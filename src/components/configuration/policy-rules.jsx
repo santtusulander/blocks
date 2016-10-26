@@ -2,12 +2,21 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
-import {parsePolicy} from '../../util/policy-config'
+import {
+  getScriptLua,
+  matchIsContentTargeting,
+  parsePolicy,
+  parseCountriesByResponseCodes,
+  ALLOW_RESPONSE_CODES,
+  DENY_RESPONSE_CODES,
+  REDIRECT_RESPONSE_CODES
+} from '../../util/policy-config'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -58,14 +67,41 @@ class ConfigurationPolicyRules extends React.Component {
       if(!policy.has('match')) {
         return null
       }
+
       const {matches, sets} = parsePolicy(policy, [])
+
+      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
+      let matchLabel = ''
+      let actionsLabel = ''
+      if ( matchIsContentTargeting(policy.get('match') )) {
+        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
+        actionsLabel = ''
+
+        const scriptLua = getScriptLua( policy )
+
+        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
+        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
+        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
+
+        let ctActionLabels = []
+        if ( allowCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+        if ( denyCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+        if ( redirectCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+
+        actionsLabel = ctActionLabels.join(' | ')
+
+      } else {
+        matchLabel = matches.map(match => match.field).join(', ')
+        actionsLabel = sets.map(set => set.setkey).join(', ')
+      }
       return (
-        <tr key={i}>
+        <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
-          <td>{matches.map(match => match.field).join(', ')}</td>
-          <td>{sets.map(set => set.setkey).join(', ')}</td>
+          <td>{matchLabel}</td>
+          <td>{actionsLabel}</td>
           <td className="nowrap-column">
             <ActionButtons
+              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
               onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
               onDelete={this.showConfirmation(`${type}_policy`, i)} />
             {this.state[`${type}_policy`] !== false &&
@@ -92,6 +128,7 @@ class ConfigurationPolicyRules extends React.Component {
         </tr>
       )
     }
+
     const rows = [
       ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
@@ -139,4 +176,4 @@ ConfigurationPolicyRules.defaultProps = {
   responsePolicies: Immutable.List()
 }
 
-module.exports = injectIntl(ConfigurationPolicyRules)
+export default injectIntl(ConfigurationPolicyRules)

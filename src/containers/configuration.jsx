@@ -12,7 +12,9 @@ import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { getContentUrl } from '../util/routes'
+import { getContentUrl, getUrl } from '../util/routes'
+import checkPermissions from '../util/permissions'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -21,6 +23,7 @@ import PageHeader from '../components/layout/page-header'
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
+import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
 
@@ -34,8 +37,6 @@ import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
-
-import { getUrl } from '../util/routes'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -91,6 +92,10 @@ export class Configuration extends React.Component {
   }
   changeValue(path, value) {
     return this.changeValues([[path, value]])
+  }
+
+  isReadOnly() {
+    return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_PROPERTY)
   }
 
   // allows changing multiple values while only changing state once
@@ -235,7 +240,7 @@ export class Configuration extends React.Component {
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-
+    const readOnly = this.isReadOnly()
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -263,15 +268,24 @@ export class Configuration extends React.Component {
             </div>
           </AccountSelector>
           <ButtonToolbar className="pull-right">
-            <Button bsStyle="danger" className="btn btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-              <IconTrash/>
-            </Button>
+            <IsAllowed to={DELETE_PROPERTY}>
+              <Button
+                bsStyle="danger"
+                className="btn btn-icon"
+                onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+            </IsAllowed>
             {activeEnvironment === 2 ||
               activeEnvironment === 1 ||
               !activeEnvironment ?
-              <Button bsStyle="primary" onClick={this.togglePublishModal}>
-                <FormattedMessage id="portal.button.publish"/>
-              </Button>
+              <IsAllowed to={MODIFY_PROPERTY}>
+                <Button
+                  bsStyle="primary"
+                  onClick={this.togglePublishModal}>
+                  <FormattedMessage id="portal.button.publish"/>
+                </Button>
+              </IsAllowed>
               : null
             }
             {/* Hide in 1.0 – UDNP-1406
@@ -325,12 +339,14 @@ export class Configuration extends React.Component {
         <PageContainer>
           {this.state.activeTab === 'details' ?
             <ConfigurationDetails
+              readOnly={readOnly}
               edgeConfiguration={activeConfig.get('edge_configuration')}
               changeValue={this.changeValue}/>
             : null}
 
           {this.state.activeTab === 'defaults' ?
             <ConfigurationDefaults
+              readOnly={readOnly}
               activateMatch={this.props.uiActions.changePolicyActiveMatch}
               activateRule={this.props.uiActions.changePolicyActiveRule}
               activateSet={this.props.uiActions.changePolicyActiveSet}
@@ -344,6 +360,7 @@ export class Configuration extends React.Component {
 
           {this.state.activeTab === 'policies' ?
             <ConfigurationPolicies
+              readOnly={readOnly}
               activateMatch={this.props.uiActions.changePolicyActiveMatch}
               activateRule={this.props.uiActions.changePolicyActiveRule}
               activateSet={this.props.uiActions.changePolicyActiveSet}
@@ -361,6 +378,7 @@ export class Configuration extends React.Component {
 
             {this.state.activeTab === 'security' ?
               <ConfigurationSecurity
+                readOnly={readOnly}
                 changeValue={this.changeValue}
                 changeValues={this.changeValues}
                 config={activeConfig}
@@ -388,10 +406,11 @@ export class Configuration extends React.Component {
 
         {this.state.deleteModal &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
-          cancelButton={toggleDelete}
-          deleteButton={() => {
+          cancelButton={true}
+          deleteButton={true}
+          cancel={toggleDelete}
+          submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
@@ -447,6 +466,7 @@ Configuration.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
@@ -456,6 +476,7 @@ Configuration.propTypes = {
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
   policyActiveSet: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
@@ -474,11 +495,13 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activeHost: state.host.get('activeHost'),
+    currentUser: state.user.get('currentUser'),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),
     policyActiveMatch: state.ui.get('policyActiveMatch'),
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
+    roles: state.roles.get('roles'),
     sslCertificates: state.security.get('sslCertificates')
   };
 }
