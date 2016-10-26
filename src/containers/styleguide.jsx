@@ -77,6 +77,8 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
+import MapPoc from '../components/map/poc'
+
 class Styleguide extends React.Component {
   render() {
     return (
@@ -388,6 +390,9 @@ class Styleguide extends React.Component {
 
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
+          <h1 className="page-header">MapBox</h1>
+
+          <MapPoc />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

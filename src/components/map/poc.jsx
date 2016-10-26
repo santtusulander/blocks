@@ -3,100 +3,146 @@ import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet';
 
 import * as countryGeoJson from './countries.geo.json'
 
-const cities = [
-  { id: 'NYC', countryId: 'USA', name: 'New York', total: 5000000, position: [40.785091, -73.968285] },
-  { id: 'LDN', countryId: 'GBR', name: 'London', total: 500000, position: [51.505, -0.09] },
-  { id: 'HEL', countryId: 'FIN', name: 'Helsinki', total: 100000, position: [60.17083, 24.93750] },
-  { id: 'TKU', countryId: 'FIN', name: 'Turku', total: 80000, position: [60.454510, 22.264824] }
+import '../../../node_modules/leaflet/dist/leaflet.css'
+import './poc.scss'
+
+
+const heatMapColors = [
+  '#e32119', // red dark
+  '#e32119', //red light
+  '#00a9d4', //cyan
+  '#009f80', //green
+  '#89ba17'  //lime
 ]
 
-const countryColors = {
-  'GBR': '#FF0000',
-  'USA': '#00ff00',
-  'FIN': '#0000ff'
-}
+const cities = [
+  { id: 'LDN', countryId: 'GBR', name: 'London', bytes: 500000, requests: 10000, position: [51.505, -0.09] },
+  { id: 'NYC', countryId: 'USA', name: 'New York', bytes: 400000, requests: 20000, position: [40.785091, -73.968285] },
+  { id: 'HEL', countryId: 'FIN', name: 'Helsinki', bytes: 300000, requests: 30000, position: [60.17083, 24.93750] },
+  { id: 'TKU', countryId: 'FIN', name: 'Turku', bytes: 200000, requests: 40000, position: [60.454510, 22.264824] },
+  { id: 'BJN', countryId: 'CHN', name: 'Beijing', bytes: 100000, requests: 50000, position: [39.9042, 116.4074] }
+]
 
-const getCountryStyle = ( feature ) => {
-  const color = countryColors[feature.id] ? countryColors[feature.id] : '#ff0000'
-  const fillOpacity =  countryColors[feature.id] ? 0.5 : 0
+const countries = [
+  {id: 'GBR', total_traffic: 100000},
+  {id: 'USA', total_traffic: 1000000},
+  {id: 'FIN', total_traffic: 700000},
+  {id: 'CHN', total_traffic: 300000}
+]
+
+const getCountryStyle = ( median, feature ) => {
+
+  const trafficCountry = countries.find( c => c.id === feature.id )
+  const trafficHeat = trafficCountry && getScore(median, trafficCountry.total_traffic)
+  const countryColor = trafficCountry ? heatMapColors[ trafficHeat - 1] : '#00a9d4'
+
+  const fillOpacity =  trafficCountry ? 0.5 : 0.2
+
   return {
-    color: color,
+    color: countryColor,
     fillOpacity: fillOpacity,
+    opacity: 0.5,
     weight: 1
   }
 }
 
-const getCityColor = ( city ) => {
-  const color = countryColors[city.countryId] ? countryColors[city.countryId] : '#cccccc'
-  const fillOpacity =  countryColors[city.countryId] ? 0.8 : 0
-  return color/*{
-    color: color,
-    fillOpacity: fillOpacity,
-    weight: 2
-  }*/
+/**
+ * Calculate Median -value
+ * @param values
+ * @returns {value}
+ */
+const calculateMedian = (values) => {
+
+  values.sort( function(a,b) {return a - b;} );
+
+  var half = Math.floor(values.length/2);
+
+  if(values.length % 2)
+    return values[half];
+  else
+    return (values[half-1] + values[half]) / 2.0;
 }
+/**
+ * Get Score for value compared to 'median' range (0 - steps)
+ * @param median
+ * @param value
+ * @param steps
+ * @returns {number}
+ */
+const getScore = (median, value, steps = 5) => {
+
+  const diff = (value / median)
+  const score = Math.ceil(diff * (steps / 2)) ;
+
+  return score;
+}
+
 const handleFeature = ( feature, layer) => {
   layer.bindPopup(feature.properties.name);
   layer.on({
     mouseover: () => {
       layer.setStyle({
-        weight:3,
+        weight:2
       });
-
-      //this.openPopup();
     },
     mouseout: () => {
       layer.setStyle({
         weight:1,
-        opacity: 0.5
+        opacity: 0.2
       });
-
-      //this.closePopup();
     }
   })
 }
 
 class MapPoc extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = {zoom: 5}
+    this.state = {zoom: 2}
+
   }
   zoomEnd(e){
     this.setState({zoom: e.target._zoom})
   }
+  componentDidMount() {
+    window.dispatchEvent(new Event('resize'));
+  }
   render() {
+
+    const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
+    const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
+
+    const cityCircles = cities.map( city => {
+      const cityHeat = getScore(cityMedian, city.bytes)
+      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+
+      return (
+        <Circle center={city.position} radius={ cityHeat * 10000 } color={ cityColor } >
+          <Popup>
+            <span>{city.name}</span>
+          </Popup>
+        </Circle>
+      )
+    })
+
     return (
       <Map
         center={cities[0].position}
         zoom={this.state.zoom}
         onZoomEnd={(e)=>this.zoomEnd(e)}
       >
-
         <TileLayer
           url='https://api.mapbox.com/styles/v1/ericssonudn/ciuiy8uym006y2jml6xizki1p/tiles/256/{z}/{x}/{y}?access_token={accessToken}'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'
         />
 
-      {
-        cities.map( city => {
-          const cityColor = getCityColor(city)
+        {cityCircles}
 
-          return (
-            <Circle center={city.position} radius={city.total / 10} color={ cityColor } >
-              <Popup>
-                <span>{city.name}</span>
-              </Popup>
-            </Circle>
-          )
-        })
-      }
-
-      {this.state.zoom < 6 &&
+        {this.state.zoom < 6 &&
         <GeoJson
-        data={countryGeoJson}
-        style={getCountryStyle}
-        onEachFeature={handleFeature}
+          data={countryGeoJson}
+          style={(feature) => getCountryStyle(countryMedian, feature)}
+          onEachFeature={handleFeature}
         />}
 
       </Map>
