@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 
 const ThemeWrap = require('./theme-wrap.jsx');
 
@@ -12,7 +12,7 @@ storiesOf('Navigation', module)
     </ThemeWrap>
   ))
   .add('Navigation', () => (
-    <div style={ { width: '90px' } }>
+    <div style={{ width: '90px' }}>
       <Navigation />
     </div>
   ))
