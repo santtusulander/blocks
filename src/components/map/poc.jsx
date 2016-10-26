@@ -17,7 +17,10 @@ const heatMapColors = [
 
 const cities = [
   { id: 'LDN', countryId: 'GBR', name: 'London', bytes: 500000, requests: 10000, position: [51.505, -0.09] },
+  { id: 'MCR', countryId: 'GBR', name: 'Manchester', bytes: 300000, requests: 10000, position: [53.4807593, -2.2426305000000184] },
   { id: 'NYC', countryId: 'USA', name: 'New York', bytes: 400000, requests: 20000, position: [40.785091, -73.968285] },
+  { id: 'BTN', countryId: 'USA', name: 'Boston', bytes: 300000, requests: 20000, position: [42.3600825, -71.05888010000001] },
+  { id: 'WCR', countryId: 'USA', name: 'Worchester', bytes: 200000, requests: 20000, position: [42.261573789394745, -71.79908395742189] },
   { id: 'HEL', countryId: 'FIN', name: 'Helsinki', bytes: 300000, requests: 30000, position: [60.17083, 24.93750] },
   { id: 'TKU', countryId: 'FIN', name: 'Turku', bytes: 200000, requests: 40000, position: [60.454510, 22.264824] },
   { id: 'BJN', countryId: 'CHN', name: 'Beijing', bytes: 100000, requests: 50000, position: [39.9042, 116.4074] }
