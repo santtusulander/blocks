@@ -170,7 +170,8 @@ DnsDomainEditFormContainer.propTypes = {
   deleteDomain: PropTypes.func,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  saveDomain: PropTypes.func
+  saveDomain: PropTypes.func,
+  touchAll: PropTypes.func
 }
 
 function mapStateToProps({ dns }, { edit }) {

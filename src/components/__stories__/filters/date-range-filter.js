@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 
 const ThemeWrap       = require('../theme-wrap.jsx');
 const DateRangeFilter = require('../../analysis/filters/date-range-filter/date-range-filter.jsx');
