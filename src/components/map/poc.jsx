@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet';
+import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
 
 import * as countryGeoJson from './countries.geo.json'
 
@@ -90,7 +90,7 @@ const handleFeature = ( feature, layer) => {
     },
     mouseout: () => {
       layer.setStyle({
-        weight:0,
+        weight:0
       });
     }
   })
@@ -102,11 +102,11 @@ class MapPoc extends React.Component {
     this.state = {zoom: 2}
 
   }
-  zoomEnd(e){
-    this.setState({zoom: e.target._zoom})
-  }
   componentDidMount() {
     window.dispatchEvent(new Event('resize'));
+  }
+  zoomEnd(e){
+    this.setState({zoom: e.target._zoom})
   }
   render() {
 
@@ -118,7 +118,7 @@ class MapPoc extends React.Component {
       const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
 
       return (
-        <Circle center={city.position} radius={ cityHeat * 10000 } color={ cityColor } >
+        <Circle center={city.position} radius={cityHeat * 10000} color={cityColor} >
           <Popup>
             <span>{city.name}</span>
           </Popup>

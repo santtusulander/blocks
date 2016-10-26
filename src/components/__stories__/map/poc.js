@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import {storiesOf} from '@kadira/storybook';
 
 import ThemeWrap from '../theme-wrap'
 import MapPoc from '../../map/poc'
