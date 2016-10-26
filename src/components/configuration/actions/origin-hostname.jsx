@@ -1,11 +1,10 @@
 import React from 'react'
 import { Input, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
-
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class OriginHostname extends React.Component {
   constructor(props) {
@@ -99,6 +98,7 @@ class OriginHostname extends React.Component {
 OriginHostname.displayName = 'OriginHostname'
 OriginHostname.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import {Input } from 'react-bootstrap'
+import React from 'react'
+import { Input } from 'react-bootstrap'
 
 import './udn-file-input.scss'
 
@@ -25,6 +25,7 @@ const UDNFileInput = (props) => {
 }
 
 UDNFileInput.propTypes = {
+  addonAfter: React.PropTypes.string,
   id: React.PropTypes.string.isRequired
 }
 

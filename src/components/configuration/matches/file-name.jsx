@@ -1,10 +1,10 @@
 import React from 'react'
 import { Input, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class Filename extends React.Component {
   constructor(props) {
@@ -65,6 +65,7 @@ class Filename extends React.Component {
 Filename.displayName = 'Filename'
 Filename.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }

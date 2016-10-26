@@ -6,7 +6,7 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import { FormattedMessage, formatMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Toggle from '../../toggle'
 import SelectWrapper from '../../select-wrapper.jsx'
@@ -118,7 +118,7 @@ class SupportTicketForm extends React.Component {
       status: status.value,
       type: type.value,
       priority: priority.value,
-      assignee: assignee.value,
+      assignee: assignee.value
     }
 
     if (ticket) {
@@ -227,6 +227,7 @@ class SupportTicketForm extends React.Component {
 
 SupportTicketForm.propTypes = {
   fields: PropTypes.object,
+  intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   ticket: PropTypes.instanceOf(Map)
