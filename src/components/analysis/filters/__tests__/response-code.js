@@ -1,10 +1,10 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../response-code.jsx')
-jest.dontMock('../../../../util/status-codes')
+jest.unmock('../response-code.jsx')
+jest.unmock('../../../../util/status-codes')
 
-const ResponseCode = require('../response-code.jsx')
+import ResponseCode from '../response-code.jsx'
 
 describe('FilterResponseCode', () => {
   it('should exist', () => {

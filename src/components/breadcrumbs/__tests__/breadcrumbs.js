@@ -1,8 +1,8 @@
 import React from 'react'
 import { render } from 'enzyme'
 
-jest.dontMock('../breadcrumbs.jsx')
-const Breadcrumbs = require('../breadcrumbs.jsx').Breadcrumbs
+jest.unmock('../breadcrumbs.jsx')
+import { Breadcrumbs } from '../breadcrumbs.jsx'
 const fakeLinks = [{
   label: 'aaa',
   url: 'bbb'

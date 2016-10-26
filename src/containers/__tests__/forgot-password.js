@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.autoMockOff()
-jest.dontMock('../forgot-password.jsx')
-const ForgotPassword = require('../forgot-password.jsx').ForgotPassword
+jest.unmock('../forgot-password.jsx')
+import { ForgotPassword } from '../forgot-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
