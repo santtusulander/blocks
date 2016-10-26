@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createAction } from 'redux-actions'
 import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
@@ -107,8 +106,9 @@ export default handleActions({
 
 // ACTIONS
 
-export const createTicket = createAction(TICKET_CREATED, (data) => {
-  console.log('createTicket', data)
+// export const createTicket = createAction(TICKET_CREATED, (data) => {
+export const createTicket = createAction(TICKET_CREATED, () => {
+  // TODO: add integration with Zendesk
 
   return new Promise((resolve) => {
     resolve({
@@ -128,8 +128,9 @@ export const createTicket = createAction(TICKET_CREATED, (data) => {
   })
 })
 
-export const deleteTicket = createAction(TICKET_DELETED, (id) => {
-  return console.log('deleteTicket', id);
+// export const deleteTicket = createAction(TICKET_DELETED, (id) => {
+export const deleteTicket = createAction(TICKET_DELETED, () => {
+  // TODO: add integration with Zendesk
 })
 
 export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
@@ -217,8 +218,9 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
   };
 })
 
-export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
-  console.log('updateTicket', id, data);
+// export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
+export const updateTicket = createAction(TICKET_UPDATED, (id) => {
+  // TODO: add integration with Zendesk
 
   return new Promise((resolve) => {
     resolve({
