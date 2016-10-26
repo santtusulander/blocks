@@ -27,7 +27,11 @@ class MatchesSelection extends React.Component {
         cases: [
           [WILDCARD_REGEXP, [{
             script_lua: {
-              target: { }
+              target: {
+                geo: [{
+                  country: []
+                }]
+              }
             }
           }]]
         ],

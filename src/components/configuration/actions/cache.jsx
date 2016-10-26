@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button, ButtonToolbar, Col, Input, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 import { secondsToUnit, secondsFromUnit } from '../helpers'
 
 class Cache extends React.Component {
@@ -187,6 +187,7 @@ Cache.displayName = 'Cache'
 Cache.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

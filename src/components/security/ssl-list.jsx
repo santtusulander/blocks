@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
-import {FormattedMessage, injectIntl, intlShape} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import ActionButtons from '../action-buttons'
 import { AccountManagementHeader } from '../account-management/account-management-header'
@@ -66,6 +66,7 @@ SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   onCheck: PropTypes.func,
   uploadCertificate: PropTypes.func
