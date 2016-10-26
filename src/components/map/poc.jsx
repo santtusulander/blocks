@@ -3,9 +3,8 @@ import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet';
 
 import * as countryGeoJson from './countries.geo.json'
 
-import '../../../node_modules/leaflet/dist/leaflet.css'
-import './poc.scss'
 
+import './poc.scss'
 
 const heatMapColors = [
   '#e32119', // red dark

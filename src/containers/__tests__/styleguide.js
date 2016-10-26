@@ -1,15 +1,14 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import {shallow} from 'enzyme'
 
-jest.autoMockOff()
-jest.dontMock('../styleguide.jsx')
-const Styleguide = require('../styleguide.jsx')
+jest.unmock('../styleguide.jsx')
+import Styleguide from '../styleguide.jsx'
 
 describe('Styleguide', () => {
   it('should exist', () => {
-    let styleguide = TestUtils.renderIntoDocument(
+    let styleguide = shallow(
       <Styleguide />
     );
-    expect(TestUtils.isCompositeComponent(styleguide)).toBeTruthy();
+    expect(styleguide.length).toBe(1);
   });
 })
