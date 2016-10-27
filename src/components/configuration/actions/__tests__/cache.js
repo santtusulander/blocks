@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../cache.jsx')
-const Cache = require('../cache.jsx')
+jest.unmock('../cache.jsx')
+import Cache from '../cache.jsx'
 
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]

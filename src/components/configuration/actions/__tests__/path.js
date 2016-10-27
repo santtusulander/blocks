@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../path.jsx')
-const Path = require('../path.jsx')
+jest.unmock('../path.jsx')
+import Path from '../path.jsx'
 
 function intlMaker() {
   return {
