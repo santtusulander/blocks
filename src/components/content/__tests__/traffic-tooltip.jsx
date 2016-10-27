@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../traffic-tooltip.jsx')
-const Tooltip = require('../traffic-tooltip.jsx')
+jest.unmock('../traffic-tooltip.jsx')
+import Tooltip from '../traffic-tooltip.jsx'
 
 describe('ContentTrafficTooltip', () => {
   it('should exist', () => {

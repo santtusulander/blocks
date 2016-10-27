@@ -110,6 +110,17 @@ export function removeProps(object, remove) {
   return result
 }
 
+/**
+ * Flatten nested array
+ *
+ * @param arr
+ * @returns {Array.<*>}
+ */
+export function flatten(arr) {
+  const flat = [].concat(...arr)
+  return flat.some(Array.isArray) ? flatten(flat) : flat;
+}
+
 /* REFACTOR: this is a quick fix to get tab links from current path
  - takes the last link part out and replaces it with tabName
  */
