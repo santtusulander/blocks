@@ -4,17 +4,18 @@ import numeral from 'numeral'
 
 import AnalysisByTime from '../analysis/by-time'
 import {formatBytes} from '../../util/helpers'
-import { paleblue } from '../../constants/colors'
+import { paleblue, yellow } from '../../constants/colors'
 
 class SPOnOffNetTraffic extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      byTimeWidth: 500
+      byTimeWidth: 72
     }
 
     this.measureContainers = this.measureContainers.bind(this)
+    this.measureContainersTimeout = null
   }
 
   componentDidMount() {
@@ -23,11 +24,16 @@ class SPOnOffNetTraffic extends React.Component {
   }
 
   componentWillReceiveProps() {
+    if (this.measureContainersTimeout) {
+      clearTimeout(this.measureContainersTimeout)
+    }
+
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
 
   measureContainers() {
@@ -154,25 +160,25 @@ class SPOnOffNetTraffic extends React.Component {
     let datasets = []
     datasets.push({
       area: true,
-      color: 'yellow',
-      comparisonData: true,
-      data: offNet,
-      id: 'offNet',
-      label: '',
-      line: true,
-      stackedAgainst: false,
-      xAxisFormatter: false
-    })
-
-    datasets.push({
-      area: true,
       color: paleblue,
       comparisonData: true,
       data: onNet,
       id: 'onNet',
       label: '',
-      line: true,
+      line: false,
       stackedAgainst: 'offNet',
+      xAxisFormatter: false
+    })
+
+    datasets.push({
+      area: true,
+      color: yellow,
+      comparisonData: true,
+      data: offNet,
+      id: 'offNet',
+      label: '',
+      line: false,
+      stackedAgainst: false,
       xAxisFormatter: false
     })
 
@@ -183,13 +189,16 @@ class SPOnOffNetTraffic extends React.Component {
 
         <div ref="byTimeHolder">
           <AnalysisByTime
-            padding={40}
             dataKey="bytes"
             dataSets={datasets}
+            className="bg-transparent"
+            padding={2}
             width={this.state.byTimeWidth}
             height={this.state.byTimeWidth / 3}
             showTooltip={false}
-            showLegend={false}/>
+            showLegend={false}
+            noHover={true}
+            noXNice={true} />
         </div>
 
         <h4>On-Net</h4>
@@ -205,10 +214,6 @@ class SPOnOffNetTraffic extends React.Component {
 SPOnOffNetTraffic.displayName = 'SPOnOffNetTraffic'
 SPOnOffNetTraffic.propTypes = {
   intl: React.PropTypes.object
-}
-
-SPOnOffNetTraffic.defaultProps = {
-
 }
 
 module.exports = injectIntl(SPOnOffNetTraffic)
