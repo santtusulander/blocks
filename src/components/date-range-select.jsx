@@ -233,6 +233,7 @@ DateRangeSelect.propTypes = {
   availableRanges: React.PropTypes.array,
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
+  intl: React.PropTypes.object,
   startDate: React.PropTypes.instanceOf(moment)
 }
 

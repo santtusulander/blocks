@@ -1,6 +1,5 @@
 import React from 'react'
 import numeral from 'numeral'
-import moment from 'moment'
 import Immutable from 'immutable'
 
 import SectionHeader from '../layout/section-header'
@@ -185,7 +184,9 @@ class AnalysisContribution extends React.Component {
 AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   sectionHeaderTitle: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
