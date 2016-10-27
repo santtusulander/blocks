@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-jest.dontMock('../stacked-by-group.jsx')
-const AnalysisStackedByGroup = require('../stacked-by-group.jsx')
+jest.unmock('../stacked-by-group.jsx')
+import AnalysisStackedByGroup from '../stacked-by-group.jsx'
 
 const fakeData = Immutable.fromJS([
   {
