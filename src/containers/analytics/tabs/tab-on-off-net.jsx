@@ -53,6 +53,7 @@ class AnalyticsTabOnOffNet extends React.Component {
   render(){
     return (
       <AnalysisOnOffNetReport
+        dateRangeLabel={this.props.filters.get('dateRangeLabel')}
         fetching={this.props.fetching}
         onOffNetChartType={this.props.onOffNetChartType}
         onOffStats={this.props.onOffStats}

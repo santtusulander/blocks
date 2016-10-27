@@ -203,7 +203,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 </Row>
               </div>
               <div className="analysis-data-box">
-                <h4>Traffic Month to Date</h4>
+                <h4>Traffic <FormattedMessage id={this.props.dateRangeLabel} /></h4>
                 <p>{formatBytes(stats.get('total'))}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
@@ -284,6 +284,7 @@ class AnalysisOnOffNetReport extends React.Component {
 
 AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
 AnalysisOnOffNetReport.propTypes = {
+  dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
