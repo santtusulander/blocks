@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
