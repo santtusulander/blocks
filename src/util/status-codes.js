@@ -68,7 +68,7 @@ export const HTTP_RESPONSES = [
   { code: 500, message: <FormattedMessage id="portal.common.statusCode.500"/> },
   { code: 501, message: <FormattedMessage id="portal.common.statusCode.501"/> },
   { code: 502, message: <FormattedMessage id="portal.common.statusCode.502"/> },
-  { code: 503, message: <FormattedMessage id="portal.common.statusCode.503"/> },
+  { code: 503, message: <FormattedMessage id="portal.common.statusCode.503"/> }
 
   // { code: 504, message: <FormattedMessage id="portal.common.statusCode.504"/> },
   // { code: 505, message: <FormattedMessage id="portal.common.statusCode.505"/> },

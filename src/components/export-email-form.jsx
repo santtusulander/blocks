@@ -2,23 +2,19 @@ import React from 'react'
 import {
   Input,
   ButtonToolbar,
-  Button,
-  FormGroup,
-  FormControl,
-  ControlLabel
-
-  } from 'react-bootstrap'
+  Button
+} from 'react-bootstrap'
 
 import Immutable from 'immutable'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-const frequencyOptions = [
-    {label: <FormattedMessage id="portal.exportEmail.oneTime.text"/>, value: 'one-time'},
-    {label: <FormattedMessage id="portal.exportEmail.weekly.text"/>, value: 'weekly'},
-].map( (e) => {
-    return <option value={e.value}>{e.label}</option>;
-});
+// const frequencyOptions = [
+//   { label: <FormattedMessage id="portal.exportEmail.oneTime.text"/>, value: 'one-time' },
+//   { label: <FormattedMessage id="portal.exportEmail.weekly.text"/>, value: 'weekly' },
+// ].map((e) => {
+//   return <option value={e.value}>{e.label}</option>;
+// });
 
 class ExportEmailForm extends React.Component {
 
@@ -40,7 +36,7 @@ class ExportEmailForm extends React.Component {
 
     this.props.onSend( this.props.formValues )
   }
-  onCancel(e) {
+  onCancel() {
     this.props.onCancel()
   }
 
@@ -100,9 +96,12 @@ class ExportEmailForm extends React.Component {
 }
 ExportEmailForm.displayName = 'ExportEmailForm'
 ExportEmailForm.propTypes = {
+  changeValue: React.PropTypes.func,
   formValues: React.PropTypes.instanceOf(Immutable.Map),
+  intl: React.PropTypes.object,
+  onCancel: React.PropTypes.func,
   onSend: React.PropTypes.func,
-  onCancel: React.PropTypes.func
+  subject: React.PropTypes.string
 }
 
 ExportEmailForm.defaultProps = {

@@ -4,8 +4,7 @@ import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 import PageHeader from '../layout/page-header'
-import DateRangeSelect from '../date-range-select.jsx'
-import DateRanges from '../../constants/date-ranges'
+import FilterDateRange from '../analysis/filters/date-range'
 import ProviderTypes from '../../constants/provider-types'
 import {
   userIsServiceProvider,
@@ -20,7 +19,6 @@ import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
-import FilterIncludeComparison from '../analysis/filters/include-comparison.jsx'
 
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
@@ -131,41 +129,13 @@ const AnalyticsFilters = (props) => {
   return (
     <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
-        <div className='action'>
-          <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
-          <DateRangeSelect
-            changeDateRange={(startDate, endDate, activeDateRange) => {
 
-              console.log('activeDateRange', activeDateRange)
-
-              props.onFilterChange(
-                'dateRange', {startDate: startDate, endDate: endDate}
-              )
-              props.onFilterChange(
-                'dateRangeLabel', activeDateRange
-              )
-            }}
-            startDate={props.filters.getIn(['dateRange','startDate'])}
-            endDate={props.filters.getIn(['dateRange','endDate'])}
-            availableRanges={[
-              DateRanges.MONTH_TO_DATE,
-              DateRanges.LAST_MONTH,
-              DateRanges.THIS_WEEK,
-              DateRanges.TODAY,
-              DateRanges.YESTERDAY,
-              DateRanges.CUSTOM_TIMERANGE
-            ]}/>
-          {props.showFilters.includes('comparison') &&
-            <FilterIncludeComparison
-              includeComparison={props.filters.get('includeComparison')}
-              toggleComparison={val => {
-                props.onFilterChange(
-                  'includeComparison', val
-                )
-              }}/>
-          }
-        </div>
-      }
+        <FilterDateRange
+          startDate={props.filters.getIn(['dateRange','startDate'])}
+          endDate={props.filters.getIn(['dateRange','endDate'])}
+          showComparison={props.showFilters.includes('comparison')}
+          onFilterChange={props.onFilterChange}
+          includeComparison={props.filters.get('includeComparison')}/>}
 
       {(props.showFilters.includes('service-provider') && spFilterOptions.length > 0) &&
         <FilterServiceProvider

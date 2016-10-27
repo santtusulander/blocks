@@ -164,7 +164,8 @@ export class SetPassword extends React.Component {
                 {this.state.passwordError ?
                   this.state.passwordError
                 :
-                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>                }
+                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>
+                }
               </Tooltip>
             : null}
 

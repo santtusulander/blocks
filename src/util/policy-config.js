@@ -1,4 +1,7 @@
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
+import _ from 'underscore'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -6,6 +9,10 @@ export const matchFilterChildPaths = {
   'does_not_exist': ['default'],
   'does_not_contain': ['cases', 1, 1]
 }
+
+export const ALLOW_RESPONSE_CODES = [200]
+export const DENY_RESPONSE_CODES = [401,404,500]
+export const REDIRECT_RESPONSE_CODES = [301,302]
 
 export const WILDCARD_REGEXP = '.*';
 
@@ -56,8 +63,8 @@ export function policyContainsSetComponent(policy, setComponent) {
 }
 
 export function matchIsContentTargeting(match) {
-  return match.get('field') === 'request_host'
-          && match.getIn(["cases", 0, 1, 0, "script_lua"])
+  return !!(match.get('field') === 'request_host'
+          && match.getIn(["cases", 0, 1, 0, "script_lua"]))
 }
 
 export function parsePolicy(policy, path) {
@@ -120,13 +127,13 @@ export function parsePolicy(policy, path) {
 
     for (let searchPath of searchPaths) {
       if (policy.getIn(searchPath)) {
-        const actions = policy.getIn(searchPath).map((action, index) => {
+        const actions = policy.getIn(searchPath).toJS().map((action, index) => {
           return {
             setkey: index,
-            name: 'Content Targeting Action', // TODO: localize this
+            name: setContentTargetingActionName(action),
             path: path.concat(searchPath).concat([index])
           }
-        }).toJS()
+        })
         sets = sets.concat(actions)
       }
     }
@@ -142,4 +149,70 @@ export function parsePolicy(policy, path) {
       sets: []
     }
   }
+}
+
+/**
+ * Get script_lua block from policy rule
+ * @param policy
+ * @returns {*}
+ */
+export const getScriptLua = ( policy ) => {
+  return policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS()
+}
+
+/**
+ * Parse countries that have response code specified in responseCodes
+ * @param scriptLua, responseCodes
+ * @returns {*|Array}
+ */
+export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
+  const countries = scriptLua.target.geo[0].country
+
+  return _.flatten(countries.filter( c => {
+    return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
+  }).map( c => {
+    const cArray = c.in || c.not_in
+    return (cArray)
+  }))
+}
+
+/**
+ *
+ * @param config
+ * @returns {number|*}
+ */
+export const getVaryHeaderRuleId = ( config ) => {
+  const path = config.getIn(['response_policy', 'policy_rules'])
+
+  return path.findIndex( rule => {
+    return 'Vary' === rule.getIn(['set', 'header','header'])
+  })
+}
+
+/**
+ * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
+ * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
+ */
+const setContentTargetingActionName = action => {
+  const { response: { headers, code } } = action
+  const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
+  const fromOrNotFromPart = action.not_in ?
+    'portal.policy.edit.policies.contentTargeting.notFrom.text' :
+    'portal.policy.edit.policies.contentTargeting.from.text'
+  const redirectTo = headers && headers.Location
+  const redirLocationPart = redirectTo ? (': ' + redirectTo) : ''
+  let actionTypePart = null
+  if (code < 300) {
+    actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
+  } else if(code < 400) {
+    actionTypePart = 'portal.policy.edit.allowBlock.redirect.text'
+  } else {
+    actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
+  }
+  return (
+    <span>
+      <FormattedMessage id={actionTypePart}/> <FormattedMessage id={fromOrNotFromPart}/> {countries}
+      {redirLocationPart}
+    </span>
+  )
 }
