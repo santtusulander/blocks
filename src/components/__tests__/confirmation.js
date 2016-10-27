@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../confirmation.jsx')
-const Confirmation = require('../confirmation.jsx')
+jest.unmock('../confirmation.jsx')
+import Confirmation from '../confirmation.jsx'
 
 describe('Confirmation', () => {
   it('should exist', () => {

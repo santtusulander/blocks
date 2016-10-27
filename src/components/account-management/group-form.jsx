@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, getValues } from 'redux-form'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map, List } from 'immutable'
 import {
   Modal,
@@ -246,10 +246,11 @@ class GroupForm extends React.Component {
 
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
+  canEditBilling: PropTypes.bool,
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groupId: PropTypes.number,
-  intl: PropTypes.object,
+  intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

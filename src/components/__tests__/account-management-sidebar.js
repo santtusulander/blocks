@@ -1,9 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../account-management/account-management-sidebar.jsx')
-jest.dontMock('../button.jsx')
-const AccountManagementSidebar = require('../account-management/account-management-sidebar.jsx').AccountManagementSidebar
+jest.unmock('../account-management/account-management-sidebar.jsx')
+jest.unmock('../button.jsx')
+import { AccountManagementSidebar } from '../account-management/account-management-sidebar.jsx'
 
 function intlMaker() {
   return {

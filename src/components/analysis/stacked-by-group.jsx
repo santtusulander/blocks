@@ -3,11 +3,11 @@ import d3 from 'd3'
 import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
-import {formatBytes} from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
 
 const maxStrokeWidth = 100
 const minStrokeWidth = 20
-const closestGroup = d3.bisector(d => d.groupIndex).left
+// const closestGroup = d3.bisector(d => d.groupIndex).left
 
 class AnalysisStackedByGroup extends React.Component {
   constructor(props) {

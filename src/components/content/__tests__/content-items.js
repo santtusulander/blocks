@@ -1,13 +1,12 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../../../constants/content-item-sort-options.js')
+jest.unmock('../../../constants/content-item-sort-options.js')
 jest.unmock('../../../util/status-codes')
-jest.dontMock('../content-items.jsx')
+jest.unmock('../content-items.jsx')
 
-const ContentItems = require('../content-items.jsx').default
+import ContentItems from '../content-items.jsx'
 
 const fakeMetrics = Immutable.fromJS([
   {

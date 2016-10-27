@@ -1,10 +1,10 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../content-item')
-const ContentItem = require('../content-item')
-const ContentItemList = require('../content-item-list')
-const ContentItemChart = require('../content-item-chart')
+jest.unmock('../content-item')
+import ContentItem from '../content-item'
+import ContentItemList from '../content-item-list'
+import ContentItemChart from '../content-item-chart'
 
 describe('ContentItem', () => {
   it('should show a list if not a chart', () => {

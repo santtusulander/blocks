@@ -4,8 +4,8 @@ import TestUtils from 'react-addons-test-utils'
 
 jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
 
-jest.dontMock('../dialog.jsx')
-const Dialog = require('../dialog.jsx')
+jest.unmock('../dialog.jsx')
+import Dialog from '../dialog.jsx'
 
 describe('Select', () => {
   it('should exist', () => {

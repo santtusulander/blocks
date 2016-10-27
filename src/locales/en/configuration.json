@@ -34,8 +34,17 @@
   "portal.policy.edit.policies.matchContentTargeting.redirect.to.text": "to",
   "portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text": "and present",
   "portal.policy.edit.policies.matchContentTargeting.exclude.text": "Exclude Areas",
+  "portal.policy.edit.policies.contentTargeting.from.text": "Users from",
+  "portal.policy.edit.policies.contentTargeting.notFrom.text": "Users NOT from",
   "portal.policy.edit.policies.cancel.text": "Cancel",
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
 
-  "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication"
+  "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
+  "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
+
+  "portal.configuration.policies.contentTargeting.text": "Content Targeting",
+  "portal.configuration.policies.allow.text": "Allow",
+  "portal.configuration.policies.deny.text": "Deny",
+  "portal.configuration.policies.redirect.text": "Redirect"
+
 }
