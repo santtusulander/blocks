@@ -10,7 +10,7 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-import { FormattedMessage } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 class AnalysisContribution extends React.Component {
   constructor(props) {
@@ -67,7 +67,6 @@ class AnalysisContribution extends React.Component {
   }
 
   render() {
-    const month = moment().format('MMMM YYYY')
     const isHttp = this.props.serviceTypes.includes('http')
     const isHttps = this.props.serviceTypes.includes('https')
     const isOnNet = this.props.onOffFilter.includes('on-net')
@@ -132,7 +131,7 @@ class AnalysisContribution extends React.Component {
             <SectionContainer className="analysis-contribution">
               <div ref="stacksHolder">
                 <AnalysisStackedByGroup padding={40}
-                  chartLabel={`${month}, Month to Date`}
+                  chartLabel={this.props.intl.formatMessage({id: this.props.dateRangeLabel })}
                   datasets={providers}
                   datasetLabels={[
                     <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
@@ -199,4 +198,4 @@ AnalysisContribution.defaultProps = {
   stats: Immutable.List()
 }
 
-module.exports = AnalysisContribution
+module.exports = injectIntl(AnalysisContribution)
