@@ -13,11 +13,11 @@ const DashboardPanel = (props) => {
         'no-padding': noPadding
       }
     )}>
-      {title ?
+      {title &&
         <div className="dashboard-panel-header">
           <h5>{title}</h5>
         </div>
-      : null}
+      }
       <div className="dashboard-panel-content">
         {children}
       </div>
