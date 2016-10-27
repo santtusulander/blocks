@@ -4,7 +4,7 @@ import {injectIntl} from 'react-intl'
 import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
 
-class SPOnOffNetTraffic extends React.Component {
+class OnOffNetTraffic extends React.Component {
   constructor(props) {
     super(props);
 
@@ -120,8 +120,8 @@ class SPOnOffNetTraffic extends React.Component {
   }
 }
 
-SPOnOffNetTraffic.displayName = 'SPOnOffNetTraffic'
-SPOnOffNetTraffic.propTypes = {
+OnOffNetTraffic.displayName = 'OnOffNetTraffic'
+OnOffNetTraffic.propTypes = {
   data: React.PropTypes.array,
   dataKey: React.PropTypes.string,
   intl: React.PropTypes.object,
@@ -131,4 +131,4 @@ SPOnOffNetTraffic.propTypes = {
   totalTrafficValue: React.PropTypes.number
 }
 
-module.exports = injectIntl(SPOnOffNetTraffic)
+module.exports = injectIntl(OnOffNetTraffic)

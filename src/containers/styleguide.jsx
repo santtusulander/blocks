@@ -27,7 +27,7 @@ import {
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
-import SPOnOffNetTraffic from '../components/dashboard/on-off-net-traffic'
+import OnOffNetTraffic from '../components/dashboard/on-off-net-traffic'
 import MiniChart from '../components/dashboard/mini-chart'
 
 import IconAccount       from '../components/icons/icon-account'
@@ -389,7 +389,7 @@ export default class Styleguide extends React.Component {
           <h1 className="page-header">SP On/Off Net Traffic Component</h1>
           <Row>
             <Col xs={6}>
-              <SPOnOffNetTraffic
+              <OnOffNetTraffic
                 dataKey="bytes"
                 data={[
                   {
