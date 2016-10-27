@@ -13,7 +13,7 @@ import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.
 
 class AnalyticsTabUrlReport extends React.Component {
   componentDidMount() {
-    const {params, filters, activeHostConfiguredName, location} = this.props
+    const {params, filters, activeHostConfiguredName} = this.props
 
     // activeHostConfiguredName can be null when this container is mounted.
     // In that case, the fetching actually triggers from componentWillReceiveProps.
