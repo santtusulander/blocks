@@ -78,7 +78,7 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
-class Styleguide extends React.Component {
+export default class Styleguide extends React.Component {
   constructor(props) {
     super(props)
 
