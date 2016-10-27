@@ -1,9 +1,7 @@
 import React from 'react'
 import {injectIntl} from 'react-intl'
-import numeral from 'numeral'
 
 import AnalysisByTime from '../analysis/by-time'
-import {formatBytes} from '../../util/helpers'
 import { paleblue, yellow } from '../../constants/colors'
 
 class SPOnOffNetTraffic extends React.Component {
@@ -11,7 +9,7 @@ class SPOnOffNetTraffic extends React.Component {
     super(props);
 
     this.state = {
-      byTimeWidth: 72
+      byTimeWidth: 100
     }
 
     this.measureContainers = this.measureContainers.bind(this)
@@ -20,15 +18,12 @@ class SPOnOffNetTraffic extends React.Component {
 
   componentDidMount() {
     this.measureContainers()
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
 
   componentWillReceiveProps() {
-    if (this.measureContainersTimeout) {
-      clearTimeout(this.measureContainersTimeout)
-    }
-
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
+    this.measureContainers()
   }
 
   componentWillUnmount() {
@@ -43,114 +38,16 @@ class SPOnOffNetTraffic extends React.Component {
   }
 
   render() {
-    let statsDetails = []
-    statsDetails.push(
-      {
-        "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
-        "total": 92020173697866,
-        "net_on": {
-          "bytes": 71856580682504,
-          "percent_total": 0.7809
-        },
-        "net_off": {
-          "bytes": 20163593015362,
-          "percent_total": 0.2191
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
-        "total": 99672709053865,
-        "net_on": {
-          "bytes": 76848354018252,
-          "percent_total": 0.771
-        },
-        "net_off": {
-          "bytes": 22824355035613,
-          "percent_total": 0.229
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
-        "total": 94821186769899,
-        "net_on": {
-          "bytes": 72941835769369,
-          "percent_total": 0.7693
-        },
-        "net_off": {
-          "bytes": 21879351000530,
-          "percent_total": 0.2307
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
-        "total": 117441291619312,
-        "net_on": {
-          "bytes": 90477417340581,
-          "percent_total": 0.7704
-        },
-        "net_off": {
-          "bytes": 26963874278731,
-          "percent_total": 0.2296
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
-        "total": 81546375702611,
-        "net_on": {
-          "bytes": 62160286504951,
-          "percent_total": 0.7623
-        },
-        "net_off": {
-          "bytes": 19386089197660,
-          "percent_total": 0.2377
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
-        "total": 117341539984300,
-        "net_on": {
-          "bytes": 90364165873239,
-          "percent_total": 0.7701
-        },
-        "net_off": {
-          "bytes": 26977374111061,
-          "percent_total": 0.2299
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
-        "total": 94064934029131,
-        "net_on": {
-          "bytes": 72989086766237,
-          "percent_total": 0.7759
-        },
-        "net_off": {
-          "bytes": 21075847262894,
-          "percent_total": 0.2241
-        }
-      },
-      {
-        "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
-        "total": 93196929110225,
-        "net_on": {
-          "bytes": 72133332220394,
-          "percent_total": 0.774
-        },
-        "net_off": {
-          "bytes": 21063596889831,
-          "percent_total": 0.226
-        }
-      }
-    )
+    const { data, dataKey, totalTrafficUnit, totalTrafficValue, onNetValue, offNetValue } = this.props
 
-    const onNet = statsDetails.map(datapoint => {
+    const onNet = data.map(datapoint => {
       return {
         bytes: datapoint['net_on']['bytes'] || 0,
         timestamp: datapoint['timestamp']
       }
     })
 
-    const offNet = statsDetails.map(datapoint => {
+    const offNet = data.map(datapoint => {
       return {
         bytes: datapoint['net_off']['bytes'] || 0,
         timestamp: datapoint['timestamp']
@@ -161,11 +58,11 @@ class SPOnOffNetTraffic extends React.Component {
     datasets.push({
       area: true,
       color: paleblue,
-      comparisonData: true,
+      comparisonData: false,
       data: onNet,
       id: 'onNet',
       label: '',
-      line: false,
+      line: true,
       stackedAgainst: 'offNet',
       xAxisFormatter: false
     })
@@ -173,39 +70,51 @@ class SPOnOffNetTraffic extends React.Component {
     datasets.push({
       area: true,
       color: yellow,
-      comparisonData: true,
+      comparisonData: false,
       data: offNet,
       id: 'offNet',
       label: '',
-      line: false,
+      line: true,
       stackedAgainst: false,
       xAxisFormatter: false
     })
 
     return (
-      <div>
-        <h4>Total</h4>
-        <h1>{formatBytes(1558780931444688)}</h1>
+      <div className="on-off-net-traffic">
+        <div className="traffic-label">Total</div>
 
-        <div ref="byTimeHolder">
-          <AnalysisByTime
-            dataKey="bytes"
-            dataSets={datasets}
-            className="bg-transparent"
-            padding={2}
-            width={this.state.byTimeWidth}
-            height={this.state.byTimeWidth / 3}
-            showTooltip={false}
-            showLegend={false}
-            noHover={true}
-            noXNice={true} />
+        <div className="on-off-net-traffic-container">
+          <div className="traffic-amount-col total">
+            <span className="value">{totalTrafficValue}</span>
+            <span className="suffix">{totalTrafficUnit}</span>
+          </div>
+
+          <div ref="byTimeHolder" className="traffic-amount-col chart">
+            <AnalysisByTime
+              dataKey={dataKey}
+              dataSets={datasets}
+              className="bg-transparent"
+              padding={2}
+              width={this.state.byTimeWidth}
+              height={72}
+              showTooltip={false}
+              showLegend={false}
+              noHover={true}
+              noXNice={true} />
+          </div>
+
+          <div className="traffic-amount-col">
+            <div className="traffic-label on-net">On-Net</div>
+            <span className="value">{onNetValue}</span>
+            <span className="suffix">%</span>
+          </div>
+
+          <div className="traffic-amount-col">
+            <div className="traffic-label off-net">Off-Net</div>
+            <span className="value">{offNetValue}</span>
+            <span className="suffix">%</span>
+          </div>
         </div>
-
-        <h4>On-Net</h4>
-        <h1>{numeral(0.7704).format('0,0%')}</h1>
-
-        <h4>Off-Net</h4>
-        <h1>{numeral(0.2296).format('0,0%')}</h1>
       </div>
     )
   }
@@ -213,7 +122,13 @@ class SPOnOffNetTraffic extends React.Component {
 
 SPOnOffNetTraffic.displayName = 'SPOnOffNetTraffic'
 SPOnOffNetTraffic.propTypes = {
-  intl: React.PropTypes.object
+  data: React.PropTypes.array,
+  dataKey: React.PropTypes.string,
+  intl: React.PropTypes.object,
+  offNetValue: React.PropTypes.number,
+  onNetValue: React.PropTypes.number,
+  totalTrafficUnit: React.PropTypes.string,
+  totalTrafficValue: React.PropTypes.number
 }
 
 module.exports = injectIntl(SPOnOffNetTraffic)
