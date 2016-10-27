@@ -1,0 +1,33 @@
+@import './src/styles/base/colors';
+@import './src/styles/base/variables';
+@import './src/styles/base/functions';
+
+$dashboard-panel-horizontal-padding: em(30px, 14px);
+
+.dashboard-panel {
+
+  .dark-theme & {
+    background-color: rgba($black, 0.3);
+  }
+
+  .light-theme & {
+    background-color: $white;
+  }
+
+  .dashboard-panel-header {
+    padding: 15px 30px;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
+      border-bottom: 1px solid rgba($black, 0.2);
+    }
+  }
+
+  &:not(.no-padding) .dashboard-panel-content {
+    padding: 15px 30px;
+  }
+}
