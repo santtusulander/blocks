@@ -40,7 +40,6 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
-import Network from './containers/network'
 import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property'
 import Purge from './containers/configure/purge'
@@ -151,7 +150,7 @@ export const getRoutes = store => {
         </Route>
       </Route>
 
-      {/* Content - routes */}
+      {/* Content / CP Accounts - routes */}
       <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
         <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
         <Route component={ContentTransition}>
@@ -164,6 +163,13 @@ export const getRoutes = store => {
           {getAnalyticsTabRoutes(store)}
         </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
+      </Route>
+
+      {/* Network / SP Accounts - routes */}
+      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
+        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
+        <Route path={routes.networkBrand} component={Accounts}/>
+        <Route path={routes.networkAccount} component={Groups}/>
       </Route>
 
       {/* Security - routes */}
@@ -255,16 +261,11 @@ export const getRoutes = store => {
         <Route path={routes.userAccount} component={User}/>
       </Route>
 
-      {/* TEMP UDNP-1545 - routes */}
-      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+      {/* Dashboard - routes */}
+      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION, store)}>
         <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
         <Route path={routes.dashboardBrand} component={Dashboard}/>
         <Route path={routes.dashboardAccount} component={Dashboard}/>
-      </Route>
-      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
-        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-        <Route path={routes.networkBrand} component={Network}/>
-        <Route path={routes.networkAccount} component={Network}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />
