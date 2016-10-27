@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../video.jsx')
-const Video = require('../video.jsx')
+jest.unmock('../video.jsx')
+import Video from '../video.jsx'
 
 describe('FilterVideo', () => {
   it('should exist', () => {

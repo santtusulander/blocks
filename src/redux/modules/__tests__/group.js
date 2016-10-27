@@ -1,8 +1,8 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
-jest.dontMock('../group.js')
+jest.unmock('../group.js')
 
-const {
+import {
   createSuccess,
   deleteSuccess,
   deleteFailure,
@@ -14,7 +14,7 @@ const {
   updateSuccess,
   updateFailure,
   changeActive
-} = require('../group.js');
+} from '../group.js';
 
 describe('Group Module', () => {
 
