@@ -12,6 +12,7 @@ $dashboard-panel-horizontal-padding: em(30px, 14px);
 
   .light-theme & {
     background-color: $white;
+    box-shadow: 0 5px 10px rgba($black, 0.2);
   }
 
   .dashboard-panel-header {
