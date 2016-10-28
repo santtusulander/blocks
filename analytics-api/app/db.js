@@ -1200,7 +1200,7 @@ class AnalyticsDB {
       FROM spc_global_${optionsFinal.granularity}
       WHERE epoch_start BETWEEN ? AND ?
         ${conditions.join('\n        ')}
-      GROUP BY ${this.accountLevelFieldMap.account.field};
+      GROUP BY epoch_start, ${this.accountLevelFieldMap.account.field};
     `;
 
     queries.push(this._executeQuery(globalQueryParameterized, queryOptions));
