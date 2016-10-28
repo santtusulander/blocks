@@ -67,6 +67,8 @@ function routeSpDashboard(req, res) {
       }
     }
 
+    // Process data for traffic, bandwidth, latency, connections, and cache_hit
+    // =============================================================================================
     let bytesTotal        = 0;
     let bytesOnNetTotal   = 0;
     let bytesOffNetTotal  = 0;
@@ -77,7 +79,10 @@ function routeSpDashboard(req, res) {
     let fullDetail        = [];
     let globalDataGrouped = _.groupBy(globalData, 'timestamp');
 
-    // Iterate over each timestamp
+    // The data is grouped by timestamp because the data is grouped by timestamp
+    // and net_type. Calculating latency and cache hit data requires that we look
+    // at each timestamp and manually sum/avg data for the on net and off net records.
+    // NOTE: There may or may not be two net type records for a given timestamp.
     _.forEach(globalDataGrouped, (records, timestamp) => {
       let bytes           = 0;
       let bytesOnNet      = 0;
@@ -90,20 +95,21 @@ function routeSpDashboard(req, res) {
       let avgFBLOnNet     = 0;
       let avgFBLOffNet    = 0;
 
+      // Iterate over the on/off net records for a given timestamp
       records.forEach(record => {
         bytes       += record.bytes;
         connections += record.connections;
 
         if (record.net_type === 'on') {
-          bytesOnNet = record.bytes;
+          bytesOnNet     = record.bytes;
           chitRatioOnNet = record.chit_ratio * record.connections;
-          avgFBLOnNet = record.avg_fbl * record.connections;
+          avgFBLOnNet    = record.avg_fbl * record.connections;
         }
 
         if (record.net_type === 'off') {
-          bytesOffNet = record.bytes;
+          bytesOffNet     = record.bytes;
           chitRatioOffNet = record.chit_ratio * record.connections;
-          avgFBLOffNet = record.avg_fbl * record.connections;
+          avgFBLOffNet    = record.avg_fbl * record.connections;
         }
       });
 
@@ -134,6 +140,7 @@ function routeSpDashboard(req, res) {
 
     });
 
+    // Pad the detail array with missing timestamp records
     fullDetail = dataUtils.buildContiguousTimeline(
       detail,
       options.start,
