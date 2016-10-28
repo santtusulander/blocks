@@ -170,6 +170,21 @@ function routeSpDashboard(req, res) {
     finalData.cache_hit.chit_ratio               = Math.round(chitRatioTotal / connectionsTotal);
 
 
+    // Process country data
+    // =============================================================================================
+    let countryDetail = countryData.map(record => {
+      let { code, bytes } = record;
+      return {
+        code: dataUtils.get3CharCountryCodeFromCode(code),
+        name: dataUtils.getCountryNameFromCode(code),
+        bytes,
+        bits_per_second: dataUtils.getBPSFromBytes(bytes, duration)
+      }
+    });
+
+    finalData.countries = countryDetail;
+
+
     res.jsend({finalData, countryData, providerData});
 
   }).catch((err) => {

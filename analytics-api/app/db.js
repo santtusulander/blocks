@@ -1178,8 +1178,8 @@ class AnalyticsDB {
     // Country Data Query
     let countryQueryParameterized = `
       SELECT
-        country,
         epoch_start as timestamp,
+        country as code,
         ${this.accountLevelFieldMap.sp_account.select},
         ${this.accountLevelFieldMap.sp_group.select},
         sum(bytes) as bytes
