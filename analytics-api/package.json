@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run e2e && npm run units",
     "e2e": "node e2e/run.js",
-    "units": "istanbul cover jasmine-runner.js",
+    "units": "node --harmony_destructuring ./node_modules/istanbul/lib/cli.js cover jasmine-runner.js",
     "start": "node --harmony_destructuring index.js",
     "staging": "NODE_ENV=staging node index.js",
     "production": "NODE_ENV=production node index.js",
