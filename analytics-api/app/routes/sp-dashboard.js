@@ -60,11 +60,7 @@ function routeSpDashboard(req, res) {
         detail: []
       },
       countries: [],
-      providers: {
-        bytes: 0,
-        bits_per_second: 0,
-        detail: []
-      }
+      providers: []
     }
 
     // Process data for traffic, bandwidth, latency, connections, and cache_hit
@@ -77,6 +73,7 @@ function routeSpDashboard(req, res) {
     let avgFBLTotal       = 0;
     let detail            = [];
     let fullDetail        = [];
+    let fullDetailGrouped = [];
     let globalDataGrouped = _.groupBy(globalData, 'timestamp');
 
     // The data is grouped by timestamp because the data is grouped by timestamp
@@ -149,6 +146,9 @@ function routeSpDashboard(req, res) {
       ['bytes', 'bytes_net_on', 'bytes_net_off', 'bits_per_second', 'connections', 'connections_per_second', 'chit_ratio', 'avg_fbl']
     );
 
+    // This is used later when processing provider data to calculate percentages
+    fullDetailGrouped = _.groupBy(fullDetail, 'timestamp');
+
     // Populate Final Detail Data
     fullDetail.forEach(record => {
       let { timestamp, bytes, bytes_net_on, bytes_net_off, bits_per_second, connections, connections_per_second, chit_ratio, avg_fbl } = record;
@@ -184,8 +184,57 @@ function routeSpDashboard(req, res) {
 
     finalData.countries = countryDetail;
 
+    // Process provider data
+    // =============================================================================================
+    let providerDataGrouped = _.groupBy(providerData, 'account');
 
-    res.jsend({finalData, countryData, providerData});
+    // Process data for each provider
+    _.forEach(providerDataGrouped, (data, account) => {
+      let providerBytes = 0;
+      let providerRecord = {
+        account: parseInt(account),
+        bytes: 0,
+        bits_per_second: 0,
+        bytes_percent_total: 0,
+        detail: []
+      }
+
+      // Build the detail array for each provider
+      data.forEach(record => {
+        let { timestamp, bytes } = record;
+        let correspondingTotalBytes = fullDetailGrouped[timestamp][0].bytes || 0;
+        providerBytes += bytes;
+        providerRecord.detail.push({
+          timestamp,
+          bytes,
+          bits_per_second: dataUtils.getBPSFromBytes(bytes, options.granularity),
+          // There may be a path to have a division by zero bug here, but if we find traffic
+          // for a provider for a given hour, there should definitely be a corresponding
+          // total amount to divide by (otherwise, how could there be any traffic for a provider?).
+          bytes_percent_total: parseFloat((bytes / correspondingTotalBytes).toFixed(4))
+        })
+      });
+
+      // Save the totals for the provider to the providerRecord
+      providerRecord.bytes = providerBytes;
+      providerRecord.bits_per_second = dataUtils.getBPSFromBytes(providerBytes, duration);
+      providerRecord.bytes_percent_total = parseFloat((providerBytes / bytesTotal).toFixed(4));
+
+      // Pad the detail array with missing timestamp records
+      providerRecord.detail = dataUtils.buildContiguousTimeline(
+        providerRecord.detail,
+        options.start,
+        options.end,
+        options.granularity,
+        ['bytes', 'bits_per_second']
+      );
+
+      finalData.providers.push(providerRecord);
+    });
+
+
+    // Send the final data
+    res.jsend(finalData);
 
   }).catch((err) => {
     log.error(err);
