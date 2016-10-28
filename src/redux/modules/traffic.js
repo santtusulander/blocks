@@ -238,6 +238,8 @@ export const fetchTotals = createAction(TOTALS_FETCHED, (opts) => {
 })
 
 export const fetchByTime = createAction(TRAFFIC_BY_TIME_FETCHED, (opts) => {
+  console.log(opts)
+
   return axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`)
   .then(parseResponseData);
 })

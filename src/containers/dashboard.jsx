@@ -1,15 +1,32 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import SelectWrapper from '../components/select-wrapper'
 
+import * as dashboardActionCreators from '../redux/modules/dashboard'
+
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props)
+
+    this.fetchData = this.fetchData.bind(this)
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  componentWillReceiveProps() {
+    this.fetchData()
+  }
+
+  fetchData() {
+    this.props.dashboardActions.fetchDashboard()
   }
 
   render() {
@@ -35,8 +52,10 @@ export class Dashboard extends React.Component {
 
 Dashboard.displayName = 'Dashboard'
 Dashboard.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map)
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  dashboardActions: React.PropTypes.object
 }
+
 Dashboard.defaultProps = {
   activeAccount: Immutable.Map()
 }
@@ -47,4 +66,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Dashboard)
+function mapDispatchToProps(dispatch) {
+  return {
+    dashboardActions: bindActionCreators(dashboardActionCreators, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
