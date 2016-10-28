@@ -109,7 +109,7 @@ function routeSpDashboard(req, res) {
 
       // Calculate the weighted metrics
       chitRatio = Math.round((chitRatioOnNet + chitRatioOffNet) / connections);
-      avgFBL = `${Math.round((avgFBLOnNet + avgFBLOffNet) / connections)} ms`;
+      avgFBL = Math.round((avgFBLOnNet + avgFBLOffNet) / connections);
 
       // Build a big detail array with all the metrics
       detail.push({
@@ -130,7 +130,7 @@ function routeSpDashboard(req, res) {
       bytesOffNetTotal += bytesOffNet;
       connectionsTotal += connections;
       chitRatioTotal   += chitRatio * connections;
-      avgFBLTotal      += parseInt(avgFBL) * connections;
+      avgFBLTotal      += avgFBL * connections;
 
     });
 
