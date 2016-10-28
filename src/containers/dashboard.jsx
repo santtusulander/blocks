@@ -10,6 +10,8 @@ import SelectWrapper from '../components/select-wrapper'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 
+// import { buildAnalyticsOpts } from '../util/helpers.js'
+
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props)
@@ -18,15 +20,20 @@ export class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData()
+    this.fetchData(this.props.params)
   }
 
   componentWillReceiveProps() {
-    this.fetchData()
+    this.fetchData(this.props.params)
   }
 
-  fetchData() {
-    this.props.dashboardActions.fetchDashboard()
+  fetchData(params) {
+    const dashboardOpts = Object.assign({
+      startDate: Math.floor((Date.now() / 1000)) - 86400,
+      endDate: Math.floor((Date.now() / 1000)),
+      granularity: 'hour'
+    }, params)
+    this.props.dashboardActions.fetchDashboard(dashboardOpts)
   }
 
   render() {
@@ -53,7 +60,8 @@ export class Dashboard extends React.Component {
 Dashboard.displayName = 'Dashboard'
 Dashboard.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  dashboardActions: React.PropTypes.object
+  dashboardActions: React.PropTypes.object,
+  params: React.PropTypes.object
 }
 
 Dashboard.defaultProps = {
