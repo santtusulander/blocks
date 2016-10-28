@@ -75,7 +75,7 @@ function routeSpDashboard(req, res) {
     let avgFBLTotal       = 0;
     let detail            = [];
     let fullDetail        = [];
-    let globalDataGrouped = _.groupBy(globalData, 'epoch_start');
+    let globalDataGrouped = _.groupBy(globalData, 'timestamp');
 
     // Iterate over each timestamp
     _.forEach(globalDataGrouped, (records, timestamp) => {

@@ -1161,7 +1161,7 @@ class AnalyticsDB {
     // Global Data Query
     let globalQueryParameterized = `
       SELECT
-        epoch_start,
+        epoch_start as timestamp,
         ${this.accountLevelFieldMap.sp_account.select},
         ${this.accountLevelFieldMap.sp_group.select},
         sum(bytes) as bytes,
@@ -1178,8 +1178,8 @@ class AnalyticsDB {
     // Country Data Query
     let countryQueryParameterized = `
       SELECT
-        epoch_start,
         country,
+        epoch_start as timestamp,
         ${this.accountLevelFieldMap.sp_account.select},
         ${this.accountLevelFieldMap.sp_group.select},
         sum(bytes) as bytes
@@ -1192,7 +1192,7 @@ class AnalyticsDB {
     // Provider Data Query
     let providerQueryParameterized = `
       SELECT
-        epoch_start,
+        epoch_start as timestamp,
         ${this.accountLevelFieldMap.account.select},
         ${this.accountLevelFieldMap.sp_account.select},
         ${this.accountLevelFieldMap.sp_group.select},
