@@ -33,8 +33,9 @@ function routeSpDashboard(req, res) {
   };
 
   db.getSpDashboardMetrics(options).spread((globalData, countryData, providerData) => {
-    const duration = options.end - options.start + 1;
-    const secondsPerGranularity = dataUtils.secondsPerGranularity[options.granularity];
+    const optionsFinal = db._getQueryOptions(options);
+    const duration = optionsFinal.end - optionsFinal.start + 1;
+    const secondsPerGranularity = dataUtils.secondsPerGranularity[optionsFinal.granularity];
     let finalData = {
       traffic: {
         bytes: 0,
@@ -120,7 +121,7 @@ function routeSpDashboard(req, res) {
         bytes: bytes,
         bytes_net_on: bytesOnNet,
         bytes_net_off: bytesOffNet,
-        bits_per_second: dataUtils.getBPSFromBytes(bytes, options.granularity),
+        bits_per_second: dataUtils.getBPSFromBytes(bytes, optionsFinal.granularity),
         connections: connections,
         connections_per_second: parseFloat((connections / secondsPerGranularity).toFixed(4)),
         chit_ratio: chitRatio,
@@ -140,9 +141,9 @@ function routeSpDashboard(req, res) {
     // Pad the detail array with missing timestamp records
     fullDetail = dataUtils.buildContiguousTimeline(
       detail,
-      options.start,
-      options.end,
-      options.granularity,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.granularity,
       ['bytes', 'bytes_net_on', 'bytes_net_off', 'bits_per_second', 'connections', 'connections_per_second', 'chit_ratio', 'avg_fbl']
     );
 
@@ -207,7 +208,7 @@ function routeSpDashboard(req, res) {
         providerRecord.detail.push({
           timestamp,
           bytes,
-          bits_per_second: dataUtils.getBPSFromBytes(bytes, options.granularity),
+          bits_per_second: dataUtils.getBPSFromBytes(bytes, optionsFinal.granularity),
           // There may be a path to have a division by zero bug here, but if we find traffic
           // for a provider for a given hour, there should definitely be a corresponding
           // total amount to divide by (otherwise, how could there be any traffic for a provider?).
@@ -223,9 +224,9 @@ function routeSpDashboard(req, res) {
       // Pad the detail array with missing timestamp records
       providerRecord.detail = dataUtils.buildContiguousTimeline(
         providerRecord.detail,
-        options.start,
-        options.end,
-        options.granularity,
+        optionsFinal.start,
+        optionsFinal.end,
+        optionsFinal.granularity,
         ['bytes', 'bits_per_second']
       );
 
