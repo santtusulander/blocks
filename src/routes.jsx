@@ -266,6 +266,7 @@ export const getRoutes = store => {
         <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
         <Route path={routes.dashboardBrand} component={Dashboard}/>
         <Route path={routes.dashboardAccount} component={Dashboard}/>
+        <Route path={routes.dashboardGroup} component={Dashboard}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />

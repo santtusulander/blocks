@@ -74,7 +74,8 @@ module.exports = {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
-  
+  dashboardGroup: '/dashboard/:brand/:account/:group',
+
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account'

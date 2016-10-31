@@ -97,6 +97,26 @@ export function getNetworkUrl(linkType, val, params) {
   return url
 }
 
+export function getDashboardUrl(linkType, val, params) {
+  const { brand, account } = params,
+    baseUrl = getRoute('dashboard')
+
+  let url
+  switch(linkType) {
+    case 'brand':
+      url = `${baseUrl}/${val}`
+      break;
+    case 'account':
+      url = `${baseUrl}/${brand}/${val}`
+      break;
+    case 'group':
+      url = `${baseUrl}/${brand}/${account}/${val}`
+      break;
+  }
+
+  return url
+}
+
 export function getAnalyticsUrlFromParams(params, currentUser, roles) {
   const allowedTab = analyticsTabConfig.find(tab =>  checkPermissions(
     roles, currentUser, tab.get('permission')
@@ -202,9 +222,11 @@ export function getSecurityUrlFromParams(params) {
 }
 
 export function getDashboardUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group } = params
 
-  if (account) {
+  if (group) {
+    return getRoute('dashboardGroup', params)
+  } else if (account) {
     return getRoute('dashboardAccount', params)
   } else if (brand) {
     return getRoute('dashboardBrand', params)
