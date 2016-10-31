@@ -1,10 +1,9 @@
 var path                  = require('path');
 var webpack               = require('webpack');
-var CopyWebpackPlugin     = require('copy-webpack-plugin');
-var ExtractTextPlugin     = require("extract-text-webpack-plugin");
-var HtmlWebpackPlugin     = require('html-webpack-plugin');
-var WebpackNotifierPlugin = require('webpack-notifier');
 var helpers               = require('./helpers');
+
+//var ExtractTextPlugin     = require("extract-text-webpack-plugin");
+var WebpackNotifierPlugin = require('webpack-notifier');
 
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
@@ -24,37 +23,13 @@ var development = Object.assign({}, {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('style.css'),
-    new HtmlWebpackPlugin({
-      inject: 'body',
-      template: 'src/index.html',
-      favicon: 'src/assets/icons/favicon.ico'
-    }),
-    new HtmlWebpackPlugin({
-      inject: 'body',
-      template: 'src/downtime.html',
-      favicon: 'src/assets/icons/favicon.ico',
-      filename: 'downtime.html'
-    }),
-    new HtmlWebpackPlugin({
-      inject: 'body',
-      template: 'src/downtime_scheduled.html',
-      favicon: 'src/assets/icons/favicon.ico',
-      filename: 'downtime_scheduled.html'
-    }),
-    new CopyWebpackPlugin([
-      {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/pdf/CP_User_Guide.pdf', to: 'assets/pdf'},
-      {from: 'src/assets/pdf/SP_User_Guide.pdf', to: 'assets/pdf'},
-      {from: 'src/assets/pdf/UDN_Admin_Guide.pdf', to: 'assets/pdf'},
-      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
-    ]),
     new WebpackNotifierPlugin({
       title: `UDN portal v.${require('../package.json').version}`
     })
   ]
+  .concat(
+    helpers.staticAssets
+  )
 }, require('./config'));
 
 development.entry.app.push('webpack-dev-server/client?http://localhost:' + process.env.PORT);
