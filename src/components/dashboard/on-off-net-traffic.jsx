@@ -81,9 +81,9 @@ class OnOffNetTraffic extends React.Component {
       xAxisFormatter: false
     })
 
-    let totalTrafficValueArray = formatOutput(formatBytes(data['traffic']['bytes']))
-    let totalTrafficValue = totalTrafficValueArray.value
-    let totalTrafficUnit = totalTrafficValueArray.unit
+    let totalTrafficValueOutput = formatOutput(formatBytes(data['traffic']['bytes']))
+    let totalTrafficValue = totalTrafficValueOutput.value
+    let totalTrafficUnit = totalTrafficValueOutput.unit
 
     let onNetValue = numeral((data['traffic']['bytes_net_on'] / data['traffic']['bytes']) * 100).format('0,0')
     let offNetValue = numeral((data['traffic']['bytes_net_off'] / data['traffic']['bytes']) * 100).format('0,0')
@@ -131,7 +131,7 @@ class OnOffNetTraffic extends React.Component {
 
 OnOffNetTraffic.displayName = 'OnOffNetTraffic'
 OnOffNetTraffic.propTypes = {
-  data: React.PropTypes.array,
+  data: React.PropTypes.object,
   dataKey: React.PropTypes.string,
   intl: React.PropTypes.object,
   offNetValue: React.PropTypes.number,
