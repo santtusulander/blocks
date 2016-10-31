@@ -8,8 +8,8 @@ function intlMaker() {
   }
 }
 
-jest.dontMock('../mime-type.jsx')
-const MimeType = require('../mime-type.jsx')
+jest.unmock('../mime-type.jsx')
+import MimeType from '../mime-type.jsx'
 
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
