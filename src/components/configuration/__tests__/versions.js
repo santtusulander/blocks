@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
-jest.dontMock('../versions.jsx')
-const ConfigurationVersions = require('../versions.jsx')
+jest.unmock('../versions.jsx')
+import ConfigurationVersions from '../versions.jsx'
 
 function intlMaker() {
   return {

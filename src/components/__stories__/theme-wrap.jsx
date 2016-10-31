@@ -1,47 +1,47 @@
 import React from 'react'
 
 class ThemeWrap extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     if (props.theme) {
-      this.state = {theme: props.theme};
-   } else {
-      this.state = {theme: 'dark'};
-   }
+      this.state = { theme: props.theme };
+    } else {
+      this.state = { theme: 'dark' };
+    }
 
     this.toggleTheme = this.toggleTheme.bind(this);
- }
+  }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setBodyClass(this.state.theme);
- }
+  }
 
-  toggleTheme(){
+  toggleTheme() {
 
     const theme = this.state.theme === 'dark' ? 'light' : 'dark';
-    this.setBodyClass( theme );
-    this.setState( {'theme': theme} );
+    this.setBodyClass(theme);
+    this.setState({ 'theme': theme });
 
- }
+  }
 
-  setBodyClass( theme ){
+  setBodyClass(theme) {
     document.body.classList.remove('light-theme');
     document.body.classList.remove('dark-theme');
 
     document.body.classList.add(theme + '-theme');
- }
+  }
 
   render() {
-    return(
+    return (
       <div>
-        <h5>Using: {this.state.theme} -theme <a onClick={this.toggleTheme }>Switch theme</a></h5>
+        <h5>Using: {this.state.theme} -theme <a onClick={this.toggleTheme}>Switch theme</a></h5>
         <hr/>
 
-          {this.props.children}
+        {this.props.children}
       </div>
     );
- }
+  }
 
 }
 

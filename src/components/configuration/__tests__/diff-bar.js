@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../diff-bar.jsx')
-const ConfigurationDiffBar = require('../diff-bar.jsx')
+jest.unmock('../diff-bar.jsx')
+import ConfigurationDiffBar from '../diff-bar.jsx'
 
 describe('ConfigurationDiffBar', () => {
   it('should exist', () => {

@@ -8,8 +8,8 @@ function intlMaker() {
   }
 }
 
-jest.dontMock('../file-extension.jsx')
-const FileExtension = require('../file-extension.jsx')
+jest.unmock('../file-extension.jsx')
+import FileExtension from '../file-extension.jsx'
 
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]

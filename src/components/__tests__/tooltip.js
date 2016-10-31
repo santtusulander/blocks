@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../tooltip.jsx');
-const Tooltip = require('../tooltip.jsx');
+jest.unmock('../tooltip.jsx');
+import Tooltip from '../tooltip.jsx'
 
 describe('Tooltip', function() {
   it('uses the x / y coordinates', () => {

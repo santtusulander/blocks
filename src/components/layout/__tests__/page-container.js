@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../page-container.jsx')
-const PageContainer = require('../page-container.jsx')
+jest.unmock('../page-container.jsx')
+import PageContainer from '../page-container.jsx'
 
 describe('Page Container layout', () => {
   it('should exist', () => {

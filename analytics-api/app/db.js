@@ -1414,6 +1414,91 @@ class AnalyticsDB {
   }
 
   /**
+   * Get a bunch of different metrics to support the SP Dashboard.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSpDashboardMetrics(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let queries          = [];
+    let queryOptions     = [];
+    let conditions       = [];
+
+    // Build the table name
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.granularity === 'day'
+      && conditions.push('AND timezone = "UTC"')
+
+    // Global Data Query
+    let globalQueryParameterized = `
+      SELECT
+        epoch_start as timestamp,
+        ${this.accountLevelFieldMap.sp_account.select},
+        ${this.accountLevelFieldMap.sp_group.select},
+        sum(bytes) as bytes,
+        sum(connections) as connections,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl,
+        net_type
+      FROM spc_global_${optionsFinal.granularity}
+      WHERE epoch_start BETWEEN ? AND ?
+        ${conditions.join('\n        ')}
+      GROUP BY epoch_start, net_type
+      ORDER BY epoch_start;
+    `;
+
+    // Country Data Query
+    let countryQueryParameterized = `
+      SELECT
+        epoch_start as timestamp,
+        country as code,
+        ${this.accountLevelFieldMap.sp_account.select},
+        ${this.accountLevelFieldMap.sp_group.select},
+        sum(bytes) as bytes
+      FROM spc_country_${optionsFinal.granularity}
+      WHERE epoch_start BETWEEN ? AND ?
+        ${conditions.join('\n        ')}
+      GROUP BY country;
+    `;
+
+    // Provider Data Query
+    let providerQueryParameterized = `
+      SELECT
+        epoch_start as timestamp,
+        ${this.accountLevelFieldMap.account.select},
+        sum(bytes) as bytes
+      FROM spc_global_${optionsFinal.granularity}
+      WHERE epoch_start BETWEEN ? AND ?
+        ${conditions.join('\n        ')}
+      GROUP BY epoch_start, ${this.accountLevelFieldMap.account.field}
+      ORDER BY epoch_start;
+    `;
+
+    queries.push(this._executeQuery(globalQueryParameterized, queryOptions));
+    queries.push(this._executeQuery(countryQueryParameterized, queryOptions));
+    queries.push(this._executeQuery(providerQueryParameterized, queryOptions));
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
    * Get data stored in the schema_info table
    */
   getSchemaInfo() {

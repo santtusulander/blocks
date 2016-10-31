@@ -2,12 +2,8 @@ import React from 'react'
 import {
   Input,
   ButtonToolbar,
-  Button,
-  FormGroup,
-  FormControl,
-  ControlLabel
-
-  } from 'react-bootstrap'
+  Button
+} from 'react-bootstrap'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -15,8 +11,8 @@ const EXPORT_TYPE_PDF = 'export_pdf'
 const EXPORT_TYPE_CSV = 'export_csv'
 
 const fileTypes = [
-  {label: 'PDF', value: EXPORT_TYPE_PDF},
-  {label: 'CSV', value: EXPORT_TYPE_CSV},
+  { label: 'PDF', value: EXPORT_TYPE_PDF },
+  { label: 'CSV', value: EXPORT_TYPE_CSV }
 ]
 
 export class ExportFileForm extends React.Component {
@@ -63,14 +59,14 @@ export class ExportFileForm extends React.Component {
               label={fileType.label}
               checked={fileType.value == this.state.fileType}
               className="export-input-list-item"
-              onChange={ this.onChange(fileType.value) }
+              onChange={this.onChange(fileType.value)}
               />
             ))}
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={ this.onCancel }><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button type="submit" bsStyle="primary" onClick={ this.onDownload(this.state.fileType) }><FormattedMessage id="portal.button.download"/></Button>
+          <Button className="btn-outline" onClick={this.onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button type="submit" bsStyle="primary" onClick={this.onDownload(this.state.fileType)}><FormattedMessage id="portal.button.download"/></Button>
         </ButtonToolbar>
 
       </div>
@@ -85,6 +81,7 @@ module.exports = {
 }
 
 ExportFileForm.propTypes = {
-  onDownload: React.PropTypes.func,
+  fileType: React.PropTypes.string,
   onCancel: React.PropTypes.func,
+  onDownload: React.PropTypes.func
 }

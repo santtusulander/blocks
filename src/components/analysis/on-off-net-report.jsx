@@ -175,6 +175,16 @@ class AnalysisOnOffNetReport extends React.Component {
       activeDirection: this.state.sortDir
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
+
+    let trafficToday = statsToday.get('total')
+    let trafficDateRange = stats.get('total')
+    if(this.props.onOffFilter.contains('on-net') && !this.props.onOffFilter.contains('off-net')) {
+      trafficToday = statsToday.getIn(['net_on', 'bytes'])
+      trafficDateRange = stats.getIn(['net_on', 'bytes'])
+    } else if (this.props.onOffFilter.contains('off-net') && !this.props.onOffFilter.contains('on-net')) {
+      trafficToday = statsToday.getIn(['net_off', 'bytes'])
+      trafficDateRange = stats.getIn(['net_off', 'bytes'])
+    }
     return (
       <div>
         <SectionContainer>
@@ -182,7 +192,7 @@ class AnalysisOnOffNetReport extends React.Component {
             <Col xs={12}>
               <div className="analysis-data-box">
                 <h4>Traffic today</h4>
-                <p>{formatBytes(statsToday.get('total'))}</p>
+                <p>{formatBytes(trafficToday)}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
                   <Col xs={6}>
@@ -204,7 +214,7 @@ class AnalysisOnOffNetReport extends React.Component {
               </div>
               <div className="analysis-data-box">
                 <h4>Traffic Month to Date</h4>
-                <p>{formatBytes(stats.get('total'))}</p>
+                <p>{formatBytes(trafficDateRange)}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
                   <Col xs={6}>
