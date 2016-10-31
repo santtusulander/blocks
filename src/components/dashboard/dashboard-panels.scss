@@ -1,0 +1,19 @@
+// Dashboard
+// =========
+
+.dashboard-panels {
+  display: flex;
+  flex-wrap: wrap;
+
+  .table {
+
+    th,
+    td {
+      padding-left: 0;
+
+      &:last-of-type {
+        padding-right: 0;
+      }
+    }
+  }
+}
