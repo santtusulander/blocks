@@ -17,7 +17,7 @@ class MiniChart extends React.Component {
   }
   componentDidMount() {
     this.measureContainers()
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 300)
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillReceiveProps() {

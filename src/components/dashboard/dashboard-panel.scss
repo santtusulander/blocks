@@ -3,12 +3,22 @@
 @import './src/styles/base/functions';
 
 $dashboard-panel-font-size: 14px;
+$dashboard-panel-margin: rem(30px);
 $dashboard-panel-horizontal-padding: em(30px, $dashboard-panel-font-size);
 $dashboard-panel-vertical-padding: em(15px, $dashboard-panel-font-size);
 $dashboard-panel-bg: rgba($black, 0.3);
 $dashboard-panel-header-bg: rgba($black, 0.2);
 
 .dashboard-panel {
+  margin-bottom: $dashboard-panel-margin;
+
+  .dashboard-panels & {
+    width: calc(50% - (#{$dashboard-panel-margin} / 2));
+
+    &:nth-child(odd) {
+      margin-right: $dashboard-panel-margin;
+    }
+  }
 
   .dark-theme & {
     background-color: $dashboard-panel-bg;
