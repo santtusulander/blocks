@@ -165,7 +165,7 @@ function routeSpDashboard(req, res) {
     finalData.traffic.bytes_net_on               = bytesOnNetTotal;
     finalData.traffic.bytes_net_off              = bytesOffNetTotal;
     finalData.bandwidth.bits_per_second          = dataUtils.getBPSFromBytes(bytesTotal, duration);
-    finalData.latency.avg_fbl                    = `${Math.round(avgFBLTotal / connectionsTotal)} ms`;
+    finalData.latency.avg_fbl                    = Math.round(avgFBLTotal / connectionsTotal);
     finalData.connections.connections            = connectionsTotal;
     finalData.connections.connections_per_second = parseFloat((connectionsTotal / duration).toFixed(4));
     finalData.cache_hit.chit_ratio               = Math.round(chitRatioTotal / connectionsTotal);
