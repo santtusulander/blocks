@@ -23,10 +23,6 @@ export class Dashboard extends React.Component {
     this.fetchData(this.props.params)
   }
 
-  componentWillReceiveProps() {
-    this.fetchData(this.props.params)
-  }
-
   fetchData(params) {
     const dashboardOpts = Object.assign({
       startDate: Math.floor((Date.now() / 1000)) - 86400,
@@ -71,6 +67,7 @@ Dashboard.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
+    dashboard: state.dashboard.get('dashboard'),
     filters: state.filters.get('filters')
   };
 }

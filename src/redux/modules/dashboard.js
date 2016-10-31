@@ -1,7 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
-// import moment from 'moment'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 
@@ -10,16 +9,21 @@ const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
 const DASHBOARD_FETCHED = 'DASHBOARD_FETCHED'
 
 const emptyDashboard = Immutable.Map({
+  dashboard: Immutable.List(),
   fetching: false
 })
 
 // REDUCERS
 export function dashboardFetchSuccess(state, action) {
-  console.log(state, action)
+  return state.merge({
+    dashboard: Immutable.fromJS(action.payload.data)
+  })
 }
 
 export function dashboardFetchFailure(state) {
-  console.log(state)
+  return state.merge({
+    dashboard: Immutable.List()
+  })
 }
 
 export function dashboardStartFetch(state){
