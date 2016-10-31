@@ -12,6 +12,7 @@ import {
   ButtonToolbar,
   Col,
   Dropdown,
+  Image,
   Input,
   Label,
   MenuItem,
@@ -28,6 +29,7 @@ import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
 import MiniChart from '../components/dashboard/mini-chart'
+import DashboardPanel from '../components/dashboard/dashboard-panel'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -455,6 +457,21 @@ export default class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]} />
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Dashboard Panel</h1>
+
+          <Row>
+            <Col xs={6}>
+              <DashboardPanel title="Traffic">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et mi imperdiet, condimentum nibh a, tincidunt ipsum. Fusce vitae metus iaculis, iaculis nunc vel, laoreet nisi. Aliquam quis tortor vitae odio porttitor suscipit. Donec vel nisl quis lacus consequat semper. Morbi cursus vestibulum urna. Praesent eleifend feugiat enim, eget accumsan mauris aliquet et. Vivamus tincidunt magna est, id commodo felis tempor vitae. In odio nisl, mollis interdum lacus et, varius scelerisque odio. Curabitur vitae libero eu metus mattis vulputate. Quisque commodo congue fringilla.</p>
+              </DashboardPanel>
+            </Col>
+            <Col xs={6}>
+              <DashboardPanel title="No padding" noPadding={true}>
+                <Image responsive={true} src="https://upload.wikimedia.org/wikipedia/en/archive/a/a4/20060531003742!United_States_(World_Map).png" />
+              </DashboardPanel>
             </Col>
           </Row>
 
