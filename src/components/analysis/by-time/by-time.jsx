@@ -180,7 +180,10 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.axes ? 3 : 1),
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
-      .nice(d3.time.day.utc, 1);
+
+    if(!this.props.noXNice) {
+      xScale.nice(d3.time.day.utc, 1)
+    }
 
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
@@ -238,7 +241,7 @@ class AnalysisByTime extends React.Component {
               </g>
             )
           })}
-          {this.state.tooltipText.map((text, i) => {
+          {!this.props.noHover && this.state.tooltipText.map((text, i) => {
             return(
               <g key={i}>
                 <circle r="5"
@@ -341,6 +344,8 @@ AnalysisByTime.propTypes = {
   formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
+  noHover: React.PropTypes.bool,
+  noXNice: React.PropTypes.bool,
   padding: React.PropTypes.number,
   selectSlice: React.PropTypes.func,
   showLegend: React.PropTypes.bool,
