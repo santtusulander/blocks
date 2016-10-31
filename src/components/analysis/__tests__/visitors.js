@@ -2,12 +2,10 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
-jest.autoMockOff()
-jest.dontMock('../visitors.jsx')
+jest.unmock('../visitors.jsx')
+jest.unmock('../../table-sorter.jsx')
 
-jest.dontMock('../../table-sorter.jsx')
-
-const AnalysisVisitors = require('../visitors.jsx')
+import AnalysisVisitors from '../visitors.jsx'
 
 const fakeCountryData = Immutable.fromJS([
   {
@@ -135,8 +133,7 @@ describe('AnalysisVisitors', () => {
         serviceTypes={Immutable.List()}
         intl={intlMaker()}/>
     );
-    const div = visitors.find('div')
-    expect(div.at(0).html()).toContain('Loading...');
+    expect(visitors.find({ id: 'portal.loading.text' }).length).toBe(4);
   });
 
   it('should show data in tables', () => {
