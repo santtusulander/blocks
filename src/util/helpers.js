@@ -68,6 +68,14 @@ export function formatTime(milliseconds) {
   return formatted
 }
 
+export function formatOutput(formatFunction) {
+  let formatOutputArray = formatFunction.split(' ')
+  return {
+    'value': formatOutputArray[0],
+    'unit': formatOutputArray[1]
+  }
+}
+
 export function filterMetricsByAccounts(metrics, accounts) {
   return metrics.filter((metric) => {
     return accounts.find((account) => {

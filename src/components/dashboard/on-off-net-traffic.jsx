@@ -1,8 +1,10 @@
 import React from 'react'
 import {injectIntl} from 'react-intl'
+import numeral from 'numeral'
 
 import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
+import { formatBytes, formatOutput } from '../../util/helpers'
 
 class OnOffNetTraffic extends React.Component {
   constructor(props) {
@@ -38,18 +40,18 @@ class OnOffNetTraffic extends React.Component {
   }
 
   render() {
-    const { data, dataKey, totalTrafficUnit, totalTrafficValue, onNetValue, offNetValue } = this.props
+    const { data, dataKey } = this.props
 
-    const onNet = data.map(datapoint => {
+    const onNet = data['traffic']['detail'].map(datapoint => {
       return {
-        bytes: datapoint['net_on']['bytes'] || 0,
+        bytes: datapoint['bytes_net_on'] || 0,
         timestamp: datapoint['timestamp']
       }
     })
 
-    const offNet = data.map(datapoint => {
+    const offNet = data['traffic']['detail'].map(datapoint => {
       return {
-        bytes: datapoint['net_off']['bytes'] || 0,
+        bytes: datapoint['bytes_net_off'] || 0,
         timestamp: datapoint['timestamp']
       }
     })
@@ -78,6 +80,13 @@ class OnOffNetTraffic extends React.Component {
       stackedAgainst: false,
       xAxisFormatter: false
     })
+
+    let totalTrafficValueArray = formatOutput(formatBytes(data['traffic']['bytes']))
+    let totalTrafficValue = totalTrafficValueArray.value
+    let totalTrafficUnit = totalTrafficValueArray.unit
+
+    let onNetValue = numeral((data['traffic']['bytes_net_on'] / data['traffic']['bytes']) * 100).format('0,0')
+    let offNetValue = numeral((data['traffic']['bytes_net_off'] / data['traffic']['bytes']) * 100).format('0,0')
 
     return (
       <div className="on-off-net-traffic">
@@ -126,9 +135,7 @@ OnOffNetTraffic.propTypes = {
   dataKey: React.PropTypes.string,
   intl: React.PropTypes.object,
   offNetValue: React.PropTypes.number,
-  onNetValue: React.PropTypes.number,
-  totalTrafficUnit: React.PropTypes.string,
-  totalTrafficValue: React.PropTypes.number
+  onNetValue: React.PropTypes.number
 }
 
 module.exports = injectIntl(OnOffNetTraffic)
