@@ -54,9 +54,21 @@ class AnalyticsDB {
         whereIn: 'AND sp_account_id IN ( ? )',
         field: 'sp_account_id'
       },
+      sp_account_sp: {
+        select: 'sp_account_id AS `account`',
+        where: 'AND sp_account_id = ?',
+        whereIn: 'AND sp_account_id IN ( ? )',
+        field: 'sp_account_id'
+      },
       sp_group: {
         select: 'sp_group_id AS `sp_group`',
         where: 'AND sp_group_id = ?',
+        whereIn: 'AND sp_group_id IN ( ? )',
+        field: 'sp_group_id'
+      },
+      sp_group_sp: {
+        select: 'sp_group_id AS `group`',
+        where: 'AND account_id = ?',
         whereIn: 'AND sp_group_id IN ( ? )',
         field: 'sp_group_id'
       },
@@ -324,7 +336,261 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
+  
+  /**
+   * Get total and detailed Service Provider traffic information.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPTrafficTotals(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, true);
 
+    if (accountLevel === "account") {
+      accountLevel = "sp_account_sp"
+    }
+
+    if (accountLevel === "group") {
+      accountLevel = "sp_group_sp"
+    }
+
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let queryOptions     = [];
+
+    // Build the table name
+    let table = `spc_global_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    if (optionsFinal.granularity === 'day') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    if (!optionsFinal.account && optionsFinal.account_min != null && optionsFinal.account_max != null) {
+      conditions.push(`AND spc_account_id BETWEEN ${optionsFinal.account_min} AND ${optionsFinal.account_max}`);
+    }
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    let queryParameterized = `
+      SELECT
+        epoch_start,
+        ${accountLevelData.select},
+        max(bytes) as bytes_peak,
+        min(bytes) as bytes_lowest,
+        avg(bytes) as bytes_average,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
+      FROM ??
+      WHERE ${conditions.join('\n        ')}
+      GROUP BY ${accountLevelData.field};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  /**
+   * Returns Service Provider egress traffic for a group or account.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getSpEgress(options) {
+    let optionsFinal     = this._getQueryOptions(options);
+    let accountLevel     = this._getAccountLevel(optionsFinal, true);
+
+    if (accountLevel === "account") {
+      accountLevel = "sp_account_sp"
+    }
+
+    if (accountLevel === "group") {
+      accountLevel = "sp_group_sp"
+    }
+
+    let accountLevelData = this.accountLevelFieldMap[accountLevel];
+    let conditions       = [];
+    let grouping         = [];
+    let queryOptions     = [];
+    let selectedDimension;
+
+    // Build the SELECT clause
+    // Include the dimension option as a column to be selected unless it's
+    // undefined or the default value of 'global'
+    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
+      selectedDimension = `${optionsFinal.dimension},\n        `;
+    } else {
+      selectedDimension = '';
+    }
+
+    // Build the table name
+    let table = `spc_${optionsFinal.dimension}_${optionsFinal.granularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    if (optionsFinal.granularity === 'day') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    if (!optionsFinal.account && optionsFinal.account_min != null && optionsFinal.account_max != null) {
+      conditions.push(`AND spc_account_id BETWEEN ${optionsFinal.account_min} AND ${optionsFinal.account_max}`);
+    }
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    // Build the GROUP BY clause
+    selectedDimension && grouping.push(selectedDimension);
+    grouping.push('epoch_start');
+    grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        ${accountLevelData.select},
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE ${conditions.join('\n        ')}
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join('')}
+      ORDER BY
+        ${selectedDimension}epoch_start,
+        ${accountLevelData.field}
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  /**
+   * Returns Service Provider traffic for a group or account.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getSpTraffic(options) {
+    let optionsFinal      = this._getQueryOptions(options);
+    let accountLevel      = this._getAccountLevel(optionsFinal, true);
+
+    if (accountLevel === "account") {
+      accountLevel = "sp_account_sp"
+    }
+
+    if (accountLevel === "group") {
+      accountLevel = "sp_group_sp"
+    }
+
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let grouping          = [];
+    let queryOptions      = [];
+
+    // Build the table name
+    let tableGranularity = optionsFinal.resolution || optionsFinal.granularity;
+    let table = `spc_global_${tableGranularity}`;
+    queryOptions.push(table);
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
+
+    // Build the WHERE clause
+    if (tableGranularity === 'day') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account
+      && conditions.push(this.accountLevelFieldMap.sp_account.where)
+      && queryOptions.push(optionsFinal.account);
+
+    optionsFinal.group
+      && conditions.push(this.accountLevelFieldMap.sp_group.where)
+      && queryOptions.push(optionsFinal.group);
+
+    optionsFinal.service_type
+      && conditions.push('AND service_type = ?')
+      && queryOptions.push(optionsFinal.service_type);
+
+    // Build the GROUP BY clause
+    grouping.push(accountLevelData.field);
+    optionsFinal.is_detail && grouping.push('epoch_start');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start as timestamp,
+        ${accountLevelData.select},
+        sum(bytes) as bytes,
+        max(bytes) as bytes_peak,
+        min(bytes) as bytes_lowest,
+        round(avg(bytes)) as bytes_average,
+        sum(connections) as connections,
+        max(connections) as connections_peak,
+        min(connections) as connections_lowest,
+        round(avg(connections)) as connections_average,
+        round(sum(connections * chit_ratio) / sum(connections) * 100) as chit_ratio,
+        round(sum(connections * avg_fbl) / sum(connections)) as avg_fbl
+      FROM ??
+      WHERE ${conditions.join('\n        ')}
+      ${grouping.length ? 'GROUP BY' : ''}
+        ${grouping.join(',\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, queryOptions);
+  }
+
+  /**
+   * Get Service Provider traffic for a group or account for a
+   * requested time frame AND the previous time frame of the same duration.
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the query results
+   */
+  getSpEgressWithHistorical(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let start           = parseInt(optionsFinal.start);
+    let end             = parseInt(optionsFinal.end);
+    let duration        = end - start + 1;
+    let optionsHistoric = Object.assign({}, optionsFinal, {
+      start: start - duration,
+      end: start - 1
+    });
+    let queries = [
+      this.getSpEgress(optionsFinal),
+      this.getSpEgress(optionsHistoric)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        log.info(`Successfully received data from ${queryData.length} queries.`);
+        return queryData;
+      })
+      .catch((err) => log.error(err));
+  }
 
   /**
    * Get total and detailed traffic information.
@@ -340,11 +606,19 @@ class AnalyticsDB {
     options.show_totals && queries.push(this.getTraffic(optionsTotals));
     options.show_detail && queries.push(this.getTraffic(optionsDetail));
 
+    // Skipping SP data fetching in case of unsupported query options
+    if (options.granularity !== "5min" && options.granularity !== "month" && options.property === null) {
+      options.show_totals && queries.push(this.getSpTraffic(optionsTotals));
+      options.show_detail && queries.push(this.getSpTraffic(optionsDetail));  
+    }
+
     return Promise.all(queries)
       .then((queryData) => {
         log.info(`Successfully received data from ${queryData.length} queries.`);
         let dataTotals = [];
         let dataDetail = [];
+        let spDataTotals = [];
+        let spDataDetail = [];
 
         if (queryData.length === 1) {
           dataTotals = options.show_totals ? queryData[0] : [];
@@ -353,9 +627,14 @@ class AnalyticsDB {
         } else if (queryData.length === 2) {
           dataTotals = options.show_totals ? queryData[0] : [];
           dataDetail = options.show_detail ? queryData[1] : [];
+        } else if (queryData.length === 4) {
+          dataTotals = options.show_totals ? queryData[0] : [];
+          dataDetail = options.show_detail ? queryData[1] : [];
+          spDataTotals = options.show_totals ? queryData[2] : [];
+          spDataDetail = options.show_detail ? queryData[3] : [];
         }
 
-        return [dataTotals, dataDetail];
+        return [dataTotals, dataDetail, spDataTotals, spDataDetail];
       })
       .catch((err) => log.error(err));
   }
@@ -370,7 +649,9 @@ class AnalyticsDB {
   getMetrics(options) {
     let queries = [
       this.getEgressWithHistorical(options, true),
-      this._getAggregateNumbers(options, true)
+      this._getAggregateNumbers(options, true),
+      this.getSPTrafficTotals(options),
+      this.getSpEgressWithHistorical(options)
     ];
 
     return Promise.all(queries)
@@ -383,6 +664,8 @@ class AnalyticsDB {
 
         // queryData[1] is an array of account levels with aggregate traffic data
         queryDataOrganized.push(queryData[1]);
+        queryDataOrganized.push(queryData[2]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[3]);
 
         // NOTE: queryDataOrganized ends up looking something like this:
         // [trafficData, historicalTrafficData, aggregateData]

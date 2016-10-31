@@ -63,9 +63,13 @@ function routeTraffic(req, res) {
   let optionsFinal = db._getQueryOptions(options);
   let resolution = optionsFinal.resolution || optionsFinal.granularity;
 
-  db.getTrafficWithTotals(optionsFinal).spread((totalsData, detailData) => {
+  db.getTrafficWithTotals(optionsFinal).spread((totalsData, detailData, spDataTotals, spDataDetail) => {
     let duration      = optionsFinal.end - optionsFinal.start + 1;
     let selectedLevel = db._getAccountLevel(optionsFinal, isListingChildren);
+
+    totalsData = totalsData.concat(spDataTotals);
+    detailData = detailData.concat(spDataDetail);
+
     let entityList    = totalsData.length ? totalsData : detailData;
     let entities      = entityList && _.uniq(entityList.map((row) => row[selectedLevel]));
 
