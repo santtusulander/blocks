@@ -70,7 +70,8 @@ Dashboard.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount')
+    activeAccount: state.account.get('activeAccount'),
+    filters: state.filters.get('filters')
   };
 }
 
