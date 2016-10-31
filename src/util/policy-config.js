@@ -1,7 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
-import _ from 'underscore'
+
+import { flatten } from '../util/helpers'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -168,7 +169,7 @@ export const getScriptLua = ( policy ) => {
 export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
   const countries = scriptLua.target.geo[0].country
 
-  return _.flatten(countries.filter( c => {
+  return flatten(countries.filter( c => {
     return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
   }).map( c => {
     const cArray = c.in || c.not_in
