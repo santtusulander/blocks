@@ -34,10 +34,14 @@ function routeMetrics(req, res) {
     account_max : params.account_max
   };
 
-  db.getMetrics(options).spread((trafficData, historicalTrafficData, aggregateData) => {
+  db.getMetrics(options).spread((trafficDataRaw, historicalTrafficDataRaw, aggregateDataRaw, spAggregateDataRaw, spTrafficDataRaw, spHistoricalTrafficDataRaw) => {
     let responseData = [];
 
-    if (trafficData && historicalTrafficData && aggregateData) {
+    if (trafficDataRaw && historicalTrafficDataRaw && aggregateDataRaw) {
+      let trafficData = trafficDataRaw.concat(spTrafficDataRaw);
+      let historicalTrafficData = historicalTrafficDataRaw.concat(spHistoricalTrafficDataRaw);
+      let aggregateData = aggregateDataRaw.concat(spAggregateDataRaw);
+
       let optionsFinal    = db._getQueryOptions(options);
       let startTime       = parseInt(optionsFinal.start);
       let endTime         = parseInt(optionsFinal.end);
