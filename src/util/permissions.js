@@ -11,6 +11,12 @@ permissionMapping[PERMISSIONS.VIEW_ANALYTICS_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'analytics'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.network' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'security'])
 permissionMapping[PERMISSIONS.VIEW_SERVICES_SECTION] =
