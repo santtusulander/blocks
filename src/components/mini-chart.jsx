@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
-import { paleblue } from '../../constants/colors'
+import { paleblue } from '../constants/colors'
 
-import AnalysisByTime from '../analysis/by-time'
+import AnalysisByTime from './analysis/by-time'
 
 class MiniChart extends React.Component {
   constructor(props) {
