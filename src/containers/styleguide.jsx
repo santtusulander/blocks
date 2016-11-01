@@ -86,7 +86,7 @@ const filterCheckboxOptions = Immutable.fromJS([
 
 export default class Styleguide extends React.Component {
   render() {
-    const data = {
+    const spDashboardData = {
       "traffic": {
         "bytes": 446265804980374,
         "bytes_net_on": 352569123057670,
@@ -144,26 +144,26 @@ export default class Styleguide extends React.Component {
       }
     }
 
-    const datasetA = data['traffic']['detail'].map(datapoint => {
+    const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
-        bytes: datapoint['bytes_net_on'] || 0,
-        timestamp: datapoint['timestamp']
+        bytes: datapoint.bytes_net_on || 0,
+        timestamp: datapoint.timestamp
       }
     })
 
-    const datasetB = data['traffic']['detail'].map(datapoint => {
+    const datasetB = spDashboardData.traffic.detail.map(datapoint => {
       return {
-        bytes: datapoint['bytes_net_off'] || 0,
-        timestamp: datapoint['timestamp']
+        bytes: datapoint.bytes_net_off || 0,
+        timestamp: datapoint.timestamp
       }
     })
 
-    let totalDatasetValueOutput = separateUnit(formatBytes(data['traffic']['bytes']))
+    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
     let totalDatasetUnit = totalDatasetValueOutput.unit
 
-    let datasetAValue = numeral((data['traffic']['bytes_net_on'] / data['traffic']['bytes']) * 100).format('0,0')
-    let datasetBValue = numeral((data['traffic']['bytes_net_off'] / data['traffic']['bytes']) * 100).format('0,0')
+    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
 
     return (
       <div className="styleguide-page">
