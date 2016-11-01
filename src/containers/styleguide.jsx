@@ -388,7 +388,7 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
-          <h1 className="page-header">SP On/Off Net Traffic Component</h1>
+          <h1 className="page-header">Stacked By Time Summary</h1>
           <Row>
             <Col xs={6}>
               <StackedByTimeSummary
@@ -450,6 +450,10 @@ export default class Styleguide extends React.Component {
                     ]
                   }
                 }}
+                datasetALabel="On-Net"
+                datasetAUnit="%"
+                datasetBLabel="Off-Net"
+                datasetBUnit="%"
               />
             </Col>
           </Row>

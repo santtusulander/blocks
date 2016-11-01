@@ -1,13 +1,13 @@
 // SP Dashboard On Off Net Traffic Styles
 .stacked-by-time-summary {
-  .traffic-label {
+  .dataset-label {
     font-weight: bold;
 
-    &.on-net {
+    &.dataset-a {
       color: $pale-blue;
     }
 
-    &.off-net {
+    &.dataset-b {
       color: $yellow;
     }
   }
@@ -16,7 +16,7 @@
     display: flex;
     align-items: flex-end;
 
-    .traffic-amount-col {
+    .dataset-col {
       padding-right: 36px;
       font-weight: bold;
       white-space: nowrap;
