@@ -9,20 +9,20 @@ const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
 const DASHBOARD_FETCHED = 'DASHBOARD_FETCHED'
 
 const emptyDashboard = Immutable.Map({
-  dashboard: Immutable.List(),
+  spDashboard: Immutable.Map(),
   fetching: false
 })
 
 // REDUCERS
 export function dashboardFetchSuccess(state, action) {
   return state.merge({
-    dashboard: Immutable.fromJS(action.payload.data)
+    spDashboard: Immutable.fromJS(action.payload.data)
   })
 }
 
 export function dashboardFetchFailure(state) {
   return state.merge({
-    dashboard: Immutable.List()
+    spDashboard: Immutable.List()
   })
 }
 
