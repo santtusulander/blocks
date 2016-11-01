@@ -68,6 +68,19 @@ export function formatTime(milliseconds) {
   return formatted
 }
 
+/**
+ * Takes a string value and returns an object with the value and unit separated
+ * @param string
+ * @returns object
+ */
+export function separateUnit(stringValue) {
+  let separateUnitArray = stringValue.split(' ')
+  return {
+    'value': separateUnitArray[0],
+    'unit': separateUnitArray[1]
+  }
+}
+
 export function filterMetricsByAccounts(metrics, accounts) {
   return metrics.filter((metric) => {
     return accounts.find((account) => {
