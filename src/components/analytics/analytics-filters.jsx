@@ -132,6 +132,7 @@ const AnalyticsFilters = (props) => {
         <FilterDateRange
           startDate={props.filters.getIn(['dateRange','startDate'])}
           endDate={props.filters.getIn(['dateRange','endDate'])}
+          dateRanges={props.dateRanges}
           showComparison={props.showFilters.includes('comparison')}
           onFilterChange={props.onFilterChange}
           includeComparison={props.filters.get('includeComparison')}/>}
@@ -255,6 +256,7 @@ const AnalyticsFilters = (props) => {
 AnalyticsFilters.propTypes = {
   activeAccountProviderType: PropTypes.number,
   currentUser: PropTypes.instanceOf(Map),
+  dateRanges: PropTypes.array.isRequired,
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
