@@ -106,14 +106,14 @@ class StackedByTimeSummary extends React.Component {
           <div className="dataset-col">
             <div className="dataset-label dataset-a">{datasetALabel}</div>
             <span className="value">{datasetAValue}</span>
-            <span className="suffix">{datasetAUnit}</span>
+            {datasetAUnit && <span className="suffix">{datasetAUnit}</span>}
           </div>
 
           {datasetBArray &&
           <div className="dataset-col">
-            <div className="dataset-label dataset-b">{datasetBLabel}</div>
-            <span className="value">{datasetBValue}</span>
-            <span className="suffix">{datasetBUnit}</span>
+            {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
+            {datasetBValue && <span className="value">{datasetBValue}</span>}
+            {datasetBUnit && <span className="suffix">{datasetBUnit}</span>}
           </div>
           }
         </div>
@@ -127,7 +127,7 @@ StackedByTimeSummary.propTypes = {
   dataKey: PropTypes.string,
   datasetAArray: PropTypes.array.isRequired,
   datasetALabel: PropTypes.string.isRequired,
-  datasetAUnit: PropTypes.string.isRequired,
+  datasetAUnit: PropTypes.string,
   datasetAValue: PropTypes.string.isRequired,
   datasetBArray: PropTypes.array,
   datasetBLabel: PropTypes.string,
