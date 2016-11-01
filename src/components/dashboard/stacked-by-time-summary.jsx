@@ -62,21 +62,23 @@ class StackedByTimeSummary extends React.Component {
       id: 'datasetA',
       label: '',
       line: true,
-      stackedAgainst: 'datasetB',
+      stackedAgainst: datasetBArray ? 'datasetB' : '',
       xAxisFormatter: false
     })
 
-    datasets.push({
-      area: true,
-      color: yellow,
-      comparisonData: false,
-      data: datasetBArray,
-      id: 'datasetB',
-      label: '',
-      line: true,
-      stackedAgainst: false,
-      xAxisFormatter: false
-    })
+    if (datasetBArray) {
+      datasets.push({
+        area: true,
+        color: yellow,
+        comparisonData: false,
+        data: datasetBArray,
+        id: 'datasetB',
+        label: '',
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
+      })
+    }
 
     return (
       <div className="stacked-by-time-summary">
