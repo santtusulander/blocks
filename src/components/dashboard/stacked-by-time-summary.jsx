@@ -38,7 +38,19 @@ class StackedByTimeSummary extends React.Component {
   }
 
   render() {
-    const { dataKey, datasetAArray, datasetALabel, datasetAUnit, datasetAValue, datasetBArray, datasetBLabel, datasetBUnit, datasetBValue, totalDatasetUnit, totalDatasetValue } = this.props
+    const {
+      dataKey,
+      datasetAArray,
+      datasetALabel,
+      datasetAUnit,
+      datasetAValue,
+      datasetBArray,
+      datasetBLabel,
+      datasetBUnit,
+      datasetBValue,
+      totalDatasetUnit,
+      totalDatasetValue
+    } = this.props
 
     let datasets = []
     datasets.push({
@@ -108,19 +120,18 @@ class StackedByTimeSummary extends React.Component {
 
 StackedByTimeSummary.displayName = 'StackedByTimeSummary'
 StackedByTimeSummary.propTypes = {
-  data: PropTypes.object,
   dataKey: PropTypes.string,
-  datasetAArray: PropTypes.array,
-  datasetALabel: PropTypes.string,
-  datasetAUnit: PropTypes.string,
-  datasetAValue: PropTypes.string,
+  datasetAArray: PropTypes.array.isRequired,
+  datasetALabel: PropTypes.string.isRequired,
+  datasetAUnit: PropTypes.string.isRequired,
+  datasetAValue: PropTypes.string.isRequired,
   datasetBArray: PropTypes.array,
   datasetBLabel: PropTypes.string,
   datasetBUnit: PropTypes.string,
   datasetBValue: PropTypes.string,
   intl: PropTypes.object,
-  totalDatasetUnit: PropTypes.string,
-  totalDatasetValue: PropTypes.string
+  totalDatasetUnit: PropTypes.string.isRequired,
+  totalDatasetValue: PropTypes.string.isRequired
 }
 
 module.exports = injectIntl(StackedByTimeSummary)
