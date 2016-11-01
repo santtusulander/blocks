@@ -10,12 +10,6 @@ jest.mock('../../../util/helpers', () => { return {
 
 import StackedByTimeSummary from '../stacked-by-time-summary.jsx'
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 describe('StackedByTimeSummary', () => {
   let subject, error, props = null
 
@@ -63,7 +57,7 @@ describe('StackedByTimeSummary', () => {
         totalDatasetUnit: "TB",
         totalDatasetValue: "446"
       }
-      return shallow(<StackedByTimeSummary {...props} intl={intlMaker()}/>)
+      return shallow(<StackedByTimeSummary {...props} />)
     }
   })
 
