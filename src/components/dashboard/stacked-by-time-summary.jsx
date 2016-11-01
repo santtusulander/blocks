@@ -4,7 +4,7 @@ import numeral from 'numeral'
 
 import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
-import { formatBytes, formatOutput } from '../../util/helpers'
+import { formatBytes, separateUnit } from '../../util/helpers'
 
 class StackedByTimeSummary extends React.Component {
   constructor(props) {
@@ -81,7 +81,7 @@ class StackedByTimeSummary extends React.Component {
       xAxisFormatter: false
     })
 
-    let totalTrafficValueOutput = formatOutput(formatBytes(data['traffic']['bytes']))
+    let totalTrafficValueOutput = separateUnit(formatBytes(data['traffic']['bytes']))
     let totalTrafficValue = totalTrafficValueOutput.value
     let totalTrafficUnit = totalTrafficValueOutput.unit
 

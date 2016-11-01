@@ -5,7 +5,7 @@ jest.unmock('../stacked-by-time-summary.jsx')
 
 jest.mock('../../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
-  formatOutput: bytes => bytes
+  separateUnit: bytes => bytes
 }})
 
 import StackedByTimeSummary from '../stacked-by-time-summary.jsx'
