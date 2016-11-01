@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import {injectIntl} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
@@ -48,7 +48,6 @@ class StackedByTimeSummary extends React.Component {
       datasetBLabel,
       datasetBUnit,
       datasetBValue,
-      intl,
       totalDatasetUnit,
       totalDatasetValue
     } = this.props
@@ -82,7 +81,7 @@ class StackedByTimeSummary extends React.Component {
 
     return (
       <div className="stacked-by-time-summary">
-        <div className="dataset-label">{intl.formatMessage({id: 'portal.common.total.text'})}</div>
+        <div className="dataset-label"><FormattedMessage id={intl.formatMessage({id: 'portal.common.total.text'})} /></div>
 
         <div className="stacked-by-time-summary-container">
           <div className="dataset-col total">
@@ -134,9 +133,8 @@ StackedByTimeSummary.propTypes = {
   datasetBLabel: PropTypes.string,
   datasetBUnit: PropTypes.string,
   datasetBValue: PropTypes.string,
-  intl: PropTypes.object,
   totalDatasetUnit: PropTypes.string.isRequired,
   totalDatasetValue: PropTypes.string.isRequired
 }
 
-module.exports = injectIntl(StackedByTimeSummary)
+module.exports = StackedByTimeSummary
