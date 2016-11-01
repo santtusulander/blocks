@@ -282,3 +282,24 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
+
+/**
+ * Selector for getting roles from currentUser
+ * @param  {[type]} state [description]
+ * @return {[type]}       [description]
+ */
+export const getUserRoles = ( state ) => {
+  return state.getIn(['roles'])
+}
+
+/**
+ * Check if user has role for UDN Admin
+ * @param  {state}  user state
+ * @return {Boolean}
+ */
+export const isSuperAdmin = ( state ) => {
+  const roles = getUserRoles(state)
+  if ( roles && roles.some( role => role === 1) ) return true
+
+  return false
+}

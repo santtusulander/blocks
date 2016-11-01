@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar } from 'react-bootstrap'
-import { Map, is, fromJS } from 'immutable'
+import { Map, List, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
@@ -18,6 +18,8 @@ import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
 import './account.scss'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
+
+import {isSuperAdmin} from '../../../redux/modules/user'
 
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
@@ -234,7 +236,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.services.text"/></label>
             <Col xs={3}>
-              <CheckboxArray iterable={checkBoxes} field={services}/>
+              <CheckboxArray iterable={checkBoxes} field={services} disabled={!isSuperAdmin(this.props.currentUser)}/>
             </Col>
           </div>
 
@@ -252,6 +254,7 @@ class AccountManagementAccountDetails extends React.Component {
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  currentUser: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
   intl: React.PropTypes.object,
   invalid: React.PropTypes.bool,
@@ -260,7 +263,8 @@ AccountManagementAccountDetails.propTypes = {
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   toggleModal: React.PropTypes.func,
-  uiActions: React.PropTypes.object
+  uiActions: React.PropTypes.object,
+  users: React.PropTypes.instanceOf(List)
 }
 AccountManagementAccountDetails.defaultProps = {
   account: Map({})
