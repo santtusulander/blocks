@@ -25,8 +25,9 @@ export class Dashboard extends React.Component {
 
   fetchData(params) {
     const dashboardOpts = Object.assign({
-      startDate: Math.floor((Date.now() / 1000)) - 86400,
-      endDate: Math.floor((Date.now() / 1000)),
+      account: 143,
+      startDate: 1477872000,
+      endDate: 1477958399,
       granularity: 'hour'
     }, params)
     this.props.dashboardActions.fetchDashboard(dashboardOpts)
