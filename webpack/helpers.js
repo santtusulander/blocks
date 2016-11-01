@@ -37,6 +37,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/topo/countries.geo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/pdf/CP_User_Guide.pdf', to: 'assets/pdf'},

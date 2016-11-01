@@ -1,8 +1,9 @@
 import React from 'react';
+import axios from 'axios'
+import {topoBase} from '../../redux/util'
 import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
 
-import * as countryGeoJson from './countries.geo.json'
-
+import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
 import './poc.scss'
 
@@ -99,17 +100,24 @@ const handleFeature = ( feature, layer) => {
 class MapPoc extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {zoom: 2}
+    this.state = {zoom: 2, countryGeoJson: null}
 
   }
+  componentWillMount(){
+    axios.get(`${topoBase()}/countries.geo.json`)
+      .then( ({data}) => {
+        this.setState({countryGeoJson: data});
+      })
+  }
   componentDidMount() {
+    //this fixes map bug
     window.dispatchEvent(new Event('resize'));
   }
+
   zoomEnd(e){
     this.setState({zoom: e.target._zoom})
   }
   render() {
-
     const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
     const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
 
@@ -126,6 +134,8 @@ class MapPoc extends React.Component {
       )
     })
 
+    const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
+
     return (
       <Map
         center={cities[0].position}
@@ -133,18 +143,16 @@ class MapPoc extends React.Component {
         onZoomEnd={(e)=>this.zoomEnd(e)}
       >
         <TileLayer
-          url='https://api.mapbox.com/styles/v1/sampoj/ciq3vp5n3004sbwkx8b1b7fym/tiles/256/{z}/{x}/{y}?access_token={accessToken}'
+          url={mapboxUrl}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          accessToken='pk.eyJ1Ijoic2FtcG9qIiwiYSI6ImNpandieDZjdDA4OHd2Ymx6MmN4OGczemUifQ.0tIX1nbH6oCHeVMfZjb1bw'
+          accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'
         />
 
-          {/*url='https://api.mapbox.com/styles/v1/ericssonudn/ciuiy8uym006y2jml6xizki1p/tiles/256/{z}/{x}/{y}?access_token={accessToken}'*/}
-          {/*accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'*/}
         {cityCircles}
 
-        {this.state.zoom < 6 &&
+        {this.state.zoom < 6 && this.state.countryGeoJson &&
         <GeoJson
-          data={countryGeoJson}
+          data={this.state.countryGeoJson}
           style={(feature) => getCountryStyle(countryMedian, feature)}
           onEachFeature={handleFeature}
         />}
@@ -152,6 +160,10 @@ class MapPoc extends React.Component {
       </Map>
     )
   }
+}
+
+MapPoc.propTypes = {
+  theme: React.PropTypes.string
 }
 
 export default MapPoc;
