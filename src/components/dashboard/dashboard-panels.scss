@@ -3,6 +3,7 @@
 
 .dashboard-panels {
   display: flex;
+  max-width: 1400px;
   flex-wrap: wrap;
 
   .table {
