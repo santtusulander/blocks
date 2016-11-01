@@ -276,8 +276,10 @@ describe('db.getMetrics', function() {
 
   it('should log the number of result sets received from the queries', function(done) {
     db.getMetrics(options).then(function(data) {
-      expect(log.info.calls.any()).toBe(true);
-      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
+      var logCalls   = log.info.calls;
+      var lastLogMessage = logCalls.argsFor(logCalls.count() - 1)[0];
+      expect(logCalls.any()).toBe(true);
+      expect(parseInt(lastLogMessage.match(/\d+/)[0])).toEqual(data.length);
       done();
     });
   });
