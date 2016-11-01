@@ -20,6 +20,10 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
+import * as dashboardActionCreators from '../redux/modules/dashboard'
+
+// import { buildAnalyticsOpts } from '../util/helpers.js'
+
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props)
@@ -28,12 +32,14 @@ export class Dashboard extends React.Component {
       byLocationWidth: 100
     }
 
+    this.fetchData = this.fetchData.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
   }
 
   componentDidMount() {
+    this.fetchData(this.props.params)
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
     window.addEventListener('resize', this.measureContainers)
@@ -51,6 +57,16 @@ export class Dashboard extends React.Component {
     window.removeEventListener('resize', this.measureContainers)
     // TODO: remove this timeout as part of UDNP-1426
     clearTimeout(this.measureContainersTimeout)
+  }
+
+  fetchData(params) {
+    const dashboardOpts = Object.assign({
+      account: 143,
+      startDate: 1477872000,
+      endDate: 1477958399,
+      granularity: 'hour'
+    }, params)
+    this.props.dashboardActions.fetchDashboard(dashboardOpts)
   }
 
   measureContainers() {
@@ -292,6 +308,7 @@ export class Dashboard extends React.Component {
 Dashboard.displayName = 'Dashboard'
 Dashboard.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
+  dashboardActions: PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
@@ -309,6 +326,7 @@ Dashboard.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount') || Map(),
+    dashboard: state.dashboard.get('dashboard'),
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
     user: state.user.get('currentUser')
@@ -317,6 +335,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch)
   }
 }
