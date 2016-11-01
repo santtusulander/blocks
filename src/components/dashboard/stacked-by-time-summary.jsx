@@ -110,11 +110,13 @@ class StackedByTimeSummary extends React.Component {
             <span className="suffix">{datasetAUnit}</span>
           </div>
 
+          {datasetBArray &&
           <div className="dataset-col">
             <div className="dataset-label dataset-b">{datasetBLabel}</div>
             <span className="value">{datasetBValue}</span>
             <span className="suffix">{datasetBUnit}</span>
           </div>
+          }
         </div>
       </div>
     )
