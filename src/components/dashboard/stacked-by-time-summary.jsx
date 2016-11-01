@@ -1,10 +1,8 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import {injectIntl} from 'react-intl'
-import numeral from 'numeral'
 
 import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
-import { formatBytes, separateUnit } from '../../util/helpers'
 
 class StackedByTimeSummary extends React.Component {
   constructor(props) {
@@ -40,28 +38,14 @@ class StackedByTimeSummary extends React.Component {
   }
 
   render() {
-    const { data, dataKey, datasetALabel, datasetAUnit, datasetBLabel, datasetBUnit } = this.props
-
-    const datasetA = data['traffic']['detail'].map(datapoint => {
-      return {
-        bytes: datapoint['bytes_net_on'] || 0,
-        timestamp: datapoint['timestamp']
-      }
-    })
-
-    const datasetB = data['traffic']['detail'].map(datapoint => {
-      return {
-        bytes: datapoint['bytes_net_off'] || 0,
-        timestamp: datapoint['timestamp']
-      }
-    })
+    const { dataKey, datasetAArray, datasetALabel, datasetAUnit, datasetAValue, datasetBArray, datasetBLabel, datasetBUnit, datasetBValue, totalDatasetUnit, totalDatasetValue } = this.props
 
     let datasets = []
     datasets.push({
       area: true,
       color: paleblue,
       comparisonData: false,
-      data: datasetA,
+      data: datasetAArray,
       id: 'datasetA',
       label: '',
       line: true,
@@ -73,20 +57,13 @@ class StackedByTimeSummary extends React.Component {
       area: true,
       color: yellow,
       comparisonData: false,
-      data: datasetB,
+      data: datasetBArray,
       id: 'datasetB',
       label: '',
       line: true,
       stackedAgainst: false,
       xAxisFormatter: false
     })
-
-    let totalDatasetValueOutput = separateUnit(formatBytes(data['traffic']['bytes']))
-    let totalDatasetValue = totalDatasetValueOutput.value
-    let totalDatasetUnit = totalDatasetValueOutput.unit
-
-    let datasetAValue = numeral((data['traffic']['bytes_net_on'] / data['traffic']['bytes']) * 100).format('0,0')
-    let datasetBValue = numeral((data['traffic']['bytes_net_off'] / data['traffic']['bytes']) * 100).format('0,0')
 
     return (
       <div className="stacked-by-time-summary">
@@ -131,15 +108,19 @@ class StackedByTimeSummary extends React.Component {
 
 StackedByTimeSummary.displayName = 'StackedByTimeSummary'
 StackedByTimeSummary.propTypes = {
-  data: React.PropTypes.object,
-  dataKey: React.PropTypes.string,
-  datasetALabel: React.PropTypes.string,
-  datasetAUnit: React.PropTypes.string,
-  datasetAValue: React.PropTypes.number,
-  datasetBLabel: React.PropTypes.string,
-  datasetBUnit: React.PropTypes.string,
-  datasetBValue: React.PropTypes.number,
-  intl: React.PropTypes.object
+  data: PropTypes.object,
+  dataKey: PropTypes.string,
+  datasetAArray: PropTypes.array,
+  datasetALabel: PropTypes.string,
+  datasetAUnit: PropTypes.string,
+  datasetAValue: PropTypes.string,
+  datasetBArray: PropTypes.array,
+  datasetBLabel: PropTypes.string,
+  datasetBUnit: PropTypes.string,
+  datasetBValue: PropTypes.string,
+  intl: PropTypes.object,
+  totalDatasetUnit: PropTypes.string,
+  totalDatasetValue: PropTypes.string
 }
 
 module.exports = injectIntl(StackedByTimeSummary)
