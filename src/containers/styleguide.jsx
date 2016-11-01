@@ -28,7 +28,7 @@ import {
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
-import OnOffNetTraffic from '../components/dashboard/on-off-net-traffic'
+import StackedByTimeSummary from '../components/dashboard/stacked-by-time-summary'
 import MiniChart from '../components/dashboard/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 
@@ -391,7 +391,7 @@ export default class Styleguide extends React.Component {
           <h1 className="page-header">SP On/Off Net Traffic Component</h1>
           <Row>
             <Col xs={6}>
-              <OnOffNetTraffic
+              <StackedByTimeSummary
                 dataKey="bytes"
                 data={{
                   "traffic": {

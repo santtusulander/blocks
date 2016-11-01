@@ -1,14 +1,14 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../on-off-net-traffic.jsx')
+jest.unmock('../stacked-by-time-summary.jsx')
 
 jest.mock('../../../util/helpers', () => { return {
   formatBytes: bytes => bytes,
   formatOutput: bytes => bytes
 }})
 
-import OnOffNetTraffic from '../on-off-net-traffic.jsx'
+import StackedByTimeSummary from '../stacked-by-time-summary.jsx'
 
 
 const fakeData = {
@@ -69,7 +69,7 @@ const fakeData = {
   }
 }
 
-describe('OnOffNetTraffic', () => {
+describe('StackedByTimeSummary', () => {
   let subject, error, props = null
 
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe('OnOffNetTraffic', () => {
         dataKey: "bytes",
         data: fakeData
       }
-      return shallow(<OnOffNetTraffic {...props}/>)
+      return shallow(<StackedByTimeSummary {...props}/>)
     }
   })
 

@@ -6,7 +6,7 @@ import AnalysisByTime from '../analysis/by-time'
 import { paleblue, yellow } from '../../constants/colors'
 import { formatBytes, formatOutput } from '../../util/helpers'
 
-class OnOffNetTraffic extends React.Component {
+class StackedByTimeSummary extends React.Component {
   constructor(props) {
     super(props);
 
@@ -89,10 +89,10 @@ class OnOffNetTraffic extends React.Component {
     let offNetValue = numeral((data['traffic']['bytes_net_off'] / data['traffic']['bytes']) * 100).format('0,0')
 
     return (
-      <div className="on-off-net-traffic">
+      <div className="stacked-by-time-summary">
         <div className="traffic-label">Total</div>
 
-        <div className="on-off-net-traffic-container">
+        <div className="stacked-by-time-summary-container">
           <div className="traffic-amount-col total">
             <span className="value">{totalTrafficValue}</span>
             <span className="suffix">{totalTrafficUnit}</span>
@@ -129,8 +129,8 @@ class OnOffNetTraffic extends React.Component {
   }
 }
 
-OnOffNetTraffic.displayName = 'OnOffNetTraffic'
-OnOffNetTraffic.propTypes = {
+StackedByTimeSummary.displayName = 'StackedByTimeSummary'
+StackedByTimeSummary.propTypes = {
   data: React.PropTypes.object,
   dataKey: React.PropTypes.string,
   intl: React.PropTypes.object,
@@ -138,4 +138,4 @@ OnOffNetTraffic.propTypes = {
   onNetValue: React.PropTypes.number
 }
 
-module.exports = injectIntl(OnOffNetTraffic)
+module.exports = injectIntl(StackedByTimeSummary)
