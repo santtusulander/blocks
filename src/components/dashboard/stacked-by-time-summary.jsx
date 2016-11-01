@@ -48,6 +48,7 @@ class StackedByTimeSummary extends React.Component {
       datasetBLabel,
       datasetBUnit,
       datasetBValue,
+      intl,
       totalDatasetUnit,
       totalDatasetValue
     } = this.props
@@ -79,7 +80,7 @@ class StackedByTimeSummary extends React.Component {
 
     return (
       <div className="stacked-by-time-summary">
-        <div className="dataset-label">Total</div>
+        <div className="dataset-label">{intl.formatMessage({id: 'portal.common.total.text'})}</div>
 
         <div className="stacked-by-time-summary-container">
           <div className="dataset-col total">
