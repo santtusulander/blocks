@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
-import { formatBitsPerSecond } from '../util/helpers'
+import { formatBitsPerSecond, formatBytes, separateUnit } from '../util/helpers'
+import numeral from 'numeral'
 
 import * as filtersActionCreators from '../redux/modules/filters'
 
@@ -16,6 +17,7 @@ import DashboardPanels from '../components/dashboard/dashboard-panels'
 import MiniChart from '../components/mini-chart'
 import PageContainer from '../components/layout/page-container'
 import PageHeader from '../components/layout/page-header'
+import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
 export class Dashboard extends React.Component {
@@ -54,7 +56,7 @@ export class Dashboard extends React.Component {
   measureContainers() {
     let containerWidth = this.refs.byLocationHolder.clientWidth
     this.setState({
-      byLocationWidth: containerWidth < 720 ? containerWidth : 720
+      byLocationWidth: containerWidth < 640 ? containerWidth : 640
     })
   }
 
@@ -67,7 +69,6 @@ export class Dashboard extends React.Component {
 
   render() {
     const { activeAccount, filterOptions, filters, intl, params, user } = this.props
-    const showFilters = List(['date-range'])
     // Remove these as part of UDNP-1739
     const fakeTop5cp = List([1,2,3,4,5])
     const fakeData = [
@@ -86,6 +87,81 @@ export class Dashboard extends React.Component {
       Map({bits_per_second: 20000, code: "CAN"}),
       Map({bits_per_second: 10000, code: "FIN"})
     ])
+    const fakeSpDashboardData = {
+      "traffic": {
+        "bytes": 446265804980374,
+        "bytes_net_on": 352569123057670,
+        "bytes_net_off": 93696681922704,
+        "detail": [
+          {
+            "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
+            "bytes": 92020173697866,
+            "bytes_net_on": 71856580682504,
+            "bytes_net_off": 20163593015362
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
+            "bytes": 99672709053865,
+            "bytes_net_on": 76848354018252,
+            "bytes_net_off": 22824355035613
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
+            "bytes": 94821186769899,
+            "bytes_net_on": 72941835769369,
+            "bytes_net_off": 21879351000530
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
+            "bytes": 117441291619312,
+            "bytes_net_on": 90477417340581,
+            "bytes_net_off": 26963874278731
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
+            "bytes": 81546375702611,
+            "bytes_net_on": 62160286504951,
+            "bytes_net_off": 19386089197660
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
+            "bytes": 117341539984300,
+            "bytes_net_on": 90364165873239,
+            "bytes_net_off": 26977374111061
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
+            "bytes": 94064934029131,
+            "bytes_net_on": 72989086766237,
+            "bytes_net_off": 21075847262894
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
+            "bytes": 93196929110225,
+            "bytes_net_on": 72133332220394,
+            "bytes_net_off": 21063596889831
+          }
+        ]
+      }
+    }
+    const showFilters = List(['date-range'])
+    const datasetA = fakeSpDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_on || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+    const datasetB = fakeSpDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_off || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+    let totalDatasetValueOutput = separateUnit(formatBytes(fakeSpDashboardData.traffic.bytes))
+    let totalDatasetValue = totalDatasetValueOutput.value
+    let totalDatasetUnit = totalDatasetValueOutput.unit
+    let datasetAValue = numeral((fakeSpDashboardData.traffic.bytes_net_on / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
+    let datasetBValue = numeral((fakeSpDashboardData.traffic.bytes_net_off / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
     return (
       <Content>
         <PageHeader pageSubTitle="Dashboard">
@@ -108,6 +184,18 @@ export class Dashboard extends React.Component {
         <PageContainer>
           <DashboardPanels>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
+              <StackedByTimeSummary
+                dataKey="bytes"
+                totalDatasetValue={totalDatasetValue}
+                totalDatasetUnit={totalDatasetUnit}
+                datasetAArray={datasetA}
+                datasetALabel="On-Net"
+                datasetAUnit="%"
+                datasetAValue={datasetAValue}
+                datasetBArray={datasetB}
+                datasetBLabel="Off-Net"
+                datasetBUnit="%"
+                datasetBValue={datasetBValue}/>
               <hr />
               <Row>
                 <Col xs={6}>
