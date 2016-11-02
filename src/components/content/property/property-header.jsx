@@ -15,7 +15,8 @@ import IconTrash from '../../icons/icon-trash.jsx'
 import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
 
-const PropertyHeader = (props) => {
+const PropertyHeader = ({ router, params, togglePurge, deleteProperty }) => {
+
 
   const itemSelectorTexts = {
     property: 'Back to Groups',
@@ -26,7 +27,7 @@ const PropertyHeader = (props) => {
 
   const itemSelectorTopBarAction = (tier, fetchItems, IDs) => {
     const { account } = IDs
-    switch(tier) {
+    switch (tier) {
       case 'property':
         fetchItems('group', 'udn', account)
         break
@@ -35,7 +36,7 @@ const PropertyHeader = (props) => {
         break
       case 'brand':
       case 'account':
-        props.router.push(getContentUrl('brand', 'udn', {}))
+        router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -44,13 +45,13 @@ const PropertyHeader = (props) => {
     <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
       <AccountSelector
         as="propertySummary"
-        params={props.params}
+        params={params}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => props.router.push(getContentUrl(...params))}>
+        onSelect={(...params) => router.push(getContentUrl(...params))}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
-            <TruncatedTitle content={props.params.property}
+            <TruncatedTitle content={params.property}
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>
@@ -59,18 +60,18 @@ const PropertyHeader = (props) => {
       </AccountSelector>
       <ButtonToolbar>
         <IsAllowed to={MODIFY_PROPERTY}>
-          <Button bsStyle="primary" onClick={props.togglePurge}>Purge</Button>
+          <Button bsStyle="primary" onClick={togglePurge}>Purge</Button>
         </IsAllowed>
         <Link className="btn btn-success btn-icon"
-              to={`${getAnalyticsUrl('property', props.params.property, props.params)}`}>
+              to={`${getAnalyticsUrl('property', params.property, params)}`}>
           <IconChart/>
         </Link>
         <Link className="btn btn-success btn-icon"
-              to={`${getContentUrl('property', props.params.property, props.params)}/configuration`}>
+              to={`${getContentUrl('property', params.property, params)}/configuration`}>
           <IconConfiguration/>
         </Link>
         <IsAllowed to={DELETE_PROPERTY}>
-          <Button bsStyle="danger" className="btn-icon" onClick={props.deleteProperty}>
+          <Button bsStyle="danger" className="btn-icon" onClick={deleteProperty}>
             <IconTrash/>
           </Button>
         </IsAllowed>
@@ -78,5 +79,12 @@ const PropertyHeader = (props) => {
     </PageHeader>
   )
 }
+PropertyHeader.propTypes = {
+  deleteProperty: React.PropTypes.func,
+  params: React.PropTypes.object,
+  router: React.PropTypes.object,
+  togglePurge: React.PropTypes.func
+}
+
 
 export default withRouter(injectIntl(PropertyHeader))
