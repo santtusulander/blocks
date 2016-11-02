@@ -126,7 +126,7 @@ class MapPoc extends React.Component {
       const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
 
       return (
-        <Circle center={city.position} radius={cityHeat * 10000} color={cityColor} >
+        <Circle key={city.id} center={city.position} radius={cityHeat * 10000} color={cityColor} >
           <Popup>
             <span>{city.name}</span>
           </Popup>

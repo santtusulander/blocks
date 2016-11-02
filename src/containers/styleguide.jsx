@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
 
@@ -82,7 +83,7 @@ const filterCheckboxOptions = Immutable.fromJS([
 
 import MapPoc from '../components/map/poc'
 
-export default class Styleguide extends React.Component {
+class Styleguide extends React.Component {
   render() {
     return (
       <div className="styleguide-page">
@@ -483,7 +484,7 @@ export default class Styleguide extends React.Component {
 
           <h1 className="page-header">MapBox</h1>
 
-          <MapPoc />
+          <MapPoc theme={this.props.theme}/>
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -675,4 +676,14 @@ export default class Styleguide extends React.Component {
 }
 
 Styleguide.displayName = 'Styleguide'
-Styleguide.propTypes = {}
+Styleguide.propTypes = {
+  theme: React.PropTypes.string
+}
+
+const mapStateToProps = (state) => {
+  return {
+    theme: state.ui.get('theme')
+  }
+}
+
+export default connect(mapStateToProps)(Styleguide)
