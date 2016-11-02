@@ -237,6 +237,4 @@ DateRangeSelect.propTypes = {
   startDate: React.PropTypes.instanceOf(moment)
 }
 
-//module.exports = DateRangeSelect
-
 export default injectIntl(DateRangeSelect)
