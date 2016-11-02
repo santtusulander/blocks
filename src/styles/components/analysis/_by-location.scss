@@ -16,13 +16,14 @@
 
   .chart {
     position: relative;
+    text-align: center;
   }
 
-  .dark-theme & {
+  .dark-theme &:not(.no-bg) {
     background-color: rgba($black, 0.2);
   }
 
-  .light-theme & {
+  .light-theme &:not(.no-bg) {
     background-color: $white;
   }
 

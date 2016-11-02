@@ -17,16 +17,16 @@
     align-items: flex-end;
 
     .dataset-col {
-      padding-right: 36px;
+      padding-right: 6%;
       font-weight: bold;
       white-space: nowrap;
 
       &:last-child {
-        padding-right: 24px;
+        padding-right: 3%;
       }
 
       &.total {
-        padding-right: 24px;
+        padding-right: 3%;
         line-height: normal;
 
         .value {
@@ -39,9 +39,11 @@
       }
 
       &.chart {
-        width: 50%;
+        width: 100%;
+        min-width: 72px;
         padding-right: 0;
-        margin-right: 36px;
+        margin-right: 6%;
+        overflow: hidden;
       }
 
       .dark-theme & {
