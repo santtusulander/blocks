@@ -15,7 +15,7 @@ jest.mock('../../util/routes', () => ({ getContentUrl: jest.fn() }))
 jest.autoMockOff()
 
 jest.unmock('../property.jsx')
-import { Property } from '../property.jsx'
+import { Property } from '../property/property.jsx'
 
 function accountActionsMaker() {
   return {

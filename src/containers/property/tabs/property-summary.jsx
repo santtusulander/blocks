@@ -1,37 +1,30 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Col, Row } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl'
-import moment from 'moment'
 import numeral from 'numeral'
+import moment from 'moment'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as hostActionCreators from '../redux/modules/host'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as purgeActionCreators from '../redux/modules/purge'
-import * as trafficActionCreators from '../redux/modules/traffic'
-import * as uiActionCreators from '../redux/modules/ui'
-import * as visitorsActionCreators from '../redux/modules/visitors'
+import * as accountActionCreators from '../../../redux/modules/account'
+import * as groupActionCreators from '../../../redux/modules/group'
+import * as hostActionCreators from '../../../redux/modules/host'
+import * as metricsActionCreators from '../../../redux/modules/metrics'
+import * as purgeActionCreators from '../../../redux/modules/purge'
+import * as trafficActionCreators from '../../../redux/modules/traffic'
+import * as uiActionCreators from '../../../redux/modules/ui'
+import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
-import PageContainer from '../components/layout/page-container'
-import Content from '../components/layout/content'
-import PropertyHeader from '../components/content/property/property-header'
-import AnalysisByTime from '../components/analysis/by-time'
-import PurgeModal from '../components/purge-modal'
-import DateRangeSelect from '../components/date-range-select'
-import Tooltip from '../components/tooltip'
-import ModalWindow from '../components/modal'
+import PageContainer from '../../../components/layout/page-container'
+import AnalysisByTime from '../../../components/analysis/by-time'
+import DateRangeSelect from '../../../components/date-range-select'
+import Tooltip from '../../../components/tooltip'
 
-import { formatBitsPerSecond } from '../util/helpers'
-import { getContentUrl } from '../util/routes'
+import { formatBitsPerSecond } from '../../../util/helpers'
 
-import DateRanges from '../constants/date-ranges'
-
-import { paleblue } from '../constants/colors'
+import DateRanges from '../../../constants/date-ranges'
+import { paleblue } from "../../../constants/colors";
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -53,17 +46,15 @@ function safeFormattedEndDate(date) {
   return date || endOfThisDay().format('X')
 }
 
-export class Property extends React.Component {
-  constructor(props) {
+class PropertySummary extends React.Component {
+
+  constructor(props){
     super(props)
 
     this.state = {
-      deleteModal: false,
       activeSlice: null,
       activeSliceX: 100,
-      byTimeWidth: 0,
-      purgeActive: false,
-      propertyMenuOpen: false
+      byTimeWidth: 0
     }
 
     this.togglePurge = this.togglePurge.bind(this)
@@ -78,7 +69,6 @@ export class Property extends React.Component {
 
     this.measureContainersTimeout = null
   }
-
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
     this.fetchData(
@@ -270,20 +260,23 @@ export class Property extends React.Component {
   }
 
   render() {
+
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
-    }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
-    const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
+    }s
+
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
     let dateRange = moment.duration(endDate - startDate, 'milliseconds').add(1, 's')
+
     if (dateRange < moment.duration(28, 'days')) {
       dateRange = moment.duration(28, 'days')
     }
+
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
     const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
+
     // Add time difference to the historical data so it matches up
     const historical_traffic = !this.props.hourlyTraffic.get('history').size ?
       [] :
@@ -344,153 +337,123 @@ export class Property extends React.Component {
         xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
       })
     }
+
     return (
-      <Content>
+      <PageContainer className="property-container">
+        <Row className="property-info-row no-end-gutters">
+          <Col xs={3} className="kpi">
+            Origin Hostname
+            <h3>
+              {activeConfig.get('edge_configuration').get('origin_host_name')}
+            </h3>
+          </Col>
+          <Col xs={3} className="kpi">
+            Published Hostname
+            <h3>
+              {activeConfig.get('edge_configuration').get('published_name')}
+            </h3>
+          </Col>
+          <Col xs={4} className="kpi">
+            Deployed
+            <h3>
+              {moment(
+                activeConfig.get('configuration_status').get('deployment_date'), 'X'
+              ).format('M/D/YYYY, h:mma')}
+            </h3>
+          </Col>
+        </Row>
 
-        <PropertyHeader
-          params={this.props.params}
-          togglePurge={this.togglePurge}
-          deleteProperty={() => this.setState({ deleteModal: true })}
-        />
-
-        <PageContainer className="property-container">
-          <Row className="property-info-row no-end-gutters">
-            <Col xs={3} className="kpi">
-              Origin Hostname
-              <h3>
-                {activeConfig.get('edge_configuration').get('origin_host_name')}
-              </h3>
-            </Col>
-            <Col xs={3} className="kpi">
-              Published Hostname
-              <h3>
-                {activeConfig.get('edge_configuration').get('published_name')}
-              </h3>
-            </Col>
-            <Col xs={4} className="kpi">
-              Deployed
-              <h3>
-                {moment(
-                  activeConfig.get('configuration_status').get('deployment_date'), 'X'
-                ).format('M/D/YYYY, h:mma')}
-              </h3>
-            </Col>
-          </Row>
-
-          <div className="chart-header">
-            <div className="kpi">
-              Unique visitors / h (avg)
-              <h3>
-                {this.props.fetching || this.props.visitorsFetching ?
-                  <span>Loading...</span> :
-                  numeral(uniq_vis).format('0,0')
-                }
-              </h3>
-            </div>
-            <div className="kpi">
-              Time to First Byte (avg)
-              <h3>
-                {avg_ttfb}
-              </h3>
-            </div>
-            <div className="kpi">
-              Cache Hit Rate (avg)
-              <h3>
-                {avg_cache_hit_rate}%
-              </h3>
-            </div>
-            <div className="kpi">
-              Bandwidth (avg/s)
-              <h3>
-                {formatBitsPerSecond(avg_transfer_rate, true)}
-              </h3>
-            </div>
-            <h3 className="has-btn">
-              Property Summary
-              <DateRangeSelect
-                startDate={startDate}
-                endDate={endDate}
-                changeDateRange={this.changeDateRange}
-                availableRanges={[
-                  DateRanges.LAST_28,
-                  DateRanges.CUSTOM_TIMERANGE
-                ]}/>
+        <div className="chart-header">
+          <div className="kpi">
+            Unique visitors / h (avg)
+            <h3>
+              {this.props.fetching || this.props.visitorsFetching ?
+                <span>Loading...</span> :
+                numeral(uniq_vis).format('0,0')
+              }
             </h3>
           </div>
-
-          <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
-            <AnalysisByTime
-              axes={true}
-              padding={30}
-              dataSets={datasets}
-              showLegend={true}
-              showTooltip={false}
-              dataKey='bits_per_second'
-              width={this.state.byTimeWidth}
-              height={this.state.byTimeWidth / 3}
-              xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
-                : this.state.byTimeWidth > 600 ? 2 : 3}
-              yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
-              sliceGranularity={sliceGranularity}
-              hoverSlice={this.hoverSlice}
-              selectSlice={this.selectSlice}
-              formatSecondaryTooltip={formatHistoryTooltip}/>
-            {this.state.activeSlice && <Tooltip
-              className="slice-tooltip"
-              x={this.state.activeSliceX}
-              y={-30}
-              hidden={false}>
-              <div className="tooltip-header">
-                <b>{moment.utc(this.state.activeSlice.get('timestamp'),'X').format('MMM D, ddd')}</b>
-              </div>
-              <div>
-                Peak
-                <span className="pull-right">
-                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','peak']))}
-                </span>
-              </div>
-              <div>
-                Average <span className="pull-right">
-                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','average']))}
-                </span>
-              </div>
-              <div>
-                Low <span className="pull-right">
-                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates','low']))}
-                </span>
-              </div>
-            </Tooltip>}
+          <div className="kpi">
+            Time to First Byte (avg)
+            <h3>
+              {avg_ttfb}
+            </h3>
           </div>
-        </PageContainer>
-        {this.state.purgeActive && <PurgeModal
-          activePurge={this.props.activePurge}
-          changePurge={this.props.purgeActions.updateActivePurge}
-          hideAction={this.togglePurge}
-          savePurge={this.savePurge}
-          showNotification={this.showNotification}/>}
-        {this.state.deleteModal &&
-        <ModalWindow
-          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
-          cancelButton={true}
-          deleteButton={true}
-          cancel={toggleDelete}
-          submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
-          invalid={true}
-          verifyDelete={true}>
-          <p>
-            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
-          </p>
-        </ModalWindow>
-        }
-      </Content>
+          <div className="kpi">
+            Cache Hit Rate (avg)
+            <h3>
+              {avg_cache_hit_rate}%
+            </h3>
+          </div>
+          <div className="kpi">
+            Bandwidth (avg/s)
+            <h3>
+              {formatBitsPerSecond(avg_transfer_rate, true)}
+            </h3>
+          </div>
+          <h3 className="has-btn">
+            Property Summary
+            <DateRangeSelect
+              startDate={startDate}
+              endDate={endDate}
+              changeDateRange={this.changeDateRange}
+              availableRanges={[
+                DateRanges.LAST_28,
+                DateRanges.CUSTOM_TIMERANGE
+              ]}/>
+          </h3>
+        </div>
+
+        <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
+          <AnalysisByTime
+            axes={true}
+            padding={30}
+            dataSets={datasets}
+            showLegend={true}
+            showTooltip={false}
+            dataKey='bits_per_second'
+            width={this.state.byTimeWidth}
+            height={this.state.byTimeWidth / 3}
+            xAxisTickFrequency={this.state.byTimeWidth > 920 ? 1
+              : this.state.byTimeWidth > 600 ? 2 : 3}
+            yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
+            sliceGranularity={sliceGranularity}
+            hoverSlice={this.hoverSlice}
+            selectSlice={this.selectSlice}
+            formatSecondaryTooltip={formatHistoryTooltip}/>
+          {this.state.activeSlice && <Tooltip
+            className="slice-tooltip"
+            x={this.state.activeSliceX}
+            y={-30}
+            hidden={false}>
+            <div className="tooltip-header">
+              <b>{moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
+            </div>
+            <div>
+              Peak
+              <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'peak']))}
+                </span>
+            </div>
+            <div>
+              Average <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'average']))}
+                </span>
+            </div>
+            <div>
+              Low <span className="pull-right">
+                  {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'low']))}
+                </span>
+            </div>
+          </Tooltip>}
+        </div>
+      </PageContainer>
     )
   }
 }
 
-Property.displayName = 'Property'
-Property.propTypes = {
+PropertySummary.displayName = 'PropertySummary'
+PropertySummary.propTypes = {
   account: React.PropTypes.string,
   accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
@@ -522,7 +485,7 @@ Property.propTypes = {
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
   visitorsFetching: React.PropTypes.bool
 }
-Property.defaultProps = {
+PropertySummary.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
@@ -567,4 +530,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Property));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PropertySummary));
