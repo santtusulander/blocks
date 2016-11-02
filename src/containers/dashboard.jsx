@@ -51,7 +51,10 @@ export class Dashboard extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps) !== JSON.stringify(this.props)) {
+    const prevProps = JSON.stringify(this.props)
+    const props = JSON.stringify(nextProps)
+
+    if (prevProps.params !== props.params || this.props.filters !== nextProps.filters) {
       this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
@@ -73,9 +76,11 @@ export class Dashboard extends React.Component {
       endDate: Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000),
       granularity: 'hour'
     }, params)
-    this.props.accountActions.fetchAccounts(this.props.params.brand)
-    this.props.dashboardActions.fetchDashboard(dashboardOpts)
-      .then(this.props.dashboardActions.finishFetching)
+    return Promise.all([
+      this.props.dashboardActions.startFetching(),
+      this.props.accountActions.fetchAccounts(this.props.params.brand),
+      this.props.dashboardActions.fetchDashboard(dashboardOpts)
+    ]).then(this.props.dashboardActions.finishFetching)
   }
 
   measureContainers() {
@@ -94,9 +99,6 @@ export class Dashboard extends React.Component {
 
   render() {
     const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, params, user } = this.props
-    if(fetching) {
-      return <LoadingSpinner />
-    }
     const showFilters = List(['date-range'])
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
@@ -171,6 +173,9 @@ export class Dashboard extends React.Component {
           filterOptions={filterOptions}
           showFilters={showFilters}
         />
+        {fetching ?
+          <LoadingSpinner />
+        :
         <PageContainer>
           <DashboardPanels>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
@@ -275,7 +280,7 @@ export class Dashboard extends React.Component {
               </Table>
             </DashboardPanel>
           </DashboardPanels>
-        </PageContainer>
+        </PageContainer>}
       </Content>
     )
   }
