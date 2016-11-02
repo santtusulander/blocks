@@ -17,10 +17,11 @@ module.exports = {
   content: '/content',
   contentBrand: '/content/:brand',
   contentAccount: '/content/:brand/:account',
-  contentGroup: '/content/:brand/:account/:group',
-  contentProperty: '/content/:brand/:account/:group/:property',
-  contentPropertyAnalytics: '/content/:brand/:account/:group/:property/analytics',
-  contentPropertyConfiguration: '/content/:brand/:account/:group/:property/configuration',
+  contentGroups: '/content/:brand/:account/groups',
+  contentGroup: '/content/:brand/:account/groups/:group',
+  contentProperty: '/content/:brand/:account/groups/:group/:property',
+  contentPropertyAnalytics: '/content/:brand/:account/groups/:group/:property/analytics',
+  contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
@@ -74,8 +75,9 @@ module.exports = {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
-  
+
   network: '/network',
   networkBrand: '/network/:brand',
-  networkAccount: '/network/:brand/:account'
+  networkAccount: '/network/:brand/:account',
+  networkGroups: '/network/:brand/:account/groups'
 }

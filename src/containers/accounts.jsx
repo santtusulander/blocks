@@ -10,7 +10,10 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterMetricsByAccounts } from '../util/helpers'
+import {
+  filterMetricsByAccounts,
+  userIsCloudProvider
+} from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
@@ -48,16 +51,28 @@ export class Accounts extends React.Component {
   render() {
     const { brand } = this.props.params
     const {
+      activeAccount,
       accounts,
       fetching,
       fetchingMetrics,
       metrics,
+      params,
       roles,
       sortDirection,
       sortValuePath,
       viewingChart,
       user,
       uiActions } = this.props
+
+    // Only UDN admins can see list of all accounts
+    const currentUser = user.get('currentUser')
+    const showAccountList = userIsCloudProvider(currentUser)
+    const contentItems = showAccountList
+                      ? accounts
+                      : Immutable.List.of(activeAccount)
+    const headerTextLabel = showAccountList
+                              ? <FormattedMessage id='portal.brand.allAccounts.message'/>
+                              : activeAccount.get('name')
 
     const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
 
@@ -75,17 +90,17 @@ export class Accounts extends React.Component {
       <ContentItems
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
-        params={this.props.params}
+        params={params}
         className="groups-container"
         createNewItem={this.createAccount}
         editItem={this.editAccount}
-        contentItems={accounts}
+        contentItems={contentItems}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
-        headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: <FormattedMessage id='portal.brand.allAccounts.message'/> }}
-        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_ACCOUNTS)}
+        headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
+        isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         sortDirection={sortDirection}
@@ -93,7 +108,7 @@ export class Accounts extends React.Component {
         sortValuePath={sortValuePath}
         toggleChartView={uiActions.toggleChartView}
         type='account'
-        user={this.props.user}
+        user={user}
         viewingChart={viewingChart}
         fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
       />
