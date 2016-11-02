@@ -41,7 +41,8 @@ import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
-import Property from './containers/property'
+import Property from './containers/property/property'
+import PropertySummary from './containers/property/tabs/property-summary'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
@@ -158,7 +159,14 @@ export const getRoutes = store => {
           <Route path={routes.contentAccount} component={Groups}/>
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
-        <Route path={routes.contentProperty} component={Property} />
+
+        {/* Properties - routes */}
+        <Route path={routes.content} component={Property}>
+          <IndexRedirect to={getRoute('contentProperty', { brand: 'udn' })}/>
+          <Route path={routes.contentProperty} component={PropertySummary}/>
+          <Route path={routes.contentPropertyPurgeStatus} component={Property}/>
+        </Route>
+
         <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
           {getAnalyticsTabRoutes(store)}
         </Route>

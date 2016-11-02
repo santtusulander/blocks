@@ -1,3 +1,6 @@
 {
-  "portal.content.xxx": "value xxx"
+  "portal.content.xxx": "value xxx",
+
+  "portal.content.property.tabs.summary.label": "Summary",
+  "portal.content.property.tabs.purgeStatus.label": "Purge Status"
 }
