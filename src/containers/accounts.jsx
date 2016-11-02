@@ -74,7 +74,7 @@ export class Accounts extends React.Component {
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
 
-    const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
+    const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
     const nextPageURLBuilder = (accountID) => {
       return getContentUrl('groups', accountID, this.props.params)
