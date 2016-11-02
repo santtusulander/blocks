@@ -40,7 +40,7 @@ module.exports = {
         loader: 'json'
       },
       {
-        test: /\.?css$/,
+        test: /\.scss$/,
         loader:
           isProductionBuild() ?
             ExtractTextPlugin.extract(
