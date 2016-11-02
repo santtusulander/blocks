@@ -3,8 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router'
+import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -18,28 +17,21 @@ import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
-import AccountSelector from '../components/global-account-selector/global-account-selector'
 import PageContainer from '../components/layout/page-container'
 import Content from '../components/layout/content'
-import PageHeader from '../components/layout/page-header'
+import PropertyHeader from '../components/content/property/property-header'
 import AnalysisByTime from '../components/analysis/by-time'
-import IconTrash from '../components/icons/icon-trash.jsx'
-import IconChart from '../components/icons/icon-chart.jsx'
-import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
-import TruncatedTitle from '../components/truncated-title'
-import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 
 import { formatBitsPerSecond } from '../util/helpers'
-import { getContentUrl, getAnalyticsUrl } from '../util/routes'
+import { getContentUrl } from '../util/routes'
 
 import DateRanges from '../constants/date-ranges'
 
 import { paleblue } from '../constants/colors'
-import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -48,21 +40,17 @@ const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract
 function safeMomentStartDate(date) {
   return date ? moment.utc(date, 'X') : startOfLast28()
 }
+
 function safeMomentEndDate(date) {
   return date ? moment.utc(date, 'X') : endOfThisDay()
 }
+
 function safeFormattedStartDate(date) {
   return date || startOfLast28().format('X')
 }
+
 function safeFormattedEndDate(date) {
   return date || endOfThisDay().format('X')
-}
-
-const itemSelectorTexts = {
-  property: 'Back to Groups',
-  group: 'Back to Accounts',
-  account: 'UDN Admin',
-  brand: 'UDN Admin'
 }
 
 export class Property extends React.Component {
@@ -78,7 +66,6 @@ export class Property extends React.Component {
       propertyMenuOpen: false
     }
 
-    this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
     this.togglePurge = this.togglePurge.bind(this)
     this.measureContainers = this.measureContainers.bind(this)
     this.savePurge = this.savePurge.bind(this)
@@ -91,6 +78,7 @@ export class Property extends React.Component {
 
     this.measureContainersTimeout = null
   }
+
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
     this.fetchData(
@@ -99,12 +87,14 @@ export class Property extends React.Component {
       this.props.activeHostConfiguredName
     )
   }
+
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
+
   componentWillReceiveProps(nextProps) {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
@@ -133,10 +123,12 @@ export class Property extends React.Component {
     }
     this.measureContainers()
   }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
     clearTimeout(this.measureContainersTimeout)
   }
+
   getEmptyHourlyTraffic(startDate, endDate) {
     let hourlyTraffic = [];
     for (var t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
@@ -147,6 +139,7 @@ export class Property extends React.Component {
     }
     return hourlyTraffic
   }
+
   changeDateRange (startDate, endDate) {
     const { pathname } = this.props.location
     const fStartDate = safeMomentStartDate(startDate).format('X')
@@ -159,21 +152,7 @@ export class Property extends React.Component {
       )
     })
   }
-  itemSelectorTopBarAction(tier, fetchItems, IDs) {
-    const { account } = IDs
-    switch(tier) {
-      case 'property':
-        fetchItems('group', 'udn', account)
-        break
-      case 'group':
-        fetchItems('account', 'udn')
-        break
-      case 'brand':
-      case 'account':
-        this.props.router.push(getContentUrl('brand', 'udn', {}))
-        break
-    }
-  }
+
   fetchHost(property) {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(
@@ -183,6 +162,7 @@ export class Property extends React.Component {
       property
     )
   }
+
   fetchData(params, queryParams, hostConfiguredName) {
     const {brand, account, group, property} = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
@@ -222,6 +202,7 @@ export class Property extends React.Component {
     this.props.metricsActions.fetchHourlyHostTraffic(metricsOpts)
     this.props.metricsActions.fetchDailyHostTraffic(metricsOpts)
   }
+
   measureContainers() {
     if(this.refs.byTimeHolder) {
       this.setState({
@@ -229,12 +210,14 @@ export class Property extends React.Component {
       })
     }
   }
+
   togglePurge() {
     this.setState({
       purgeActive: !this.state.purgeActive
     })
     this.props.purgeActions.resetActivePurge()
   }
+
   savePurge() {
     this.props.purgeActions.createPurge(
       this.props.params.brand,
@@ -254,15 +237,18 @@ export class Property extends React.Component {
       }
     })
   }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
     this.notificationTimeout = setTimeout(
       this.props.uiActions.changeNotification, 10000)
   }
+
   togglePropertyMenu() {
     this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
   }
+
   hoverSlice(date, x1, x2) {
     if(date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
@@ -278,9 +264,11 @@ export class Property extends React.Component {
       this.setState({activeSlice: null})
     }
   }
+
   selectSlice(date) {
     this.changeDateRange(moment.utc(date), moment.utc(date).endOf('day'))
   }
+
   render() {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
@@ -358,37 +346,12 @@ export class Property extends React.Component {
     }
     return (
       <Content>
-        <PageHeader pageSubTitle={<FormattedMessage id="portal.properties.propertyContentSummary.text"/>}>
-          <AccountSelector
-            as="propertySummary"
-            params={this.props.params}
-            topBarTexts={itemSelectorTexts}
-            topBarAction={this.itemSelectorTopBarAction}
-            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
-            <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret"></span>
-            </div>
-          </AccountSelector>
-          <ButtonToolbar>
-            <IsAllowed to={MODIFY_PROPERTY}>
-              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
-            </IsAllowed>
-            <Link className="btn btn-success btn-icon"
-                  to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
-              <IconChart/>
-            </Link>
-            <Link className="btn btn-success btn-icon"
-                  to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
-              <IconConfiguration/>
-            </Link>
-            <IsAllowed to={DELETE_PROPERTY}>
-              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-                <IconTrash/>
-              </Button>
-            </IsAllowed>
-          </ButtonToolbar>
-        </PageHeader>
+
+        <PropertyHeader
+          params={this.props.params}
+          togglePurge={this.togglePurge}
+          deleteProperty={() => this.setState({ deleteModal: true })}
+        />
 
         <PageContainer className="property-container">
           <Row className="property-info-row no-end-gutters">
