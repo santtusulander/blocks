@@ -23,7 +23,10 @@ import {
 } from '../../util/routes.js'
 
 
-import { userIsServiceProvider } from '../../util/helpers.js'
+import {
+  userIsServiceProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -186,6 +189,14 @@ class Header extends React.Component {
       className = className + ' ' + this.props.className
     }
     const itemSelectorFunc = (...params) => {
+      // This check is done to prevent UDN admin from accidentally hitting
+      // the account detail endpoint, which they don't have permission for
+      if(router.isActive('/content') || router.isActive('/network')) {
+        if (params[0] === 'account' && userIsCloudProvider(user)) {
+          params[0] = 'groups'
+        }
+      }
+
       if(router.isActive('/content')) {
         router.push(getContentUrl(...params))
       } else if(router.isActive('/analysis')) {
