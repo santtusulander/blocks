@@ -9,6 +9,8 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
+import {getTrafficByDateRangeLabel} from './helpers'
+
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 class AnalysisContribution extends React.Component {
@@ -120,6 +122,9 @@ class AnalysisContribution extends React.Component {
       activeDirection: this.state.sortDir
     }
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
+
+    const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
+
     return (
       <div>
         <SectionHeader
@@ -130,7 +135,7 @@ class AnalysisContribution extends React.Component {
             <SectionContainer className="analysis-contribution">
               <div ref="stacksHolder">
                 <AnalysisStackedByGroup padding={40}
-                  chartLabel={this.props.intl.formatMessage({id: this.props.dateRangeLabel })}
+                  chartLabel={`${this.props.intl.formatMessage({id: 'portal.analytics.contribution.traffic.label'})} ${trafficByDateRangeLabel}`}
                   datasets={providers}
                   datasetLabels={[
                     <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
@@ -184,6 +189,7 @@ class AnalysisContribution extends React.Component {
 AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  dateRange: React.PropTypes.instanceOf(Immutable.Map),
   dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
