@@ -60,17 +60,20 @@ export function getContentUrl(linkType, val, params) {
     case 'account':
       url = `${baseUrl}/${brand}/${val}`
       break;
+    case 'groups':
+      url = `${baseUrl}/${brand}/${val}/groups`
+      break;
     case 'group':
-      url = `${baseUrl}/${brand}/${account}/${val}`
+      url = `${baseUrl}/${brand}/${account}/groups/${val}`
       break;
     case 'property':
-      url = `${baseUrl}/${brand}/${account}/${group}/${val}`
+      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}`
       break;
     case 'propertyAnalytics':
-      url = `${baseUrl}/${brand}/${account}/${group}/${val}/analytics`
+      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}/analytics`
       break;
     case 'propertyConfiguration':
-      url = `${baseUrl}/${brand}/${account}/${group}/${val}/configuration`
+      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}/configuration`
       break;
   }
 

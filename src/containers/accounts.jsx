@@ -66,7 +66,7 @@ export class Accounts extends React.Component {
 
     // Only UDN admins can see list of all accounts
     const currentUser = user.get('currentUser')
-    const showAccountList = userIsCloudProvider(currentUser)
+    const showAccountList = activeAccount.isEmpty() && userIsCloudProvider(currentUser)
     const contentItems = showAccountList
                       ? accounts
                       : Immutable.List.of(activeAccount)
@@ -77,7 +77,7 @@ export class Accounts extends React.Component {
     const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
 
     const nextPageURLBuilder = (accountID) => {
-      return getContentUrl('account', accountID, this.props.params)
+      return getContentUrl('groups', accountID, this.props.params)
     }
     const analyticsURLBuilder = (...account) => {
       return getAnalyticsUrlFromParams(
