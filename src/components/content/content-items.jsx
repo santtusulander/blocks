@@ -11,6 +11,7 @@ import {
   getContentUrl,
   getNetworkUrl
 } from '../../util/routes'
+import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
 import UDNButton from '../button'
@@ -202,6 +203,13 @@ class ContentItems extends React.Component {
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
         onSelect={(...params) => {
+          // This check is done to prevent UDN admin from accidentally hitting
+          // the account detail endpoint, which they don't have permission for
+          const currentUser = props.user.get('currentUser')
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
+
           const url = props.router.isActive('network')
                         ? getNetworkUrl(...params)
                         : getContentUrl(...params)
