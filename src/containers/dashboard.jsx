@@ -161,23 +161,23 @@ export class Dashboard extends React.Component {
       }
     }
     const showFilters = List(['date-range'])
-    const datasetA = fakeSpDashboardData.traffic.detail.map(datapoint => {
+    const onNetDataset = fakeSpDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_on || 0,
         timestamp: datapoint.timestamp
       }
     })
-    const datasetB = fakeSpDashboardData.traffic.detail.map(datapoint => {
+    const offNetDataset = fakeSpDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_off || 0,
         timestamp: datapoint.timestamp
       }
     })
-    let totalDatasetValueOutput = separateUnit(formatBytes(fakeSpDashboardData.traffic.bytes))
-    let totalDatasetValue = totalDatasetValueOutput.value
-    let totalDatasetUnit = totalDatasetValueOutput.unit
-    let datasetAValue = numeral((fakeSpDashboardData.traffic.bytes_net_on / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
-    let datasetBValue = numeral((fakeSpDashboardData.traffic.bytes_net_off / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
+    let totalOnOffNet = separateUnit(formatBytes(fakeSpDashboardData.traffic.bytes))
+    let totalOnOffNetValue = totalOnOffNet.value
+    let totalOnOffNetUnit = totalOnOffNet.unit
+    let onNetValue = numeral((fakeSpDashboardData.traffic.bytes_net_on / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
+    let offNetValue = numeral((fakeSpDashboardData.traffic.bytes_net_off / fakeSpDashboardData.traffic.bytes) * 100).format('0,0')
     return (
       <Content>
         <PageHeader pageSubTitle="Dashboard">
@@ -202,16 +202,16 @@ export class Dashboard extends React.Component {
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
               <StackedByTimeSummary
                 dataKey="bytes"
-                totalDatasetValue={totalDatasetValue}
-                totalDatasetUnit={totalDatasetUnit}
-                datasetAArray={datasetA}
-                datasetALabel="On-Net"
+                totalDatasetValue={totalOnOffNetValue}
+                totalDatasetUnit={totalOnOffNetUnit}
+                datasetAArray={onNetDataset}
+                datasetALabel={intl.formatMessage({id: 'portal.analytics.onNet.title'})}
                 datasetAUnit="%"
-                datasetAValue={datasetAValue}
-                datasetBArray={datasetB}
-                datasetBLabel="Off-Net"
+                datasetAValue={onNetValue}
+                datasetBArray={offNetDataset}
+                datasetBLabel={intl.formatMessage({id: 'portal.analytics.offNet.title'})}
                 datasetBUnit="%"
-                datasetBValue={datasetBValue}/>
+                datasetBValue={offNetValue}/>
               <hr />
               <Row>
                 <Col xs={6}>
@@ -266,17 +266,17 @@ export class Dashboard extends React.Component {
               <Table className="table-simple">
                 <thead>
                   <tr>
-                    <th><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                    <th className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-                    <th className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
+                    <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
+                    <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                    <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
                   </tr>
                 </thead>
                 <tbody>
                   {fakeTop5cp.map((i) => {
                     return (
                       <tr key={i}>
-                        <td width="30%"><b>HBO</b></td>
-                        <td width="35%">
+                        <td><b>HBO</b></td>
+                        <td>
                           <MiniChart
                             kpiRight={true}
                             kpiValue={1}
@@ -284,7 +284,7 @@ export class Dashboard extends React.Component {
                             dataKey="bits_per_second"
                             data={fakeData} />
                         </td>
-                        <td width="35%">
+                        <td>
                           <MiniChart
                             kpiRight={true}
                             kpiValue={40}

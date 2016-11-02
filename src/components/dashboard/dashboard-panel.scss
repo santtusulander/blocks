@@ -3,7 +3,7 @@
 @import './src/styles/base/functions';
 
 $dashboard-panel-font-size: 14px;
-$dashboard-panel-margin: rem(30px);
+$dashboard-panel-margin: em(30px, $dashboard-panel-font-size);
 $dashboard-panel-horizontal-padding: em(30px, $dashboard-panel-font-size);
 $dashboard-panel-vertical-padding: em(15px, $dashboard-panel-font-size);
 $dashboard-panel-bg: rgba($black, 0.3);
