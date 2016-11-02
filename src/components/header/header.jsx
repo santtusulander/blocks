@@ -138,7 +138,7 @@ class Header extends React.Component {
 
       links.push({
         label:  <FormattedMessage id="portal.header.content.text"/>,
-        url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
+        url: params.account && links.length > 0 ? getContentUrl('groups', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)
