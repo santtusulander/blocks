@@ -18,6 +18,7 @@ import {
   getAccountManagementUrlFromParams,
   getAnalyticsUrl,
   getContentUrl,
+  getNetworkUrl,
   getUrl
 } from '../../util/routes.js'
 
@@ -113,7 +114,7 @@ class Header extends React.Component {
 
     if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
-      if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
+      if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
           label:  <FormattedMessage id="portal.header.analytics.text"/>
         })
@@ -196,13 +197,13 @@ class Header extends React.Component {
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
       } else if(router.isActive('/network')) {
-        router.push(getContentUrl(...params))
+        router.push(getNetworkUrl(...params))
       } else if(router.isActive('/dashboard')) {
-        router.push(getContentUrl(...params))
+        router.push(getUrl('/dashboard', ...params))
       }
     }
     const logoLink = userIsServiceProvider(user) ?
-      `/network/udn/${this.props.activeAccount.get('id')}` :
+      getRoute('networkAccount', {brand: 'udn', account: user.get('account_id')}) :
       getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>

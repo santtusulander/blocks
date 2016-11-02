@@ -1,12 +1,19 @@
 import { getRoute } from '../routes.jsx'
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
 import checkPermissions from './permissions'
-import VIEW_CONTENT_PROPERTIES from '../constants/permissions'
+import {
+  VIEW_CONTENT_PROPERTIES,
+  VIEW_ACCOUNT_DETAIL
+} from '../constants/permissions'
 
 export function getUrl(baseUrl, linkType, val, params) {
+  // eslint-disable-next-line no-console
+  console.warn('Avoid using getUrl as it is very brittle: build links using the getRoute method instead.')
+
   const { brand, account, group } = params;
 
-  let url
+  let url = baseUrl
+
   switch(linkType) {
     case 'brand':
       url = `${baseUrl}/${val}`
@@ -26,78 +33,44 @@ export function getUrl(baseUrl, linkType, val, params) {
 }
 
 export function getAnalyticsUrl(linkType, val, params) {
-  const { brand, account, group } = params,
-    baseUrl = getRoute('analytics')
-
-  let url
   switch(linkType) {
     case 'brand':
-      url = `${baseUrl}/${val}`
-      break;
+      return getRoute('analyticsBrand', { brand: val })
     case 'account':
-      url = `${baseUrl}/${brand}/${val}`
-      break;
+      return getRoute('analyticsAccount', { ...params, account: val })
     case 'group':
-      url = `${baseUrl}/${brand}/${account}/${val}`
-      break;
+      return getRoute('analyticsGroup', { ...params, group: val })
     case 'property':
-      url = `${baseUrl}/${brand}/${account}/${group}/${val}`
-      break;
+      return getRoute('analyticsProperty', { ...params, property: val })
   }
-
-  return url
 }
 
 export function getContentUrl(linkType, val, params) {
-  const { brand, account, group } = params,
-    baseUrl = getRoute('content')
-
-  let url
   switch(linkType) {
     case 'brand':
-      url = `${baseUrl}/${val}`
-      break;
+      return getRoute('contentBrand', { brand: val })
     case 'account':
-      url = `${baseUrl}/${brand}/${val}`
-      break;
+      return getRoute('contentAccount', { ...params, account: val })
     case 'groups':
-      url = `${baseUrl}/${brand}/${val}/groups`
-      break;
+      return getRoute('contentGroups', { ...params, account: val })
     case 'group':
-      url = `${baseUrl}/${brand}/${account}/groups/${val}`
-      break;
+      return getRoute('contentGroup', { ...params, group: val })
     case 'property':
-      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}`
-      break;
-    case 'propertyAnalytics':
-      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}/analytics`
-      break;
+      return getRoute('contentProperty', { ...params, property: val })
     case 'propertyConfiguration':
-      url = `${baseUrl}/${brand}/${account}/groups/${group}/${val}/configuration`
-      break;
+      return getRoute('contentPropertyConfiguration', { ...params, property: val })
   }
-
-  return url
 }
 
 export function getNetworkUrl(linkType, val, params) {
-  const { brand, account } = params,
-    baseUrl = getRoute('network')
-
-  let url
   switch(linkType) {
     case 'brand':
-      url = `${baseUrl}/${val}`
-      break;
+      return getRoute('networkBrand', { brand: val })
     case 'account':
-      url = `${baseUrl}/${brand}/${val}`
-      break;
-    case 'group':
-      url = `${baseUrl}/${brand}/${account}/${val}`
-      break;
+      return getRoute('networkAccount', { ...params, account: val })
+    case 'groups':
+      return getRoute('networkGroups', { ...params, account: val })
   }
-
-  return url
 }
 
 export function getAnalyticsUrlFromParams(params, currentUser, roles) {
@@ -124,19 +97,23 @@ export function getAnalyticsUrlFromParams(params, currentUser, roles) {
 
 export function getContentUrlFromParams(params, currentUser, roles) {
   const { brand, account, group, property } = params,
-    baseUrl = getRoute('content'),
-    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES)
+    canListProperties = checkPermissions(roles, currentUser, VIEW_CONTENT_PROPERTIES),
+    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (property) {
-    return `${baseUrl}/${brand}/${account}/${group}/${property}`
+    return getRoute('contentProperty', params)
   } else if (group && canListProperties) {
-    return `${baseUrl}/${brand}/${account}/${group}`
+    return getRoute('contentGroup', params)
   } else if (account) {
-    return `${baseUrl}/${brand}/${account}`
+    if (canViewAccountDetail) {
+      return getRoute('contentAccount', params)
+    } else {
+      return getRoute('contentGroups', params)
+    }
   } else if (brand) {
-    return `${baseUrl}/${brand}`
+    return getRoute('contentBrand', params)
   } else {
-    return `${baseUrl}/udn`
+    return getRoute('contentBrand', { brand: 'udn' })
   }
 }
 
@@ -216,11 +193,16 @@ export function getDashboardUrlFromParams(params) {
   }
 }
 
-export function getNetworkUrlFromParams(params) {
-  const { brand, account } = params
+export function getNetworkUrlFromParams(params, currentUser, roles) {
+  const { brand, account } = params,
+    canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
-    return getRoute('networkAccount', params)
+    if (canViewAccountDetail) {
+      return getRoute('networkAccount', params)
+    } else {
+      return getRoute('networkGroups', params)
+    }
   } else if (brand) {
     return getRoute('networkBrand', params)
   } else {

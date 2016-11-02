@@ -16,12 +16,14 @@ import {
 import IsAllowed from '../is-allowed'
 
 
-import {VIEW_ACCOUNT_SECTION,
+import {
+  VIEW_ACCOUNT_SECTION,
   VIEW_ANALYTICS_SECTION,
   VIEW_CONTENT_SECTION,
   VIEW_SECURITY_SECTION,
   VIEW_SERVICES_SECTION,
-  VIEW_SUPPORT_SECTION} from '../../constants/permissions'
+  VIEW_SUPPORT_SECTION
+} from '../../constants/permissions'
 
 import { userIsServiceProvider } from '../../util/helpers.js'
 
@@ -42,7 +44,16 @@ const Navigation = (props) => {
     router = props.router
 
   const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
+    networkActive = router.isActive(getRoute('network')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
+
+  const contentOrNetworkUrlBuilder = (params, currentUser, roles) => {
+    if (router.isActive(getRoute('network'))) {
+      return getNetworkUrlFromParams(params, currentUser, roles)
+    } else {
+      return getContentUrlFromParams(params, currentUser, roles)
+    }
+  }
 
   const isSP = userIsServiceProvider(props.currentUser)
 
@@ -54,7 +65,7 @@ const Navigation = (props) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
-            <Link to={getContentUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive}>
+            <Link to={contentOrNetworkUrlBuilder(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
               <IconContent />
               <span>
                 <FormattedMessage id="portal.navigation.content.text"/>
@@ -65,7 +76,7 @@ const Navigation = (props) => {
 
         {isSP &&
           <li>
-            <Link to={getNetworkUrlFromParams(params)} activeClassName="active">
+            <Link to={contentOrNetworkUrlBuilder(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
               <IconContent />
               <span><FormattedMessage id="portal.navigation.network.text"/></span>
             </Link>

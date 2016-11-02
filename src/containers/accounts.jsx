@@ -4,7 +4,11 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
+import {
+  getAnalyticsUrlFromParams,
+  getContentUrl,
+  getNetworkUrl
+} from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -19,6 +23,7 @@ import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
 import checkPermissions from '../util/permissions'
+import PROVIDER_TYPES from '../constants/provider-types'
 
 import { FormattedMessage } from 'react-intl';
 
@@ -76,8 +81,12 @@ export class Accounts extends React.Component {
 
     const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
-    const nextPageURLBuilder = (accountID) => {
-      return getContentUrl('groups', accountID, this.props.params)
+    const nextPageURLBuilder = (accountID, account) => {
+      if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
+        return getContentUrl('groups', accountID, this.props.params)
+      } else {
+        return getNetworkUrl('groups', accountID, this.props.params)
+      }
     }
     const analyticsURLBuilder = (...account) => {
       return getAnalyticsUrlFromParams(
