@@ -72,7 +72,6 @@ export class Security extends React.Component {
 
   render() {
     const {
-      accounts,
       activeAccount,
       activeCertificates,
       activeModal,
@@ -109,10 +108,8 @@ export class Security extends React.Component {
       <Content>
         <SecurityPageHeader
           params={this.props.params}
-          accounts={accounts}
-          activeAccount={activeAccount.get('name')}
           itemSelectorFunc={itemSelectorFunc}
-          fetchAccount={fetchAccount}/>
+          activeAccount={activeAccount} />
 
           <PageContainer>
             {this.renderContent(certificateFormProps, sslListProps)}
@@ -140,7 +137,6 @@ export class Security extends React.Component {
 }
 
 Security.propTypes = {
-  accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
@@ -161,7 +157,6 @@ function mapStateToProps(state) {
     toDelete: state.security.get('certificateToEdit'),
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
-    accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
     sslCertificates: state.security.get('sslCertificates')
   };
