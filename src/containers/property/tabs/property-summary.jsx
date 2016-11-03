@@ -1,5 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -218,12 +219,16 @@ class PropertySummary extends React.Component {
     ).then((action) => {
       if(action.payload instanceof Error) {
         this.setState({purgeActive: false})
-        this.showNotification('Purge request failed: ' +
-          action.payload.message)
+        this.showNotification(
+          <FormattedMessage
+            id="portal.content.property.summary.reguestFailed.label"
+            value={{reason: action.payload.message}}
+          />
+        )
       }
       else {
         this.setState({purgeActive: false})
-        this.showNotification('Purge request succesfully submitted')
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.reguestSuccess.label"/>)
       }
     })
   }
@@ -317,7 +322,7 @@ class PropertySummary extends React.Component {
         comparisonData: false,
         data: metrics_traffic.toJS(),
         id: '',
-        label: 'Selected Period',
+        label: <FormattedMessage id="portal.content.property.summary.selectedPeriod.label"/>,
         line: true,
         stackedAgainst: false,
         xAxisFormatter: false
@@ -331,7 +336,7 @@ class PropertySummary extends React.Component {
         data: historical_traffic.toJS(),
         noGradient: true,
         id: '',
-        label: 'Comparison Period',
+        label: <FormattedMessage id="portal.content.property.summary.comparisonPeriod.label"/>,
         line: false,
         stackedAgainst: false,
         xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
@@ -342,19 +347,19 @@ class PropertySummary extends React.Component {
       <PageContainer className="property-container">
         <Row className="property-info-row no-end-gutters">
           <Col xs={3} className="kpi">
-            Origin Hostname
+            <FormattedMessage id="portal.content.property.summary.originHostname.title"/>
             <h3>
               {activeConfig.get('edge_configuration').get('origin_host_name')}
             </h3>
           </Col>
           <Col xs={3} className="kpi">
-            Published Hostname
+            <FormattedMessage id="portal.content.property.summary.publishedHostname.title"/>
             <h3>
               {activeConfig.get('edge_configuration').get('published_name')}
             </h3>
           </Col>
           <Col xs={4} className="kpi">
-            Deployed
+            <FormattedMessage id="portal.content.property.summary.deployed.title"/>
             <h3>
               {moment(
                 activeConfig.get('configuration_status').get('deployment_date'), 'X'
@@ -365,7 +370,7 @@ class PropertySummary extends React.Component {
 
         <div className="chart-header">
           <div className="kpi">
-            Unique visitors / h (avg)
+            <FormattedMessage id="portal.content.property.summary.uniqueVisitors.title"/>
             <h3>
               {this.props.fetching || this.props.visitorsFetching ?
                 <span>Loading...</span> :
@@ -374,25 +379,25 @@ class PropertySummary extends React.Component {
             </h3>
           </div>
           <div className="kpi">
-            Time to First Byte (avg)
+            <FormattedMessage id="portal.content.property.summary.timeToFirstByte.title"/>
             <h3>
               {avg_ttfb}
             </h3>
           </div>
           <div className="kpi">
-            Cache Hit Rate (avg)
+            <FormattedMessage id="portal.content.property.summary.cacheHitRate.title"/>
             <h3>
               {avg_cache_hit_rate}%
             </h3>
           </div>
           <div className="kpi">
-            Bandwidth (avg/s)
+            <FormattedMessage id="portal.content.property.summary.bandWith.title"/>
             <h3>
               {formatBitsPerSecond(avg_transfer_rate, true)}
             </h3>
           </div>
           <h3 className="has-btn">
-            Property Summary
+            <FormattedMessage id="portal.content.property.summary.propertySummary.title"/>
             <DateRangeSelect
               startDate={startDate}
               endDate={endDate}
@@ -430,18 +435,20 @@ class PropertySummary extends React.Component {
               <b>{moment.utc(this.state.activeSlice.get('timestamp'), 'X').format('MMM D, ddd')}</b>
             </div>
             <div>
-              Peak
+              <FormattedMessage id="portal.content.property.summary.peak.label"/>
               <span className="pull-right">
                   {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'peak']))}
                 </span>
             </div>
             <div>
-              Average <span className="pull-right">
+              <FormattedMessage id="portal.content.property.summary.average.label"/>
+              <span className="pull-right">
                   {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'average']))}
                 </span>
             </div>
             <div>
-              Low <span className="pull-right">
+              <FormattedMessage id="portal.content.property.summary.low.label"/>
+              <span className="pull-right">
                   {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'low']))}
                 </span>
             </div>
@@ -530,4 +537,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PropertySummary));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withRouter(PropertySummary)));
