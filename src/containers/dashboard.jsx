@@ -150,7 +150,10 @@ export class Dashboard extends React.Component {
 
     const countries = !dashboard.size ? List() : dashboard.get('countries')
 
+    const topCPamount = 5
     const topCPs = !dashboard.size ? List() : dashboard.get('providers')
+      .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
+      .take(topCPamount)
     const topCPsIDs = topCPs.map(provider => provider.get('account')).toJS()
     const topCPsAccounts = getAccountByID(accounts, topCPsIDs)
 
