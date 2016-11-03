@@ -17,6 +17,9 @@
   "portal.analytics.contribution.traffic.label": "Traffic",
   "portal.analytics.contribution.trafficPercentage.label": "% of traffic",
 
+  "portal.analytics.onOffNet.traffic.label": "Traffic",
+  "portal.analytics.onOffNet.trafficToday.label": "Traffic Today",
+
   "portal.analytics.fileErrors.noData.text": "No error data found.",
   "portal.analytics.urlList.noData.text": "No URL data found.",
 
