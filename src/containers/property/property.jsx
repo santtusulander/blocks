@@ -53,13 +53,13 @@ export class Property extends React.Component {
       this.props.activeHostConfiguredName,
       this.props.activePurge.toJS()
     ).then((action) => {
-      if(action.payload instanceof Error) {
-        this.setState({purgeActive: false})
+      if (action.payload instanceof Error) {
+        this.setState({ purgeActive: false })
         this.showNotification('Purge request failed: ' +
           action.payload.message)
       }
       else {
-        this.setState({purgeActive: false})
+        this.setState({ purgeActive: false })
         this.showNotification('Purge request succesfully submitted')
       }
     })
@@ -73,7 +73,7 @@ export class Property extends React.Component {
   }
 
   togglePropertyMenu() {
-    this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
+    this.setState({ propertyMenuOpen: !this.state.propertyMenuOpen })
   }
 
   render() {
@@ -116,17 +116,18 @@ export class Property extends React.Component {
           showNotification={this.showNotification}/>}
         {this.state.deleteModal &&
         <ModalWindow
-          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
           cancelButton={true}
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))
+          }}
           invalid={true}
           verifyDelete={true}>
           <p>
-            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{ itemToDelete: "Property" }}/>
           </p>
         </ModalWindow>
         }
@@ -190,14 +191,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
-    dailyTraffic: state.metrics.get('hostDailyTraffic'),
-    fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
-    properties: state.host.get('allHosts'),
-    trafficFetching: state.traffic.get('fetching'),
-    visitorsByCountry: state.visitors.get('byCountry'),
-    visitorsFetching: state.traffic.get('fetching')
+    properties: state.host.get('allHosts')
   };
 }
 
@@ -206,11 +200,8 @@ function mapDispatchToProps(dispatch) {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 
