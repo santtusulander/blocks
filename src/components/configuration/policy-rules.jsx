@@ -84,9 +84,9 @@ class ConfigurationPolicyRules extends React.Component {
         const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
 
         let ctActionLabels = []
-        if ( allowCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
 
         actionsLabel = ctActionLabels.join(' | ')
 
