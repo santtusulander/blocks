@@ -344,6 +344,7 @@ class PropertySummary extends React.Component {
     }
 
     return (
+
       <PageContainer className="property-container">
         <Row className="property-info-row no-end-gutters">
           <Col xs={3} className="kpi">
@@ -394,6 +395,7 @@ class PropertySummary extends React.Component {
             <FormattedMessage id="portal.content.property.summary.bandWith.title"/>
             <h3>
               {formatBitsPerSecond(avg_transfer_rate, true)}
+
             </h3>
           </div>
           <h3 className="has-btn">
@@ -469,6 +471,7 @@ PropertySummary.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -497,6 +500,7 @@ PropertySummary.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  currentUser: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
@@ -513,6 +517,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),

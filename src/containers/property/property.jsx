@@ -79,6 +79,7 @@ export class Property extends React.Component {
   render() {
 
     const {
+      currentUser,
       hostActions: {
         deleteHost
       },
@@ -96,6 +97,7 @@ export class Property extends React.Component {
     return (
       <Content>
         <PropertyHeader
+          currentUser={currentUser}
           params={this.props.params}
           togglePurge={this.togglePurge}
           deleteProperty={() => this.setState({ deleteModal: true })}
@@ -147,6 +149,7 @@ Property.propTypes = {
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -175,6 +178,7 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  currentUser: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
@@ -191,6 +195,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    currentUser: state.user.get('currentUser'),
     properties: state.host.get('allHosts')
   };
 }

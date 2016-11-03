@@ -213,8 +213,8 @@ class AnalysisByTime extends React.Component {
 
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={this.deactivateTooltip}>
+      onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
+      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
         <svg
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}

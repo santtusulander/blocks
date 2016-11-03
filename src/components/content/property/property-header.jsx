@@ -6,16 +6,22 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../../constants/permissions'
 import IsAllowed from '../../is-allowed'
 
+import {
+  getAnalyticsUrl,
+  getContentUrl,
+  getNetworkUrl
+} from '../../../util/routes.js'
+import { userIsCloudProvider } from '../../../util/helpers'
+
 import PageHeader from '../../layout/page-header'
 import AccountSelector from '../../global-account-selector/global-account-selector'
 import TruncatedTitle from '../../truncated-title'
-import { getAnalyticsUrl, getContentUrl } from '../../../util/routes.js'
 
 import IconTrash from '../../icons/icon-trash.jsx'
 import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
 
-const PropertyHeader = ({ router, params, togglePurge, deleteProperty, intl }) => {
+const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, togglePurge }) => {
 
   const itemSelectorTexts = {
     property: intl.formatMessage({ id: 'portal.content.property.topBar.property.label' }),
@@ -47,7 +53,23 @@ const PropertyHeader = ({ router, params, togglePurge, deleteProperty, intl }) =
         params={params}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => router.push(getContentUrl(...params))}>
+        onSelect={(...params) => {
+          // This check is done to prevent UDN admin from accidentally hitting
+          // the account detail endpoint, which they don't have permission for
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
+
+          const url = router.isActive('network')
+            ? getNetworkUrl(...params)
+            : getContentUrl(...params)
+
+          // We perform this check to prevent routing to unsupported routes
+          // For example, prevent clicking to SP group route (not yet supported)
+          if (url) {
+            router.push(url)
+          }
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
             <TruncatedTitle content={params.property}
