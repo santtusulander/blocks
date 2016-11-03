@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
+import numeral from 'numeral'
 
 // React-Bootstrap
 // ===============
@@ -28,8 +29,10 @@ import {
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
-import MiniChart from '../components/dashboard/mini-chart'
+import StackedByTimeSummary from '../components/stacked-by-time-summary'
+import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
+import DashboardPanels from '../components/dashboard/dashboard-panels'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -68,6 +71,8 @@ import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
 
+import { formatBytes, separateUnit } from '../util/helpers'
+
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1', checked: true },
   { value: 'link2', label: 'Property 2', checked: true },
@@ -82,6 +87,85 @@ const filterCheckboxOptions = Immutable.fromJS([
 
 export default class Styleguide extends React.Component {
   render() {
+    const spDashboardData = {
+      "traffic": {
+        "bytes": 446265804980374,
+        "bytes_net_on": 352569123057670,
+        "bytes_net_off": 93696681922704,
+        "detail": [
+          {
+            "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
+            "bytes": 92020173697866,
+            "bytes_net_on": 71856580682504,
+            "bytes_net_off": 20163593015362
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
+            "bytes": 99672709053865,
+            "bytes_net_on": 76848354018252,
+            "bytes_net_off": 22824355035613
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
+            "bytes": 94821186769899,
+            "bytes_net_on": 72941835769369,
+            "bytes_net_off": 21879351000530
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
+            "bytes": 117441291619312,
+            "bytes_net_on": 90477417340581,
+            "bytes_net_off": 26963874278731
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
+            "bytes": 81546375702611,
+            "bytes_net_on": 62160286504951,
+            "bytes_net_off": 19386089197660
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
+            "bytes": 117341539984300,
+            "bytes_net_on": 90364165873239,
+            "bytes_net_off": 26977374111061
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
+            "bytes": 94064934029131,
+            "bytes_net_on": 72989086766237,
+            "bytes_net_off": 21075847262894
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
+            "bytes": 93196929110225,
+            "bytes_net_on": 72133332220394,
+            "bytes_net_off": 21063596889831
+          }
+        ]
+      }
+    }
+
+    const datasetA = spDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_on || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+
+    const datasetB = spDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_off || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+
+    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
+    let totalDatasetValue = totalDatasetValueOutput.value
+    let totalDatasetUnit = totalDatasetValueOutput.unit
+
+    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
+
     return (
       <div className="styleguide-page">
 
@@ -387,8 +471,26 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
-          <h1 className="page-header">Mini Chart</h1>
+          <h1 className="page-header">Stacked By Time Summary</h1>
+          <Row>
+            <Col xs={6}>
+              <StackedByTimeSummary
+                dataKey="bytes"
+                totalDatasetValue={totalDatasetValue}
+                totalDatasetUnit={totalDatasetUnit}
+                datasetAArray={datasetA}
+                datasetALabel="On-Net"
+                datasetAUnit="%"
+                datasetAValue={datasetAValue}
+                datasetBArray={datasetB}
+                datasetBLabel="Off-Net"
+                datasetBUnit="%"
+                datasetBValue={datasetBValue}
+              />
+            </Col>
+          </Row>
 
+          <h1 className="page-header">Mini Chart</h1>
           <Row>
             <Col xs={3}>
               <label>With label and KPI</label>
@@ -462,23 +564,17 @@ export default class Styleguide extends React.Component {
 
           <h1 className="page-header">Dashboard Panel</h1>
 
-          <Row>
-            <Col xs={6}>
-              <DashboardPanel title="Traffic">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et mi imperdiet, condimentum nibh a, tincidunt ipsum. Fusce vitae metus iaculis, iaculis nunc vel, laoreet nisi. Aliquam quis tortor vitae odio porttitor suscipit. Donec vel nisl quis lacus consequat semper. Morbi cursus vestibulum urna. Praesent eleifend feugiat enim, eget accumsan mauris aliquet et. Vivamus tincidunt magna est, id commodo felis tempor vitae. In odio nisl, mollis interdum lacus et, varius scelerisque odio. Curabitur vitae libero eu metus mattis vulputate. Quisque commodo congue fringilla.</p>
-              </DashboardPanel>
-            </Col>
-            <Col xs={6}>
-              <DashboardPanel title="No padding" noPadding={true}>
-                <Image responsive={true} src="https://upload.wikimedia.org/wikipedia/en/archive/a/a4/20060531003742!United_States_(World_Map).png" />
-              </DashboardPanel>
-            </Col>
-          </Row>
+          <DashboardPanels>
+            <DashboardPanel title="Traffic">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et mi imperdiet, condimentum nibh a, tincidunt ipsum. Fusce vitae metus iaculis, iaculis nunc vel, laoreet nisi. Aliquam quis tortor vitae odio porttitor suscipit. Donec vel nisl quis lacus consequat semper. Morbi cursus vestibulum urna. Praesent eleifend feugiat enim, eget accumsan mauris aliquet et. Vivamus tincidunt magna est, id commodo felis tempor vitae. In odio nisl, mollis interdum lacus et, varius scelerisque odio. Curabitur vitae libero eu metus mattis vulputate. Quisque commodo congue fringilla.</p>
+            </DashboardPanel>
+            <DashboardPanel title="No padding" noPadding={true}>
+              <Image responsive={true} src="https://upload.wikimedia.org/wikipedia/en/archive/a/a4/20060531003742!United_States_(World_Map).png" />
+            </DashboardPanel>
+          </DashboardPanels>
 
           <h1 className="page-header">Pagination</h1>
-
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
-
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

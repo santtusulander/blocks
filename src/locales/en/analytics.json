@@ -48,5 +48,8 @@
 
   "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
   "portal.analytics.purgeModal.maxAmount.error": "Maximum amount of purge objects exceeded",
-  "portal.analytics.purgeModal.email.error": "Enter a valid Email address"
+  "portal.analytics.purgeModal.email.error": "Enter a valid Email address",
+  
+  "portal.analytics.onNet.title": "On-Net",
+  "portal.analytics.offNet.title": "Off-Net"
 }
