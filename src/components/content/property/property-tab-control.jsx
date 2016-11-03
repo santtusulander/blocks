@@ -11,7 +11,7 @@ import { getTabLink } from '../../../util/helpers.js'
 const PropertyTabControl = (props) => {
   const tabs = [
     {
-      key: '',
+      key: 'summary',
       label: props.intl.formatMessage({id: 'portal.content.property.tabs.summary.label'}),
       permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW
     },
@@ -29,7 +29,7 @@ const PropertyTabControl = (props) => {
           const tabContent = (
             <IsAllowed key={tab.key} to={tab.permission}>
               <li role="tab">
-                <Link to={getTabLink(props.location, `${props.params.property}/${tab.key}`)}
+                <Link to={getTabLink(props.location, tab.key)}
                       activeClassName='active'>{tab.label}</Link>
               </li>
             </IsAllowed>
