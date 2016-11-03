@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import Immutable from 'immutable'
 
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
@@ -37,7 +38,7 @@ const SecurityPageHeader = ({ activeAccount, intl, itemSelectorFunc, params }) =
 }
 
 SecurityPageHeader.propTypes = {
-  activeAccount: PropTypes.string,
+  activeAccount: PropTypes.instanceOf(Immutable.Map),
   intl: PropTypes.object,
   itemSelectorFunc: PropTypes.func,
   params: PropTypes.object

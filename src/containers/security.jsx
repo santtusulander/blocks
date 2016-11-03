@@ -147,7 +147,7 @@ Security.propTypes = {
   params: PropTypes.object,
   router: React.PropTypes.object,
   securityActions: PropTypes.object,
-  sslCertificates: PropTypes.instanceOf(Map),
+  sslCertificates: PropTypes.instanceOf(List),
   toDelete: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func
 }
