@@ -76,7 +76,7 @@ const Navigation = (props) => {
 
         {isSP &&
           <li>
-            <Link to={contentOrNetworkUrlBuilder(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
+            <Link to={getNetworkUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
               <IconContent />
               <span><FormattedMessage id="portal.navigation.network.text"/></span>
             </Link>
