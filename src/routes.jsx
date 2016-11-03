@@ -161,9 +161,6 @@ export const getRoutes = store => {
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
         <Route path={routes.contentProperty} component={Property} />
-        <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes(store)}
-        </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>
 

@@ -20,7 +20,6 @@ module.exports = {
   contentGroups: '/content/:brand/:account/groups',
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
-  contentPropertyAnalytics: '/content/:brand/:account/groups/:group/:property/analytics',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
 
   accountManagement: '/account-management',
