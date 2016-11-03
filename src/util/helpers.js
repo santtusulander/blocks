@@ -377,3 +377,15 @@ export function userHasRole(user, roleToFind) {
 
   return false
 }
+
+export function getAccountByID(accounts, ids) {
+  if (Array.isArray(ids)) {
+    let accountsArray = []
+    ids.map(id => {
+      accountsArray.push(accounts.find(account => account.get('id') === id))
+    })
+    return accountsArray
+  } else {
+    return accounts.find(account => account.get('id') === ids)
+  }
+}
