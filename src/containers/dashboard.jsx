@@ -259,7 +259,7 @@ export class Dashboard extends React.Component {
                     const trafficPercentage = separateUnit(numeral(provider.get('bytes') / trafficBytes).format('0 %'))
                     return (
                       <tr key={i}>
-                        <td><b>{topCPsAccounts[i].get('name')}</b></td>
+                        <td><b>{topCPsAccounts[i] ? topCPsAccounts[i].get('name') : provider.get('account')}</b></td>
                         <td>
                           <MiniChart
                             kpiRight={true}
