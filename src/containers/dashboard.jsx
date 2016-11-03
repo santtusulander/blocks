@@ -51,10 +51,10 @@ export class Dashboard extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const prevProps = JSON.stringify(this.props)
-    const props = JSON.stringify(nextProps)
+    const prevParams = JSON.stringify(this.props.params)
+    const params = JSON.stringify(nextProps.params)
 
-    if (prevProps.params !== props.params || this.props.filters !== nextProps.filters) {
+    if (prevParams !== params || this.props.filters !== nextProps.filters) {
       this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
