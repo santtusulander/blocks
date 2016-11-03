@@ -15,14 +15,13 @@ import IconTrash from '../../icons/icon-trash.jsx'
 import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
 
-const PropertyHeader = ({ router, params, togglePurge, deleteProperty }) => {
-
+const PropertyHeader = ({ router, params, togglePurge, deleteProperty, intl }) => {
 
   const itemSelectorTexts = {
-    property: 'Back to Groups',
-    group: 'Back to Accounts',
-    account: 'UDN Admin',
-    brand: 'UDN Admin'
+    property: intl.formatMessage({ id: 'portal.content.property.topBar.property.label' }),
+    group: intl.formatMessage({ id: 'portal.content.property.topBar.group.label' }),
+    account: intl.formatMessage({ id: 'portal.content.property.topBar.account.label' }),
+    brand: intl.formatMessage({ id: 'portal.content.property.topBar.brand.label' })
   }
 
   const itemSelectorTopBarAction = (tier, fetchItems, IDs) => {
@@ -81,6 +80,7 @@ const PropertyHeader = ({ router, params, togglePurge, deleteProperty }) => {
 }
 PropertyHeader.propTypes = {
   deleteProperty: React.PropTypes.func,
+  intl: React.PropTypes.object,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
   togglePurge: React.PropTypes.func
