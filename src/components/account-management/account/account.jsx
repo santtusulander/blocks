@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar } from 'react-bootstrap'
-import { Map, List, is, fromJS } from 'immutable'
+import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
 
@@ -263,8 +263,7 @@ AccountManagementAccountDetails.propTypes = {
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   toggleModal: React.PropTypes.func,
-  uiActions: React.PropTypes.object,
-  users: React.PropTypes.instanceOf(List)
+  uiActions: React.PropTypes.object
 }
 AccountManagementAccountDetails.defaultProps = {
   account: Map({})
