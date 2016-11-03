@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
 import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
+import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -294,12 +295,11 @@ export const getUserRoles = ( state ) => {
 
 /**
  * Check if user has role for UDN Admin
- * @param  {state}  user state
+ * @param  {state}  currentUser state
  * @return {Boolean}
  */
-export const isSuperAdmin = ( state ) => {
-  const roles = getUserRoles(state)
-  if ( roles && roles.some( role => role === 1) ) return true
+export const isUdnAdmin = ( state ) => {
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
 
   return false
 }

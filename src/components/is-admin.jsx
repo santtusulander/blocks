@@ -2,11 +2,13 @@ import React, { PropTypes, Component, Children } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 
+import {isUdnAdmin} from '../redux/modules/user'
+
 class IsAdmin extends Component {
   render() {
     const { children, currentUser } = this.props;
 
-    const isAdmin = currentUser && currentUser.get('roles') && currentUser.get('roles').contains(1)
+    const isAdmin = isUdnAdmin(currentUser)
 
     return (
       isAdmin && Children.only(children)
