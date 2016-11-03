@@ -9,7 +9,8 @@ jest.mock('../../util/helpers', () => {
     removeProps: jest.fn(),
     filterAccountsByUserName: jest.fn(),
     filterMetricsByAccounts: jest.fn(),
-    matchesRegexp: jest.fn()
+    matchesRegexp: jest.fn(),
+    userIsCloudProvider: jest.fn()
   }
 })
 
