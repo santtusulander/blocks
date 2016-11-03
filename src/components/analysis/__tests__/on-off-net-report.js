@@ -50,6 +50,8 @@ describe('AnalysisOnOffNetReport', () => {
   it('should exist', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={Immutable.Map({startDate: new Date(), endDate: new Date()})}
+        dateRangeLabel='Label'
         fetching={true}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
@@ -61,6 +63,8 @@ describe('AnalysisOnOffNetReport', () => {
   it('should show data rows in table', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={ Immutable.Map({startDate: new Date(), endDate: new Date() })}
+        dateRangeLabel='Label'
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
@@ -73,6 +77,8 @@ describe('AnalysisOnOffNetReport', () => {
   it('should show summary stats', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={Immutable.Map({startDate: new Date(), endDate: new Date()})}
+        dateRangeLabel='Label'
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
