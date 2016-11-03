@@ -6,7 +6,7 @@ class IsAdmin extends Component {
   render() {
     const { children, currentUser } = this.props;
 
-    const isAdmin = false; //currentUser.get('roles').contains(1)
+    const isAdmin = currentUser.get('roles').contains(1)
 
     return (
       isAdmin && Children.only(children)
