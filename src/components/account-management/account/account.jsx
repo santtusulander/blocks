@@ -19,7 +19,7 @@ import './account.scss'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
-import {isSuperAdmin} from '../../../redux/modules/user'
+import {isUdnAdmin} from '../../../redux/modules/user'
 
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
@@ -236,7 +236,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.services.text"/></label>
             <Col xs={3}>
-              <CheckboxArray iterable={checkBoxes} field={services} disabled={!isSuperAdmin(this.props.currentUser)}/>
+              <CheckboxArray iterable={checkBoxes} field={services} disabled={!isUdnAdmin(this.props.currentUser)}/>
             </Col>
           </div>
 
