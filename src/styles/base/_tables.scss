@@ -123,6 +123,7 @@
     > thead > tr > th {
       background-color: transparent;
       border-bottom: 1px solid rgba($pale-blue, 0.2);
+      color: $text-color;
     }
 
     > tbody > tr > td:not(:last-child):not(.no-border) {
