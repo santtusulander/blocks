@@ -236,6 +236,7 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.services.text"/></label>
             <Col xs={3}>
+              {/*TODO: remove isUdnAdmin - check as part of UDNP-1713 */}
               <CheckboxArray iterable={checkBoxes} field={services} disabled={!isUdnAdmin(this.props.currentUser)}/>
             </Col>
           </div>

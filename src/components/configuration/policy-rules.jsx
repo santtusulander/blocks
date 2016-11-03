@@ -98,7 +98,10 @@ class ConfigurationPolicyRules extends React.Component {
         actionsLabel = sets.map(set => set.setkey).join(', ')
       }
 
-      {/* Allow CT / TA modification only for UDN Admin */}
+      {/*
+        TODO: remove UDN admin checks as part of UDNP-1713 
+        Allow CT / TA modification only for UDN Admin
+      */}
       const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
