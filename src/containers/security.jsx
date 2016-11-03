@@ -1,14 +1,11 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
-// import { Nav } from 'react-bootstrap'
-// import { Link, withRouter } from 'react-router'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { getTabName } from '../util/helpers'
-// import { getSecurityUrlFromParams } from '../util/routes'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as securityActionCreators from '../redux/modules/security'
@@ -45,22 +42,13 @@ export class Security extends React.Component {
   }
 
   fetchData(props) {
-    const { location: { pathname }, params: { brand, account, group } } = props
-    switch(getTabName(pathname)) {
-      case 'ssl-certificate':
-        props.securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
-        break
-      // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
-      // case 'content-targeting': securityActions.fetchContentTrageting(account)
-      default: break
-    }
+    const { securityActions, params: { brand, account } } = props
+    securityActions.fetchSSLCertificates(brand, Number(account))
   }
 
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
     const subPage = getTabName(this.props.location.pathname)
-    // for token auth & content targeting post-1.0
-    // const securityBaseUrl = getSecurityUrlFromParams(params);
 
     if (!params.account) {
       return (
@@ -70,29 +58,6 @@ export class Security extends React.Component {
         </Content>
       )
     }
-
-    if (!params.group) {
-      return (
-        <Content className="tab-bodies">
-          <p className='text-center'>Please select a group<br/>
-            from top left to see security</p>
-        </Content>
-      )
-    }
-
-    // for token auth & content targeting post-1.0
-    // return (
-      // <Nav bsStyle="tabs">
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
-      //   </li>
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
-      //   </li>
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-      //   </li>
-      // </Nav>
 
     return (
       <div>
@@ -108,12 +73,10 @@ export class Security extends React.Component {
   render() {
     const {
       accounts,
-      groups,
       activeAccount,
       activeCertificates,
       activeModal,
       fetchAccount,
-      params,
       onDelete,
       sslCertificates,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
@@ -129,7 +92,6 @@ export class Security extends React.Component {
     }
 
     const sslListProps = {
-      groups,
       activeModal,
       activeCertificates,
       certificates: sslCertificates,
@@ -138,8 +100,6 @@ export class Security extends React.Component {
       editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
     }
-
-    const activeGroup = groups.find(obj => obj.get('id') === Number(params.group))
 
     const itemSelectorFunc = (...params) => {
       this.props.router.push(getUrl('/security', ...params))
@@ -151,7 +111,6 @@ export class Security extends React.Component {
           params={this.props.params}
           accounts={accounts}
           activeAccount={activeAccount.get('name')}
-          activeGroup={activeGroup ? activeGroup.get('name') : null}
           itemSelectorFunc={itemSelectorFunc}
           fetchAccount={fetchAccount}/>
 
@@ -187,7 +146,6 @@ Security.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
-  groups: PropTypes.instanceOf(List),
   location: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
@@ -198,17 +156,14 @@ Security.propTypes = {
   toggleModal: PropTypes.func
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     toDelete: state.security.get('certificateToEdit'),
     activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
-    groups: state.group.get('allGroups'),
-    sslCertificates: state.security.get('sslCertificates').filter(cert =>
-      ownProps.params.group ? cert.get('group') === Number(ownProps.params.group) : false
-    )
+    sslCertificates: state.security.get('sslCertificates')
   };
 }
 
@@ -219,7 +174,7 @@ function mapDispatchToProps(dispatch) {
   const toggleModal = uiActions.toggleAccountManagementModal
   function onDelete(toDelete) {
     toggleModal(null)
-    securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+    securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('cn'))
       .then(() => {
         securityActions.resetCertificateToEdit()
       })

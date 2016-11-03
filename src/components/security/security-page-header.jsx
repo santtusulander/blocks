@@ -25,7 +25,7 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
         topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
         onSelect={itemSelectorFunc}
         restrictedTo={restriction}
-        startTier={account ? "group" : "account"}
+        startTier={"account"}
         drillable={true}>
 
         <div className="btn btn-link dropdown-toggle header-toggle">
