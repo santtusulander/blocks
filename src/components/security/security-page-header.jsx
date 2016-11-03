@@ -24,14 +24,13 @@ const SecurityPageHeader = ({ activeAccount, intl, itemSelectorFunc, params }) =
           onSelect={itemSelectorFunc}
           restrictedTo="account">
           <div className="btn btn-link dropdown-toggle header-toggle">
-            <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
-              tooltipPlacement="bottom" className="account-management-title"/></h1>
+            <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" /></h1>
             <span className="caret"></span>
           </div>
         </AccountSelector>
       </IsAllowed>
       <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-        <h1>{headerText}</h1>
+        <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" /></h1>
       </IsAllowed>
      </PageHeader>
   )
