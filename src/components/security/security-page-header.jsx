@@ -16,15 +16,15 @@ const SecurityPageHeader = ({ activeAccount, intl, itemSelectorFunc, params }) =
     <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
       <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
         <AccountSelector
-          as="accountManagement"
+          as="security"
           params={params}
-          topBarTexts={{ brand: 'UDN Admin' }}
+          topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
           topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
           onSelect={itemSelectorFunc}
           restrictedTo="account">
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
-              tooltipPlacement="bottom" className="account-property-title"/></h1>
+              tooltipPlacement="bottom" className="account-management-title"/></h1>
             <span className="caret"></span>
           </div>
         </AccountSelector>
