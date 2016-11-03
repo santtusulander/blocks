@@ -7,7 +7,11 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
-import { getContentUrl } from '../../util/routes'
+import {
+  getContentUrl,
+  getNetworkUrl
+} from '../../util/routes'
+import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
 import UDNButton from '../button'
@@ -151,7 +155,11 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.router.push(getContentUrl('brand', 'udn', {}))
+        if (this.props.router.isActive('network')) {
+          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
+        } else {
+          this.props.router.push(getContentUrl('brand', 'udn', {}))
+        }
         break
     }
   }
@@ -194,7 +202,24 @@ class ContentItems extends React.Component {
         startTier={props.selectionStartTier}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => props.router.push(getContentUrl(...params))}>
+        onSelect={(...params) => {
+          // This check is done to prevent UDN admin from accidentally hitting
+          // the account detail endpoint, which they don't have permission for
+          const currentUser = props.user.get('currentUser')
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
+
+          const url = props.router.isActive('network')
+                        ? getNetworkUrl(...params)
+                        : getContentUrl(...params)
+
+          // We perform this check to prevent routing to unsupported routes
+          // For example, prevent clicking to SP group route (not yet supported)
+          if (url) {
+            props.router.push(url)
+          }
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
@@ -312,7 +337,7 @@ class ContentItems extends React.Component {
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
                     id: id,
-                    linkTo: this.props.nextPageURLBuilder(id),
+                    linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
