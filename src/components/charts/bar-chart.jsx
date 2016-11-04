@@ -15,7 +15,8 @@ export default class BarChart extends Component {
   /**
    * Attach mouse-event handlers to a bar if tooltip is desired to be shown only on bar hover.
    * If there are multiple bars to display per dataset, add stackId-prop that defines which stack
-   * each bar belongs in. Defaulting all bars representing data for one entity to one stack.
+   * each bar belongs in. Otherwise delete the property as Recharts throws an error.
+   * Defaulting all bars representing data for one entity to one stack.
    */
   getBarProps(props) {
     if (!this.props.tooltipAlwaysActive) {
@@ -24,6 +25,8 @@ export default class BarChart extends Component {
     }
     if (this.props.barModels.length > 1) {
       props.stackId = props.stackId || 0
+    } else if (props.stackId) {
+      delete props.stackId
     }
     return props
   }
@@ -42,7 +45,7 @@ export default class BarChart extends Component {
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
         <div className="bar-chart-container">
-          <span className="bar-chart-label">{chartLabel}</span>
+          <span id="bar-chart-label" className="bar-chart-label">{chartLabel}</span>
           <ResponsiveContainer>
             <RechartsBarChart
               data={chartData}
