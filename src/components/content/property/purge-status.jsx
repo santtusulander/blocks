@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Pagination } from 'react-bootstrap'
 
@@ -175,7 +176,10 @@ class PurgeHistoryReport extends React.Component {
 }
 
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
-PurgeHistoryReport.propTypes = {}
+PurgeHistoryReport.propTypes = {
+  historyData: React.PropTypes.instanceOf(List),
+  intl: React.PropTypes.object
+}
 
 PurgeHistoryReport.defaultProps = {}
 

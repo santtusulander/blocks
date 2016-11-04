@@ -1,4 +1,5 @@
 import React from 'react';
+import { Map } from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -101,6 +102,7 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, tog
   )
 }
 PropertyHeader.propTypes = {
+  currentUser: React.PropTypes.instanceOf(Map),
   deleteProperty: React.PropTypes.func,
   intl: React.PropTypes.object,
   params: React.PropTypes.object,
