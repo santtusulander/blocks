@@ -1,4 +1,4 @@
-import React, { propTypes } from 'react'
+import React, { PropTypes } from 'react'
 
 const CustomLegend = ({ data = [] }) =>
   <div className="rechart-legend">
@@ -13,7 +13,7 @@ const CustomLegend = ({ data = [] }) =>
   </div>
 
 CustomLegend.propTypes = {
-  data: propTypes.array
+  data: PropTypes.array
 }
 
 export default CustomLegend
