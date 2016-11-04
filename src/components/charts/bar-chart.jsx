@@ -65,15 +65,26 @@ class UDNBarChart extends Component {
                 align="right"
                 content={<CustomLegend data={barModels}/>}
                 layout="vertical"/>
-            </BarChart>
+            </RechartsBarChart>
           </ResponsiveContainer>
         </div>
     );
   }
 }
 
-UDNBarChart.defaultProps = {
+BarChart.defaultProps = {
   tooltipAlwaysActive: true
 }
 
-export default UDNBarChart
+BarChart.propTypes = {
+  barModels: PropTypes.arrayOf(
+    PropTypes.shape({
+      className: PropTypes.string,
+      name: PropTypes.string.isRequired,
+      dataKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
+      stackId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ])
+    })).isRequired,
+  chartData: PropTypes.arrayOf(PropTypes.object),
+  chartLabel: PropTypes.string,
+  tooltipAlwaysActive: PropTypes.bool
+}
