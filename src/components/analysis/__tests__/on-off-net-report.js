@@ -84,8 +84,10 @@ describe('AnalysisOnOffNetReport', () => {
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
+
     let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
-    expect(summaryBoxes.at(0).text()).toContain('123456')
-    expect(summaryBoxes.at(1).text()).toContain('31000000')
+
+    expect(summaryBoxes.at(0).find('p').text()).toContain('123')
+    expect(summaryBoxes.at(1).find('p').text()).toContain('500000')
   });
 })
