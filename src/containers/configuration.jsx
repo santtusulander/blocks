@@ -74,7 +74,7 @@ export class Configuration extends React.Component {
     this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
-    this.props.securityActions.fetchSSLCertificates(brand, account)
+    this.props.securityActions.fetchSSLCertificates(brand, account, group)
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
