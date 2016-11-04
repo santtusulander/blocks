@@ -14,8 +14,8 @@ export default class BarChart extends Component {
 
   /**
    * Attach mouse-event handlers to a bar if tooltip is desired to be shown only on bar hover.
-   * If there are multiple bars to display a dataset, add stackId-prop that defines which stack
-   * the bar belongs in. Defaulting all bars representing data for one entity to one stack.
+   * If there are multiple bars to display per dataset, add stackId-prop that defines which stack
+   * each bar belongs in. Defaulting all bars representing data for one entity to one stack.
    */
   getBarProps(props) {
     if (!this.props.tooltipAlwaysActive) {
