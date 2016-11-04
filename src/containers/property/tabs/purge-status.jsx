@@ -1,6 +1,5 @@
 import React from 'react'
-import Immutable from 'immutable'
-import { fromJS } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -67,6 +66,19 @@ class PurgeStatus extends React.Component {
     super(props)
 
     this.state = {}
+
+    this.fetchData = this.fetchData.bind(this)
+  }
+
+  componentWillMount() {
+    //this.fetchData(this.props.params)
+  }
+
+  fetchData(params) {
+    const { purgeActions } = this.props
+    const { brand, account, group, property } = params
+
+    purgeActions.fetchAllPurges(brand, account, group, property)
   }
 
   render() {
@@ -81,19 +93,26 @@ class PurgeStatus extends React.Component {
 }
 
 PurgeStatus.displayName = 'PurgeStatus'
-PurgeStatus.propTypes = {}
+
 PurgeStatus.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  activeHost: Immutable.Map(),
-  activePurge: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  hourlyTraffic: Immutable.fromJS({
-    now: [],
-    history: []
-  }),
-  properties: Immutable.List(),
-  visitorsByCountry: Immutable.Map()
+  activeAccount: Map(),
+  activeGroup: Map(),
+  activeHost: Map(),
+  activePurge: Map(),
+  allPurges: List(),
+  params: {},
+  properties: List()
+}
+
+PurgeStatus.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Map),
+  activeGroup: React.PropTypes.instanceOf(Map),
+  activeHost: React.PropTypes.instanceOf(Map),
+  activePurge: React.PropTypes.instanceOf(Map),
+  allPurges: React.PropTypes.instanceOf(List),
+  params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(List),
+  purgeActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -103,6 +122,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    allPurges: state.purge.get('allPurges'),
     fetching: state.host.get('fetching'),
     properties: state.host.get('allHosts')
   };
