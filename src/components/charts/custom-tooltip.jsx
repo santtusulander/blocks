@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
 import { formatBytes } from '../../util/helpers'
 
@@ -30,6 +30,11 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
       </div>
     </div>
   )
+}
+
+CustomTooltip.propTypes = {
+  iconClass: PropTypes.func,
+  payload: PropTypes.array
 }
 
 export default CustomTooltip
