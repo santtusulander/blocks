@@ -25,14 +25,14 @@ export default class BarChart extends Component {
     if (this.props.barModels.length > 1) {
       props.stackId = props.stackId || 0
     }
-    props.key = props.dataKey
     return props
   }
 
   renderBars() {
-    return this.props.barModels.map(barProps =>
+    return this.props.barModels.map((barProps, index) =>
       <Bar
         {...this.getBarProps(barProps)}
+        key={index}
         isAnimationActive={false}/>
     )
   }
