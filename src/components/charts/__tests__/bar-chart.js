@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../bar-chart.jsx')
-import BarChart from '../bar-chart.jsx'
+jest.unmock('../bar-chart')
+import BarChart from '../bar-chart'
 
 const chartData = [
   {
