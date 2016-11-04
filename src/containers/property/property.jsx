@@ -8,11 +8,8 @@ import { FormattedMessage } from 'react-intl'
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
-import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as purgeActionCreators from '../../redux/modules/purge'
-import * as trafficActionCreators from '../../redux/modules/traffic'
 import * as uiActionCreators from '../../redux/modules/ui'
-import * as visitorsActionCreators from '../../redux/modules/visitors'
 
 import Content from '../../components/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
@@ -150,28 +147,18 @@ Property.propTypes = {
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   description: React.PropTypes.string,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
   id: React.PropTypes.string,
   location: React.PropTypes.object,
-  metricsActions: React.PropTypes.object,
   name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  trafficActions: React.PropTypes.object,
-  trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
-  visitorsActions: React.PropTypes.object,
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
-  visitorsFetching: React.PropTypes.bool
 }
 Property.defaultProps = {
   activeAccount: Immutable.Map(),
@@ -179,13 +166,7 @@ Property.defaultProps = {
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
   currentUser: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  hourlyTraffic: Immutable.fromJS({
-    now: [],
-    history: []
-  }),
-  properties: Immutable.List(),
-  visitorsByCountry: Immutable.Map()
+  properties: Immutable.List()
 }
 
 function mapStateToProps(state) {
