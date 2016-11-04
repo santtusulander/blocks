@@ -168,13 +168,43 @@ export default class Styleguide extends React.Component {
         "onNetHttps": 8905041306312,
         "offNetHttp": 4413020296483,
         "offNetHttps": 2063509423994
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
       }
     ]
 
     const singleBarChartData = [
       {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
         "name": "Datafone Inc.",
         "onNetHttp": 9149792187422
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
       },
       {
         "name": "AsiaNet",
@@ -183,6 +213,10 @@ export default class Styleguide extends React.Component {
       {
         "name": "QXT",
         "onNetHttp": 17640581263893
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
       }
     ]
 
@@ -265,6 +299,7 @@ export default class Styleguide extends React.Component {
                     ]}/>}
               </SectionContainer>
               </Row>
+              <hr />
               <Row>
                 <label>Normal barchart, tooltip always active</label>
                 <SectionContainer className="analysis-contribution">
