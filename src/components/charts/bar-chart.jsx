@@ -51,7 +51,6 @@ export default class BarChart extends Component {
               data={chartData}
               maxBarSize={maxBarSize}
               margin={{top: 100, right: 30, left: 20, bottom: 20}}>
-              {this.renderBars()}
               <XAxis
                 padding={{ right: 50 }}
                 tickLine={false}
@@ -73,6 +72,7 @@ export default class BarChart extends Component {
                 align="right"
                 content={<CustomLegend data={barModels}/>}
                 layout="vertical"/>
+              {this.renderBars()}
             </RechartsBarChart>
           </ResponsiveContainer>
         </div>

@@ -75,6 +75,7 @@
     "react-redux": "^4.4.0",
     "react-router": "^2.5.2",
     "react-telephone-input": "^3.5.0",
+    "recharts": "^0.15.3",
     "redux": "^3.3.1",
     "redux-actions": "^0.9.1",
     "redux-auth-wrapper": "^0.6.0",
