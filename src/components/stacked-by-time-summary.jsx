@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import AnalysisByTime from '../analysis/by-time'
-import { paleblue, yellow } from '../../constants/colors'
+import AnalysisByTime from './analysis/by-time'
+import { paleblue, yellow } from '../constants/colors'
 
 class StackedByTimeSummary extends React.Component {
   constructor(props) {
