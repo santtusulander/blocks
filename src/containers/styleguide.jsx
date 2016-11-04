@@ -147,6 +147,45 @@ export default class Styleguide extends React.Component {
       }
     }
 
+    const stackedBarChartData = [
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905,
+        "onNetHttps": 27260875504858,
+        "offNetHttp": 16598076780724,
+        "offNetHttps": 6941781887919
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
+      }
+    ]
+
+    const singleBarChartData = [
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      }
+    ]
+
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_on || 0,
@@ -217,35 +256,13 @@ export default class Styleguide extends React.Component {
                   {<BarChart
                     chartLabel="Month to Date"
                     tooltipAlwaysActive={false}
-                    chartData={[
-                      {
-                        "name": "Datafone Inc.",
-                        "onNetHttp": 9149792187422,
-                        "onNetHttps": 4324269843760,
-                        "offNetHttp": 2297510618946,
-                        "offNetHttps": 1090755001954
-                      },
-                      {
-                        "name": "AsiaNet",
-                        "onNetHttp": 58034767339905,
-                        "onNetHttps": 27260875504858,
-                        "offNetHttp": 16598076780724,
-                        "offNetHttps": 6941781887919
-                      },
-                      {
-                        "name": "QXT",
-                        "onNetHttp": 17640581263893,
-                        "onNetHttps": 8905041306312,
-                        "offNetHttp": 4413020296483,
-                        "offNetHttps": 2063509423994
-                      }
-                    ]}
-                  barModels={[
-                    { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
-                    { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
-                    { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-                    { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
-                  ]}/>}
+                    chartData={stackedBarChartData}
+                    barModels={[
+                      { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
+                      { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                      { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                      { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
+                    ]}/>}
               </SectionContainer>
               </Row>
               <Row>
@@ -253,21 +270,8 @@ export default class Styleguide extends React.Component {
                 <SectionContainer className="analysis-contribution">
                   <BarChart
                     chartLabel="This Week"
-                    chartData={[
-                      {
-                        "name": "Datafone Inc.",
-                        "onNetHttp": 9149792187422
-                      },
-                      {
-                        "name": "AsiaNet",
-                        "onNetHttp": 58034767339905
-                      },
-                      {
-                        "name": "QXT",
-                        "onNetHttp": 17640581263893
-                      }
-                    ]}
-                  barModels={[ { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' } ]}/>
+                    chartData={singleBarChartData}
+                    barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
               </SectionContainer>
             </Row>
 

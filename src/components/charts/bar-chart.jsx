@@ -31,18 +31,18 @@ export default class BarChart extends Component {
   renderBars() {
     return this.props.barModels.map((barProps, index) =>
       <Bar
-        {...this.getBarProps(barProps)}
         key={index}
-        isAnimationActive={false}/>
+        isAnimationActive={false}
+        {...this.getBarProps(barProps)}/>
     )
   }
 
   render() {
-    const { props: { chartData, barModels, chartLabel, maxBarSize }, state: { showTooltip } } = this
+    const { props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset }, state: { showTooltip } } = this
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
-        <div className="analysis-by-time analysis-stacked">
-          <span className="stacked-chart-label">{chartLabel}</span>
+        <div className="bar-chart-container">
+          <span className="bar-chart-label">{chartLabel}</span>
           <ResponsiveContainer>
             <RechartsBarChart
               data={chartData}
@@ -62,7 +62,7 @@ export default class BarChart extends Component {
                 <Tooltip
                   animationDelay={500}
                   animationEase="linear"
-                  offset={40}
+                  offset={toolTipOffset}
                   content={<CustomTooltip iconClass={tooltipIconClass}/>}/>}
               <Legend
                 verticalAlign="top"
@@ -79,6 +79,7 @@ export default class BarChart extends Component {
 
 BarChart.defaultProps = {
   tooltipAlwaysActive: true,
+  toolTipOffset: 40,
   maxBarSize: 80
 }
 
@@ -93,5 +94,6 @@ BarChart.propTypes = {
   chartData: PropTypes.arrayOf(PropTypes.object),
   chartLabel: PropTypes.string,
   maxBarSize: PropTypes.number,
+  toolTipOffset: PropTypes.number,
   tooltipAlwaysActive: PropTypes.bool
 }
