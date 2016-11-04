@@ -222,7 +222,7 @@ class ContentItemChart extends React.Component {
                 width: innerRadius * 2, height: innerRadius * 2,
                 marginTop: -innerRadius, marginLeft: -innerRadius
               }}>
-              <div className="circle-gradient"></div>
+              <div className="circle-gradient" />
             </div>
             <ReactCSSTransitionGroup
               component="div"

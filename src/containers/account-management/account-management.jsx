@@ -379,7 +379,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret"></span>
+                <span className="caret" />
               </div>
             </AccountSelector>
           </IsAllowed>

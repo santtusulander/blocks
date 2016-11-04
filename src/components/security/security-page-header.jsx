@@ -25,7 +25,7 @@ const SecurityPageHeader = ({ activeAccount, intl, itemSelectorFunc, params }) =
           restrictedTo="account">
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" /></h1>
-            <span className="caret"></span>
+            <span className="caret" />
           </div>
         </AccountSelector>
       </IsAllowed>

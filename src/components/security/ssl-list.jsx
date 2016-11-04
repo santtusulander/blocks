@@ -25,7 +25,7 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
                 checked={false}/>
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
-            <th width="1%"></th>
+            <th width="1%" />
           </tr>
         </thead>
         <tbody>
