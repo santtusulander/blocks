@@ -50,12 +50,8 @@ module.exports = {
   security: '/security',
   securityBrand: '/security/:brand',
   securityAccount: '/security/:brand/:account',
-  securityGroup: '/security/:brand/:account/:group',
-  securityProperty: '/security/:brand/:account/:group/:property',
 
   securityTabSslCertificate: 'ssl-certificate',
-  securityTabContentTargeting: 'content-targeting',
-  securityTabTokenAuthentication: 'token-authentication',
 
   support: '/support',
   supportBrand: '/support/:brand',

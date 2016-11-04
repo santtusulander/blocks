@@ -16,7 +16,8 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import {
   filterMetricsByAccounts,
-  userIsCloudProvider
+  userIsCloudProvider,
+  userIsServiceProvider
 } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
@@ -78,6 +79,7 @@ export class Accounts extends React.Component {
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
+    const selectionDisabled = !showAccountList && userIsServiceProvider(currentUser)
 
     const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
@@ -112,6 +114,7 @@ export class Accounts extends React.Component {
         isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        selectionDisabled={selectionDisabled}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}

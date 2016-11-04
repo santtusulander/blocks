@@ -194,20 +194,6 @@ export const getRoutes = store => {
         <Route path={routes.securityAccount} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
           <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
-        </Route>
-        <Route path={routes.securityGroup} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
-        </Route>
-        <Route path={routes.securityProperty} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
         </Route>
       </Route>
 
