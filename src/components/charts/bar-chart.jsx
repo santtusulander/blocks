@@ -1,17 +1,22 @@
-import React, { Component } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import React, { Component, PropTypes } from 'react'
+import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 import CustomTooltip from './custom-tooltip'
 import CustomLegend from './custom-legend'
 
 import { formatBytes } from '../../util/helpers'
 
-class UDNBarChart extends Component {
+export default class BarChart extends Component {
   constructor(props) {
     super(props)
     this.state = { showTooltip: props.tooltipAlwaysActive }
   }
 
+  /**
+   * Attach mouse-event handlers to a bar if tooltip is desired to be shown only on bar hover.
+   * If there are multiple bars to display a dataset, add stackId-prop that defines which stack
+   * the bar belongs in. Defaulting all bars representing data for one entity to one stack.
+   */
   getBarProps(props) {
     if (!this.props.tooltipAlwaysActive) {
       props.onMouseEnter = () => this.setState({ showTooltip: true })
@@ -20,6 +25,7 @@ class UDNBarChart extends Component {
     if (this.props.barModels.length > 1) {
       props.stackId = props.stackId || 0
     }
+    props.key = props.dataKey
     return props
   }
 
@@ -38,7 +44,7 @@ class UDNBarChart extends Component {
         <div className="analysis-by-time analysis-stacked">
           <span className="stacked-chart-label">{chartLabel}</span>
           <ResponsiveContainer>
-            <BarChart
+            <RechartsBarChart
               data={chartData}
               maxBarSize={80}
               margin={{top: 100, right: 30, left: 20, bottom: 20}}>
@@ -57,7 +63,6 @@ class UDNBarChart extends Component {
                   animationDelay={500}
                   animationEase="linear"
                   offset={40}
-                  payload={[]}
                   content={<CustomTooltip iconClass={tooltipIconClass}/>}/>}
               <Legend
                 verticalAlign="top"
