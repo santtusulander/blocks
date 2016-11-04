@@ -308,10 +308,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <div className="conditions">
             {flattenedPolicy.matches.map((match, i) => {
-              let values = match.values[0]
-              if(match.values.length > 1) {
-                values = `${values} and ${match.values.length - 1} others`
-              }
               let active = false
               if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
