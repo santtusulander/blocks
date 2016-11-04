@@ -38,7 +38,7 @@ export default class BarChart extends Component {
   }
 
   render() {
-    const { props: { chartData, barModels, chartLabel }, state: { showTooltip } } = this
+    const { props: { chartData, barModels, chartLabel, maxBarSize }, state: { showTooltip } } = this
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
         <div className="analysis-by-time analysis-stacked">
@@ -46,7 +46,7 @@ export default class BarChart extends Component {
           <ResponsiveContainer>
             <RechartsBarChart
               data={chartData}
-              maxBarSize={80}
+              maxBarSize={maxBarSize}
               margin={{top: 100, right: 30, left: 20, bottom: 20}}>
               {this.renderBars()}
               <XAxis
@@ -78,7 +78,8 @@ export default class BarChart extends Component {
 }
 
 BarChart.defaultProps = {
-  tooltipAlwaysActive: true
+  tooltipAlwaysActive: true,
+  maxBarSize: 80
 }
 
 BarChart.propTypes = {
@@ -91,5 +92,6 @@ BarChart.propTypes = {
     })).isRequired,
   chartData: PropTypes.arrayOf(PropTypes.object),
   chartLabel: PropTypes.string,
+  maxBarSize: PropTypes.number,
   tooltipAlwaysActive: PropTypes.bool
 }
