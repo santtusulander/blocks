@@ -158,7 +158,7 @@ Property.propTypes = {
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  uiActions: React.PropTypes.object,
+  uiActions: React.PropTypes.object
 }
 Property.defaultProps = {
   activeAccount: Immutable.Map(),
