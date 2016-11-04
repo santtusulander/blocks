@@ -1,24 +1,50 @@
+@import "../../../components/analysis/by-time/legend.scss";
+
 .analysis-stacked {
+  background-color: rgba($black, 0.2);
+  height: 100%;
   line {
     stroke-width: 20px;
   }
 
-  .line-0 {
+  .rechart-tooltip {
+    @extend .chart-legend;
+    position: relative;
+    background-color: rgba($black, 0.8);
+    padding: 10px 0;
+    top: auto;
+    right: auto;
+    min-width: auto;
 
-    .dark-theme &,
-    .light-theme & {
-      color: $pale-blue;
-      stroke: $pale-blue;
+    .tooltip-item {
+      @extend .legend-item;
+      padding: 0 0.6em;
     }
   }
 
-  .line-1 {
+  .stacked-chart-label {
+    top: 1.5em;
+    left: 2em;
+    position: absolute;
+    font-weight: bold;
+  }
 
-    .dark-theme &,
-    .light-theme & {
-      color: $yellow;
-      stroke: $yellow;
-    }
+  .legend-icon {
+      font-weight: bold;
+      margin-right: 0.5em;
+  }
+
+  .rechart-legend {
+    padding: 1em 5em 1em 1em;
+    background-color: rgba($black, 0.4);
+  }
+
+  .recharts-bar-rectangle:hover {
+    opacity: 0.8;
+  }
+
+  .recharts-bar-cursor {
+    display: none;
   }
 
   .dataset-labels {
