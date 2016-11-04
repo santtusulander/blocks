@@ -7,7 +7,7 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
   return (
     <div className="rechart-tooltip">
       {payload.map(({ name, value, dataKey }, i) =>
-        <div key={i} className="tooltip-item">
+        <div key={i} id="tooltip-item" className="tooltip-item">
           <span className="legend-label">
             <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
             {name}
@@ -21,7 +21,7 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
         <span className="legend-label">
           Total
         </span>
-        <span className='legend-value'>{total}</span>
+        <span id="tooltip-total" className="legend-value">{total}</span>
       </div>
     </div>
   )

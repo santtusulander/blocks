@@ -57,21 +57,6 @@ const subject = (conditionalProps = {}) => shallow(
     chartData={conditionalProps.chartData || chartData}/>
 )
 
-// BarChart.propTypes = {
-//   barModels: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       className: PropTypes.string,
-//       name: PropTypes.string.isRequired,
-//       dataKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
-//       stackId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ])
-//     })).isRequired,
-//   chartData: PropTypes.arrayOf(PropTypes.object),
-//   chartLabel: PropTypes.string,
-//   maxBarSize: PropTypes.number,
-//   toolTipOffset: PropTypes.number,
-//   tooltipAlwaysActive: PropTypes.bool
-// }
-
 describe('BarChart', () => {
   it('should exist', () => {
     expect(subject()).toBeDefined()
