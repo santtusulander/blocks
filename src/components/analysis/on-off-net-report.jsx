@@ -177,12 +177,15 @@ class AnalysisOnOffNetReport extends React.Component {
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
 
-    let trafficToday = statsToday.get('total')
-    if(this.props.onOffFilter.contains('on-net') && !this.props.onOffFilter.contains('off-net')) {
-      trafficToday = statsToday.getIn(['net_on', 'bytes'])
-    } else if (this.props.onOffFilter.contains('off-net') && !this.props.onOffFilter.contains('on-net')) {
-      trafficToday = statsToday.getIn(['net_off', 'bytes'])
-    }
+    /* Get values for KPIs */
+    const dataKey = this.props.onOffFilter.get(0) === 'off-net' ? 'net_off' : 'net_on'
+    const trafficToday = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+      ? statsToday.get('total')
+      : statsToday.getIn([ dataKey, 'bytes'] )
+
+    const totalTrafficByDateRange = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+      ? stats.get('total')
+      : stats.getIn([ dataKey, 'bytes'] )
 
     const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
 
@@ -191,6 +194,7 @@ class AnalysisOnOffNetReport extends React.Component {
         <SectionContainer>
           <Row>
             <Col xs={12}>
+              {/* KPI Traffic Today */}
               <div className="analysis-data-box">
                 <h4><FormattedMessage id='portal.analytics.onOffNet.trafficToday.label' /></h4>
                 <p>{formatBytes(trafficToday)}</p>
@@ -213,9 +217,10 @@ class AnalysisOnOffNetReport extends React.Component {
                 }
                 </Row>
               </div>
+              {/* KPI Traffic By Date Range */}
               <div className="analysis-data-box">
                 <h4><FormattedMessage id='portal.analytics.onOffNet.traffic.label' /> {trafficByDateRangeLabel}</h4>
-                <p>{formatBytes(stats.get('total'))}</p>
+                <p>{formatBytes(totalTrafficByDateRange)}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
                   <Col xs={6}>

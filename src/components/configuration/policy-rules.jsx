@@ -9,6 +9,7 @@ import ActionButtons from '../../components/action-buttons.jsx'
 import {
   getScriptLua,
   matchIsContentTargeting,
+  actionIsTokenAuth,
   parsePolicy,
   parseCountriesByResponseCodes,
   ALLOW_RESPONSE_CODES,
@@ -17,6 +18,8 @@ import {
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
+
+import IsAdmin from '../is-admin'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -84,9 +87,9 @@ class ConfigurationPolicyRules extends React.Component {
         const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
 
         let ctActionLabels = []
-        if ( allowCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
 
         actionsLabel = ctActionLabels.join(' | ')
 
@@ -94,16 +97,33 @@ class ConfigurationPolicyRules extends React.Component {
         matchLabel = matches.map(match => match.field).join(', ')
         actionsLabel = sets.map(set => set.setkey).join(', ')
       }
+
+      {/*
+        TODO: remove UDN admin checks as part of UDNP-1713 
+        Allow CT / TA modification only for UDN Admin
+      */}
+      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
+      const actionButtons = (
+        <ActionButtons
+          permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
+          onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
+          onDelete={this.showConfirmation(`${type}_policy`, i)} />
+      )
+
       return (
         <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
-            <ActionButtons
-              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
-              onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
-              onDelete={this.showConfirmation(`${type}_policy`, i)} />
+            {/* Allow CT / TA modification only for UDN Admin */}
+            {ruleNeedsAdmin ?
+              <IsAdmin>
+                {actionButtons}
+              </IsAdmin>
+              :
+              actionButtons
+            }
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"
