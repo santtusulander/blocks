@@ -380,19 +380,19 @@ $lt-caret-color: $silver-60;
     background-color: $black;
     background-image: linear-gradient(rgba($btn-primary-background, 0.3), rgba($btn-primary-background, 0.3));
 
-    &:hover {
-      background-image: linear-gradient(rgba($btn-primary-background, 0.4), rgba($btn-primary-background, 0.4));
+    &:active,
+    &.active {
+      background-image: linear-gradient(rgba($btn-primary-background, 0.2), rgba($btn-primary-background, 0.2));
 
       .icon {
         fill: $btn-primary-background;
       }
     }
 
-    &:active,
-    &.active,
+    &:hover,
     &:active:hover,
     &.active:focus {
-      background-image: linear-gradient(rgba($btn-primary-background, 0.2), rgba($btn-primary-background, 0.2));
+      background-image: linear-gradient(rgba($btn-primary-background, 0.4), rgba($btn-primary-background, 0.4));
 
       .icon {
         fill: $btn-primary-background;
@@ -460,6 +460,30 @@ $lt-caret-color: $silver-60;
 
     &:focus {
       box-shadow: 0 0 0 2px rgba($black, 0.4), inset 0 0 0 2px $btn-primary-background;
+    }
+  }
+
+  .btn-tertiary {
+    background-color: $black;
+    background-image: linear-gradient(rgba($btn-primary-background, 0.8), rgba($btn-primary-background, 0.8));
+
+    &:active,
+    &.active {
+      background-image: linear-gradient(rgba($btn-primary-background, 0.5), rgba($btn-primary-background, 0.5));
+
+      .icon {
+        fill: $btn-primary-background;
+      }
+    }
+
+    &:hover,
+    &:active:hover,
+    &.active:focus {
+      background-image: linear-gradient(rgba($btn-primary-background, 0.7), rgba($btn-primary-background, 0.7));
+
+      .icon {
+        fill: $btn-primary-background;
+      }
     }
   }
 

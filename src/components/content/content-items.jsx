@@ -301,15 +301,15 @@ class ContentItems extends React.Component {
               value={currentValue}
               options={sortOptions.map(opt => [opt.value, opt.label])}/>
             <UDNButton bsStyle={viewingChart ? 'primary' : 'tertiary'}
-                       className="toggle-chart"
+                       active={!viewingChart}
                        icon={true}
                        toggleView={true}
                        onClick={!viewingChart && this.props.toggleChartView}>
               <IconItemChart/>
             </UDNButton>
             <UDNButton bsStyle={!viewingChart ? 'primary' : 'tertiary'}
+                       active={viewingChart}
                        icon={true}
-                       className="toggle-list"
                        toggleView={true}
                        onClick={viewingChart && this.props.toggleChartView}>
               <IconItemList/>

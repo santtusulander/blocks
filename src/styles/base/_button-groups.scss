@@ -55,8 +55,11 @@
       margin-left: 12px;
     }
 
-    + .toggle-list {
-      margin-left: 0;
+    + .btn-icon {
+
+      &:last-child {
+        margin-left: 0;
+      }
     }
   }
 
