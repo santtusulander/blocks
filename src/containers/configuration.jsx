@@ -263,7 +263,7 @@ export class Configuration extends React.Component {
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
-              <span className="caret"></span>
+              <span className="caret" />
             </div>
           </AccountSelector>
           <ButtonToolbar className="pull-right">

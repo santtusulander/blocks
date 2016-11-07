@@ -109,7 +109,7 @@ class AccountList extends Component {
             noClear={true}
             className="inline-add-dropdown"
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-          positionClass: 'row col-xs-6'
+        positionClass: 'row col-xs-6'
       } ]
     ]
   }
