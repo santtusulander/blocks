@@ -9,7 +9,7 @@ import {
   getMatchFilterType
 } from '../../../util/policy-config'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 class Matcher extends React.Component {
   constructor(props) {
@@ -134,38 +134,39 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-
-          <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
-            placeholder={`Enter ${this.props.name} Name`}
+          <Input type="text" label={this.props.label}
+            placeholder={this.props.placeholder}
             id="matches_val"
             value={this.state.val}
             onChange={this.handleValChange}/>
 
           <hr />
 
-          <div className="form-groups">
-            <InputConnector show={hasContainingRule} noLabel={true} />
-            <div className="form-group">
-              <Select className="input-select"
-                onSelect={this.handleMatchesChange}
-                value={this.state.activeFilter}
-                options={matchOpts}/>
-            </div>
+          {!this.props.disableRuleSelector &&
+            <div className="form-groups">
+              <InputConnector show={hasContainingRule} noLabel={true} />
+              <div className="form-group">
+                <Select className="input-select"
+                  onSelect={this.handleMatchesChange}
+                  value={this.state.activeFilter}
+                  options={matchOpts}/>
+              </div>
 
-            <Panel className="form-panel" collapsible={true}
-              expanded={hasContainingRule}>
-              <Input type="text" label="Value"
-                value={this.state.containsVal}
-                onChange={this.handleContainsValChange}/>
-            </Panel>
-          </div>
+              <Panel className="form-panel" collapsible={true}
+                expanded={hasContainingRule}>
+                <Input type="text" label="Value"
+                  value={this.state.containsVal}
+                  onChange={this.handleContainsValChange}/>
+              </Panel>
+            </div>
+          }
 
           <ButtonToolbar className="text-right">
             <Button bsStyle="default" onClick={this.props.close}>
-              Cancel
+              <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
-              Save Match
+              <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
           </ButtonToolbar>
 
@@ -181,10 +182,12 @@ Matcher.propTypes = {
   close: React.PropTypes.func,
   contains: React.PropTypes.bool,
   description: React.PropTypes.string,
-  intl: React.PropTypes.object,
+  disableRuleSelector: React.PropTypes.bool,
+  label: React.PropTypes.string,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,
-  path: React.PropTypes.instanceOf(Immutable.List)
+  path: React.PropTypes.instanceOf(Immutable.List),
+  placeholder: React.PropTypes.string
 }
 
-module.exports = injectIntl(Matcher)
+module.exports = Matcher

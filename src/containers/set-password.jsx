@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import { getContentUrl } from '../util/routes'
+import { getUrl } from '../util/routes'
 
 import * as userActionCreators from '../redux/modules/user'
 
@@ -25,7 +25,7 @@ export class SetPassword extends React.Component {
     this.changePassword = this.changePassword.bind(this)
   }
   goToLoginPage() {
-    this.props.router.push(getContentUrl('/login', {}))
+    this.props.router.push(getUrl('/login', {}))
   }
   onSubmit(e) {
     e.preventDefault()

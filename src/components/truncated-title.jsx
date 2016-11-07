@@ -37,6 +37,7 @@ class TruncatedTitle extends React.Component {
         <h3>{this.props.content}</h3>
       </Tooltip>
     )
+
     return (
       <div
         className={className}
@@ -58,7 +59,10 @@ class TruncatedTitle extends React.Component {
 TruncatedTitle.displayName = 'TruncatedTitle'
 TruncatedTitle.propTypes = {
   className: React.PropTypes.string,
-  content: React.PropTypes.string,
+  content: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object
+  ]),
   tooltipPlacement: React.PropTypes.string
 };
 

@@ -37,6 +37,10 @@ class Validator {
         validator : /^(?:5min|hour|day|month)$/,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid time granularity ("5min", "hour", "day", or "month"). Value received: ${value}`
       },
+      sp_granularity: {
+        validator : /^(?:hour|day)$/,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid time granularity ("hour" or "day"). Value received: ${value}`
+      },
       number: {
         validator : /^\d+$/,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid number. Value received: ${value}`

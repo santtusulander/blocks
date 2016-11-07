@@ -104,8 +104,10 @@ export class FilterDropdown extends React.Component {
 
 FilterDropdown.displayName = 'FilterDropdown'
 FilterDropdown.propTypes   = {
+  className: React.PropTypes.string,
   handleSelect: React.PropTypes.func,
-  options: React.PropTypes.instanceOf(Immutable)
+  options: React.PropTypes.instanceOf(Immutable),
+  parent: React.PropTypes.string
 }
 
 module.exports = FilterDropdown

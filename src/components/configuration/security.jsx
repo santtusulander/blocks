@@ -47,7 +47,8 @@ class ConfigurationSecurity extends React.Component {
   render() {
     const {
       config,
-      sslCertificates
+      sslCertificates,
+      readOnly
     } = this.props
 
     const sslEnabled =
@@ -68,6 +69,7 @@ class ConfigurationSecurity extends React.Component {
           </Col>
           <Col xs={9}>
             <Toggle
+              readonly={readOnly}
               value={sslEnabled}
               changeValue={this.toggleHTTPS()}
             />
@@ -80,6 +82,7 @@ class ConfigurationSecurity extends React.Component {
             </Col>
             <Col xs={4}>
               <Select className="input-select"
+                disabled={readOnly}
                 onSelect={this.setSSLCertificate()}
                 value={sslCertificateId}
                 options={sslCertificateOptions}/>
@@ -95,7 +98,8 @@ ConfigurationSecurity.propTypes = {
   changeValue: React.PropTypes.func,
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
+  readOnly: React.PropTypes.bool,
   sslCertificates: React.PropTypes.instanceOf(Immutable.List)
 }
 
-module.exports = ConfigurationSecurity
+export default ConfigurationSecurity

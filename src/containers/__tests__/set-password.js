@@ -3,24 +3,24 @@ import { Tooltip } from 'react-bootstrap'
 import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../util/routes', () => {
   return {
-    getContentUrl: jest.genMockFunction()
-      .mockImplementation(val => '/path/after/login')
+    getContentUrl: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
-jest.autoMockOff()
-jest.dontMock('../set-password.jsx')
-const SetPassword = require('../set-password.jsx').SetPassword
+jest.unmock('../set-password.jsx')
+jest.unmock('../../redux/modules/filters')
+import { SetPassword } from '../set-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
-    startFetching: jest.genMockFunction(),
-    logIn: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    logIn: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     }),
-    checkToken: jest.genMockFunction().mockImplementation(() => {
+    checkToken: jest.fn().mockImplementation(() => {
       return {payload: {token:null}}
     })
   }
@@ -28,10 +28,10 @@ function userActionsMaker(cbResponse) {
 
 describe('SetPassword', () => {
   it('should exist', () => {
-    const setPassword = TestUtils.renderIntoDocument(
+    const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    expect(TestUtils.isCompositeComponent(setPassword)).toBeTruthy();
+    expect(setPassword).toBeTruthy();
   })
 
   it('sets the validPassword state to false when the isValidPassword paramter is false', () => {

@@ -117,6 +117,7 @@ class ModalServerValidation extends React.Component {
 ModalServerValidation.displayName = 'ModalServerValidation'
 ModalServerValidation.propTypes = {
   handleCloseModal: React.PropTypes.func,
+  intl: React.PropTypes.object,
   showDetails: React.PropTypes.bool,
   toggleShowDetails: React.PropTypes.func
 }

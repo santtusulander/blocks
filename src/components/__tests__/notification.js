@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../notification.jsx')
-const Notification = require('../notification.jsx')
+jest.unmock('../notification.jsx')
+import Notification from '../notification.jsx'
 
 describe('Notification', () => {
   it('should exist', () => {

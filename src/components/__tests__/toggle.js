@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../toggle.jsx');
-const Toggle = require('../toggle.jsx').default;
+jest.unmock('../toggle.jsx');
+import Toggle from '../toggle.jsx'
 
 describe('Toggle', function() {
 

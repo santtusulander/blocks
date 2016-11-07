@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../select.jsx')
-const Select = require('../select.jsx').default
+jest.unmock('../select.jsx')
+import Select from '../select.jsx'
 import { Dropdown } from 'react-bootstrap'
 
 describe('Select', () => {

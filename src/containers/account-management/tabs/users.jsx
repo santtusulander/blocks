@@ -24,8 +24,7 @@ import IconInfo from '../../../components/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
-import ActionModal from '../../../components/action-modal'
-import UDNButton from '../../../components/button'
+import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -258,14 +257,14 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
-        buttons:  [
-          <UDNButton key="button-1" onClick={() => {
-            this.isLeaving = true
-            this.props.router.push(pathname)
-            this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary">Continue</UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">Stay</UDNButton>
-        ]
+        stayButton: true,
+        continueButton: true,
+        cancel: this.props.uiActions.hideInfoDialog,
+        submit: () => {
+          this.isLeaving = true
+          this.props.router.push(pathname)
+          this.props.uiActions.hideInfoDialog()
+        }
       })
       return false;
     }
@@ -277,9 +276,8 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
-        buttons:  [
-          <UDNButton key="button-1" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">OK</UDNButton>
-        ]
+        okButton: true,
+        cancel: this.props.uiActions.hideInfoDialog
       })
     }
     else {
@@ -478,16 +476,11 @@ export class AccountManagementAccountUsers extends React.Component {
           />
         }
         {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
-          <ActionModal
-            show={this.state.showPermissionsModal}
+          <ModalWindow
             title="View Permissions"
-            showClose={true}
-            closeModal={this.togglePermissionModal}
-            buttons={
-              <Button
-                className="btn-save"
-                onClick={this.togglePermissionModal}>CLOSE</Button>
-            }>
+            closeModal={true}
+            closeButton={true}
+            cancel={this.togglePermissionModal}>
               {this.props.roles.map((role, i) => (
                 <PanelGroup accordion={true} key={i} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
@@ -504,7 +497,7 @@ export class AccountManagementAccountUsers extends React.Component {
                   </Panel>
                 </PanelGroup>
               ))}
-          </ActionModal>
+          </ModalWindow>
         }
       </PageContainer>
     )

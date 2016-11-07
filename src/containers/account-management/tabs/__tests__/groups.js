@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {shallow, mount, render} from 'enzyme'
+import { shallow } from 'enzyme'
 
 jest.unmock('../groups.jsx')
 import Groups from '../groups.jsx'

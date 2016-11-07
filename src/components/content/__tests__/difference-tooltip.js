@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../difference-tooltip.jsx')
-const Tooltip = require('../difference-tooltip.jsx')
+jest.unmock('../difference-tooltip.jsx')
+import Tooltip from '../difference-tooltip.jsx'
 
 describe('ContentDifferenceTooltip', () => {
   it('should exist', () => {
