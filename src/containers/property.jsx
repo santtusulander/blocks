@@ -27,14 +27,26 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import IconChart from '../components/icons/icon-chart.jsx'
 import IconConfiguration from '../components/icons/icon-configuration.jsx'
 import PurgeModal from '../components/purge-modal'
-import {formatBitsPerSecond} from '../util/helpers'
-import { getContentUrl, getAnalyticsUrl } from '../util/routes'
 import DateRangeSelect from '../components/date-range-select'
 import Tooltip from '../components/tooltip'
-import DateRanges from '../constants/date-ranges'
 import TruncatedTitle from '../components/truncated-title'
-import DeleteModal from '../components/delete-modal'
+import IsAllowed from '../components/is-allowed'
+import ModalWindow from '../components/modal'
+
+import {
+  formatBitsPerSecond,
+  userIsCloudProvider
+} from '../util/helpers'
+import {
+  getContentUrl,
+  getNetworkUrl,
+  getAnalyticsUrl
+} from '../util/routes'
+
+import DateRanges from '../constants/date-ranges'
+
 import { paleblue } from '../constants/colors'
+import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 const endOfThisDay = () => moment().utc().endOf('day')
 const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
@@ -359,14 +371,32 @@ export class Property extends React.Component {
             params={this.props.params}
             topBarTexts={itemSelectorTexts}
             topBarAction={this.itemSelectorTopBarAction}
-            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+            onSelect={(...params) => {
+              // This check is done to prevent UDN admin from accidentally hitting
+              // the account detail endpoint, which they don't have permission for
+              if (params[0] === 'account' && userIsCloudProvider(this.props.currentUser)) {
+                params[0] = 'groups'
+              }
+
+              const url = this.props.router.isActive('network')
+                            ? getNetworkUrl(...params)
+                            : getContentUrl(...params)
+
+              // We perform this check to prevent routing to unsupported routes
+              // For example, prevent clicking to SP group route (not yet supported)
+              if (url) {
+                this.props.router.push(url)
+              }
+            }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret"></span>
+              <span className="caret" />
             </div>
           </AccountSelector>
           <ButtonToolbar>
-            <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            <IsAllowed to={MODIFY_PROPERTY}>
+              <Button bsStyle="primary" onClick={this.togglePurge}>Purge</Button>
+            </IsAllowed>
             <Link className="btn btn-success btn-icon"
                   to={`${getAnalyticsUrl('property', this.props.params.property, this.props.params)}`}>
               <IconChart/>
@@ -375,9 +405,11 @@ export class Property extends React.Component {
                   to={`${getContentUrl('property', this.props.params.property, this.props.params)}/configuration`}>
               <IconConfiguration/>
             </Link>
-            <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
-              <IconTrash/>
-            </Button>
+            <IsAllowed to={DELETE_PROPERTY}>
+              <Button bsStyle="danger" className="btn-icon" onClick={() => this.setState({ deleteModal: true })}>
+                <IconTrash/>
+              </Button>
+            </IsAllowed>
           </ButtonToolbar>
         </PageHeader>
 
@@ -496,13 +528,22 @@ export class Property extends React.Component {
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
           showNotification={this.showNotification}/>}
-        {this.state.deleteModal && <DeleteModal
-          itemToDelete="Property"
+        {this.state.deleteModal &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Property"}}/>}
+          cancelButton={true}
+          deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
             deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))
-          }}/>}
+              .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+          </p>
+        </ModalWindow>
+        }
       </Content>
     )
   }
@@ -518,6 +559,7 @@ Property.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -546,6 +588,7 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  currentUser: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
@@ -562,6 +605,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),

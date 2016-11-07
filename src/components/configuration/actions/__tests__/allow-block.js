@@ -1,7 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../allow-block.jsx')
+jest.unmock('../../../../util/status-codes')
+jest.unmock('../allow-block.jsx')
 const AllowBlock = require('../allow-block.jsx')
 
 function intlMaker() {

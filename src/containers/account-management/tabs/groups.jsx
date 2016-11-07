@@ -1,7 +1,7 @@
 import React from 'react'
-import Immutable from 'immutable'
 import { Input, Table, Button } from 'react-bootstrap'
-import { formatUnixTimestamp} from '../../../util/helpers'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -18,17 +18,13 @@ import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
-import UDNButton from '../../../components/button'
+import IsAllowed from '../../../components/is-allowed'
 
+import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
 import { isValidAccountName } from '../../../util/validators'
 
-
-import { FormattedMessage, injectIntl } from 'react-intl'
-import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
-
-
 
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
@@ -187,16 +183,14 @@ class AccountManagementAccountGroups extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id="portal.common.error.warning.title"/>,
         content: <FormattedMessage id="portal.account.groups.modal.unsaved.content"/>,
-        buttons:  [
-          <UDNButton key="button-1" onClick={() => {
-            this.isLeaving = true
-            this.props.router.push(pathname)
-            this.props.uiActions.hideInfoDialog()
-          }} bsStyle="primary"><FormattedMessage id="portal.common.button.continue"/></UDNButton>,
-          <UDNButton key="button-2" onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary">
-            <FormattedMessage id="portal.common.button.stay"/>
-          </UDNButton>
-        ]
+        stayButton: true,
+        continueButton: true,
+        cancel: this.props.uiActions.hideInfoDialog,
+        submit: () => {
+          this.isLeaving = true
+          this.props.router.push(pathname)
+          this.props.uiActions.hideInfoDialog()
+        }
       })
       return false;
     }
@@ -246,7 +240,7 @@ class AccountManagementAccountGroups extends React.Component {
       []
     ]
     const groupSize = sortedGroups.size
-    const groupText = sortedGroups.size === 1 ? <FormattedMessage id="portal.account.groups.single.text"/> : <FormattedMessage id="portal.account.groups.multiple.text"/>
+    const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
     const finalGroupText = groupSize + groupText + hiddenGroupText
 

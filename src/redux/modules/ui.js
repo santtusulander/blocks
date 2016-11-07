@@ -1,7 +1,7 @@
 import {createAction, handleActions} from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import STATUS_CODES from '../../constants/status-codes.js'
+import { getAnalysisErrorCodes } from '../../util/status-codes'
 
 const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
@@ -43,7 +43,7 @@ export const defaultUI = fromJS({
   notification: '',
   analysisOnOffNetChartType: 'bar',
   analysisServiceTypes: ['http', 'https'],
-  analysisErrorStatusCodes: STATUS_CODES,
+  analysisErrorStatusCodes: getAnalysisErrorCodes(),
   analysisSPChartType: 'bar',
   showErrorDialog: false,
   showInfoDialog: false,
@@ -126,10 +126,10 @@ export function infoDialogHidden(state) {
 }
 
 export function analysisStatusCodeToggled(state, action) {
-  if(action.payload === STATUS_CODES) {
-    return state.get('analysisErrorStatusCodes').size === STATUS_CODES.length ?
+  if(action.payload === getAnalysisErrorCodes()) {
+    return state.get('analysisErrorStatusCodes').size === getAnalysisErrorCodes().length ?
       state.set('analysisErrorStatusCodes', fromJS([])) :
-      state.set('analysisErrorStatusCodes', fromJS(STATUS_CODES))
+      state.set('analysisErrorStatusCodes', fromJS(getAnalysisErrorCodes()))
   }
   let newStatusCodes = state.get('analysisErrorStatusCodes')
   newStatusCodes = newStatusCodes.includes(action.payload) ?

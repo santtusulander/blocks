@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../chart-type.jsx')
-const ChartType = require('../chart-type.jsx')
+jest.unmock('../chart-type.jsx')
+import ChartType from '../chart-type.jsx'
 
 describe('FilterChartType', () => {
   it('should exist', () => {

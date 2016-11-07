@@ -4,8 +4,6 @@ import Immutable from 'immutable'
 import { Input } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-import UDNButton from '../../button'
-
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
@@ -15,7 +13,8 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
       showInfoDialog({
         title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
         content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,
-        buttons: <UDNButton onClick={hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></UDNButton>
+        okButton: true,
+        cancel: hideInfoDialog
       });
     }
     else {

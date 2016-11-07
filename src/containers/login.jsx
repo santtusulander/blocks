@@ -6,7 +6,10 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import { getContentUrl } from '../util/routes'
+import {
+  getContentUrl,
+  getNetworkUrl
+} from '../util/routes'
 
 import { userIsServiceProvider } from '../util/helpers.js'
 
@@ -44,12 +47,11 @@ export class Login extends React.Component {
       this.props.uiActions.setLoginUrl(null)
     }
     else {
-      // Temp UDNP-1545
       if(userIsServiceProvider(this.props.currentUser)) {
         if(this.props.currentUser.get('account_id')) {
-          this.props.router.push(`/network/udn/${this.props.currentUser.get('account_id')}`)
+          this.props.router.push(getNetworkUrl('brand', 'udn', {account: this.props.currentUser.get('account_id')}))
         } else {
-          this.props.router.push(`/network/udn`)
+          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
         }
       } else {
         this.props.router.push(getContentUrl('brand', 'udn', {}))
@@ -129,7 +131,7 @@ export class Login extends React.Component {
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
-          <div className="login-header-gradient"></div>
+          <div className="login-header-gradient" />
           <h1>
             <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
             <FormattedMessage id="portal.login.title"/>

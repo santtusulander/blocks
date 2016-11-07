@@ -9,15 +9,11 @@ import { mount, shallow } from 'enzyme'
 import { reducer as form } from 'redux-form'
 import { createStore } from 'redux'
 import { combineReducers } from 'redux'
-import jsdom from 'jsdom'
 
 jest.unmock('../../button.js')
 jest.unmock('../../account-management/dns-soa-form.jsx')
 jest.genMockFromModule('react-bootstrap')
 import FormContainer, { SoaEditForm } from '../../account-management/dns-soa-form.jsx'
-
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>')
-global.window = document.defaultView
 
 const REQUIRED = 'Required'
 const INVALID_INPUT = 'Invalid input'

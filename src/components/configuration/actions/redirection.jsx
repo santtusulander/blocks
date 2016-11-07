@@ -5,7 +5,7 @@ import Immutable from 'immutable'
 import Toggle from '../../toggle'
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 class Redirection extends React.Component {
   constructor(props) {
@@ -147,6 +147,7 @@ class Redirection extends React.Component {
 Redirection.displayName = 'Redirection'
 Redirection.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

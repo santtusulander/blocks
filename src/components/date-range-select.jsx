@@ -1,8 +1,8 @@
 import React from 'react'
 import moment from 'moment'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import DatePicker from 'react-datepicker'
 import { Col, Row } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
 
 import Select from './select'
 import DateRanges from '../constants/date-ranges'
@@ -16,6 +16,8 @@ const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
+const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
+const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
 const startOfThisWeek = () => moment().utc().startOf('isoWeek')
 const endOfThisWeek = () => moment().utc().endOf('isoWeek')
 
@@ -88,6 +90,10 @@ export class DateRangeSelect extends React.Component {
       startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
       return DateRanges.LAST_MONTH
     }
+    if(this.props.availableRanges.indexOf(DateRanges.LAST_WEEK) !== -1 &&
+      startOfLastWeek().isSame(start, 'hour') && endOfLastWeek().isSame(end, 'hour')) {
+      return DateRanges.LAST_WEEK
+    }
     if(this.props.availableRanges.indexOf(DateRanges.LAST_28) !== -1 &&
       startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
       return DateRanges.LAST_28
@@ -150,6 +156,10 @@ export class DateRangeSelect extends React.Component {
       startDate = startOfThisWeek()
       endDate   = endOfThisWeek()
     }
+    else if(value === DateRanges.LAST_WEEK) {
+      startDate = startOfLastWeek()
+      endDate   = endOfLastWeek()
+    }
     else if(value === DateRanges.LAST_MONTH) {
       startDate = startOfLastMonth()
       endDate   = endOfLastMonth()
@@ -161,12 +171,13 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate, value)
+      this.props.changeDateRange(startDate, endDate, value )
     })
   }
 
   render() {
-    const ranges = this.props.availableRanges.map(range => [range, range])
+    const ranges = this.props.availableRanges.map(range => [range, this.props.intl.formatMessage({id: range})])
+
     return (
       <div className="date-range-select">
         <Select className="btn-block"
@@ -222,7 +233,8 @@ DateRangeSelect.propTypes = {
   availableRanges: React.PropTypes.array,
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
+  intl: React.PropTypes.object,
   startDate: React.PropTypes.instanceOf(moment)
 }
 
-module.exports = DateRangeSelect
+export default injectIntl(DateRangeSelect)

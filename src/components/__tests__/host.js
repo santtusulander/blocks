@@ -1,8 +1,8 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.dontMock('../host.jsx')
-const Host = require('../host.jsx')
+jest.unmock('../host.jsx')
+import Host from '../host.jsx'
 
 describe('Host', () => {
   it('should exist', () => {

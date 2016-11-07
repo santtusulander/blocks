@@ -70,7 +70,7 @@ export const SoaEditForm = props => {
         <form>
 
           <Input
-            { ...domainName }
+            {...domainName}
             type="text"
             label={props.intl.formatMessage({id: 'portal.account.soaForm.domainName.label'})}/>
 
@@ -79,7 +79,7 @@ export const SoaEditForm = props => {
           <hr/>
 
           <Input
-            { ...nameServer }
+            {...nameServer}
             type="text"
             label={props.intl.formatMessage({id: 'portal.account.soaForm.nameServer.label'})}/>
 
@@ -88,7 +88,7 @@ export const SoaEditForm = props => {
           <hr/>
 
           <Input
-            { ...personResponsible }
+            {...personResponsible}
             type="text"
             className="soa-form-input"
             label={props.intl.formatMessage({id: 'portal.account.soaForm.personResponsible.label'})}/>
@@ -99,7 +99,7 @@ export const SoaEditForm = props => {
           <hr/>
 
           <Input
-            { ...zoneSerialNumber }
+            {...zoneSerialNumber}
             type="text"
             className="soa-form-input"
             label={props.intl.formatMessage({id: 'portal.account.soaForm.zoneSerialNumber.label'})}/>
@@ -110,7 +110,7 @@ export const SoaEditForm = props => {
           <hr/>
 
           <Input
-            { ...refresh }
+            {...refresh}
             type="text"
             className="soa-form-input refresh-input"
             label={props.intl.formatMessage({id: 'portal.account.soaForm.refresh.label'})}/>
