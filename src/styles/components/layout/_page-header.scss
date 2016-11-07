@@ -30,15 +30,6 @@ $action-padding-right: rem(30px);
     .btn-toolbar {
       padding-left: 18px;
       white-space: nowrap;
-
-      .btn-secondary {
-        background-color: rgba($black, 0.3);
-        box-shadow: none;
-      }
-
-      .btn.toggle-list {
-        margin-left: 0;
-      }
     }
 
     .selector-component {

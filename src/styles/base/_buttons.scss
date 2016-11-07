@@ -376,6 +376,30 @@ $lt-caret-color: $silver-60;
     }
   }
 
+  .btn-tertiary {
+    background-color: $black;
+    background-image: linear-gradient(rgba($btn-primary-background, 0.3), rgba($btn-primary-background, 0.3));
+
+    &:hover {
+      background-image: linear-gradient(rgba($btn-primary-background, 0.4), rgba($btn-primary-background, 0.4));
+
+      .icon {
+        fill: $btn-primary-background;
+      }
+    }
+
+    &:active,
+    &.active,
+    &:active:hover,
+    &.active:focus {
+      background-image: linear-gradient(rgba($btn-primary-background, 0.2), rgba($btn-primary-background, 0.2));
+
+      .icon {
+        fill: $btn-primary-background;
+      }
+    }
+  }
+
   .dropdown-select {
     .dropdown-toggle {
       &:hover:not(:disabled),
