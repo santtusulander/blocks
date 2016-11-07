@@ -390,7 +390,7 @@ export class Property extends React.Component {
             }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret"></span>
+              <span className="caret" />
             </div>
           </AccountSelector>
           <ButtonToolbar>

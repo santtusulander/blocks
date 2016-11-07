@@ -135,7 +135,7 @@ export class SetPassword extends React.Component {
           <div className="logo-ericsson">Ericsson</div>
           <h1>{this.props.reset ? <FormattedMessage id="portal.passsword.resetPassword.text"/> : <FormattedMessage id="portal.passsword.setPassword.text"/>}</h1>
           <p>Ericsson UDN Service</p>
-          <div className="login-header-gradient"></div>
+          <div className="login-header-gradient" />
         </Modal.Header>
 
         <Modal.Body>
