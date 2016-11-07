@@ -8,7 +8,7 @@ class Dialog extends React.Component {
     }
     return (
       <div className={className}>
-        <div className="configuration-dialog-gradient"></div>
+        <div className="configuration-dialog-gradient" />
         <div className="configuration-dialog-body">
           {this.props.children}
         </div>

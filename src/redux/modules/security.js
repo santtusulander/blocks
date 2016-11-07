@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers, BASE_URL_NORTH } from '../util'
+import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_SSL_CERTIFICATE_FETCH = 'SECURITY_SSL_CERTIFICATE_FETCH'
@@ -11,8 +11,10 @@ const SECURITY_SSL_CERTIFICATES_UPLOAD = 'SECURITY_SSL_CERTIFICATES_UPLOAD'
 const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
+const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
 
 export const initialState = fromJS({
+  groups: [],
   fetching: false,
   certificateToEdit: {},
   activeCertificates: [],
@@ -20,6 +22,20 @@ export const initialState = fromJS({
 })
 
 // REDUCERS
+
+export function fetchGroupsSuccess(state, action) {
+  return state.merge({
+    groups: fromJS(action.payload.data),
+    fetching: false
+  })
+}
+
+export function fetchGroupsFailure(state) {
+  return state.merge({
+    groups: fromJS([]),
+    fetching: false
+  })
+}
 
 export function fetchSSLCertificatesSuccess(state, action) {
   return state.set('sslCertificates', fromJS(action.payload))
@@ -32,10 +48,10 @@ export function fetchSSLCertificatesFailure(state) {
 }
 
 export function uploadSSLCertificateSuccess(state, action) {
-  const { account, certificate } = action.payload
+  const { account, group, certificate } = action.payload
   const sslCertificates = state.get('sslCertificates')
   return state.merge({ sslCertificates: sslCertificates
-    .merge(sslCertificates.push(fromJS(certificate).merge({ account })))
+    .merge(sslCertificates.push(fromJS(certificate).merge({ account, group })))
   })
 }
 
@@ -70,16 +86,16 @@ export function certificateToEditReset(state) {
 }
 
 export function fetchSSLCertificateSuccess(state, action) {
-  const { account, certificate } = action.payload
-  return state.merge({ certificateToEdit: fromJS(certificate).merge({ account }) })
+  const { account, group, certificate } = action.payload
+  return state.merge({ certificateToEdit: fromJS(certificate).merge({ account, group }) })
 }
 
 export function editSSLCertificateSuccess(state, action) {
-  const { account, certificate } = action.payload
+  const { account, group, certificate } = action.payload
   const sslCertificates = state.get('sslCertificates')
   const itemIndex = sslCertificates.findIndex(item => item.get('cn') === state.get('certificateToEdit').get('cn'))
   return state.merge({ sslCertificates: sslCertificates.update(itemIndex,
-    item => item.merge(fromJS(certificate).merge({ account }))
+    item => item.merge(fromJS(certificate).merge({ account, group }))
   )})
 
 }
@@ -99,6 +115,7 @@ export function activeCertificatesToggled(state, action) {
 }
 
 export default handleActions({
+  SECURITY_MODAL_GROUPS_FETCH: mapReducers(fetchGroupsSuccess, fetchGroupsFailure),
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
   SECURITY_SSL_CERTIFICATE_FETCH: mapReducers(fetchSSLCertificateSuccess, fetchSSLCertificateFailure),
   SECURITY_ACTIVE_CERTIFICATES_TOGGLED: activeCertificatesToggled,
@@ -109,48 +126,58 @@ export default handleActions({
 }, initialState)
 
 // ACTIONS
-export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, data) => {
-  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs`, data, {
+export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
+  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response && { account, certificate: response.data })
+  }).then(response => response && { account, group, certificate: response.data })
 })
 
-export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, (brand, account, cert) => {
-  return axios.delete(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs/${cert}`)
+export const deleteSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_DELETE, (brand, account, group, cert) => {
+  return axios.delete(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`)
 })
 
-export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, data, cert) => {
-  return axios.put(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs/${cert}`, data, {
+export const editSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_EDIT, (brand, account, group, data, cert) => {
+  return axios.put(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cert}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response && { account, certificate: response.data })
+  }).then(response => response && { account, group, certificate: response.data })
 })
 
-export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, commonName) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs/${commonName}`)
-    .then(response => response && { account, certificate: response.data })
+export const fetchSSLCertificate = createAction(SECURITY_SSL_CERTIFICATE_FETCH, (brand, account, group, commonName) => {
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${commonName}`)
+    .then(response => response && { account, group, certificate: response.data })
 })
 
 
-export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account) => {
-  if (!account) {
+export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH, (brand, account, group) => {
+  if (!account || !group) {
     return Promise.resolve([])
   }
 
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs`)
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`)
     .then(action => Promise.all(action.data.map(
-      cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/certs/${cn}`)
+      cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
     )))
     .then(resp => resp.map(certificate => {
       return {
+        group,
         cn: certificate.data.cn,
         title: certificate.data.title,
         account
       }
     }))
+})
+
+export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
 })
 
 export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATES_TOGGLED, opts => {
