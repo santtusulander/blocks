@@ -1,10 +1,13 @@
+var CopyWebpackPlugin     = require('copy-webpack-plugin');
+var HtmlWebpackPlugin     = require('html-webpack-plugin');
+
 /**
  *
  * @param {Object} config
  * @return {Object}
  */
 module.exports = {
-  parseDotenvConfig: function(config) {
+  parseDotenvConfig: function (config) {
     const define = {};
     for (var key in config) {
       if (config.hasOwnProperty(key)) {
@@ -12,5 +15,34 @@ module.exports = {
       }
     }
     return define;
-  }
-};
+  },
+
+  staticAssets: [
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      template: 'src/index.html',
+      favicon: 'src/assets/icons/favicon.ico'
+    }),
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      template: 'src/downtime.html',
+      favicon: 'src/assets/icons/favicon.ico',
+      filename: 'downtime.html'
+    }),
+    new HtmlWebpackPlugin({
+      inject: 'body',
+      template: 'src/downtime_scheduled.html',
+      favicon: 'src/assets/icons/favicon.ico',
+      filename: 'downtime_scheduled.html'
+    }),
+    new CopyWebpackPlugin([
+      {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/pdf/CP_User_Guide.pdf', to: 'assets/pdf'},
+      {from: 'src/assets/pdf/SP_User_Guide.pdf', to: 'assets/pdf'},
+      {from: 'src/assets/pdf/UDN_Admin_Guide.pdf', to: 'assets/pdf'},
+      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
+    ])
+  ]
+}

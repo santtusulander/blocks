@@ -3,6 +3,7 @@ import analytics from './analytics.json'
 import common from './common.json'
 import configuration from './configuration.json'
 import content from './content.json'
+import dashboard from './dashboard.json'
 import security from './security.json'
 import services from './security.json'
 import support from './support.json'
@@ -17,6 +18,7 @@ export default Object.assign({},
   common,
   configuration,
   content,
+  dashboard,
   security,
   services,
   support,

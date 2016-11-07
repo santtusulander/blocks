@@ -12,6 +12,7 @@ import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
+import {getTrafficByDateRangeLabel} from './helpers'
 
 import {injectIntl} from 'react-intl'
 
@@ -175,14 +176,28 @@ class AnalysisOnOffNetReport extends React.Component {
       activeDirection: this.state.sortDir
     }
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
+
+    /* Get values for KPIs */
+    const dataKey = this.props.onOffFilter.get(0) === 'off-net' ? 'net_off' : 'net_on'
+    const trafficToday = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+      ? statsToday.get('total')
+      : statsToday.getIn([ dataKey, 'bytes'] )
+
+    const totalTrafficByDateRange = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+      ? stats.get('total')
+      : stats.getIn([ dataKey, 'bytes'] )
+
+    const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
+
     return (
       <div>
         <SectionContainer>
           <Row>
             <Col xs={12}>
+              {/* KPI Traffic Today */}
               <div className="analysis-data-box">
-                <h4>Traffic today</h4>
-                <p>{formatBytes(statsToday.get('total'))}</p>
+                <h4><FormattedMessage id='portal.analytics.onOffNet.trafficToday.label' /></h4>
+                <p>{formatBytes(trafficToday)}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
                   <Col xs={6}>
@@ -202,9 +217,10 @@ class AnalysisOnOffNetReport extends React.Component {
                 }
                 </Row>
               </div>
+              {/* KPI Traffic By Date Range */}
               <div className="analysis-data-box">
-                <h4>Traffic Month to Date</h4>
-                <p>{formatBytes(stats.get('total'))}</p>
+                <h4><FormattedMessage id='portal.analytics.onOffNet.traffic.label' /> {trafficByDateRangeLabel}</h4>
+                <p>{formatBytes(totalTrafficByDateRange)}</p>
                 <Row className="extra-margin-top">
                 {this.props.onOffFilter.contains('on-net') &&
                   <Col xs={6}>
@@ -284,6 +300,8 @@ class AnalysisOnOffNetReport extends React.Component {
 
 AnalysisOnOffNetReport.displayName = 'AnalysisOnOffNetReport'
 AnalysisOnOffNetReport.propTypes = {
+  dateRange: React.PropTypes.instanceOf(Immutable.Map),
+  dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
@@ -295,7 +313,7 @@ AnalysisOnOffNetReport.propTypes = {
 AnalysisOnOffNetReport.defaultProps = {
   onOffStats: Immutable.Map(),
   onOffStatsToday: Immutable.Map(),
-  onOffFilter: Immutable.Map()
+  onOffFilter: Immutable.List()
 }
 
 module.exports = injectIntl(AnalysisOnOffNetReport)

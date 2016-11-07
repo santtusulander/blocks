@@ -17,6 +17,42 @@
   "portal.analytics.contribution.traffic.label": "Traffic",
   "portal.analytics.contribution.trafficPercentage.label": "% of traffic",
 
+  "portal.analytics.onOffNet.traffic.label": "Traffic",
+  "portal.analytics.onOffNet.trafficToday.label": "Traffic Today",
+
   "portal.analytics.fileErrors.noData.text": "No error data found.",
-  "portal.analytics.urlList.noData.text": "No URL data found."
+  "portal.analytics.urlList.noData.text": "No URL data found.",
+
+  "portal.analytics.purgeModal.title.text": "Purge Content",
+  "portal.analytics.purgeModal.property.text": "Property",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.text": "What do you want to purge?",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.url.text": "URLs",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.directory.text": "Directories",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.hostname.text": "Hostnames",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.group.text": "Entire Group",
+  "portal.analytics.purgeModal.url.title": "URLs to Purge",
+  "portal.analytics.purgeModal.url.help": "Up to 100 urls, separated by comma",
+  "portal.analytics.purgeModal.url.placeholder": "Enter URLs",
+  "portal.analytics.purgeModal.directory.title": "Directories to Purge",
+  "portal.analytics.purgeModal.directory.help": "Up to 100 directories, separated by comma",
+  "portal.analytics.purgeModal.directory.placeholder": "Enter directory paths",
+  "portal.analytics.purgeModal.invalidate.section.title": "Content Removal Method",
+  "portal.analytics.purgeModal.invalidate.label": "Invalidate content",
+  "portal.analytics.purgeModal.invalidate.value": "Invalidate",
+  "portal.analytics.purgeModal.delete.label": "Delete content",
+  "portal.analytics.purgeModal.notification.section.title": "Notification",
+  "portal.analytics.purgeModal.notification.label": "Notify me when purge is completed",
+  "portal.analytics.purgeModal.email.label": "Enter Email address",
+  "portal.analytics.purgeModal.note.section.title": "Note",
+  "portal.analytics.purgeModal.note.placeholder": "A note about the purge",
+  "portal.analytics.purgeModal.hostName.text": "Purge by hostname will be supported in a future version.",
+  "portal.analytics.purgeModal.group.text": "Purge entire group will be supported in a future version.",
+  "portal.analytics.purgeModal.button.purge.text": "Purge",
+
+  "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
+  "portal.analytics.purgeModal.maxAmount.error": "Maximum amount of purge objects exceeded",
+  "portal.analytics.purgeModal.email.error": "Enter a valid Email address",
+  
+  "portal.analytics.onNet.title": "On-Net",
+  "portal.analytics.offNet.title": "Off-Net"
 }

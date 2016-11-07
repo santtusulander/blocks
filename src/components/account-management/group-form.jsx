@@ -6,16 +6,17 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import {Map, List, fromJS} from 'immutable'
+import { Map, List } from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-import IconClose from '../icons/icon-close.jsx'
+// import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+// import IconClose from '../icons/icon-close.jsx'
 
-import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+import { isValidAccountName } from '../../util/validators'
+
 
 import './group-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 let errors = {}
 
@@ -23,11 +24,11 @@ const validate = (values) => {
   const {name} = values
   errors = {}
   if(!name || name.length === 0) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.required"/>
   }
 
-  if( name && ! new RegExp( NAME_VALIDATION_REGEXP ).test(name) ) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+  if( name && !isValidAccountName(name) ) {
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.invalid" />
   }
 
   return errors;
@@ -107,6 +108,8 @@ class GroupForm extends React.Component {
 
   render() {
     const { fields: {name}, show, onCancel } = this.props
+
+/*
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -128,6 +131,7 @@ class GroupForm extends React.Component {
       }
       return arr;
     }, []))
+*/
 
     const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
@@ -212,6 +216,7 @@ GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
+  intl: intlShape.isRequired,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,

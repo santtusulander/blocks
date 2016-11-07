@@ -56,7 +56,7 @@ describe('Host Module', () => {
       configuredHostNames: [1]
     });
     const newState = deleteSuccess(state, {payload: {id: 1}});
-    expect(newState.get('allHosts')).not.toContain(1);
+    expect(newState.get('allHosts').toJS()).not.toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
@@ -65,7 +65,7 @@ describe('Host Module', () => {
       allHosts: [1]
     });
     const newState = deleteFailure(state, {payload: {id: 1}});
-    expect(newState.get('allHosts')).toContain(1);
+    expect(newState.get('allHosts').toJS()).toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 

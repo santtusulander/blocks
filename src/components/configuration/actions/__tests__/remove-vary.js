@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../remove-vary.jsx')
-const RemoveVary = require('../remove-vary.jsx')
+jest.unmock('../remove-vary.jsx')
+import RemoveVary from '../remove-vary.jsx'
 
 describe('Redirection', () => {
   it('should exist', () => {

@@ -1,0 +1,40 @@
+// Mini Chart
+// ======
+
+.mini-chart {
+
+  .mini-chart-label {
+    font-weight: bold;
+  }
+
+  .mini-chart-container {
+    display: flex;
+
+    .mini-chart-col {
+
+      &.mini-chart-kpi {
+        width: 50%;
+        padding-right: 15px;
+        font-weight: bold;
+        white-space: nowrap;
+
+        .dark-theme & {
+          color: $white;
+        }
+
+        .value {
+          margin-right: 4px;
+          font-size: rem(24px);
+        }
+
+        & + .mini-chart-graph {
+          width: 50%;
+        }
+      }
+
+      &.mini-chart-graph {
+        width: 100%;
+      }
+    }
+  }
+}

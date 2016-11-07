@@ -5,6 +5,7 @@ import * as topojson from 'topojson'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import classNames from 'classnames'
 
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
@@ -163,7 +164,9 @@ class AnalysisByLocation extends React.Component {
     }
 
     return (
-      <div className="analysis-by-location">
+      <div className={classNames(
+        'analysis-by-location',
+        { 'no-bg': this.props.noBg })}>
         <div className="chart" ref="chart">
           <svg
             viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
@@ -266,6 +269,7 @@ AnalysisByLocation.propTypes = {
   dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
+  noBg: React.PropTypes.bool,
   stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
   timelineKey: React.PropTypes.string,

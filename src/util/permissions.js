@@ -1,4 +1,8 @@
 import * as PERMISSIONS from '../constants/permissions'
+import {
+  ROLES_MAPPING,
+  ACCOUNT_TYPE_CLOUD_PROVIDER
+} from '../constants/account-management-options'
 
 let permissionMapping = {};
 
@@ -7,9 +11,21 @@ let permissionMapping = {};
 // Sections
 permissionMapping[PERMISSIONS.VIEW_ACCOUNT_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'account'])
+permissionMapping[PERMISSIONS.VIEW_ACCOUNT_DETAIL] =
+  (userRole) => {
+    const role = ROLES_MAPPING.find(role => role.id === userRole.get('id'))
+    const roleIsCloudProvider = role.accountTypes.indexOf(ACCOUNT_TYPE_CLOUD_PROVIDER) >= 0
+    return !roleIsCloudProvider
+  }
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'analytics'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.network' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'content'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'security'])
@@ -92,6 +108,27 @@ permissionMapping[PERMISSIONS.MODIFY_ZONE] =
 
 permissionMapping[PERMISSIONS.CREATE_RECORD] =
   (role) => role.getIn(['permissions', 'north', 'rr', 'create', 'allowed'])
+
+//Security permissions
+permissionMapping[PERMISSIONS.DELETE_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_CERTIFICATE] =
+  (role) => role.getIn(['permissions', 'north', 'certs', 'modify', 'allowed'])
+
+//Published Host permissions
+permissionMapping[PERMISSIONS.DELETE_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.CREATE_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
+  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'modify', 'allowed'])
+
 
 /**
  * Determine if a user has a permission.
