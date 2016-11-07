@@ -179,12 +179,17 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  const metricsOpts = {
+  let metricsOpts = {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
+
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
+      if (!canListAccounts) {
+        metricsOpts.account = ownProps.params.account;
+      }
+      metricsOpts.list_children = !!canListAccounts;
       if(accounts.isEmpty() && canListAccounts) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
