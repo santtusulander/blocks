@@ -54,12 +54,20 @@
     + .form-group {
       margin-left: 12px;
     }
+  }
 
-    + .btn-icon {
+  .toggle-view {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
 
-      &:last-child {
-        margin-left: 0;
-      }
+    &:last-child {
+      margin-left: 0;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
     }
   }
 
