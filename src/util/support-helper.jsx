@@ -127,7 +127,7 @@ export function getTicketPriorityIcon(priority) {
     [`support-ticket__priority-icon--${priority.toLowerCase()}`]: true
   })
 
-  return (<div className={className}></div>)
+  return (<div className={className} />)
 }
 
 export function getTicketPriorityLabel(priority) {
