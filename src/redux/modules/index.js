@@ -2,7 +2,6 @@ import accountSelector from './account-selector'
 import multireducer from 'multireducer'
 
 export const account = require('./account').default;
-export const exports = require('./exports').default;
 export const form = require('redux-form').reducer;
 export const group = require('./group').default;
 export const host = require('./host').default;
@@ -18,6 +17,7 @@ export const reports = require('./reports').default;
 export const roles = require('./roles').default;
 export const permissions = require('./permissions').default;
 export const support = require('./support').default;
+export const dashboard = require('./dashboard').default;
 
 //Account Management
 export const dnsRecords = require('./dns-records/actions').default;

@@ -4,11 +4,7 @@ import { List } from 'immutable'
 import classNames from 'classnames'
 
 import IconComments from '../icons/icon-comments'
-import IconIncident from '../icons/icon-incident'
-import IconIntegration from '../icons/icon-integration'
-import IconProblem from '../icons/icon-problem'
-import IconQuestion from '../icons/icon-question'
-import IconTask from '../icons/icon-task'
+
 import {
   getTicketPriorities,
   getTicketStatuses,
@@ -87,11 +83,11 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
+  openTicket: React.PropTypes.func,
   priority: React.PropTypes.oneOf(getTicketPriorities()),
   status: React.PropTypes.oneOf(getTicketStatuses()),
   title: React.PropTypes.string,
-  type: React.PropTypes.string,
-  openTicket: React.PropTypes.func
+  type: React.PropTypes.string
 }
 
 export default SupportTicketPanel

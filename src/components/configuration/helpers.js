@@ -3,26 +3,31 @@ import React from 'react'
 import MatchesSelection from './matches-selection'
 import ActionsSelection from './actions-selection'
 
-import ConfigurationMatchMimeType from './matches/mime-type'
-import ConfigurationMatchFileExtension from './matches/file-extension'
-import ConfigurationMatchFileName from './matches/file-name'
-import ConfigurationMatchIpAddress from './matches/ip-address'
+// import ConfigurationMatchMimeType from './matches/mime-type'
+// import ConfigurationMatchFileExtension from './matches/file-extension'
+// import ConfigurationMatchFileName from './matches/file-name'
+// import ConfigurationMatchIpAddress from './matches/ip-address'
+import ConfigurationContentTargetingMatch from './matches/content-targeting'
 import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
-import ConfigurationActionRedirection from './actions/redirection'
-import ConfigurationActionOriginHostname from './actions/origin-hostname'
-import ConfigurationActionCompression from './actions/compression'
-import ConfigurationActionPath from './actions/path'
-import ConfigurationActionQueryString from './actions/query-string'
+import ConfigurationTokenAuthentication from './actions/token-authentication'
+// import ConfigurationActionRedirection from './actions/redirection'
+// import ConfigurationActionOriginHostname from './actions/origin-hostname'
+// import ConfigurationActionCompression from './actions/compression'
+// import ConfigurationActionPath from './actions/path'
+// import ConfigurationActionQueryString from './actions/query-string'
 import ConfigurationActionHeader from './actions/header'
-import ConfigurationActionRemoveVary from './actions/remove-vary'
-import ConfigurationActionAllowBlock from './actions/allow-block'
-import ConfigurationActionPostSupport from './actions/post-support'
-import ConfigurationActionCors from './actions/cors'
+// import ConfigurationActionRemoveVary from './actions/remove-vary'
+// import ConfigurationActionAllowBlock from './actions/allow-block'
+// import ConfigurationActionPostSupport from './actions/post-support'
+// import ConfigurationActionCors from './actions/cors'
+import ConfigurationContentTargetingAction from './actions/content-targeting'
 
-export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
+import { matchIsContentTargeting } from '../../util/policy-config'
+
+export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
   const clearActiveMatchSet = () => activateSet(null)
   let activeEditForm = null
@@ -34,7 +39,14 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
       match: activeMatch,
       path: matchPath
     }
-    switch(activeMatch.get('field')) {
+
+    let matchType = activeMatch.get('field')
+
+    if (matchIsContentTargeting(activeMatch)) {
+      matchType = 'content_targeting'
+    }
+
+    switch(matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
@@ -88,7 +100,7 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             {...matcherProps}/>
         )
         break
-      case 'request_query':
+      case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
             contains={true}
@@ -99,10 +111,14 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
             {...matcherProps}/>
         )
         break
+      case 'content_targeting':
+        activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
+        break
       default:
         activeEditForm = (
           <MatchesSelection
             path={matchPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break
@@ -120,7 +136,13 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
       path: setPath,
       set: activeSet
     }
-    switch(setPath.last()) {
+
+    let setType = setPath.last()
+    if (setPath.contains('script_lua')) {
+      setType = 'content_targeting'
+    }
+
+    switch(setType) {
       case 'cache_name':
         activeEditForm = (
           <ConfigurationActionCacheKeyQueryString {...setterProps}/>
@@ -136,12 +158,23 @@ export function getActiveMatchSetForm(matchPath, setPath, config, actions) {
           <ConfigurationActionHeader {...setterProps}/>
         )
         break
+      case 'tokenauth':
+        activeEditForm = (
+          <ConfigurationTokenAuthentication {...setterProps}/>
+        )
+        break
+      case 'content_targeting':
+        activeEditForm = (
+          <ConfigurationContentTargetingAction {...setterProps}/>
+        )
+        break
       default:
         activeEditForm = (
           <ActionsSelection
             activateSet={activateSet}
             config={config}
             path={setPath}
+            rule={activeRule}
             changeValue={changeValue}/>
         )
         break

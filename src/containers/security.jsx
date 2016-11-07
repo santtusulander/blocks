@@ -163,10 +163,11 @@ export class Security extends React.Component {
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === DELETE_CERTIFICATE &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: "Certificate"}}/>}
-          cancelButton={() => toggleModal(null)}
-          deleteButton={() => onDelete(toDelete)}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => toggleModal(null)}
+          submit={() => onDelete(toDelete)}
           invalid={true}
           verifyDelete={true}>
           <p>

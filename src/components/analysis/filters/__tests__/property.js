@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../property.jsx')
-const Property = require('../property.jsx')
+jest.unmock('../property.jsx')
+import Property from '../property.jsx'
 
 describe('FilterProperty', () => {
   it('should exist', () => {

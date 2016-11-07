@@ -12,13 +12,16 @@ function routeMetrics(req, res) {
   log.debug('query params:', req.query);
 
   let params = req.query;
+  let isListingChildren = _.isUndefined(params.list_children) ? true : params.list_children === 'true';
+
   let errors = validator.validate(params, {
-    start       : {required: true, type: 'Timestamp'},
-    end         : {required: false, type: 'Timestamp'},
-    account     : {required: false, type: 'ID'},
-    group       : {required: false, type: 'ID'},
-    account_min : {required: false, type: 'ID'},
-    account_max : {required: false, type: 'ID'}
+    start         : {required: true, type: 'Timestamp'},
+    end           : {required: false, type: 'Timestamp'},
+    account       : {required: !isListingChildren, type: 'ID'},
+    group         : {required: false, type: 'ID'},
+    account_min   : {required: false, type: 'ID'},
+    account_max   : {required: false, type: 'ID'},
+    list_children : {required: false, type: 'Boolean'}
   });
 
   if (errors) {
@@ -26,18 +29,23 @@ function routeMetrics(req, res) {
   }
 
   let options = {
-    start       : params.start,
-    end         : params.end,
-    account     : params.account,
-    group       : params.group,
-    account_min : params.account_min,
-    account_max : params.account_max
+    start         : params.start,
+    end           : params.end,
+    account       : params.account,
+    group         : params.group,
+    account_min   : params.account_min,
+    account_max   : params.account_max,
+    list_children : isListingChildren
   };
 
-  db.getMetrics(options).spread((trafficData, historicalTrafficData, aggregateData) => {
+  db.getMetrics(options).spread((trafficDataRaw, historicalTrafficDataRaw, aggregateDataRaw, spAggregateDataRaw, spTrafficDataRaw, spHistoricalTrafficDataRaw) => {
     let responseData = [];
 
-    if (trafficData && historicalTrafficData && aggregateData) {
+    if (trafficDataRaw && historicalTrafficDataRaw && aggregateDataRaw) {
+      let trafficData = trafficDataRaw.concat(spTrafficDataRaw);
+      let historicalTrafficData = historicalTrafficDataRaw.concat(spHistoricalTrafficDataRaw);
+      let aggregateData = aggregateDataRaw.concat(spAggregateDataRaw);
+
       let optionsFinal    = db._getQueryOptions(options);
       let startTime       = parseInt(optionsFinal.start);
       let endTime         = parseInt(optionsFinal.end);
@@ -48,7 +56,7 @@ function routeMetrics(req, res) {
       });
 
       // Set the selected level
-      let selectedLevel = db._getAccountLevel(optionsFinal, true);
+      let selectedLevel = db._getAccountLevel(optionsFinal);
 
       // Build a list of unique level identifiers
       let levels = _.uniq(aggregateData.map((row) => row[selectedLevel]));

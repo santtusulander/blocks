@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import { getContentUrl } from '../util/routes'
+import { getUrl } from '../util/routes'
 
 import * as userActionCreators from '../redux/modules/user'
 
@@ -43,7 +43,7 @@ export class SetPassword extends React.Component {
     this.validatePassword = this.validatePassword.bind(this)
   }
   goToLoginPage() {
-    this.props.router.push(getContentUrl('/login', {}))
+    this.props.router.push(getUrl('/login', {}))
   }
   onSubmit(e) {
     e.preventDefault()
@@ -164,7 +164,8 @@ export class SetPassword extends React.Component {
                 {this.state.passwordError ?
                   this.state.passwordError
                 :
-                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>                }
+                  <FormattedMessage id="portal.passsword.invalidPassword.text"/>
+                }
               </Tooltip>
             : null}
 

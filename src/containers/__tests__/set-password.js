@@ -1,25 +1,24 @@
 import React from 'react'
-import { Tooltip } from 'react-bootstrap'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../util/routes', () => {
   return {
-    getContentUrl: jest.genMockFunction()
-      .mockImplementation(val => '/path/after/login')
+    getContentUrl: jest.fn(),
+    matchesRegexp: jest.fn()
   }
 })
 
-jest.autoMockOff()
-jest.dontMock('../set-password.jsx')
-const SetPassword = require('../set-password.jsx').SetPassword
+jest.unmock('../set-password.jsx')
+jest.unmock('../../redux/modules/filters')
+import { SetPassword } from '../set-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
-    startFetching: jest.genMockFunction(),
-    logIn: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    logIn: jest.fn().mockImplementation(() => {
       return {then: cb => cb(cbResponse)}
     }),
-    checkToken: jest.genMockFunction().mockImplementation(() => {
+    checkToken: jest.fn().mockImplementation(() => {
       return {payload: {token:null}}
     })
   }
@@ -37,7 +36,6 @@ describe('SetPassword', () => {
     const setPassword = shallow(
       <SetPassword userActions={userActionsMaker({})}/>
     )
-    const inputs = setPassword.find('Input')
     expect(setPassword.find('#password').prop('type')).toBe('password')
     // setPassword.find('.input-addon-link').at(0).simulate('click')
     setPassword.setState({passwordVisible: true})
@@ -68,7 +66,6 @@ describe('SetPassword', () => {
     usernameHolder.simulate('blur')
     expect(setPassword.state('passwordFocus')).toBe(false)
 
-    const passwordHolder = inputs.at(1)
     expect(setPassword.state('confirmFocus')).toBe(false)
     inputs.at(1).simulate('focus')
     expect(setPassword.state('confirmFocus')).toBe(true)

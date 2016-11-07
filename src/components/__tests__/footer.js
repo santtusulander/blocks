@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../footer.jsx')
-const Footer = require('../footer.jsx')
+jest.unmock('../footer.jsx')
+import Footer from '../footer.jsx'
 
 describe('Footer', () => {
   it('should exist', () => {

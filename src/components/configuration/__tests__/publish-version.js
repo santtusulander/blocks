@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../publish-version.jsx')
-const ConfigurationPublishVersion = require('../publish-version.jsx')
+jest.unmock('../publish-version.jsx')
+import ConfigurationPublishVersion from '../publish-version.jsx'
 
 function intlMaker() {
   return {

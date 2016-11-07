@@ -98,6 +98,11 @@ class DnsDomainEditFormContainer  extends Component {
     this.hideDeleteModal = this.hideDeleteModal.bind(this)
   }
 
+  componentDidMount(){
+    //show errors on edit even without touching fields
+    if (this.props.edit) this.props.touchAll()
+  }
+
   deleteDomain() {
     this.props.deleteDomain(this.state.domainToDelete)
     this.hideDeleteModal()
@@ -113,11 +118,6 @@ class DnsDomainEditFormContainer  extends Component {
     this.setState({
       domainToDelete: null
     })
-  }
-
-  componentDidMount(){
-    //show errors on edit even without touching fields
-    if (this.props.edit) this.props.touchAll()
   }
 
   render() {
@@ -148,10 +148,11 @@ class DnsDomainEditFormContainer  extends Component {
         </Modal>
         {this.state.domainToDelete &&
         <ModalWindow
-          show={true}
           title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
-          cancelButton={this.hideDeleteModal}
-          deleteButton={() => {this.deleteDomain()}}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={this.hideDeleteModal}
+          submit={() => {this.deleteDomain()}}
           invalid={true}
           verifyDelete={true}>
           <p>
@@ -169,7 +170,8 @@ DnsDomainEditFormContainer.propTypes = {
   deleteDomain: PropTypes.func,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  saveDomain: PropTypes.func
+  saveDomain: PropTypes.func,
+  touchAll: PropTypes.func
 }
 
 function mapStateToProps({ dns }, { edit }) {
@@ -217,7 +219,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
               content: res.payload.data.message,
-              okButton: () => dispatch(hideInfoDialog())
+              okButton: true,
+              cancel: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()
@@ -244,7 +247,8 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
-              okButton: () => dispatch(hideInfoDialog())
+              okButton: true,
+              cancel: () => dispatch(hideInfoDialog())
             }))
           }
           dnsActions.stopFetchingDomains()
