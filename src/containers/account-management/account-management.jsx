@@ -363,7 +363,8 @@ export class AccountManagement extends Component {
       },
       roles: this.props.roles,
       permissions: this.props.permissions,
-      users: this.props.users
+      users: this.props.users,
+      currentUser: this.props.currentUser
     }
     return (
       <Content>
@@ -423,6 +424,7 @@ export class AccountManagement extends Component {
            */}
         </Nav>}
 
+        {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
         {accountManagementModal === ADD_ACCOUNT &&
@@ -430,6 +432,7 @@ export class AccountManagement extends Component {
           id="account-form"
           onSave={this.editAccount}
           account={this.accountToUpdate}
+          currentUser={this.props.currentUser}
           onCancel={() => toggleModal(null)}
           show={true}/>}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
@@ -470,6 +473,7 @@ AccountManagement.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
+  currentUser: PropTypes.instanceOf(Map),
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
@@ -509,7 +513,8 @@ function mapStateToProps(state) {
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
-    users: state.user.get('allUsers')
+    users: state.user.get('allUsers'),
+    currentUser: state.user.get('currentUser')
   };
 }
 
