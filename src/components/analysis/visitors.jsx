@@ -36,14 +36,18 @@ class AnalysisVisitors extends React.Component {
     this.changeOSSort = this.changeOSSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
     this.getTrending = this.getTrending.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     this.setState({
@@ -424,4 +428,4 @@ AnalysisVisitors.defaultProps = {
   serviceTypes: Immutable.List()
 }
 
-module.exports = injectIntl(AnalysisVisitors)
+export default injectIntl(AnalysisVisitors)

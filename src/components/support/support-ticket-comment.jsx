@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 import { Map } from 'immutable'
-import IconClose from '../icons/icon-close'
 import { formatDate } from '../../util/helpers'
 
 class SupportTicketComment extends React.Component {
@@ -10,7 +9,7 @@ class SupportTicketComment extends React.Component {
   }
 
   render() {
-    const { className, comment, onDelete } = this.props
+    const { className, comment } = this.props
 
     return (
       <div className={classNames('support-ticket-comment', className)}>

@@ -1,9 +1,8 @@
+/* eslint-disable react/jsx-no-undef */
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 
 const ThemeWrap = require('./theme-wrap.jsx');
-
-import Navigation from '../navigation/navigation.jsx'
 
 storiesOf('Filters', module)
   .addDecorator((story) => (

@@ -23,7 +23,7 @@ const getExtent = (datasets, key) => {
 
 const configureTooltip = (date, positionVal, height, formatY, xScale, yScale, actualVal, formatter) => {
   const formattedDate = moment.utc(date).format('MMM D H:mm')
-  const val = actualVal || positionVal
+  const val = actualVal || 0
   const formattedValue = formatY(val)
   const text = formatter ?
     formatter(date, val) :
@@ -45,7 +45,6 @@ class AnalysisByTime extends React.Component {
       tooltipX: [],
       tooltipY: [],
       tooltipOffsetTop: [],
-
       labelWidth: []
     }
 
@@ -181,7 +180,10 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.axes ? 3 : 1),
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
-      .nice(d3.time.day.utc, 1);
+
+    if(!this.props.noXNice) {
+      xScale.nice(d3.time.day.utc, 1)
+    }
 
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
@@ -205,14 +207,18 @@ class AnalysisByTime extends React.Component {
         slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
+
+    // Set some extra height to chart if we have more than two datasets as the legends take up approx. 25px per legend
+    const extraHeight = stackedDatasets.length > 2 ? stackedDatasets.length * 25 : 0
+
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={this.deactivateTooltip}>
+      onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
+      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
         <svg
-          viewBox={'0 0 ' + this.props.width + ' ' + this.props.height}
+          viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}
-          height={this.props.height}
+          height={this.props.height + extraHeight}
           ref='chart'>
           {stackedDatasets.map((dataset, i) => {
             return (
@@ -235,7 +241,7 @@ class AnalysisByTime extends React.Component {
               </g>
             )
           })}
-          {this.state.tooltipText.map((text, i) => {
+          {!this.props.noHover && this.state.tooltipText.map((text, i) => {
             return(
               <g key={i}>
                 <circle r="5"
@@ -255,8 +261,14 @@ class AnalysisByTime extends React.Component {
             showHours={endDate - startDate <= 24*60*60*1000}
             />}
           {this.props.axes ? (() => {
-            const yMax = Math.max(...yScale.ticks(4))
-            return yScale.ticks(4).reduce((axes, tick, i) => {
+            let numTicks = 4;
+            const yMax = Math.max(...yScale.ticks(numTicks))
+
+            // If the yMax is less than the number of ticks, we end up seeing
+            // multiple ticks on the Y axis with the same number. See UDNP-1586
+            numTicks = yMax < numTicks ? yMax : numTicks
+
+            return yScale.ticks(numTicks).reduce((axes, tick, i) => {
               if(i) {
                 axes.push(
                   <g key={i}>
@@ -332,6 +344,8 @@ AnalysisByTime.propTypes = {
   formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
+  noHover: React.PropTypes.bool,
+  noXNice: React.PropTypes.bool,
   padding: React.PropTypes.number,
   selectSlice: React.PropTypes.func,
   showLegend: React.PropTypes.bool,

@@ -1,8 +1,8 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../redirection.jsx')
-const Redirection = require('../redirection.jsx')
+jest.unmock('../redirection.jsx')
+import Redirection from '../redirection.jsx'
 
 function intlMaker() {
   return {
@@ -12,36 +12,35 @@ function intlMaker() {
 
 describe('Redirection', () => {
   it('should exist', () => {
-    let redirection = TestUtils.renderIntoDocument(
+    let redirection = shallow(
       <Redirection intl={intlMaker()} />
     );
-    expect(TestUtils.isCompositeComponent(redirection)).toBeTruthy();
+    expect(redirection).toBeDefined();
   })
 
   it('should update the parameters as changes happen', () => {
     let changeValue = jest.genMockFunction()
-    let redirection = TestUtils.renderIntoDocument(
+    let redirection = shallow(
       <Redirection changeValue={changeValue} intl={intlMaker()}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(redirection, 'input')
-    inputs[0].value = 'new'
-    TestUtils.Simulate.change(inputs[0])
+    let inputs = redirection.find('Input')
+    inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'redirection_domain'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')
   })
 
   it('should handle select changes', () => {
     let changeValue = jest.genMockFunction()
-    let redirection = TestUtils.renderIntoDocument(
+    let redirection = shallow(
       <Redirection changeValue={changeValue} intl={intlMaker()}/>
     )
-    expect(redirection.state.activeProtocol).toBe('http')
-    redirection.handleSelectChange('activeProtocol')('foo')
-    expect(redirection.state.activeProtocol).toBe('foo')
+    expect(redirection.state('activeProtocol')).toBe('http')
+    redirection.instance().handleSelectChange('activeProtocol')('foo')
+    expect(redirection.state('activeProtocol')).toBe('foo')
     expect(changeValue.mock.calls[0][1]).toBe('foo')
-    expect(redirection.state.activeRedirectionType).toBe('301')
-    redirection.handleSelectChange('activeRedirectionType')('bar')
-    expect(redirection.state.activeRedirectionType).toBe('bar')
+    expect(redirection.state('activeRedirectionType')).toBe('301')
+    redirection.instance().handleSelectChange('activeRedirectionType')('bar')
+    expect(redirection.state('activeRedirectionType')).toBe('bar')
     expect(changeValue.mock.calls[1][1]).toBe('bar')
   })
 })

@@ -2,8 +2,8 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-jest.dontMock('../details.jsx')
-const ConfigurationDetails = require('../details.jsx')
+jest.unmock('../details.jsx')
+import ConfigurationDetails from '../details.jsx'
 
 describe('ConfigurationDetails', () => {
   it('should exist', () => {

@@ -1,0 +1,59 @@
+// SP Dashboard On Off Net Traffic Styles
+.stacked-by-time-summary {
+  .dataset-label {
+    font-weight: bold;
+
+    &.dataset-a {
+      color: $pale-blue;
+    }
+
+    &.dataset-b {
+      color: $yellow;
+    }
+  }
+
+  .stacked-by-time-summary-container {
+    display: flex;
+    align-items: flex-end;
+
+    .dataset-col {
+      padding-right: 6%;
+      font-weight: bold;
+      white-space: nowrap;
+
+      &:last-child {
+        padding-right: 3%;
+      }
+
+      &.total {
+        padding-right: 3%;
+        line-height: normal;
+
+        .value {
+          font-size: rem(60px);
+        }
+
+        .suffix {
+          font-size: rem(24px);
+        }
+      }
+
+      &.chart {
+        width: 100%;
+        min-width: 72px;
+        padding-right: 0;
+        margin-right: 6%;
+        overflow: hidden;
+      }
+
+      .dark-theme & {
+        color: $white;
+      }
+
+      .value {
+        margin-right: 4px;
+        font-size: rem(24px);
+      }
+    }
+  }
+}

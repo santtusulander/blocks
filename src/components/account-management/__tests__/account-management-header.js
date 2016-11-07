@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../account-management-header.jsx')
-const AccountManagementHeader = require('../account-management-header.jsx').AccountManagementHeader
+jest.unmock('../account-management-header.jsx')
+import { AccountManagementHeader } from '../account-management-header.jsx'
 
 describe('AccountManagementHeader', () => {
   it('should exist', () => {

@@ -1,8 +1,8 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
-jest.dontMock('../group.js')
+jest.unmock('../group.js')
 
-const {
+import {
   createSuccess,
   deleteSuccess,
   deleteFailure,
@@ -14,7 +14,7 @@ const {
   updateSuccess,
   updateFailure,
   changeActive
-} = require('../group.js');
+} from '../group.js';
 
 describe('Group Module', () => {
 
@@ -44,7 +44,7 @@ describe('Group Module', () => {
       allGroups: [1]
     });
     const newState = deleteFailure(state, {payload: {id: 1}});
-    expect(newState.get('allGroups')).toContain(1);
+    expect(newState.get('allGroups').toJS()).toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../actions-selection.jsx')
-const ActionsSelection = require('../actions-selection.jsx')
+jest.unmock('../actions-selection.jsx')
+import ActionsSelection from '../actions-selection.jsx'
 
 describe('ConditionSelection', () => {
   it('should exist', () => {
@@ -19,7 +19,7 @@ describe('ConditionSelection', () => {
       <ActionsSelection
         changeValue={changeValue}
         activateSet={activateSet}
-        path={[]}
+        path={Immutable.List()}
         config={Immutable.Map()} />
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(actionsSelection, 'a');

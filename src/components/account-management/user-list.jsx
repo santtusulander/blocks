@@ -17,7 +17,7 @@ const UserList = props => {
             <th width="30%"><FormattedMessage id="portal.user.list.name.column.title"/></th>
             <th width="30%"><FormattedMessage id="portal.user.list.role.column.title"/></th>
             <th width="30%"><FormattedMessage id="portal.user.list.email.column.title"/></th>
-            <th width="1%"></th>
+            <th width="1%" />
           </tr>
         </thead>
         <tbody>
