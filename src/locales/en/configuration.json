@@ -41,10 +41,11 @@
 
   "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
   "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
-
+  "portal.policy.edit.defaults.allowCookie.text": "Allow Cookies",
   "portal.configuration.policies.contentTargeting.text": "Content Targeting",
   "portal.configuration.policies.allow.text": "Allow",
   "portal.configuration.policies.deny.text": "Deny",
   "portal.configuration.policies.redirect.text": "Redirect"
+
 
 }
