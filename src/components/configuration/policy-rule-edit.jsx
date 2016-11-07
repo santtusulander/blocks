@@ -46,6 +46,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const childPath = matchFilterChildPaths[deepestMatch.filterType]
       const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
+
       let newMatch = Immutable.fromJS([
         {match: {field: null, cases: [['',[]]]}}
       ])
@@ -101,15 +102,36 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(newPath.concat([newSets.size - 1]))
     }
   }
-  deleteMatch(path) {
+  deleteMatch(matches, i) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      const children = this.props.config.getIn(path.concat(['cases', 0, 1]))
-      this.props.changeValue(
-        path.slice(0, -2),
-        children
-      )
+      if (i === 0){
+        const childPath = matchFilterChildPaths[matches[0].filterType]
+        const newPath = matches[0].path.concat(childPath)
+        const currentSets = this.props.config.getIn(newPath)
+
+        this.props.changeValue(
+          matches[0].path.slice(0, -2),
+          this.props.config.getIn(matches[0].path.concat(['cases', 0, 1]))
+        )
+        this.props.changeValue([],
+         this.props.config.setIn(
+           matches[1].path.concat(childPath),
+           currentSets
+         )
+        )
+      }
+
+      matches.map((match, key)=>{
+        if(key < i){
+          this.props.changeValue(
+            matches[key+1].path,
+            this.props.config.getIn(match.path)
+          )
+        }
+      })
+
       this.props.activateMatch(null)
     }
   }
@@ -234,6 +256,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     const disableButton = () => {
+
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
         !flattenedPolicy.matches[0].field ||
         !flattenedPolicy.sets.length ||
@@ -283,10 +306,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <div className="conditions">
             {flattenedPolicy.matches.map((match, i) => {
-              let values = match.values[0]
-              if(match.values.length > 1) {
-                values = `${values} and ${match.values.length - 1} others`
-              }
               let active = false
               if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
@@ -318,7 +337,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 matchName = <div className="condition-name">Content Targeting</div>
                 filterText = null
               }
-
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
@@ -337,7 +355,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={2} className="text-right">
                     <ActionButtons
                       secondaryBtn={true}
-                      onDelete={this.deleteMatch(match.path)}
+                      onDelete={this.deleteMatch(flattenedPolicy.matches, i)}
                       deleteDisabled={flattenedPolicy.matches.length < 2} />
                   </Col>
                 </div>

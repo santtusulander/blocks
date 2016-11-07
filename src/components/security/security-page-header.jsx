@@ -19,17 +19,17 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
 
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
-      <AccountSelector
-        as="security"
-        params={params}
-        topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
-        topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
-        onSelect={itemSelectorFunc}
+        <AccountSelector
+          as="security"
+          params={params}
+          topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+          topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
+          onSelect={itemSelectorFunc}
         restrictedTo={restriction}
         startTier={account ? "group" : "account"}
         drillable={true}>
 
-        <div className="btn btn-link dropdown-toggle header-toggle">
+          <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={headerText} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <IconCaretDown />
         </div>

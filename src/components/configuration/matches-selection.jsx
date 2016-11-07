@@ -7,6 +7,8 @@ import IconCaretRight from '../icons/icon-caret-right'
 
 import { parsePolicy, policyIsCompatibleWithMatch, WILDCARD_REGEXP } from '../../util/policy-config'
 
+import IsAdmin from '../is-admin'
+
 class MatchesSelection extends React.Component {
   constructor(props) {
     super(props);
@@ -93,12 +95,14 @@ class MatchesSelection extends React.Component {
                 <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
               </a>
             </li>
+            <IsAdmin>
             <li>
               <a href="#" className={contentTargetingClassName} onClick={contentTargetingOnClick}>
                 {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.contentTargeting.text"/>
               </a>
             </li>
+            </IsAdmin>
             {/*<li>
               <a href="#" onClick={this.setMatchField(null)}>
                 IP Address NEEDS_API

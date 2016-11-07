@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../group.jsx')
-const Group = require('../group.jsx')
+jest.unmock('../group.jsx')
+import Group from '../group.jsx'
 
 describe('Group', () => {
   it('should exist', () => {

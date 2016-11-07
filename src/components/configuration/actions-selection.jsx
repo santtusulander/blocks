@@ -2,10 +2,9 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
-
 import IconCaretRight from '../icons/icon-caret-right'
-
 import { parsePolicy, policyIsCompatibleWithAction } from '../../util/policy-config'
+import IsAdmin from '../is-admin'
 
 class ActionsSelection extends React.Component {
   constructor(props) {
@@ -58,12 +57,14 @@ class ActionsSelection extends React.Component {
                 <FormattedMessage id="portal.policy.edit.actionSelection.header.text"/>
               </a>
             </li>
-            <li>
-              <a href="#" className={tokenAuthClassName} onClick={tokenAuthOnClick}>
-                {iconCaretRight}
-                <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
-              </a>
-            </li>
+            <IsAdmin>
+              <li>
+                <a href="#" className={tokenAuthClassName} onClick={tokenAuthOnClick}>
+                  {iconCaretRight}
+                  <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
+                </a>
+              </li>
+            </IsAdmin>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
                 {iconCaretRight}
