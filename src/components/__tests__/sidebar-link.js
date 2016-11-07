@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../sidebar-link.jsx')
-const SidebarLink = require('../sidebar-link.jsx').SidebarLink
+jest.unmock('../sidebar-link.jsx')
+import { SidebarLink } from '../sidebar-link.jsx'
 
 describe('SidebarLink', () => {
   it('should exist', () => {

@@ -28,7 +28,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           searchValue={searchValue}
           onSearch={searchFunc}>
             <div className="dropdown-toggle header-toggle">
-              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
+              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret" />
             </div>
         </DomainSelector> :
         <h4 id='empty-domains-text' className="selector-component"><FormattedMessage id={emptyDomainsTxt}/></h4>}

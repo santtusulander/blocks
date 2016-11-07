@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../content.jsx')
-const Content = require('../content.jsx')
+jest.unmock('../content.jsx')
+import Content from '../content.jsx'
 
 describe('Content layout', () => {
   it('should exist', () => {

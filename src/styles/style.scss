@@ -37,7 +37,6 @@
 @import 'base/icons';
 @import 'base/input-groups';
 @import 'base/labels';
-@import 'base/modals';
 @import 'base/navs';
 @import 'base/panels';
 @import 'base/tables';
@@ -63,17 +62,16 @@
 // ==========
 
 @import 'components/account-sidebar';
-@import 'components/action-modal';
 @import 'components/confirmation';
 @import 'components/datepicker';
-@import 'components/delete-modal';
-@import 'components/error-modal';
 @import 'components/footer';
 @import 'components/global-account-selector';
 @import 'components/header';
 @import 'components/user-menu-dropdown';
 @import 'components/inline-add';
 @import 'components/input-connector';
+@import 'components/mini-chart';
+@import 'components/modal-window';
 @import 'components/modal-form-panel';
 @import 'components/notification';
 @import 'components/permission-selection';
@@ -82,6 +80,7 @@
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
+@import 'components/typeahead';
 @import 'components/truncated-title';
 // Support
 @import 'components/support/ticket-form';
@@ -91,7 +90,6 @@
 @import 'components/support/support';
 //Account Management
 @import 'components/account-management/account-management-header';
-@import 'components/account-management/action-buttons';
 @import 'components/account-management/user-list';
 @import 'components/account-management/groups';
 @import 'components/account-management/user-edit';
@@ -103,7 +101,7 @@
 @import 'components/analysis/horizontal-bar';
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
-@import 'components/analysis/service-providers';
+@import 'components/analysis/contribution';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
@@ -122,6 +120,8 @@
 @import 'components/content/content-item';
 @import 'components/content/content-item-chart';
 @import 'components/content/content-item-list';
+// SP Dashboard
+@import 'components/stacked-by-time-summary';
 
 // Transitions
 // ===========

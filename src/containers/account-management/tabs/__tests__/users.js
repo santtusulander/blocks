@@ -9,6 +9,9 @@ import Users from '../users.jsx'
 jest.unmock('../../../__mocks__/gen-async');
 import { genAsyncMock } from '../../../__mocks__/gen-async'
 
+jest.unmock('../../../__mocks__/router');
+import { Router as routerMock } from '../../../__mocks__/router'
+
 describe('AccountManagementAccountUsers', () => {
   it('should exist', () => {
     const users = TestUtils.renderIntoDocument(

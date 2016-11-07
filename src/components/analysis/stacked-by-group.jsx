@@ -3,11 +3,11 @@ import d3 from 'd3'
 import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
-import {formatBytes} from '../../util/helpers'
+import { formatBytes } from '../../util/helpers'
 
 const maxStrokeWidth = 100
 const minStrokeWidth = 20
-const closestGroup = d3.bisector(d => d.groupIndex).left
+// const closestGroup = d3.bisector(d => d.groupIndex).left
 
 class AnalysisStackedByGroup extends React.Component {
   constructor(props) {
@@ -139,7 +139,7 @@ class AnalysisStackedByGroup extends React.Component {
             {this.props.datasetLabels.map((label, i) => (
               <span key={i} className="chart-label-container">
                 <svg width={20} height={20}>
-                  <circle r={10} cx={10} cy={10} className={`line-${i}`}></circle>
+                  <circle r={10} cx={10} cy={10} className={`line-${i}`} />
                 </svg> <span className="chart-label">{label}</span>
               </span>
             ))}

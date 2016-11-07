@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as domainActionCreators from '../../../redux/modules/dns'
@@ -17,7 +17,7 @@ import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
-import DeleteDnsRecordModal from '../../../components/account-management/delete-dns-record-modal'
+import ModalWindow from '../../../components/modal'
 
 class AccountManagementSystemDNS extends Component {
   constructor(props) {
@@ -46,12 +46,9 @@ class AccountManagementSystemDNS extends Component {
     this.props.fetchRecords(nextProps.activeDomain)
   }
 
-  deleteDnsRecord(activeDomain) {
-    const { recordToDelete } = this.state
-    this.props.removeResource(activeDomain, recordToDelete.name, recordToDelete)
-    this.setState({
-      recordToDelete: null
-    })
+  deleteDnsRecord() {
+    const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
+    deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
   }
 
   closeDeleteDnsRecordModal() {
@@ -72,7 +69,8 @@ class AccountManagementSystemDNS extends Component {
 
     const {domainSearch, recordSearch} = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
-    const visibleRecords = records.filter(({ name, value }) => name.includes(recordSearch) || getRecordValueString(value).includes(recordSearch))
+    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,
@@ -125,17 +123,29 @@ class AccountManagementSystemDNS extends Component {
         <DomainToolbar {...domainHeaderProps}/>
         {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
         {activeModal === RECORD_EDIT &&
-          <RecordForm
-            edit={this.editingRecord}
-            closeModal={() => toggleModal(null)}/>}
+        <RecordForm
+          edit={this.editingRecord}
+          closeModal={() => toggleModal(null)}/>
+        }
         {activeModal === DNS_DOMAIN_EDIT &&
-          <DomainForm
-            edit={this.editingDomain}
-            closeModal={() => toggleModal(null)}/>}
-        {this.state.recordToDelete && <DeleteDnsRecordModal
-          itemToDelete={this.state.recordToDelete.name}
+        <DomainForm
+          edit={this.editingDomain}
+          closeModal={() => toggleModal(null)}/>
+        }
+        {this.state.recordToDelete &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.dnsRecord.delete.title"/>}
+          cancelButton={true}
+          deleteButton={true}
           cancel={this.closeDeleteDnsRecordModal}
-          submit={() => { this.deleteDnsRecord(activeDomain) }}/>}
+          submit={this.deleteDnsRecord}
+          loading={loadingRecords}
+          invalid={false}>
+          <p>
+            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
+          </p>
+        </ModalWindow>
+        }
       </div>
     )
   }
@@ -145,6 +155,7 @@ AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
   activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
+  deleteRecord: PropTypes.func,
   domains: PropTypes.array,
   fetchDomain: PropTypes.func,
   fetchDomains: PropTypes.func,
@@ -184,7 +195,10 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       startFetchingDomains()
       return fetchDomains(brand)
     },
-    removeResource,
+    deleteRecord: (domain, record, onResponse) => {
+      startFetching()
+      removeResource(domain, record.name, record).then(onResponse)
+    },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),

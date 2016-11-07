@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../cors.jsx')
-const Cors = require('../cors.jsx')
+jest.unmock('../cors.jsx')
+import Cors from '../cors.jsx'
 
 function intlMaker() {
   return {

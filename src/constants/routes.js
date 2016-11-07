@@ -9,7 +9,7 @@ module.exports = {
   analyticsTabVisitors: 'visitors',
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
-  analyticsTabServiceProviders: 'service-providers',
+  analyticsTabContribution: 'contribution',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
@@ -17,10 +17,10 @@ module.exports = {
   content: '/content',
   contentBrand: '/content/:brand',
   contentAccount: '/content/:brand/:account',
-  contentGroup: '/content/:brand/:account/:group',
-  contentProperty: '/content/:brand/:account/:group/:property',
-  contentPropertyAnalytics: '/content/:brand/:account/:group/:property/analytics',
-  contentPropertyConfiguration: '/content/:brand/:account/:group/:property/configuration',
+  contentGroups: '/content/:brand/:account/groups',
+  contentGroup: '/content/:brand/:account/groups/:group',
+  contentProperty: '/content/:brand/:account/groups/:group/:property',
+  contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
@@ -69,5 +69,15 @@ module.exports = {
 
   user: '/user',
   userBrand: '/user/:brand',
-  userAccount: '/user/:brand/:account'
+  userAccount: '/user/:brand/:account',
+
+  dashboard: '/dashboard',
+  dashboardBrand: '/dashboard/:brand',
+  dashboardAccount: '/dashboard/:brand/:account',
+  dashboardGroup: '/dashboard/:brand/:account/:group',
+
+  network: '/network',
+  networkBrand: '/network/:brand',
+  networkAccount: '/network/:brand/:account',
+  networkGroups: '/network/:brand/:account/groups'
 }

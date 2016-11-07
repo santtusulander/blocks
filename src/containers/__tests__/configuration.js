@@ -1,45 +1,45 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow }  from 'enzyme'
 
-jest.autoMockOff() // Uses react-bootstrap extensively, so don't auto mock
-
-const Configuration = require('../configuration.jsx').Configuration
-const ConfigurationDetails = require('../../components/configuration/details')
-const ConfigurationDefaults = require('../../components/configuration/defaults')
-const ConfigurationPolicies = require('../../components/configuration/policies')
-const ConfigurationPerformance = require('../../components/configuration/performance')
-const ConfigurationSecurity = require('../../components/configuration/security')
-const ConfigurationCertificates = require('../../components/configuration/certificates')
-const ConfigurationChangeLog = require('../../components/configuration/change-log')
+jest.disableAutomock() // Uses react-bootstrap extensively, so don't auto mock
+jest.unmock('../../util/status-codes')
+jest.unmock('../configuration.jsx')
+import { Configuration } from '../configuration.jsx'
 
 function hostActionsMaker() {
   return {
-    startFetching: jest.genMockFunction(),
-    fetchHost: jest.genMockFunction(),
-    updateHost: jest.genMockFunction().mockImplementation(() => {
+    startFetching: jest.fn(),
+    fetchHost: jest.fn(),
+    updateHost: jest.fn().mockImplementation(() => {
       return {then: cb => cb({payload: {}})}
     }),
-    changeActiveHost: jest.genMockFunction(),
-    deleteConfiguration: jest.genMockFunction()
+    changeActiveHost: jest.fn(),
+    deleteConfiguration: jest.fn()
   }
 }
 
 function uiActionsMaker() {
   return {
-    changeNotification: jest.genMockFunction()
+    changeNotification: jest.fn()
   }
 }
 
 function accountActionsMaker() {
   return {
-    fetchAccount: jest.genMockFunction()
+    fetchAccount: jest.fn()
   }
 }
 
 function groupActionsMaker() {
   return {
-    fetchGroup: jest.genMockFunction()
+    fetchGroup: jest.fn()
+  }
+}
+
+function securityActionsMaker() {
+  return {
+    fetchSSLCertificates: jest.fn()
   }
 }
 
@@ -238,26 +238,33 @@ const fakeHost = Immutable.fromJS({
   "description": ""
 })
 
+let config = null
+let hostActions = null
+let uiActions = null
 describe('Configuration', () => {
-  it('should exist', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
+  beforeEach(() => {
+    hostActions = hostActionsMaker()
+    uiActions = uiActionsMaker()
+    config = shallow(
+      <Configuration
+        hostActions={hostActions}
+        currentUser={new Immutable.Map()}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
+        securityActions={securityActionsMaker()}
         activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
+        params={urlParams}
+        fetching={true}
+        uiActions={uiActions}
+        location={fakeLocation}/>
     );
-    expect(TestUtils.isCompositeComponent(config)).toBeTruthy();
+  });
+
+  it('should exist', () => {
+    expect(config.length).toBe(1);
   });
 
   it('should request data on mount', () => {
-    const hostActions = hostActionsMaker()
-    TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActions} fetching={true}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        params={urlParams} location={fakeLocation}/>
-    )
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.fetchHost.mock.calls[0][1]).toBe('1')
@@ -265,207 +272,133 @@ describe('Configuration', () => {
   });
 
   it('should initially render details subcomponent', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(1);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(0);
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(1);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(0);
   })
 
   it('should render defaults subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[1]);
-
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(1);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(0);
+    config.setState({activeTab: 'defaults'})
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(1);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(0);
   })
 
   it('should render policies subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[2]);
-
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(1);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(0);
+    config.setState({activeTab: 'policies'})
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(1);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(0);
   })
 
   it('should render performance subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[3]);
-
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(1);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(0);
+    config.setState({activeTab: 'performance'})
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(1);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(0);
   })
 
   it('should render security subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[4]);
-
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(1);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(0);
+    config.setState({activeTab: 'security'})
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(1);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(0);
   })
 
   it('should render certificates subcomponent when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[5]);
-
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(1);
-		expect(changelog.length).toEqual(0);
+    config.setState({activeTab: 'certificates'})
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(1);
+    expect(changelog.length).toEqual(0);
   })
 
-  it('should render performance change log when tab is clicked', () => {
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActionsMaker()}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    let nav = TestUtils.findRenderedDOMComponentWithClass(config, 'nav');
-    let links = nav.getElementsByTagName('a')
-    TestUtils.Simulate.click(links[6]);
+  it('should render change-log change log when tab is clicked', () => {
+    config.setState({activeTab: 'change-log'})
 
-    let details = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDetails);
-    let defaults = TestUtils.scryRenderedComponentsWithType(config, ConfigurationDefaults);
-    let policies = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPolicies);
-    let performance = TestUtils.scryRenderedComponentsWithType(config, ConfigurationPerformance);
-    let security = TestUtils.scryRenderedComponentsWithType(config, ConfigurationSecurity);
-    let certs = TestUtils.scryRenderedComponentsWithType(config, ConfigurationCertificates);
-    let changelog = TestUtils.scryRenderedComponentsWithType(config, ConfigurationChangeLog);
-		expect(details.length).toEqual(0);
-		expect(defaults.length).toEqual(0);
-		expect(policies.length).toEqual(0);
-		expect(performance.length).toEqual(0);
-		expect(security.length).toEqual(0);
-		expect(certs.length).toEqual(0);
-		expect(changelog.length).toEqual(1);
+    let details = config.find('ConfigurationDetails');
+    let defaults = config.find('ConfigurationDefaults');
+    let policies = config.find('ConfigurationPolicies');
+    let performance = config.find('ConfigurationPerformance');
+    let security = config.find('ConfigurationSecurity');
+    let certs = config.find('ConfigurationCertificates');
+    let changelog = config.find('ConfigurationChangeLog');
+    expect(details.length).toEqual(0);
+    expect(defaults.length).toEqual(0);
+    expect(policies.length).toEqual(0);
+    expect(performance.length).toEqual(0);
+    expect(security.length).toEqual(0);
+    expect(certs.length).toEqual(0);
+    expect(changelog.length).toEqual(1);
   })
 
   it('should make changes to the host', () => {
-    const hostActions = hostActionsMaker()
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActions}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    config.changeValue(['edge_configuration', 'origin_host_name'], 'new value')
+    config.instance().changeValue(['edge_configuration', 'origin_host_name'], 'new value')
     expect(hostActions.changeActiveHost.mock.calls[0][0].toJS()).toEqual(
       fakeHost.setIn(
         ['services', 0, 'configurations', 0, 'edge_configuration', 'origin_host_name'],
@@ -474,17 +407,7 @@ describe('Configuration', () => {
   })
 
   it('should save changes to the host', () => {
-    const hostActions = hostActionsMaker()
-    const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActions}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}
-        uiActions={uiActions}/>
-    );
-    config.saveActiveHostChanges()
+    config.instance().saveActiveHostChanges()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
@@ -493,15 +416,7 @@ describe('Configuration', () => {
   })
 
   it('should add a version', () => {
-    const hostActions = hostActionsMaker()
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActions}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}/>
-    );
-    config.cloneActiveVersion()
+    config.instance().cloneActiveVersion()
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
@@ -510,31 +425,22 @@ describe('Configuration', () => {
   })
 
   it("should change a version's deployment_status", () => {
-    const hostActions = hostActionsMaker()
-    const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
-      <Configuration hostActions={hostActions}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        activeHost={fakeHost}
-        params={urlParams} location={fakeLocation}
-        uiActions={uiActions}/>
-    );
-    config.togglePublishModal = jest.genMockFunction()
-    config.changeActiveVersionEnvironment(2)
+    config.instance().togglePublishModal = jest.fn()
+    config.instance().changeActiveVersionEnvironment(2)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(2)
-    expect(config.togglePublishModal.mock.calls.length).toBe(1)
+    expect(config.instance().togglePublishModal.mock.calls.length).toBe(1)
   })
 
+  /* Not in 1.0
   it("should not show publish modal if version is retired", () => {
     const hostActions = hostActionsMaker()
     const uiActions = uiActionsMaker()
-    let config = TestUtils.renderIntoDocument(
+    let config = shallow(
       <Configuration hostActions={hostActions}
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
@@ -542,14 +448,15 @@ describe('Configuration', () => {
         params={urlParams} location={fakeLocation}
         uiActions={uiActions}/>
     );
-    config.togglePublishModal = jest.genMockFunction()
-    config.changeActiveVersionEnvironment(1)
+    config.instance().togglePublishModal = jest.fn()
+    config.instance().changeActiveVersionEnvironment(1)
     expect(hostActions.updateHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.updateHost.mock.calls[0][1]).toBe('1')
     expect(hostActions.updateHost.mock.calls[0][2]).toBe('2')
     expect(hostActions.updateHost.mock.calls[0][3]).toBe('www.abc.com')
     expect(hostActions.updateHost.mock.calls[0][4].services[0].configurations[0]
       .configuration_status.deployment_status).toBe(1)
-    expect(config.togglePublishModal.mock.calls.length).toBe(0)
+    expect(config.instance().togglePublishModal.mock.calls.length).toBe(0)
   })
+  */
 })

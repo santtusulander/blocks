@@ -7,12 +7,16 @@ import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
 import ConfigurationPolicyRules from './policy-rules'
 import ConfigurationPolicyRuleEdit from './policy-rule-edit'
-import ConfigurationSidebar from './sidebar'
 import CacheKeyQueryStringForm from './actions/cache-key-query-string-form'
-import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
+import ConfigurationSidebar from './sidebar'
 import Toggle from '../toggle'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import IsAllowed from '../is-allowed'
+
+import {getVaryHeaderRuleId} from '../../util/policy-config'
+import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
+import { MODIFY_PROPERTY } from '../../constants/permissions'
 
 const policyPath = Immutable.List(['default_policy', 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
@@ -36,6 +40,10 @@ class ConfigurationDefaults extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
     this.updateCacheKeyQueryString = this.updateCacheKeyQueryString.bind(this)
+
+    this.toggleVaryHeaderRule = this.toggleVaryHeaderRule.bind(this)
+    this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
+    this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
   }
   addRule(e) {
     e.preventDefault()
@@ -82,8 +90,50 @@ class ConfigurationDefaults extends React.Component {
     const index = getNameIndex(this.props.config)
     this.props.changeValue(policyPath.push(index,'set','cache_name'), set)
   }
+
+  /**
+   * Adds Remove Vary Header Rule to response_policy
+   */
+  addVaryHeaderRule (){
+    const id = getVaryHeaderRuleId( this.props.config )
+    if ( id === -1 ) {
+      const varyHeaderRule = Immutable.fromJS({
+        rule_name: "Remove Vary header from response",
+        set: {
+          header: {
+            action: "set",
+            header: "Vary",
+            value: ""
+          }
+        }
+      })
+
+      const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
+      const newRules = rules.push( varyHeaderRule )
+      this.props.changeValue(['response_policy', 'policy_rules'], newRules)
+    }
+  }
+  /**
+   * Removes Remove Vary Header Rule from response_policy
+   */
+  removeVaryHeaderRule( ruleId ){
+    const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
+    this.props.changeValue(['response_policy', 'policy_rules'], rules.delete(ruleId) )
+  }
+
+  /**
+   * Toggles Remove Vary Header - rule
+   */
+  toggleVaryHeaderRule( varyHeaderRuleId ){
+    if (varyHeaderRuleId === -1) {
+      this.addVaryHeaderRule()
+    } else {
+      this.removeVaryHeaderRule( varyHeaderRuleId )
+    }
+  }
+
   render() {
-    const {config, intl} = this.props;
+    const { config, intl, readOnly } = this.props;
     if(!config || !config.size) {
       return (
         <div className="container"><FormattedMessage id="portal.loading.text"/></div>
@@ -114,11 +164,15 @@ class ConfigurationDefaults extends React.Component {
       activateSet: this.props.activateSet
     }
     const activeEditForm = getActiveMatchSetForm(
+      this.props.activeRule ? config.getIn(this.props.activeRule) : null,
       this.props.activeMatch,
       this.props.activeSet,
       config,
       activeEditFormActions
     )
+
+    const varyHeaderRuleId = getVaryHeaderRuleId( config )
+
     return (
       <div className="configuration-defaults">
 
@@ -126,13 +180,27 @@ class ConfigurationDefaults extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
         <SectionContainer>
+          {/* Remove Vary Header */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.removeVaryHeader.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle
+                readonly={readOnly}
+                value={varyHeaderRuleId !== -1}
+                changeValue={() => this.toggleVaryHeaderRule(varyHeaderRuleId)}/>
+            </Col>
+          </Row>
           {/* Ignore case from origin */}
           <Row className="form-group">
             <Col lg={4} xs={6} className="toggle-label">
               <FormattedMessage id="portal.policy.edit.defaults.ignoreOriginCase.text"/>
             </Col>
             <Col lg={8} xs={6}>
-              <Toggle value={config.getIn(policyPaths.ignore_case)}
+              <Toggle
+                readonly={readOnly}
+                value={config.getIn(policyPaths.ignore_case)}
                 changeValue={this.handleChange(policyPaths.ignore_case)}/>
             </Col>
           </Row>
@@ -144,6 +212,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={5} xs={6}>
               <Select className="input-select"
+                disabled={readOnly}
                 onSelect={this.handleEtagChange(policyPaths.honor_etags)}
                 value={config.getIn(policyPaths.honor_etags)}
                 options={[
@@ -160,6 +229,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={8} xs={6}>
               <Toggle
+                readonly={readOnly}
                 value={config.getIn(policyPaths.honor_origin_cache_policies)}
                 changeValue={this.handleChange(policyPaths.honor_origin_cache_policies)}/>
             </Col>
@@ -173,6 +243,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={2} xs={3}>
               <Input type="text"
+                disabled={readOnly}
                 className="ttl-value"
                 placeholder={intl.formatMessage({
                   id: 'portal.policy.edit.defaults.timeToLive.text'
@@ -182,6 +253,7 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col xs={3}>
               <Select className="input-select"
+                disabled={readOnly}
                 onSelect={this.changeTTLUnit(policyPaths.max_age)}
                 value={this.state.ttlUnit}
                 options={[
@@ -197,6 +269,7 @@ class ConfigurationDefaults extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.cacheKeyQueryString.text"/>} />
         <SectionContainer>
           <CacheKeyQueryStringForm
+            disabled={readOnly}
             horizontal={true}
             intl={intl}
             set={config.getIn(policyPaths.cache_name)}
@@ -205,10 +278,12 @@ class ConfigurationDefaults extends React.Component {
 
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.edgeCacheDefaultRules.text"/>}>
-          <Button bsStyle="success" className="btn-icon"
-            onClick={this.addRule}>
-            <IconAdd />
-          </Button>
+          <IsAllowed to={MODIFY_PROPERTY}>
+            <Button bsStyle="success" className="btn-icon"
+              onClick={this.addRule}>
+              <IconAdd />
+            </Button>
+          </IsAllowed>
         </SectionHeader>
 
         <SectionContainer>
@@ -251,10 +326,11 @@ ConfigurationDefaults.propTypes = {
   activeSet: React.PropTypes.instanceOf(Immutable.List),
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  intl: React.PropTypes.object
+  intl: React.PropTypes.object,
+  readOnly: React.PropTypes.bool
 }
 ConfigurationDefaults.defaultProps = {
   config: Immutable.Map()
 }
 
-module.exports = injectIntl(ConfigurationDefaults)
+export default injectIntl(ConfigurationDefaults)

@@ -6,33 +6,13 @@ import { injectIntl } from 'react-intl'
 
 import * as PERMISSIONS from '../../constants/permissions'
 
-//import HeadingDropdown from '../heading-dropdown/heading-dropdown.jsx'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName } from '../../util/helpers.js'
-import { getAnalyticsUrl, getContentUrl } from '../../util/routes.js'
+import { getAnalyticsUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
 
-/* Not USED atm - will be used when filter dropdown is implemented
- function createDropdownOptions ( opts ) {
- return opts.map(opt => {
- return {
- link: opt.get('id').toString(),
- label: opt.get('name')
- }
- })
- }
-
- function createPropertyDropdownOptions ( opts ){
- return opts.map( opt => {
- return {
- link: opt,
- label: opt
- }
- })
- }
- */
 const AnalyticsViewControl = (props) => {
 
   const {
@@ -84,8 +64,8 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
-      key: 'service-providers',
-      label: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.label'}),
+      key: 'contribution',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.contribution.label'}),
       hideHierarchy: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION,
       titles: {
@@ -128,11 +108,6 @@ const AnalyticsViewControl = (props) => {
     }
   ]
 
-  /*
-   const brandOptions = createOptions( props.brands )
-   const groupDropdownOptions = createDropdownOptions( props.groups )
-   const propertyDropdownOptions = createPropertyDropdownOptions( props.properties )
-   */
   let title = "Analytics"
   let active
   if(props.activeTab) {
@@ -163,15 +138,11 @@ const AnalyticsViewControl = (props) => {
   else if(account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
-  const isContentAnalytics = props.router.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Back to Accounts',
     account: 'UDN Admin',
     brand: 'UDN Admin'
-  }
-  if(property && isContentAnalytics) {
-    delete topBarTexts.property
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account, brand } = IDs
@@ -197,10 +168,8 @@ const AnalyticsViewControl = (props) => {
         topBarTexts={topBarTexts}
         topBarAction={topBarFunc}
         onSelect={(...params) => {
-          let url = isContentAnalytics ?
-            `${getContentUrl(...params)}/analytics` :
-            getAnalyticsUrl(...params)
-          if(active && !isContentAnalytics) {
+          let url = getAnalyticsUrl(...params)
+          if (active) {
             let tab = active.key
             if(active.propertyOnly && params[0] !== 'property') {
               tab = ''
@@ -211,7 +180,7 @@ const AnalyticsViewControl = (props) => {
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
-          <span className="caret"></span>
+          <span className="caret" />
         </div>
       </AccountSelector>
       {props.params.account &&
@@ -237,7 +206,6 @@ AnalyticsViewControl.propTypes = {
   intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object
 }
 
@@ -248,7 +216,6 @@ AnalyticsViewControl.defaultProps = {
   activeHost: Immutable.Map(),
   brands: Immutable.List(),
   groups: Immutable.List(),
-  properties: Immutable.List(),
   params: {}
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.dontMock('../on-off-net.jsx')
-const OnOffNet = require('../on-off-net.jsx').default
+jest.unmock('../on-off-net.jsx')
+import OnOffNet from '../on-off-net.jsx'
 
 describe('FilterOnOffNet', () => {
   it('should exist', () => {

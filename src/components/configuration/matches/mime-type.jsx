@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class MimeType extends React.Component {
   constructor(props) {
@@ -65,6 +65,7 @@ class MimeType extends React.Component {
 MimeType.displayName = 'MimeType'
 MimeType.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: React.PropTypes.object,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }

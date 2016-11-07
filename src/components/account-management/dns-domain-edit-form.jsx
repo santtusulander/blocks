@@ -1,6 +1,6 @@
 import React from 'react'
 import { Input, ButtonToolbar, Button } from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import './dns-domain-edit-form.scss'
 
@@ -22,7 +22,7 @@ const DnsDomainEditForm = (props) => {
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> : edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form>
+    <form autoComplete="off">
       <Input
         {...name}
       type="text"
@@ -112,8 +112,10 @@ DnsDomainEditForm.displayName = 'DnsDomainEditForm'
 
 DnsDomainEditForm.propTypes = {
   edit: React.PropTypes.bool,
+  errors: React.PropTypes.object,
   fetching: React.PropTypes.bool,
   fields: React.PropTypes.object.isRequired,
+  intl: React.PropTypes.shape(intlShape),
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,

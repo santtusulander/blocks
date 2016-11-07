@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
 import { Nav, Navbar } from 'react-bootstrap' // Button, Input
+import { FormattedMessage } from 'react-intl'
 
 import UserMenu from './user-menu'
 import TruncatedTitle from '../truncated-title'
@@ -13,10 +14,19 @@ import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
-import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
-  getUrl } from '../../util/routes.js'
+import {
+  getAccountManagementUrlFromParams,
+  getAnalyticsUrl,
+  getContentUrl,
+  getNetworkUrl,
+  getUrl
+} from '../../util/routes.js'
 
-import { FormattedMessage } from 'react-intl'
+
+import {
+  userIsServiceProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -107,7 +117,7 @@ class Header extends React.Component {
 
     if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
-      if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
+      if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
           label:  <FormattedMessage id="portal.header.analytics.text"/>
         })
@@ -128,7 +138,7 @@ class Header extends React.Component {
 
       links.push({
         label:  <FormattedMessage id="portal.header.content.text"/>,
-        url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
+        url: params.account && links.length > 0 ? getContentUrl('groups', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)
@@ -148,6 +158,10 @@ class Header extends React.Component {
       links.push( {label:  'Support'} )
     } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
       links.push( {label:  'Configuration'} )
+    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
+      links.push( {label:  'Network'} )
+    } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
+      links.push( {label:  'Dashboard'} )
     }
 
     return links.reverse()
@@ -168,11 +182,21 @@ class Header extends React.Component {
     const { activeAccount, router, user, params: { account, brand } } = this.props
     const activeAccountName = activeAccount && this.props.params.account ?
       activeAccount.get('name') : 'UDN Admin'
+    const activeAccountNameNoPlaceholder = activeAccount && this.props.params.account ?
+      activeAccount.get('name') : ''
     let className = 'header'
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
     const itemSelectorFunc = (...params) => {
+      // This check is done to prevent UDN admin from accidentally hitting
+      // the account detail endpoint, which they don't have permission for
+      if(router.isActive('/content') || router.isActive('/network')) {
+        if (params[0] === 'account' && userIsCloudProvider(user)) {
+          params[0] = 'groups'
+        }
+      }
+
       if(router.isActive('/content')) {
         router.push(getContentUrl(...params))
       } else if(router.isActive('/analysis')) {
@@ -183,15 +207,21 @@ class Header extends React.Component {
         router.push(getUrl('/security', ...params))
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
+      } else if(router.isActive('/network')) {
+        router.push(getNetworkUrl(...params))
+      } else if(router.isActive('/dashboard')) {
+        router.push(getUrl('/dashboard', ...params))
       }
     }
+    const logoLink = userIsServiceProvider(user) ?
+      getRoute('networkAccount', {brand: 'udn', account: user.get('account_id')}) :
+      getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
           className={this.state.animatingGradient ?
             'header__gradient animated' :
-            'header__gradient'}>
-        </div>
+            'header__gradient'} />
         <div className="header__content">
           <Nav className="header__left">
             <li className="header__logo">
@@ -201,10 +231,7 @@ class Header extends React.Component {
                 </Link>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <Link to={getRoute('contentAccount', {
-                  brand: 'udn',
-                  account: user.get('account_id')
-                })} className="logo">
+                <Link to={logoLink} className="logo">
                   <IconEricsson />
                 </Link>
               </IsAllowed>
@@ -220,12 +247,12 @@ class Header extends React.Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                    <span className="caret"></span>
+                    <span className="caret" />
                   </div>
                 </AccountSelector>
               </IsAllowed>
               <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
-                <div className="active-account-name">{activeAccountName}</div>
+                <div className="active-account-name">{activeAccountNameNoPlaceholder}</div>
               </IsAllowed>
             </li>
             {this.renderBreadcrumb()}
@@ -254,6 +281,7 @@ class Header extends React.Component {
                 onToggle={this.toggleUserMenu}
                 logout={this.props.logOut}
                 user={user}
+                params={this.props.params}
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>

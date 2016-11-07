@@ -1,14 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {shallow, mount} from 'enzyme'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../helpers.js')
-jest.dontMock('../defaults.jsx')
-jest.dontMock('../actions/cache-key-query-string-form.jsx')
-jest.dontMock('../policy-rules.jsx')
-jest.dontMock('../../icons/icon-add.jsx')
-jest.dontMock('../../icon.jsx')
-const ConfigurationDefaults = require('../defaults.jsx')
+jest.unmock('../../layout/section-header.jsx')
+jest.unmock('../../layout/section-container.jsx')
+jest.unmock('../defaults.jsx')
+jest.unmock('../helpers.js')
+import ConfigurationDefaults from '../defaults.jsx'
 
 function intlMaker() {
   return {
@@ -55,7 +53,7 @@ describe('ConfigurationDefaults', () => {
   it('should change ttl value based on unit', () => {
     const agePath = Immutable.List(['default_policy','policy_rules',0,'set','cache_control','max_age'])
     const changeValue = jest.fn()
-    const defaults = mount(
+    const defaults = shallow(
       <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     )

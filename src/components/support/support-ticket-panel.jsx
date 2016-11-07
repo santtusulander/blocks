@@ -4,11 +4,7 @@ import { List } from 'immutable'
 import classNames from 'classnames'
 
 import IconComments from '../icons/icon-comments'
-import IconIncident from '../icons/icon-incident'
-import IconIntegration from '../icons/icon-integration'
-import IconProblem from '../icons/icon-problem'
-import IconQuestion from '../icons/icon-question'
-import IconTask from '../icons/icon-task'
+
 import {
   getTicketPriorities,
   getTicketStatuses,
@@ -33,7 +29,7 @@ class SupportTicketPanel extends React.Component {
 
     return (
       <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
-        <div className={priorityClassNames}></div>
+        <div className={priorityClassNames} />
         <Grid componentClass="header" fluid={true}>
           <Row>
             <Col xs={6}>
@@ -87,11 +83,11 @@ SupportTicketPanel.propTypes = {
   body: React.PropTypes.string,
   comments: React.PropTypes.string,
   number: React.PropTypes.string,
+  openTicket: React.PropTypes.func,
   priority: React.PropTypes.oneOf(getTicketPriorities()),
   status: React.PropTypes.oneOf(getTicketStatuses()),
   title: React.PropTypes.string,
-  type: React.PropTypes.string,
-  openTicket: React.PropTypes.func
+  type: React.PropTypes.string
 }
 
 export default SupportTicketPanel

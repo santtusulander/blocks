@@ -172,6 +172,7 @@ class ModalMtr extends React.Component {
 ModalMtr.displayName = 'ModalMtr'
 ModalMtr.propTypes = {
   handleCloseModal: React.PropTypes.func,
+  intl: React.PropTypes.object,
   showDetails: React.PropTypes.bool,
   toggleShowDetails: React.PropTypes.func
 }
