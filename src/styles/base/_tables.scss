@@ -117,6 +117,23 @@
     }
   }
 
+  &.table-simple {
+    background-color: transparent;
+
+    > thead > tr > th {
+      background-color: transparent;
+      border-bottom: 1px solid rgba($pale-blue, 0.2);
+    }
+
+    > tbody > tr > td:not(:last-child):not(.no-border) {
+
+      .dark-theme &,
+      .light-theme & {
+        border: 0;
+      }
+    }
+  }
+
   &.no-padding {
 
     > thead,

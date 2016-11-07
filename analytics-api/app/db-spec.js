@@ -50,17 +50,17 @@ describe('db._getQueryOptions', function() {
 describe('db._getAccountLevel', function() {
   // isListingChildren is true
   it('should return "property" if account and group were provided, and isListingChildren is true', function() {
-    let level = db._getAccountLevel({account: true, group: true}, true);
+    let level = db._getAccountLevel({account: true, group: true, list_children: true});
     expect(level).toBe('property');
   });
 
   it('should return "group" if account was provided, and isListingChildren is true', function() {
-    let level = db._getAccountLevel({account: true}, true);
+    let level = db._getAccountLevel({account: true, list_children: true});
     expect(level).toBe('group');
   });
 
   it('should return "account" if account, group, and property were NOT provided, and isListingChildren is true', function() {
-    let level = db._getAccountLevel({}, true);
+    let level = db._getAccountLevel({list_children: true});
     expect(level).toBe('account');
   });
 
@@ -91,6 +91,7 @@ describe('db._getAccountLevel', function() {
 
 describe('db._getAggregateNumbers', function() {
   let options = {start: 0, end: 1, account: 2, granularity: 'hour'};
+  let optionsListChildren = Object.assign({list_children: true}, options);
   beforeEach(function() {
     spyOn(db, '_getQueryOptions').and.callThrough();
     spyOn(db, '_executeQuery').and.stub();
@@ -115,7 +116,7 @@ describe('db._getAggregateNumbers', function() {
   });
 
   it('should get numbers for child accounts when account, group, and property are NOT provided and isListingChildren is true', function() {
-    db._getAggregateNumbers({start: 0, end: 1, granularity: 'hour'}, true);
+    db._getAggregateNumbers({start: 0, end: 1, granularity: 'hour', list_children: true});
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
     let query = db._executeQuery.calls.argsFor(0)[0];
     expect(db._executeQuery.calls.any()).toBe(true);
@@ -131,7 +132,7 @@ describe('db._getAggregateNumbers', function() {
   });
 
   it('should get numbers for child groups of an account when account is provided and isListingChildren is true', function() {
-    db._getAggregateNumbers(options, true);
+    db._getAggregateNumbers(optionsListChildren, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
     let query = db._executeQuery.calls.argsFor(0)[0];
     expect(db._executeQuery.calls.any()).toBe(true);
@@ -148,7 +149,7 @@ describe('db._getAggregateNumbers', function() {
   });
 
   it('should get numbers for child properties of a group when account and group are provided and isListingChildren is true', function() {
-    let optionsModified = Object.assign({}, options, {group: 3});
+    let optionsModified = Object.assign({}, optionsListChildren, {group: 3});
     db._getAggregateNumbers(optionsModified, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
     let query = db._executeQuery.calls.argsFor(0)[0];
@@ -167,7 +168,7 @@ describe('db._getAggregateNumbers', function() {
   });
 
   it('should get numbers for child properties of a group when account, group, and property are provided and isListingChildren is true', function() {
-    let optionsModified = Object.assign({}, options, {group: 3, property: 4});
+    let optionsModified = Object.assign({}, optionsListChildren, {group: 3, property: 4});
     db._getAggregateNumbers(optionsModified, true);
     let optionsArray = db._executeQuery.calls.argsFor(0)[1];
     let query = db._executeQuery.calls.argsFor(0)[0];
@@ -276,8 +277,10 @@ describe('db.getMetrics', function() {
 
   it('should log the number of result sets received from the queries', function(done) {
     db.getMetrics(options).then(function(data) {
-      expect(log.info.calls.any()).toBe(true);
-      expect(parseInt(log.info.calls.argsFor(0)[0].match(/\d+/)[0])).toEqual(data.length);
+      var logCalls   = log.info.calls;
+      var lastLogMessage = logCalls.argsFor(logCalls.count() - 1)[0];
+      expect(logCalls.any()).toBe(true);
+      expect(parseInt(lastLogMessage.match(/\d+/)[0])).toEqual(data.length);
       done();
     });
   });
