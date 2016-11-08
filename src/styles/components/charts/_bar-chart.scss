@@ -8,14 +8,14 @@
     @extend .chart-legend;
     position: relative;
     background-color: rgba($black, 0.8);
-    padding: 0.6em 0;
+    padding: 8px 0;
     top: auto;
     right: auto;
     min-width: auto;
 
     .tooltip-item {
       @extend .legend-item;
-      padding: 0 0.6em;
+      padding: 0 8px;
     }
   }
 
@@ -35,19 +35,19 @@
   }
 
   .bar-chart-label {
-    top: 1.5em;
-    left: 2em;
+    top: 20px;
+    left: 30px;
     position: absolute;
     font-weight: bold;
   }
 
   .legend-icon {
     font-weight: bold;
-    margin-right: 0.5em;
+    margin-right: 7.5px;
   }
 
   .rechart-legend {
-    padding: 1em 5em 1em 1em;
+    padding: 15px 80px 15px 15px;
     background-color: rgba($black, 0.4);
   }
 
