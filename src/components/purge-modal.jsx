@@ -3,10 +3,8 @@ import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { isValidFQDN } from '../util/helpers'
-
 import Select from './select'
-import { isValidEmail } from '../util/validators'
+import { isValidEmail, isValidFQDN } from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
