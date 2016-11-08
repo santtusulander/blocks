@@ -28,7 +28,7 @@ const FilterDateRange = ({ onFilterChange, startDate, endDate, showComparison, i
 FilterDateRange.displayName = 'FilterDateRange'
 FilterDateRange.propTypes = {
   changeDateRange: PropTypes.func,
-  dateRanges: PropTypes.array,
+  dateRanges: PropTypes.array.isRequired,
   endDate: PropTypes.instanceOf(moment),
   includeComparison: PropTypes.bool,
   onFilterChange: PropTypes.func,
