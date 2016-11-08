@@ -1,6 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { injectIntl, intlShape } from 'react-intl'
 import d3 from 'd3'
+import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
@@ -9,6 +11,8 @@ import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
+
+import { deploymentModes } from '../../constants/configuration'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip.jsx'
@@ -52,21 +56,24 @@ class ContentItemChart extends React.Component {
     this.differenceHover = this.differenceHover.bind(this)
     this.sliceHover = this.sliceHover.bind(this)
   }
+
   differenceHover(hover) {
     return () => {
       this.setState({ showDiffLegend: hover })
     }
   }
+
   sliceHover(sliceData) {
     return () => {
       this.setState({ activeSlice: sliceData })
     }
   }
+
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
-
+    const { intl: { formatMessage } } = this.props
     const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
     const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
@@ -222,7 +229,7 @@ class ContentItemChart extends React.Component {
                 width: innerRadius * 2, height: innerRadius * 2,
                 marginTop: -innerRadius, marginLeft: -innerRadius
               }}>
-              <div className="circle-gradient" />
+              <div className={classnames({ "circle-gradient": true, bright: this.props.trialMode })} />
             </div>
             <ReactCSSTransitionGroup
               component="div"
@@ -289,6 +296,10 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
+            {this.props.trialMode &&
+              <span className="content-item-text-box">
+                {formatMessage({ id: deploymentModes['trial'] }).toUpperCase()}
+              </span>}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -357,6 +368,7 @@ ContentItemChart.propTypes = {
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
+  intl: intlShape.required,
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
@@ -366,7 +378,8 @@ ContentItemChart.propTypes = {
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,
-  timeToFirstByte: React.PropTypes.string
+  timeToFirstByte: React.PropTypes.string,
+  trialMode: React.PropTypes.bool
 }
 ContentItemChart.defaultProps = {
   dailyTraffic: Immutable.List(),
@@ -375,4 +388,4 @@ ContentItemChart.defaultProps = {
   secondaryData: Immutable.List()
 }
 
-module.exports = ContentItemChart
+export default injectIntl(ContentItemChart)
