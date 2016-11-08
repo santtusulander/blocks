@@ -45,7 +45,8 @@
   "portal.configuration.policies.contentTargeting.text": "Content Targeting",
   "portal.configuration.policies.allow.text": "Allow",
   "portal.configuration.policies.deny.text": "Deny",
-  "portal.configuration.policies.redirect.text": "Redirect"
+  "portal.configuration.policies.redirect.text": "Redirect",
 
-
+  "portal.configuration.details.deploymentMode.production": "Production",
+  "portal.configuration.details.deploymentMode.trial": "Trial"
 }
