@@ -29,7 +29,7 @@ class SupportTicketPanel extends React.Component {
 
     return (
       <div className={statusClassNames} onClick={() => {this.props.openTicket()}}>
-        <div className={priorityClassNames}></div>
+        <div className={priorityClassNames} />
         <Grid componentClass="header" fluid={true}>
           <Row>
             <Col xs={6}>

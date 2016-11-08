@@ -16,7 +16,8 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import {
   filterMetricsByAccounts,
-  userIsCloudProvider
+  userIsCloudProvider,
+  userIsServiceProvider
 } from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
@@ -36,10 +37,13 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData(
-      this.props.metrics,
-      this.props.accounts,
-      this.props.dailyTraffic)
+    const { fetchData, metrics, accounts, dailyTraffic, roles, user } = this.props;
+    fetchData(
+      metrics,
+      accounts,
+      dailyTraffic,
+      checkPermissions(roles, user.get('currentUser'), PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+    )
   }
   createAccount(brand, data) {
     return this.props.accountActions.createAccount(brand, data)
@@ -78,6 +82,7 @@ export class Accounts extends React.Component {
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
+    const selectionDisabled = !showAccountList && userIsServiceProvider(currentUser)
 
     const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
 
@@ -112,6 +117,7 @@ export class Accounts extends React.Component {
         isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        selectionDisabled={selectionDisabled}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}
@@ -173,13 +179,18 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  const metricsOpts = {
+  let metricsOpts = {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
+
   return {
-    fetchData: (metrics, accounts, dailyTraffic) => {
-      if(accounts.isEmpty()) {
+    fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
+      if (!canListAccounts) {
+        metricsOpts.account = ownProps.params.account;
+      }
+      metricsOpts.list_children = !!canListAccounts;
+      if(accounts.isEmpty() && canListAccounts) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
       }
