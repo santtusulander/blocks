@@ -4,6 +4,7 @@ import d3 from 'd3'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
+import classNames from 'classnames'
 
 import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart.jsx'
@@ -14,6 +15,9 @@ import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
+
+import providerTypes from '../../constants/provider-types.js'
+import { FormattedMessage } from 'react-intl'
 
 const dayHours = 24
 const rayHours = 3
@@ -289,6 +293,15 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
+              {this.props.providerType === providerTypes.CONTENT_PROVIDER || this.props.providerType === providerTypes.SERVICE_PROVIDER ?
+                <div className={classNames({"content-item-text-box": true,
+                                            "secondary": this.props.providerType !== providerTypes.CONTENT_PROVIDER
+                                          })}>
+                  {this.props.providerType === providerTypes.CONTENT_PROVIDER ?
+                    <FormattedMessage id="portal.content.contentProvider"/> :
+                    <FormattedMessage id="portal.content.serviceProvider"/>}
+                </div>
+              : null}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -364,6 +377,7 @@ ContentItemChart.propTypes = {
   name: React.PropTypes.string,
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
+  providerType: React.PropTypes.number,
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,
   timeToFirstByte: React.PropTypes.string

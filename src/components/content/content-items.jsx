@@ -349,6 +349,7 @@ class ContentItems extends React.Component {
                     } : null,
                     analyticsLink: this.props.analyticsURLBuilder(id),
                     name: item.get('name'),
+                    providerType: item.get('provider_type'),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
