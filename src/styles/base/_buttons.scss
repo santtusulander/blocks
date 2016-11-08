@@ -389,9 +389,8 @@ $lt-caret-color: $silver-60;
       }
     }
 
-    &:hover,
-    &:active:hover,
-    &.active:focus {
+    &:hover:not(.active),
+    &:focus:not(.active) {
       background-image: linear-gradient(rgba($btn-primary-background, 0.4), rgba($btn-primary-background, 0.4));
 
       .icon {
@@ -476,9 +475,8 @@ $lt-caret-color: $silver-60;
       }
     }
 
-    &:hover,
-    &:active:hover,
-    &.active:focus {
+    &:hover:not(.active),
+    &:focus:not(.active) {
       background-image: linear-gradient(rgba($btn-primary-background, 0.7), rgba($btn-primary-background, 0.7));
 
       .icon {

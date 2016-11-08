@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonToolbar } from 'react-bootstrap'
+import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -300,20 +300,20 @@ class ContentItems extends React.Component {
               onSelect={this.handleSortChange}
               value={currentValue}
               options={sortOptions.map(opt => [opt.value, opt.label])}/>
-            <UDNButton bsStyle={viewingChart ? 'primary' : 'tertiary'}
-                       active={!viewingChart}
-                       icon={true}
-                       toggleView={true}
-                       onClick={!viewingChart && this.props.toggleChartView}>
-              <IconItemChart/>
-            </UDNButton>
-            <UDNButton bsStyle={!viewingChart ? 'primary' : 'tertiary'}
-                       active={viewingChart}
-                       icon={true}
-                       toggleView={true}
-                       onClick={viewingChart && this.props.toggleChartView}>
-              <IconItemList/>
-            </UDNButton>
+            <ButtonGroup>
+              <UDNButton bsStyle={viewingChart ? 'tertiary' : 'primary'}
+                         active={viewingChart}
+                         icon={true}
+                         onClick={!viewingChart && this.props.toggleChartView}>
+                <IconItemChart/>
+              </UDNButton>
+              <UDNButton bsStyle={!viewingChart ? 'tertiary' : 'primary'}
+                         active={!viewingChart}
+                         icon={true}
+                         onClick={viewingChart && this.props.toggleChartView}>
+                <IconItemList/>
+              </UDNButton>
+            </ButtonGroup>
           </ButtonToolbar>
         </PageHeader>
 

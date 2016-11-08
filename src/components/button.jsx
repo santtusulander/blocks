@@ -13,8 +13,7 @@ ButtonWrapper.propTypes = {
   bsStyle: PropTypes.oneOf(bsStyles),
   hidden: PropTypes.bool,
   icon: PropTypes.bool,
-  outLine: PropTypes.bool,
-  toggleView: PropTypes.bool
+  outLine: PropTypes.bool
 }
 
 function createButtonClassName(props){
@@ -23,7 +22,6 @@ function createButtonClassName(props){
     'btn-icon': props.icon,
     'btn-add-new': props.addNew,
     'hidden': props.hidden,
-    'toggle-view': props.toggleView,
     [props.className]: props.className ? true : false
   })
 }
