@@ -67,8 +67,17 @@ export function isValidFQDN(domainName, opts = {}) {
  * @param opts
  * @returns {boolean|*}
  */
-export function isValidHostName(hostName, opts = {}) {
-  return isValidFQDN(hostName, opts)
+export function isValidHostName(hostName) {
+  /* Rules matching CloudScale's Hostname validation:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-zA-Z0-9-];
+    - doesn't begin or end with a hyphen;
+    - can end with a dot.
+  */
+  if (hostName.length > 255) return false
+  return matchesRegexp(hostName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }
 
 /**
