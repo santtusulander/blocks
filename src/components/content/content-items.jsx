@@ -224,7 +224,7 @@ class ContentItems extends React.Component {
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret"></span>
+          <span className="caret" />
         </div>
       </AccountSelector>
     )
