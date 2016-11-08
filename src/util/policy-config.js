@@ -182,9 +182,9 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
 }
 
 /**
- *
+ * Gets Vary Header Rule from config
  * @param config
- * @returns {number|*}
+ * @returns Boolean
  */
 export const getVaryHeaderRuleId = ( config ) => {
   const path = config.getIn(['response_policy', 'policy_rules'])
