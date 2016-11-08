@@ -151,20 +151,13 @@ class AnalyticsDB {
    * @private
    * @param  {object} options            Options object that contains keys for
    *                                     account, group, and/or property
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     For example, if the caller is trying to
-   *                                     list properties of a group, this function
-   *                                     needs to return 'property', but the caller
-   *                                     would only provide account and group values.
    * @return {string}                    Will return 'account', 'group', or 'property'
    *                                     Returns null if the level could not be determined
    */
-  _getAccountLevel(options, isListingChildren) {
+  _getAccountLevel(options) {
     let accountLevel;
-    isListingChildren = !!isListingChildren || false;
 
-    if (isListingChildren) {
+    if (options.list_children) {
 
       if (options.group && options.account) {
         accountLevel = 'property';
@@ -200,13 +193,13 @@ class AnalyticsDB {
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  _getAggregateNumbers(options, isListingChildren) {
-    isListingChildren    = !!isListingChildren || false;
-    let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
-    let accountLevelData = this.accountLevelFieldMap[accountLevel];
-    let conditions       = [];
-    let queryOptions     = [];
+  _getAggregateNumbers(options) {
+    let optionsFinal      = this._getQueryOptions(options);
+    let isListingChildren = optionsFinal.list_children;
+    let accountLevel      = this._getAccountLevel(optionsFinal);
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let queryOptions      = [];
 
     // Build the table name
     let table = `${accountLevel}_global_${optionsFinal.granularity}`;
@@ -267,8 +260,7 @@ class AnalyticsDB {
    */
   getTraffic(options) {
     let optionsFinal      = this._getQueryOptions(options);
-    let isListingChildren = optionsFinal.list_children;
-    let accountLevel      = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
     let accountLevelData  = this.accountLevelFieldMap[accountLevel];
     let conditions        = [];
     let grouping          = [];
@@ -297,7 +289,7 @@ class AnalyticsDB {
       && queryOptions.push(optionsFinal.group);
 
     optionsFinal.property
-      && !isListingChildren
+      && !optionsFinal.list_children
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
@@ -345,7 +337,7 @@ class AnalyticsDB {
    */
   getSPTrafficTotals(options) {
     let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, true);
+    let accountLevel     = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -410,7 +402,7 @@ class AnalyticsDB {
    */
   getSpEgress(options) {
     let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, true);
+    let accountLevel     = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -495,7 +487,7 @@ class AnalyticsDB {
    */
   getSpTraffic(options) {
     let optionsFinal      = this._getQueryOptions(options);
-    let accountLevel      = this._getAccountLevel(optionsFinal, true);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -609,7 +601,7 @@ class AnalyticsDB {
     // Skipping SP data fetching in case of unsupported query options
     if (options.granularity !== "5min" && options.granularity !== "month" && options.property === null) {
       options.show_totals && queries.push(this.getSpTraffic(optionsTotals));
-      options.show_detail && queries.push(this.getSpTraffic(optionsDetail));  
+      options.show_detail && queries.push(this.getSpTraffic(optionsDetail));
     }
 
     return Promise.all(queries)
@@ -648,8 +640,8 @@ class AnalyticsDB {
    */
   getMetrics(options) {
     let queries = [
-      this.getEgressWithHistorical(options, true),
-      this._getAggregateNumbers(options, true),
+      this.getEgressWithHistorical(options),
+      this._getAggregateNumbers(options),
       this.getSPTrafficTotals(options),
       this.getSpEgressWithHistorical(options)
     ];
@@ -737,20 +729,17 @@ class AnalyticsDB {
    * Get outbound traffic (egress) for a property, group, or account.
    *
    * @param  {object}  options           Options that get piped into an SQL query
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     See _getAccountLevel for more info.
    * @return {Promise}                   A promise that is fulfilled with the
    *                                     query results
    */
-  getEgress(options, isListingChildren) {
-    isListingChildren    = !!isListingChildren || false;
-    let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
-    let accountLevelData = this.accountLevelFieldMap[accountLevel];
-    let conditions       = [];
-    let grouping         = [];
-    let queryOptions     = [];
+  getEgress(options) {
+    let isListingChildren = !!options.list_children || false;
+    let optionsFinal      = this._getQueryOptions(options);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let grouping          = [];
+    let queryOptions      = [];
     let selectedDimension;
 
     // Build the SELECT clause
@@ -828,13 +817,9 @@ class AnalyticsDB {
    * requested time frame AND the previous time frame of the same duration.
    *
    * @param  {object}  options           Options that get piped into an SQL query
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     See _getAccountLevel for more info.
    * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getEgressWithHistorical(options, isListingChildren) {
-    isListingChildren   = !!isListingChildren || false;
+  getEgressWithHistorical(options) {
     let optionsFinal    = this._getQueryOptions(options);
     let start           = parseInt(optionsFinal.start);
     let end             = parseInt(optionsFinal.end);
@@ -844,8 +829,8 @@ class AnalyticsDB {
       end: start - 1
     });
     let queries = [
-      this.getEgress(optionsFinal, isListingChildren),
-      this.getEgress(optionsHistoric, isListingChildren)
+      this.getEgress(optionsFinal),
+      this.getEgress(optionsHistoric)
     ];
 
     return Promise.all(queries)

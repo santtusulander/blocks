@@ -221,8 +221,7 @@ class Header extends React.Component {
         <div ref="gradient"
           className={this.state.animatingGradient ?
             'header__gradient animated' :
-            'header__gradient'}>
-        </div>
+            'header__gradient'} />
         <div className="header__content">
           <Nav className="header__left">
             <li className="header__logo">
@@ -248,7 +247,7 @@ class Header extends React.Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                    <span className="caret"></span>
+                    <span className="caret" />
                   </div>
                 </AccountSelector>
               </IsAllowed>

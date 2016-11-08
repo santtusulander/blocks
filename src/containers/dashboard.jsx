@@ -236,7 +236,7 @@ export class Dashboard extends React.Component {
               <div ref="byLocationHolder">
                 <AnalysisByLocation
                   dataKey="bytes"
-                  tooltipCustomFormat={val => formatBitsPerSecond(val, true)}
+                  tooltipCustomFormat={val => formatBytes(val)}
                   timelineKey="detail"
                   noBg={true}
                   width={this.state.byLocationWidth}

@@ -7,6 +7,7 @@ import {
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
+import IsAdmin from '../is-admin'
 
 class ActionsSelection extends React.Component {
   constructor(props) {
@@ -55,11 +56,13 @@ class ActionsSelection extends React.Component {
                 <FormattedMessage id="portal.policy.edit.actionSelection.header.text"/>
               </a>
             </li>
-            <li>
-              <a href="#" className={tokenAuthClassName} onClick={tokenAuthOnClick}>
-                <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
-              </a>
-            </li>
+            <IsAdmin>
+              <li>
+                <a href="#" className={tokenAuthClassName} onClick={tokenAuthOnClick}>
+                  <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
+                </a>
+              </li>
+            </IsAdmin>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
                 <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>

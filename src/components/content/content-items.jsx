@@ -224,7 +224,7 @@ class ContentItems extends React.Component {
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret"></span>
+          <span className="caret" />
         </div>
       </AccountSelector>
     )
@@ -240,7 +240,8 @@ class ContentItems extends React.Component {
       analyticsURLBuilder,
       fetchingMetrics,
       showAnalyticsLink,
-      viewingChart
+      viewingChart,
+      user
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -289,9 +290,12 @@ class ContentItems extends React.Component {
           {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)}
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-            <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
-            </IsAllowed>
+            {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
+            {userIsCloudProvider(user.get('currentUser')) || activeAccount.size ?
+              <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
+                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+              </IsAllowed>
+            : null}
             <Select
               onSelect={this.handleSortChange}
               value={currentValue}

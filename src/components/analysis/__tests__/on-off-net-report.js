@@ -50,6 +50,8 @@ describe('AnalysisOnOffNetReport', () => {
   it('should exist', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={Immutable.Map({startDate: new Date(), endDate: new Date()})}
+        dateRangeLabel='Label'
         fetching={true}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
@@ -61,6 +63,8 @@ describe('AnalysisOnOffNetReport', () => {
   it('should show data rows in table', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={ Immutable.Map({startDate: new Date(), endDate: new Date() })}
+        dateRangeLabel='Label'
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
@@ -73,13 +77,17 @@ describe('AnalysisOnOffNetReport', () => {
   it('should show summary stats', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
+        dateRange={Immutable.Map({startDate: new Date(), endDate: new Date()})}
+        dateRangeLabel='Label'
         fetching={false}
         onOffStats={fakeOnOffStats}
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
+
     let summaryBoxes = analysisOnOffNetReport.find('.analysis-data-box')
-    expect(summaryBoxes.at(0).text()).toContain('123456')
-    expect(summaryBoxes.at(1).text()).toContain('31000000')
+
+    expect(summaryBoxes.at(0).find('p').text()).toContain('123')
+    expect(summaryBoxes.at(1).find('p').text()).toContain('500000')
   });
 })
