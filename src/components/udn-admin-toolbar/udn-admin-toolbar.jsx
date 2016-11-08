@@ -5,7 +5,7 @@ import Select from '../select.jsx'
 import './udn-admin-toolbar.scss'
 import { ADD_ACCOUNT } from '../../constants/account-management-modals.js'
 
-const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, routes, toggleAccountManagementModal, history}) => {
+const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManagementModal, history}) => {
 
   const accountOptions = accounts.map( account => {
     return [account.get('id'), account.get('name')]
@@ -44,6 +44,14 @@ const UdnAdminToolbar = ({accounts, activeAccount, fetchAccountData, routes, tog
 UdnAdminToolbar.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map()
+}
+
+UdnAdminToolbar.propTypes = {
+  accounts: React.PropTypes.instanceOf.Immutable.List(),
+  activeAccount: React.PropTypes.instanceOf.Immutable.Map(),
+  history: React.PropTypes.object,
+  routes: React.PropTypes.object,
+  toggleAccountManagementModal: React.PropTypes.func
 }
 
 export default UdnAdminToolbar

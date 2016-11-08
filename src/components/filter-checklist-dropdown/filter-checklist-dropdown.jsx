@@ -1,8 +1,9 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
 import { List } from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
+
+import autoClose from '../../decorators/select-auto-close'
 
 import './filter-checklist-dropdown.scss'
 
@@ -11,34 +12,15 @@ export class FilterChecklistDropdown extends React.Component {
     super(props)
 
     this.state = {
-      dropdownOpen: false,
       filteredResults: this.props.options,
       filterValue: ''
     }
 
     this.handleCheck  = this.handleCheck.bind(this)
-    this.handleClick  = this.handleClick.bind(this)
     this.handleClear  = this.handleClear.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
     this.getLabel     = this.getLabel.bind(this)
     this.getFilteredResults = this.getFilteredResults.bind(this)
-  }
-
-  componentWillMount() {
-    document.addEventListener('click', this.handleClick, false)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick, false)
-  }
-
-  handleClick(e) {
-    !findDOMNode(this).contains(e.target) && this.state.dropdownOpen &&
-      this.setState({ dropdownOpen: false })
-  }
-
-  toggleDropdown(val) {
-    this.setState({ dropdownOpen: !val })
   }
 
   handleCheck(optionVal) {
@@ -72,7 +54,7 @@ export class FilterChecklistDropdown extends React.Component {
     let inputVal = this.state.filterValue
     if(this.state.filterValue.length) {
       return this.props.options.filter(
-        option => option.get('label').toLowerCase().indexOf(inputVal) !== -1
+        option => option.get('label').toString().toLowerCase().indexOf(inputVal) !== -1
       )
     }
     else {
@@ -111,7 +93,7 @@ export class FilterChecklistDropdown extends React.Component {
 
   render() {
 
-    const { dropdownOpen, filterValue } = this.state
+    const { state: { filterValue }, props: { open, toggle } } = this
     const filteredResults = this.getFilteredResults()
 
     let itemList;
@@ -161,15 +143,16 @@ export class FilterChecklistDropdown extends React.Component {
 
     return (
       <div className="form-group">
-        <Dropdown id=""
-                  defaultOpen={dropdownOpen}
-                  className={className}>
-          <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
+        <Dropdown
+          open={open}
+          onToggle={() => {/*because we pass an open-prop, this needs a handler or react-bs throws a failed proptype-warning.*/}}
+          className={className}>
+          <Dropdown.Toggle disabled={this.props.disabled} onClick={toggle} noCaret={true}>
             <IconSelectCaret/>
             {this.getLabel()}
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            {dropdownOpen &&
+            {open &&
               <li role="presentation" className="action-container">
                 <Input
                   ref="filterInput"
@@ -203,10 +186,13 @@ FilterChecklistDropdown.displayName = 'FilterChecklistDropdown'
 FilterChecklistDropdown.propTypes   = {
   children: React.PropTypes.array,
   className: React.PropTypes.string,
+  disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
   noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,
+  open: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),
+  toggle: React.PropTypes.func,
   value: React.PropTypes.instanceOf(List)
 }
 
@@ -215,4 +201,4 @@ FilterChecklistDropdown.defaultProps = {
   value: List()
 }
 
-export default FilterChecklistDropdown
+export default autoClose(FilterChecklistDropdown)

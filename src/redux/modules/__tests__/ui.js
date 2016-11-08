@@ -1,7 +1,7 @@
 import { fromJS, is } from 'immutable'
 
 jest.unmock('../ui.js')
-jest.unmock('../../../constants/status-codes.js')
+jest.unmock('../../../util/status-codes')
 
 import {
   accountManagementModalToggled,

@@ -6,7 +6,6 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
-import { Button } from 'react-bootstrap'
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
@@ -40,7 +39,7 @@ if (module.hot) {
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.timeout = 60000
+axios.defaults.timeout = 300000
 
 // Handle 401s with a redirect to login page
 // Handle 403s with a InfoDialod & display message
@@ -59,20 +58,15 @@ axios.interceptors.response.use(function (response) {
         const method = error.config.method.toLowerCase()
         const tokenDidExpire = loggedIn && method === 'get'
 
+        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
+
         if (tokenDidExpire) {
           store.dispatch(showInfoDialog({
             title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
             content: <FormattedMessage id='portal.common.error.tokenExpire.content'/>,
-            buttons: (
-              <a href="/login">
-                <Button bsStyle="primary">
-                  <FormattedMessage id='portal.common.error.tokenExpire.button'/>
-                </Button>
-              </a>
-            )
+            loginButton: true
           }));
         } else {
-          store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
           browserHistory.push('/login')
         }
       }
@@ -81,11 +75,8 @@ axios.interceptors.response.use(function (response) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
-        buttons: (
-          <Button onClick={() => store.dispatch(hideInfoDialog())} bsStyle="primary">
-            <FormattedMessage id='portal.common.button.ok'/>
-          </Button>
-        )
+        okButton: true,
+        cancel: () => store.dispatch(hideInfoDialog())
       }));
     }
     else if (status === 500 || status === 404) {

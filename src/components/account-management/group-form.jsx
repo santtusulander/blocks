@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { reduxForm } from 'redux-form'
 import {
   Modal,
@@ -7,15 +8,15 @@ import {
   Button,
   Table
 } from 'react-bootstrap'
-import { Map, List, fromJS } from 'immutable'
 
+import { Map, List } from 'immutable'
 import IconTrash from '../icons/icon-trash.jsx'
+import { isValidAccountName } from '../../util/validators'
 
-import { NAME_VALIDATION_REGEXP } from '../../constants/account-management-options'
+// import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+// import IconClose from '../icons/icon-close.jsx'
 
 import './group-form.scss'
-
-import { FormattedMessage, injectIntl } from 'react-intl'
 
 let errors = {}
 
@@ -27,8 +28,8 @@ const validate = (values) => {
     errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
   }
 
-  if (name && !new RegExp(NAME_VALIDATION_REGEXP).test(name)) {
-    errors.name = <FormattedMessage id="portal.group.edit.name.required.text"/>
+  if (name && !isValidAccountName(name)) {
+    errors.name = <FormattedMessage id="portal.account.groups.name.error.invalid"/>
   }
 
   return errors;
@@ -107,29 +108,32 @@ class GroupForm extends React.Component {
   }
 
   render() {
+
     const { fields: { name }, show, onCancel } = this.props
 
-    // Temporarily disabled until we allow assigning users to groups
-    // const currentMembers = this.props.users.reduce((members, user) => {
-    //   if (this.state.usersToAdd.includes(user.get('email'))) {
-    //     return [user.set('toAdd', true), ...members]
-    //   }
-    //   if (this.state.usersToDelete.includes(user.get('email'))) {
-    //     return [...members, user.set('toDelete', true)]
-    //   }
-    //   if (user.get('group_id').includes(this.props.group.get('id'))) {
-    //     return [...members, user]
-    //   }
-    //   return members
-    // }, [])
-    //
-    // const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
-    //   const userEmail = user.get('email')
-    //   if (!user.get('group_id').includes(this.props.group.get('id'))) {
-    //     return [...arr, { label: userEmail, value: userEmail }]
-    //   }
-    //   return arr;
-    // }, []))
+    /*
+     const currentMembers = this.props.users.reduce((members, user) => {
+     if (this.state.usersToAdd.includes(user.get('email'))) {
+     return [user.set('toAdd', true), ...members]
+     }
+     if (this.state.usersToDelete.includes(user.get('email'))) {
+     return [...members, user.set('toDelete', true)]
+     }
+     if (user.get('group_id').includes(this.props.group.get('id'))) {
+     return [...members, user]
+     }
+     return members
+     }, [])
+
+
+     const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
+     const userEmail = user.get('email')
+     if(!user.get('group_id').includes(this.props.group.get('id'))) {
+     return [...arr, {label: userEmail, value: userEmail}]
+     }
+     return arr;
+     }, []))
+     */
 
     const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> :
       <FormattedMessage id="portal.group.edit.newGroup.title"/>
@@ -252,7 +256,7 @@ GroupForm.propTypes = {
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
   hosts: PropTypes.instanceOf(List),
-  intl: PropTypes.func,
+  intl: intlShape.isRequired,
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onSave: PropTypes.func,

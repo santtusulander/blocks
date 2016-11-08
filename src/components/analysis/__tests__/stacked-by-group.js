@@ -3,18 +3,8 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-jest.dontMock('../stacked-by-group.jsx')
-const AnalysisStackedByGroup = require('../stacked-by-group.jsx')
-
-// Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
-const numeral = require('numeral')
-
-const momentFormatMock = jest.genMockFunction().mockReturnValue('time')
-const numeralFormatMock = jest.genMockFunction().mockReturnValue('number')
-
-moment.mockReturnValue({format:momentFormatMock})
-numeral.mockReturnValue({format:numeralFormatMock})
+jest.unmock('../stacked-by-group.jsx')
+import AnalysisStackedByGroup from '../stacked-by-group.jsx'
 
 const fakeData = Immutable.fromJS([
   {
@@ -63,8 +53,6 @@ describe('AnalysisStackedByGroup', () => {
   })
 
   it('should have group labels', () => {
-    moment.mockClear()
-    momentFormatMock.mockClear()
     let stacks = TestUtils.renderIntoDocument(
       <AnalysisStackedByGroup width={400} height={200} padding={10} datasets={fakeData}/>
     )

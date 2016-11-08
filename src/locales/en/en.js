@@ -130,13 +130,12 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
   'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
 
-  'portal.analytics.cacheHitRateByDay.text': 'Cache Hit Rate',
+  'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
   'portal.analytics.serviceProviderContribution.onNetHttp.label': 'On-Net HTTP',
   'portal.analytics.serviceProviderContribution.onNetHttps.label': 'On-Net HTTPS',
   'portal.analytics.serviceProviderContribution.offNetHttp.label': 'Off-Net HTTP',
   'portal.analytics.serviceProviderContribution.offNetHttps.label': 'Off-Net HTTPS',
-  'portal.analytics.serviceProviderContribution.totalTraffic.label': 'TOTAL TRAFFIC BY SERVICE PROVIDER',
 
   'portal.analytics.trafficOverview.httpDatasetLabel.text': 'HTTP',
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
@@ -184,7 +183,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.traffic.propertyTitle': 'Property Traffic Overview',
   'portal.analytics.tabs.traffic.groupTitle': 'Group Traffic Overview',
   'portal.analytics.tabs.traffic.accountTitle': 'Account Traffic Overview',
-  'portal.analytics.tabs.cacheHitRate.label': 'Cache Hit Rate',
+  'portal.analytics.tabs.cacheHitRate.label': 'Daily Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.propertyTitle': 'Property Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.groupTitle': 'Group Cache Hit Rate',
   'portal.analytics.tabs.cacheHitRate.accountTitle': 'Account Cache Hit Rate',
@@ -196,7 +195,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
-  'portal.analytics.tabs.serviceProviders.label': 'SP Contribution',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -224,7 +222,6 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
-  'portal.analysis.filters.serviceProvider.title': 'Service Providers',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
@@ -234,6 +231,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.cacheKeyQueryString.queryName.text': 'Query Name',
   'portal.policy.edit.cacheKeyQueryString.enterQueryName.text': 'Enter Query Name',
   'portal.policy.edit.allowBlock.allow.text': 'Allow',
+  'portal.policy.edit.allowBlock.redirect.text': 'Redirect',
   'portal.policy.edit.allowBlock.deny.text': 'Deny',
   'portal.policy.edit.allowBlock.301.text': '301 Permanently moved',
   'portal.policy.edit.allowBlock.302.text': '302 Found',
@@ -493,6 +491,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.services.text': 'Services',
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
+  'portal.navigation.network.text': 'Network',
 
   'portal.security.header.text': 'SECURITY',
 
@@ -502,8 +501,10 @@ const TRANSLATED_MESSAGES = {
 
   'portal.services.header.text': 'SERVICES',
 
+  'portal.deleteModal.validation.label': 'To confirm, write "DELETE" below',
+  'portal.deleteModal.validation.placeholder': 'DELETE',
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
-  'portal.deleteModal.header.text': 'Delete {itemToDelete}',
+  'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
   'portal.errorModal.errorOccured.text': 'An error occured',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
@@ -527,7 +528,7 @@ const TRANSLATED_MESSAGES = {
   'portal.fileInput.chooseFile.text': 'Choose file',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
-  'portal.accountManagement.deleetConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deleteConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
   'portal.accountManagement.noActiveAccount.text': 'No active account',
   'portal.accountManagement.invalidAccountName.text': 'Account name is invalid.',
   'portal.accountManagement.account.text': 'ACCOUNT',
@@ -593,6 +594,7 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.month_to_date': 'Month to Date',
   'portal.constants.date-ranges.last_28': 'Last 28 Days',
   'portal.constants.date-ranges.last_month': 'Last Month',
+  'portal.constants.date-ranges.last_week': 'Last Week',
   'portal.constants.date-ranges.this_week': 'This Week',
   'portal.constants.date-ranges.today': 'Today',
   'portal.constants.date-ranges.yesterday': 'Yesterday',
@@ -617,7 +619,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
-  'portal.notFound.pageNotFound.text': 'We couldn&rsquo;t find the page you were looking for',
+  'portal.notFound.pageNotFound.text': 'We couldn\'t find the page you were looking for',
 
   'portal.security.sslCertificate.text': 'SSL CERTIFICATE',
   'portal.security.tokenAuth.text': 'TOKEN AUTHENTICATION',
@@ -649,6 +651,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
   'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
   'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
+  'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
+  'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',
   'portal.startburstHelp.dayWedge.text': 'Day Wedge',
   'portal.startburstHelp.wedgeDisclaimer.text': 'Each wedge represents one day of data',
   'portal.startburstHelp.ttfb.text': 'TTFB (Time to First Byte)',

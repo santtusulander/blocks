@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../edit-group.jsx')
-const EditGroup = require('../edit-group.jsx')
+jest.unmock('../edit-group.jsx')
+import EditGroup from '../edit-group.jsx'
 
 describe('EditGroup', () => {
   it('should exist', () => {

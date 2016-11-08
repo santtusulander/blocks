@@ -1,15 +1,15 @@
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../cache.jsx')
-const Cache = require('../cache.jsx')
+jest.unmock('../cache.jsx')
+import Cache from '../cache.jsx'
 
 const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
 
-const fakePath = ['foo', 'bar']
+const fakePath = Immutable.fromJS(['foo', 'bar'])
 
 function intlMaker() {
   return {
@@ -19,22 +19,21 @@ function intlMaker() {
 
 describe('Cache', () => {
   it('should exist', () => {
-    let cache = TestUtils.renderIntoDocument(
+    let cache = shallow(
       <Cache set={fakeConfig} path={fakePath} intl={intlMaker()}/>
     );
-    expect(TestUtils.isCompositeComponent(cache)).toBeTruthy();
+    expect(cache).toBeTruthy();
   })
 
   it('should update the state as changes happen', () => {
     let changeValue = jest.genMockFunction()
-    let cache = TestUtils.renderIntoDocument(
+    let cache = shallow(
       <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(cache, 'input')
-    inputs[0].value = 'new'
-    TestUtils.Simulate.change(inputs[0])
-    expect(cache.state.maxAge).toEqual('new')
+    const inputs = cache.find('Input')
+    inputs.at(1).simulate('change', {target: {value: 'new'}})
+    expect(cache.state('maxAge')).toEqual('new')
   })
 
   it('should save changes', () => {
@@ -47,7 +46,7 @@ describe('Cache', () => {
       max_age: 123,
       no_store: 'ddd'
     })
-    let cache = TestUtils.renderIntoDocument(
+    let cache = shallow(
       <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
         close={close} intl={intlMaker()}/>
     )
@@ -57,8 +56,8 @@ describe('Cache', () => {
       maxAge: '123',
       noStore: 'ddd'
     })
-    cache.saveChanges()
-    expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar'])
+    cache.instance().saveChanges()
+    expect(changeValue.mock.calls[0][0].toJS()).toEqual(['foo', 'bar'])
     expect(Immutable.is(changeValue.mock.calls[0][1], expectedSave)).toBeTruthy()
     expect(close.mock.calls.length).toBe(1)
   })
