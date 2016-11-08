@@ -19,6 +19,8 @@ import './account.scss'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
+import {isUdnAdmin} from '../../../redux/modules/user'
+
 // const brandOptions = BRANDS.map( (e) => {
 //   return [ e.id, e.brandName ]
 // });
@@ -90,8 +92,10 @@ class AccountManagementAccountDetails extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.title'/>,
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
-        stayButton: this.props.uiActions.hideInfoDialog,
-        continueButton: () => {
+        stayButton: true,
+        continueButton: true,
+        cancel: this.props.uiActions.hideInfoDialog,
+        submit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()
@@ -232,13 +236,14 @@ class AccountManagementAccountDetails extends React.Component {
           <div className="form-group">
             <label className="col-xs-3 control-label"><FormattedMessage id="portal.account.manage.services.text"/></label>
             <Col xs={3}>
-              <CheckboxArray iterable={checkBoxes} field={services}/>
+              {/*TODO: remove isUdnAdmin - check as part of UDNP-1713 */}
+              <CheckboxArray iterable={checkBoxes} field={services} disabled={!isUdnAdmin(this.props.currentUser)}/>
             </Col>
           </div>
 
           <ButtonToolbar className="text-right extra-margin-top">
             <IsAllowed to={MODIFY_ACCOUNTS}>
-              <UDNButton disabled={this.props.invalid} bsStyle="primary" onClick={this.save}>Save</UDNButton> 
+              <UDNButton disabled={this.props.invalid} bsStyle="primary" onClick={this.save}>Save</UDNButton>
             </IsAllowed>
           </ButtonToolbar>
         </form>
@@ -250,6 +255,7 @@ class AccountManagementAccountDetails extends React.Component {
 AccountManagementAccountDetails.displayName = 'AccountManagementAccountDetails'
 AccountManagementAccountDetails.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  currentUser: React.PropTypes.instanceOf(Map),
   fields: React.PropTypes.object,
   intl: React.PropTypes.object,
   invalid: React.PropTypes.bool,
