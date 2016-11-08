@@ -44,6 +44,7 @@ class ConfigurationDefaults extends React.Component {
     this.toggleVaryHeaderRule = this.toggleVaryHeaderRule.bind(this)
     this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
     this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
+    this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
   }
   addRule(e) {
     e.preventDefault()
