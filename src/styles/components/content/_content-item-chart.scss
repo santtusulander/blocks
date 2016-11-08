@@ -113,11 +113,17 @@
     transition: opacity 250ms;
 
     .dark-theme & {
-      background: linear-gradient($pale-blue, rgba($white, 0.3));
       background-position: center center;
       background-size: 100%;
       border-color: $black;
-      opacity: 0.3;
+      &.bright {
+        background: linear-gradient($pale-blue, rgba($pale-blue, 0.6));
+        opacity: 0.6;
+      }
+      & {
+        background: linear-gradient($pale-blue, rgba($ericsson-dark-blue, 0.3));
+        opacity: 0.3;
+      }
     }
 
     .light-theme & {
