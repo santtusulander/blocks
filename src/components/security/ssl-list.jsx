@@ -1,7 +1,4 @@
-// Disable nag until checkboxes are uncommented
-/* eslint-disable no-unused-vars */
 import React, { PropTypes } from 'react'
-import { Input } from 'react-bootstrap'
 import { List } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -10,7 +7,7 @@ import { AccountManagementHeader } from '../account-management/account-managemen
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
 
-const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
+const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, uploadCertificate }) => {
   return (
     <div>
       <AccountManagementHeader
@@ -20,16 +17,6 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-{/*
-            Comment these out untill they actually do something
-            <th width="30%">
-              <Input type="checkbox"
-                label={intl.formatMessage({id: 'portal.security.ssl.title.text'})}
-                onChange={() => onCheck('all')}
-                checked={false}/>
-            </th>
-
-*/}
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
             <th width="1%" />
@@ -43,16 +30,6 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
             const account = cert.get('account')
             return (
               <tr key={index}>
-{/*
-                Comment these out untill they actually do something
-                <td>
-                  <Input type="checkbox"
-                    onChange={() => onCheck(commonName)}
-                    label={cert.get('title') || 'NEEDS API'}
-                    checked={activeCertificates.includes(commonName)}/>
-                </td>
-
-*/}
                 <td>{commonName}</td>
                 <td>{groupName}</td>
                 <td className="nowrap-column">
