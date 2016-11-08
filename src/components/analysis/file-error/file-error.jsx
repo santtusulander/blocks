@@ -59,7 +59,7 @@ class AnalysisFileError extends React.Component {
     })
     //filter by error codes (is errorKey included in errorCodes)
     .filter( (errorVal, i) => {
-      return statusCodes.includes('All') || statusCodes.includes(i.substr(1))
+      return statusCodes.includes('All') || statusCodes.includes(parseInt(i.substr(1)))
     })
 
     //separate server & client errs for KPIs
@@ -81,7 +81,7 @@ class AnalysisFileError extends React.Component {
     })
     //filter by error code
     .filter( (url) => {
-      return statusCodes.includes('All') || statusCodes.includes(url.get('status_code'))
+      return statusCodes.includes('All') || statusCodes.includes(parseInt(url.get('status_code')))
     })
 
     return (

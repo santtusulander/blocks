@@ -1,8 +1,13 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
+import {
+  parsePolicy,
+  policyIsCompatibleWithAction
+} from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
+import IsAdmin from '../is-admin'
 
 class ActionsSelection extends React.Component {
   constructor(props) {
@@ -23,6 +28,11 @@ class ActionsSelection extends React.Component {
     }
   }
   render() {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    const enableTokenAuth = policyIsCompatibleWithAction(flattenedPolicy, 'tokenauth')
+    const tokenAuthClassName = enableTokenAuth ? null : "inactive"
+    const tokenAuthOnClick = enableTokenAuth ? this.setSetKey('tokenauth') : this.setSetKey(null)
+
     return (
       <div>
         <Modal.Header>
@@ -46,6 +56,13 @@ class ActionsSelection extends React.Component {
                 <FormattedMessage id="portal.policy.edit.actionSelection.header.text"/>
               </a>
             </li>
+            <IsAdmin>
+              <li>
+                <a href="#" className={tokenAuthClassName} onClick={tokenAuthOnClick}>
+                  <FormattedMessage id="portal.policy.edit.actionSelection.tokenauth.text"/>
+                </a>
+              </li>
+            </IsAdmin>
             <li>
               <a href="#" className="inactive" onClick={this.setSetKey(null)}>
                 <FormattedMessage id="portal.policy.edit.actionSelection.redirection.text"/>
@@ -103,7 +120,8 @@ ActionsSelection.propTypes = {
   activateSet: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
-  path: React.PropTypes.instanceOf(Immutable.List)
+  path: React.PropTypes.instanceOf(Immutable.List),
+  rule: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = ActionsSelection

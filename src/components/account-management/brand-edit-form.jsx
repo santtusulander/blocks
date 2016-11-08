@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Modal, Input, ButtonToolbar, Button, Label } from 'react-bootstrap'
+import React from 'react'
+import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
 import SelectWrapper from '../select-wrapper.jsx'
@@ -7,7 +7,7 @@ import UDNFileInput from '../udn-file-input.jsx'
 
 import './brand-edit-form.scss'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 const colorThemeOptions = [
   { id: '1', themeName: 'Theme Name 1' },
@@ -22,7 +22,7 @@ let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const {brandName, brandLogo, favicon, colorTheme, availability} = values
+  const { brandName } = values
 
   if (!brandName || brandName.length === 0) errors.brandName = 'brandName is required'
 
@@ -32,7 +32,7 @@ const validate = (values) => {
 const BrandEditForm = (props) => {
 
   const title = props.edit ? <FormattedMessage id="portal.brand.edit.editBrand.title"/> : <FormattedMessage id="portal.brand.edit.newBrand.title"/>
-  const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/> 
+  const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
 
   const { fields: {brandName, brandLogo, favicon, colorTheme, availability} } = props
 
@@ -49,7 +49,7 @@ const BrandEditForm = (props) => {
         <form>
 
           <Input
-            { ...brandName }
+            {...brandName}
             type="text"
             label={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.text'})}
             placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
@@ -60,7 +60,7 @@ const BrandEditForm = (props) => {
           <hr/>
 
           <UDNFileInput
-            { ...brandLogo }
+            {...brandLogo}
             id='brand-input'
             label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
             placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
@@ -71,7 +71,7 @@ const BrandEditForm = (props) => {
           <hr/>
 
           <UDNFileInput
-            { ...favicon }
+            {...favicon}
             id='favicon-input'
             label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
             placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
@@ -84,9 +84,9 @@ const BrandEditForm = (props) => {
           <div className="form-group">
             <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
             <SelectWrapper
-              { ... colorTheme }
+              {... colorTheme}
               className="input-select"
-              options={ colorThemeOptions }
+              options={colorThemeOptions}
             />
           </div>
 
@@ -105,7 +105,7 @@ const BrandEditForm = (props) => {
 
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-            <Button disabled={ Object.keys(errors).length > 0 } bsStyle="primary" onClick={props.onSave} >{ actionButtonTitle }</Button>
+            <Button disabled={Object.keys(errors).length > 0} bsStyle="primary" onClick={props.onSave} >{actionButtonTitle}</Button>
           </ButtonToolbar>
         </form>
 

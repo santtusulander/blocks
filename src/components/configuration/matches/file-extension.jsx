@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 class FileExtension extends React.Component {
   constructor(props) {
@@ -70,6 +70,7 @@ class FileExtension extends React.Component {
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.array
 }

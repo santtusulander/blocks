@@ -1,14 +1,14 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
-jest.dontMock('../playback-demo.jsx')
-const PlaybackDemo = require('../playback-demo.jsx')
+jest.unmock('../playback-demo.jsx')
+import PlaybackDemo from '../playback-demo.jsx'
 
 describe('PlaybackDemo', () => {
   it('should exist', () => {
-    let demo = TestUtils.renderIntoDocument(
+    let demo = shallow(
       <PlaybackDemo />
     );
-    expect(TestUtils.isCompositeComponent(demo)).toBeTruthy();
+    expect(demo).toBeTruthy();
   });
 })

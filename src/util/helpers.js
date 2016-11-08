@@ -3,13 +3,10 @@ import numeral from 'numeral'
 import { fromJS } from 'immutable'
 import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
-import { httpErrorCodes, httpStatusCodes } from '../redux/modules/filters.js'
 import filesize from 'filesize'
-import { Address4, Address6 } from 'ip-address'
-import isFQDN from 'validator/lib/isFQDN'
-
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { ROLES_MAPPING } from '../constants/account-management-options'
+import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 
 const BYTE_BASE = 1000
 
@@ -71,6 +68,19 @@ export function formatTime(milliseconds) {
   return formatted
 }
 
+/**
+ * Takes a string value and returns an object with the value and unit separated
+ * @param string
+ * @returns object
+ */
+export function separateUnit(stringValue) {
+  let separateUnitArray = stringValue.split(' ')
+  return {
+    'value': separateUnitArray[0],
+    'unit': separateUnitArray[1]
+  }
+}
+
 export function filterMetricsByAccounts(metrics, accounts) {
   return metrics.filter((metric) => {
     return accounts.find((account) => {
@@ -99,6 +109,17 @@ export function removeProps(object, remove) {
   return result
 }
 
+/**
+ * Flatten nested array
+ *
+ * @param arr
+ * @returns {Array.<*>}
+ */
+export function flatten(arr) {
+  const flat = [].concat(...arr)
+  return flat.some(Array.isArray) ? flatten(flat) : flat;
+}
+
 /* REFACTOR: this is a quick fix to get tab links from current path
  - takes the last link part out and replaces it with tabName
  */
@@ -110,6 +131,7 @@ export function getTabLink(location, tabName) {
 
   return linkArr.join('/') + location.search
 }
+
 /* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName(path) {
   let linkArr = path.split('/')
@@ -134,8 +156,8 @@ export function buildAnalyticsOpts(params, filters){
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
-  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
-  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   return {
     account: params.account,
@@ -162,8 +184,8 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
   const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0).replace(/-.*$/, '')
-  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === httpErrorCodes.length ? undefined : filters.get('errorCodes').toJS().join(',')
-  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === httpStatusCodes.length ? undefined : filters.get('statusCodes').toJS().join(',')
+  const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
+  const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
   if (accountType === PROVIDER_TYPES.CONTENT_PROVIDER) {
     return {
@@ -327,50 +349,6 @@ export function matchesRegexp(string, pattern) {
   return testPattern.test(string);
 }
 
-/**
- * Check if current userAgent is Safari
- * @returns {boolean}
- */
-export function isSafari() {
-  return matchesRegexp(navigator.userAgent, /^((?!chrome|android).)*safari/)
-}
-
-/**
- * Check for Fully Qualified Domain Name (FQDN)
- * @param domainName
- * @returns {*}
- */
-export function isValidFQDN(domainName) {
-  if (!domainName) {
-    return false
-  }
-  return isFQDN(domainName)
-}
-
-/**
- * Check if address is valid IPv4
- * @param address
- * @returns {*}
- */
-export function isValidIPv4Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address4(address).isValid()
-}
-
-/**
- * Check if address is valid IPv6
- * @param address
- * @returns {*}
- */
-export function isValidIPv6Address(address) {
-  if (!address) {
-    return false
-  }
-  return new Address6(address).isValid()
-}
-
 export function userIsServiceProvider(user) {
   return userHasRole(user, PROVIDER_TYPES.SERVICE_PROVIDER)
 }
@@ -399,4 +377,16 @@ export function userHasRole(user, roleToFind) {
   }
 
   return false
+}
+
+export function getAccountByID(accounts, ids) {
+  if (Array.isArray(ids)) {
+    let accountsArray = []
+    ids.map(id => {
+      accountsArray.push(accounts.find(account => account.get('id') === id))
+    })
+    return accountsArray
+  } else {
+    return accounts.find(account => account.get('id') === ids)
+  }
 }
