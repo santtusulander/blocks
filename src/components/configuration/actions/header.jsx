@@ -25,7 +25,7 @@ class Header extends React.Component {
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.set) !== JSON.stringify(this.props.set)) {
+    if (!Immutable.is(nextProps.set, this.props.set)) {
       const value = nextProps.set.get('value')
 
       this.state = {
