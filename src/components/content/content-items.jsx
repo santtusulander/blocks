@@ -335,20 +335,18 @@ class ContentItems extends React.Component {
                   'content-item-grid' :
                   'content-item-lists'}>
                 {contentItems.map(content => {
-                  const item = content.get('item')
+                  const item = content.get('item').toJS()
                   const contentMetrics = content.get('metrics')
-                  const id = String(item.get('id'))
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
-                    id: id,
-                    linkTo: this.props.nextPageURLBuilder(id, item),
+                    ...item,
+                    linkTo: this.props.nextPageURLBuilder(item.id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
-                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
+                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(item.id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-                      this.editItem(id)
+                      this.editItem(item.id)
                     } : null,
-                    analyticsLink: this.props.analyticsURLBuilder(id),
-                    name: item.get('name'),
+                    analyticsLink: this.props.analyticsURLBuilder(item.id),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
@@ -368,7 +366,7 @@ class ContentItems extends React.Component {
                   }
 
                   return (
-                    <ContentItem key={id}
+                    <ContentItem key={item.id}
                       isChart={viewingChart}
                       itemProps={itemProps}
                       scaledWidth={scaledWidth}
