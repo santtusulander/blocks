@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../input-connector.jsx')
-const InputConnector = require('../input-connector.jsx')
+jest.unmock('../input-connector.jsx')
+import InputConnector from '../input-connector.jsx'
 
 describe('InputConnector', () => {
   it('should exist', () => {

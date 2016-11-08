@@ -24,8 +24,8 @@ class SupportTicketAttachments extends React.Component {
 }
 
 SupportTicketAttachments.propTypes = {
-  className: PropTypes.string,
-  attachments: PropTypes.instanceOf(List)
+  attachments: PropTypes.instanceOf(List),
+  className: PropTypes.string
 }
 
 SupportTicketAttachments.defaultProps = {

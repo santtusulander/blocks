@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../sidebar.jsx')
-const Sidebar = require('../sidebar.jsx')
+jest.unmock('../sidebar.jsx')
+import Sidebar from '../sidebar.jsx'
 
 describe('Content layout', () => {
   it('should exist', () => {

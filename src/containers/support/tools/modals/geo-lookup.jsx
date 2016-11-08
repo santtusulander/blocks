@@ -154,6 +154,7 @@ class ModalGeoLookup extends React.Component {
 ModalGeoLookup.displayName = 'ModalGeoLookup'
 ModalGeoLookup.propTypes = {
   handleCloseModal: React.PropTypes.func,
+  intl: React.PropTypes.object,
   showDetails: React.PropTypes.bool,
   toggleShowDetails: React.PropTypes.func
 }

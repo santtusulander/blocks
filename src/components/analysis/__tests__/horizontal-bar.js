@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../horizontal-bar.jsx')
-const AnalysisHorizontalBar = require('../horizontal-bar.jsx')
+jest.unmock('../horizontal-bar.jsx')
+import AnalysisHorizontalBar from '../horizontal-bar.jsx'
 
 describe('AnalysisHorizontalBar', () => {
   it('should exist', () => {

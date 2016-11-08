@@ -2,8 +2,8 @@ import React from 'react'
 import { Map } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.unmock('../header')
-import Header from '../header'
+jest.unmock('../header.jsx')
+import Header from '../header.jsx'
 
 function intlMaker() {
   return {
