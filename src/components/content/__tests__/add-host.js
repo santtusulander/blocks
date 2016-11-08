@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../add-host.jsx')
-const AddHost = require('../add-host.jsx')
+jest.unmock('../add-host.jsx')
+import AddHost from '../add-host.jsx'
 
 function intlMaker() {
   return {

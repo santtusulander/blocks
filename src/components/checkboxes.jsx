@@ -63,7 +63,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
 
   return (
     <div className={classNames.join(' ')}>
-      { headerText &&
+      {headerText &&
       <div className="checkbox-array__header">
         <Input
           type="checkbox"

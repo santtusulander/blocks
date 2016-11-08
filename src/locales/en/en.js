@@ -231,6 +231,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.cacheKeyQueryString.queryName.text': 'Query Name',
   'portal.policy.edit.cacheKeyQueryString.enterQueryName.text': 'Enter Query Name',
   'portal.policy.edit.allowBlock.allow.text': 'Allow',
+  'portal.policy.edit.allowBlock.redirect.text': 'Redirect',
   'portal.policy.edit.allowBlock.deny.text': 'Deny',
   'portal.policy.edit.allowBlock.301.text': '301 Permanently moved',
   'portal.policy.edit.allowBlock.302.text': '302 Found',

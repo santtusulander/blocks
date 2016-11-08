@@ -1,4 +1,4 @@
-  import React from 'react'
+import React from 'react'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -75,6 +75,7 @@ AccountManagementSystemRoles.displayName = 'AccountManagementSystemRoles'
 AccountManagementSystemRoles.propTypes = {
   accountActions: React.PropTypes.object,
   fetchingAccounts: React.PropTypes.bool,
+  fetchingUsers: React.PropTypes.bool,
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
   roles: React.PropTypes.instanceOf(Immutable.List),

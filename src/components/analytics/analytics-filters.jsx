@@ -129,6 +129,7 @@ const AnalyticsFilters = (props) => {
   return (
     <PageHeader secondaryPageHeader={true}>
       {props.showFilters.includes('date-range') &&
+
         <FilterDateRange
           startDate={props.filters.getIn(['dateRange','startDate'])}
           endDate={props.filters.getIn(['dateRange','endDate'])}

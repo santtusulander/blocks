@@ -9,6 +9,8 @@ import {
   WILDCARD_REGEXP
 } from '../../util/policy-config'
 
+import IsAdmin from '../is-admin'
+
 class MatchesSelection extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +31,11 @@ class MatchesSelection extends React.Component {
         cases: [
           [WILDCARD_REGEXP, [{
             script_lua: {
-              target: { }
+              target: {
+                geo: [{
+                  country: []
+                }]
+              }
             }
           }]]
         ],
@@ -84,11 +90,13 @@ class MatchesSelection extends React.Component {
                 <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
               </a>
             </li>
+            <IsAdmin>
             <li>
               <a href="#" className={contentTargetingClassName} onClick={contentTargetingOnClick}>
                 <FormattedMessage id="portal.policy.edit.matchesSelection.contentTargeting.text"/>
               </a>
             </li>
+            </IsAdmin>
             {/*<li>
               <a href="#" onClick={this.setMatchField(null)}>
                 IP Address NEEDS_API

@@ -1,15 +1,15 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable'
 
-jest.dontMock('../reports.js')
+jest.unmock('../reports.js')
 
-const {
+import {
   fetchUrlMetricsSuccess,
   fetchUrlMetricsFailure,
   fetchFileErrorMetricsSuccess,
   fetchFileErrorMetricsFailure,
   startFetch,
   finishFetch
-} = require('../reports.js');
+} from '../reports.js'
 
 describe('Reports Module', () => {
 

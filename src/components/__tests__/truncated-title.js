@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../truncated-title.jsx');
-const TruncatedTitle = require('../truncated-title.jsx');
+jest.unmock('../truncated-title.jsx');
+import TruncatedTitle from '../truncated-title.jsx'
 
 describe('TruncatedTitle', function() {
   it('should exist', () => {

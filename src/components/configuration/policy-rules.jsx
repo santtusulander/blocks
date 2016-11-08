@@ -6,9 +6,20 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
+import {
+  getScriptLua,
+  matchIsContentTargeting,
+  actionIsTokenAuth,
+  parsePolicy,
+  parseCountriesByResponseCodes,
+  ALLOW_RESPONSE_CODES,
+  DENY_RESPONSE_CODES,
+  REDIRECT_RESPONSE_CODES
+} from '../../util/policy-config'
 
-import { parsePolicy } from '../../util/policy-config'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
+
+import IsAdmin from '../is-admin'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -59,17 +70,60 @@ class ConfigurationPolicyRules extends React.Component {
       if(!policy.has('match')) {
         return null
       }
+
       const {matches, sets} = parsePolicy(policy, [])
+
+      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
+      let matchLabel = ''
+      let actionsLabel = ''
+      if ( matchIsContentTargeting(policy.get('match') )) {
+        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
+        actionsLabel = ''
+
+        const scriptLua = getScriptLua( policy )
+
+        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
+        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
+        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
+
+        let ctActionLabels = []
+        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+
+        actionsLabel = ctActionLabels.join(' | ')
+
+      } else {
+        matchLabel = matches.map(match => match.field).join(', ')
+        actionsLabel = sets.map(set => set.setkey).join(', ')
+      }
+
+      {/*
+        TODO: remove UDN admin checks as part of UDNP-1713 
+        Allow CT / TA modification only for UDN Admin
+      */}
+      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
+      const actionButtons = (
+        <ActionButtons
+          permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
+          onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
+          onDelete={this.showConfirmation(`${type}_policy`, i)} />
+      )
+
       return (
         <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
-          <td>{matches.map(match => match.field).join(', ')}</td>
-          <td>{sets.map(set => set.setkey).join(', ')}</td>
+          <td>{matchLabel}</td>
+          <td>{actionsLabel}</td>
           <td className="nowrap-column">
-            <ActionButtons
-              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
-              onEdit={this.activateRule([`${type}_policy`, 'policy_rules', i])}
-              onDelete={this.showConfirmation(`${type}_policy`, i)} />
+            {/* Allow CT / TA modification only for UDN Admin */}
+            {ruleNeedsAdmin ?
+              <IsAdmin>
+                {actionButtons}
+              </IsAdmin>
+              :
+              actionButtons
+            }
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"
@@ -94,6 +148,7 @@ class ConfigurationPolicyRules extends React.Component {
         </tr>
       )
     }
+
     const rows = [
       ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
@@ -108,7 +163,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th><FormattedMessage id="portal.policy.edit.rules.policy.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
-              <th width="1%"></th>
+              <th width="1%" />
             </tr>
           </thead>
           <tbody>

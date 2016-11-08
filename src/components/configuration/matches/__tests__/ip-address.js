@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../ip-address.jsx')
-const IpAddress = require('../ip-address.jsx')
+jest.unmock('../ip-address.jsx')
+import IpAddress from '../ip-address.jsx'
 
 function intlMaker() {
   return {

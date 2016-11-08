@@ -428,4 +428,4 @@ AnalysisVisitors.defaultProps = {
   serviceTypes: Immutable.List()
 }
 
-module.exports = injectIntl(AnalysisVisitors)
+export default injectIntl(AnalysisVisitors)

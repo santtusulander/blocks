@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../query-string.jsx')
-const QueryString = require('../query-string.jsx')
+jest.unmock('../query-string.jsx')
+import QueryString from '../query-string.jsx'
 
 function intlMaker() {
   return {

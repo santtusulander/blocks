@@ -33,7 +33,7 @@ const SupportPageHeader = (props) => {
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
               tooltipPlacement="bottom" className="account-management-title"/></h1>
-            <span className="caret"></span>
+            <span className="caret" />
           </div>
         </AccountSelector>
       </IsAllowed>
