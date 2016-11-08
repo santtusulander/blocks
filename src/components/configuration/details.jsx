@@ -42,8 +42,12 @@ class ConfigurationDetails extends React.Component {
     return (
       <form className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
-
-
+        <div className="form-group">
+          <label className="control-label col-xs-3">Deployment Mode</label>
+          <div className="col-xs-9">
+            {this.props.deploymentMode}
+          </div>
+        </div>
         {/* Origin Hostname */}
 
         <Input type="text" label="Customer Origin"

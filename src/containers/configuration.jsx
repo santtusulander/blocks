@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { injectIntl, intlShape } from 'react-intl'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
@@ -15,6 +16,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
+import { deploymentModes } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -234,11 +236,14 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { intl: { formatMessage }, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
+    const deploymentMode = formatMessage({
+      id: deploymentModes[this.props.activeHost.getIn(['services', 0, 'deployment_mode'])]
+    })
     const readOnly = this.isReadOnly()
     return (
       <Content>
@@ -339,6 +344,7 @@ export class Configuration extends React.Component {
         <PageContainer>
           {this.state.activeTab === 'details' ?
             <ConfigurationDetails
+              deploymentMode={deploymentMode}
               readOnly={readOnly}
               edgeConfiguration={activeConfig.get('edge_configuration')}
               changeValue={this.changeValue}/>
@@ -471,6 +477,7 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
+  intl: intlShape.isRequired,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -516,4 +523,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Configuration));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Configuration)));
