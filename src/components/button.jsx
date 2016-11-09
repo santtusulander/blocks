@@ -7,7 +7,7 @@ import { removeProps } from '../util/helpers'
 const ButtonWrapper = props =>
   <Button {...removeProps(props, ['hidden'])} className={createButtonClassName(props)}/>
 
-const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link', 'secondary']
+const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link']
 ButtonWrapper.propTypes = {
   addNew: PropTypes.bool,
   bsStyle: PropTypes.oneOf(bsStyles),
