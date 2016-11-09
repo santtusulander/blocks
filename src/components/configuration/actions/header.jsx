@@ -25,6 +25,17 @@ class Header extends React.Component {
     this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
+  componentWillReceiveProps(nextProps) {
+    if (!Immutable.is(nextProps.set, this.props.set)) {
+      const value = nextProps.set.get('value')
+
+      this.state = {
+        activeActivity: nextProps.set.get('action') || 'set',
+        to_header: nextProps.set.get('header'),
+        to_value: value && value.size ? value.get(0).get('field_detail') : ''
+      }
+    }
+  }
   handleSelectChange(key) {
     return key, value => {
       if (key === 'activeActivity') {
