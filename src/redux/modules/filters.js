@@ -9,6 +9,8 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
+import DateRanges from '../../constants/date-ranges'
+
 import {
   getAnalysisStatusCodes,
   getAnalysisErrorCodes
@@ -21,7 +23,7 @@ const initialState = Immutable.fromJS({
       endDate: moment().utc().endOf('day')
     },
     includeComparison: false,
-    dateRangeLabel: 'Month to date',
+    dateRangeLabel: DateRanges.MONTH_TO_DATE,
     recordType: 'transfer_rates',
     serviceTypes: ['http', 'https'],
     contentProviders: [],
