@@ -16,6 +16,12 @@ import numeral from 'numeral'
 moment.format = jest.fn()
 numeral.format = jest.fn()
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const fakeStats = Immutable.fromJS([
   {
     "name": "Vodafone",
@@ -79,7 +85,9 @@ describe('AnalysisContribution', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
         fetching={true}
-        stats={fakeStats}/>
+        stats={fakeStats}
+        intl={intlMaker()}
+      />
     );
     expect(TestUtils.isCompositeComponent(analysisContribution)).toBeTruthy();
   });
@@ -88,7 +96,9 @@ describe('AnalysisContribution', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
         fetching={false}
-        stats={fakeStats}/>
+        stats={fakeStats}
+        intl={intlMaker()}
+      />
     );
     const trs = analysisContribution.find('tr')
     expect(trs.length).toBe(4);

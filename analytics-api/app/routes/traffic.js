@@ -65,7 +65,7 @@ function routeTraffic(req, res) {
 
   db.getTrafficWithTotals(optionsFinal).spread((totalsData, detailData, spDataTotals, spDataDetail) => {
     let duration      = optionsFinal.end - optionsFinal.start + 1;
-    let selectedLevel = db._getAccountLevel(optionsFinal, isListingChildren);
+    let selectedLevel = db._getAccountLevel(optionsFinal);
 
     totalsData = totalsData.concat(spDataTotals);
     detailData = detailData.concat(spDataDetail);

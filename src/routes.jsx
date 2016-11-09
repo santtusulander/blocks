@@ -6,6 +6,7 @@ import routes from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
+  UserCanViewAccountDetail,
   UserCanManageAccounts,
   UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
@@ -155,21 +156,22 @@ export const getRoutes = store => {
         <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
         <Route component={ContentTransition}>
           <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-          <Route path={routes.contentAccount} component={Groups}/>
+          <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+          <Route path={routes.contentGroups} component={Groups}/>
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
         <Route path={routes.contentProperty} component={Property} />
-        <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes(store)}
-        </Route>
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>
 
       {/* Network / SP Accounts - routes */}
       <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
         <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-        <Route path={routes.networkBrand} component={Accounts}/>
-        <Route path={routes.networkAccount} component={Groups}/>
+        <Route component={ContentTransition}>
+          <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+          <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+          <Route path={routes.networkGroups} component={Groups}/>
+        </Route>
       </Route>
 
       {/* Security - routes */}
@@ -179,20 +181,6 @@ export const getRoutes = store => {
         <Route path={routes.securityAccount} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
           <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
-        </Route>
-        <Route path={routes.securityGroup} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
-        </Route>
-        <Route path={routes.securityProperty} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
         </Route>
       </Route>
 
@@ -266,6 +254,7 @@ export const getRoutes = store => {
         <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
         <Route path={routes.dashboardBrand} component={Dashboard}/>
         <Route path={routes.dashboardAccount} component={Dashboard}/>
+        <Route path={routes.dashboardGroup} component={Dashboard}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />

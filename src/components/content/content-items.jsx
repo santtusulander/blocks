@@ -7,7 +7,11 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
-import { getContentUrl } from '../../util/routes'
+import {
+  getContentUrl,
+  getNetworkUrl
+} from '../../util/routes'
+import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
 import UDNButton from '../button'
@@ -151,7 +155,11 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.router.push(getContentUrl('brand', 'udn', {}))
+        if (this.props.router.isActive('network')) {
+          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
+        } else {
+          this.props.router.push(getContentUrl('brand', 'udn', {}))
+        }
         break
     }
   }
@@ -194,12 +202,29 @@ class ContentItems extends React.Component {
         startTier={props.selectionStartTier}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => props.router.push(getContentUrl(...params))}>
+        onSelect={(...params) => {
+          // This check is done to prevent UDN admin from accidentally hitting
+          // the account detail endpoint, which they don't have permission for
+          const currentUser = props.user.get('currentUser')
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
+
+          const url = props.router.isActive('network')
+                        ? getNetworkUrl(...params)
+                        : getContentUrl(...params)
+
+          // We perform this check to prevent routing to unsupported routes
+          // For example, prevent clicking to SP group route (not yet supported)
+          if (url) {
+            props.router.push(url)
+          }
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret"></span>
+          <span className="caret" />
         </div>
       </AccountSelector>
     )
@@ -215,7 +240,8 @@ class ContentItems extends React.Component {
       analyticsURLBuilder,
       fetchingMetrics,
       showAnalyticsLink,
-      viewingChart
+      viewingChart,
+      user
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -264,9 +290,12 @@ class ContentItems extends React.Component {
           {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)}
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-            <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
-            </IsAllowed>
+            {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
+            {userIsCloudProvider(user.get('currentUser')) || activeAccount.size ?
+              <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
+                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+              </IsAllowed>
+            : null}
             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
@@ -312,7 +341,7 @@ class ContentItems extends React.Component {
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
                     id: id,
-                    linkTo: this.props.nextPageURLBuilder(id),
+                    linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {

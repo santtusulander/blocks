@@ -158,7 +158,7 @@ export class PlaybackDemo extends React.Component {
           </div>
         </div>
         <div className="container-fluid container-fluid-video text-center">
-          {!isSafari() ? <video ref="player" controls={true}></video> : <p className="video-error-msg"><FormattedMessage id="portal.analytics.demoPlayback.safariNotSupported.text'"/></p>}
+          {!isSafari() ? <video ref="player" controls={true} /> : <p className="video-error-msg"><FormattedMessage id="portal.analytics.demoPlayback.safariNotSupported.text'"/></p>}
         </div>
         <div className="container-fluid low-pad">
           <div className="chart-row" ref="chartHolder">

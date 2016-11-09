@@ -17,6 +17,9 @@
   "portal.analytics.contribution.traffic.label": "Traffic",
   "portal.analytics.contribution.trafficPercentage.label": "% of traffic",
 
+  "portal.analytics.onOffNet.traffic.label": "Traffic",
+  "portal.analytics.onOffNet.trafficToday.label": "Traffic Today",
+
   "portal.analytics.fileErrors.noData.text": "No error data found.",
   "portal.analytics.urlList.noData.text": "No URL data found.",
 
@@ -48,5 +51,8 @@
 
   "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
   "portal.analytics.purgeModal.maxAmount.error": "Maximum amount of purge objects exceeded",
-  "portal.analytics.purgeModal.email.error": "Enter a valid Email address"
+  "portal.analytics.purgeModal.email.error": "Enter a valid Email address",
+  
+  "portal.analytics.onNet.title": "On-Net",
+  "portal.analytics.offNet.title": "Off-Net"
 }
