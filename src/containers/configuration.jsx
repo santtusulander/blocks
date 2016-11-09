@@ -236,13 +236,13 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { intl: { formatMessage }, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = formatMessage({
-      id: deploymentModes[this.props.activeHost.getIn(['services', 0, 'deployment_mode'])]
+      id: deploymentModes[activeHost.getIn(['services', 0, 'deployment_mode'])]
     })
     const readOnly = this.isReadOnly()
     return (
@@ -268,7 +268,7 @@ export class Configuration extends React.Component {
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+              <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <span className="caret" />
             </div>
           </AccountSelector>

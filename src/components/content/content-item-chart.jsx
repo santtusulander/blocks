@@ -12,8 +12,6 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import IconQuestionMark from '../icons/icon-question-mark.jsx'
 
-import { deploymentModes } from '../../constants/configuration'
-
 import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
 import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
@@ -73,7 +71,7 @@ class ContentItemChart extends React.Component {
     const { trialMode, intl: { formatMessage } } = this.props
     return trialMode &&
       <span className="content-item-text-box">
-        {formatMessage({ id: deploymentModes['trial'] }).toUpperCase()}
+        {formatMessage({ id: "portal.configuration.details.deploymentMode.trial" }).toUpperCase()}
       </span>
   }
 
