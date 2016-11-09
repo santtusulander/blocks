@@ -178,12 +178,12 @@ class AnalysisOnOffNetReport extends React.Component {
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
 
     /* Get values for KPIs */
-    const dataKey = this.props.onOffFilter.get(0) === 'off-net' ? 'net_off' : 'net_on'
-    const trafficToday = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+    const dataKey = this.props.onOffFilter.get(0) === 'off' ? 'net_off' : 'net_on'
+    const trafficToday = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? statsToday.get('total')
       : statsToday.getIn([ dataKey, 'bytes'] )
 
-    const totalTrafficByDateRange = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+    const totalTrafficByDateRange = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? stats.get('total')
       : stats.getIn([ dataKey, 'bytes'] )
 
