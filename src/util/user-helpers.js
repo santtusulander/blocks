@@ -13,21 +13,3 @@ export function getRoleSelectOptions(user) {
 
   return options
 }
-
-/**
- * Checks if the given user has the given role
- * @param user
- * @param role
- * @returns {boolean}
- */
-export function hasRole(user, role) {
-  let hasRole = false
-
-  user.get('roles').forEach(role => {
-    if (role === role) {
-      hasRole = true
-    }
-  })
-
-  return hasRole
-}
