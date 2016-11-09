@@ -482,7 +482,7 @@ export class Property extends React.Component {
           <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
             <AnalysisByTime
               axes={true}
-              padding={30}
+              padding={40}
               dataSets={datasets}
               showLegend={true}
               showTooltip={false}
