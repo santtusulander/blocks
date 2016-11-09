@@ -67,14 +67,6 @@ class ContentItemChart extends React.Component {
     }
   }
 
-  renderStarBurstTag() {
-    const { tagText, intl: { formatMessage } } = this.props
-    return !!tagText &&
-      <span className="content-item-text-box">
-        {formatMessage({ id: tagText }).toUpperCase()}
-      </span>
-  }
-
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
@@ -156,7 +148,7 @@ class ContentItemChart extends React.Component {
     const dayArc = d3.svg.arc()
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
-    let {avgTransfer, maxTransfer, minTransfer} = this.props
+    let { avgTransfer, maxTransfer, minTransfer, intl: { formatMessage }, tagText } = this.props
     const endDate = moment.utc().format('MMM D')
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
@@ -301,7 +293,7 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
-              {this.renderStarBurstTag()}
+              {!!tagText && <StarBurstTag content={formatMessage({ id: tagText })}/>}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -334,6 +326,17 @@ class ContentItemChart extends React.Component {
       </OverlayTrigger>
     )
   }
+}
+
+const StarBurstTag = ({ content, upperCase, customClass }) =>
+  <span className={classnames('content-item-text-box', customClass)}>
+    {upperCase ? content.toUpperCase() : content}
+  </span>
+
+StarBurstTag.propTypes = {
+  content: React.PropTypes.string.isRequired,
+  customClass: React.PropTypes.string,
+  upperCase: React.PropTypes.bool
 }
 
 // NOTE: this is temporary for the 1.0 release to disable
