@@ -1,5 +1,6 @@
 // Content Item Chart
 // ==================
+$starburst-tag-font-size: 1.8rem;
 
 .content-item-grid {
   text-align: center;
@@ -221,7 +222,7 @@
     }
 
     .content-item-text-sm {
-      font-size: 16px;
+      font-size: $starburst-tag-font-size;
     }
 
     p {
@@ -252,22 +253,20 @@
   }
 
   .content-item-text-box {
-    padding: em(4px, $btn-font-size) em(20px, $btn-font-size);
+    padding: 0 25px;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 1em;
+    font-size: $starburst-tag-font-size;
     text-transform: uppercase;
     border-radius: 2px;
-    background: $dark-blue;
-    opacity: 0.7;
-
     position: absolute;
-    top: 80%;
+    bottom: 12%;
     left: 50%;
     transform: translate(-50%, -32%);
-
-    &.secondary {
-      background: $dark-green;
+    .dark-theme & {
+      background-color: rgba($pale-blue, 0.3);
+    }
+    .light-theme & {
+      background-color: rgba($pale-blue, 0.6);
     }
   }
 
