@@ -21,8 +21,7 @@ export const emptyPurges = Immutable.Map({
 export const emptyPurge = Immutable.fromJS({
   action: 'purge',
   objects: [],
-  note: '',
-  published_host_id: ''
+  note: ''
 })
 
 // REDUCERS
