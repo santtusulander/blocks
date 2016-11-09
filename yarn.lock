@@ -4065,6 +4065,10 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
+leaflet@^0.7.0:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-0.7.7.tgz#1e352ba54e63d076451fa363c900890cb2cf75ee"
+
 levn@^0.3.0, levn@~0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.3.0.tgz#3b09924edf9f083c0490fdd4c0bc4421e04764ee"
@@ -5737,6 +5741,13 @@ react-lazy-cache@^3.0.1:
   resolved "https://registry.yarnpkg.com/react-lazy-cache/-/react-lazy-cache-3.0.1.tgz#0dc64d38df1767ef77678c5c94190064cb11b0cd"
   dependencies:
     deep-equal "^1.0.1"
+
+react-leaflet@^0.12.3:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-0.12.3.tgz#db37372e2f9bca7c45cc6d8c2e720bee7788845b"
+  dependencies:
+    lodash "^4.0.0"
+    warning "^3.0.0"
 
 react-modal@^1.2.0, react-modal@^1.2.1:
   version "1.5.2"
