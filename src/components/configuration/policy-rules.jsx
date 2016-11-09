@@ -99,7 +99,7 @@ class ConfigurationPolicyRules extends React.Component {
       }
 
       {/*
-        TODO: remove UDN admin checks as part of UDNP-1713 
+        TODO: remove UDN admin checks as part of UDNP-1713
         Allow CT / TA modification only for UDN Admin
       */}
       const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
