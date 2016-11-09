@@ -232,21 +232,6 @@ class ContentItems extends React.Component {
     )
   }
 
-  getTagText(isCloudProvider, providerType, trialMode) {
-    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
-    if (isCloudProvider && !trialMode) {
-      switch(providerType) {
-        case ACCOUNT_TYPE_CONTENT_PROVIDER:
-          tagText = 'portal.content.contentProvider'
-          break
-        case ACCOUNT_TYPE_SERVICE_PROVIDER:
-          tagText = 'portal.content.serviceProvider'
-        default: break
-      }
-    }
-    return { tagText: tagText }
-  }
-
   render() {
     const {
       sortValuePath,
@@ -364,7 +349,7 @@ class ContentItems extends React.Component {
                     id,
                     name,
                     brightMode: isTrialHost,
-                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                    tagText: isTrialHost && 'portal.configuration.details.deploymentMode.trial',
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
