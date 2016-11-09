@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
-import { injectIntl, intlShape } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
@@ -477,7 +477,7 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  intl: intlShape.isRequired,
+  intl: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),

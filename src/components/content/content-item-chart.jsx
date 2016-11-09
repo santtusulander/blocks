@@ -69,11 +69,18 @@ class ContentItemChart extends React.Component {
     }
   }
 
+  renderDeploymentModeTag() {
+    const { trialMode, intl: { formatMessage } } = this.props
+    return trialMode &&
+      <span className="content-item-text-box">
+        {formatMessage({ id: deploymentModes['trial'] }).toUpperCase()}
+      </span>
+  }
+
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
-    const { intl: { formatMessage } } = this.props
     const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
     const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
@@ -296,10 +303,7 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
-            {this.props.trialMode &&
-              <span className="content-item-text-box">
-                {formatMessage({ id: deploymentModes['trial'] }).toUpperCase()}
-              </span>}
+              {this.renderDeploymentModeTag()}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -368,7 +372,7 @@ ContentItemChart.propTypes = {
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.string,
-  intl: intlShape.required,
+  intl: React.PropTypes.object,
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
