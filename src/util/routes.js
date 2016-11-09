@@ -166,13 +166,9 @@ export function getSupportUrlFromParams(params) {
 }
 
 export function getSecurityUrlFromParams(params) {
-  const { brand, account, group, property } = params
+  const { brand, account } = params
 
-  if (property) {
-    return getRoute('securityProperty', params)
-  } else if (group) {
-    return getRoute('securityGroup', params)
-  } else if (account) {
+  if (account) {
     return getRoute('securityAccount', params)
   } else if (brand) {
     return getRoute('securityBrand', params)
