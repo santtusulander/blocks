@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 import { FormattedMessage } from 'react-intl'
+import PROVIDER_TYPES from '../../../constants/provider-types.js'
 
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+import { buildAnalyticsOpts, changedParamsFiltersQS } from '../../../util/helpers.js'
 import ProviderTypes from '../../../constants/provider-types'
-import { hasRole } from '../../../util/user-helpers'
+import { userHasRole } from '../../../util/helpers'
 
 
 class AnalyticsTabOnOffNet extends React.Component {
@@ -57,8 +58,9 @@ class AnalyticsTabOnOffNet extends React.Component {
   render(){
     const { activeAccount, currentUser } = this.props
 
-    // Role number 1 is UDN admin
-    if (hasRole(currentUser, 1) && (!activeAccount || activeAccount.get('provider_type') !== ProviderTypes.SERVICE_PROVIDER)) {
+    // Check for Cloud Providers / UDN Admins
+    if (userHasRole(currentUser, PROVIDER_TYPES.CLOUD_PROVIDER) &&
+      (!activeAccount || activeAccount.get('provider_type') !== ProviderTypes.SERVICE_PROVIDER)) {
       return (
         <div className="text-center">
           <FormattedMessage id="portal.analytics.selectServiceProviderAccount.text" values={{ br: <br/> }}/>
@@ -83,6 +85,7 @@ class AnalyticsTabOnOffNet extends React.Component {
 AnalyticsTabOnOffNet.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
