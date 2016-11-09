@@ -497,7 +497,6 @@ const TRANSLATED_MESSAGES = {
 
   'portal.security.ssl.title.text': 'TITLE',
   'portal.security.ssl.commonName.text': 'COMMON NAME',
-  'portal.security.ssl.group.text': 'GROUP',
 
   'portal.services.header.text': 'SERVICES',
 
@@ -627,10 +626,14 @@ const TRANSLATED_MESSAGES = {
   'portal.security.editCertificate.text': 'Edit Certificate',
   'portal.security.uploadCertificate.text': 'Upload Certificate',
 
-  'portal.passsword.resetPassword.text': 'Reset Password',
-  'portal.passsword.setPassword.text': 'Set Password',
-  'portal.passsword.invalidPassword.text': 'Password is not valid',
-  'portal.passsword.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.resetPassword.text': 'Reset Password',
+  'portal.password.setPassword.text': 'Set Password',
+  'portal.password.invalidPassword.text': 'Password is not valid',
+  'portal.password.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.passwordLengthValid.text': 'at least 8 characters',
+  'portal.password.passwordUppercaseValid.text': 'at least one uppercase character',
+  'portal.password.passwordNumberValid.text': 'at least one number',
+  'portal.password.passwordSpecialCharValid.text': 'at least one special character (!,?,#,$,...)',
 
   'portal.startburstHelp.today.text': 'Today',
   'portal.startburstHelp.healthRing.text': 'Health Ring',

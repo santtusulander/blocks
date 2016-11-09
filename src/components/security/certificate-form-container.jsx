@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Modal } from 'react-bootstrap'
-import { reduxForm, getValues, reset, change } from 'redux-form'
+import { reduxForm, getValues, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { List, Map } from 'immutable'
 
@@ -11,11 +11,8 @@ import CertificateForm from './certificate-form'
 let errors = {}
 const validate = values => {
   errors = {}
-  const { title, privateKey, certificate, group } = values
+  const { title, privateKey, certificate } = values
 
-  if (!group || group === '') {
-    errors.group = 'Required'
-  }
   if (!title) {
     errors.title = 'Required'
   }
@@ -29,10 +26,6 @@ const validate = values => {
 }
 
 class CertificateFormContainer extends Component {
-  componentWillMount() {
-    this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
-  }
-
   render() {
     const { title, formValues, upload, toEdit, edit, cancel, toggleModal, ...formProps } = this.props
     const buttonFunctions = {
@@ -42,7 +35,6 @@ class CertificateFormContainer extends Component {
         const data = [
           'udn',
           Number(formValues.account),
-          Number(formValues.group),
           { title: formValues.title, private_key: formValues.privateKey, certificate: formValues.certificate }
         ]
         if(cert) {
@@ -71,10 +63,8 @@ CertificateFormContainer.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   cancel: PropTypes.func,
   edit: PropTypes.func,
-  fetchGroups: PropTypes.func,
   fields: PropTypes.object,
   formValues: PropTypes.object,
-  groups: PropTypes.instanceOf(List),
   title: PropTypes.object,
   toEdit: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func,
@@ -82,31 +72,24 @@ CertificateFormContainer.propTypes = {
 }
 
 export default reduxForm({
-  fields: ['account', 'group', 'title', 'privateKey', 'certificate'],
+  fields: ['account', 'title', 'privateKey', 'certificate'],
   form: 'certificateForm',
   validate
 }, function mapStateToProps(state) {
   const toEdit = state.security.get('certificateToEdit')
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
-  const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
 
   return {
     toEdit,
     initialValues: {
       title: toEdit.get('title'),
-      account: toEdit.get('account') || activeAccount,
-      group: toEdit.get('group') || activeGroup
+      account: toEdit.get('account') || activeAccount
     },
-    formValues: getValues(state.form.certificateForm),
-    groups: state.security.get('groups')
+    formValues: getValues(state.form.certificateForm)
   }
 }, function mapDispatchToProps(dispatch) {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   return {
-    fetchGroups: (...params) => {
-      securityActions.fetchGroupsForModal(...params)
-      return () => dispatch(change('certificateForm', 'group', null))
-    },
     cancel: toggleModal => {
       securityActions.resetCertificateToEdit()
       toggleModal(null)

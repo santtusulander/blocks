@@ -19,13 +19,14 @@ describe('AddHost', () => {
     expect(TestUtils.isCompositeComponent(addHost)).toBeTruthy();
   })
   it('should create host on submit', () => {
-    let createHost = jest.genMockFunction()
+    let createHost = jest.fn()
     let addHost = TestUtils.renderIntoDocument(
       <AddHost group={Immutable.Map()} createHost={createHost}
         intl={intlMaker()}/>
     )
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(addHost, 'input')
     inputs[0].value = 'new'
+    addHost.setState({ valid: true })
     let form = TestUtils.findRenderedDOMComponentWithTag(addHost, 'form')
     TestUtils.Simulate.submit(form)
     expect(createHost.mock.calls[0][0]).toEqual('new')
