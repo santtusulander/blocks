@@ -1,6 +1,6 @@
 import React from 'react'
 import { fromJS } from 'immutable'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 
 jest.unmock('../policy-rules')
 
@@ -127,7 +127,7 @@ describe('ConfigurationPolicyRules', () => {
       let defaultProps = Object.assign({}, {
         intl: intlMaker()
       }, props)
-      return shallow(<ConfigurationPolicyRules {...defaultProps}/>)
+      return mount(<ConfigurationPolicyRules {...defaultProps}/>)
     }
   })
 
