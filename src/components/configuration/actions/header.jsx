@@ -22,6 +22,7 @@ class Header extends React.Component {
     }
 
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -48,6 +49,29 @@ class Header extends React.Component {
       }
     }
   }
+
+  validate() {
+
+    const {
+      activeActivity,
+      to_header,
+      to_value,
+      from_header,
+      from_value
+    } = this.state
+
+    switch (activeActivity) {
+      case 'set':
+        return !!to_header && !!to_value
+      case 'unset':
+        return !!to_header
+      case 'modify':
+        return to_header && !!to_value && !!from_header && !!from_value
+      default:
+        return false
+    }
+  }
+
   saveChanges() {
     let newSet
     if(this.state.activeActivity === 'unset') {
@@ -77,6 +101,18 @@ class Header extends React.Component {
     this.props.close()
   }
   render() {
+
+    const {
+      activeActivity,
+      activeDirection,
+      to_header,
+      to_value,
+      from_header,
+      from_value
+    } = this.state
+
+    const isValid = this.validate()
+
     return (
       <div>
         <Modal.Header>
@@ -87,13 +123,13 @@ class Header extends React.Component {
           <div className="form-groups">
 
             <InputConnector show={true}
-              hasTwoEnds={this.state.activeActivity !== 'unset'}/>
+              hasTwoEnds={activeActivity !== 'unset'}/>
 
             <div className="form-group">
               <label className="control-label">Activity</label>
               <Select className="input-select"
                 onSelect={this.handleSelectChange('activeActivity')}
-                value={this.state.activeActivity}
+                value={activeActivity}
                 options={[
                   ['set', <FormattedMessage id="portal.policy.edit.header.add.text"/>],
                   /*['modify', 'Modify'],*/
@@ -101,32 +137,32 @@ class Header extends React.Component {
             </div>
 
             <Panel className="form-panel" collapsible={true}
-              expanded={this.state.activeActivity !== 'modify'}>
+              expanded={activeActivity !== 'modify'}>
               <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.label'})}
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
-                value={this.state.to_header}
+                value={to_header}
                 onChange={(e) => {this.setState({
                   to_header: e.target.value
                 })}}/>
             </Panel>
 
             <Panel className="form-panel" collapsible={true}
-              expanded={this.state.activeActivity === 'set'}>
+              expanded={activeActivity === 'set'}>
               <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.label'})}
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
-                value={this.state.to_value}
+                value={to_value}
                 onChange={(e) => {this.setState({
                   to_value: e.target.value
                 })}}/>
             </Panel>
 
             <Panel className="form-panel" collapsible={true}
-              expanded={this.state.activeActivity === 'modify'}>
+              expanded={activeActivity === 'modify'}>
               <Row>
                 <Col xs={6}>
                   <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.label'})}
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
-                    value={this.state.from_header}
+                    value={from_header}
                     onChange={(e) => {this.setState({
                       from_header: e.target.value
                     })}}/>
@@ -134,7 +170,7 @@ class Header extends React.Component {
                 <Col xs={6}>
                   <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.label'})}
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
-                    value={this.state.to_header}
+                    value={to_header}
                     onChange={(e) => {this.setState({
                       to_header: e.target.value
                     })}}/>
@@ -142,7 +178,7 @@ class Header extends React.Component {
                 <Col xs={6}>
                   <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.label'})}
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
-                    value={this.state.from_value}
+                    value={from_value}
                     onChange={(e) => {this.setState({
                       from_value: e.target.value
                     })}}/>
@@ -150,7 +186,7 @@ class Header extends React.Component {
                 <Col xs={6}>
                   <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.label'})}
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
-                    value={this.state.to_value}
+                    value={to_value}
                     onChange={(e) => {this.setState({
                       to_value: e.target.value
                     })}}/>
@@ -166,7 +202,7 @@ class Header extends React.Component {
             <label className="control-label"><FormattedMessage id="portal.policy.edit.header.direction.text"/></label>
             <Select className="input-select"
               onSelect={this.handleSelectChange('activeDirection')}
-              value={this.state.activeDirection}
+              value={activeDirection}
               options={[
                 ['to_origin', <FormattedMessage id="portal.policy.edit.header.toOrigin.text"/>],
                 ['to_client', <FormattedMessage id="portal.policy.edit.header.toClient.text"/>],
@@ -177,7 +213,7 @@ class Header extends React.Component {
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges}>
+            <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.button.saveAction"/>
             </Button>
           </ButtonToolbar>
@@ -197,4 +233,4 @@ Header.propTypes = {
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
-module.exports = injectIntl(Header)
+export default injectIntl(Header)

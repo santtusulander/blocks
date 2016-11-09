@@ -525,6 +525,7 @@ export class Property extends React.Component {
         </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
+          activeHost={this.props.activeHost}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
