@@ -33,6 +33,17 @@ $starburst-tag-font-size: 1.8rem;
     transform: scale(0.5);
   }
 
+  .dark-theme &.bright {
+    .btn-icon:hover {
+      background: rgba($black, 0.4);
+    }
+
+    .circle-gradient {
+      background: linear-gradient($pale-blue, rgba($pale-blue, 0.6));
+      opacity: 0.6;
+    }
+  }
+
   &:hover {
 
     .content-item-toolbar .invisible {
@@ -50,6 +61,7 @@ $starburst-tag-font-size: 1.8rem;
     .hover-info {
       opacity: 1;
     }
+
   }
 
   .hover-info,
@@ -120,17 +132,11 @@ $starburst-tag-font-size: 1.8rem;
     transition: opacity 250ms;
 
     .dark-theme & {
+      background: linear-gradient($pale-blue, rgba($ericsson-dark-blue, 0.3));
       background-position: center center;
       background-size: 100%;
       border-color: $black;
-      &.bright {
-        background: linear-gradient($pale-blue, rgba($pale-blue, 0.6));
-        opacity: 0.6;
-      }
-      & {
-        background: linear-gradient($pale-blue, rgba($ericsson-dark-blue, 0.3));
-        opacity: 0.3;
-      }
+      opacity: 0.3;
     }
 
     .light-theme & {
@@ -253,18 +259,20 @@ $starburst-tag-font-size: 1.8rem;
   }
 
   .content-item-text-box {
-    padding: 0 25px;
-    font-weight: 700;
-    font-size: $starburst-tag-font-size;
-    text-transform: uppercase;
-    border-radius: 2px;
     position: absolute;
     bottom: 12%;
     left: 50%;
+    padding: 0 $starburst-tag-font-size;
+    font-size: $starburst-tag-font-size;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 2px;
     transform: translate(-50%, -32%);
+
     .dark-theme & {
       background-color: rgba($pale-blue, 0.3);
     }
+
     .light-theme & {
       background-color: rgba($pale-blue, 0.6);
     }
