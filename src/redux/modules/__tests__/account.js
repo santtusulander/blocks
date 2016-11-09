@@ -1,8 +1,8 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable'
 
-jest.dontMock('../account.js')
+jest.unmock('../account.js')
 
-const {
+import {
   createSuccess,
   deleteSuccess,
   deleteFailure,
@@ -14,7 +14,7 @@ const {
   updateSuccess,
   updateFailure,
   changeActive
-} = require('../account.js');
+} from '../account.js'
 
 describe('Account Module', () => {
 

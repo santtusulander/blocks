@@ -5,7 +5,7 @@ import './hover-tool-tip.scss'
 const HoverToolTip = (props) => {
   return (
     <span className='hover-tool-tip'>
-      <a className='hover-tool-tip-link' >{ props.linkText }
+      <a className='hover-tool-tip-link'>{props.linkText}
         <div className='hover-tool-tip-content'>
             {props.children}
         </div>
@@ -16,7 +16,8 @@ const HoverToolTip = (props) => {
 
 HoverToolTip.displayName = 'HoverToolTip'
 HoverToolTip.propTypes = {
-  children: React.PropTypes.node
+  children: React.PropTypes.node,
+  linkText: React.PropTypes.string
 };
 
 module.exports = HoverToolTip

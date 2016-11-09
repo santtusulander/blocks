@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Nav, Button } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -153,7 +153,8 @@ export class AccountManagement extends Component {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
-          okButton: this.props.uiActions.hideInfoDialog
+          okButton: true,
+          cancel: this.props.uiActions.hideInfoDialog
         })
     })
   }
@@ -286,24 +287,26 @@ export class AccountManagement extends Component {
     switch(accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
-          show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
-          cancelButton: () => toggleModal(null),
-          deleteButton: () => onDelete(brand, account || this.accountToDelete, router)
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => toggleModal(null),
+          submit: () => onDelete(brand, account || this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
-          show: true,
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
-          cancelButton: () => toggleModal(null),
-          deleteButton: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => toggleModal(null),
+          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
     }
 
@@ -360,7 +363,8 @@ export class AccountManagement extends Component {
       },
       roles: this.props.roles,
       permissions: this.props.permissions,
-      users: this.props.users
+      users: this.props.users,
+      currentUser: this.props.currentUser
     }
     return (
       <Content>
@@ -376,7 +380,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret"></span>
+                <span className="caret" />
               </div>
             </AccountSelector>
           </IsAllowed>
@@ -420,6 +424,7 @@ export class AccountManagement extends Component {
            */}
         </Nav>}
 
+        {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
         {accountManagementModal === ADD_ACCOUNT &&
@@ -427,15 +432,17 @@ export class AccountManagement extends Component {
           id="account-form"
           onSave={this.editAccount}
           account={this.accountToUpdate}
+          currentUser={this.props.currentUser}
           onCancel={() => toggleModal(null)}
           show={true}/>}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
         {accountManagementModal === DELETE_USER &&
         <ModalWindow
-          show={true}
           title="Delete User?"
-          cancelButton={() => toggleModal(null)}
-          deleteButton={this.deleteUser}>
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => toggleModal(null)}
+          submit={() => this.deleteUser()}>
           <h3>
             {this.userToDelete}<br/>
           </h3>
@@ -466,6 +473,7 @@ AccountManagement.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
+  currentUser: PropTypes.instanceOf(Map),
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
@@ -505,7 +513,8 @@ function mapStateToProps(state) {
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
-    users: state.user.get('allUsers')
+    users: state.user.get('allUsers'),
+    currentUser: state.user.get('currentUser')
   };
 }
 
@@ -534,7 +543,8 @@ function mapDispatchToProps(dispatch) {
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
-            okButton: uiActions.hideInfoDialog
+            okButton: true,
+            cancel: uiActions.hideInfoDialog
           })
         }
       })

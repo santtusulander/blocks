@@ -11,7 +11,7 @@ class Tooltip extends React.Component {
     }
     if(this.props.hidden){
       return (
-        <div className={`${className} hidden`}></div>
+        <div className={`${className} hidden`} />
       );
     }
     return (

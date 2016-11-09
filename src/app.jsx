@@ -6,7 +6,6 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
-import { Button } from 'react-bootstrap'
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
@@ -76,7 +75,8 @@ axios.interceptors.response.use(function (response) {
       store.dispatch(showInfoDialog({
         title: <FormattedMessage id='portal.common.error.unauthorized.title'/>,
         content: <FormattedMessage id='portal.common.error.unauthorized.content'/>,
-        okButton: () => store.dispatch(hideInfoDialog())
+        okButton: true,
+        cancel: () => store.dispatch(hideInfoDialog())
       }));
     }
     else if (status === 500 || status === 404) {

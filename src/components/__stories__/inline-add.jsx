@@ -1,9 +1,9 @@
 import React from 'react';
 import { Input, Table, Button } from 'react-bootstrap'
-import {storiesOf} from '@kadira/storybook';
-import {reducer as form} from 'redux-form'
-import {createStore, combineReducers} from 'redux'
-import {Provider} from 'react-redux'
+import { storiesOf, action } from '@kadira/storybook';
+import { reducer as form } from 'redux-form'
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
 
 import SelectWrapper from '../select-wrapper.jsx'
 import ActionButtons from '../action-buttons.jsx'
@@ -79,8 +79,8 @@ storiesOf('Inline Add', module)
               fields={['a', 'b', 'c', 'd']}
               inputs={inlineAddInputs}
               cancel={() => {}}
-              unmount={() => console.log('will unmount!')}
-              save={vals => console.log(vals)}/>
+              unmount={() => action('will unmount!')}
+              save={vals => action(vals)}/>
             {users.map((user, index) => {
               return (
                 <tr key={index}>

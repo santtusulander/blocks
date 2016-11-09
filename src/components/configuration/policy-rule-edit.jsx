@@ -10,7 +10,9 @@ import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
   parsePolicy,
-  policyContainsSetComponent
+  policyContainsSetComponent,
+  matchIsContentTargeting,
+  policyIsCompatibleWithAction
 } from '../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -26,9 +28,12 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.addMatch = this.addMatch.bind(this)
     this.addAction = this.addAction.bind(this)
+    this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
+    this.deleteContentTargetingSet = this.deleteContentTargetingSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
+    this.moveContentTargetingSet = this.moveContentTargetingSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
     this.cancelChanges = this.cancelChanges.bind(this)
@@ -43,6 +48,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const childPath = matchFilterChildPaths[deepestMatch.filterType]
       const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
+
       let newMatch = Immutable.fromJS([
         {match: {field: null, cases: [['',[]]]}}
       ])
@@ -60,6 +66,12 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
   addAction(deepestMatch) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')
+          || this.props.rule.getIn(['match', 'cases', 0, 1, 0, 'script_lua']))
+    {
+      return this.addContentTargetingAction(deepestMatch)
+    }
     return e => {
       e.preventDefault()
       const childPath = matchFilterChildPaths[deepestMatch.filterType]
@@ -75,19 +87,61 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(newPath.concat([newSets.size - 1, 'set', '']))
     }
   }
-  deleteMatch(path) {
+  addContentTargetingAction(deepestMatch) {
+    return e => {
+      e.preventDefault()
+      const childPath = matchFilterChildPaths[deepestMatch.filterType]
+      const contentTargetingPath = [0, 'script_lua', 'target', 'geo', 0, 'country']
+      const newPath = deepestMatch.path.concat(childPath).concat(contentTargetingPath)
+      const currentSets = this.props.config.getIn(newPath)
+      const newSets = currentSets.push(Immutable.fromJS({"in": [], "response": { "code": 200 }}))
+      this.props.changeValue([],
+        this.props.config.setIn(
+          newPath,
+          newSets
+        )
+      )
+      this.props.activateSet(newPath.concat([newSets.size - 1]))
+    }
+  }
+  deleteMatch(matches, i) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      const children = this.props.config.getIn(path.concat(['cases', 0, 1]))
-      this.props.changeValue(
-        path.slice(0, -2),
-        children
-      )
+      if (i === 0){
+        const childPath = matchFilterChildPaths[matches[0].filterType]
+        const newPath = matches[0].path.concat(childPath)
+        const currentSets = this.props.config.getIn(newPath)
+
+        this.props.changeValue(
+          matches[0].path.slice(0, -2),
+          this.props.config.getIn(matches[0].path.concat(['cases', 0, 1]))
+        )
+        this.props.changeValue([],
+         this.props.config.setIn(
+           matches[1].path.concat(childPath),
+           currentSets
+         )
+        )
+      }
+
+      matches.map((match, key)=>{
+        if(key < i){
+          this.props.changeValue(
+            matches[key+1].path,
+            this.props.config.getIn(match.path)
+          )
+        }
+      })
+
       this.props.activateMatch(null)
     }
   }
   deleteSet(path) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.deleteContentTargetingSet(path)
+    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
@@ -98,7 +152,22 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
+  deleteContentTargetingSet(path) {
+    return e => {
+      e.preventDefault()
+      e.stopPropagation()
+      const setIndex = path.last()
+      const setContainerPath = path.slice(0, -1)
+      const filtered = this.props.config.getIn(setContainerPath).delete(setIndex)
+      this.props.changeValue(setContainerPath, filtered)
+      this.props.activateSet(null)
+    }
+  }
   moveSet(path, newIndex) {
+    const flattenedPolicy = parsePolicy(this.props.rule, [])
+    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+      return this.moveContentTargetingSet(path, newIndex)
+    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
@@ -108,6 +177,21 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         .filterNot((val, i) => i === path.get(path.size-3))
         .insert(newIndex, set)
       this.props.changeValue(path.slice(0, -3), updated)
+      this.props.activateSet(null)
+    }
+  }
+  moveContentTargetingSet(path, newIndex) {
+    return e => {
+      e.preventDefault()
+      e.stopPropagation()
+      const currentIndex = path.last()
+      const containerPath = path.slice(0, -1)
+      const set = this.props.config.getIn(path)
+      const updated = this.props.config
+        .getIn(containerPath)
+        .filterNot((val, i) => i === currentIndex)
+        .insert(newIndex, set)
+      this.props.changeValue(containerPath, updated)
       this.props.activateSet(null)
     }
   }
@@ -147,7 +231,25 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
     const disableAddMatchButton = () => {
-      return policyContainsSetComponent(flattenedPolicy, 'tokenauth')
+      // token auth
+      if (policyContainsSetComponent(flattenedPolicy, 'tokenauth')) {
+        return true
+
+      // content targeting
+      } else {
+        const config = this.props.config
+        const rootMatchInfo = flattenedPolicy.matches[0]
+
+        if (rootMatchInfo) {
+          const rootMatch = config.getIn(rootMatchInfo.path)
+
+          if (rootMatch) {
+            return matchIsContentTargeting(rootMatch)
+          }
+        }
+      }
+
+      return false
     }
 
     const disableAddActionButton = () => {
@@ -156,10 +258,12 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     const disableButton = () => {
+
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
         !flattenedPolicy.matches[0].field ||
         !flattenedPolicy.sets.length ||
-        !flattenedPolicy.sets[0].setkey
+        flattenedPolicy.sets[0].setkey === '' ||
+        flattenedPolicy.sets[0].setkey == null
     }
 
     return (
@@ -204,10 +308,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
           <div className="conditions">
             {flattenedPolicy.matches.map((match, i) => {
-              let values = match.values[0]
-              if(match.values.length > 1) {
-                values = `${values} and ${match.values.length - 1} others`
-              }
               let active = false
               if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
@@ -225,17 +325,27 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               else if(match.filterType === 'does_not_contain') {
                 filterText = `Does not contain ${match.containsVal}`
               }
+
+              let matchName = (<div className="condition-name">
+                {match.field}&nbsp;:&nbsp;
+                <TruncatedTitle
+                  content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
+              </div>)
+
+              const matchCondition = this.props.config.getIn(match.path)
+              const isContentTargeting = matchCondition && matchIsContentTargeting(matchCondition)
+
+              if (isContentTargeting) {
+                matchName = <div className="condition-name">Content Targeting</div>
+                filterText = null
+              }
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateMatch(match.path)}>
+                  onClick={isContentTargeting ? null : this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      <div className="condition-name">
-                        {match.field}&nbsp;:&nbsp;
-                        <TruncatedTitle
-                          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
-                      </div>
+                      matchName
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
@@ -245,7 +355,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
-                    <Button onClick={this.deleteMatch(match.path)} bsStyle="primary"
+                    <Button onClick={this.deleteMatch(flattenedPolicy.matches, i)} bsStyle="primary"
                       disabled={flattenedPolicy.matches.length < 2}
                       className="btn-link btn-icon">
                       <IconTrash/>
@@ -282,7 +392,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateSet(set.path)}>
                   <Col xs={8}>
-                    <p>{i + 1} {set.setkey}</p>
+                    <p>{i + 1} {set.name}</p>
                   </Col>
                   <Col xs={4} className="text-right">
                     <Button

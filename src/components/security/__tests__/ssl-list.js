@@ -27,7 +27,7 @@ describe('SSLList', () => {
     subject = (props) => {
       let defaultProps = Object.assign({}, {
         intl: intlMaker(),
-        groups: [],
+        groups: fromJS([]),
         certificates: fakeCerts,
         activeCertificates: fromJS([])
       }, props)

@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Panel, PanelGroup, Table, Button, Row, Col, Input } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -25,7 +25,6 @@ import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
 import ArrayCell from '../../../components/array-td/array-td'
 import ModalWindow from '../../../components/modal'
-import UDNButton from '../../../components/button'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -275,8 +274,10 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Warning',
         content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
-        stayButton: this.props.uiActions.hideInfoDialog,
-        continueButton: () => {
+        stayButton: true,
+        continueButton: true,
+        cancel: this.props.uiActions.hideInfoDialog,
+        submit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()
@@ -292,7 +293,8 @@ export class AccountManagementAccountUsers extends React.Component {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
-        okButton: this.props.uiActions.hideInfoDialog
+        okButton: true,
+        cancel: this.props.uiActions.hideInfoDialog
       })
     }
     else {
@@ -491,10 +493,10 @@ export class AccountManagementAccountUsers extends React.Component {
         }
         {this.props.roles.size && this.props.permissions.size && this.state.showPermissionsModal &&
           <ModalWindow
-            show={this.state.showPermissionsModal}
             title="View Permissions"
-            closeModal={this.togglePermissionModal}
-            closeButton={this.togglePermissionModal}>
+            closeModal={true}
+            closeButton={true}
+            cancel={this.togglePermissionModal}>
               {this.props.roles.map((role, i) => (
                 <PanelGroup accordion={true} key={i} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={i}>

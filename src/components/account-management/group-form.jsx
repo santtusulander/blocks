@@ -6,11 +6,11 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
-import { Map, List, fromJS } from 'immutable'
-import { FormattedMessage, formatMessage, injectIntl } from 'react-intl'
+import { Map, List } from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-import IconClose from '../icons/icon-close.jsx'
+// import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+// import IconClose from '../icons/icon-close.jsx'
 
 import { isValidAccountName } from '../../util/validators'
 
@@ -108,6 +108,8 @@ class GroupForm extends React.Component {
 
   render() {
     const { fields: {name}, show, onCancel } = this.props
+
+/*
     const currentMembers = this.props.users.reduce((members, user) => {
       if (this.state.usersToAdd.includes(user.get('email'))) {
         return [user.set('toAdd', true), ...members]
@@ -129,6 +131,7 @@ class GroupForm extends React.Component {
       }
       return arr;
     }, []))
+*/
 
     const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
     const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
@@ -213,6 +216,7 @@ GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   fields: PropTypes.object,
   group: PropTypes.instanceOf(Map),
+  intl: intlShape.isRequired,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
