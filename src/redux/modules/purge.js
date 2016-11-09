@@ -22,7 +22,6 @@ export const emptyPurge = Immutable.fromJS({
   action: 'purge',
   objects: [],
   note: '',
-  feedback: null,
   published_host_id: ''
 })
 

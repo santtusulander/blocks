@@ -106,14 +106,14 @@ class PurgeModal extends React.Component {
     }
   }
   toggleNotification() {
-    let feedback = null
     if(!this.props.activePurge.get('feedback')) {
-      feedback = Immutable.Map({email: ''})
+      this.props.changePurge(this.props.activePurge.set('feedback', Immutable.Map({email: ''})))
+    } else {
+      this.props.changePurge(this.props.activePurge.delete('feedback'))
     }
     this.setState({
       purgeEmailError: ''
     })
-    this.props.changePurge(this.props.activePurge.set('feedback', feedback))
   }
   purgeObjInput({title, help, placeholder}) {
     return (
