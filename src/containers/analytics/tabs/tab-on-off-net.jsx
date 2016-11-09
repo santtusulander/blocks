@@ -106,12 +106,12 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
+    currentUser: state.user.get('currentUser'),
     fetching: state.traffic.get('fetching'),
+    filters: state.filters.get('filters'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffStats: state.traffic.get('onOffNet'),
-    onOffStatsToday: state.traffic.get('onOffNetToday'),
-    filters: state.filters.get('filters'),
-    currentUser: state.user.get('currentUser')
+    onOffStatsToday: state.traffic.get('onOffNetToday')
   }
 }
 
