@@ -28,12 +28,15 @@ const FilterDateRange = ({ onFilterChange, startDate, endDate, showComparison, i
 FilterDateRange.displayName = 'FilterDateRange'
 FilterDateRange.propTypes = {
   changeDateRange: PropTypes.func,
-  dateRanges: PropTypes.array.isRequired,
+  dateRanges: PropTypes.array,
   endDate: PropTypes.instanceOf(moment),
   includeComparison: PropTypes.bool,
   onFilterChange: PropTypes.func,
   showComparison: PropTypes.bool,
   startDate: PropTypes.instanceOf(moment)
+}
+FilterDateRange.defaultProps = {
+  dateRanges: []
 }
 
 export default FilterDateRange
