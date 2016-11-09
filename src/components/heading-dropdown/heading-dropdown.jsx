@@ -63,8 +63,10 @@ class HeadingDropdown extends Component {
 HeadingDropdown.displayName = 'HeadingDropdown'
 HeadingDropdown.propTypes   = {
   className: PropTypes.string,
+  defaultLabel: PropTypes.string,
   onSelect: PropTypes.func,
   options: PropTypes.array,
+  type: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 

@@ -4,12 +4,13 @@ import SupportTicketForm from './form'
 import { Modal } from 'react-bootstrap'
 
 class SupportTicketFormModal extends React.Component {
-  constructor(props) {
-    super(props)
-  }
 
   static getTitle(ticket = null) {
     return ticket ? `Edit Ticket: #${ticket.get('id')}` : 'New Ticket'
+  }
+
+  constructor(props) {
+    super(props)
   }
 
   render() {

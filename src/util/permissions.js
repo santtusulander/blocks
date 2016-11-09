@@ -1,4 +1,8 @@
 import * as PERMISSIONS from '../constants/permissions'
+import {
+  ROLES_MAPPING,
+  ACCOUNT_TYPE_CLOUD_PROVIDER
+} from '../constants/account-management-options'
 
 let permissionMapping = {};
 
@@ -7,9 +11,21 @@ let permissionMapping = {};
 // Sections
 permissionMapping[PERMISSIONS.VIEW_ACCOUNT_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'account'])
+permissionMapping[PERMISSIONS.VIEW_ACCOUNT_DETAIL] =
+  (userRole) => {
+    const role = ROLES_MAPPING.find(role => role.id === userRole.get('id'))
+    const roleIsCloudProvider = role.accountTypes.indexOf(ACCOUNT_TYPE_CLOUD_PROVIDER) >= 0
+    return !roleIsCloudProvider
+  }
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'analytics'])
 permissionMapping[PERMISSIONS.VIEW_CONTENT_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.network' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_NETWORK_SECTION] =
+  (role) => role.getIn(['permissions', 'ui', 'content'])
+// TODO: UDNP-1726 -- change to 'permissions.ui.dashboard' after CS-439 is complete
+permissionMapping[PERMISSIONS.VIEW_DASHBOARD_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'content'])
 permissionMapping[PERMISSIONS.VIEW_SECURITY_SECTION] =
   (role) => role.getIn(['permissions', 'ui', 'security'])

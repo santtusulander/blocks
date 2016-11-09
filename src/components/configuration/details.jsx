@@ -107,7 +107,7 @@ class ConfigurationDetails extends React.Component {
 
         <div className="form-groups">
           <div className={'input-connector col-xs-offset-3' +
-            (isOtherHostHeader ? ' show' : '')}></div>
+            (isOtherHostHeader ? ' show' : '')} />
 
           <div className="form-group">
             <label className="col-xs-3 control-label">Host Header Value</label>
@@ -226,6 +226,7 @@ ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
+  readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func
 }
 

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
-import { Modal, Glyphicon } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 
 import IconEdit from '../icons/icon-configuration'
 import IconClose from '../icons/icon-close'
@@ -19,9 +19,6 @@ import {
 } from '../../util/support-helper'
 
 class SupportTicketModal extends React.Component {
-  constructor(props) {
-    super(props)
-  }
 
   static getTicketType(ticket) {
     const type = ticket.get('type')
@@ -41,6 +38,10 @@ class SupportTicketModal extends React.Component {
         <div className="ticket-modal__priority-label">{getTicketPriorityLabel(priority)}</div>
       </div>
     )
+  }
+
+  constructor(props) {
+    super(props)
   }
 
   render() {

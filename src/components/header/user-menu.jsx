@@ -39,19 +39,19 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, param
                 value={theme}
                 options={[
                   ['dark',
-                  <div>
-                    <span className="helper-header helper-ui-theme text-sm">
-                      <FormattedMessage id="portal.header.menu.theme.title"/>
-                    </span>
-                    <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
-                  </div>],
+                    <div>
+                      <span className="helper-header helper-ui-theme text-sm">
+                        <FormattedMessage id="portal.header.menu.theme.title"/>
+                      </span>
+                      <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
+                    </div>],
                   ['light',
-                  <div>
-                    <span className="helper-header helper-ui-theme text-sm">
-                      <FormattedMessage id="portal.header.menu.theme.title"/>
-                    </span>
-                    <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
-                  </div>]
+                    <div>
+                      <span className="helper-header helper-ui-theme text-sm">
+                        <FormattedMessage id="portal.header.menu.theme.title"/>
+                      </span>
+                      <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
+                    </div>]
                 ]}
               />
             </li>
