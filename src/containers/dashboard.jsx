@@ -6,6 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
 import { formatBitsPerSecond, formatBytes, formatTime, getAccountByID, separateUnit } from '../util/helpers'
 import numeral from 'numeral'
+import DateRanges from '../constants/date-ranges'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -157,6 +158,16 @@ export class Dashboard extends React.Component {
     const topCPsIDs = topCPs.map(provider => provider.get('account')).toJS()
     const topCPsAccounts = getAccountByID(accounts, topCPsIDs)
 
+    const dateRanges = [
+      DateRanges.MONTH_TO_DATE,
+      DateRanges.LAST_MONTH,
+      DateRanges.THIS_WEEK,
+      DateRanges.LAST_WEEK,
+      DateRanges.TODAY,
+      DateRanges.YESTERDAY,
+      DateRanges.CUSTOM_TIMERANGE
+    ]
+
     return (
       <Content>
         <PageHeader pageSubTitle="Dashboard">
@@ -170,6 +181,7 @@ export class Dashboard extends React.Component {
         <AnalyticsFilters
           activeAccountProviderType={activeAccount && activeAccount.get('provider_type')}
           currentUser={user}
+          dateRanges={dateRanges}
           params={params}
           onFilterChange={this.onFilterChange}
           filters={filters}
