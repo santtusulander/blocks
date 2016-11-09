@@ -17,14 +17,6 @@ import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
-import {
-  ACCOUNT_TYPE_CONTENT_PROVIDER,
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CLOUD_PROVIDER
- } from '../../constants/account-management-options'
-
-import { FormattedMessage } from 'react-intl'
-
 const dayHours = 24
 const rayHours = 3
 
@@ -242,7 +234,7 @@ class ContentItemChart extends React.Component {
                 width: innerRadius * 2, height: innerRadius * 2,
                 marginTop: -innerRadius, marginLeft: -innerRadius
               }}>
-              <div className={classnames({ "circle-gradient": true, bright: this.props.trialMode })} />
+              <div className={classnames({ "circle-gradient": true, bright: this.props.brightMode })} />
             </div>
             <ReactCSSTransitionGroup
               component="div"
@@ -368,6 +360,7 @@ ContentItemChart.propTypes = {
   avgTransfer: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
+  brightMode: React.PropTypes.bool,
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
@@ -388,8 +381,8 @@ ContentItemChart.propTypes = {
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,
-  timeToFirstByte: React.PropTypes.string,
-  trialMode: React.PropTypes.bool
+  tagText: React.PropTypes.string,
+  timeToFirstByte: React.PropTypes.string
 }
 ContentItemChart.defaultProps = {
   dailyTraffic: Immutable.List(),
