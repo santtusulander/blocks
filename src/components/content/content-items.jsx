@@ -5,9 +5,7 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import {
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
+import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,

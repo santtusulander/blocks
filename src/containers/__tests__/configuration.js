@@ -247,6 +247,7 @@ describe('Configuration', () => {
     uiActions = uiActionsMaker()
     config = shallow(
       <Configuration
+        intl={{formatMessage() {}}}
         hostActions={hostActions}
         currentUser={new Immutable.Map()}
         accountActions={accountActionsMaker()}
