@@ -67,9 +67,12 @@ class AccountManagementSystemDNS extends Component {
       activeModal,
       toggleModal } = this.props
 
-    const {domainSearch, recordSearch} = this.state
+    const { domainSearch, recordSearch, recordToDelete } = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+
+    // Handle concat here instead of in Redux action
+    const fullRecordName = recordToDelete && recordToDelete.name.concat('.' + activeDomain)
 
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
@@ -118,6 +121,7 @@ class AccountManagementSystemDNS extends Component {
             id='portal.account.dnsList.records.hiddenRecords'
             values={{ hiddenRecordCount }} /> : ''
     }
+
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
@@ -142,7 +146,7 @@ class AccountManagementSystemDNS extends Component {
           loading={loadingRecords}
           invalid={false}>
           <p>
-            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
+            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: fullRecordName}}/>
           </p>
         </ModalWindow>
         }
@@ -197,7 +201,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
     },
     deleteRecord: (domain, record, onResponse) => {
       startFetching()
-      removeResource(domain, record.name, record).then(onResponse)
+      return removeResource(domain, record.name, record).then(onResponse)
     },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
