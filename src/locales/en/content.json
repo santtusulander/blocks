@@ -1,4 +1,3 @@
 {
-  "portal.content.contentProvider": "CP",
-  "portal.content.serviceProvider": "SP"
+  "portal.content.xxx": "value xxx"
 }
