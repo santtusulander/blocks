@@ -179,7 +179,8 @@ class ContentItemChart extends React.Component {
       </Tooltip>)
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
-        <div className="content-item-chart grid-item"
+        <div
+          className={classnames({ 'content-item-chart': true, bright: this.props.brightMode, 'grid-item': true })}
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
@@ -226,7 +227,7 @@ class ContentItemChart extends React.Component {
                 width: innerRadius * 2, height: innerRadius * 2,
                 marginTop: -innerRadius, marginLeft: -innerRadius
               }}>
-              <div className={classnames({ "circle-gradient": true, bright: this.props.brightMode })} />
+              <div className="circle-gradient" />
             </div>
             <ReactCSSTransitionGroup
               component="div"
