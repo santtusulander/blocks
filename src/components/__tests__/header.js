@@ -1,7 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
 import { Navbar } from 'react-bootstrap'
 
@@ -20,14 +18,9 @@ jest.mock('../../routes', () => {
   }
 })
 
-// Mock out router
-jest.mock('react-router')
-const reactRouter = require('react-router')
-reactRouter.withRouter = jest.fn(wrappedClass => wrappedClass)
+jest.unmock('../header/header.jsx')
 
-jest.dontMock('../header/header.jsx')
-const Header = require('../header/header.jsx').default
-
+import Header from '../header/header.jsx'
 function fakeRouterMaker() {
   return {
     createHref: jest.fn(),
@@ -35,9 +28,10 @@ function fakeRouterMaker() {
   }
 }
 
-const handleThemeChange = jest.fn()
-const logOut = jest.fn()
-const activatePurge = jest.fn()
+// Not used at the moment
+// const handleThemeChange = jest.fn()
+// const logOut = jest.fn()
+// const activatePurge = jest.fn()
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
 
@@ -65,12 +59,12 @@ describe('Header', () => {
       <Header theme="dark" fetching={false} location={fakeLocation}
         params={fakeParams} router={fakeRouterMaker()} />
     )
-    expect(header.instance().state.animatingGradient).toBe(false)
+    expect(header.state('animatingGradient')).toBe(false)
     header = shallow(
       <Header theme="dark" fetching={true} location={fakeLocation}
         params={fakeParams} router={fakeRouterMaker()} />
     )
-    expect(header.instance().state.animatingGradient).toBe(true)
+    expect(header.state('animatingGradient')).toBe(true)
   });
   // TODO: Figure out how to do these with both refs and react-intl
   // it('should show gradient animation when fetching', () => {

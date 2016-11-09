@@ -1,11 +1,10 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../policies.jsx')
-const ConfigurationPolicies = require('../policies.jsx')
-const ConfigurationSidebar = require('../sidebar.jsx')
+jest.unmock('../policies.jsx')
+import ConfigurationPolicies from '../policies.jsx'
+import ConfigurationSidebar from '../sidebar.jsx'
 
 const fakeConfig = Immutable.fromJS(
   {"status": 1,

@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {Input, Button} from 'react-bootstrap'
+import {Input} from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -20,7 +20,8 @@ class FilterServiceType extends React.Component {
         this.props.uiActions.showInfoDialog({
           title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
           content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
-          buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage id="portal.button.ok"/></Button>
+          okButton: true,
+          cancel: this.props.uiActions.hideInfoDialog
         });
       }
       else {

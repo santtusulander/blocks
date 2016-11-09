@@ -157,6 +157,9 @@
   .content-item-list-chart {
     height: $content-item-list-height;
     margin: 0 700px 0 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     @include md {
       height: $md-content-item-list-height;

@@ -106,9 +106,9 @@ export default handleActions({
 
 // ACTIONS
 
-export const createTicket = createAction(TICKET_CREATED, (data) => {
-  //noinspection Eslint
-  console.log('createTicket', data)
+// export const createTicket = createAction(TICKET_CREATED, (data) => {
+export const createTicket = createAction(TICKET_CREATED, () => {
+  // TODO: add integration with Zendesk
 
   return new Promise((resolve) => {
     resolve({
@@ -128,9 +128,9 @@ export const createTicket = createAction(TICKET_CREATED, (data) => {
   })
 })
 
-export const deleteTicket = createAction(TICKET_DELETED, (id) => {
-  //noinspection Eslint
-  return console.log('deleteTicket', id);
+// export const deleteTicket = createAction(TICKET_DELETED, (id) => {
+export const deleteTicket = createAction(TICKET_DELETED, () => {
+  // TODO: add integration with Zendesk
 })
 
 export const fetchTicket = createAction(TICKET_FETCHED, (id) => {
@@ -218,9 +218,9 @@ export const fetchTickets = createAction(TICKET_FETCHED_ALL, () => {
   };
 })
 
-export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
-  //noinspection Eslint
-  console.log('updateTicket', id, data);
+// export const updateTicket = createAction(TICKET_UPDATED, (id, data) => {
+export const updateTicket = createAction(TICKET_UPDATED, (id) => {
+  // TODO: add integration with Zendesk
 
   return new Promise((resolve) => {
     resolve({

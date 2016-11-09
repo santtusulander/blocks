@@ -1,6 +1,5 @@
 import React from 'react'
 import numeral from 'numeral'
-import moment from 'moment'
 import Immutable from 'immutable'
 
 import SectionHeader from '../layout/section-header'
@@ -10,7 +9,9 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
-import { FormattedMessage } from 'react-intl'
+import {getTrafficByDateRangeLabel} from './helpers'
+
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 class AnalysisContribution extends React.Component {
   constructor(props) {
@@ -26,14 +27,18 @@ class AnalysisContribution extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
+
+    this.measureContainersTimeout = null
   }
   componentDidMount() {
     this.measureContainers()
-    setTimeout(() => {this.measureContainers()}, 500)
+    // TODO: remove this timeout as part of UDNP-1426
+    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
+    clearTimeout(this.measureContainersTimeout)
   }
   measureContainers() {
     if (!this.refs.stacksHolder) {
@@ -63,7 +68,6 @@ class AnalysisContribution extends React.Component {
   }
 
   render() {
-    const month = moment().format('MMMM YYYY')
     const isHttp = this.props.serviceTypes.includes('http')
     const isHttps = this.props.serviceTypes.includes('https')
     const isOnNet = this.props.onOffFilter.includes('on-net')
@@ -118,6 +122,9 @@ class AnalysisContribution extends React.Component {
       activeDirection: this.state.sortDir
     }
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
+
+    const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
+
     return (
       <div>
         <SectionHeader
@@ -128,7 +135,7 @@ class AnalysisContribution extends React.Component {
             <SectionContainer className="analysis-contribution">
               <div ref="stacksHolder">
                 <AnalysisStackedByGroup padding={40}
-                  chartLabel={`${month}, Month to Date`}
+                  chartLabel={`${this.props.intl.formatMessage({id: 'portal.analytics.contribution.traffic.label'})} ${trafficByDateRangeLabel}`}
                   datasets={providers}
                   datasetLabels={[
                     <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
@@ -165,7 +172,7 @@ class AnalysisContribution extends React.Component {
                         <td>{country.get('provider')}</td>
                         <td>{country.get('country')}</td>
                         <td>{formatBytes(country.get('bytes'))}</td>
-                        <td>{numeral(country.get('percent_total')).format('0%')}</td>
+                        <td>{numeral(country.get('percent_total')).format('0.00%')}</td>
                       </tr>
                     )
                   })}
@@ -182,7 +189,10 @@ class AnalysisContribution extends React.Component {
 AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
   accounts: React.PropTypes.instanceOf(Immutable.List),
+  dateRange: React.PropTypes.instanceOf(Immutable.Map),
+  dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   onOffFilter: React.PropTypes.instanceOf(Immutable.List),
   sectionHeaderTitle: React.PropTypes.object,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
@@ -195,4 +205,4 @@ AnalysisContribution.defaultProps = {
   stats: Immutable.List()
 }
 
-module.exports = AnalysisContribution
+module.exports = injectIntl(AnalysisContribution)

@@ -4,17 +4,23 @@ import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
 
 jest.autoMockOff()
-jest.dontMock('../contribution.jsx')
-jest.dontMock('../../table-sorter.jsx')
+jest.unmock('../contribution.jsx')
+jest.unmock('../../table-sorter.jsx')
 
-const AnalysisContribution = require('../contribution.jsx')
+import AnalysisContribution from '../contribution.jsx'
 
 // Set up mocks to make sure formatting libs are used correctly
-const moment = require('moment')
-const numeral = require('numeral')
+import moment from 'moment'
+import numeral from 'numeral'
 
 moment.format = jest.fn()
 numeral.format = jest.fn()
+
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
 
 const fakeStats = Immutable.fromJS([
   {
@@ -79,7 +85,9 @@ describe('AnalysisContribution', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
         fetching={true}
-        stats={fakeStats}/>
+        stats={fakeStats}
+        intl={intlMaker()}
+      />
     );
     expect(TestUtils.isCompositeComponent(analysisContribution)).toBeTruthy();
   });
@@ -88,7 +96,9 @@ describe('AnalysisContribution', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
         fetching={false}
-        stats={fakeStats}/>
+        stats={fakeStats}
+        intl={intlMaker()}
+      />
     );
     const trs = analysisContribution.find('tr')
     expect(trs.length).toBe(4);

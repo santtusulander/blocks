@@ -122,6 +122,8 @@ class AnalyticsTabContribution extends React.Component {
 
     return (
       <AnalysisContribution
+        dateRangeLabel={this.props.filters.get('dateRangeLabel')}
+        dateRange={this.props.filters.get('dateRange')}
         fetching={this.props.fetching}
         sectionHeaderTitle={sectionHeaderTitle}
         stats={this.props.contribution}
