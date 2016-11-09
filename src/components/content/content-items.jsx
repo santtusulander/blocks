@@ -5,7 +5,9 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -229,6 +231,22 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
+
+  getTagText(isCloudProvider, providerType, trialMode) {
+    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
+    if (isCloudProvider && !trialMode) {
+      switch(providerType) {
+        case ACCOUNT_TYPE_CONTENT_PROVIDER:
+          tagText = 'portal.content.contentProvider'
+          break
+        case ACCOUNT_TYPE_SERVICE_PROVIDER:
+          tagText = 'portal.content.serviceProvider'
+        default: break
+      }
+    }
+    return { tagText: tagText }
+  }
+
   render() {
     const {
       sortValuePath,
@@ -284,6 +302,7 @@ class ContentItems extends React.Component {
         opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
+    const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -291,7 +310,7 @@ class ContentItems extends React.Component {
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
-            {userIsCloudProvider(user.get('currentUser')) || activeAccount.size ?
+            {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
@@ -336,17 +355,21 @@ class ContentItems extends React.Component {
                   'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
+                  const id = item.get('id')
+                  const name = item.get('name')
                   const contentMetrics = content.get('metrics')
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
-                    ...item.toJS(),
-                    linkTo: this.props.nextPageURLBuilder(item.get('id'), item),
+                    id,
+                    name,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), item.get('trialMode')),
+                    linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
-                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(item.get('id')) : null,
+                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-                      this.editItem(item.get('id'))
+                      this.editItem(id)
                     } : null,
-                    analyticsLink: this.props.analyticsURLBuilder(item.get('id')),
+                    analyticsLink: this.props.analyticsURLBuilder(id),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
@@ -366,7 +389,7 @@ class ContentItems extends React.Component {
                   }
 
                   return (
-                    <ContentItem key={item.get('id')}
+                    <ContentItem key={id}
                       isChart={viewingChart}
                       itemProps={itemProps}
                       scaledWidth={scaledWidth}
