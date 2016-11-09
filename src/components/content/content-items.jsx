@@ -275,7 +275,7 @@ class ContentItems extends React.Component {
         item = item.merge({
           id: item.get('id').replace(trialNameRegEx, '$1'),
           name: item.get('id').replace(trialNameRegEx, '$1'),
-          trialMode: true
+          isTrialHost: true
         })
       }
       return Immutable.Map({
@@ -356,13 +356,15 @@ class ContentItems extends React.Component {
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
+                  const isTrialHost = item.get('isTrialHost')
                   const name = item.get('name')
                   const contentMetrics = content.get('metrics')
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
                     id,
                     name,
-                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), item.get('trialMode')),
+                    brightMode: isTrialHost,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
