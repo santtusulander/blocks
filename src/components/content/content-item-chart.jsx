@@ -17,6 +17,14 @@ import DifferenceTooltip from './difference-tooltip.jsx'
 import TrafficTooltip from './traffic-tooltip.jsx'
 import {formatBitsPerSecond} from '../../util/helpers'
 
+import {
+  ACCOUNT_TYPE_CONTENT_PROVIDER,
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CLOUD_PROVIDER
+ } from '../../constants/account-management-options'
+
+import { FormattedMessage } from 'react-intl'
+
 const dayHours = 24
 const rayHours = 3
 
@@ -67,11 +75,11 @@ class ContentItemChart extends React.Component {
     }
   }
 
-  renderDeploymentModeTag() {
-    const { trialMode, intl: { formatMessage } } = this.props
-    return trialMode &&
+  renderStarBurstTag() {
+    const { tagText, intl: { formatMessage } } = this.props
+    return !!tagText &&
       <span className="content-item-text-box">
-        {formatMessage({ id: "portal.configuration.details.deploymentMode.trial" }).toUpperCase()}
+        {formatMessage({ id: tagText }).toUpperCase()}
       </span>
   }
 
@@ -301,7 +309,7 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
-              {this.renderDeploymentModeTag()}
+              {this.renderStarBurstTag()}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
