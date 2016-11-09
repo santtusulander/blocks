@@ -329,15 +329,14 @@ class ContentItemChart extends React.Component {
   }
 }
 
-const StarBurstTag = ({ content, upperCase, customClass }) =>
+const StarBurstTag = ({ content, customClass }) =>
   <span className={classnames('content-item-text-box', customClass)}>
-    {upperCase ? content.toUpperCase() : content}
+    {content}
   </span>
 
 StarBurstTag.propTypes = {
   content: React.PropTypes.string.isRequired,
-  customClass: React.PropTypes.string,
-  upperCase: React.PropTypes.bool
+  customClass: React.PropTypes.string
 }
 
 // NOTE: this is temporary for the 1.0 release to disable
