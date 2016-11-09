@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { injectIntl, intlShape } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import d3 from 'd3'
 import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -371,7 +371,7 @@ ContentItemChart.propTypes = {
   differenceData: React.PropTypes.instanceOf(Immutable.List),
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  id: React.PropTypes.string,
+  id: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
   intl: React.PropTypes.object,
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
