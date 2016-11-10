@@ -3,8 +3,9 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.unmock('../actions-selection.jsx')
-import ActionsSelection from '../actions-selection.jsx'
+jest.autoMockOff()
+jest.dontMock('../actions-selection.jsx')
+const ActionsSelection = require('../actions-selection.jsx')
 
 describe('ConditionSelection', () => {
   it('should exist', () => {

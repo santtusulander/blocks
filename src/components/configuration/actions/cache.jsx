@@ -33,9 +33,9 @@ class Cache extends React.Component {
 
     this.state = {
       checkEtag: props.set.get('check_etag') || 'false',
-      honorOrigin: props.set.get('honor_origin'),
+      honorOrigin: props.set.get('honor_origin') || false,
       maxAge: maxAge,
-      noStore: props.set.get('no_store'),
+      noStore: props.set.get('no_store') || false,
       ttlType: ttlType
     }
 
@@ -169,7 +169,7 @@ class Cache extends React.Component {
           </Input>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
