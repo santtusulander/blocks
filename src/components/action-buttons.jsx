@@ -72,6 +72,7 @@ ActionButtons.propTypes = {
   arrowUpDisabled: PropTypes.bool,
   className: PropTypes.bool,
   deleteDisabled: PropTypes.bool,
+  // TODO: UDNP-1809: updated onArrowDown and onArrowUp to only accept functions
   onArrowDown: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.function
