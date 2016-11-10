@@ -41,7 +41,7 @@ class CacheKeyQueryString extends React.Component {
             updateSet={this.updateSet}/>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" id="close-button" onClick={this.props.close}>
+            <Button className="btn-secondary" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" id="save-button" onClick={this.saveChanges}>
