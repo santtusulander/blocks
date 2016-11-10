@@ -533,71 +533,12 @@ $lt-caret-color: $silver-60;
   }
 }
 
-// TODO: remove this / move to other files
-.dark-theme {
-  .btn-save {
-
-    &,
-    &:hover {
-      color: $white;
-      background-color: $pale-blue;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &:hover:not(:disabled) {
-      color: $lt-button-color;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
-    }
-  }
-}
-
-// TODO: remove this / move to other files
+// TODO: Update class name btn-outline from all elements and remove these styles
 .light-theme {
   .configuration-sidebar .btn-outline {
     color: $pale-blue;
     background-color: $white !important;
     border: 0;
-  }
-
-  .configuration-sidebar .btn-primary,
-  .sidebar-layout .btn-primary {
-
-    &,
-    &:hover,
-    &:active,
-    &.active {
-      color: $white;
-      background-color: $pale-blue;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &.active:not(:disabled) {
-      color: $lt-button-color;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
-    }
-  }
-
-  .btn-save {
-
-    &,
-    &:hover {
-      color: $white;
-      background-color: $pale-blue;
-      fill: $white;
-      stroke: $white;
-    }
-
-    &:hover:not(:disabled) {
-      color: $lt-button-color;
-      fill: $lt-button-color;
-      stroke: $lt-button-color;
-    }
   }
 }
 
