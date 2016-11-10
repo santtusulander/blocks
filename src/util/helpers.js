@@ -220,7 +220,7 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
   const contentProviders = filters.get('contentProviders').size === 0 ? undefined : filters.get('contentProviders').toJS().join(',')
   const contentProviderGroups = filters.get('contentProviderGroups').size === 0 ? undefined : filters.get('contentProviderGroups').toJS().join(',')
   const serviceType = filters.get('serviceTypes').size > 1 ? undefined : filters.get('serviceTypes').toJS()
-  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0) //.replace(/-.*$/, '')
+  const netType = filters.get('onOffNet').size > 1 ? undefined : filters.get('onOffNet').get(0)
   const errorCodes = filters.get('errorCodes').size === 0 || filters.get('errorCodes').size === getAnalysisErrorCodes().length ? undefined : filters.get('errorCodes').toJS().join(',')
   const statusCodes = filters.get('statusCodes').size === 0 || filters.get('statusCodes').size === getAnalysisStatusCodes().length ? undefined : filters.get('statusCodes').toJS().join(',')
 
