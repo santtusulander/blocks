@@ -106,7 +106,7 @@ export class TokenAuthentication extends React.Component {
           </div>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={close}>
+            <Button className="btn-secondary" onClick={close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary" disabled={this.props.invalid} onClick={this.saveChanges}>
