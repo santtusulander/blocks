@@ -10,7 +10,6 @@ import {
 } from 'react-bootstrap'
 
 import { Map, List } from 'immutable'
-import IconTrash from '../icons/icon-trash.jsx'
 import { isValidAccountName } from '../../util/validators'
 
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
