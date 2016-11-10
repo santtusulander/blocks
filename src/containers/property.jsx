@@ -481,7 +481,7 @@ export class Property extends React.Component {
           <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
             <AnalysisByTime
               axes={true}
-              padding={30}
+              padding={40}
               dataSets={datasets}
               showLegend={true}
               showTooltip={false}
@@ -524,6 +524,7 @@ export class Property extends React.Component {
         </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
+          activeHost={this.props.activeHost}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}

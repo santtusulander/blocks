@@ -13,13 +13,15 @@ import ProviderTypes from '../../../constants/provider-types'
 
 class AnalyticsTabContribution extends React.Component {
   componentDidMount() {
-    this.fetchData(
-      this.props.params,
-      this.props.filters,
-      this.props.location,
-      this.props.activeHostConfiguredName,
-      this.props.accountType
-    )
+    if (this.props.accountType) {
+      this.fetchData(
+        this.props.params,
+        this.props.filters,
+        this.props.location,
+        this.props.activeHostConfiguredName,
+        this.props.accountType
+      )
+    }
   }
 
   componentWillReceiveProps(nextProps){
