@@ -6,21 +6,32 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
+import Raven from 'raven-js'
+import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
 import { LogPageView } from './util/google-analytics'
-
-import { IntlProvider, FormattedMessage } from 'react-intl';
-
+import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
 
 import TRANSLATED_MESSAGES from './locales/en/'
 
-const createStoreWithMiddleware = applyMiddleware(
-  promiseMiddleware
-)(createStore)
+const useRaven = true //process.env.NODE_ENV === 'production'
+
+/* Initialize Middlewares */
+const createStoreWithMiddleware =
+  useRaven
+  ?  applyMiddleware(
+      UdnRavenMiddleware(SENTRY_DSN),
+      promiseMiddleware
+    )(createStore)
+  : applyMiddleware(
+      promiseMiddleware
+    )(createStore)
+
 const stateReducer = combineReducers(reducers)
 const store =
   process.env.NODE_ENV === 'development' ?
@@ -80,11 +91,15 @@ axios.interceptors.response.use(function (response) {
       }));
     }
     else if (status === 500 || status === 404) {
-      store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
+      if (Raven.isSetup()) {
+        captureAndShowRavenError(store, error.data.message, null, true)
+      } else {
+        store.dispatch({ type: 'UI_SHOW_ERROR_DIALOG' })
+      }
     }
   }
 
-  return Promise.reject(error);
+  return Promise.reject(error)
 });
 
 const runApp = () => {
@@ -99,6 +114,33 @@ const runApp = () => {
   );
 }
 
+let startApp = runApp
+
+if (useRaven) {
+  if (!Raven.isSetup()) Raven.config(SENTRY_DSN).install()
+  startApp = Raven.wrap( runApp )
+
+  let errorDisplayed = false
+
+  window.onunhandledrejection = (data) => {
+    if (!errorDisplayed) {
+      /* eslint-disable no-console */
+      console.error('Unrecoverable onunhandledrejection happened.')
+      captureAndShowRavenError(store, data.reason, null, false)
+      errorDisplayed = true
+    }
+  }
+
+  window.onerror = (data) => {
+    if (!errorDisplayed) {
+      /* eslint-disable no-console */
+      console.error('Unrecoverable error happened.')
+      captureAndShowRavenError(store, data.reson, null, false)
+      errorDisplayed = true;
+    }
+  }
+}
+
 // Check if Intl -polyfill required
 if (!window.Intl) {
   require.ensure([
@@ -108,8 +150,8 @@ if (!window.Intl) {
     require('intl');
     require('intl/locale-data/jsonp/en.js');
 
-    runApp();
+    startApp();
   });
 } else {
-  runApp();
+  startApp();
 }
