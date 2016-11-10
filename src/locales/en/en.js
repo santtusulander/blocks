@@ -579,6 +579,8 @@ const TRANSLATED_MESSAGES = {
   'portal.configuration.security.text': 'Security',
   'portal.configuration.certificates.text': 'Certificates',
   'portal.configuration.changeLog.text': 'Change Log',
+  'portal.configuration.updated.text': 'UPDATED',
+  'portal.configuration.deployed.text': 'DEPLOYED',
 
   'portal.configurationList.showAll.text': 'Show all properties',
   'portal.configurationList.filter1.text': 'Filter 1',

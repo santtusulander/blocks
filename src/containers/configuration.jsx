@@ -241,15 +241,23 @@ export class Configuration extends React.Component {
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const readOnly = this.isReadOnly()
+
+
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
-          pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+          pageHeaderDetailsUpdated={[
             deployMoment.format('MMM, D YYYY'),
             deployMoment.format('H:MMa'),
-            activeConfig.get('configuration_status').get('last_edited_by')]}>
+            activeConfig.get('configuration_status').get('last_edited_by')
+          ]}
+          pageHeaderDetailsDeployed={[
+            deployMoment.format('MMM, D YYYY'),
+            deployMoment.format('H:MMa'),
+            activeConfig.get('configuration_status').get('last_edited_by')
+          ]}>
           <AccountSelector
             as="configuration"
             params={this.props.params}
