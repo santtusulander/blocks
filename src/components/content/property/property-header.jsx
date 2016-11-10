@@ -77,7 +77,7 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, tog
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>
-          <span className="caret"></span>
+          <span className="caret" />
         </div>
       </AccountSelector>
       <ButtonToolbar>
