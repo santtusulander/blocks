@@ -15,6 +15,7 @@ import { isValidAccountName } from '../../util/validators'
 
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 
 import './group-form.scss'
 
@@ -178,10 +179,8 @@ class GroupForm extends React.Component {
                     <tr key={i}>
                       <td>{host}</td>
                       <td>
-                        <Button onClick={() => onDeleteHost(host, this.props.group)}
-                                className="btn-link btn-icon">
-                          <IconTrash/>
-                        </Button>
+                        <ActionButtons
+                          onDelete={() => onDeleteHost(host, this.props.group)}/>
                       </td>
                     </tr>
                   )

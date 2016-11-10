@@ -9,11 +9,13 @@ import { ALLOW_ALWAYS } from '../constants/permissions'
 
 const ActionButtons = ({ onEdit, onDelete, permissions }) =>
     <div className='action-buttons'>
-      <IsAllowed to={permissions ? permissions.modify : ALLOW_ALWAYS}>
-        <Button id='edit-button' onClick={onEdit} className="btn btn-icon btn-primary">
-          <IconEdit />
-        </Button>
-      </IsAllowed>
+      {onEdit ?
+        <IsAllowed to={permissions ? permissions.modify : ALLOW_ALWAYS}>
+          <Button id='edit-button' onClick={onEdit} className="btn btn-icon btn-primary">
+            <IconEdit />
+          </Button>
+        </IsAllowed>
+      : null}
       <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
         <Button id='delete-button' onClick={onDelete} className="btn btn-icon btn-danger">
           <IconTrash/>
