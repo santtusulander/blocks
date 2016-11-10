@@ -46,8 +46,7 @@
   "portal.analytics.purgeModal.email.label": "Enter Email address",
   "portal.analytics.purgeModal.note.section.title": "Note",
   "portal.analytics.purgeModal.note.placeholder": "A note about the purge",
-  "portal.analytics.purgeModal.hostName.text": "Purge by hostname will be supported in a future version.",
-  "portal.analytics.purgeModal.group.text": "Purge entire group will be supported in a future version.",
+  "portal.analytics.purgeModal.group.text": "All hostnames have been selected to purge.",
   "portal.analytics.purgeModal.button.purge.text": "Purge",
 
   "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
