@@ -26,6 +26,7 @@ import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
+import IconCaretDown from '../../components/icons/icon-caret-down'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -380,7 +381,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret" />
+                <IconCaretDown />
               </div>
             </AccountSelector>
           </IsAllowed>
