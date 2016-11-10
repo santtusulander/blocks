@@ -10,17 +10,17 @@ import IconArrowDown from './icons/icon-arrow-down.jsx'
 
 import { ALLOW_ALWAYS } from '../constants/permissions'
 
-const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, deleteDisabled, onArrowDown, onArrowUp, onEdit, onDelete, permissions, secondaryBtn }) => {
-  let className = classNames(
+const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDisabled, onArrowDown, onArrowUp, onEdit, onDelete, permissions }) => {
+  let finalClassName = classNames(
     'action-buttons',
     {
-      'primary': !secondaryBtn,
-      'secondary': secondaryBtn
-    }
+      'primary': !className
+    },
+    className
   );
 
   return (
-    <div className={className}>
+    <div className={finalClassName}>
       {onArrowUp &&
       <Button
         id='arrow-down-button'
@@ -70,6 +70,7 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, deleteDisabled, onA
 ActionButtons.propTypes = {
   arrowDownDisabled: PropTypes.bool,
   arrowUpDisabled: PropTypes.bool,
+  className: PropTypes.bool,
   deleteDisabled: PropTypes.bool,
   onArrowDown: PropTypes.oneOfType([
     PropTypes.string,
@@ -81,8 +82,7 @@ ActionButtons.propTypes = {
   ]),
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
-  permissions: PropTypes.object,
-  secondaryBtn: PropTypes.bool
+  permissions: PropTypes.object
 }
 
 export default ActionButtons
