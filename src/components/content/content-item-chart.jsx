@@ -8,13 +8,14 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
 import { Link } from 'react-router'
-import IconChart from '../icons/icon-chart.jsx'
-import IconConfiguration from '../icons/icon-configuration.jsx'
-import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IconChart from '../icons/icon-chart'
+import IconConfiguration from '../icons/icon-configuration'
+import IconQuestionMark from '../icons/icon-question-mark'
 
-import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
-import DifferenceTooltip from './difference-tooltip.jsx'
-import TrafficTooltip from './traffic-tooltip.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
+import DifferenceTooltip from './difference-tooltip'
+import StarBurstTag from './starburst-tag'
+import TrafficTooltip from './traffic-tooltip'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 const dayHours = 24
@@ -327,16 +328,6 @@ class ContentItemChart extends React.Component {
       </OverlayTrigger>
     )
   }
-}
-
-const StarBurstTag = ({ content, customClass }) =>
-  <span className={classnames('content-item-text-box', customClass)}>
-    {content}
-  </span>
-
-StarBurstTag.propTypes = {
-  content: React.PropTypes.string.isRequired,
-  customClass: React.PropTypes.string
 }
 
 // NOTE: this is temporary for the 1.0 release to disable
