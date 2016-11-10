@@ -235,7 +235,7 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { hostActions: { deleteHost }, params: { brand, account, group }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
@@ -412,7 +412,7 @@ export class Configuration extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+            deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
           verifyDelete={true}>

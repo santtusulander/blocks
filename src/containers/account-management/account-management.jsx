@@ -213,24 +213,35 @@ export class AccountManagement extends Component {
       toggleModal
     } = this.props
 
-    hostActions.deleteHost(
+    const account = activeAccount.get('id')
+    const group = this.state.groupToUpdate.get('id')
+
+    hostActions.fetchHost(
       brand,
-      activeAccount.get('id'),
-      this.state.groupToUpdate.get('id'),
+      account,
+      group,
       host
     )
-      .then(res => {
-        toggleModal(null)
-        if (res.error) {
-          uiActions.showInfoDialog({
-            title: 'Error',
-            content: res.payload.data.message,
-            buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
-              id="portal.accountManagement.accoutnUpdated.text"/></Button>
+      .then(() => {
+        hostActions.deleteHost(
+          brand,
+          account,
+          group,
+          this.props.activeHost
+        )
+          .then(res => {
+            toggleModal(null)
+            if (res.error) {
+              uiActions.showInfoDialog({
+                title: 'Error',
+                content: res.payload.data.message,
+                buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
+                  id="portal.accountManagement.accoutnUpdated.text"/></Button>
+              })
+            } else {
+              this.showNotification(`Host ${host} deleted.`)
+            }
           })
-        } else {
-          this.showNotification(`Host ${host} deleted.`)
-        }
       })
   }
 
@@ -527,6 +538,7 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeHost: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -553,6 +565,7 @@ AccountManagement.propTypes = {
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
+  activeHost: Map(),
   dnsData: Map(),
   groups: List(),
   hosts: List(),
@@ -565,6 +578,7 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
+    activeHost: state.host.get('activeHost'),
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
