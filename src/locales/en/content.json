@@ -29,6 +29,7 @@
   "portal.content.property.purgeStatus.all.label": "All",
   "portal.content.property.purgeStatus.created.label": "Created",
   "portal.content.property.purgeStatus.completed.label": "Completed",
+  "portal.content.property.purgeStatus.notFound.label": "No purge data found",
 
   "portal.content.property.purgeStatus.table.status.label": "Status",
   "portal.content.property.purgeStatus.table.startTime.label": "Start Time",
