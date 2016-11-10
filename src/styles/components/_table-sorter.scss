@@ -4,7 +4,6 @@
 // scss-lint:disable SelectorDepth NestingDepth
 // Need to override BootStrap
 .table-sorter > a {
-  position: relative;
   display: block;
   padding-right: 1em;
   text-decoration: none;
@@ -27,14 +26,9 @@
     }
   }
 
-  .caret {
+  .icon {
     position: absolute;
-    top: 50%;
+    top: 0;
     right: 0;
-    transform: translateY(-50%) scaleY(-1);
-
-    &.up {
-      transform: translateY(-50%);
-    }
   }
 }

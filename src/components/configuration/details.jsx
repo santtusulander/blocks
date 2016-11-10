@@ -46,8 +46,8 @@ class ConfigurationDetails extends React.Component {
 
       {/* Deployment Mode */}
 
-        <div className="form-group">
-          <label className="control-label col-xs-3">
+        <div className="control-label form-group">
+          <label className="col-xs-3">
             <FormattedMessage id="portal.configuration.details.deploymentMode.text"/>
           </label>
           <div className="col-xs-9">

@@ -5,9 +5,7 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import {
-  ACCOUNT_TYPE_SERVICE_PROVIDER,
-  ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
+import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -24,6 +22,7 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
@@ -226,25 +225,10 @@ class ContentItems extends React.Component {
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret" />
+          <IconCaretDown />
         </div>
       </AccountSelector>
     )
-  }
-
-  getTagText(isCloudProvider, providerType, trialMode) {
-    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
-    if (isCloudProvider && !trialMode) {
-      switch(providerType) {
-        case ACCOUNT_TYPE_CONTENT_PROVIDER:
-          tagText = 'portal.content.contentProvider'
-          break
-        case ACCOUNT_TYPE_SERVICE_PROVIDER:
-          tagText = 'portal.content.serviceProvider'
-        default: break
-      }
-    }
-    return { tagText: tagText }
   }
 
   render() {
@@ -364,7 +348,7 @@ class ContentItems extends React.Component {
                     id,
                     name,
                     brightMode: isTrialHost,
-                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                    tagText: isTrialHost && 'portal.configuration.details.deploymentMode.trial',
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
