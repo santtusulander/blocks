@@ -108,6 +108,7 @@ export class Property extends React.Component {
         {this.props.children}
 
         {this.state.purgeActive && <PurgeModal
+          activeHost={this.props.activeHost}
           activePurge={this.props.activePurge}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
