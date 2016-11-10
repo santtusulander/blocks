@@ -1,9 +1,8 @@
 import React from 'react'
-import { Map, List, fromJS } from 'immutable'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import moment from 'moment'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -13,52 +12,6 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 
 import PageContainer from '../../../components/layout/page-container'
 import PurgeHistoryReport from '../../../components/content/property/purge-status'
-
-const fakeHistoryData = fromJS([
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  },
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  },
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  },
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  },
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  },
-  {
-    status: 'in progress',
-    start_time: moment().unix(),
-    end_time: moment().add(7, 'days').unix(),
-    initiated_by: 'Some User',
-    description: 'Some User'
-  }
-]);
-
 
 class PurgeStatus extends React.Component {
 
@@ -71,21 +24,33 @@ class PurgeStatus extends React.Component {
   }
 
   componentWillMount() {
-    //this.fetchData(this.props.params)
+    if (!this.props.purgeObjects.size) {
+      this.fetchData(this.props.params)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params !== this.props.params) {
+      this.fetchData(this.props.params)
+    }
   }
 
   fetchData(params) {
     const { purgeActions } = this.props
     const { brand, account, group, property } = params
 
-    purgeActions.fetchAllPurges(brand, account, group, property)
+    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
   }
 
   render() {
+
+    const { fetching, purgeObjects } = this.props
+
     return (
       <PageContainer className="property-container">
         <PurgeHistoryReport
-          historyData={fakeHistoryData}
+          fetching={fetching}
+          historyData={purgeObjects}
         />
       </PageContainer>
     )
@@ -100,8 +65,10 @@ PurgeStatus.defaultProps = {
   activeHost: Map(),
   activePurge: Map(),
   allPurges: List(),
+  fetching: false,
   params: {},
-  properties: List()
+  properties: List(),
+  purgeObjects: List()
 }
 
 PurgeStatus.propTypes = {
@@ -110,9 +77,11 @@ PurgeStatus.propTypes = {
   activeHost: React.PropTypes.instanceOf(Map),
   activePurge: React.PropTypes.instanceOf(Map),
   allPurges: React.PropTypes.instanceOf(List),
+  fetching: React.PropTypes.bool,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(List),
-  purgeActions: React.PropTypes.object
+  purgeActions: React.PropTypes.object,
+  purgeObjects: React.PropTypes.instanceOf(List)
 }
 
 function mapStateToProps(state) {
@@ -123,8 +92,9 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
     allPurges: state.purge.get('allPurges'),
-    fetching: state.host.get('fetching'),
-    properties: state.host.get('allHosts')
+    fetching: state.purge.get('fetching'),
+    properties: state.host.get('allHosts'),
+    purgeObjects: state.purge.get('purgeObjects')
   };
 }
 
