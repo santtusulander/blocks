@@ -354,7 +354,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={2} className="text-right">
                     <ActionButtons
-                      className="btn-secondary"
+                      className="secondary"
                       onDelete={this.deleteMatch(flattenedPolicy.matches, i)}
                       deleteDisabled={flattenedPolicy.matches.length < 2} />
                   </Col>
@@ -393,7 +393,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={4} className="text-right">
                     <ActionButtons
-                      className="btn-secondary"
+                      className="secondary"
                       onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
                       arrowUpDisabled={i <= 0}
                       onArrowDown={i < flattenedPolicy.sets.length - 1 ?

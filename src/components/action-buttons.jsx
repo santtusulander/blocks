@@ -70,7 +70,7 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDi
 ActionButtons.propTypes = {
   arrowDownDisabled: PropTypes.bool,
   arrowUpDisabled: PropTypes.bool,
-  className: PropTypes.bool,
+  className: PropTypes.string,
   deleteDisabled: PropTypes.bool,
   // TODO: UDNP-1809: updated onArrowDown and onArrowUp to only accept functions
   onArrowDown: PropTypes.oneOfType([
