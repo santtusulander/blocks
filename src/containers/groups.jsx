@@ -4,7 +4,11 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
+import {
+  getAnalyticsUrlFromParams,
+  getContentUrl,
+  getNetworkUrl
+} from '../util/routes.js'
 import { userIsServiceProvider } from '../util/helpers.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
@@ -98,7 +102,11 @@ export class Groups extends React.Component {
     const { activeAccount, activeGroup, roles, user } = this.props
 
     const nextPageURLBuilder = (groupID) => {
-      return getContentUrl('group', groupID, this.props.params)
+      if (activeAccount.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
+        return getContentUrl('group', groupID, this.props.params)
+      } else {
+        return getNetworkUrl('group', groupID, this.props.params)
+      }
     }
     const analyticsURLBuilder = (group) => {
       return getAnalyticsUrlFromParams(

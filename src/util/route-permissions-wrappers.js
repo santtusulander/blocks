@@ -120,3 +120,16 @@ export const UserCanViewHosts = (store) => {
     allowRedirectBack: false
   })
 }
+
+export const UserCanViewAccountDetail = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const pathname = ownProps.location.pathname
+      return `${pathname}/groups`
+    },
+    wrapperDisplayName: 'UserCanViewAccountDetail',
+    predicate: permissionChecker(PERMISSIONS.VIEW_ACCOUNT_DETAIL, store),
+    allowRedirectBack: false
+  })
+}

@@ -26,7 +26,7 @@ const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertif
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
-            <th width="1%"></th>
+            <th width="1%" />
           </tr>
         </thead>
         <tbody>

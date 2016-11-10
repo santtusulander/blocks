@@ -26,6 +26,7 @@ import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
+import IconCaretDown from '../../components/icons/icon-caret-down'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -371,7 +372,8 @@ export class AccountManagement extends Component {
       },
       roles: this.props.roles,
       permissions: this.props.permissions,
-      users: this.props.users
+      users: this.props.users,
+      currentUser: this.props.currentUser
     }
     return (
       <Content>
@@ -387,7 +389,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret"></span>
+                <IconCaretDown />
               </div>
             </AccountSelector>
           </IsAllowed>
@@ -431,6 +433,7 @@ export class AccountManagement extends Component {
            */}
         </Nav>}
 
+        {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
         {accountManagementModal === ADD_ACCOUNT &&
@@ -438,6 +441,7 @@ export class AccountManagement extends Component {
           id="account-form"
           onSave={this.editAccount}
           account={this.accountToUpdate}
+          currentUser={this.props.currentUser}
           onCancel={() => toggleModal(null)}
           show={true}/>}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
@@ -476,6 +480,7 @@ AccountManagement.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
+  currentUser: PropTypes.instanceOf(Map),
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
@@ -515,7 +520,8 @@ function mapStateToProps(state) {
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
-    users: state.user.get('allUsers')
+    users: state.user.get('allUsers'),
+    currentUser: state.user.get('currentUser')
   };
 }
 

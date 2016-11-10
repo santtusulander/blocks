@@ -8,6 +8,7 @@ import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../truncated-title'
+import IconCaretDown from '../../components/icons/icon-caret-down'
 
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -33,7 +34,7 @@ const SupportPageHeader = (props) => {
           <div className="btn btn-link dropdown-toggle header-toggle">
             <h1><TruncatedTitle content={activeAccount.get('name') || 'No active account'}
               tooltipPlacement="bottom" className="account-management-title"/></h1>
-            <span className="caret"></span>
+            <IconCaretDown />
           </div>
         </AccountSelector>
       </IsAllowed>

@@ -193,8 +193,8 @@ describe('ConfigurationPolicyRuleEdit', () => {
         location={fakeLocation}/>
     );
       let conditions = TestUtils.scryRenderedDOMComponentsWithClass(policyRule, 'conditions');
-      let btns = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'button');
-      TestUtils.Simulate.click(btns[4])
+      let btns = TestUtils.scryRenderedDOMComponentsWithClass(policyRule, 'btn');
+      TestUtils.Simulate.click(btns[2])
       expect(changeValue.mock.calls.length).toBe(1)
       expect(activateSet.mock.calls.length).toBe(1)
   });

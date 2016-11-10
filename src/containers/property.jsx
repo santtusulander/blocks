@@ -32,9 +32,17 @@ import Tooltip from '../components/tooltip'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
+import IconCaretDown from '../components/icons/icon-caret-down'
 
-import { formatBitsPerSecond } from '../util/helpers'
-import { getContentUrl, getAnalyticsUrl } from '../util/routes'
+import {
+  formatBitsPerSecond,
+  userIsCloudProvider
+} from '../util/helpers'
+import {
+  getContentUrl,
+  getNetworkUrl,
+  getAnalyticsUrl
+} from '../util/routes'
 
 import DateRanges from '../constants/date-ranges'
 
@@ -364,10 +372,26 @@ export class Property extends React.Component {
             params={this.props.params}
             topBarTexts={itemSelectorTexts}
             topBarAction={this.itemSelectorTopBarAction}
-            onSelect={(...params) => this.props.router.push(getContentUrl(...params))}>
+            onSelect={(...params) => {
+              // This check is done to prevent UDN admin from accidentally hitting
+              // the account detail endpoint, which they don't have permission for
+              if (params[0] === 'account' && userIsCloudProvider(this.props.currentUser)) {
+                params[0] = 'groups'
+              }
+
+              const url = this.props.router.isActive('network')
+                            ? getNetworkUrl(...params)
+                            : getContentUrl(...params)
+
+              // We perform this check to prevent routing to unsupported routes
+              // For example, prevent clicking to SP group route (not yet supported)
+              if (url) {
+                this.props.router.push(url)
+              }
+            }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret"></span>
+              <IconCaretDown />
             </div>
           </AccountSelector>
           <ButtonToolbar>
@@ -458,7 +482,7 @@ export class Property extends React.Component {
           <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
             <AnalysisByTime
               axes={true}
-              padding={30}
+              padding={40}
               dataSets={datasets}
               showLegend={true}
               showTooltip={false}
@@ -501,6 +525,7 @@ export class Property extends React.Component {
         </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
+          activeHost={this.props.activeHost}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
@@ -536,6 +561,7 @@ Property.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -564,6 +590,7 @@ Property.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  currentUser: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
@@ -580,6 +607,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
