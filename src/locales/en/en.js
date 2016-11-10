@@ -497,6 +497,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.security.ssl.title.text': 'TITLE',
   'portal.security.ssl.commonName.text': 'COMMON NAME',
+  'portal.security.ssl.group.text': 'GROUP',
 
   'portal.services.header.text': 'SERVICES',
 
