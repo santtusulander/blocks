@@ -1,12 +1,12 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { injectIntl, FormattedMessage } from 'react-intl'
-import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import numeral from 'numeral'
+import { Col, Row } from 'react-bootstrap';
+import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
+import numeral from 'numeral'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -22,13 +22,15 @@ import AnalysisByTime from '../../../components/analysis/by-time'
 import DateRangeSelect from '../../../components/date-range-select'
 import Tooltip from '../../../components/tooltip'
 
-import { formatBitsPerSecond } from '../../../util/helpers'
+import {
+  formatBitsPerSecond
+} from '../../../util/helpers'
 
 import DateRanges from '../../../constants/date-ranges'
 import { paleblue } from "../../../constants/colors";
 
 const endOfThisDay = () => moment().utc().endOf('day')
-const startOfLast28 = () => endOfThisDay().endOf('day').add(1,'second').subtract(28, 'days')
+const startOfLast28 = () => endOfThisDay().endOf('day').add(1, 'second').subtract(28, 'days')
 
 // default dates to last 28 days
 function safeMomentStartDate(date) {
@@ -49,7 +51,7 @@ function safeFormattedEndDate(date) {
 
 class PropertySummary extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -70,6 +72,7 @@ class PropertySummary extends React.Component {
 
     this.measureContainersTimeout = null
   }
+
   componentWillMount() {
     this.props.visitorsActions.visitorsReset()
     this.fetchData(
@@ -82,7 +85,9 @@ class PropertySummary extends React.Component {
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
+    this.measureContainersTimeout = setTimeout(() => {
+      this.measureContainers()
+    }, 500)
     window.addEventListener('resize', this.measureContainers)
   }
 
@@ -99,17 +104,17 @@ class PropertySummary extends React.Component {
         nextProps.activeHostConfiguredName
       )
     }
-    if(params !== prevParams) {
+    if (params !== prevParams) {
       this.fetchHost(nextProps.params.property)
       fetch()
     }
-    else if(newQuery.startDate !== oldQuery.startDate ||
+    else if (newQuery.startDate !== oldQuery.startDate ||
       newQuery.endDate !== oldQuery.endDate) {
       this.setState({
         activeSlice: null
       }, fetch)
     }
-    else if( this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
+    else if (this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       fetch()
     }
     this.measureContainers()
@@ -131,7 +136,7 @@ class PropertySummary extends React.Component {
     return hourlyTraffic
   }
 
-  changeDateRange (startDate, endDate) {
+  changeDateRange(startDate, endDate) {
     const { pathname } = this.props.location
     const fStartDate = safeMomentStartDate(startDate).format('X')
     const fEndDate = safeMomentEndDate(endDate).format('X')
@@ -155,10 +160,10 @@ class PropertySummary extends React.Component {
   }
 
   fetchData(params, queryParams, hostConfiguredName) {
-    const {brand, account, group, property} = params
+    const { brand, account, group, property } = params
     const startDate = safeFormattedStartDate(queryParams.startDate)
     const endDate = safeFormattedEndDate(queryParams.endDate)
-    if(!this.props.activeHost || !this.props.activeHost.size || this.props.activeHostConfiguredName !== property) {
+    if (!this.props.activeHost || !this.props.activeHost.size || this.props.activeHostConfiguredName !== property) {
       this.fetchHost(property)
     }
     Promise.all([
@@ -173,13 +178,13 @@ class PropertySummary extends React.Component {
         max_countries: 3
       })
     ]).then(this.props.visitorsActions.finishFetching)
-    if(!this.props.properties || !this.props.properties.size) {
+    if (!this.props.properties || !this.props.properties.size) {
       this.props.hostActions.fetchHosts(brand, account, group)
     }
-    if(!this.props.activeAccount || !this.props.activeAccount.size) {
+    if (!this.props.activeAccount || !this.props.activeAccount.size) {
       this.props.accountActions.fetchAccount(brand, account)
     }
-    if(!this.props.activeGroup || !this.props.activeGroup.size) {
+    if (!this.props.activeGroup || !this.props.activeGroup.size) {
       this.props.groupActions.fetchGroup(brand, account, group)
     }
     const metricsOpts = {
@@ -195,7 +200,7 @@ class PropertySummary extends React.Component {
   }
 
   measureContainers() {
-    if(this.refs.byTimeHolder) {
+    if (this.refs.byTimeHolder) {
       this.setState({
         byTimeWidth: this.refs.byTimeHolder.clientWidth
       })
@@ -217,17 +222,17 @@ class PropertySummary extends React.Component {
       this.props.activeHostConfiguredName,
       this.props.activePurge.toJS()
     ).then((action) => {
-      if(action.payload instanceof Error) {
-        this.setState({purgeActive: false})
+      if (action.payload instanceof Error) {
+        this.setState({ purgeActive: false })
         this.showNotification(
           <FormattedMessage
             id="portal.content.property.summary.reguestFailed.label"
-            value={{reason: action.payload.message}}
+            value={{ reason: action.payload.message }}
           />
         )
       }
       else {
-        this.setState({purgeActive: false})
+        this.setState({ purgeActive: false })
         this.showNotification(<FormattedMessage id="portal.content.property.summary.reguestSuccess.label"/>)
       }
     })
@@ -241,11 +246,11 @@ class PropertySummary extends React.Component {
   }
 
   togglePropertyMenu() {
-    this.setState({propertyMenuOpen: !this.state.propertyMenuOpen})
+    this.setState({ propertyMenuOpen: !this.state.propertyMenuOpen })
   }
 
   hoverSlice(date, x1, x2) {
-    if(date && this.props.dailyTraffic.size) {
+    if (date && this.props.dailyTraffic.size) {
       const activeSlice = this.props.dailyTraffic.get(0).get('detail')
         .find(day => moment.utc(day.get('timestamp'), 'X')
           .isSame(moment.utc(date), 'day'))
@@ -256,7 +261,7 @@ class PropertySummary extends React.Component {
       })
     }
     else {
-      this.setState({activeSlice: null})
+      this.setState({ activeSlice: null })
     }
   }
 
@@ -266,7 +271,7 @@ class PropertySummary extends React.Component {
 
   render() {
 
-    if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
+    if (this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
 
@@ -280,23 +285,23 @@ class PropertySummary extends React.Component {
 
     const activeHost = this.props.activeHost
     const activeConfig = activeHost.get('services').get(0).get('configurations').get(0)
-    const totals = this.props.hourlyTraffic.getIn(['now',0,'totals'])
+    const totals = this.props.hourlyTraffic.getIn(['now', 0, 'totals'])
 
     // Add time difference to the historical data so it matches up
     const historical_traffic = !this.props.hourlyTraffic.get('history').size ?
       [] :
-      this.props.hourlyTraffic.getIn(['history',0,'detail']).map(hour => {
+      this.props.hourlyTraffic.getIn(['history', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates','average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'average'])
         }
       })
     const metrics_traffic = !totals ?
       !historical_traffic.length ? [] : this.getEmptyHourlyTraffic(startDate, endDate) :
-      this.props.hourlyTraffic.getIn(['now',0,'detail']).map(hour => {
+      this.props.hourlyTraffic.getIn(['now', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates','average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'average'])
         }
       })
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
@@ -315,7 +320,7 @@ class PropertySummary extends React.Component {
       'timestamp',
       new Date(time.get('timestamp').getTime() + dateRange.asMilliseconds() * direction))
     const datasets = []
-    if(metrics_traffic.size) {
+    if (metrics_traffic.size) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -328,7 +333,7 @@ class PropertySummary extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(historical_traffic.size) {
+    if (historical_traffic.size) {
       datasets.push({
         area: true,
         color: paleblue,
@@ -414,7 +419,7 @@ class PropertySummary extends React.Component {
         <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
           <AnalysisByTime
             axes={true}
-            padding={30}
+            padding={40}
             dataSets={datasets}
             showLegend={true}
             showTooltip={false}
@@ -453,6 +458,7 @@ class PropertySummary extends React.Component {
               <span className="pull-right">
                   {formatBitsPerSecond(this.state.activeSlice.getIn(['transfer_rates', 'low']))}
                 </span>
+
             </div>
           </Tooltip>}
         </div>

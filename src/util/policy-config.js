@@ -68,6 +68,10 @@ export function matchIsContentTargeting(match) {
           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
 }
 
+export function actionIsTokenAuth(sets) {
+  return sets.some( set => (set.setkey === 'tokenauth') )
+}
+
 export function parsePolicy(policy, path) {
   // if this is a match
   if(policy && policy.has('match')) {
@@ -178,9 +182,9 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
 }
 
 /**
- *
+ * Gets Vary Header Rule from config
  * @param config
- * @returns {number|*}
+ * @returns Boolean
  */
 export const getVaryHeaderRuleId = ( config ) => {
   const path = config.getIn(['response_policy', 'policy_rules'])

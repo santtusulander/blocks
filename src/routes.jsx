@@ -93,7 +93,7 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
-  [PERMISSIONS.VIEW_PLAYBACK_DEMO, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
+  [PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
 ]
 
 /* helper for creating Analytics Tab-Routes */
@@ -194,6 +194,20 @@ export const getRoutes = store => {
         <Route path={routes.securityAccount} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
           <Route path={routes.securityTabSslCertificate} component={Security}/>
+          <Route path={routes.securityTabContentTargeting} component={Security}/>
+          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+        </Route>
+        <Route path={routes.securityGroup} component={Security}>
+          <IndexRedirect to={routes.securityTabSslCertificate} />
+          <Route path={routes.securityTabSslCertificate} component={Security}/>
+          <Route path={routes.securityTabContentTargeting} component={Security}/>
+          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+        </Route>
+        <Route path={routes.securityProperty} component={Security}>
+          <IndexRedirect to={routes.securityTabSslCertificate} />
+          <Route path={routes.securityTabSslCertificate} component={Security}/>
+          <Route path={routes.securityTabContentTargeting} component={Security}/>
+          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
         </Route>
       </Route>
 

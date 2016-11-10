@@ -8,7 +8,7 @@ import { AccountManagementHeader } from '../account-management/account-managemen
 
 import { MODIFY_CERTIFICATE, DELETE_CERTIFICATE, CREATE_CERTIFICATE } from '../../constants/permissions'
 
-const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
+const SSLList = ({ groups, activeCertificates, certificates, onCheck, editCertificate, deleteCertificate, uploadCertificate, intl }) => {
   return (
     <div>
       <AccountManagementHeader
@@ -25,12 +25,15 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
                 checked={false}/>
             </th>
             <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
-            <th width="1%"></th>
+            <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
+            <th width="1%" />
           </tr>
         </thead>
         <tbody>
           {!certificates.isEmpty() ? certificates.map((cert, index) => {
             const commonName = cert.get('cn')
+            const groupID = cert.get('group')
+            const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
             const account = cert.get('account')
             return (
               <tr key={index}>
@@ -41,11 +44,12 @@ const SSLList = ({ activeCertificates, certificates, onCheck, editCertificate, d
                     checked={activeCertificates.includes(commonName)}/>
                 </td>
                 <td>{commonName}</td>
+                <td>{groupName}</td>
                 <td className="nowrap-column">
                   <ActionButtons
                     permissions={{ modify: MODIFY_CERTIFICATE, delete: DELETE_CERTIFICATE }}
-                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, commonName)}
-                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, commonName)}/>
+                    onEdit={() => !cert.get('noEdit') && editCertificate('udn', account, groupID, commonName)}
+                    onDelete={() => !cert.get('noEdit') && deleteCertificate('udn', account, groupID, commonName)}/>
                 </td>
               </tr>
             )
@@ -62,6 +66,7 @@ SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   onCheck: PropTypes.func,
   uploadCertificate: PropTypes.func

@@ -12,7 +12,7 @@ import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { getContentUrl, getUrl } from '../util/routes'
+import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
@@ -36,6 +36,7 @@ import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
+import IconCaretDown from '../components/icons/icon-caret-down'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -74,7 +75,7 @@ export class Configuration extends React.Component {
     this.props.groupActions.fetchGroup(brand, account, group)
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
-    this.props.securityActions.fetchSSLCertificates(brand, account)
+    this.props.securityActions.fetchSSLCertificates(brand, account, group)
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
@@ -257,13 +258,14 @@ export class Configuration extends React.Component {
               const { brand, account, group } = params, { hostActions } = this.props
               hostActions.startFetching()
               hostActions.fetchHost(brand, account, group, value).then(() => {
-                this.props.router.push(`${getUrl('/content', tier, value, params)}/configuration`)
+                const url = getContentUrl('propertyConfiguration', value, params)
+                this.props.router.push(url)
               })
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
-              <span className="caret"></span>
+              <IconCaretDown />
             </div>
           </AccountSelector>
           <ButtonToolbar className="pull-right">

@@ -1,13 +1,13 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import { FormattedMessage } from 'react-intl'
-import {
-  parsePolicy,
-  policyIsCompatibleWithMatch,
-  WILDCARD_REGEXP
-} from '../../util/policy-config'
+import IconCaretRight from '../icons/icon-caret-right'
+
+import { parsePolicy, policyIsCompatibleWithMatch, WILDCARD_REGEXP } from '../../util/policy-config'
+
+import IsAdmin from '../is-admin'
 
 class MatchesSelection extends React.Component {
   constructor(props) {
@@ -49,6 +49,7 @@ class MatchesSelection extends React.Component {
     const contentTargetingOnClick = enableContentTargeting ?
                                       this.setMatchFieldForContentTargeting()
                                       : this.setMatchField(null)
+    const iconCaretRight = <IconCaretRight width={28} height={28} />
 
     return (
       <div>
@@ -60,39 +61,48 @@ class MatchesSelection extends React.Component {
           <ul className="condition-selection list-unstyled">
             <li>
               <a href="#" onClick={this.setMatchField('request_host')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.hostname.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_url')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.url.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_path')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.directoryPath.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_query_arg')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.queryString.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_header')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.header.text"/>
               </a>
             </li>
             <li>
               <a href="#" onClick={this.setMatchField('request_cookie')}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.cookie.text"/>
               </a>
             </li>
+            <IsAdmin>
             <li>
               <a href="#" className={contentTargetingClassName} onClick={contentTargetingOnClick}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.contentTargeting.text"/>
               </a>
             </li>
+            </IsAdmin>
             {/*<li>
               <a href="#" onClick={this.setMatchField(null)}>
                 IP Address NEEDS_API
@@ -105,16 +115,19 @@ class MatchesSelection extends React.Component {
             </li>*/}
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.fileExtension.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.fileName.text"/>
               </a>
             </li>
             <li>
               <a href="#" className="inactive" onClick={this.setMatchField(null)}>
+                {iconCaretRight}
                 <FormattedMessage id="portal.policy.edit.matchesSelection.fileType.text"/>
               </a>
             </li>

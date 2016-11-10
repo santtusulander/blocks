@@ -10,7 +10,7 @@ import IsAllowed from '../is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
 import IconAdd from '../icons/icon-add'
 import IconEdit from '../icons/icon-edit'
-
+import IconCaretDown from '../icons/icon-caret-down'
 
 const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
   const sortedDomains = domains.sort((a,b) => {
@@ -28,7 +28,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           searchValue={searchValue}
           onSearch={searchFunc}>
             <div className="dropdown-toggle header-toggle">
-              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><span className="caret"></span>
+              <h4><TruncatedTitle content={activeDomain} tooltipPlacement="bottom"/></h4><IconCaretDown />
             </div>
         </DomainSelector> :
         <h4 id='empty-domains-text' className="selector-component"><FormattedMessage id={emptyDomainsTxt}/></h4>}
