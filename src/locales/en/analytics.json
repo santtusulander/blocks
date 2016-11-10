@@ -36,6 +36,7 @@
   "portal.analytics.purgeModal.directory.title": "Directories to Purge",
   "portal.analytics.purgeModal.directory.help": "Up to 100 directories, separated by comma",
   "portal.analytics.purgeModal.directory.placeholder": "Enter directory paths",
+  "portal.analytics.purgeModal.hostname.title": "Hostnames to Purge",
   "portal.analytics.purgeModal.invalidate.section.title": "Content Removal Method",
   "portal.analytics.purgeModal.invalidate.label": "Invalidate content",
   "portal.analytics.purgeModal.invalidate.value": "Invalidate",
@@ -52,7 +53,7 @@
   "portal.analytics.purgeModal.minAmount.error": "Specify at least one purge object",
   "portal.analytics.purgeModal.maxAmount.error": "Maximum amount of purge objects exceeded",
   "portal.analytics.purgeModal.email.error": "Enter a valid Email address",
-  
+
   "portal.analytics.onNet.title": "On-Net",
   "portal.analytics.offNet.title": "Off-Net"
 }

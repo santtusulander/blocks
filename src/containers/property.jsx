@@ -526,6 +526,7 @@ export class Property extends React.Component {
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
           activeHost={this.props.activeHost}
+          allHosts={this.props.allHosts}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}
@@ -560,6 +561,7 @@ Property.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  allHosts: React.PropTypes.instanceOf(Immutable.List),
   brand: React.PropTypes.string,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
@@ -607,6 +609,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    allHosts: state.host.get('allHosts'),
     currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),

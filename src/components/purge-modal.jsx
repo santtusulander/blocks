@@ -1,6 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
+import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Select from './select'
@@ -136,6 +137,16 @@ class PurgeModal extends React.Component {
   }
   render() {
     const showPropertySelect = this.props.availableProperties && this.props.changeProperty
+    const allHosts = this.props.allHosts
+    const hostnamesArray = !allHosts ?
+    [] :
+    allHosts.map(host => {
+      return {
+        id: host,
+        label: host
+      }
+    }).toJS();
+
     return (
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
         onHide={this.props.hideAction}>
@@ -176,9 +187,8 @@ class PurgeModal extends React.Component {
                 onSelect={(type) => this.showPurgeOption(type)}/>
               <hr/>
 
-              {this.state.type && this.state.type !== 'hostname'
-                && this.state.type !== 'group' && <div>
-
+              {this.state.type && this.state.type !== 'group' &&
+              <div>
                 {this.state.type === 'url' && <this.purgeObjInput
                   title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.title'})}
                   help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.help'})}
@@ -188,6 +198,16 @@ class PurgeModal extends React.Component {
                   title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.title'})}
                   help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.help'})}
                   placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.placeholder'})}/>}
+
+                {this.state.type === 'hostname' &&
+                <div>
+                  <h3><FormattedMessage id="portal.analytics.purgeModal.hostname.title"/></h3>
+                  <Typeahead
+                    multiple={true}
+                    options={hostnamesArray}
+                    onChange={this.parsePurgeObjects}/>
+                  <hr/>
+                </div>}
 
                 {/* SECTION - Content Removal Method */}
                 <h3><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></h3>
@@ -244,10 +264,6 @@ class PurgeModal extends React.Component {
                 </ButtonToolbar>
               </div>}
 
-              {this.state.type === 'hostname' && <div>
-                <FormattedMessage id="portal.analytics.purgeModal.hostName.text"/>
-              </div>}
-
               {this.state.type === 'group' && <div>
                 <FormattedMessage id="portal.analytics.purgeModal.group.text"/>
               </div>}
@@ -265,6 +281,7 @@ PurgeModal.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeProperty: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  allHosts: React.PropTypes.instanceOf(Immutable.List),
   availableProperties: React.PropTypes.instanceOf(Immutable.List),
   changeProperty: React.PropTypes.func,
   changePurge: React.PropTypes.func,
