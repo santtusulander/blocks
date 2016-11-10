@@ -1,6 +1,5 @@
 // Content Item Chart
 // ==================
-$starburst-tag-font-size: 1.8rem;
 
 .content-item-grid {
   text-align: center;
@@ -49,12 +48,6 @@ $starburst-tag-font-size: 1.8rem;
     .content-item-toolbar .invisible {
       opacity: 1;
       visibility: visible;
-      transition: opacity 250ms;
-    }
-
-    .content-item-text-box {
-      opacity: 0;
-      visibility: hidden;
       transition: opacity 250ms;
     }
 
@@ -228,7 +221,7 @@ $starburst-tag-font-size: 1.8rem;
     }
 
     .content-item-text-sm {
-      font-size: $starburst-tag-font-size;
+      font-size: $content-item-tag-font-size;
     }
 
     p {
@@ -256,26 +249,6 @@ $starburst-tag-font-size: 1.8rem;
     left: 50%;
     width: 90%;
     transform: translate(-50%, -32%);
-  }
-
-  .content-item-text-box {
-    position: absolute;
-    bottom: 12%;
-    left: 50%;
-    padding: 0 $starburst-tag-font-size;
-    font-size: $starburst-tag-font-size;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 2px;
-    transform: translate(-50%, -32%);
-
-    .dark-theme & {
-      background-color: rgba($pale-blue, 0.3);
-    }
-
-    .light-theme & {
-      background-color: rgba($pale-blue, 0.6);
-    }
   }
 
   .content-item-chart-name {

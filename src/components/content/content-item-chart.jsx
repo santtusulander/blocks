@@ -14,7 +14,7 @@ import IconQuestionMark from '../icons/icon-question-mark'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import DifferenceTooltip from './difference-tooltip'
-import StarBurstTag from './starburst-tag'
+import ContentItemTag from './content-item-tag'
 import TrafficTooltip from './traffic-tooltip'
 import {formatBitsPerSecond} from '../../util/helpers'
 
@@ -295,7 +295,7 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
-              {!!tagText && <StarBurstTag content={formatMessage({ id: tagText })}/>}
+              {!!tagText && <ContentItemTag content={formatMessage({ id: tagText })}/>}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
