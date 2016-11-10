@@ -98,4 +98,42 @@ describe('Matcher', () => {
     const inputSelects = matcher.find('Select')
     expect(inputSelects.length).toEqual(0)
   })
+
+  it('should validate for "exists" matches', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        disableRuleSelector={true}/>
+    )
+    matcher.instance().handleMatchesChange('exists')
+    expect(matcher.instance().validate()).toBe(true)
+  })
+
+  it('should validate for "contains" matches', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        disableRuleSelector={true}/>
+    )
+    matcher.instance().handleMatchesChange('contains')
+    expect(matcher.instance().validate()).toBe(false)
+    matcher.instance().handleContainsValChange({ target: { value: 'aaa' } })
+    expect(matcher.instance().validate()).toBe(true)
+
+    matcher.instance().handleContainsValChange({ target: { } })
+    matcher.instance().handleMatchesChange('does_not_contain')
+    expect(matcher.instance().validate()).toBe(false)
+    matcher.instance().handleContainsValChange({ target: { value: 'aaa' } })
+    expect(matcher.instance().validate()).toBe(true)
+  })
 })

@@ -28,6 +28,7 @@ class Matcher extends React.Component {
     this.handleValChange = this.handleValChange.bind(this)
     this.handleMatchesChange = this.handleMatchesChange.bind(this)
     this.handleContainsValChange = this.handleContainsValChange.bind(this)
+    this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -53,6 +54,20 @@ class Matcher extends React.Component {
       activeFilter: value,
       containsVal: ''
     })
+  }
+  validate() {
+    const {
+      activeFilter,
+      containsVal
+    } = this.state
+
+    switch (activeFilter) {
+      case 'contains':
+      case 'does_not_contain':
+        return !!containsVal
+      default:
+        return true
+    }
   }
   saveChanges() {
     // matches with a contain value put val in field_detail and use containsVal
@@ -128,6 +143,7 @@ class Matcher extends React.Component {
       matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
       matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
     }
+    const isValid = this.validate()
     return (
       <div>
         <Modal.Header>
@@ -166,7 +182,7 @@ class Matcher extends React.Component {
             <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges}>
+            <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
           </ButtonToolbar>
