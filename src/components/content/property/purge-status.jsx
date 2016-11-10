@@ -1,7 +1,7 @@
 import React from 'react'
 import { List } from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Pagination } from 'react-bootstrap'
+// import { Pagination } from 'react-bootstrap'
 
 import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
@@ -10,16 +10,16 @@ import SelectWrapper from '../../../components/select-wrapper'
 
 import { formatUnixTimestamp } from '../../../util/helpers'
 
-const purgeOptions = [
+const filterOptions = [
   { value: 'all', label: <FormattedMessage id="portal.content.property.purgeStatus.all.label"/> },
   { value: 'created', label: <FormattedMessage id="portal.content.property.purgeStatus.created.label"/> },
   { value: 'completed', label: <FormattedMessage id="portal.content.property.purgeStatus.completed.label"/> }
 ]
-
-const PAGINATION = {
-  items: 10,
-  maxButtons: 5
-}
+// Comment this out until the API supports pagination
+// const PAGINATION = {
+//   items: 10,
+//   maxButtons: 5
+// }
 
 class PurgeHistoryReport extends React.Component {
   constructor(props) {
@@ -30,10 +30,11 @@ class PurgeHistoryReport extends React.Component {
       sortBy: 'status',
       sortDir: -1,
       sortFunc: '',
-      filteredStatus: purgeOptions[0].value
+      filteredStatus: filterOptions[0].value
     }
 
     this.changeSort = this.changeSort.bind(this)
+    this.filterData = this.filterData.bind(this)
     this.sortedData = this.sortedData.bind(this)
     this.handlePaginate = this.handlePaginate.bind(this)
   }
@@ -43,6 +44,13 @@ class PurgeHistoryReport extends React.Component {
       sortBy: column,
       sortDir: direction,
       sortFunc: sortFunc
+    })
+  }
+
+  filterData(data) {
+    const activeFilter = this.state.filteredStatus
+    return data.filter(item => {
+      return activeFilter === 'all' ? true : item.get('status') === activeFilter
     })
   }
 
@@ -105,7 +113,8 @@ class PurgeHistoryReport extends React.Component {
       activeDirection: this.state.sortDir
     }
 
-    const sortedStats = this.sortedData(historyData, this.state.sortBy, this.state.sortDir)
+    const filteredData = this.filterData(historyData)
+    const sortedStats = this.sortedData(filteredData, this.state.sortBy, this.state.sortDir)
 
     return (
       <div>
@@ -118,59 +127,63 @@ class PurgeHistoryReport extends React.Component {
               onChange={value => {
                 this.setState({ filteredStatus: value })
               }}
-              options={purgeOptions}/>
+              options={filterOptions}/>
           </div>
         </SectionHeader>
         <SectionContainer>
-          <table className="table table-striped table-analysis">
-            <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="status">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.status.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="start_time">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="end_time">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="initiated_by">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="description">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
-              </TableSorter>
-            </tr>
-            </thead>
-            <tbody>
-            {sortedStats.map((data, i) => {
-              return (
-                <tr key={i}>
-                  <td>{data.get('status')}</td>
-                  <td>{formatUnixTimestamp(data.get('start_time'))}</td>
-                  <td>{formatUnixTimestamp(data.get('end_time'))}</td>
-                  <td>{data.get('initiated_by')}</td>
-                  <td>{data.get('description')}</td>
-                </tr>
-              )
-            })}
-            </tbody>
-          </table>
+          {sortedStats.size ?
+            <table className="table table-striped table-analysis">
+              <thead>
+              <tr>
+                <TableSorter {...sorterProps} column="status">
+                  <FormattedMessage id="portal.content.property.purgeStatus.table.status.label"/>
+                </TableSorter>
+                <TableSorter {...sorterProps} column="created_at">
+                  <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
+                </TableSorter>
+                <TableSorter {...sorterProps} column="completed_at">
+                  <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
+                </TableSorter>
+                <TableSorter {...sorterProps} column="created_by">
+                  <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
+                </TableSorter>
+                <TableSorter {...sorterProps} column="note">
+                  <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
+                </TableSorter>
+              </tr>
+              </thead>
+              <tbody>
+              {sortedStats.map((data, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{data.get('status')}</td>
+                    <td>{formatUnixTimestamp(data.get('created_at'))}</td>
+                    <td>{data.get('completed_at') && formatUnixTimestamp(data.get('completed_at'))}</td>
+                    <td>{data.get('created_by')}</td>
+                    <td>{data.get('note')}</td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </table>
+            :
+            <p><FormattedMessage id="portal.content.property.purgeStatus.notFound.label"/></p>
+          }
         </SectionContainer>
 
-        <Pagination className="pull-right"
-                    items={PAGINATION.items}
-                    maxButtons={PAGINATION.maxButtons}
-                    prev={true}
-                    next={true}
-                    first={true}
-                    last={true}
-                    ellipsis={true}
-                    activePage={this.state.activePage}
-                    onSelect={this.handlePaginate}
-        />
+        {/* Comment this out until the API supports pagination */}
+        {/*        <Pagination className="pull-right"
+         items={PAGINATION.items}
+         maxButtons={PAGINATION.maxButtons}
+         prev={true}
+         next={true}
+         first={true}
+         last={true}
+         ellipsis={true}
+         activePage={this.state.activePage}
+         onSelect={this.handlePaginate}
+         />*/}
       </div>
-
     )
   }
 }
