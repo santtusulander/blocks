@@ -1,7 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
@@ -16,7 +15,6 @@ import * as uiActionCreators from '../redux/modules/ui'
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
-import { deploymentModes } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -237,14 +235,11 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
-    const deploymentMode = formatMessage({
-      id: deploymentModes[activeHost.getIn(['services', 0, 'deployment_mode'])]
-    })
     const readOnly = this.isReadOnly()
     return (
       <Content>
@@ -269,7 +264,7 @@ export class Configuration extends React.Component {
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
             </div>
           </AccountSelector>
@@ -345,7 +340,6 @@ export class Configuration extends React.Component {
         <PageContainer>
           {this.state.activeTab === 'details' ?
             <ConfigurationDetails
-              deploymentMode={deploymentMode}
               readOnly={readOnly}
               edgeConfiguration={activeConfig.get('edge_configuration')}
               changeValue={this.changeValue}/>
@@ -478,7 +472,6 @@ Configuration.propTypes = {
   groupActions: React.PropTypes.object,
   history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  intl: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -524,4 +517,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Configuration)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Configuration));
