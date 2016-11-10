@@ -42,9 +42,13 @@ import IconAlerts        from '../components/icons/icon-alerts'
 import IconAnalytics     from '../components/icons/icon-analytics'
 import IconArrowDown     from '../components/icons/icon-arrow-down'
 import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
+import IconArrowRight     from '../components/icons/icon-arrow-right'
+import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
 import IconArrowLeft     from '../components/icons/icon-arrow-left'
 import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
 import IconArrowUp       from '../components/icons/icon-arrow-up'
+import IconCaretRight    from '../components/icons/icon-caret-right'
+import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
 import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
@@ -375,7 +379,7 @@ export default class Styleguide extends React.Component {
               <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1>Select Account</h1>
-                  <span className="caret"/>
+                  <IconCaretDown />
                 </div>
               </AccountSelector>
             </div>
@@ -709,9 +713,29 @@ export default class Styleguide extends React.Component {
             IconArrowLeft
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowRight />
+            <br />
+            IconArrowRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowUp />
             <br />
             IconArrowUp
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCaretRight />
+            <br />
+            IconCaretRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCaretDown />
+            <br />
+            IconCaretDown
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconArrowLgRight />
+            <br />
+            IconArrowLgRight
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconArrowLgDown />

@@ -21,8 +21,12 @@
     "jest": true
   },
   "plugins": [
-    "react"
+    "react",
+    "import"
   ],
+  "settings": {
+    "import/resolver": { "node": { "extensions": ['.js', '.jsx'] } }
+  },
   "rules": {
     "no-alert": 0,
     "no-array-constructor": 0,
@@ -220,6 +224,11 @@
     "react/require-extension": 0,
     "react/self-closing-comp": 1,
     "react/sort-comp": 1,
-    "react/jsx-wrap-multilines": 1
+    "react/jsx-wrap-multilines": 1,
+    "import/no-unresolved": [2, {commonjs: true, amd: true}],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
   }
 }
