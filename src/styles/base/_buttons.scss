@@ -377,8 +377,12 @@ $lt-caret-color: $silver-60;
   }
 
   .btn-tertiary {
-    background-color: $black;
-    background-image: linear-gradient(rgba($btn-primary-background, 0.3), rgba($btn-primary-background, 0.3));
+    &,
+    &:hover,
+    &:focus {
+      background-color: $black;
+      background-image: linear-gradient(rgba($btn-primary-background, 0.3), rgba($btn-primary-background, 0.3));
+    }
 
     &:active,
     &.active {
@@ -463,8 +467,12 @@ $lt-caret-color: $silver-60;
   }
 
   .btn-tertiary {
-    background-color: $black;
-    background-image: linear-gradient(rgba($btn-primary-background, 0.8), rgba($btn-primary-background, 0.8));
+    &,
+    &:hover,
+    &:focus {
+      background-color: $black;
+      background-image: linear-gradient(rgba($btn-primary-background, 0.8), rgba($btn-primary-background, 0.8));
+    }
 
     &:active,
     &.active {
