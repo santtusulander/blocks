@@ -65,6 +65,7 @@
     "multireducer": "^3.0.0",
     "node-zendesk": "^1.1.10",
     "numeral": "^1.5.3",
+    "raven-js": "^3.8.0",
     "react": "^0.14.7",
     "react-addons-css-transition-group": "^0.14.7",
     "react-bootstrap": "^0.28.2",
