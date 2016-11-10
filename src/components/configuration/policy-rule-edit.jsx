@@ -371,8 +371,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button bsStyle="primary"
                       className="btn-icon btn-add-new"
                       onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={disableAddActionButton()}
-              >
+                      disabled={disableAddActionButton()}>
                 <IconAdd />
               </Button>
             </Col>
@@ -399,7 +398,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                       onArrowDown={i < flattenedPolicy.sets.length - 1 ?
                         this.moveSet(set.path, i+1) : ''}
                       arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
-                      onDelete={this.deleteMatch(set.path)} />
+                      onDelete={this.deleteSet(set.path)} />
                   </Col>
                 </div>
               )
