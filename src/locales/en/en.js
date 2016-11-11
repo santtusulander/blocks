@@ -563,9 +563,9 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.dns.domain.deleteError' : 'Unable to delete domain',
   'portal.accountManagement.dns.domain.saveError' : 'Unable to save domain',
 
-  'portal.configuration.updateSuccessfull.text': 'Configurations succesfully saved',
-  'portal.configuration.retireSuccessfull.text': 'Configurations succesfully retired',
-  'portal.configuration.publishSuccessfull.text': 'Configurations succesfully published',
+  'portal.configuration.updateSuccessfull.text': 'Configurations successfully saved',
+  'portal.configuration.retireSuccessfull.text': 'Configurations successfully retired',
+  'portal.configuration.publishSuccessfull.text': 'Configurations successfully published',
   'portal.configuration.header.text': 'CONFIGURATION',
   'portal.configuration.hostname.text': 'Hostname',
   'portal.configuration.defaults.text': 'Defaults',
@@ -574,6 +574,7 @@ const TRANSLATED_MESSAGES = {
   'portal.configuration.security.text': 'Security',
   'portal.configuration.certificates.text': 'Certificates',
   'portal.configuration.changeLog.text': 'Change Log',
+  'portal.configuration.changes.text': '{numChanges, plural, one {change} other{changes}}',
 
   'portal.configurationList.showAll.text': 'Show all properties',
   'portal.configurationList.filter1.text': 'Filter 1',
