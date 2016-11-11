@@ -26,6 +26,7 @@ import GroupForm from '../../components/account-management/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
+import IconCaretDown from '../../components/icons/icon-caret-down'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -190,8 +191,11 @@ export class AccountManagement extends Component {
   }
 
   showEditGroupModal(group) {
-    this.setState({ groupToUpdate: group })
-    this.props.toggleModal(EDIT_GROUP)
+    const { params: { brand, account }, groupActions: { fetchGroup } } = this.props
+    fetchGroup(brand, account, group.get('id')).then(() => {
+      this.setState({ groupToUpdate: group.get('id') })
+      this.props.toggleModal(EDIT_GROUP)
+    })
   }
 
   editAccount(brandId, accountId, data) {
@@ -248,16 +252,21 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: ! isValidAccountName(accountName),
-          errorText: <div key={accountName}>{[<FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
-                                                                            <div style={{marginTop: '0.5em'}}>
-                                                                              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                                                                              <ul>
-                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                                                                              </ul>
-                                                                            </div>
-                                                                          </div>]}</div>
+          condition: !isValidAccountName(accountName),
+          errorText:
+            <div key={accountName}>
+              {[
+                <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
+                  <div style={{marginTop: '0.5em'}}>
+                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                    <ul>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                    </ul>
+                  </div>
+                </div>
+              ]}
+            </div>
         }
       ]
     }
@@ -380,7 +389,7 @@ export class AccountManagement extends Component {
               <div className="btn btn-link dropdown-toggle header-toggle">
                 <h1><TruncatedTitle content={activeAccount.get('name') ||  <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}
                   tooltipPlacement="bottom" className="account-property-title"/></h1>
-                <span className="caret" />
+                <IconCaretDown />
               </div>
             </AccountSelector>
           </IsAllowed>
@@ -453,12 +462,10 @@ export class AccountManagement extends Component {
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
-          group={this.state.groupToUpdate}
-          account={activeAccount}
+          groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => toggleModal(null)}
           show={true}
-          users={this.props.users}
         />}
       </Content>
     )

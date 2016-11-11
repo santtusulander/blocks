@@ -32,6 +32,7 @@ import Tooltip from '../components/tooltip'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
+import IconCaretDown from '../components/icons/icon-caret-down'
 
 import {
   formatBitsPerSecond,
@@ -390,7 +391,7 @@ export class Property extends React.Component {
             }}>
             <div className="btn btn-link dropdown-toggle header-toggle">
               <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-property-title"/></h1>
-              <span className="caret" />
+              <IconCaretDown />
             </div>
           </AccountSelector>
           <ButtonToolbar>
@@ -481,7 +482,7 @@ export class Property extends React.Component {
           <div className="extra-margin-top transfer-by-time" ref="byTimeHolder">
             <AnalysisByTime
               axes={true}
-              padding={30}
+              padding={40}
               dataSets={datasets}
               showLegend={true}
               showTooltip={false}
@@ -524,6 +525,7 @@ export class Property extends React.Component {
         </PageContainer>
         {this.state.purgeActive && <PurgeModal
           activePurge={this.props.activePurge}
+          activeHost={this.props.activeHost}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
           savePurge={this.savePurge}

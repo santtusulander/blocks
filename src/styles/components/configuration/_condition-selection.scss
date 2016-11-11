@@ -39,12 +39,12 @@
     position: relative;
     display: block;
     height: 100%;
-    padding: ($bar-height / 4) 0 ($bar-height / 4) $btn-height / 2 + 20px;
+    padding: ($bar-height / 2) 0;
     line-height: $bar-height / 2;
     text-decoration: none;
 
-    @include md {
-      padding: ($md-bar-height / 4) 0 ($md-bar-height / 4) $md-btn-height / 2 + 20px;
+    > span {
+      padding-left: 12px;
     }
 
     .dark-theme & {
@@ -73,45 +73,6 @@
     &.inactive {
       cursor: default;
       opacity: 0.3;
-    }
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: $btn-height / 2;
-      height: $btn-height / 2;
-      margin-top: -($btn-height / 4);
-      border-radius: 50%;
-      content: '';
-
-      @include md {
-        width: $btn-sm-height / 2;
-        height: $btn-sm-height / 2;
-        margin-top: -($btn-sm-height / 4);
-      }
-
-      .dark-theme &,
-      .light-theme & {
-        background-color: rgba($black, 0.2);
-      }
-    }
-
-    &::after {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      margin: -5px 0 0 13px;
-      vertical-align: middle;
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-      border-left: 5px dashed;
-      border-left-color: inherit;
-      content: '';
-
-      @include md {
-        margin-left: 11px;
-      }
     }
   }
 }

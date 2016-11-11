@@ -198,7 +198,7 @@ class ContentTargeting extends React.Component {
           }
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" id="close-button" onClick={this.props.close}>
+            <Button className="btn-secondary" id="close-button" onClick={this.props.close}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button
