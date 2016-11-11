@@ -22,6 +22,10 @@ export default function(WrappedSelect) {
     }
 
     handleClick(e) {
+      // TODO: UDNP-1826, UDNP-1819
+      // Ideally, we should find a way of doing this without findDOMNode, but
+      // until we can update to React >0.15.x, we are limited to using findDOMNode
+      // eslint-disable-next-line react/no-find-dom-node
       if (findDOMNode(this).contains(e.target)) {
         return
       }
