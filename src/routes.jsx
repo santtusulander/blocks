@@ -33,6 +33,13 @@ import AnalyticsTabContribution from './containers/analytics/tabs/tab-contributi
 import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
 import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
+import ConfigurationDetails from './components/configuration/details'
+import ConfigurationDefaults from './components/configuration/defaults'
+import ConfigurationPolicies from './components/configuration/policies'
+import ConfigurationPerformance from './components/configuration/performance'
+import ConfigurationSecurity from './components/configuration/security'
+import ConfigurationCertificates from './components/configuration/certificates'
+import ConfigurationChangeLog from './components/configuration/change-log'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
@@ -161,7 +168,15 @@ export const getRoutes = store => {
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
         <Route path={routes.contentProperty} component={Property} />
-        <Route path={routes.contentPropertyConfiguration} component={Configuration} />
+        <Route path={routes.contentPropertyConfiguration} component={Configuration}>
+          <IndexRedirect to={routes.configurationTabDetails} />
+          <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
+          <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
+          <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
+          <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
+            <Route path={routes.configurationTabPoliciesEditPolicy}/>
+          </Route>
+        </Route>
       </Route>
 
       {/* Network / SP Accounts - routes */}
