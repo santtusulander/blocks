@@ -1,9 +1,9 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Nav, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -26,13 +26,6 @@ import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 
-import ConfigurationDetails from '../components/configuration/details'
-import ConfigurationDefaults from '../components/configuration/defaults'
-import ConfigurationPolicies from '../components/configuration/policies'
-import ConfigurationPerformance from '../components/configuration/performance'
-import ConfigurationSecurity from '../components/configuration/security'
-import ConfigurationCertificates from '../components/configuration/certificates'
-import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
@@ -50,7 +43,6 @@ export class Configuration extends React.Component {
 
     this.state = {
       deleteModal: false,
-      activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
       showPublishModal: false,
@@ -60,7 +52,6 @@ export class Configuration extends React.Component {
     this.changeValue = this.changeValue.bind(this)
     this.changeValues = this.changeValues.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
-    this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
@@ -137,9 +128,6 @@ export class Configuration extends React.Component {
         this.showNotification(<FormattedMessage id="portal.configuration.updateSuccessfull.text"/>)
       }
     })
-  }
-  activateTab(tabName) {
-    this.setState({activeTab: tabName})
   }
   activateVersion(id) {
     const index = this.props.activeHost.get('services').get(0)
@@ -235,12 +223,13 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const readOnly = this.isReadOnly()
+    const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -255,7 +244,7 @@ export class Configuration extends React.Component {
             params={this.props.params}
             topBarTexts={{}}
             onSelect={(tier, value, params) => {
-              const { brand, account, group } = params, { hostActions } = this.props
+              const { params: { brand, account, group }, hostActions } = this.props
               hostActions.startFetching()
               hostActions.fetchHost(brand, account, group, value).then(() => {
                 const url = getContentUrl('propertyConfiguration', value, params)
