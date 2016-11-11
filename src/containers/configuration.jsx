@@ -243,7 +243,7 @@ export class Configuration extends React.Component {
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = formatMessage({
-      id: deploymentModes[activeHost.getIn(['services', 0, 'deployment_mode'])]
+      id: deploymentModes[activeHost.getIn(['services', 0, 'deployment_mode']) || 'notSet']
     })
     const readOnly = this.isReadOnly()
     return (
