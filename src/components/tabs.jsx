@@ -105,7 +105,7 @@ class Tabs extends React.Component {
 
 Tabs.displayName = 'Tabs'
 Tabs.propTypes = {
-  activeKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
+  activeKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   children: PropTypes.node,
   className: PropTypes.string,
   onSelect: PropTypes.func
