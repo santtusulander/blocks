@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Nav } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -27,6 +26,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
+import Tabs from '../../components/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -191,8 +191,11 @@ export class AccountManagement extends Component {
   }
 
   showEditGroupModal(group) {
-    this.setState({ groupToUpdate: group })
-    this.props.toggleModal(EDIT_GROUP)
+    const { params: { brand, account }, groupActions: { fetchGroup } } = this.props
+    fetchGroup(brand, account, group.get('id')).then(() => {
+      this.setState({ groupToUpdate: group.get('id') })
+      this.props.toggleModal(EDIT_GROUP)
+    })
   }
 
   editAccount(brandId, accountId, data) {
@@ -249,16 +252,21 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: ! isValidAccountName(accountName),
-          errorText: <div key={accountName}>{[<FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
-                                                                            <div style={{marginTop: '0.5em'}}>
-                                                                              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                                                                              <ul>
-                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                                                                                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                                                                              </ul>
-                                                                            </div>
-                                                                          </div>]}</div>
+          condition: !isValidAccountName(accountName),
+          errorText:
+            <div key={accountName}>
+              {[
+                <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
+                  <div style={{marginTop: '0.5em'}}>
+                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                    <ul>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                    </ul>
+                  </div>
+                </div>
+              ]}
+            </div>
         }
       ]
     }
@@ -389,41 +397,41 @@ export class AccountManagement extends Component {
             <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
           </IsAllowed>
         </PageHeader>
-        {account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        {account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-        </Nav>}
-        {!account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        </Tabs>}
+        {!account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li className="navbar">
+          {/*<li eventKey="brands">
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS}>
-           <li className="navbar">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+           <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li className="navbar">
+          <li eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li className="navbar">
+           <li eventKey="services">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
-        </Nav>}
+        </Tabs>}
 
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
@@ -454,12 +462,10 @@ export class AccountManagement extends Component {
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
-          group={this.state.groupToUpdate}
-          account={activeAccount}
+          groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => toggleModal(null)}
           show={true}
-          users={this.props.users}
         />}
       </Content>
     )

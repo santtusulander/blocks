@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -25,6 +25,7 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
+import Tabs from '../components/tabs'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
@@ -295,8 +296,7 @@ export class Configuration extends React.Component {
             */}
           </ButtonToolbar>
         </PageHeader>
-
-        <Nav bsStyle="tabs">
+        <Tabs>
           <li className="navbar">
             <Link to={baseUrl + '/details'} activeClassName="active">
               <FormattedMessage id="portal.configuration.hostname.text"/>
@@ -331,7 +331,7 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.changeLog.text"/>
           </NavItem>
           */}
-        </Nav>
+        </Tabs>
 
         <PageContainer>
           {React.cloneElement(children, {
