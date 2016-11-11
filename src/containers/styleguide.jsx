@@ -229,7 +229,7 @@ export default class Styleguide extends React.Component {
             <NavItem eventKey={2}>Long Tab Name 2</NavItem>
             <NavItem eventKey={3}>Longer Tab Name 3</NavItem>
             <NavItem eventKey={4}>Even Longer Tab Name 4</NavItem>
-            <NavItem eventKey={5}>Can't believe how Long Tab Name 5</NavItem>
+            <NavItem eventKey={5}>Can&apos;t believe how Long Tab Name 5</NavItem>
             <NavItem eventKey={6}>Normal Tab Name 6</NavItem>
           </Tabs>
 
