@@ -260,6 +260,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary">Primary</Button>
             <Button className="btn-secondary">Secondary</Button>
+            <Button className="btn-tertiary">Tertiary</Button>
             <Button bsStyle="danger">Destructive</Button>
             <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
@@ -270,6 +271,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary" disabled={true}>Primary</Button>
             <Button className="btn-secondary" disabled={true}>Secondary</Button>
+            <Button className="btn-tertiary" disabled={true}>Tertiary</Button>
             <Button bsStyle="danger" disabled={true}>Destructive</Button>
             <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
