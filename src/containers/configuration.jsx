@@ -297,22 +297,22 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
         <Tabs>
-          <li className="navbar">
+          <li>
             <Link to={baseUrl + '/details'} activeClassName="active">
               <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li className="navbar">
+          <li>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
               <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li className="navbar">
+          <li>
             <Link to={baseUrl + '/policies'} activeClassName="active">
               <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li className="navbar">
+          <li>
             <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
             </Link>
