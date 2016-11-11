@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 
+import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
 const SelectorComponent = ({
@@ -37,7 +38,7 @@ const SelectorComponent = ({
               </a>
               {drillable &&
                 <a className="caret-container" onClick={() => onCaretClick(option[0])} tabIndex="-1">
-                  <span className="caret"></span>
+                  <IconArrowRight />
                 </a>}
             </li>
           )}

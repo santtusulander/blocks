@@ -56,9 +56,8 @@ $header-seach-left-padding: rem(30px);
 
     .active-account-name {
       padding: 0 20px 0 30px;
-      margin: 11.5px 20px 11.5px 0;
+      margin: 12px 0;
       font-weight: bold;
-      border-right: 1px solid $silver-80;
     }
   }
 
@@ -82,10 +81,9 @@ $header-seach-left-padding: rem(30px);
     &__toggle {
       display: flex;
       width: 100%;
-      padding: 0 20px 0 30px;
-      margin: 11.5px 20px 11.5px 0;
+      padding: 0 16px 0 30px;
+      margin: 6px 0;
       overflow: hidden;
-      border-right: 1px solid $silver-80;
 
       .dropdown-toggle {
         font-weight: bold;
@@ -372,7 +370,6 @@ $header-seach-left-padding: rem(30px);
     }
 
     .dropdown-toggle {
-
       &,
       &:focus {
         position: absolute;
@@ -389,10 +386,6 @@ $header-seach-left-padding: rem(30px);
           width: $md-bar-height;
           height: $md-bar-height;
         }
-      }
-
-      &:hover .caret {
-        color: $white;
       }
     }
 
@@ -416,5 +409,55 @@ $header-seach-left-padding: rem(30px);
       background-color: transparent;
       border-color: transparent;
     }
+  }
+}
+
+.header-toggle {
+  position: relative;
+  height: auto;
+  min-width: 0;
+  padding: 0;
+  line-height: inherit;
+  text-align: left;
+
+  h3 {
+    max-width: calc(100% - #{$bar-height});
+    white-space: normal;
+  }
+
+  .icon {
+    display: inline-block;
+    vertical-align: middle;
+    border-width: 0;
+  }
+
+  &:hover .icon:not(.caret-icon),
+  &:focus .icon:not(.caret-icon) {
+
+    .dark-theme &,
+    .light-theme & {
+      stroke: $pale-blue;
+    }
+  }
+
+  .dark-theme .open > &,
+  .light-theme .open > & {
+
+    &,
+    &:hover,
+    &:active,
+    &:focus,
+    .icon {
+      color: $pale-blue;
+      background-color: transparent;
+      box-shadow: none;
+      stroke: $pale-blue;
+    }
+  }
+
+  h1,
+  h3 {
+    display: inline-block;
+    vertical-align: middle;
   }
 }

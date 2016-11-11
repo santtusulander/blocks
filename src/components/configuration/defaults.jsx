@@ -44,6 +44,7 @@ class ConfigurationDefaults extends React.Component {
     this.toggleVaryHeaderRule = this.toggleVaryHeaderRule.bind(this)
     this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
     this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
+    this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
   }
   addRule(e) {
     e.preventDefault()
@@ -132,6 +133,10 @@ class ConfigurationDefaults extends React.Component {
     }
   }
 
+  toggleAllowCookie( val ) {
+    this.props.changeValue(['edge_configuration', 'allow_cookies'], val)
+  }
+
   render() {
     const { config, intl, readOnly } = this.props;
     if(!config || !config.size) {
@@ -180,6 +185,20 @@ class ConfigurationDefaults extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
         <SectionContainer>
+
+          {/* Allow tracking cookies */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.allowCookies.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle
+                readonly={readOnly}
+                value={config.getIn(['edge_configuration','allow_cookies'])}
+                changeValue={(val) => this.toggleAllowCookie(val)}/>
+            </Col>
+          </Row>
+
           {/* Remove Vary Header */}
           <Row className="form-group">
             <Col lg={4} xs={6} className="toggle-label">

@@ -3,15 +3,8 @@
 
 .tooltip {
   z-index: 1040;
-  max-width: 360px;
-  min-width: 285px;
+  max-width: 320px;
   font-size: $tooltip-font-size;
-
-  @include md {
-    max-width: 320px;
-    min-width: 250px;
-    font-size: $md-tooltip-font-size;
-  }
 
   &.in {
     opacity: 1;
@@ -104,8 +97,8 @@
 }
 
 .content-item-chart-tooltip {
-
   &.top {
+    min-width: 250px;
     padding: 0;
   }
 
@@ -120,4 +113,21 @@
   .tooltip-arrow {
     display: none;
   }
+}
+
+.interactive-password-tooltip {
+  .valid {
+    color: $green;
+
+    &::after {
+      padding-left: 18px;
+      background: url('../assets/icons/icon-valid.svg') right center no-repeat;
+      background-size: 14px;
+      content: '';
+    }
+  }
+}
+
+.stacked-tooltip {
+  top: 100%;
 }

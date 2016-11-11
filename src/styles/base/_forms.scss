@@ -6,6 +6,7 @@ $form-line-height: 1.6;
 $form-vertical-padding: em(7px, $form-font-size);
 $form-horizontal-padding: em(12px, $form-font-size);
 $form-inline-min-width: em(228px, $form-font-size);
+$form-inline-margin-right: em(12px, $form-font-size);
 $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
@@ -109,9 +110,9 @@ label {
     }
   }
 
-
   &.invalid,
   .invalid & {
+    &,
     &:focus,
     &:active {
       .dark-theme & {
@@ -185,8 +186,27 @@ label {
   }
 }
 
-.form-horizontal {
+.inline-form-layout {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
 
+  .form-group {
+    width: 100%;
+    padding-bottom: 0;
+
+    &:not(:last-child) {
+      margin-right: $form-inline-margin-right;
+    }
+  }
+
+  .inline-add-row & {
+    margin-right: 50px;
+  }
+}
+
+.form-horizontal {
   .form-group {
     margin-right: 0;
     margin-left: 0;

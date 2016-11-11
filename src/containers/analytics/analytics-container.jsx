@@ -12,6 +12,7 @@ import * as filtersActionCreators from '../../redux/modules/filters'
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
 import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
 import AnalyticsFilters from '../../components/analytics/analytics-filters'
+import DateRanges from '../../constants/date-ranges'
 
 //layout
 import PageContainer from '../../components/layout/page-container'
@@ -109,11 +110,21 @@ class AnalyticsContainer extends React.Component {
 
     const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
     const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
+    const dateRanges = [
+      DateRanges.MONTH_TO_DATE,
+      DateRanges.LAST_MONTH,
+      DateRanges.THIS_WEEK,
+      DateRanges.LAST_WEEK,
+      DateRanges.TODAY,
+      DateRanges.YESTERDAY,
+      DateRanges.CUSTOM_TIMERANGE
+    ]
 
     return (
       <AnalyticsFilters
         activeAccountProviderType={activeAccountProviderType}
         currentUser={user}
+        dateRanges={dateRanges}
         params={params}
         onFilterChange={this.onFilterChange}
         filters={filters}

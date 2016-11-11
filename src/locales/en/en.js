@@ -86,11 +86,6 @@ const TRANSLATED_MESSAGES = {
   'portal.brand.list.lastEdited.text': 'Last Edited',
   'portal.brand.list.usedBy.text': 'Used By',
 
-  'portal.group.edit.name.required.text': 'Group name is required',
-  'portal.group.edit.name.label': 'Group Name',
-  'portal.group.edit.name.enter.text': 'Enter Group Name',
-  'portal.group.edit.editGroup.title': 'Edit Group',
-  'portal.group.edit.newGroup.title': 'Add new group',
 
   'portal.manage.tabs.users.title': 'Users',
   'portal.manage.tabs.brands.title': 'Brands',
@@ -627,10 +622,14 @@ const TRANSLATED_MESSAGES = {
   'portal.security.editCertificate.text': 'Edit Certificate',
   'portal.security.uploadCertificate.text': 'Upload Certificate',
 
-  'portal.passsword.resetPassword.text': 'Reset Password',
-  'portal.passsword.setPassword.text': 'Set Password',
-  'portal.passsword.invalidPassword.text': 'Password is not valid',
-  'portal.passsword.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.resetPassword.text': 'Reset Password',
+  'portal.password.setPassword.text': 'Set Password',
+  'portal.password.invalidPassword.text': 'Password is not valid',
+  'portal.password.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.passwordLengthValid.text': 'at least 8 characters',
+  'portal.password.passwordUppercaseValid.text': 'at least one uppercase character',
+  'portal.password.passwordNumberValid.text': 'at least one number',
+  'portal.password.passwordSpecialCharValid.text': 'at least one special character (!,?,#,$,...)',
 
   'portal.startburstHelp.today.text': 'Today',
   'portal.startburstHelp.healthRing.text': 'Health Ring',
