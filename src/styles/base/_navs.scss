@@ -129,6 +129,10 @@ $lt-tab-color: $lt-text-color;
       padding-bottom: 0;
       background: none;
 
+      .light-theme & .icon {
+        fill: $lt-text-color;
+      }
+
       &:focus {
         box-shadow: none;
       }
