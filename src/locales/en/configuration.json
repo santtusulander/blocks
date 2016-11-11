@@ -49,5 +49,6 @@
 
   "portal.configuration.details.deploymentMode.text": "Deployment Mode",
   "portal.configuration.details.deploymentMode.production": "Production",
-  "portal.configuration.details.deploymentMode.trial": "Trial"
+  "portal.configuration.details.deploymentMode.trial": "Trial",
+  "portal.configuration.details.deploymentMode.unknown": "Unknown"
 }
