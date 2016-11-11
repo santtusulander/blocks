@@ -34,11 +34,9 @@ class PurgeModal extends React.Component {
     this.setState({type: type})
 
     if (type == 'url' || type == 'directory') {
-      this.props.changePurge(this.props.activePurge.delete('published_hosts'))
-      this.props.changePurge(this.props.activePurge.set('published_host_id', this.props.activeHost.get('published_host_id')))
+      this.props.changePurge(this.props.activePurge.delete('published_hosts').set('published_host_id', this.props.activeHost.get('published_host_id')))
     } else if (type == 'group') {
-      this.props.changePurge(this.props.activePurge.delete('published_host_id'))
-      this.props.changePurge(this.props.activePurge.set('published_hosts', (this.props.allHosts).toJS()))
+      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', (this.props.allHosts).toJS()))
     }
   }
   change(path) {
