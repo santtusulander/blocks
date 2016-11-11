@@ -13,7 +13,7 @@ class Tabs extends React.Component {
       hiddenTabs: []
     }
 
-    this.timeout
+    this.timeout = null
     this.getDOMNodeTop = this.getDOMNodeTop.bind(this)
     this.measureTabs = this.measureTabs.bind(this)
   }
@@ -34,13 +34,13 @@ class Tabs extends React.Component {
 
     let hiddenTabs = []
     this.setState({ hiddenTabs: hiddenTabs })
-    let reverseTabs = [].concat(this.props.children).reverse()
+    let reverseTabs = this.props.children.slice().reverse()
 
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (ReactDOM.findDOMNode(this.refs['tab0']) !== undefined &&
-        ReactDOM.findDOMNode(this.refs['hiddenTabs']) !== undefined) {
+      if (ReactDOM.findDOMNode(this.refs['tab0']) != null &&
+        ReactDOM.findDOMNode(this.refs['hiddenTabs']) != null) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
