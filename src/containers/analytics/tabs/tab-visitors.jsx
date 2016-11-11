@@ -50,9 +50,6 @@ class AnalyticsTabVisitors extends React.Component {
         byOS={this.props.byOS.get('os')}
         byTime={this.props.byTime}
         fetching={this.props.fetching}
-        serviceTypes={Immutable.fromJS(['http', 'https'])
-        /* TODO: should this be this.props.filters.serviceTypes ? but can we
-        filter visitors by serviceType ?*/}
       />
     )
   }

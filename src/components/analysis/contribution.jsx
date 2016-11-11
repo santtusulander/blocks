@@ -188,7 +188,6 @@ class AnalysisContribution extends React.Component {
 
 AnalysisContribution.displayName = 'AnalysisContribution'
 AnalysisContribution.propTypes = {
-  accounts: React.PropTypes.instanceOf(Immutable.List),
   dateRange: React.PropTypes.instanceOf(Immutable.Map),
   dateRangeLabel: React.PropTypes.string,
   fetching: React.PropTypes.bool,
@@ -199,7 +198,6 @@ AnalysisContribution.propTypes = {
   stats: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisContribution.defaultProps = {
-  accounts: Immutable.List(),
   onOffFilter: Immutable.List(),
   serviceTypes: Immutable.List(),
   stats: Immutable.List()

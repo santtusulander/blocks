@@ -14,7 +14,6 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as purgeActionCreators from '../redux/modules/purge'
-import * as trafficActionCreators from '../redux/modules/traffic'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as visitorsActionCreators from '../redux/modules/visitors'
 
@@ -326,13 +325,6 @@ export class Property extends React.Component {
     const avg_ttfb = totals && totals.get('avg_fbl')
     const uniq_vis = this.props.visitorsByCountry.get('total')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
-    const formatHistoryTooltip = (date, value) => {
-      const formattedDate = moment.utc(date)
-        .subtract(dateRange.asDays(), 'days')
-        .format('MMM D H:mm')
-      const formattedValue = formatBitsPerSecond(value)
-      return `${formattedDate} ${formattedValue}`
-    }
     const timespanAdjust = direction => time => time.set(
       'timestamp',
       new Date(time.get('timestamp').getTime() + dateRange.asMilliseconds() * direction))
@@ -494,8 +486,7 @@ export class Property extends React.Component {
               yAxisCustomFormat={(val, setMax) => formatBitsPerSecond(val, false, setMax)}
               sliceGranularity={sliceGranularity}
               hoverSlice={this.hoverSlice}
-              selectSlice={this.selectSlice}
-              formatSecondaryTooltip={formatHistoryTooltip}/>
+              selectSlice={this.selectSlice}/>
             {this.state.activeSlice && <Tooltip
               className="slice-tooltip"
               x={this.state.activeSliceX}
@@ -563,23 +554,17 @@ Property.propTypes = {
   brand: React.PropTypes.string,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
-  id: React.PropTypes.string,
   location: React.PropTypes.object,
   metricsActions: React.PropTypes.object,
-  name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  trafficActions: React.PropTypes.object,
-  trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
   visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
@@ -610,10 +595,8 @@ function mapStateToProps(state) {
     currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
-    trafficFetching: state.traffic.get('fetching'),
     visitorsByCountry: state.visitors.get('byCountry'),
     visitorsFetching: state.traffic.get('fetching')
   };
@@ -626,7 +609,6 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   };

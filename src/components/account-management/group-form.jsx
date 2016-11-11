@@ -254,13 +254,13 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  show: PropTypes.bool,
-  users: PropTypes.instanceOf(List)
+  show: PropTypes.bool
+  // users: PropTypes.instanceOf(List)
 }
 
-GroupForm.defaultProps = {
-  users: List()
-}
+// GroupForm.defaultProps = {
+//   users: List()
+// }
 
 /**
  * If not editing a group, pass empty initial values
@@ -281,7 +281,7 @@ function mapStateToProps({ user, group, account, form }, { groupId }) {
   return {
     canEditBilling,
     formValues: getValues(form.groupEdit),
-    users: user.get('allUsers'),
+    // users: user.get('allUsers'),
     account: account.get('activeAccount'),
     fields: canSeeBilling ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
     initialValues: determineInitialValues(groupId, group.get('activeGroup'))

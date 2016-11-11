@@ -186,7 +186,6 @@ Security.propTypes = {
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
-  fetchListData: PropTypes.func,
   groups: PropTypes.instanceOf(List),
   location: PropTypes.object,
   onDelete: PropTypes.func,

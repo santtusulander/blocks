@@ -427,14 +427,13 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activateSet: React.PropTypes.func,
   activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
   activeSetPath: React.PropTypes.instanceOf(Immutable.List),
-  changeActiveRuleType: React.PropTypes.func,
+  // changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   hideAction: React.PropTypes.func,
   isEditingRule: React.PropTypes.bool,
   rule: React.PropTypes.instanceOf(Immutable.Map),
-  rulePath: React.PropTypes.instanceOf(Immutable.List),
-  saveChanges: React.PropTypes.func
+  rulePath: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = ConfigurationPolicyRuleEdit

@@ -43,7 +43,7 @@ BrandListRow.propTypes = {
   brand: React.PropTypes.string,
   id: React.PropTypes.string,
   lastEdited: React.PropTypes.string,
-  logo: React.PropTypes.string,
+  // logo: React.PropTypes.string,
   onDelete: React.PropTypes.func,
   usedBy: React.PropTypes.string
 }
@@ -82,7 +82,7 @@ BrandlistUsedBy.propTypes = {
 
 const BrandList = (props) => {
 
-  const brandsFormInitialValues = {}
+  const { brandsFormInitialValues } = props
 
   const tableRows = props.brands.map( (brand, i) => {
     return (
@@ -131,6 +131,9 @@ BrandList.propTypes = {
   brands: React.PropTypes.array,
   brandsFormInitialValues: React.PropTypes.object,
   toggleModal: React.PropTypes.func
+}
+BrandList.defaultProps = {
+  brandsFormInitialValues: {}
 }
 
 module.exports = {

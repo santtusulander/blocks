@@ -256,7 +256,7 @@ class SupportTabTickets extends React.Component {
 
 SupportTabTickets.displayName = 'SupportTabTickets'
 SupportTabTickets.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
+  // activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   currentUser: React.PropTypes.instanceOf(Immutable.Map)
   // allTickets: PropTypes.Array,
   // supportActions: PropTypes.object,

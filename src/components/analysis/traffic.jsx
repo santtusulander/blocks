@@ -305,14 +305,13 @@ AnalysisTraffic.propTypes   = {
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   byTimeComparison: React.PropTypes.instanceOf(Immutable.List),
-  dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  totalEgress: React.PropTypes.number
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  // totalEgress: React.PropTypes.number
 }
 
 AnalysisTraffic.defaultProps = {

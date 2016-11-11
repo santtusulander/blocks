@@ -172,7 +172,6 @@ RolesList.displayName  = 'RolesList'
 RolesList.propTypes = {
   editRole: React.PropTypes.object,
   intl: React.PropTypes.object,
-  onAdd: React.PropTypes.func,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onEdit: React.PropTypes.func,

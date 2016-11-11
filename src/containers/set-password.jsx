@@ -89,17 +89,15 @@ export class SetPassword extends React.Component {
 SetPassword.displayName = 'SetPassword'
 SetPassword.propTypes = {
   fetching: React.PropTypes.bool,
-  loggedIn: React.PropTypes.bool,
   reset: React.PropTypes.bool,
-  router: React.PropTypes.object,
-  userActions: React.PropTypes.object
+  router: React.PropTypes.object
+  // userActions: React.PropTypes.object
 }
 
 
 function mapStateToProps(state) {
   return {
-    fetching: state.user.get('fetching') || state.account.get('fetching'),
-    loggedIn: state.user.get('loggedIn')
+    fetching: state.user.get('fetching') || state.account.get('fetching')
   };
 }
 

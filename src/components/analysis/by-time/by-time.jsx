@@ -340,8 +340,6 @@ AnalysisByTime.propTypes = {
   className: React.PropTypes.string,
   dataKey: React.PropTypes.string,
   dataSets: React.PropTypes.array,
-  formatPrimaryTooltip: React.PropTypes.func,
-  formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
   noHover: React.PropTypes.bool,
