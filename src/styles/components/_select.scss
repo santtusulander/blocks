@@ -47,3 +47,16 @@
     }
   }
 }
+
+.caret-icon.two-tone {
+  .dark-theme &,
+  .light-theme & {
+    .base {
+      fill: rgba($black, 0.2);
+    }
+
+    .primary {
+      fill: $white;
+    }  
+  }
+}

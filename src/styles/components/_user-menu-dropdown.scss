@@ -152,15 +152,12 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
             font-size: $user-menu-font-size;
             box-shadow: none;
 
-            &::after {
+            .icon {
               position: absolute;
               top: 50%;
-              right: $user-menu-horizontal-padding;
-              border-top: $caret-width-base solid transparent;
-              border-bottom: $caret-width-base solid transparent;
-              border-left: $caret-width-base dashed $dt-text-color;
-              content: '';
+              right: 16px;
               transform: translateY(-50%);
+              fill: $dt-text-color;
             }
 
             &:hover {
@@ -176,13 +173,13 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
                 }
               }
 
-              &::after {
+              .icon {
                 .dark-theme & {
-                  border-left-color: $white;
+                  fill: $white;
                 }
 
                 .light-theme & {
-                  border-left-color: $pale-blue;
+                  fill: $pale-blue;
                 }
               }
             }

@@ -22,6 +22,7 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
@@ -224,7 +225,7 @@ class ContentItems extends React.Component {
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret" />
+          <IconCaretDown />
         </div>
       </AccountSelector>
     )
@@ -390,9 +391,7 @@ class ContentItems extends React.Component {
           {this.state.showModal && this.getTier() === 'account' &&
             <GroupForm
               id="group-form"
-              users={this.props.user.get('allUsers')}
-              group={this.state.itemToEdit}
-              account={activeAccount}
+              groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
               show={true}/>

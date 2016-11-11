@@ -2,10 +2,8 @@ import React from 'react'
 import {Button, Input, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
-import IconArrowUp from '../icons/icon-arrow-up.jsx'
-import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
@@ -355,11 +353,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
-                    <Button onClick={this.deleteMatch(flattenedPolicy.matches, i)} bsStyle="primary"
-                      disabled={flattenedPolicy.matches.length < 2}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                    <ActionButtons
+                      className="secondary"
+                      onDelete={this.deleteMatch(flattenedPolicy.matches, i)}
+                      deleteDisabled={flattenedPolicy.matches.length < 2} />
                   </Col>
                 </div>
               )
@@ -374,8 +371,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button bsStyle="primary"
                       className="btn-icon btn-add-new"
                       onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={disableAddActionButton()}
-              >
+                      disabled={disableAddActionButton()}>
                 <IconAdd />
               </Button>
             </Col>
@@ -395,25 +391,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <p>{i + 1} {set.name}</p>
                   </Col>
                   <Col xs={4} className="text-right">
-                    <Button
-                      disabled={i <= 0}
-                      onClick={i > 0 ? this.moveSet(set.path, i-1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowUp/>
-                    </Button>
-                    <Button
-                      disabled={i >= flattenedPolicy.sets.length - 1}
-                      onClick={i < flattenedPolicy.sets.length - 1 ?
+                    <ActionButtons
+                      className="secondary"
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
+                      arrowUpDisabled={i <= 0}
+                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
                         this.moveSet(set.path, i+1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowDown/>
-                    </Button>
-                    <Button onClick={this.deleteSet(set.path)} bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
+                      onDelete={this.deleteSet(set.path)} />
                   </Col>
                 </div>
               )

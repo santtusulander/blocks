@@ -162,7 +162,7 @@ class Matcher extends React.Component {
           }
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
