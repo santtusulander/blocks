@@ -436,6 +436,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
   'portal.policy.edit.editRule.actions.text': 'Actions',
   'portal.policy.edit.rules.policy.text': 'Policy',
+  'portal.policy.edit.rules.type.text': 'Applies To',
   'portal.policy.edit.rules.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.rules.actions.text': 'Actions',
   'portal.policy.edit.rules.deleteRuleConfirmation.text': 'Are you sure you want to delete the rule?',
