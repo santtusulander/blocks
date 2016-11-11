@@ -1,33 +1,33 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
-// import { Nav } from 'react-bootstrap'
-// import { Link, withRouter } from 'react-router'
-import { withRouter } from 'react-router'
+import Tabs from '../../components/tabs'
+import { Link, withRouter } from 'react-router'
+//import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { getTabName } from '../util/helpers'
-// import { getSecurityUrlFromParams } from '../util/routes'
+import { getTabName } from '../../util/helpers'
+import { getSecurityUrlFromParams } from '../../util/routes'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as securityActionCreators from '../redux/modules/security'
-import * as uiActionCreators from '../redux/modules/ui'
+import * as accountActionCreators from '../../redux/modules/account'
+import * as securityActionCreators from '../../redux/modules/security'
+import * as uiActionCreators from '../../redux/modules/ui'
 
-import ModalWindow from '../components/modal'
-import PageContainer from '../components/layout/page-container'
-import SecurityPageHeader from '../components/security/security-page-header'
-import CertificateForm from '../components/security/certificate-form-container'
-import Content from '../components/layout/content'
-import SSLList from '../components/security/ssl-list'
+import ModalWindow from '../../components/modal'
+import PageContainer from '../../components/layout/page-container'
+import SecurityPageHeader from '../../components/security/security-page-header'
+import CertificateForm from '../../components/security/certificate-form-container'
+import Content from '../../components/layout/content'
+import SSLList from '../../components/security/ssl-list'
 
-import { getUrl } from '../util/routes.js'
+import { getUrl } from '../../util/routes.js'
 
 import {
   UPLOAD_CERTIFICATE,
   EDIT_CERTIFICATE,
   DELETE_CERTIFICATE
-} from '../constants/account-management-modals.js'
+} from '../../constants/account-management-modals.js'
 
 export class Security extends React.Component {
   constructor(props) {
@@ -58,9 +58,10 @@ export class Security extends React.Component {
 
   renderContent(certificateFormProps, sslListProps) {
     const params = this.props.params
-    const subPage = getTabName(this.props.location.pathname)
+    //const subPage = getTabName(this.props.location.pathname)
+    //
     // for token auth & content targeting post-1.0
-    // const securityBaseUrl = getSecurityUrlFromParams(params);
+    const securityBaseUrl = getSecurityUrlFromParams(params);
 
     if (!params.account) {
       return (
@@ -81,26 +82,27 @@ export class Security extends React.Component {
     }
 
     // for token auth & content targeting post-1.0
-    // return (
-      // <Nav bsStyle="tabs">
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
-      //   </li>
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
-      //   </li>
-      //   <li className="navbar">
-      //     <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-      //   </li>
-      // </Nav>
-
     return (
       <div>
-        <Content className="tab-bodies">
-          {subPage === 'ssl-certificate' && <SSLList {...sslListProps}/>}
-          {subPage === 'token-authentication' && <h3>token-authentication</h3>}
-          {subPage === 'content-targeting' && <h3>content-targeting</h3>}
-        </Content>
+        <Tabs activeKey={this.props.children.props.route.path}>
+          <li className="navbar">
+            <Link to={securityBaseUrl + '/ssl-certificate'} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
+          </li>
+          <li className="navbar">
+            <Link to={securityBaseUrl + '/token-authentication'} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
+          </li>
+          <li className="navbar">
+            <Link to={securityBaseUrl + '/content-targeting'} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
+          </li>
+        </Tabs>
+
+        <PageContainer className="tab-bodies">
+          {this.props.children && React.cloneElement(this.props.children, {
+              params: params,
+              sslListProps,
+            })
+          }
+        </PageContainer>
       </div>
     )
   }
@@ -155,9 +157,7 @@ export class Security extends React.Component {
           itemSelectorFunc={itemSelectorFunc}
           fetchAccount={fetchAccount}/>
 
-          <PageContainer>
-            {this.renderContent(certificateFormProps, sslListProps)}
-          </PageContainer>
+          {this.renderContent(certificateFormProps, sslListProps)}
 
         {activeModal === EDIT_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}
         {activeModal === UPLOAD_CERTIFICATE && <CertificateForm {...certificateFormProps}/>}

@@ -44,7 +44,10 @@ import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
 import Property from './containers/property'
 import Purge from './containers/configure/purge'
-import Security from './containers/security'
+import Security from './containers/security/security'
+import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificate'
+import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
+import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
 import Services from './containers/services'
 import SetPassword from './containers/set-password'
 import Support from './containers/support/support'
@@ -186,9 +189,9 @@ export const getRoutes = store => {
         </Route>
         <Route path={routes.securityGroup} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={Security}/>
-          <Route path={routes.securityTabContentTargeting} component={Security}/>
-          <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+          <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+          <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+          <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
         </Route>
         <Route path={routes.securityProperty} component={Security}>
           <IndexRedirect to={routes.securityTabSslCertificate} />
