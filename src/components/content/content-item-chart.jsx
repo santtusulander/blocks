@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import d3 from 'd3'
 import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -149,7 +149,7 @@ class ContentItemChart extends React.Component {
     const dayArc = d3.svg.arc()
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
-    let { avgTransfer, maxTransfer, minTransfer, intl: { formatMessage }, tagText } = this.props
+    let { avgTransfer, maxTransfer, minTransfer, tagText } = this.props
     const endDate = moment.utc().format('MMM D')
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
@@ -295,7 +295,10 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
-              {!!tagText && <ContentItemTag content={formatMessage({ id: tagText })}/>}
+              {!!tagText &&
+                <ContentItemTag>
+                  <FormattedMessage id={tagText}/>
+                </ContentItemTag>}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -365,7 +368,6 @@ ContentItemChart.propTypes = {
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   id: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
-  intl: React.PropTypes.object,
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
@@ -385,4 +387,4 @@ ContentItemChart.defaultProps = {
   secondaryData: Immutable.List()
 }
 
-export default injectIntl(ContentItemChart)
+export default ContentItemChart
