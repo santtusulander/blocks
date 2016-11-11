@@ -345,61 +345,20 @@ export class Configuration extends React.Component {
         </Nav>
 
         <PageContainer>
-          {this.state.activeTab === 'details' ?
-            <ConfigurationDetails
-              readOnly={readOnly}
-              edgeConfiguration={activeConfig.get('edge_configuration')}
-              changeValue={this.changeValue}/>
-            : null}
-
-          {this.state.activeTab === 'defaults' ?
-            <ConfigurationDefaults
-              readOnly={readOnly}
-              activateMatch={this.props.uiActions.changePolicyActiveMatch}
-              activateRule={this.props.uiActions.changePolicyActiveRule}
-              activateSet={this.props.uiActions.changePolicyActiveSet}
-              activeMatch={this.props.policyActiveMatch}
-              activeRule={this.props.policyActiveRule}
-              activeSet={this.props.policyActiveSet}
-              changeValue={this.changeValue}
-              config={activeConfig}
-              saveChanges={this.saveActiveHostChanges}/>
-            : null}
-
-          {this.state.activeTab === 'policies' ?
-            <ConfigurationPolicies
-              readOnly={readOnly}
-              activateMatch={this.props.uiActions.changePolicyActiveMatch}
-              activateRule={this.props.uiActions.changePolicyActiveRule}
-              activateSet={this.props.uiActions.changePolicyActiveSet}
-              activeMatch={this.props.policyActiveMatch}
-              activeRule={this.props.policyActiveRule}
-              activeSet={this.props.policyActiveSet}
-              changeValue={this.changeValue}
-              config={activeConfig}
-              saveChanges={this.saveActiveHostChanges}/>
-            : null}
-
-            {this.state.activeTab === 'performance' ?
-              <ConfigurationPerformance/>
-              : null}
-
-            {this.state.activeTab === 'security' ?
-              <ConfigurationSecurity
-                readOnly={readOnly}
-                changeValue={this.changeValue}
-                changeValues={this.changeValues}
-                config={activeConfig}
-                sslCertificates={this.props.sslCertificates} />
-              : null}
-
-            {this.state.activeTab === 'certificates' ?
-              <ConfigurationCertificates/>
-              : null}
-
-            {this.state.activeTab === 'change-log' ?
-              <ConfigurationChangeLog/>
-              : null}
+          {React.cloneElement(children, {
+            readOnly,
+            activateMatch: this.props.uiActions.changePolicyActiveMatch,
+            activateRule: this.props.uiActions.changePolicyActiveRule,
+            activateSet: this.props.uiActions.changePolicyActiveSet,
+            activeMatch: this.props.policyActiveMatch,
+            activeRule: this.props.policyActiveRule,
+            activeSet: this.props.policyActiveSet,
+            changeValue: this.changeValue,
+            config: activeConfig,
+            edgeConfiguration: activeConfig.get('edge_configuration'),
+            saveChanges: this.saveActiveHostChanges,
+            sslCertificates: this.props.sslCertificates
+          })}
           </PageContainer>
 
           <ConfigurationDiffBar
