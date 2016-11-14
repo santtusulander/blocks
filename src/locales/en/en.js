@@ -432,6 +432,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
   'portal.policy.edit.editRule.editPolicy.text': 'Update Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
+  'portal.policy.edit.editRule.type.text': 'Apply To',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
   'portal.policy.edit.editRule.actions.text': 'Actions',

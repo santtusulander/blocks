@@ -12,6 +12,8 @@ import {
   matchIsContentTargeting,
   policyIsCompatibleWithAction
 } from '../../util/policy-config'
+import Select from '../select'
+import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -260,6 +262,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         flattenedPolicy.sets[0].setkey == null
     }
 
+    const ruleType = this.props.rulePath.get(0, null)
+
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
 
@@ -281,11 +285,25 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+          <div className="form-group">
+            <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+            <Input type="text" id="configure__edge__add-cache-rule__rule-name"
+              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
+              onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
+          </div>
 
-          <Input type="text" id="configure__edge__add-cache-rule__rule-name"
-            value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
-            onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
+          <div className="form-group">
+            <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
+            <Select
+              className="input-select"
+              value={ruleType}
+              onSelect={this.props.changeActiveRuleType}
+              options={[
+                { label: 'Request', value: POLICY_TYPES.REQUEST },
+                { label: 'Response', value: POLICY_TYPES.RESPONSE }
+              ]}
+            />
+        </div>
 
           <Row className="header-btn-row">
             <Col sm={8}>
