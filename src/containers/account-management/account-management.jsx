@@ -195,8 +195,11 @@ export class AccountManagement extends Component {
   }
 
   showEditGroupModal(group) {
-    const { params: { brand, account }, groupActions: { fetchGroup } } = this.props
-    fetchGroup(brand, account, group.get('id')).then(() => {
+    const { activeAccount, params: { brand, account }, groupActions: { fetchGroup }, hostActions: { fetchHosts } } = this.props
+    Promise.all([
+      fetchHosts('udn', activeAccount.get('id'), group.get('id')),
+      fetchGroup(brand, account, group.get('id'))
+    ]).then(() => {
       this.setState({ groupToUpdate: group.get('id') })
       this.props.toggleModal(EDIT_GROUP)
     })
