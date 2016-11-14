@@ -28,7 +28,7 @@ class TabTokenAuthentication extends Component {
     const {properties, isFetching} = this.props
 
     if ( isFetching )
-      return <span>fetching...</span>
+      return <span>Loading...</span>
 
     const tokenAuthRules = getTokenAuthRules( properties )
 

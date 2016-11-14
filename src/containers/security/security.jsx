@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { Map, List } from 'immutable'
 import Tabs from '../../components/tabs'
 import { Link, withRouter } from 'react-router'
-//import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -70,15 +69,6 @@ export class Security extends React.Component {
         </Content>
       )
     }
-
-    /*if (!params.group) {
-      return (
-        <Content className="tab-bodies">
-          <p className='text-center'>Please select a group<br/>
-            from top left to see security</p>
-        </Content>
-      )
-    }*/
 
     // for token auth & content targeting post-1.0
     return (
