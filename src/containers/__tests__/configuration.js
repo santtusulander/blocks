@@ -264,7 +264,7 @@ describe('Configuration', () => {
         fetching={true}
         uiActions={uiActions}
         location={fakeLocation}>
-        <MockedChild/>
+        <MockedChild route={{ path: 'asd' }}/>
       </Configuration>
     );
   });
