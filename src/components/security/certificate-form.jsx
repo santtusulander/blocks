@@ -2,13 +2,26 @@ import React, { PropTypes } from 'react'
 import { Input, ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 
+import SelectWrapper from '../select-wrapper.jsx'
 import UDNButton from '../button'
 
-export const CertificateForm = ({ onCancel, onSave, fields, errors }) => {
-  const { title, privateKey, certificate } = fields
+export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
+  const { group, title, privateKey, certificate } = fields
+  const groupsOptions = groups.map(group => [group.get('id'), group.get('name')])
 
   return (
     <form>
+      <div id="groups">
+        <SelectWrapper
+          {...group}
+          label="Assign to Group"
+          disabled={editMode}
+          numericValues={true}
+          value={group.value}
+          className="input-select"
+          options={groupsOptions.toJS()}/>
+        <hr/>
+      </div>
       <div id="sslCertTitle">
         <Input type="text"
           label="SSL Cert Title"
@@ -55,6 +68,7 @@ CertificateForm.propTypes = {
   editMode: PropTypes.bool,
   errors: PropTypes.object,
   fields: PropTypes.object,
+  groups: PropTypes.instanceOf(List),
   initialValues: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func

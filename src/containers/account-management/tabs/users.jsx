@@ -451,16 +451,16 @@ export class AccountManagementAccountUsers extends React.Component {
         {sortedUsers.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
-              <span>No users found with the search term "{this.state.search}"</span>
+              <span>No users found with the search term &quot;{this.state.search}&quot;</span>
             :
               <span>No users found</span>
             }
             {this.state.filteredRoles !== 'all' &&
               <span> {this.state.search.length > 0 ? 'and ' : 'with '}
-                a role of "{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}"</span>
+                a role of &quot;{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}&quot;</span>
             }
             {this.state.filteredGroups !== 'all' &&
-              <span> within the group "{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}"</span>
+              <span> within the group &quot;{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}&quot;</span>
             }
           </div>
         }

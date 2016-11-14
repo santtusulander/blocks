@@ -1,5 +1,8 @@
 import React from 'react';
 
+import IconArrowUp from './icons/icon-arrow-up'
+import IconArrowDown from './icons/icon-arrow-down'
+
 class TableSorter extends React.Component {
   constructor(props) {
     super(props);
@@ -20,10 +23,10 @@ class TableSorter extends React.Component {
     let caret = ''
     if(this.props.column === this.props.activeColumn) {
       if(this.props.activeDirection < 0) {
-        caret = <span className="caret up" />
+        caret = <IconArrowDown />
       }
       else {
-        caret = <span className="caret" />
+        caret = <IconArrowUp />
       }
     }
     return (
