@@ -6,7 +6,9 @@ import { withRouter } from 'react-router'
 import * as propertyActionCreators from '../../../redux/modules/properties/actions'
 import {getProperties, isFetching} from '../../../redux/modules/properties/selectors'
 
-import {actionIsTokenAuth, parsePolicy} from '../../../util/policy-config'
+import {getTokenAuthRules} from '../../../util/policy-config'
+
+import TokenAuthList from '../../../components/security/token-auth-list'
 
 class TabTokenAuthentication extends Component {
   componentDidMount(){
@@ -22,38 +24,35 @@ class TabTokenAuthentication extends Component {
     this.props.fetchProperties(brand,account,group)
   }
 
-  //Loop all hosts
-    //loop all rules
-      //has tokenAuth => return
-
   render(){
-    const {properties} = this.props
+    const {properties, isFetching} = this.props
 
-    //const tokenAuth = properties.
+    if ( isFetching )
+      return <span>fetching...</span>
+
+    const tokenAuthRules = getTokenAuthRules( properties )
 
     return (
-      <div>
-        <h1>
-          Tab Token Authentication
-        </h1>
-
-        {this.props.isFetching && <span>fetching...</span>}
-
-        <div>
-          {JSON.stringify(this.props.properties)}
-        </div>
-      </div>
+          <TokenAuthList rules={tokenAuthRules} />
     )
+
   }
 }
 
 TabTokenAuthentication.propTypes = {
-
+  fetchProperties: PropTypes.func,
+  isFetching: PropTypes.bool,
+  params: PropTypes.object,
+  properties: PropTypes.object
 }
 
-const mapStateToProps = (state) => {
+TabTokenAuthentication.defaultProps = {
+  properties: {}
+}
+
+const mapStateToProps = (state, ownProps) => {
   return {
-    properties: getProperties(state),
+    properties: getProperties(state, ownProps.params.brand, parseInt(ownProps.params.account), parseInt(ownProps.params.group)),
     isFetching: isFetching(state)
   }
 }
