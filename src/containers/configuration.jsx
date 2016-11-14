@@ -252,11 +252,11 @@ export class Configuration extends React.Component {
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
             updateMoment.format('MMM, D YYYY'),
-            updateMoment.format('H:MMa')
+            updateMoment.format('h:MM a')
           ]}
           pageHeaderDetailsDeployed={[
             deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('H:MMa'),
+            deployMoment.format('h:MM a'),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector
