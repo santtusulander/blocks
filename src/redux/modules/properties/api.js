@@ -4,10 +4,70 @@ import {arrayOf, normalize, Schema} from 'normalizr'
 
 export const propertySchema = new Schema('properties', {idAttribute: 'published_host_id'})
 
+/**
+ * Fetch single host and normalize
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} account [description]
+ * @param  {[type]} group   [description]
+ * @param  {[type]} id      [description]
+ * @return {[type]}         [description]
+ */
+export const fetch = (brand, account, group, id) => {
+  return fetchHost(brand, account, group, id)
+    .then( ({data}) =>
+      normalizeApiResponse(data, propertySchema ) )
+}
+
+/**
+ * Fetch All host ids of a group
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} account [description]
+ * @param  {[type]} group   [description]
+ * @return {[type]}         [description]
+ */
+export const fetchAll = (brand, account, group) => {
+  return fetchHostIds(brand, account, group)
+    .then( ({data}) => {
+      const objs = data.map( val => ({published_host_id: val}) )
+      return normalizeApiResponse(objs, arrayOf(propertySchema))
+    })
+}
+
+
+/**
+ * Get all hosts and their details for an account or group
+ * @param  {brandId} brand   brandId
+ * @param  {accountId} account accountId
+ * @param  {groupId} group   groupId
+ * @return {} Merged object with published_host_id as key
+ */
+export const fetchAllWithDetails = (brand, account, group) => {
+  return getGroupIds(brand, account, group)
+    .then(groups => {
+      return fetchGroupProperties(brand, account, groups)
+    })
+    .then( data => {
+      let merged
+
+      data.map( groupHosts => {
+        merged = Object.assign( {}, merged, groupHosts)
+      })
+      return merged
+    })
+}
+
 const normalizeApiResponse = (data, schema) => {
   return normalize(data, schema)
 }
 
+/**
+ * Fetch Single host from API
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} account [description]
+ * @param  {[type]} group   [description]
+ * @param  {[type]} id      [description]
+ * @return {[type]}         [description]
+ */
 const fetchHost = (brand, account, group, id) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
     .then( (data) => {
@@ -21,12 +81,25 @@ const fetchHost = (brand, account, group, id) => {
     })
 }
 
+/**
+ * Get Array of host ids from API (for a group)
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} account [description]
+ * @param  {[type]} group   [description]
+ * @return Array array of host names (ids)
+ */
 const fetchHostIds = (brand, account, group) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
 }
 
-const fetchGroupsIds = (brand, account) => {
 
+/**
+ * Fetch group ids for an account
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} account [description]
+ * @return {[type]}         [description]
+ */
+const fetchGroupsIds = (brand, account) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
     .then( ({data}) => {
       const groupIds = data.data.map( group => {
@@ -36,19 +109,7 @@ const fetchGroupsIds = (brand, account) => {
       return groupIds
     })
 }
-export const fetch = (brand, account, group, id) => {
-  return fetchHost(brand, account, group, id)
-    .then( ({data}) =>
-      normalizeApiResponse(data, propertySchema ) )
-}
 
-export const fetchAll = (brand, account, group) => {
-  return fetchHostIds(brand, account, group)
-    .then( ({data}) => {
-      const objs = data.map( val => ({published_host_id: val}) )
-      return normalizeApiResponse(objs, arrayOf(propertySchema))
-    })
-}
 
 const fetchGroupProperties = (brand, account, groupIds) => {
   return Promise.all( groupIds.map( group => {
@@ -73,18 +134,4 @@ const getGroupIds = (brand, account, group) => {
   } else {
     return fetchGroupsIds(brand, account)
   }
-}
-export const fetchAllWithDetails = (brand, account, group) => {
-  return getGroupIds(brand, account, group)
-    .then(groups => {
-      return fetchGroupProperties(brand, account, groups)
-    })
-    .then( data => {
-      let merged
-
-      data.map( groupHosts => {
-        merged = Object.assign( {}, merged, groupHosts)
-      })
-      return merged
-    })
 }
