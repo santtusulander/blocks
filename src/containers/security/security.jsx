@@ -19,7 +19,6 @@ import PageContainer from '../../components/layout/page-container'
 import SecurityPageHeader from '../../components/security/security-page-header'
 import CertificateForm from '../../components/security/certificate-form-container'
 import Content from '../../components/layout/content'
-import SSLList from '../../components/security/ssl-list'
 
 import { getUrl } from '../../util/routes.js'
 
@@ -72,14 +71,14 @@ export class Security extends React.Component {
       )
     }
 
-    if (!params.group) {
+    /*if (!params.group) {
       return (
         <Content className="tab-bodies">
           <p className='text-center'>Please select a group<br/>
             from top left to see security</p>
         </Content>
       )
-    }
+    }*/
 
     // for token auth & content targeting post-1.0
     return (
@@ -97,11 +96,11 @@ export class Security extends React.Component {
         </Tabs>
 
         <PageContainer className="tab-bodies">
-          {this.props.children && React.cloneElement(this.props.children, {
-              params: params,
-              sslListProps,
-            })
-          }
+        {this.props.children && React.cloneElement(this.props.children, {
+          params: params,
+          sslListProps
+        })
+        }
         </PageContainer>
       </div>
     )
@@ -185,6 +184,7 @@ Security.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
+  children: PropTypes.object,
   fetchAccount: PropTypes.func,
   fetchListData: PropTypes.func,
   groups: PropTypes.instanceOf(List),
