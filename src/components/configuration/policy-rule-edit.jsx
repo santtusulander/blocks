@@ -47,9 +47,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
 
-      let newMatch = Immutable.fromJS([
-        {match: {field: null, cases: [['',[]]]}}
-      ])
+      let newMatch = Immutable.List(DEFAULT_MATCH)
       if(currentSet) {
         const newSetPath = [0, 'match'].concat(childPath)
         newMatch = newMatch.setIn(newSetPath, currentSet)
@@ -203,9 +201,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     // If this started out as an empty rule, remove it
     if(Immutable.is(
       this.state.originalConfig.getIn(this.props.rulePath),
-      Immutable.fromJS(
-        {match: {field: null, cases: [['',[]]]}}
-      )
+      DEFAULT_MATCH
     )) {
       const parentPath = this.props.rulePath.slice(0, -1)
       const newConfig = this.state.originalConfig.setIn(

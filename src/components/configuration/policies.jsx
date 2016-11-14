@@ -13,6 +13,7 @@ import IsAllowed from '../is-allowed'
 
 import { getActiveMatchSetForm } from './helpers'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
+import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -96,8 +97,8 @@ class ConfigurationPolicies extends React.Component {
         </SectionHeader>
         <SectionContainer>
           <ConfigurationPolicyRules
-            requestPolicies={config.getIn(['request_policy','policy_rules'])}
-            responsePolicies={config.getIn(['response_policy','policy_rules'])}
+            requestPolicies={config.getIn([POLICY_TYPES.REQUEST, 'policy_rules'])}
+            responsePolicies={config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])}
             activateRule={this.props.activateRule}
             deleteRule={this.deleteRule}/>
           {this.props.activeRule ?

@@ -5,6 +5,7 @@ import { shallow } from 'enzyme'
 jest.unmock('../policies.jsx')
 import ConfigurationPolicies from '../policies.jsx'
 import ConfigurationSidebar from '../sidebar.jsx'
+import { POLICY_TYPES, DEFAULT_MATCH } from '../../../constants/property-config'
 
 const fakeConfig = Immutable.fromJS(
   {"status": 1,
@@ -226,9 +227,9 @@ describe('ConfigurationPolicies', () => {
       <ConfigurationPolicies config={fakeConfig} intl={intlMaker()}
         activateRule={activateRule} activeRule={Immutable.List()}/>
     )
-    policies.instance().changeActiveRuleType('request')
+    policies.instance().changeActiveRuleType(POLICY_TYPES.REQUEST)
     expect(activateRule.mock.calls[0][0].get(0)).toEqual('request_policy')
-    policies.instance().changeActiveRuleType('response')
+    policies.instance().changeActiveRuleType(POLICY_TYPES.RESPONSE)
     expect(activateRule.mock.calls[1][0].get(0)).toEqual('response_policy')
   })
 
