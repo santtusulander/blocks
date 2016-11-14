@@ -28,13 +28,14 @@ class PurgeModal extends React.Component {
     this.validateEmail = this.validateEmail.bind(this)
     this.validatePurgeObjects = this.validatePurgeObjects.bind(this)
     this.purgeObjInput = this.purgeObjInput.bind(this)
-    this.setHostnames = this.setHostnames.bind(this)
+    this.parseTypeahead = this.parseTypeahead.bind(this)
   }
   showPurgeOption(type) {
     this.setState({type: type})
-
     if (type == 'url' || type == 'directory') {
-      this.props.changePurge(this.props.activePurge.delete('published_hosts').set('published_host_id', this.props.activeHost.get('published_host_id')))
+      this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
+    } else if (type == 'hostname') {
+      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', Immutable.List()))
     } else if (type == 'group') {
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', (this.props.allHosts).toJS()))
     }
@@ -81,8 +82,9 @@ class PurgeModal extends React.Component {
       )
     }
   }
-  setHostnames(e) {
-
+  parseTypeahead(e) {
+    const parsedTypeahead = e.map(val => val.label)
+    this.props.changePurge(this.props.activePurge.set('published_hosts', Immutable.List(parsedTypeahead)))
   }
   validatePurgeObjects(value) {
     if(!value) {
@@ -211,7 +213,7 @@ class PurgeModal extends React.Component {
                   <Typeahead
                     multiple={true}
                     options={hostnamesArray}
-                    onChange={this.setHostnames}/>
+                    onChange={this.parseTypeahead}/>
                   <hr/>
                 </div>}
 
