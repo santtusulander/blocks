@@ -95,6 +95,7 @@ export class AccountManagement extends Component {
     }
 
     else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+      this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
   }
