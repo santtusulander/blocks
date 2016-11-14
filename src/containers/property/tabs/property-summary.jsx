@@ -226,14 +226,14 @@ class PropertySummary extends React.Component {
         this.setState({ purgeActive: false })
         this.showNotification(
           <FormattedMessage
-            id="portal.content.property.summary.reguestFailed.label"
+            id="portal.content.property.summary.requestFailed.label"
             value={{ reason: action.payload.message }}
           />
         )
       }
       else {
         this.setState({ purgeActive: false })
-        this.showNotification(<FormattedMessage id="portal.content.property.summary.reguestSuccess.label"/>)
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
       }
     })
   }
