@@ -1,5 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.mock('../../util/helpers', () => {
   return {
@@ -79,34 +79,33 @@ const urlParams = {brand: 'udn', account: '1', group: '2', property: 'www.abc.co
 const fakeLocation = {query: {name: 'www.abc.com'}}
 
 describe('PropertySummary', () => {
+
+  let subject, props = null
+
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        params: urlParams,
+        location: fakeLocation,
+        fetching: true,
+        accountActions: accountActionsMaker(),
+        groupActions: groupActionsMaker(),
+        hostActions: hostActionsMaker(),
+        metricsActions: metricsActionsMaker(),
+        trafficActions: trafficActionsMaker(),
+        visitorsActions: visitorsActionsMaker(),
+      }
+      return shallow(<PropertySummary {...props}/>)
+    }
+  })
+
   it('should exist', () => {
-    const propertySummary = TestUtils.renderIntoDocument(
-      <PropertySummary
-        params={urlParams}
-        location={fakeLocation}
-        fetching={true}
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        hostActions={hostActionsMaker()}
-        metricsActions={metricsActionsMaker()}
-        trafficActions={trafficActionsMaker()}
-        visitorsActions={visitorsActionsMaker()} />
-    );
-    expect(TestUtils.isCompositeComponent(propertySummary)).toBeTruthy();
+    expect(subject().length).toBe(1)
   });
 
   it('should request data on mount', () => {
-    const hostActions = hostActionsMaker()
-    TestUtils.renderIntoDocument(
-      <PropertySummary
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        hostActions={hostActions}
-        metricsActions={metricsActionsMaker()} fetching={true}
-        params={urlParams} location={fakeLocation}
-        trafficActions={trafficActionsMaker()}
-        visitorsActions={visitorsActionsMaker()}/>
-    )
+    const hostActions = subject().instance().props.hostActions
+
     expect(hostActions.startFetching.mock.calls.length).toBe(1)
     expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
     expect(hostActions.fetchHost.mock.calls[0][1]).toBe('1')
