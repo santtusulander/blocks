@@ -110,7 +110,7 @@ class MapPoc extends React.Component {
       })
   }
   componentDidMount() {
-    //this fixes map bug
+    //this fixes a bug of map not being drawn correctly on reload
     window.dispatchEvent(new Event('resize'));
   }
 
