@@ -1,5 +1,10 @@
+/* eslint-disable react/no-find-dom-node */
+// It is acceptible to use ReactDOM.findDOMNode, since it is not deprecated.
+// react/no-find-dom-node is designed to avoid use of React.findDOMNode and
+// Component.getDOMNode
+
 import React, { PropTypes } from 'react'
-import ReactDOM from 'react-dom'
+import { findDOMNode } from 'react-dom'
 import { Dropdown, Nav } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
@@ -39,8 +44,8 @@ class Tabs extends React.Component {
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (ReactDOM.findDOMNode(this.refs['tab0']) != null &&
-        ReactDOM.findDOMNode(this.refs['hiddenTabs']) != null) {
+      if (findDOMNode(this.refs['tab0']) != null &&
+        findDOMNode(this.refs['hiddenTabs']) != null) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
@@ -59,7 +64,7 @@ class Tabs extends React.Component {
     })
   }
   getDOMNodeTop(ref) {
-    return ReactDOM.findDOMNode(this.refs[ref]).getBoundingClientRect().top
+    return findDOMNode(this.refs[ref]).getBoundingClientRect().top
   }
   render() {
     const { activeKey, children, className, onSelect } = this.props

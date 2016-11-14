@@ -229,7 +229,7 @@ export default class Styleguide extends React.Component {
             <NavItem eventKey={2}>Long Tab Name 2</NavItem>
             <NavItem eventKey={3}>Longer Tab Name 3</NavItem>
             <NavItem eventKey={4}>Even Longer Tab Name 4</NavItem>
-            <NavItem eventKey={5}>Can't believe how Long Tab Name 5</NavItem>
+            <NavItem eventKey={5}>Can&apos;t believe how Long Tab Name 5</NavItem>
             <NavItem eventKey={6}>Normal Tab Name 6</NavItem>
           </Tabs>
 
@@ -260,6 +260,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary">Primary</Button>
             <Button className="btn-secondary">Secondary</Button>
+            <Button className="btn-tertiary">Tertiary</Button>
             <Button bsStyle="danger">Destructive</Button>
             <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
@@ -270,6 +271,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary" disabled={true}>Primary</Button>
             <Button className="btn-secondary" disabled={true}>Secondary</Button>
+            <Button className="btn-tertiary" disabled={true}>Tertiary</Button>
             <Button bsStyle="danger" disabled={true}>Destructive</Button>
             <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
