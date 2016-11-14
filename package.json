@@ -138,7 +138,8 @@
       "<rootDir>/node_modules/react-redux",
       "<rootDir>/node_modules/intl",
       "<rootDir>/node_modules/react-intl",
-      "<rootDir>/node_modules/redux"
+      "<rootDir>/node_modules/redux",
+      "<rootDir>/node_modules/normalizr"
     ]
   },
   "repository": {
