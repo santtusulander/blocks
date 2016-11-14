@@ -296,27 +296,28 @@ export class Configuration extends React.Component {
             */}
           </ButtonToolbar>
         </PageHeader>
-        <Tabs>
-          <li>
+        <Tabs activeKey={children.props.route.path}>
+          <li eventKey='details'>
             <Link to={baseUrl + '/details'} activeClassName="active">
               <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li>
+          <li eventKey='defaults'>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
               <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li>
+          <li eventKey='policies'>
             <Link to={baseUrl + '/policies'} activeClassName="active">
               <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li>
+          <li eventKey='security'>
             <Link to={baseUrl + '/security'} activeClassName="active">
               <FormattedMessage id="portal.configuration.security.text"/>
             </Link>
           </li>
+
           {/* Hide in 1.0 – UDNP-1406
           <NavItem eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
