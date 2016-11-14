@@ -43,8 +43,8 @@ const TokenAuthList = ({rules}) => {
 }
 
 TokenAuthList.propTypes = {
-  rules: PropTypes.array,
   intl: intlShape.isRequired,
+  rules: PropTypes.array
 }
 TokenAuthList.defaultProps = {
   rules: []

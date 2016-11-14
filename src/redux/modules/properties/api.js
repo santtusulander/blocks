@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import axios from 'axios'
 import { BASE_URL_NORTH, BASE_URL_AAA }  from '../../util.js'
 import {arrayOf, normalize, Schema} from 'normalizr'
