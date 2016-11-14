@@ -21,6 +21,7 @@ import TruncatedTitle from '../../truncated-title'
 import IconTrash from '../../icons/icon-trash.jsx'
 import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
+import IconCaretDown from '../../icons/icon-caret-down'
 
 const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, togglePurge }) => {
 
@@ -77,12 +78,12 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, tog
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>
-          <span className="caret" />
+          <IconCaretDown />
         </div>
       </AccountSelector>
       <ButtonToolbar>
         <IsAllowed to={MODIFY_PROPERTY}>
-          <Button bsStyle="primary" onClick={togglePurge}>Purge</Button>
+          <Button bsStyle="primary" onClick={togglePurge}><FormattedMessage id="portal.content.property.header.purge.label"/></Button>
         </IsAllowed>
         <Link className="btn btn-success btn-icon"
               to={`${getAnalyticsUrl('property', params.property, params)}`}>
