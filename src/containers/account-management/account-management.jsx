@@ -349,7 +349,7 @@ export class AccountManagement extends Component {
       case DELETE_ACCOUNT:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteAccountConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: true,
@@ -361,7 +361,7 @@ export class AccountManagement extends Component {
       case DELETE_GROUP:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteGroupConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: true,
@@ -373,7 +373,7 @@ export class AccountManagement extends Component {
       case DELETE_HOST:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.hostToDelete}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: true,
