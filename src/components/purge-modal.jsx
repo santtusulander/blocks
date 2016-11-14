@@ -217,11 +217,6 @@ class PurgeModal extends React.Component {
                   <hr/>
                 </div>}
 
-                {this.state.type === 'group' && <div>
-                  <h3><FormattedMessage id="portal.analytics.purgeModal.group.text"/></h3>
-                  <hr/>
-                </div>}
-
                 {/* SECTION - Content Removal Method */}
                 <h3><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></h3>
 

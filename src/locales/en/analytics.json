@@ -29,7 +29,7 @@
   "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.url.text": "URLs",
   "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.directory.text": "Directories",
   "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.hostname.text": "Hostnames",
-  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.group.text": "Entire Group",
+  "portal.analytics.purgeModal.whatDoYouWantToPurge.selection.group.text": "Entire Group (All Hostnames)",
   "portal.analytics.purgeModal.url.title": "URLs to Purge",
   "portal.analytics.purgeModal.url.help": "Up to 100 urls, separated by comma",
   "portal.analytics.purgeModal.url.placeholder": "Enter URLs",
