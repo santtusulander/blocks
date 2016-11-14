@@ -538,6 +538,7 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
+  'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',

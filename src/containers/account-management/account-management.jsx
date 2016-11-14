@@ -244,7 +244,10 @@ export class AccountManagement extends Component {
                   id="portal.accountManagement.accoutnUpdated.text"/></Button>
               })
             } else {
-              this.showNotification(`Host ${host} deleted.`)
+              this.showNotification(<FormattedMessage
+                id="portal.accountManagement.propertyDeleted.text"
+                values={{propertyName: host}} />
+              )
             }
           })
       })
