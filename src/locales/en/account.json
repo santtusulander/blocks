@@ -54,6 +54,18 @@
   "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
   "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required",
 
+  "portal.account.groupForm.name.validation.error": "Invalid Group name",
+  "portal.account.groupForm.name.required.error": "Group name is required",
+  "portal.account.groupForm.name.label": "Group Name",
+  "portal.account.groupForm.name.text": "Enter Group Name",
+  "portal.account.groupForm.charge_number.label": "Billing Number",
+  "portal.account.groupForm.charge_id.text": "Enter Billing Number",
+  "portal.account.groupForm.charge_model.label": "Billing Mode",
+  "portal.account.groupForm.charge_model.option.bytesDelivered": "Bytes Delivered",
+  "portal.account.groupForm.charge_model.option.percentile": "95/5",
+  "portal.account.groupForm.editGroup.title": "Edit Group",
+  "portal.account.groupForm.newGroup.title": "Add new group",
+
   "portal.account.soaForm.validation.required": "Required",
   "portal.account.soaForm.validation.invalid": "Invalid input",
   "portal.account.soaForm.domainName.label": "Domain Name",
