@@ -86,11 +86,6 @@ const TRANSLATED_MESSAGES = {
   'portal.brand.list.lastEdited.text': 'Last Edited',
   'portal.brand.list.usedBy.text': 'Used By',
 
-  'portal.group.edit.name.required.text': 'Group name is required',
-  'portal.group.edit.name.label': 'Group Name',
-  'portal.group.edit.name.enter.text': 'Enter Group Name',
-  'portal.group.edit.editGroup.title': 'Edit Group',
-  'portal.group.edit.newGroup.title': 'Add new group',
 
   'portal.manage.tabs.users.title': 'Users',
   'portal.manage.tabs.brands.title': 'Brands',
@@ -528,7 +523,9 @@ const TRANSLATED_MESSAGES = {
   'portal.fileInput.chooseFile.text': 'Choose file',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
-  'portal.accountManagement.deleteConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deleteAccountConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This account will be removed from UDN immediately.',
+  'portal.accountManagement.deleteGroupConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deletePropertyConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This property will be removed from UDN immediately.',
   'portal.accountManagement.noActiveAccount.text': 'No active account',
   'portal.accountManagement.invalidAccountName.text': 'Account name is invalid.',
   'portal.accountManagement.account.text': 'ACCOUNT',
@@ -541,6 +538,7 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
+  'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',

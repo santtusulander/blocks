@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, Nav, NavItem, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, NavItem, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -27,6 +27,7 @@ import IconTrash from '../components/icons/icon-trash.jsx'
 import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
+import Tabs from '../components/tabs'
 
 import ConfigurationDetails from '../components/configuration/details'
 import ConfigurationDefaults from '../components/configuration/defaults'
@@ -233,11 +234,11 @@ export class Configuration extends React.Component {
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
-      || (!this.props.activeHost || !this.props.activeHost.size)) {
+    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    if(this.props.fetching && (!activeHost || !activeHost.size)
+      || (!activeHost || !activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
@@ -311,7 +312,7 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
 
-        <Nav bsStyle="tabs" activeKey={this.state.activeTab}
+        <Tabs activeKey={this.state.activeTab}
           onSelect={this.activateTab}>
           <NavItem eventKey={'details'}>
             <FormattedMessage id="portal.configuration.hostname.text"/>
@@ -339,7 +340,7 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.changeLog.text"/>
           </NavItem>
           */}
-        </Nav>
+        </Tabs>
 
         <PageContainer>
           {this.state.activeTab === 'details' ?
@@ -417,7 +418,7 @@ export class Configuration extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+            deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
           verifyDelete={true}>
