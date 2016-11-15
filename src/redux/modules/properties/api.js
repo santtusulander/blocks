@@ -14,8 +14,7 @@ export const propertySchema = new Schema('properties', {idAttribute: 'published_
  */
 export const fetch = (brand, account, group, id) => {
   return fetchHost(brand, account, group, id)
-    .then( ({data}) =>
-      normalizeApiResponse(data, propertySchema ) )
+    .then( ({data}) => normalizeApiResponse(data, propertySchema ) )
 }
 
 /**
