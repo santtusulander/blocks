@@ -45,9 +45,9 @@ export function createFailure(state) {
 
 export function deleteSuccess(state, action) {
   const allHosts = state.get('allHosts')
-    .filterNot(property => property === action.payload.id)
+    .filterNot(property => property === action.payload.get('published_host_id'))
   const configuredHostNames = state.get('configuredHostNames')
-    .filterNot(property => property === action.payload.name)
+    .filterNot(property => property === getConfiguredName(action.payload))
   return state.merge({
     allHosts,
     configuredHostNames,
@@ -203,10 +203,11 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
   })
 })
 
-export const deleteHost = createAction(HOST_DELETED, (brand, account, group, id, name) => {
+export const deleteHost = createAction(HOST_DELETED, (brand, account, group, host) => {
+  const id = host.get('published_host_id')
   return axios.delete(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`)
   .then(() => {
-    return { id, name }
+    return host
   });
 })
 

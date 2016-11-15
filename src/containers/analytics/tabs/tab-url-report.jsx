@@ -51,7 +51,7 @@ class AnalyticsTabUrlReport extends React.Component {
         property: hostConfiguredName
       })
     }
-    const fetchOpts = buildAnalyticsOpts(params, filters)
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const {startFetching, finishFetching, fetchURLMetrics} = this.props.reportsActions
     startFetching();
     return fetchURLMetrics(fetchOpts).then(finishFetching, finishFetching)

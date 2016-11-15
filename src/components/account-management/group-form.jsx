@@ -6,12 +6,14 @@ import {
   Modal,
   Input,
   ButtonToolbar,
-  Button
+  Button,
+  Table
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
+import ActionButtons from '../../components/action-buttons.jsx'
 
 import { checkForErrors, userIsContentProvider, userIsCloudProvider } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
@@ -139,6 +141,8 @@ class GroupForm extends React.Component {
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
 
+    const { hosts, onDeleteHost } = this.props
+
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
@@ -232,8 +236,40 @@ class GroupForm extends React.Component {
                 </ul>
               </div>
               */}
+
+              <hr/>
+
+              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+              {!hosts.isEmpty() ?
+                <Table striped={true}>
+                  <thead>
+                  <tr>
+                    <th>
+                      <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                    </th>
+                    <th width="8%"/>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {hosts.map((host, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{host}</td>
+                        <td>
+                          <ActionButtons
+                            onDelete={() => onDeleteHost(host)}/>
+                        </td>
+                      </tr>
+                    )
+                  })
+                  }
+                  </tbody>
+                </Table>
+                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+              }
+
               <ButtonToolbar className="text-right extra-margin-top">
-                <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+                <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
                 <Button disabled={invalid} bsStyle="primary"
                         onClick={this.save}>{groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
               </ButtonToolbar>
@@ -250,9 +286,11 @@ GroupForm.propTypes = {
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groupId: PropTypes.number,
+  hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
+  onDeleteHost: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool,
   users: PropTypes.instanceOf(List)
