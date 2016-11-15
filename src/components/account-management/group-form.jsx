@@ -112,7 +112,9 @@ class GroupForm extends React.Component {
       onCancel,
       groupId,
       account,
-      intl } = this.props
+      intl,
+      hosts,
+      onDeleteHost } = this.props
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
      */
@@ -140,8 +142,6 @@ class GroupForm extends React.Component {
 
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
-
-    const { hosts, onDeleteHost } = this.props
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -240,8 +240,9 @@ class GroupForm extends React.Component {
               <hr/>
 
               {!accountIsServiceProviderType(account) &&
-                <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-                (!hosts.isEmpty() ?
+                <div>
+                  <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+                  {!hosts.isEmpty() ?
                   <Table striped={true}>
                     <thead>
                     <tr>
@@ -265,10 +266,11 @@ class GroupForm extends React.Component {
                     })
                     }
                     </tbody>
-                  </Table>
-                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
-                )
-              }
+                  </Table> :
+                  <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+                  }
+                </div>
+                }
 
               <ButtonToolbar className="text-right extra-margin-top">
                 <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>

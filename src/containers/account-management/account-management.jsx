@@ -40,7 +40,7 @@ import {
 } from '../../constants/account-management-modals.js'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
-import { checkForErrors } from '../../util/helpers'
+import { checkForErrors, accountIsServiceProviderType } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 export class AccountManagement extends Component {
@@ -199,7 +199,7 @@ export class AccountManagement extends Component {
   showEditGroupModal(group) {
     const { activeAccount, params: { brand, account }, groupActions: { fetchGroup }, hostActions: { fetchHosts } } = this.props
     Promise.all([
-      fetchHosts('udn', activeAccount.get('id'), group.get('id')),
+      !accountIsServiceProviderType(activeAccount) && fetchHosts('udn', activeAccount.get('id'), group.get('id')),
       fetchGroup(brand, account, group.get('id'))
     ]).then(() => {
       this.setState({ groupToUpdate: group.get('id') })
