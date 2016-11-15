@@ -21,7 +21,7 @@ class ConfigurationDiffBar extends React.Component {
     const configDiff = diff(this.props.originalConfig, this.props.currentConfig)
     //filteredConfigDiff ignores the differences when they are just timestamps
     const filteredConfigDiff = configDiff.filterNot(
-      x => (x.has('path') && (x.get('path') === '/config_created' || x.get('path') === '/config_updated'))
+      change => (change.has('path') && (change.get('path') === '/config_created' || change.get('path') === '/config_updated'))
     )
     return (
       <ReactCSSTransitionGroup
