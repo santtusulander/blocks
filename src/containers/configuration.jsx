@@ -368,7 +368,7 @@ export class Configuration extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+            deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
           verifyDelete={true}>
