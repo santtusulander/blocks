@@ -13,7 +13,11 @@ import {
   policyIsCompatibleWithAction
 } from '../../util/policy-config'
 import Select from '../select'
-import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
+import {
+  POLICY_TYPES,
+  DEFAULT_MATCH,
+  DEFAULT_MATCH_JS
+} from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -49,7 +53,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
 
-      let newMatch = Immutable.List(DEFAULT_MATCH)
+      let newMatch = Immutable.fromJS([DEFAULT_MATCH_JS])
       if(currentSet) {
         const newSetPath = [0, 'match'].concat(childPath)
         newMatch = newMatch.setIn(newSetPath, currentSet)
