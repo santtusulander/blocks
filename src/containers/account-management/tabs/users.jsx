@@ -18,8 +18,8 @@ import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../../components/inline-add'
+import PasswordFields from '../../../components/password-fields'
 import IconAdd from '../../../components/icons/icon-add'
-import IconEye from '../../../components/icons/icon-eye'
 import IconInfo from '../../../components/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
 import UserEditModal from '../../../components/account-management/user-edit/modal'
@@ -46,6 +46,7 @@ export class AccountManagementAccountUsers extends React.Component {
       showPermissionsModal: false,
       addingNew: false,
       passwordVisible: false,
+      validPassword: false,
       usersGroups: List(),
       existingMail: null,
       existingMailMsg: null
@@ -62,6 +63,7 @@ export class AccountManagementAccountUsers extends React.Component {
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.changePassword = this.changePassword.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
@@ -125,7 +127,7 @@ export class AccountManagementAccountUsers extends React.Component {
     })
   }
 
-  validateInlineAdd({ email = '', password = '', confirmPw = '', roles = '' }) {
+  validateInlineAdd({ email = '', roles = '' }) {
     const conditions = {
       email: [
         {
@@ -136,17 +138,9 @@ export class AccountManagementAccountUsers extends React.Component {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
           errorText: 'Invalid Email.'
         }
-      ],
-      password: {
-        condition: password.length > 30,
-        errorText: 'Password too long.'
-      },
-      confirmPw: {
-        condition: confirmPw !== password,
-        errorText: 'Passwords don\'t match.'
-      }
+      ]
     }
-    return checkForErrors({ email, password, confirmPw, roles }, conditions)
+    return checkForErrors({ email, roles }, conditions)
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -186,25 +180,8 @@ export class AccountManagementAccountUsers extends React.Component {
      */
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
-      [ { input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> } ],
-      [
-        {
-          input: <Input id='password' placeholder=" Password"
-            type={this.state.passwordVisible ? 'text' : 'password'}/>,
-          positionClass: 'password-field left'
-        },
-        {
-          input: <Input id='confirmPw' placeholder=" Confirm password"
-            type={this.state.passwordVisible ? 'text' : 'password'}
-            wrapperClassName={'input-addon-after-outside'}
-            addonAfter={<a className={'input-addon-link btn-primary btn-icon' +
-                (this.state.passwordVisible ? ' active' : '')}
-                onClick={this.togglePasswordVisibility}>
-                  <IconEye/>
-              </a>}/>,
-          positionClass: 'password-field left'
-        }
-      ],
+      [{ input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> }],
+      [{ input: <PasswordFields id="password" inlinePassword={true} changePassword={this.changePassword} /> }],
       [
         {
           input: <SelectWrapper
@@ -250,6 +227,12 @@ export class AccountManagementAccountUsers extends React.Component {
     this.setState({
       passwordVisible: !this.state.passwordVisible
     })
+  }
+
+  changePassword(isPasswordValid) {
+    this.setState({
+      'validPassword': isPasswordValid
+    });
   }
 
   getGroupsForUser(user) {
@@ -437,10 +420,11 @@ export class AccountManagementAccountUsers extends React.Component {
           <tbody>
             {this.state.addingNew && <InlineAdd
               validate={this.validateInlineAdd}
-              fields={['email', 'password', 'confirmPw', 'roles', 'group_id']}
+              fields={['email', 'password', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
-              save={this.newUser}/>}
+              save={this.newUser}
+              passwordValid={this.state.validPassword}/>}
             {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
@@ -467,16 +451,16 @@ export class AccountManagementAccountUsers extends React.Component {
         {sortedUsers.size === 0 &&
           <div className="text-center">
             {this.state.search.length > 0 ?
-              <span>No users found with the search term "{this.state.search}"</span>
+              <span>No users found with the search term &quot;{this.state.search}&quot;</span>
             :
               <span>No users found</span>
             }
             {this.state.filteredRoles !== 'all' &&
               <span> {this.state.search.length > 0 ? 'and ' : 'with '}
-                a role of "{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}"</span>
+                a role of &quot;{this.props.roles.find(role => role.get('id') === this.state.filteredRoles).get('name')}&quot;</span>
             }
             {this.state.filteredGroups !== 'all' &&
-              <span> within the group "{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}"</span>
+              <span> within the group &quot;{this.props.groups.find(group => group.get('id') === this.state.filteredGroups).get('name')}&quot;</span>
             }
           </div>
         }
@@ -543,6 +527,7 @@ AccountManagementAccountUsers.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    form: state.form,
     roles: state.roles.get('roles'),
     users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser').get('email'),

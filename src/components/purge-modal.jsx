@@ -19,6 +19,7 @@ class PurgeModal extends React.Component {
 
     this.emailValidationTimeout = null
     this.purgeObjectsValidationTimeout = null
+    this.showPurgeOption = this.showPurgeOption.bind(this)
     this.change = this.change.bind(this)
     this.parsePurgeObjects = this.parsePurgeObjects.bind(this)
     this.submitForm = this.submitForm.bind(this)
@@ -26,6 +27,15 @@ class PurgeModal extends React.Component {
     this.validateEmail = this.validateEmail.bind(this)
     this.validatePurgeObjects = this.validatePurgeObjects.bind(this)
     this.purgeObjInput = this.purgeObjInput.bind(this)
+  }
+  showPurgeOption(type) {
+    this.setState({type: type})
+
+    if (type == 'url' || type == 'directory') {
+      this.props.changePurge(this.props.activePurge.set('published_host_id', this.props.activeHost.get('published_host_id')))
+    } else {
+      this.props.changePurge(this.props.activePurge.delete('published_host_id'))
+    }
   }
   change(path) {
     return (e) => {
@@ -103,14 +113,14 @@ class PurgeModal extends React.Component {
     }
   }
   toggleNotification() {
-    let feedback = null
     if(!this.props.activePurge.get('feedback')) {
-      feedback = Immutable.Map({email: ''})
+      this.props.changePurge(this.props.activePurge.set('feedback', Immutable.Map({email: ''})))
+    } else {
+      this.props.changePurge(this.props.activePurge.delete('feedback'))
     }
     this.setState({
       purgeEmailError: ''
     })
-    this.props.changePurge(this.props.activePurge.set('feedback', feedback))
   }
   purgeObjInput({title, help, placeholder}) {
     return (
@@ -171,7 +181,7 @@ class PurgeModal extends React.Component {
                   ['hostname', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.hostname.text'})],
                   ['group', this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.whatDoYouWantToPurge.selection.group.text'})]
                 ]}
-                onSelect={type => this.setState({type: type})}/>
+                onSelect={(type) => this.showPurgeOption(type)}/>
               <hr/>
 
               {this.state.type && this.state.type !== 'hostname'
@@ -260,6 +270,7 @@ class PurgeModal extends React.Component {
 
 PurgeModal.displayName = 'PurgeModal'
 PurgeModal.propTypes = {
+  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeProperty: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   availableProperties: React.PropTypes.instanceOf(Immutable.List),

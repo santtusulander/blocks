@@ -35,7 +35,7 @@ class ConfigurationDiffBar extends React.Component {
                 onClick={this.resetConfig}>
                 <FormattedMessage id="portal.button.CANCEL"/>
               </Button>
-              <Button className="btn btn-save"
+              <Button bsStyle="primary"
                 onClick={this.props.saveConfig}
                 disabled={this.props.saving}>
                 {this.props.saving ? <FormattedMessage id="portal.button.saving"/> : <FormattedMessage id="portal.button.SAVE"/>}

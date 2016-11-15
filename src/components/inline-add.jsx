@@ -57,7 +57,7 @@ const generateBsClasses = (attributes, input) => {
   return input.props.bsStyle ? { bsStyle: input.props.bsStyle } : {}
 }
 
-const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
+const InlineAdd = ({save, inputs, fields, invalid, passwordValid, values, unmount}) =>
   <tr className="inline-add-row">
     {inputs.map((cell, index) =>
       <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
@@ -72,7 +72,7 @@ const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
         })}
         {index === inputs.length - 1 &&
         <ButtonToolbar className="pull-right">
-          <UDNButton disabled={invalid} onClick={() => save(values)}>
+          <UDNButton disabled={invalid || !passwordValid} onClick={() => save(values)}>
             <FormattedMessage id="portal.button.SAVE"/>
           </UDNButton>
           <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
@@ -87,6 +87,7 @@ InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array,
   invalid: PropTypes.bool,
+  passwordValid: PropTypes.bool,
   save: PropTypes.func,
   unmount: PropTypes.func,
   values: PropTypes.object
