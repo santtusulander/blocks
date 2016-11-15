@@ -6,7 +6,9 @@ import {getFetching} from '../fetching/selectors'
  * @return [] Array of Ids
  */
 export const getAllHosts = (state) => {
-  return state.properties.properties.map( (val, key) => key)
+  const ids = []
+  state.properties.properties.forEach( (val, key) => ids.push(key) )
+  return ids
 }
 
 /**
@@ -33,11 +35,25 @@ export const getByGroup = (state, groupId) => {
   return state.properties.properties.filter( prop => prop.get('groupId') === groupId)
 }
 
+/**
+ * Get property by ID
+ * @param  {} state from redux
+ * @param  String id of the item
+ * @return {} property
+ */
+export const getById = (state, id) => {
+  return state.properties.properties.get(id)
+    //remove keys that we added when fetching host
+    .delete('brandId')
+    .delete('accountId')
+    .delete('groupId')
+    .toJS()
+}
 
 /**
  * isFetching ?
- * @param  {[type]}  state [description]
- * @return {Boolean}       [description]
+ * @param  {}  state
+ * @return Boolean
  */
 export const isFetching = (state) => {
   return getFetching(state.properties.fetching)
