@@ -1,0 +1,28 @@
+// Month Picker
+$mp-width: rem(300px);
+$mp-top-padding: rem(15px);
+$mp-horizontal-padding: rem(25px);
+$mp-bottom-padding: rem(25px);
+$mp-dark-bg-color: $black;
+$mp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+$mp-light-bg-color: $white;
+
+.month-picker {
+  width: $mp-width;
+  padding: $mp-top-padding $mp-horizontal-padding $mp-bottom-padding;
+
+  .dark-theme & {
+    background-color: $mp-dark-bg-color;
+    background-image: $mp-dark-bg-image;
+  }
+
+  .light-theme & {
+    background-color: $mp-light-bg-color;
+  }
+
+  .year-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
