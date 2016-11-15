@@ -25,11 +25,14 @@ export const emptyTraffic = fromJS({
 // REDUCERS
 
 export function fetchedByTimeSuccess(state, action) {
+  const total = action.payload.data.reduce((total, record) => total + record.uniq_vis, 0)
+  const average = action.payload.data.length ? total / action.payload.data.length : 0;
   return state.merge({
     byTime: fromJS(action.payload.data.map(datapoint => {
       datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
       return datapoint
-    }))
+    })),
+    byTimeAverage: average
   })
 }
 
