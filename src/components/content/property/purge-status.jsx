@@ -31,6 +31,11 @@ class PurgeHistoryReport extends React.Component {
     this.filterData = this.filterData.bind(this)
   }
 
+  componentWillMount() {
+    const { historyData } = this.props
+    this.setData(historyData)
+  }
+
   componentWillReceiveProps(nextProps) {
     const { historyData } = nextProps
     this.setData(historyData)
