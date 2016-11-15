@@ -2,6 +2,10 @@
 
 .group-form-sidebar {
 
+  .btn-icon {
+    border: 0 !important;
+  }
+
   .add-members {
     margin-bottom: 30px;
 
@@ -45,14 +49,14 @@
             height: 24px;
 
             .icon {
-              stroke: $pale-blue;
               vertical-align: initial;
+              stroke: $pale-blue;
 
               .light-theme & {
                 stroke: $silver-60;
               }
 
-              &:hover{
+              &:hover {
                 stroke: $white;
               }
             }

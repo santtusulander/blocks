@@ -21,6 +21,7 @@ import PageContainer from '../../../components/layout/page-container'
 import AnalysisByTime from '../../../components/analysis/by-time'
 import DateRangeSelect from '../../../components/date-range-select'
 import Tooltip from '../../../components/tooltip'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
   formatBitsPerSecond
@@ -272,7 +273,7 @@ class PropertySummary extends React.Component {
   render() {
 
     if (this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
-      return <div>Loading...</div>
+      return <LoadingSpinner />
     }
 
     const startDate = safeMomentStartDate(this.props.location.query.startDate)

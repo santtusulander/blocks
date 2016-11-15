@@ -111,18 +111,18 @@ class AnalysisOnOffNetReport extends React.Component {
     })
 
     let dataSets = [];
-    if ( this.props.onOffFilter.contains('on-net') ) {
+    if ( this.props.onOffFilter.contains('on') ) {
       dataSets.push( onNet.toJS() )
     } else {
       dataSets.push( [] )
     }
 
-    if ( this.props.onOffFilter.contains('off-net') ) {
+    if ( this.props.onOffFilter.contains('off') ) {
       dataSets.push( offNet.toJS() )
     }
 
     const datasets = []
-    if(this.props.onOffFilter.contains('on-net') && onNet) {
+    if(this.props.onOffFilter.contains('on') && onNet) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -135,7 +135,7 @@ class AnalysisOnOffNetReport extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(this.props.onOffFilter.contains('off-net') && offNet) {
+    if(this.props.onOffFilter.contains('off') && offNet) {
       datasets.push({
         area: false,
         color: 'yellow',
@@ -178,12 +178,12 @@ class AnalysisOnOffNetReport extends React.Component {
     const sortedStats = this.sortedData(stats.get('detail'), this.state.sortBy, this.state.sortDir)
 
     /* Get values for KPIs */
-    const dataKey = this.props.onOffFilter.get(0) === 'off-net' ? 'net_off' : 'net_on'
-    const trafficToday = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+    const dataKey = this.props.onOffFilter.get(0) === 'off' ? 'net_off' : 'net_on'
+    const trafficToday = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? statsToday.get('total')
       : statsToday.getIn([ dataKey, 'bytes'] )
 
-    const totalTrafficByDateRange = this.props.onOffFilter.contains('on-net') && this.props.onOffFilter.contains('off-net')
+    const totalTrafficByDateRange = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? stats.get('total')
       : stats.getIn([ dataKey, 'bytes'] )
 
@@ -199,7 +199,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <h4><FormattedMessage id='portal.analytics.onOffNet.trafficToday.label' /></h4>
                 <p>{formatBytes(trafficToday)}</p>
                 <Row className="extra-margin-top">
-                {this.props.onOffFilter.contains('on-net') &&
+                {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
                     <h4>On-net</h4>
                     <p className="on-net">
@@ -207,7 +207,7 @@ class AnalysisOnOffNetReport extends React.Component {
                     </p>
                   </Col>
                 }
-                {this.props.onOffFilter.contains('off-net') &&
+                {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
                     <h4>Off-net</h4>
                     <p className="off-net">
@@ -222,7 +222,7 @@ class AnalysisOnOffNetReport extends React.Component {
                 <h4><FormattedMessage id='portal.analytics.onOffNet.traffic.label' /> {trafficByDateRangeLabel}</h4>
                 <p>{formatBytes(totalTrafficByDateRange)}</p>
                 <Row className="extra-margin-top">
-                {this.props.onOffFilter.contains('on-net') &&
+                {this.props.onOffFilter.contains('on') &&
                   <Col xs={6}>
                     <h4>On-net</h4>
                     <p className="on-net">
@@ -230,7 +230,7 @@ class AnalysisOnOffNetReport extends React.Component {
                     </p>
                   </Col>
                 }
-                {this.props.onOffFilter.contains('off-net') &&
+                {this.props.onOffFilter.contains('off') &&
                   <Col xs={6}>
                     <h4>Off-net</h4>
                     <p className="off-net">
