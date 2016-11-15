@@ -15,7 +15,7 @@ import SelectWrapper from '../select-wrapper'
 // import IconClose from '../icons/icon-close.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 
-import { checkForErrors, userIsContentProvider, userIsCloudProvider } from '../../util/helpers'
+import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
@@ -239,33 +239,35 @@ class GroupForm extends React.Component {
 
               <hr/>
 
-              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-              {!hosts.isEmpty() ?
-                <Table striped={true}>
-                  <thead>
-                  <tr>
-                    <th>
-                      <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                    </th>
-                    <th width="8%"/>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {hosts.map((host, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>{host}</td>
-                        <td>
-                          <ActionButtons
-                            onDelete={() => onDeleteHost(host)}/>
-                        </td>
-                      </tr>
-                    )
-                  })
-                  }
-                  </tbody>
-                </Table>
-                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+              {!accountIsServiceProviderType(account) &&
+                <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+                (!hosts.isEmpty() ?
+                  <Table striped={true}>
+                    <thead>
+                    <tr>
+                      <th>
+                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                      </th>
+                      <th width="8%"/>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {hosts.map((host, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>{host}</td>
+                          <td>
+                            <ActionButtons
+                              onDelete={() => onDeleteHost(host)}/>
+                          </td>
+                        </tr>
+                      )
+                    })
+                    }
+                    </tbody>
+                  </Table>
+                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+                )
               }
 
               <ButtonToolbar className="text-right extra-margin-top">

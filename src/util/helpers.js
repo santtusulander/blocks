@@ -5,7 +5,7 @@ import { getDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
-import { ROLES_MAPPING } from '../constants/account-management-options'
+import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER } from '../constants/account-management-options'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 
 const BYTE_BASE = 1000
@@ -376,6 +376,10 @@ export function userHasRole(user, roleToFind) {
   }
 
   return false
+}
+
+export function accountIsServiceProviderType(account) {
+  return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
 }
 
 export function getAccountByID(accounts, ids) {
