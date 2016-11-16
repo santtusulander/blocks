@@ -8,7 +8,7 @@ import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 import './poc.scss'
 
 const heatMapColors = [
-  '#e32119', // red dark
+  '#e32119', //red dark
   '#e32119', //red light
   '#00a9d4', //cyan
   '#009f80', //green
@@ -103,12 +103,6 @@ class MapPoc extends React.Component {
     this.state = {zoom: 2, countryGeoJson: null}
 
   }
-  componentWillMount(){
-    axios.get(`${topoBase()}/countries.geo.json`)
-      .then( ({data}) => {
-        this.setState({countryGeoJson: data});
-      })
-  }
   componentDidMount() {
     //this fixes a bug of map not being drawn correctly on reload
     window.dispatchEvent(new Event('resize'));
@@ -150,9 +144,9 @@ class MapPoc extends React.Component {
 
         {cityCircles}
 
-        {this.state.zoom < 6 && this.state.countryGeoJson &&
+        {this.state.zoom < 6 && this.props.geoData.features &&
         <GeoJson
-          data={this.state.countryGeoJson}
+          data={this.props.geoData}
           style={(feature) => getCountryStyle(countryMedian, feature)}
           onEachFeature={handleFeature}
         />}
@@ -163,6 +157,7 @@ class MapPoc extends React.Component {
 }
 
 MapPoc.propTypes = {
+  geoData: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
