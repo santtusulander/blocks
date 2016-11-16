@@ -122,23 +122,23 @@ if (useRaven) {
 
   let errorDisplayed = false
 
-  window.onunhandledrejection = (data) => {
+  window.addEventListener('unhandledrejection', (data) => {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable onunhandledrejection happened.')
       captureAndShowRavenError(store, data.reason, null, false)
       errorDisplayed = true
     }
-  }
+  })
 
-  window.onerror = (data) => {
+  window.addEventListener('error', (data) => {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable error happened.')
       captureAndShowRavenError(store, data.reson, null, false)
       errorDisplayed = true;
     }
-  }
+  })
 }
 
 // Check if Intl -polyfill required

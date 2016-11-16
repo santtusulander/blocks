@@ -55,8 +55,23 @@ export const captureAndShowRavenError = (store, err, action = null, recoverable 
   delete loggedState.metrics
   delete loggedState.topo
 
+  //if currentUser set
+  const currentUserEmail = loggedState.user.getIn(['currentUser', 'email'])
+  if (currentUserEmail) {
+    Raven.setUserContext({
+      email: currentUserEmail
+    })
+  } else {
+    Raven.setUserContext()
+  }
+
   // Send the report.
   Raven.captureException(err, {
+    tags: {
+      /* eslint-disable no-undef */
+      version: {VERSION}
+      /* eslint-enable no-undef */
+    },
     extra: {
       action: action,
       state: loggedState
