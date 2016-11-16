@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
 
 import {getTheme} from '../../redux/modules/ui'
-import {fetchCountries, getCountryTopo} from '../../redux/modules/topo'
+import {fetchCountries, getCountryTopo, clearCountryTopo} from '../../redux/modules/topo'
 
 import MapPoc from './poc'
 
@@ -17,6 +17,10 @@ class MapBox extends Component {
 
   shouldComponentUpdate(){
     return true
+  }
+
+  componentWillUnmount(){
+    this.props.clearCountryTopo()
   }
 
   fetchData(){
@@ -38,6 +42,7 @@ class MapBox extends Component {
 }
 
 MapBox.propTypes = {
+  clearCountryTopo: PropTypes.func,
   geoData: PropTypes.object,
   getCountryTopo: PropTypes.func,
   theme: PropTypes.string
@@ -52,6 +57,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    clearCountryTopo: () => dispatch( clearCountryTopo() ),
     getCountryTopo: () => dispatch( fetchCountries() )
   }
 }
