@@ -21,6 +21,15 @@ const emptyTopology = Immutable.Map({
   states: Immutable.Map()
 })
 
+//SELECTORS
+
+export const getCountryTopo = (state) => {
+  const countries = state.topo.get('countries')
+  if (countries) return countries.toJS()
+
+  return {}
+}
+
 // REDUCERS
 
 export function countriesFetchSuccess(state, action) {
@@ -95,7 +104,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
-  return axios.get(`${topoBase()}/countries.topo.json`)
+  return axios.get(`${topoBase()}/countries.geo.json`)
   .then((res) => {
     if(res) {
       return res.data;
