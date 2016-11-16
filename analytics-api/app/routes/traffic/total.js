@@ -23,7 +23,7 @@ function routeTrafficTotal(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  db.getEgressTotal({
+  db.getTotal({
     start    : params.start,
     end      : params.end,
     account  : params.account,

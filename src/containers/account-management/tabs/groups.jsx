@@ -136,7 +136,7 @@ class AccountManagementAccountGroups extends React.Component {
 
   // TODO: Now that this is a container, no need to pass this in
   saveNewGroup(values) {
-    this.props.addGroup(values.name)
+    this.props.addGroup(values)
       .then(newGroup => {
         return Promise.all(this.state.newUsers.map(email => {
           const foundUser = this.props.users
@@ -281,7 +281,6 @@ class AccountManagementAccountGroups extends React.Component {
             validate={this.validateInlineAdd}
             fields={['name']}
             inputs={inlineAddInputs}
-            cancel={this.cancelAdding}
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
