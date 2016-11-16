@@ -1,7 +1,5 @@
 import React from 'react'
 import moment from 'moment'
-// import { injectIntl, FormattedMessage } from 'react-intl'
-// import DatePicker from 'react-datepicker'
 
 import IconArrowRight     from './icons/icon-arrow-right'
 import IconArrowLeft     from './icons/icon-arrow-left'
