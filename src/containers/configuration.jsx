@@ -370,6 +370,7 @@ export class Configuration extends React.Component {
               activeRule={this.props.policyActiveRule}
               activeSet={this.props.policyActiveSet}
               changeValue={this.changeValue}
+              changeValues={this.changeValues}
               config={activeConfig}
               saveChanges={this.saveActiveHostChanges}/>
             : null}
