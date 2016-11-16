@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { fromJS } from 'immutable'
 
 import { flatten } from '../util/helpers'
+import { POLICY_TYPES } from '../constants/property-config'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -187,7 +188,7 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
  * @returns Boolean
  */
 export const getVaryHeaderRuleId = ( config ) => {
-  const path = config.getIn(['response_policy', 'policy_rules'])
+  const path = config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])
 
   return path.findIndex( rule => {
     return 'Vary' === rule.getIn(['set', 'header','header'])

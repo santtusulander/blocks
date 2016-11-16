@@ -281,7 +281,6 @@ class AccountManagementAccountGroups extends React.Component {
             validate={this.validateInlineAdd}
             fields={['name']}
             inputs={inlineAddInputs}
-            cancel={this.cancelAdding}
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {
