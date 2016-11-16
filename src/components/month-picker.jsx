@@ -11,7 +11,6 @@ export class MonthPicker extends React.Component {
     this.state = {
       selectedMonth: moment().format('MMMM'),
       selectedYear: moment().year(),
-      monthIndex: moment().month(),
       startDate: moment().utc().startOf('month').format('X'),
       endDate: moment().utc().endOf('month').format('X')
     }
@@ -27,7 +26,7 @@ export class MonthPicker extends React.Component {
     this.setState({
       selectedYear: previousYear
     })
-    this.setDates(previousYear, this.state.monthIndex);
+    this.setDates(previousYear, this.state.selectedMonth);
   }
 
   nextYear() {
@@ -36,23 +35,22 @@ export class MonthPicker extends React.Component {
       selectedYear: nextYear
     })
 
-    this.setDates(nextYear, this.state.monthIndex);
+    this.setDates(nextYear, this.state.selectedMonth);
   }
 
-  monthSelected(monthIndex) {
-    const currentMonth = moment().month(monthIndex).format("MMMM")
+  monthSelected(month) {
+    const currentMonth = moment().month(month).format("MMMM")
     this.setState({
-      monthIndex: monthIndex,
       selectedMonth: currentMonth
     })
 
-    this.setDates(this.state.selectedYear, monthIndex);
+    this.setDates(this.state.selectedYear, currentMonth);
   }
 
   setDates(year, month) {
     this.setState({
-      startDate: moment([year, month]).utc().startOf('month').format('X'),
-      endDate: moment([year, month]).utc().endOf('month').format('X')
+      startDate: moment().year(year).month(month).utc().startOf('month').format('X'),
+      endDate: moment().year(year).month(month).utc().endOf('month').format('X')
     })
   }
 
@@ -73,10 +71,12 @@ export class MonthPicker extends React.Component {
 
         <ul className="months">
           {months.map((month, i) => {
+            const monthName = moment().month(i).format("MMMM")
             return (
               <li key={i}>
-                <a className={this.state.selectedMonth === moment().month(i).format("MMMM") ? "selected" : ""}
-                   onClick={() => this.monthSelected(i)}>{month}
+                <a className={this.state.selectedMonth === monthName ? "selected" : ""}
+                   onClick={() => this.monthSelected(monthName)}>
+                   {month}
                 </a>
               </li>
             )
