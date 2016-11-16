@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
 
 import {getTheme} from '../../redux/modules/ui'
-import {fetchCountries, getCountryTopo, clearCountryTopo} from '../../redux/modules/topo'
+import {fetchCountries, getCountryTopo, clearCountries} from '../../redux/modules/topo'
 
 import MapPoc from './poc'
 
@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    clearCountryTopo: () => dispatch( clearCountryTopo() ),
+    clearCountryTopo: () => dispatch( clearCountries() ),
     getCountryTopo: () => dispatch( fetchCountries() )
   }
 }
