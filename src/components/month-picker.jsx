@@ -17,6 +17,7 @@ export class MonthPicker extends React.Component {
 
     this.previousYear = this.previousYear.bind(this)
     this.nextYear = this.nextYear.bind(this)
+    this.monthSelected = this.monthSelected.bind(this)
   }
 
   componentWillMount() {
@@ -38,7 +39,17 @@ export class MonthPicker extends React.Component {
     })
   }
 
+  monthSelected() {
+
+  }
+
   render() {
+    const months = []
+    let monthIndex = 0
+    while(monthIndex < 12) {
+      months.push(moment().month(monthIndex++).format("MMM"))
+    }
+
     return (
       <div className="month-picker">
         <div className="year-selector">
@@ -46,6 +57,14 @@ export class MonthPicker extends React.Component {
           <div className="current-year">{this.state.selectedYear}</div>
           <a className="btn btn-icon"onClick={this.nextYear}><IconArrowRight /></a>
         </div>
+
+        <ul className="months">
+          {months.map(month => {
+            return (
+              <li><a onClick={this.monthSelected}>{month}</a></li>
+            )
+          })}
+        </ul>
       </div>
     )
   }

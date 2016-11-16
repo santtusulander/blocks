@@ -1,15 +1,20 @@
 // Month Picker
+$mp-font-size: 14px;
 $mp-width: rem(300px);
-$mp-top-padding: rem(15px);
-$mp-horizontal-padding: rem(25px);
-$mp-bottom-padding: rem(25px);
+$mp-vertical-padding: em(15px, $mp-font-size);
+$mp-horizontal-padding: em(25px, $mp-font-size);
 $mp-dark-bg-color: $black;
 $mp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
 $mp-light-bg-color: $white;
+$mp-year-margin-bottom: em(18px, $mp-font-size);
+$mp-month-vertical-margin: em(6px, $mp-font-size);
+$mp-month-vertical-padding: em(6px, $mp-font-size);
+$mp-month-horizontal-padding: em(14px, $mp-font-size);
+$mp-month-hover-bg-color: $pale-blue;
 
 .month-picker {
   width: $mp-width;
-  padding: $mp-top-padding $mp-horizontal-padding $mp-bottom-padding;
+  padding: $mp-vertical-padding $mp-horizontal-padding;
 
   .dark-theme & {
     background-color: $mp-dark-bg-color;
@@ -22,7 +27,46 @@ $mp-light-bg-color: $white;
 
   .year-selector {
     display: flex;
+    margin-bottom: $mp-year-margin-bottom;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .months {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    list-style: none;
+    flex-wrap: wrap;
+
+    li {
+      width: 33%;
+      margin: $mp-month-vertical-margin 0;
+
+      &:nth-child(3n + 1) {
+        text-align: left;
+      }
+
+      &:nth-child(3n + 2) {
+        text-align: center;
+      }
+
+      &:nth-child(3n + 3) {
+        text-align: right;
+      }
+    }
+
+    a {
+      padding: $mp-month-vertical-padding $mp-month-horizontal-padding;
+      color: $dt-text-color;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+        background-color: $mp-month-hover-bg-color;
+        border-radius: 2px;
+      }
+    }
   }
 }
