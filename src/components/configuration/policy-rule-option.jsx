@@ -23,9 +23,9 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     return <noscript />
   }
 
-  const isEnabled = checkIfEnabled(key)
+  const isEnabled = checkIfEnabled(key) && !notYetImplemented
   const className = classNames({
-    inactive: !isEnabled || notYetImplemented
+    inactive: !isEnabled
   })
   const listItem = (
     <li>
@@ -73,7 +73,7 @@ PolicyRuleOption.propTypes = {
       React.PropTypes.string
     ).isRequired,
     /**
-     * If true, the component will be disabled an have no `onClick` handler.
+     * If true, the component will be disabled and have no `onClick` handler.
      */
     notYetImplemented: React.PropTypes.bool,
     /**
