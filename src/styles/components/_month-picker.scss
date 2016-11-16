@@ -62,11 +62,13 @@ $mp-month-hover-bg-color: $pale-blue;
       color: $dt-text-color;
       cursor: pointer;
 
+      &.selected,
       &:hover {
         text-decoration: none;
         background-color: $mp-month-hover-bg-color;
         border-radius: 2px;
       }
+
     }
   }
 }

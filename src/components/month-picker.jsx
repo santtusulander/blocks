@@ -39,8 +39,11 @@ export class MonthPicker extends React.Component {
     })
   }
 
-  monthSelected() {
-
+  monthSelected(monthIndex) {
+    const currentMonth = moment().month(monthIndex).format("MMMM")
+    this.setState({
+      selectedMonth: currentMonth
+    })
   }
 
   render() {
@@ -59,9 +62,13 @@ export class MonthPicker extends React.Component {
         </div>
 
         <ul className="months">
-          {months.map(month => {
+          {months.map((month, i) => {
             return (
-              <li><a onClick={this.monthSelected}>{month}</a></li>
+              <li key={i}>
+                <a className={this.state.selectedMonth === moment().month(i).format("MMMM") ? "selected" : ""}
+                   onClick={() => this.monthSelected(i)}>{month}
+                </a>
+              </li>
             )
           })}
         </ul>
