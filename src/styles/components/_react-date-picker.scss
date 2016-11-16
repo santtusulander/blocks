@@ -1,0 +1,206 @@
+// React Date Picker
+// =================
+
+.react-date-picker__calendar {
+  width: 300px;
+  padding: 15px 25px 25px;
+  font-family: inherit;
+  font-size: inherit;
+  border: 0;
+  border-radius: 0;
+
+  .dark-theme &,
+  .light-theme & {
+    color: $dt-text-color;
+    background-color: $black;
+    background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+    background-size: 100%;
+  }
+}
+
+.react-date-picker__month-view {
+  width: 100%;
+}
+
+.react-date-picker__nav-bar {
+  padding: 0;
+  background-color: transparent;
+  border-bottom: 1px solid;
+  border-radius: 0;
+
+  .dark-theme &,
+  .light-theme & {
+    border-color: rgba($white, 0.1);
+  }
+
+  // Make months unclickable
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 35px;
+    left: 35px;
+    display: block;
+    height: 100%;
+    content: '';
+  }
+
+  .react-date-picker__nav-bar-date {
+    padding-bottom: 10px;
+    font-size: inherit;
+    font-weight: normal;
+    color: inherit;
+    text-transform: uppercase;
+  }
+
+  .react-date-picker__nav-bar-arrow {
+    position: absolute;
+    top: -8px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+
+    &.react-date-picker__nav-bar-secondary-arrow,
+    svg {
+      display: none !important;
+    }
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -6px 0 0 -3px;
+      border: 6px solid transparent;
+      content: ' ';
+    }
+
+    &.react-date-picker__nav-bar-arrow--prev {
+      left: 0;
+
+      &::after {
+        border-left: 0;
+
+        .dark-theme &,
+        .light-theme & {
+          border-right-color: $dt-text-color;
+        }
+      }
+
+      &:hover::after {
+
+        .dark-theme &,
+        .light-theme & {
+          border-right-color: $white;
+        }
+      }
+    }
+
+    &.react-date-picker__nav-bar-arrow--next {
+      right: 0;
+
+      &::after {
+        border-right: 0;
+
+        .dark-theme &,
+        .light-theme & {
+          border-left-color: $dt-text-color;
+        }
+      }
+
+      &:hover::after {
+
+        .dark-theme &,
+        .light-theme & {
+          border-left-color: $white;
+        }
+      }
+    }
+  }
+}
+
+.react-date-picker__month-view-week-day-names {
+  margin-bottom: 5px;
+  border-bottom: 1px solid;
+
+  .dark-theme &,
+  .light-theme & {
+    border-color: rgba($white, 0.1);
+  }
+
+  .dp-week-day-name {
+    padding: 7px 0;
+  }
+}
+
+.dp-day {
+  position: relative;
+  width: calc(100% / 7);
+  padding: 0;
+  margin: 2px 0;
+  line-height: $md-bar-height / 2;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: $white;
+  }
+
+  &.react-date-picker__month-view-day--prev-month,
+  &.react-date-picker__month-view-day--next-month {
+
+    .dark-theme &,
+    .light-theme & {
+      color: rgba($dt-text-color, 0.5);
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+}
+
+.react-date-picker__month-view-day--active {
+
+  .react-date-picker__month-view-day-text {
+    width: $md-bar-height / 2;
+    height: $md-bar-height / 2;
+    text-align: center;
+    border-radius: 50%;
+
+    .dark-theme &,
+    .light-theme & {
+      color: $white;
+      background-color: $pale-blue;
+    }
+  }
+}
+
+.feadatepicker__input {
+
+  &,
+  &:hover,
+  &:focus {
+    width: 100%;
+    height: $btn-height;
+    padding: 0 20px;
+    font-size: inherit;
+    color: inherit;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    @include md {
+      height: $md-btn-height;
+    }
+
+    // Hide clear button for IE because it's not working with the designed UI
+    &::-ms-clear {
+      display: none;
+    }
+  }
+
+  .dark-theme &,
+  .light-theme & {
+    background: url('../assets/icons/dt-icon-calendar.svg') rgba($black, 0.2) right center no-repeat;
+    background-size: $bar-height;
+  }
+}
