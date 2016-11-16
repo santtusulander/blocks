@@ -84,6 +84,7 @@
     "redux-form": "^5.2.5",
     "redux-promise": "^0.5.1",
     "topojson": "^1.6.22",
+    "topojson-client": "^2.1.0",
     "uniqid": "^4.0.0",
     "validator": "^6.0.0"
   },
