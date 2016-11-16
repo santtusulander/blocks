@@ -33,12 +33,6 @@ export const getCountryTopo = (state) => {
 
 // REDUCERS
 
-export const clearCountryTopo = (state) => {
-  return state.merge({
-    countries: Immutable.Map()
-  })
-}
-
 export function countriesFetchSuccess(state, action) {
   return state.merge({
     countries: Immutable.fromJS(action.payload),
@@ -106,7 +100,7 @@ export default handleActions({
   [TOPO_START_FETCH]: fetchStarted,
   [TOPO_ACTIVE_COUNTRY_CHANGED]: activeCountryChanged,
   [TOPO_ACTIVE_STATE_CHANGED]: activeStateChanged,
-  [TOPO_COUNTRIES_CLEAR]: clearCountryTopo
+  [TOPO_COUNTRIES_CLEAR]: countriesFetchFailure
 }, emptyTopology)
 
 // ACTIONS
