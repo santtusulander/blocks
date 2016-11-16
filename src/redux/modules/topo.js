@@ -11,6 +11,7 @@ const TOPO_STATES_FETCHED = 'TOPO_STATES_FETCHED'
 const TOPO_CITIES_FETCHED = 'TOPO_CITIES_FETCHED'
 const TOPO_ACTIVE_COUNTRY_CHANGED = 'TOPO_ACTIVE_COUNTRY_CHANGED'
 const TOPO_ACTIVE_STATE_CHANGED = 'TOPO_ACTIVE_STATE_CHANGED'
+const TOPO_COUNTRIES_CLEAR = 'TOPO_COUNTRIES_CLEAR'
 
 const emptyTopology = Immutable.Map({
   activeCountry: null,
@@ -31,6 +32,12 @@ export const getCountryTopo = (state) => {
 }
 
 // REDUCERS
+
+export const clearCountryTopo = (state) => {
+  return state.merge({
+    countries: Immutable.Map()
+  })
+}
 
 export function countriesFetchSuccess(state, action) {
   return state.merge({
@@ -93,12 +100,13 @@ export function fetchStarted(state) {
   return state.set('fetching', true)
 }
 export default handleActions({
-  TOPO_COUNTRIES_FETCHED: mapReducers(countriesFetchSuccess, countriesFetchFailure),
-  TOPO_STATES_FETCHED: mapReducers(statesFetchSuccess, statesFetchFailure),
-  TOPO_CITIES_FETCHED: mapReducers(citiesFetchSuccess, citiesFetchFailure),
-  TOPO_START_FETCH: fetchStarted,
-  TOPO_ACTIVE_COUNTRY_CHANGED: activeCountryChanged,
-  TOPO_ACTIVE_STATE_CHANGED: activeStateChanged
+  [TOPO_COUNTRIES_FETCHED]: mapReducers(countriesFetchSuccess, countriesFetchFailure),
+  [TOPO_STATES_FETCHED]: mapReducers(statesFetchSuccess, statesFetchFailure),
+  [TOPO_CITIES_FETCHED]: mapReducers(citiesFetchSuccess, citiesFetchFailure),
+  [TOPO_START_FETCH]: fetchStarted,
+  [TOPO_ACTIVE_COUNTRY_CHANGED]: activeCountryChanged,
+  [TOPO_ACTIVE_STATE_CHANGED]: activeStateChanged,
+  [TOPO_COUNTRIES_CLEAR]: clearCountryTopo
 }, emptyTopology)
 
 // ACTIONS
@@ -131,6 +139,7 @@ export const fetchCities = createAction(TOPO_CITIES_FETCHED, (country) => {
 })
 
 export const startFetching = createAction(TOPO_START_FETCH)
+export const clearCountries = createAction(TOPO_COUNTRIES_CLEAR)
 
 export const changeActiveCountry = createAction(TOPO_ACTIVE_COUNTRY_CHANGED)
 
