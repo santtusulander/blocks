@@ -12,7 +12,7 @@ export class CustomDatePicker extends React.Component {
     super(props)
 
     this.state = {
-      activeTab: 'day',
+      activeTab: this.props.activeTab || 'day',
       datepickerOpen: false,
       forceOpen: false,
       open: false
@@ -124,6 +124,7 @@ export class CustomDatePicker extends React.Component {
 
 CustomDatePicker.displayName = 'DateRangeSelect'
 CustomDatePicker.propTypes = {
+  activeTab: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
   changeInputValue: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
