@@ -9,27 +9,17 @@ export class MonthPicker extends React.Component {
     super(props)
 
     this.state = {
-      selectedMonth: '',
-      selectedYear: '',
-      monthIndex: null,
-      startDate: null,
-      endDate: null
+      selectedMonth: moment().format('MMMM'),
+      selectedYear: moment().year(),
+      monthIndex: moment().month(),
+      startDate: moment().utc().startOf('month').format('X'),
+      endDate: moment().utc().endOf('month').format('X')
     }
 
     this.previousYear = this.previousYear.bind(this)
     this.nextYear = this.nextYear.bind(this)
     this.monthSelected = this.monthSelected.bind(this)
     this.setDates = this.setDates.bind(this)
-  }
-
-  componentWillMount() {
-    this.setState({
-      selectedMonth: moment().format('MMMM'),
-      selectedYear: moment().year(),
-      monthIndex: moment().month(),
-      startDate: moment().utc().startOf('month').format('X'),
-      endDate: moment().utc().endOf('month').format('X')
-    })
   }
 
   previousYear() {
