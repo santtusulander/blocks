@@ -11,6 +11,7 @@ const properties = {
   },
   'bb': {
     published_host_id: 'bb',
+    brandId: 'udn',
     accountId: 3,
     groupId: 4,
   }
@@ -37,6 +38,7 @@ describe('Properties Module', () => {
     const p = selectors.getProperties( initialState, null, 3 )
     expect(p).toEqual( {bb: {
       published_host_id: 'bb',
+      brandId: 'udn',
       accountId: 3,
       groupId: 4,
     }})
@@ -46,6 +48,7 @@ describe('Properties Module', () => {
     const p = selectors.getProperties( initialState, null, 1,2 )
     expect(p).toEqual( {  'aa': {
         published_host_id: 'aa',
+        brandId: 'udn',
         accountId: 1,
         groupId: 2,
       },})
