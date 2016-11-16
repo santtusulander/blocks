@@ -25,7 +25,10 @@ const useRaven = true //process.env.NODE_ENV === 'production'
 const createStoreWithMiddleware =
   useRaven
   ?  applyMiddleware(
-      UdnRavenMiddleware(SENTRY_DSN),
+      /* eslint-disable no-undef */
+      UdnRavenMiddleware(SENTRY_DSN, {release: VERSION}),
+      /* eslint-enable no-undef */
+
       promiseMiddleware
     )(createStore)
   : applyMiddleware(
@@ -117,7 +120,10 @@ const runApp = () => {
 let startApp = runApp
 
 if (useRaven) {
-  if (!Raven.isSetup()) Raven.config(SENTRY_DSN).install()
+  /* eslint-disable no-undef */
+  if (!Raven.isSetup()) Raven.config(SENTRY_DSN, {release: VERSION}).install()
+  /* eslint-enable no-undef */
+
   startApp = Raven.wrap( runApp )
 
   let errorDisplayed = false

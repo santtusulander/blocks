@@ -67,11 +67,6 @@ export const captureAndShowRavenError = (store, err, action = null, recoverable 
 
   // Send the report.
   Raven.captureException(err, {
-    tags: {
-      /* eslint-disable no-undef */
-      version: {VERSION}
-      /* eslint-enable no-undef */
-    },
     extra: {
       action: action,
       state: loggedState
