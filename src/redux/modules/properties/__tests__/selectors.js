@@ -5,6 +5,7 @@ import * as selectors from '../selectors'
 const properties = {
   'aa': {
     published_host_id: 'aa',
+    brandId: 'udn',
     accountId: 1,
     groupId: 2,
   },
