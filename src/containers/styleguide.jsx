@@ -30,6 +30,7 @@ import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
+import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
@@ -497,6 +498,13 @@ export default class Styleguide extends React.Component {
                 multiple={true}
                 onChange={() => null}
                 options={[]}/>
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Month Picker</h1>
+          <Row>
+            <Col xs={6}>
+              <MonthPicker />
             </Col>
           </Row>
 
