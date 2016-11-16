@@ -79,7 +79,7 @@ export class CustomDatePicker extends React.Component {
   }
 
   render() {
-    const { intl, startDate } = this.props
+    const { startDate } = this.props
     const { activeTab, open, value } = this.state
 
     return (
