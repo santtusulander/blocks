@@ -86,11 +86,6 @@ const TRANSLATED_MESSAGES = {
   'portal.brand.list.lastEdited.text': 'Last Edited',
   'portal.brand.list.usedBy.text': 'Used By',
 
-  'portal.group.edit.name.required.text': 'Group name is required',
-  'portal.group.edit.name.label': 'Group Name',
-  'portal.group.edit.name.enter.text': 'Enter Group Name',
-  'portal.group.edit.editGroup.title': 'Edit Group',
-  'portal.group.edit.newGroup.title': 'Add new group',
 
   'portal.manage.tabs.users.title': 'Users',
   'portal.manage.tabs.brands.title': 'Brands',
@@ -286,10 +281,6 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.header.fromValue.placeholder': 'Enter Header Value',
   'portal.policy.edit.header.toValue.label': 'TO Value',
   'portal.policy.edit.header.toValue.placeholder': 'Enter Header Value',
-  'portal.policy.edit.header.direction.text': 'Direction',
-  'portal.policy.edit.header.toOrigin.text': 'To Origin',
-  'portal.policy.edit.header.toClient.text': 'To Client',
-  'portal.policy.edit.header.toBoth.text': 'To Both',
   'portal.policy.edit.originHostname.header': 'Origin Hostname',
   'portal.policy.edit.originHostname.originPort.placeholder': 'Enter Origin Port',
   'portal.policy.edit.originHostname.originHostname.text': 'Origin Hostname Value',
@@ -437,10 +428,12 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.editRule.addPolicy.text': 'Add Policy',
   'portal.policy.edit.editRule.editPolicy.text': 'Update Policy',
   'portal.policy.edit.editRule.ruleName.text': 'Rule Name',
+  'portal.policy.edit.editRule.type.text': 'Apply To',
   'portal.policy.edit.editRule.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.editRule.chooseCondition.text': 'Choose condition',
   'portal.policy.edit.editRule.actions.text': 'Actions',
   'portal.policy.edit.rules.policy.text': 'Policy',
+  'portal.policy.edit.rules.type.text': 'Applies To',
   'portal.policy.edit.rules.matchConditions.text': 'Match Conditions',
   'portal.policy.edit.rules.actions.text': 'Actions',
   'portal.policy.edit.rules.deleteRuleConfirmation.text': 'Are you sure you want to delete the rule?',
@@ -497,6 +490,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.security.ssl.title.text': 'TITLE',
   'portal.security.ssl.commonName.text': 'COMMON NAME',
+  'portal.security.ssl.group.text': 'GROUP',
 
   'portal.services.header.text': 'SERVICES',
 
@@ -527,7 +521,9 @@ const TRANSLATED_MESSAGES = {
   'portal.fileInput.chooseFile.text': 'Choose file',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
-  'portal.accountManagement.deleteConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deleteAccountConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This account will be removed from UDN immediately.',
+  'portal.accountManagement.deleteGroupConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This group, and all properties it contains will be removed from UDN immediately.',
+  'portal.accountManagement.deletePropertyConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This property will be removed from UDN immediately.',
   'portal.accountManagement.noActiveAccount.text': 'No active account',
   'portal.accountManagement.invalidAccountName.text': 'Account name is invalid.',
   'portal.accountManagement.account.text': 'ACCOUNT',
@@ -540,6 +536,7 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
+  'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
@@ -626,10 +623,14 @@ const TRANSLATED_MESSAGES = {
   'portal.security.editCertificate.text': 'Edit Certificate',
   'portal.security.uploadCertificate.text': 'Upload Certificate',
 
-  'portal.passsword.resetPassword.text': 'Reset Password',
-  'portal.passsword.setPassword.text': 'Set Password',
-  'portal.passsword.invalidPassword.text': 'Password is not valid',
-  'portal.passsword.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.resetPassword.text': 'Reset Password',
+  'portal.password.setPassword.text': 'Set Password',
+  'portal.password.invalidPassword.text': 'Password is not valid',
+  'portal.password.passwordDoNotMatch.text': 'Passwords do not match',
+  'portal.password.passwordLengthValid.text': 'at least 8 characters',
+  'portal.password.passwordUppercaseValid.text': 'at least one uppercase character',
+  'portal.password.passwordNumberValid.text': 'at least one number',
+  'portal.password.passwordSpecialCharValid.text': 'at least one special character (!,?,#,$,...)',
 
   'portal.startburstHelp.today.text': 'Today',
   'portal.startburstHelp.healthRing.text': 'Health Ring',

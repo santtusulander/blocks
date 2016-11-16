@@ -21,8 +21,7 @@ export const emptyPurges = Immutable.Map({
 export const emptyPurge = Immutable.fromJS({
   action: 'purge',
   objects: [],
-  note: '',
-  feedback: null
+  note: ''
 })
 
 // REDUCERS
@@ -98,7 +97,7 @@ export default handleActions({
 // ACTIONS
 
 export const createPurge = createAction(PURGE_CREATED, (brand, account, group, property, newPurge) => {
-  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge, {
+  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/purge_many`, newPurge, {
     headers: {
       'Content-Type': 'application/json'
     }

@@ -9,7 +9,7 @@ import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
-import { DNS_DOMAIN_EDIT, RECORD_EDIT } from '../../../constants/account-management-modals'
+import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import DomainToolbar from '../../../components/account-management/domain-toolbar'
@@ -96,7 +96,7 @@ class AccountManagementSystemDNS extends Component {
       modalOpen: activeModal !== null,
       onAddEntry: () => {
         this.editingRecord = false
-        toggleModal(RECORD_EDIT)
+        toggleModal(EDIT_RECORD)
       },
       onDeleteEntry: (record) => {
         this.setState({
@@ -106,7 +106,7 @@ class AccountManagementSystemDNS extends Component {
       onEditEntry: id => {
         this.props.setActiveRecord(id)
         this.editingRecord = true
-        toggleModal(RECORD_EDIT)
+        toggleModal(EDIT_RECORD)
       },
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
@@ -126,7 +126,7 @@ class AccountManagementSystemDNS extends Component {
       <div>
         <DomainToolbar {...domainHeaderProps}/>
         {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
-        {activeModal === RECORD_EDIT &&
+        {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
           closeModal={() => toggleModal(null)}/>

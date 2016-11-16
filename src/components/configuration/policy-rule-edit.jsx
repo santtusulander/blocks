@@ -2,10 +2,8 @@ import React from 'react'
 import {Button, Input, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
+import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
-import IconTrash from '../icons/icon-trash.jsx'
-import IconArrowUp from '../icons/icon-arrow-up.jsx'
-import IconArrowDown from '../icons/icon-arrow-down.jsx'
 import TruncatedTitle from '../truncated-title'
 import {
   matchFilterChildPaths,
@@ -14,6 +12,12 @@ import {
   matchIsContentTargeting,
   policyIsCompatibleWithAction
 } from '../../util/policy-config'
+import Select from '../select'
+import {
+  POLICY_TYPES,
+  DEFAULT_MATCH,
+  DEFAULT_MATCH_JS
+} from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -49,9 +53,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const newPath = deepestMatch.path.concat(childPath)
       const currentSet = this.props.config.getIn(newPath)
 
-      let newMatch = Immutable.fromJS([
-        {match: {field: null, cases: [['',[]]]}}
-      ])
+      let newMatch = Immutable.fromJS([DEFAULT_MATCH_JS])
       if(currentSet) {
         const newSetPath = [0, 'match'].concat(childPath)
         newMatch = newMatch.setIn(newSetPath, currentSet)
@@ -205,9 +207,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     // If this started out as an empty rule, remove it
     if(Immutable.is(
       this.state.originalConfig.getIn(this.props.rulePath),
-      Immutable.fromJS(
-        {match: {field: null, cases: [['',[]]]}}
-      )
+      DEFAULT_MATCH
     )) {
       const parentPath = this.props.rulePath.slice(0, -1)
       const newConfig = this.state.originalConfig.setIn(
@@ -266,6 +266,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         flattenedPolicy.sets[0].setkey == null
     }
 
+    const ruleType = this.props.rulePath.get(0, null)
+
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
 
@@ -287,11 +289,25 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+          <div className="form-group">
+            <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
+            <Select
+              className="input-select"
+              value={ruleType}
+              onSelect={this.props.changeActiveRuleType}
+              options={[
+                { label: 'Request', value: POLICY_TYPES.REQUEST },
+                { label: 'Response', value: POLICY_TYPES.RESPONSE }
+              ]}
+            />
+          </div>
 
-          <Input type="text" id="configure__edge__add-cache-rule__rule-name"
-            value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
-            onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
+          <div className="form-group">
+            <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+            <Input type="text" id="configure__edge__add-cache-rule__rule-name"
+              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
+              onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
+          </div>
 
           <Row className="header-btn-row">
             <Col sm={8}>
@@ -355,11 +371,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
-                    <Button onClick={this.deleteMatch(flattenedPolicy.matches, i)} bsStyle="primary"
-                      disabled={flattenedPolicy.matches.length < 2}
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                    <ActionButtons
+                      className="secondary"
+                      onDelete={this.deleteMatch(flattenedPolicy.matches, i)}
+                      deleteDisabled={flattenedPolicy.matches.length < 2} />
                   </Col>
                 </div>
               )
@@ -374,8 +389,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button bsStyle="primary"
                       className="btn-icon btn-add-new"
                       onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={disableAddActionButton()}
-              >
+                      disabled={disableAddActionButton()}>
                 <IconAdd />
               </Button>
             </Col>
@@ -395,25 +409,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                     <p>{i + 1} {set.name}</p>
                   </Col>
                   <Col xs={4} className="text-right">
-                    <Button
-                      disabled={i <= 0}
-                      onClick={i > 0 ? this.moveSet(set.path, i-1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowUp/>
-                    </Button>
-                    <Button
-                      disabled={i >= flattenedPolicy.sets.length - 1}
-                      onClick={i < flattenedPolicy.sets.length - 1 ?
+                    <ActionButtons
+                      className="secondary"
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
+                      arrowUpDisabled={i <= 0}
+                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
                         this.moveSet(set.path, i+1) : ''}
-                      bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconArrowDown/>
-                    </Button>
-                    <Button onClick={this.deleteSet(set.path)} bsStyle="primary"
-                      className="btn-link btn-icon">
-                      <IconTrash/>
-                    </Button>
+                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
+                      onDelete={this.deleteSet(set.path)} />
                   </Col>
                 </div>
               )
