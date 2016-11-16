@@ -1,5 +1,6 @@
 import React from 'react';
 import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
+import * as topojson from 'topojson-client'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
@@ -128,6 +129,10 @@ class MapPoc extends React.Component {
 
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
+    const geoJSON = this.props.geoData
+                    && this.props.geoData.objects
+                    && topojson.feature(this.props.geoData, this.props.geoData.objects.countries)
+
     return (
       <Map
         center={cities[0].position}
@@ -142,9 +147,9 @@ class MapPoc extends React.Component {
 
         {cityCircles}
 
-        {this.state.zoom < 6 && this.props.geoData.features &&
+        {this.state.zoom < 6 && geoJSON &&
         <GeoJson
-          data={this.props.geoData}
+          data={geoJSON}
           style={(feature) => getCountryStyle(countryMedian, feature)}
           onEachFeature={handleFeature}
         />}

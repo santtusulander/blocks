@@ -106,7 +106,7 @@ export default handleActions({
 // ACTIONS
 
 export const fetchCountries = createAction(TOPO_COUNTRIES_FETCHED, () => {
-  return axios.get(`${topoBase()}/countries.geo.json`)
+  return axios.get(`${topoBase()}/countries.topo.json`)
   .then((res) => {
     if(res) {
       return res.data;
