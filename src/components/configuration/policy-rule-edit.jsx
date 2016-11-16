@@ -277,20 +277,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
-
-        {/* [
-          ['request_method', 'Request Method'],
-          ['request_scheme', 'Request Scheme'],
-          ['request_url', 'Request URL'],
-          ['request_host', 'Request Host'],
-          ['request_path', 'Request Path'],
-          ['request_query', 'Request Query'],
-          ['request_query_arg', 'Request Query Argument'],
-          ['request_header', 'Request Header'],
-          ['request_cookie', 'Request Cookie'],
-          ['response_code', 'Response Code'],
-          ['response_header', 'Response Header']
-        ] */}
         <Modal.Header>
           <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
