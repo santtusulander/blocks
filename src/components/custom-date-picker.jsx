@@ -13,9 +13,9 @@ export class CustomDatePicker extends React.Component {
 
     this.state = {
       activeTab: this.props.activeTab || 'day',
-      datepickerOpen: false,
       forceOpen: false,
-      open: false
+      open: false,
+      value: moment().utc().format('MM/DD/YYYY')
     }
 
     this.isForceOpen = false
@@ -23,6 +23,20 @@ export class CustomDatePicker extends React.Component {
     this.forceOpen = this.forceOpen.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
+
+    const { intl } = this.props
+
+    moment.locale('custom-locale', {
+      weekdaysShort : [
+        intl.formatMessage({id: 'portal.common.weekdayShort.sunday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.monday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.tuesday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.wednesday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.thursday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.friday'}),
+        intl.formatMessage({id: 'portal.common.weekdayShort.saturday'})
+      ]
+    })
   }
 
   componentWillMount() {
@@ -48,7 +62,9 @@ export class CustomDatePicker extends React.Component {
     const endMoment = date.dateMoment.clone().endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
-    this.props.changeInputValue(dateValue)
+    this.setState({
+      value: dateValue
+    })
     this.toggleDropdown(false)
   }
 
@@ -63,20 +79,8 @@ export class CustomDatePicker extends React.Component {
   }
 
   render() {
-    const { intl, startDate, value } = this.props
-    const { activeTab, open } = this.state
-
-    moment.locale('custom-locale', {
-      weekdaysShort : [
-        intl.formatMessage({id: 'portal.common.weekdayShort.sunday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.monday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.tuesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.wednesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.thursday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.friday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.saturday'})
-      ]
-    })
+    const { intl, startDate } = this.props
+    const { activeTab, open, value } = this.state
 
     return (
       <Dropdown
@@ -126,11 +130,9 @@ CustomDatePicker.displayName = 'DateRangeSelect'
 CustomDatePicker.propTypes = {
   activeTab: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
-  changeInputValue: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
   intl: intlShape.isRequired,
-  startDate: React.PropTypes.instanceOf(moment),
-  value: React.PropTypes.string
+  startDate: React.PropTypes.instanceOf(moment)
 }
 
 export default injectIntl(CustomDatePicker)

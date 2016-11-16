@@ -97,9 +97,8 @@ export default class Styleguide extends React.Component {
 
     this.state = {
       activeTab: 1,
-      customDatePickerValue: moment().utc().format('MM/DD/YYYY'),
-      endDate: moment().utc().endOf('day'),
-      startDate: moment().utc().startOf('day')
+      customDatePickerEndDate: moment().utc().endOf('day'),
+      customDatePickerStartDate: moment().utc().startOf('day')
     }
   }
   render() {
@@ -597,17 +596,15 @@ export default class Styleguide extends React.Component {
           <Row>
             <Col xs={4}>
               <CustomDatePicker
-                endDate={this.state.endDate}
-                startDate={this.state.startDate}
-                changeDateRange={(startDate, endDate) => this.setState({ endDate: endDate, startDate: startDate })}
-                changeInputValue={value => this.setState({ customDatePickerValue: value})}
-                value={this.state.customDatePickerValue} />
+                endDate={this.state.customDatePickerEndDate}
+                startDate={this.state.customDatePickerStartDate}
+                changeDateRange={(startDate, endDate) => this.setState({ endDate: endDate, startDate: startDate })} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.startDate} (${this.state.startDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
             <Col xs={4}>
-              <p>{`endDate: ${this.state.endDate} (${this.state.endDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
 
