@@ -9,6 +9,7 @@ import { getUserUrlFromParams } from '../../util/routes.js'
 import Select from '../select'
 
 import IconUser from '../icons/icon-user.jsx'
+import IconArrowRight from '../icons/icon-arrow-right.jsx'
 
 const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, params}) => {
   return (
@@ -58,13 +59,17 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, param
 
             <li className="no-helper-header" >
               <Link to={getUserUrlFromParams(params)} onClick={onToggle}>
-                <div className="user-menu-item"><FormattedMessage id="portal.header.menu.editProfile.text"/></div>
+                <div className="user-menu-item">
+                  <FormattedMessage id="portal.header.menu.editProfile.text"/>
+                  <IconArrowRight />
+                </div>
               </Link>
             </li>
 
             <li className="bottom-item no-helper-header">
               <a id="log-out" href="#" onClick={logout}>
                 <FormattedMessage id="portal.header.menu.logout.text"/>
+                <IconArrowRight />
               </a>
             </li>
           </ul>
