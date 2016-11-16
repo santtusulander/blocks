@@ -113,6 +113,7 @@ class ConfigurationPolicyRules extends React.Component {
       return (
         <tr key={policy + i}>
           <td>{policy.get('rule_name')}</td>
+          <td className="text-right">{type}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
@@ -161,6 +162,7 @@ class ConfigurationPolicyRules extends React.Component {
           <thead>
             <tr>
               <th><FormattedMessage id="portal.policy.edit.rules.policy.text"/></th>
+              <th className="text-right"><FormattedMessage id="portal.policy.edit.rules.type.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
               <th width="1%" />
@@ -169,7 +171,7 @@ class ConfigurationPolicyRules extends React.Component {
           <tbody>
             {rows}
             {isEmpty ? <tr>
-              <td colSpan={4}>
+              <td colSpan={5}>
                 <FormattedMessage id="portal.policy.edit.rules.noRulesAdded.text"/>
               </td>
             </tr>

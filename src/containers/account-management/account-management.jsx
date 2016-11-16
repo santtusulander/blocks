@@ -68,7 +68,7 @@ export class AccountManagement extends Component {
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
-    this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
@@ -140,8 +140,8 @@ export class AccountManagement extends Component {
       .then(() => this.props.toggleModal(null))
   }
 
-  addGroupToActiveAccount(name) {
-    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
+  addGroupToActiveAccount(data) {
+    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
       .then(action => {
         this.props.hostActions.clearFetchedHosts()
         return action.payload
@@ -195,15 +195,17 @@ export class AccountManagement extends Component {
       })
   }
 
-  showEditGroupModal(group) {
-    const { activeAccount, params: { brand, account }, groupActions: { fetchGroup }, hostActions: { fetchHosts } } = this.props
-    Promise.all([
-      !accountIsServiceProviderType(activeAccount) && fetchHosts('udn', activeAccount.get('id'), group.get('id')),
-      fetchGroup(brand, account, group.get('id'))
-    ]).then(() => {
-      this.setState({ groupToUpdate: group.get('id') })
-      this.props.toggleModal(EDIT_GROUP)
-    })
+  toggleEditGroupModal(group) {
+    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    if (!group) {
+      this.setState({ groupToUpdate: null })
+      toggleModal()
+    } else {
+      fetchGroup(brand, account, group.get('id')).then(() => {
+        this.setState({ groupToUpdate: group.get('id') })
+        toggleModal(EDIT_GROUP)
+      })
+    }
   }
 
   deleteHost(host) {
@@ -408,7 +410,7 @@ export class AccountManagement extends Component {
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
-      editGroup: this.showEditGroupModal,
+      editGroup: this.toggleEditGroupModal,
       account: activeAccount,
       toggleModal,
       params,
@@ -516,12 +518,12 @@ export class AccountManagement extends Component {
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
-          hosts={this.props.hosts}
-          onDeleteHost={(host) => this.setState({ hostToDelete: host })}
+          params={this.props.params}
+          onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
           account={activeAccount}
           groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
-          onCancel={() => toggleModal(null)}
+          onCancel={() => this.toggleEditGroupModal()}
           show={true}
         />}
         {this.state.hostToDelete &&

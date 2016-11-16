@@ -14,7 +14,6 @@ class Header extends React.Component {
 
     this.state = {
       activeActivity: props.set.get('action') || 'set',
-      activeDirection: 'to_origin',
       from_header: '',
       from_value: '',
       to_header: props.set.get('header'),
@@ -41,10 +40,6 @@ class Header extends React.Component {
       if (key === 'activeActivity') {
         this.setState({
           activeActivity: value
-        })
-      } else if (key === 'activeDirection') {
-        this.setState({
-          activeDirection: value
         })
       }
     }
@@ -104,7 +99,6 @@ class Header extends React.Component {
 
     const {
       activeActivity,
-      activeDirection,
       to_header,
       to_value,
       from_header,
@@ -194,19 +188,6 @@ class Header extends React.Component {
               </Row>
             </Panel>
 
-          </div>
-
-          <hr />
-
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.header.direction.text"/></label>
-            <Select className="input-select"
-              onSelect={this.handleSelectChange('activeDirection')}
-              value={activeDirection}
-              options={[
-                ['to_origin', <FormattedMessage id="portal.policy.edit.header.toOrigin.text"/>],
-                ['to_client', <FormattedMessage id="portal.policy.edit.header.toClient.text"/>],
-                ['to_both', <FormattedMessage id="portal.policy.edit.header.toBoth.text"/>]]}/>
           </div>
 
           <ButtonToolbar className="text-right">
