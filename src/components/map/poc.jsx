@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios'
-import {topoBase} from '../../redux/util'
 import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
