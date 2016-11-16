@@ -173,34 +173,3 @@
     }
   }
 }
-
-.feadatepicker__input {
-
-  &,
-  &:hover,
-  &:focus {
-    width: 100%;
-    height: $btn-height;
-    padding: 0 20px;
-    font-size: inherit;
-    color: inherit;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-
-    @include md {
-      height: $md-btn-height;
-    }
-
-    // Hide clear button for IE because it's not working with the designed UI
-    &::-ms-clear {
-      display: none;
-    }
-  }
-
-  .dark-theme &,
-  .light-theme & {
-    background: url('../assets/icons/dt-icon-calendar.svg') rgba($black, 0.2) right center no-repeat;
-    background-size: $bar-height;
-  }
-}
