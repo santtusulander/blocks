@@ -229,6 +229,10 @@ $lt-caret-color: $silver-60;
         @include print {
           display: none;
         }
+
+        &.left {
+          left: 0;
+        }
       }
 
       span,
@@ -238,6 +242,11 @@ $lt-caret-color: $silver-60;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      &.date-picker-dropdown-toggle {
+        min-width: 300px;
+        padding-left: em(36px, $btn-font-size);
       }
     }
 
