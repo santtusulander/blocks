@@ -39,7 +39,7 @@ import {
 } from '../../constants/account-management-modals.js'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
-import { checkForErrors, accountIsServiceProviderType } from '../../util/helpers'
+import { checkForErrors } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 export class AccountManagement extends Component {
@@ -519,7 +519,7 @@ export class AccountManagement extends Component {
         <GroupForm
           id="group-form"
           params={this.props.params}
-          onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
+          onDeleteHost={(host) => this.setState({ hostToDelete: host })}
           account={activeAccount}
           groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}

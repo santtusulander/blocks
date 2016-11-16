@@ -60,8 +60,8 @@ class GroupForm extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.groupId) {
-      const { fetchHosts, startFetchingHosts, params: { brand, account }, groupId } = this.props
+    const { fetchHosts, startFetchingHosts, params: { brand, account }, groupId } = this.props
+    if (groupId && !accountIsServiceProviderType(account)) {
       startFetchingHosts()
       fetchHosts(brand, account, groupId)
     }
