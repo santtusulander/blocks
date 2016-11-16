@@ -290,13 +290,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         <Modal.Body>
 
           <div className="form-group">
-            <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
-            <Input type="text" id="configure__edge__add-cache-rule__rule-name"
-              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
-              onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
-          </div>
-
-          <div className="form-group">
             <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
             <Select
               className="input-select"
@@ -307,7 +300,14 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 { label: 'Response', value: POLICY_TYPES.RESPONSE }
               ]}
             />
-        </div>
+          </div>
+
+          <div className="form-group">
+            <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+            <Input type="text" id="configure__edge__add-cache-rule__rule-name"
+              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
+              onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
+          </div>
 
           <Row className="header-btn-row">
             <Col sm={8}>
