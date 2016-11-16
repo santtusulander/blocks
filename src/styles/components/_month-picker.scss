@@ -16,13 +16,10 @@ $mp-month-hover-bg-color: $pale-blue;
   width: $mp-width;
   padding: $mp-vertical-padding $mp-horizontal-padding;
 
-  .dark-theme & {
+  .dark-theme &,
+  .light-theme & {
     background-color: $mp-dark-bg-color;
     background-image: $mp-dark-bg-image;
-  }
-
-  .light-theme & {
-    background-color: $mp-light-bg-color;
   }
 
   .year-selector {
