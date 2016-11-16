@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Nav } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -27,6 +27,7 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
+import Tabs from '../../components/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
 import {
@@ -34,7 +35,8 @@ import {
   DELETE_ACCOUNT,
   DELETE_GROUP,
   EDIT_GROUP,
-  DELETE_USER
+  DELETE_USER,
+  DELETE_HOST
 } from '../../constants/account-management-modals.js'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -49,7 +51,8 @@ export class AccountManagement extends Component {
     this.accountToUpdate = null
     this.state = {
       groupToDelete: null,
-      groupToUpdate: null
+      groupToUpdate: null,
+      hostToDelete: null
     }
 
     this.notificationTimeout = null
@@ -66,7 +69,8 @@ export class AccountManagement extends Component {
     this.showDeleteAccountModal = this.showDeleteAccountModal.bind(this)
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
-    this.showEditGroupModal = this.showEditGroupModal.bind(this)
+    this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
+    this.deleteHost = this.deleteHost.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
@@ -75,9 +79,10 @@ export class AccountManagement extends Component {
     const { brand, account } = this.props.params
     this.props.permissionsActions.fetchPermissions()
     this.props.rolesActions.fetchRoles()
-    if(account) {
+    if (account) {
       this.props.userActions.fetchUsers(brand, account)
     }
+
     else if(this.props.accounts.size) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
@@ -86,9 +91,10 @@ export class AccountManagement extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { brand, account } = nextProps.params
-    if(nextProps.params.account && nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
       this.props.userActions.fetchUsers(brand, account)
     }
+
     else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
@@ -184,18 +190,69 @@ export class AccountManagement extends Component {
       ...addUserActions,
       ...deleteUserActions
     ])
-    .then(() => {
-      this.props.toggleModal(null)
-      this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
-    })
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
+      })
   }
 
-  showEditGroupModal(group) {
-    const { params: { brand, account }, groupActions: { fetchGroup } } = this.props
-    fetchGroup(brand, account, group.get('id')).then(() => {
-      this.setState({ groupToUpdate: group.get('id') })
-      this.props.toggleModal(EDIT_GROUP)
-    })
+  toggleEditGroupModal(group) {
+    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    if (!group) {
+      this.setState({ groupToUpdate: null })
+      toggleModal()
+    } else {
+      fetchGroup(brand, account, group.get('id')).then(() => {
+        this.setState({ groupToUpdate: group.get('id') })
+        toggleModal(EDIT_GROUP)
+      })
+    }
+  }
+
+  deleteHost(host) {
+    const {
+      uiActions,
+      hostActions,
+      params: {
+        brand
+      },
+      activeAccount,
+      toggleModal
+    } = this.props
+
+    const account = activeAccount.get('id')
+    const group = this.state.groupToUpdate
+
+    hostActions.fetchHost(
+      brand,
+      account,
+      group,
+      host
+    )
+      .then(() => {
+        hostActions.deleteHost(
+          brand,
+          account,
+          group,
+          this.props.activeHost
+        )
+          .then(res => {
+            toggleModal(null)
+            if (res.error) {
+              uiActions.showInfoDialog({
+                title: 'Error',
+                content: res.payload.data.message,
+                buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
+                  id="portal.accountManagement.accoutnUpdated.text"/></Button>
+              })
+            } else {
+              this.showNotification(<FormattedMessage
+                id="portal.accountManagement.propertyDeleted.text"
+                values={{propertyName: host}} />
+              )
+            }
+          })
+      })
   }
 
   editAccount(brandId, accountId, data) {
@@ -243,7 +300,7 @@ export class AccountManagement extends Component {
 
   validateAccountDetails({ accountName, services }) {
     let nameTaken = null
-    if(this.props.activeAccount.get('name') !== accountName) {
+    if (this.props.activeAccount.get('name') !== accountName) {
       nameTaken = {
         condition: this.props.accounts.findIndex(account => account.get('name') === accountName) > -1,
         errorText: <FormattedMessage id="portal.accountManagement.accountNameAlreadyUsed.text"/>
@@ -293,23 +350,23 @@ export class AccountManagement extends Component {
       accountType = ACCOUNT_TYPES.find(type => activeAccount.get('provider_type') === type.value)
 
     let deleteModalProps = null
-    switch(accountManagementModal) {
+    switch (accountManagementModal) {
       case DELETE_ACCOUNT:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteAccountConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: true,
           deleteButton: true,
           cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, account || this.accountToDelete, router)
+          submit: () => onDelete(brand, account, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deleteConfirmation.text"/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteGroupConfirmation.text"/>,
           invalid: true,
           verifyDelete: true,
           cancelButton: true,
@@ -317,6 +374,19 @@ export class AccountManagement extends Component {
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
+        break
+      case DELETE_HOST:
+        deleteModalProps = {
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.hostToDelete}}/>,
+          content: <FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>,
+          invalid: true,
+          verifyDelete: true,
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => toggleModal(null),
+          submit: () => this.deleteHost(this.state.hostToDelete)
+        }
+        break
     }
 
     /* TODO: remove - TEST ONLY */
@@ -354,7 +424,7 @@ export class AccountManagement extends Component {
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
-      editGroup: this.showEditGroupModal,
+      editGroup: this.toggleEditGroupModal,
       account: activeAccount,
       toggleModal,
       params,
@@ -397,41 +467,41 @@ export class AccountManagement extends Component {
             <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
           </IsAllowed>
         </PageHeader>
-        {account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        {account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-        </Nav>}
-        {!account && <Nav bsStyle="tabs">
-          <li className="navbar">
+        </Tabs>}
+        {!account && <Tabs activeKey={this.props.children.props.route.path}>
+          <li eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li className="navbar">
+          <li eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li className="navbar">
+          {/*<li eventKey="brands">
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS}>
-           <li className="navbar">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+           <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li className="navbar">
+          <li eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li className="navbar">
+           <li eventKey="services">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
-        </Nav>}
+        </Tabs>}
 
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
@@ -462,9 +532,12 @@ export class AccountManagement extends Component {
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
+          params={this.props.params}
+          onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
+          account={activeAccount}
           groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
-          onCancel={() => toggleModal(null)}
+          onCancel={() => this.toggleEditGroupModal()}
           show={true}
         />}
       </Content>
@@ -478,6 +551,7 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeHost: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -488,6 +562,7 @@ AccountManagement.propTypes = {
   groups: PropTypes.instanceOf(List),
   history: PropTypes.object,
   hostActions: PropTypes.object,
+  hosts: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
@@ -503,8 +578,10 @@ AccountManagement.propTypes = {
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
+  activeHost: Map(),
   dnsData: Map(),
   groups: List(),
+  hosts: List(),
   roles: List(),
   users: List()
 }
@@ -514,9 +591,11 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
+    activeHost: state.host.get('activeHost'),
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),
+    hosts: state.host.get('allHosts'),
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,

@@ -90,7 +90,8 @@ $search-input-left-padding: em(36px, $search-font-size);
     width: 100%;
   }
 
-  &.dropdown-account-menu {
+  &.dropdown-account-menu,
+  &.dropdown-wide-menu {
     width: 200%;
   }
 
