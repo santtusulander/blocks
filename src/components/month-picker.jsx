@@ -12,37 +12,59 @@ export class MonthPicker extends React.Component {
 
     this.state = {
       selectedMonth: '',
-      selectedYear: ''
+      selectedYear: '',
+      monthIndex: null,
+      startDate: null,
+      endDate: null
     }
 
     this.previousYear = this.previousYear.bind(this)
     this.nextYear = this.nextYear.bind(this)
     this.monthSelected = this.monthSelected.bind(this)
+    this.setDates = this.setDates.bind(this)
   }
 
   componentWillMount() {
     this.setState({
       selectedMonth: moment().format('MMMM'),
-      selectedYear: moment().year()
+      selectedYear: moment().year(),
+      monthIndex: moment().month(),
+      startDate: moment().utc().startOf('month').format('X'),
+      endDate: moment().utc().endOf('month').format('X')
     })
   }
 
   previousYear() {
+    const previousYear = this.state.selectedYear - 1
     this.setState({
-      selectedYear: this.state.selectedYear - 1
+      selectedYear: previousYear
     })
+    this.setDates(previousYear, this.state.monthIndex);
   }
 
   nextYear() {
+    const nextYear = this.state.selectedYear + 1
     this.setState({
-      selectedYear: this.state.selectedYear + 1
+      selectedYear: nextYear
     })
+
+    this.setDates(nextYear, this.state.monthIndex);
   }
 
   monthSelected(monthIndex) {
     const currentMonth = moment().month(monthIndex).format("MMMM")
     this.setState({
+      monthIndex: monthIndex,
       selectedMonth: currentMonth
+    })
+
+    this.setDates(this.state.selectedYear, monthIndex);
+  }
+
+  setDates(year, month) {
+    this.setState({
+      startDate: moment([year, month]).utc().startOf('month').format('X'),
+      endDate: moment([year, month]).utc().endOf('month').format('X')
     })
   }
 
