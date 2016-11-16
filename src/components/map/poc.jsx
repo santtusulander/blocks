@@ -133,8 +133,6 @@ class MapPoc extends React.Component {
                     && this.props.geoData.objects
                     && topojson.feature(this.props.geoData, this.props.geoData.objects.countries)
 
-                    console.log(geoJSON)
-
     return (
       <Map
         center={cities[0].position}
