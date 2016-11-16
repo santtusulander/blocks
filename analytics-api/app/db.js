@@ -328,7 +328,7 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
-  
+
   /**
    * Get total and detailed Service Provider traffic information.
    *
@@ -792,10 +792,6 @@ class AnalyticsDB {
    */
   getSPEgressTotal(options) {
     let optionsFinal    = this._getQueryOptions(options);
-    let secondsPerMonth = 2678399;
-    let secondsPerDay   = 86399;
-    let duration        = optionsFinal.end - optionsFinal.start;
-    let accountLevel    = this._getAccountLevel(optionsFinal) || 'property';
     let conditions      = [];
     let granularity = "day";
 
@@ -839,7 +835,7 @@ class AnalyticsDB {
   getTotal(options) {
     let queries = [
       this.getEgressTotal(options),
-      this.getSPEgressTotal(options),
+      this.getSPEgressTotal(options)
     ];
 
     return Promise.all(queries)
