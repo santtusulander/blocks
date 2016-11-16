@@ -328,7 +328,7 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
-  
+
   /**
    * Get total and detailed Service Provider traffic information.
    *
@@ -401,6 +401,7 @@ class AnalyticsDB {
    *                                     query results
    */
   getSpEgress(options) {
+    let isListingChildren = !!options.list_children || false;
     let optionsFinal     = this._getQueryOptions(options);
     let accountLevel     = this._getAccountLevel(optionsFinal);
 
@@ -458,21 +459,23 @@ class AnalyticsDB {
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
-    grouping.push('epoch_start');
+    (selectedDimension || isListingChildren) && grouping.push('epoch_start');
     grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
 
     let queryParameterized = `
       SELECT
         epoch_start AS timestamp,
         ${accountLevelData.select},
-        sum(bytes) AS bytes
+        ${selectedDimension}service_type,
+        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
       FROM ??
       WHERE ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join('')}
       ORDER BY
         ${selectedDimension}epoch_start,
-        ${accountLevelData.field}
+        ${accountLevelData.field},
+        service_type;
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
@@ -617,8 +620,13 @@ class AnalyticsDB {
           dataDetail = options.show_detail ? queryData[0] : [];
 
         } else if (queryData.length === 2) {
-          dataTotals = options.show_totals ? queryData[0] : [];
-          dataDetail = options.show_detail ? queryData[1] : [];
+          if (options.show_detail) {
+            dataTotals = options.show_totals ? queryData[0] : [];
+            dataDetail = options.show_detail ? queryData[1] : [];
+          } else {
+            dataTotals = options.show_totals ? queryData[0] : [];
+            spDataTotals = options.show_totals ? queryData[1] : [];
+          }
         } else if (queryData.length === 4) {
           dataTotals = options.show_totals ? queryData[0] : [];
           dataDetail = options.show_detail ? queryData[1] : [];
@@ -661,6 +669,56 @@ class AnalyticsDB {
 
         // NOTE: queryDataOrganized ends up looking something like this:
         // [trafficData, historicalTrafficData, aggregateData]
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account for a
+   * requested time frame AND the previous time frame of the same duration (both for SP and CP).
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the query results
+   */
+  getDataForCountry(options) {
+    let queries = [
+      this.getEgressWithHistorical(options),
+      this.getSpEgressWithHistorical(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        let queryDataOrganized = [];
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[1]);
+
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account (both SP and CP).
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getTime(options) {
+    let queries = [
+      this.getEgress(options),
+      this.getSpEgress(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        let queryDataOrganized = [];
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[1]);
+
         log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
         return queryDataOrganized;
       })
@@ -723,6 +781,72 @@ class AnalyticsDB {
       optionsFinal.group,
       optionsFinal.property
     ]);
+  }
+
+  /**
+   * Get total outbound traffic (egress) for a SP for a month or day, for a property,
+   * group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPEgressTotal(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let conditions      = [];
+    let granularity = "day";
+
+    // Build the table name
+    let table = `spc_global_${granularity}`;
+
+    // Build the WHERE clause
+    if (granularity === 'day' || granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account  && conditions.push('AND sp_account_id = ?');
+    optionsFinal.group    && conditions.push('AND sp_group_id = ?');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE ${conditions.join('\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      table,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account,
+      optionsFinal.group
+    ]);
+  }
+
+  /**
+   * Get traffic data, cache hit rate, and transfer rates for all properties/groups
+   * in a group/account within a given time range.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getTotal(options) {
+    let queries = [
+      this.getEgressTotal(options),
+      this.getSPEgressTotal(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        if (queryData[0][0].timestamp === null) {
+          return queryData[1];
+        } else {
+          return queryData[0]
+        }
+      })
+      .catch((err) => log.error(err));
   }
 
   /**

@@ -206,7 +206,7 @@ const createToggledFilter = ( options ) => {
   //if all opts selected - remove filter
   if (options.size > 1) return undefined
 
-  return options
+  return options.toJS()
 }
 
 const toUnixTimestamp = ( date ) => {
