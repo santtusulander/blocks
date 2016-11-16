@@ -19,6 +19,7 @@ export const emptyTraffic = fromJS({
   byCountry: {countries: []},
   byOS: {os: []},
   byTime: [],
+  byTimeAverage: 0,
   fetching: false
 })
 
@@ -81,6 +82,7 @@ export function fetchedByOSFailure(state) {
 export function reset(state) {
   return state.merge({
     byTime: List(),
+    byTimeAverage: 0,
     byCountry: fromJS({countries: []}),
     byBrowser: fromJS({browsers: []}),
     byOS: fromJS({os: []})
