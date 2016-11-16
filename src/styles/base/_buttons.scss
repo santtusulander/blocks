@@ -244,9 +244,12 @@ $lt-caret-color: $silver-60;
         white-space: nowrap;
       }
 
+      &.has-left-icon {
+        padding-left: em(36px, $btn-font-size);
+      }
+
       &.date-picker-dropdown-toggle {
         min-width: 300px;
-        padding-left: em(36px, $btn-font-size);
       }
     }
 

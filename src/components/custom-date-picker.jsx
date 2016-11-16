@@ -83,7 +83,9 @@ export class CustomDatePicker extends React.Component {
         className="custom-date-picker dropdown-select"
         open={open}
         onToggle={this.toggleDropdown}>
-        <Dropdown.Toggle className="date-picker-dropdown-toggle" noCaret={true}>
+        <Dropdown.Toggle
+          className="date-picker-dropdown-toggle has-left-icon"
+          noCaret={true}>
           <IconCalendar className="left" />
           {value}
           <IconSelectCaret/>
