@@ -43,6 +43,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.cancelChanges = this.cancelChanges.bind(this)
     this.submitForm = this.submitForm.bind(this)
   }
+  componentWillReceiveProps(nextProps) {
+    if (!Immutable.is(this.state.originalConfig, nextProps.config)) {
+      this.setState({
+        originalConfig: nextProps.config
+      })
+    }
+  }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
   }
