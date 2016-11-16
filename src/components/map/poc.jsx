@@ -80,7 +80,7 @@ const getScore = (median, value, steps = 5) => {
 }
 
 const handleFeature = ( feature, layer) => {
-  layer.bindPopup(feature.properties.name);
+  layer.bindPopup(feature.id);
   layer.on({
     mouseover: () => {
       layer.setStyle({
@@ -132,6 +132,8 @@ class MapPoc extends React.Component {
     const geoJSON = this.props.geoData
                     && this.props.geoData.objects
                     && topojson.feature(this.props.geoData, this.props.geoData.objects.countries)
+
+                    console.log(geoJSON)
 
     return (
       <Map
