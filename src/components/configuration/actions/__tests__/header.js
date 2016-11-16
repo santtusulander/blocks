@@ -35,8 +35,5 @@ describe('Header', () => {
     expect(header.state('activeActivity')).toBe('set')
     header.instance().handleSelectChange('activeActivity')('foo')
     expect(header.state('activeActivity')).toBe('foo')
-    expect(header.state('activeDirection')).toBe('to_origin')
-    header.instance().handleSelectChange('activeDirection')('bar')
-    expect(header.state('activeDirection')).toBe('bar')
   })
 })
