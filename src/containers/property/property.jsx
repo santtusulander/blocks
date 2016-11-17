@@ -35,6 +35,10 @@ export class Property extends React.Component {
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
   }
 
+  componentDidMount() {
+    this.props.hostActions.fetchHosts(this.props.params.brand, this.props.params.account, this.props.params.group);
+  }
+
   togglePurge() {
     this.setState({
       purgeActive: !this.state.purgeActive
