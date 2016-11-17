@@ -20,6 +20,8 @@ module.exports = {
   contentGroups: '/content/:brand/:account/groups',
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
+  contentPropertySummary: '/content/:brand/:account/groups/:group/:property/summary',
+  contentPropertyPurgeStatus: '/content/:brand/:account/groups/:group/:property/purge-status',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
 
   accountManagement: '/account-management',
@@ -74,8 +76,6 @@ module.exports = {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
-  dashboardGroup: '/dashboard/:brand/:account/:group',
-
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
