@@ -70,7 +70,10 @@ function visitorsActionsMaker() {
     startFetching: jest.fn(),
     fetchByCountry: jest.fn(),
     finishFetching: jest.fn(),
-    visitorsReset: jest.fn()
+    visitorsReset: jest.fn(),
+    fetchByTime: jest.fn().mockImplementation(() => {
+      return {then: cb => cb({payload: {}})}
+    })
   }
 }
 
