@@ -47,7 +47,9 @@ class ConfigurationPolicies extends React.Component {
     const oldRuleType = oldRulePath.get(0)
     const oldRuleIndex = oldRulePath.get(2)
     const oldRuleset = this.props.config.getIn([oldRuleType, 'policy_rules']).splice(oldRuleIndex, 1)
-    const newRuleset = this.props.config.getIn([policyType, 'policy_rules']).push(DEFAULT_MATCH)
+    const ruleName = this.props.config.getIn(oldRulePath).get('rule_name')
+    const newMatch = ruleName ? DEFAULT_MATCH.set('rule_name', ruleName) : DEFAULT_MATCH
+    const newRuleset = this.props.config.getIn([policyType, 'policy_rules']).push(newMatch)
     this.props.changeValues([
       [[oldRuleType, 'policy_rules'], oldRuleset],
       [[policyType, 'policy_rules'], newRuleset]
