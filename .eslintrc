@@ -234,7 +234,7 @@
     "react/require-render-return": 2,
     "react/style-prop-object": 1,
     "react/no-children-prop": 2,
-    "react/no-unused-prop-types": 1,
+    "react/no-unused-prop-types": [1, {skipShapeProps: true}],
     "react/no-find-dom-node": 2,
     "react/no-unescaped-entities": 2,
     "import/no-unresolved": [2, {commonjs: true, amd: true}],
