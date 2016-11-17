@@ -1,9 +1,9 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { Button, ButtonToolbar, NavItem, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -27,13 +27,6 @@ import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
 
-import ConfigurationDetails from '../components/configuration/details'
-import ConfigurationDefaults from '../components/configuration/defaults'
-import ConfigurationPolicies from '../components/configuration/policies'
-import ConfigurationPerformance from '../components/configuration/performance'
-import ConfigurationSecurity from '../components/configuration/security'
-import ConfigurationCertificates from '../components/configuration/certificates'
-import ConfigurationChangeLog from '../components/configuration/change-log'
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
@@ -51,7 +44,6 @@ export class Configuration extends React.Component {
 
     this.state = {
       deleteModal: false,
-      activeTab: 'details',
       activeConfig: 0,
       activeConfigOriginal: config,
       showPublishModal: false,
@@ -61,7 +53,6 @@ export class Configuration extends React.Component {
     this.changeValue = this.changeValue.bind(this)
     this.changeValues = this.changeValues.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
-    this.activateTab = this.activateTab.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
     this.changeActiveVersionEnvironment = this.changeActiveVersionEnvironment.bind(this)
@@ -138,9 +129,6 @@ export class Configuration extends React.Component {
         this.showNotification(<FormattedMessage id="portal.configuration.updateSuccessfull.text"/>)
       }
     })
-  }
-  activateTab(tabName) {
-    this.setState({activeTab: tabName})
   }
   activateVersion(id) {
     const index = this.props.activeHost.get('services').get(0)
@@ -236,12 +224,13 @@ export class Configuration extends React.Component {
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div className="container">Loading...</div>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group }, router } = this.props
+    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const readOnly = this.isReadOnly()
+    const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -256,7 +245,7 @@ export class Configuration extends React.Component {
             params={this.props.params}
             topBarTexts={{}}
             onSelect={(tier, value, params) => {
-              const { brand, account, group } = params, { hostActions } = this.props
+              const { params: { brand, account, group }, hostActions } = this.props
               hostActions.startFetching()
               hostActions.fetchHost(brand, account, group, value).then(() => {
                 const url = getContentUrl('propertyConfiguration', value, params)
@@ -307,21 +296,28 @@ export class Configuration extends React.Component {
             */}
           </ButtonToolbar>
         </PageHeader>
+        <Tabs activeKey={children.props.route.path}>
+          <li eventKey='details'>
+            <Link to={baseUrl + '/details'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.hostname.text"/>
+            </Link>
+          </li>
+          <li eventKey='defaults'>
+            <Link to={baseUrl + '/defaults'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.defaults.text"/>
+            </Link>
+          </li>
+          <li eventKey='policies'>
+            <Link to={baseUrl + '/policies'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.policies.text"/>
+            </Link>
+          </li>
+          <li eventKey='security'>
+            <Link to={baseUrl + '/security'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.security.text"/>
+            </Link>
+          </li>
 
-        <Tabs activeKey={this.state.activeTab}
-          onSelect={this.activateTab}>
-          <NavItem eventKey={'details'}>
-            <FormattedMessage id="portal.configuration.hostname.text"/>
-          </NavItem>
-          <NavItem eventKey={'defaults'}>
-            <FormattedMessage id="portal.configuration.defaults.text"/>
-          </NavItem>
-          <NavItem eventKey={'policies'}>
-            <FormattedMessage id="portal.configuration.policies.text"/>
-          </NavItem>
-          <NavItem eventKey={'security'}>
-            <FormattedMessage id="portal.configuration.security.text"/>
-          </NavItem>
           {/* Hide in 1.0 – UDNP-1406
           <NavItem eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -339,62 +335,20 @@ export class Configuration extends React.Component {
         </Tabs>
 
         <PageContainer>
-          {this.state.activeTab === 'details' ?
-            <ConfigurationDetails
-              readOnly={readOnly}
-              edgeConfiguration={activeConfig.get('edge_configuration')}
-              changeValue={this.changeValue}/>
-            : null}
-
-          {this.state.activeTab === 'defaults' ?
-            <ConfigurationDefaults
-              readOnly={readOnly}
-              activateMatch={this.props.uiActions.changePolicyActiveMatch}
-              activateRule={this.props.uiActions.changePolicyActiveRule}
-              activateSet={this.props.uiActions.changePolicyActiveSet}
-              activeMatch={this.props.policyActiveMatch}
-              activeRule={this.props.policyActiveRule}
-              activeSet={this.props.policyActiveSet}
-              changeValue={this.changeValue}
-              config={activeConfig}
-              saveChanges={this.saveActiveHostChanges}/>
-            : null}
-
-          {this.state.activeTab === 'policies' ?
-            <ConfigurationPolicies
-              readOnly={readOnly}
-              activateMatch={this.props.uiActions.changePolicyActiveMatch}
-              activateRule={this.props.uiActions.changePolicyActiveRule}
-              activateSet={this.props.uiActions.changePolicyActiveSet}
-              activeMatch={this.props.policyActiveMatch}
-              activeRule={this.props.policyActiveRule}
-              activeSet={this.props.policyActiveSet}
-              changeValue={this.changeValue}
-              changeValues={this.changeValues}
-              config={activeConfig}
-              saveChanges={this.saveActiveHostChanges}/>
-            : null}
-
-            {this.state.activeTab === 'performance' ?
-              <ConfigurationPerformance/>
-              : null}
-
-            {this.state.activeTab === 'security' ?
-              <ConfigurationSecurity
-                readOnly={readOnly}
-                changeValue={this.changeValue}
-                changeValues={this.changeValues}
-                config={activeConfig}
-                sslCertificates={this.props.sslCertificates} />
-              : null}
-
-            {this.state.activeTab === 'certificates' ?
-              <ConfigurationCertificates/>
-              : null}
-
-            {this.state.activeTab === 'change-log' ?
-              <ConfigurationChangeLog/>
-              : null}
+          {React.cloneElement(children, {
+            readOnly,
+            activateMatch: this.props.uiActions.changePolicyActiveMatch,
+            activateRule: this.props.uiActions.changePolicyActiveRule,
+            activateSet: this.props.uiActions.changePolicyActiveSet,
+            activeMatch: this.props.policyActiveMatch,
+            activeRule: this.props.policyActiveRule,
+            activeSet: this.props.policyActiveSet,
+            changeValue: this.changeValue,
+            config: activeConfig,
+            edgeConfiguration: activeConfig.get('edge_configuration'),
+            saveChanges: this.saveActiveHostChanges,
+            sslCertificates: this.props.sslCertificates
+          })}
           </PageContainer>
 
           <ConfigurationDiffBar
@@ -469,6 +423,7 @@ Configuration.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
+  children: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
