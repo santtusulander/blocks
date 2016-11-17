@@ -14,7 +14,8 @@ describe('Page Header layout', () => {
         children: [<div key='child' id='child'/>],
         className: 'aa',
         distributedColumns: distCols || false,
-        pageHeaderDetails: ['a', 'b', 'c'],
+        pageHeaderDetailsUpdated: ['a', 'b', 'c'],
+        pageHeaderDetailsDeployed: ['a', 'b', 'c'],
         pageSubTitle,
         secondaryPageHeader: secPageHeader || false
       }
@@ -33,11 +34,18 @@ describe('Page Header layout', () => {
     expect(subject(true, true).find('.secondary-page-header .distributed-columns').length).toBe(1)
   });
 
-  it('renders page header details', () => {
+  it('renders page header updated details', () => {
     const component = subject()
-    expect(component.find('#detail-0').length).toBe(1)
-    expect(component.find('#detail-1').length).toBe(1)
-    expect(component.find('#detail-2').length).toBe(1)
+    expect(component.find('#updated-0').length).toBe(1)
+    expect(component.find('#updated-1').length).toBe(1)
+    expect(component.find('#updated-2').length).toBe(1)
+  });
+
+  it('renders page header deployed details', () => {
+    const component = subject()
+    expect(component.find('#deployed-0').length).toBe(1)
+    expect(component.find('#deployed-1').length).toBe(1)
+    expect(component.find('#deployed-2').length).toBe(1)
   });
 
   it('renders a child', () => {

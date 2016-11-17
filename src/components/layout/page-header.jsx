@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 
-const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSubTitle, pageHeaderDetails, children }) => {
+const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSubTitle, pageHeaderDetailsDeployed, pageHeaderDetailsUpdated, children }) => {
   let customClassName = className || ''
   let finalClassName = classNames(
     'page-header-container',
@@ -18,15 +19,32 @@ const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSu
       <div className="page-header-layout">
         {children}
       </div>
-      {pageHeaderDetails &&
-        <p className="text-sm">
-          {pageHeaderDetails.map((detail, index) =>
-              <span key={index} id={'detail-' + index} className="right-separator">
-                {detail}
-              </span>
-          )}
-        </p>
-      }
+      <div className="page-header-details">
+        {pageHeaderDetailsUpdated &&
+          <div>
+            <h5><FormattedMessage id="portal.configuration.updated.text"/>: </h5>
+            <p className="text-sm right-separator">
+              {pageHeaderDetailsUpdated.map((detail, index) =>
+                <span key={index} id={'updated-' + index}>
+                  {detail}
+                </span>
+              )}
+            </p>
+          </div>
+        }
+        {pageHeaderDetailsDeployed &&
+          <div>
+            <h5><FormattedMessage id="portal.configuration.deployed.text"/>: </h5>
+            <p className="text-sm right-separator">
+              {pageHeaderDetailsDeployed.map((detail, index) =>
+                <span key={index} id={'deployed-' + index}>
+                  {detail}
+                </span>
+              )}
+            </p>
+          </div>
+        }
+      </div>
     </div>
   );
 }
@@ -36,7 +54,8 @@ PageHeader.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   distributedColumns: PropTypes.bool,
-  pageHeaderDetails: PropTypes.array,
+  pageHeaderDetailsDeployed: PropTypes.array,
+  pageHeaderDetailsUpdated: PropTypes.array,
   pageSubTitle: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node

@@ -43,6 +43,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.cancelChanges = this.cancelChanges.bind(this)
     this.submitForm = this.submitForm.bind(this)
   }
+  componentWillReceiveProps(nextProps) {
+    if (!Immutable.is(this.state.originalConfig, nextProps.config)) {
+      this.setState({
+        originalConfig: nextProps.config
+      })
+    }
+  }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
   }
@@ -206,8 +213,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   cancelChanges() {
     // If this started out as an empty rule, remove it
     if(Immutable.is(
-      this.state.originalConfig.getIn(this.props.rulePath),
-      DEFAULT_MATCH
+      this.state.originalConfig.getIn(this.props.rulePath).get('match'),
+      DEFAULT_MATCH.get('match')
     )) {
       const parentPath = this.props.rulePath.slice(0, -1)
       const newConfig = this.state.originalConfig.setIn(
@@ -270,37 +277,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
-
-        {/* [
-          ['request_method', 'Request Method'],
-          ['request_scheme', 'Request Scheme'],
-          ['request_url', 'Request URL'],
-          ['request_host', 'Request Host'],
-          ['request_path', 'Request Path'],
-          ['request_query', 'Request Query'],
-          ['request_query_arg', 'Request Query Argument'],
-          ['request_header', 'Request Header'],
-          ['request_cookie', 'Request Cookie'],
-          ['response_code', 'Response Code'],
-          ['response_header', 'Response Header']
-        ] */}
         <Modal.Header>
           <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
         <Modal.Body>
-
-          <div className="form-group">
-            <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
-            <Select
-              className="input-select"
-              value={ruleType}
-              onSelect={this.props.changeActiveRuleType}
-              options={[
-                { label: 'Request', value: POLICY_TYPES.REQUEST },
-                { label: 'Response', value: POLICY_TYPES.RESPONSE }
-              ]}
-            />
-          </div>
 
           <div className="form-group">
             <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
@@ -308,6 +288,21 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
               onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
           </div>
+
+          {ruleType !== POLICY_TYPES.DEFAULT &&
+            <div className="form-group">
+              <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
+              <Select
+                className="input-select"
+                value={ruleType}
+                onSelect={this.props.changeActiveRuleType}
+                options={[
+                  { label: 'Request', value: POLICY_TYPES.REQUEST },
+                  { label: 'Response', value: POLICY_TYPES.RESPONSE }
+                ]}
+              />
+            </div>
+          }
 
           <Row className="header-btn-row">
             <Col sm={8}>
