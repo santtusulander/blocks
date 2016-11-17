@@ -26,20 +26,6 @@ export class CustomDatePicker extends React.Component {
     this.toggleDropdown = this.toggleDropdown.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
     this.handleMonthChange = this.handleMonthChange.bind(this)
-
-    const { intl } = this.props
-
-    moment.defineLocale('custom-locale', {
-      weekdaysShort : [
-        intl.formatMessage({id: 'portal.common.weekdayShort.sunday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.monday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.tuesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.wednesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.thursday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.friday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.saturday'})
-      ]
-    })
   }
 
   changeTab(key) {
@@ -133,8 +119,7 @@ export class CustomDatePicker extends React.Component {
               weekStartDay={0}
               highlightWeekends={false}
               highlightToday={false}
-              theme={null}
-              locale="custom-locale" />
+              theme={null} />
           : activeTab === 'month' ?
             <MonthPicker
               date={monthDate}
