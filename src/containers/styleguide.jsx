@@ -504,7 +504,9 @@ export default class Styleguide extends React.Component {
           <h1 className="page-header">Month Picker</h1>
           <Row>
             <Col xs={6}>
-              <MonthPicker />
+              <MonthPicker
+                date={null}
+                onChange={() => null} />
             </Col>
           </Row>
 
