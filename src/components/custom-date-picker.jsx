@@ -29,7 +29,7 @@ export class CustomDatePicker extends React.Component {
 
     const { intl } = this.props
 
-    moment.locale('custom-locale', {
+    moment.defineLocale('custom-locale', {
       weekdaysShort : [
         intl.formatMessage({id: 'portal.common.weekdayShort.sunday'}),
         intl.formatMessage({id: 'portal.common.weekdayShort.monday'}),
@@ -54,8 +54,8 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleDateChange(dateValue, date) {
-    const startMoment = date.dateMoment.clone().startOf('day')
-    const endMoment = date.dateMoment.clone().endOf('day')
+    const startMoment = date.dateMoment.clone().utc().startOf('day')
+    const endMoment = date.dateMoment.clone().utc().endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
     this.setState({
@@ -117,7 +117,7 @@ export class CustomDatePicker extends React.Component {
           {activeTab === 'day' ?
             <Calendar
               dateFormat="MM/DD/YYYY"
-              date={dateRangeType === 'day' ? startDate : null}
+              date={dateRangeType === 'day' ? startDate.local() : null}
               onChange={this.handleDateChange}
               weekNumbers={false}
               weekStartDay={0}
