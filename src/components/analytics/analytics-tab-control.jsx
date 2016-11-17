@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link, withRouter } from 'react-router'
-import { Nav } from 'react-bootstrap'
 import { injectIntl } from 'react-intl'
 
+import Tabs from '../tabs'
 import * as PERMISSIONS from '../../constants/permissions'
 import IsAllowed from '../is-allowed'
 
@@ -61,33 +61,34 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      <Nav bsStyle="tabs">
+      <Tabs activeKey={props.activeTab}>
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              <IsAllowed key={tab.key} to={tab.permission}>
+              (<IsAllowed key={tab.key} to={tab.permission} eventKey={tab.key}>
                 <li role="tab">
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
-              </IsAllowed>
+              </IsAllowed>)
             :
-              <li key={tab.key} role="tab">
+              (<li key={tab.key} role="tab" eventKey={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
                 activeClassName='active'>{tab.label}</Link>
-              </li>
+              </li>)
 
             lis.push( tabContent )
           }
           return lis
         }, [])}
-      </Nav>
+      </Tabs>
     </div>
   )
 }
 
 
 AnalyticsTabControl.propTypes = {
+  activeTab: PropTypes.string,
   intl: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object

@@ -1,3 +1,8 @@
+/* eslint-disable react/no-find-dom-node */
+// It is acceptible to use ReactDOM.findDOMNode, since it is not deprecated.
+// react/no-find-dom-node is designed to avoid use of React.findDOMNode and
+// Component.getDOMNode
+
 import { findDOMNode } from 'react-dom'
 import React, { PropTypes, Component } from 'react'
 

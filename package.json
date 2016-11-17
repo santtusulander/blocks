@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.0.4-b2",
+  "version": "1.1.1-b5",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -70,6 +70,7 @@
     "react-addons-css-transition-group": "^0.14.7",
     "react-bootstrap": "^0.28.2",
     "react-bootstrap-typeahead": "^0.9.4",
+    "react-date-picker": "^5.3.28",
     "react-datepicker": "^0.21.0",
     "react-dom": "^0.14.7",
     "react-intl": "^2.1.3",

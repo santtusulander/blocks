@@ -83,6 +83,10 @@ const InlineAdd = ({save, inputs, fields, invalid, passwordValid, values, unmoun
     )}
   </tr>
 
+InlineAdd.defaultProps = {
+  passwordValid: true
+}
+
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array,

@@ -2,7 +2,7 @@ jest.unmock('../host.js')
 jest.unmock('immutable')
 jest.unmock('../../../util/helpers.js')
 
-import { fromJS, is } from 'immutable'
+import { Map, fromJS, is } from 'immutable'
 
 import {
   createSuccess,
@@ -55,7 +55,7 @@ describe('Host Module', () => {
       allHosts: [1],
       configuredHostNames: [1]
     });
-    const newState = deleteSuccess(state, {payload: {id: 1}});
+    const newState = deleteSuccess(state, {payload: Map({published_host_id: 1})});
     expect(newState.get('allHosts').toJS()).not.toContain(1);
     expect(newState.get('fetching')).toBeFalsy();
   });
