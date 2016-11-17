@@ -170,10 +170,6 @@ export const getRoutes = store => {
           <Route path={routes.contentPropertyPurgeStatus} component={PurgeStatus}/>
         </Route>
 
-        <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes(store)}
-        </Route>
-
         <Route path={routes.contentPropertyConfiguration} component={Configuration} />
       </Route>
 
