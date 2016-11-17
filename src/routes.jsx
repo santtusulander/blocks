@@ -46,7 +46,9 @@ import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
-import Property from './containers/property'
+import Property from './containers/property/property'
+import PropertySummary from './containers/property/tabs/property-summary'
+import PurgeStatus from './containers/property/tabs/purge-status'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
@@ -164,7 +166,15 @@ export const getRoutes = store => {
           <Route path={routes.contentGroups} component={Groups}/>
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
-        <Route path={routes.contentProperty} component={Property} />
+
+        {/* Properties - routes */}
+        <Route path={routes.contentProperty} component={Property}>
+          <IndexRedirect to={getRoute('contentPropertySummary', { brand: 'udn' })}/>
+          <Route path={routes.contentPropertySummary} component={PropertySummary}/>
+          <Route path={routes.contentPropertyPurgeStatus} component={PurgeStatus}/>
+        </Route>
+
+        {/* Property Configuration - routes */}
         <Route path={routes.contentPropertyConfiguration} component={Configuration}>
           <IndexRedirect to={routes.configurationTabDetails} />
           <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
