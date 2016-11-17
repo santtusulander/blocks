@@ -17,7 +17,7 @@ export class CustomDatePicker extends React.Component {
       dateRangeType: 'day',
       forceOpen: false,
       open: false,
-      value: moment().format('MM/DD/YYYY')
+      value: props.startDate.format('MM/DD/YYYY')
     }
 
     this.isForceOpen = false
