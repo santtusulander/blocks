@@ -36,7 +36,7 @@ export class Property extends React.Component {
   }
 
   componentDidMount() {
-    const { brand, account, group, property} = this.props.params
+    const { account, brand, group, property} = this.props.params
     this.props.hostActions.fetchHost(brand, account, group, property);
     this.props.hostActions.fetchHosts(brand, account, group);
   }
@@ -49,12 +49,15 @@ export class Property extends React.Component {
   }
 
   savePurge() {
-    this.props.purgeActions.createPurge(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      this.props.activeHostConfiguredName,
-      this.props.activePurge.toJS()
+    const { account, brand, group, property } = this.props.params
+    const { activeHostConfiguredName, activePurge, purgeActions } = this.props
+
+    purgeActions.createPurge(
+      brand,
+      account,
+      group,
+      activeHostConfiguredName,
+      activePurge.toJS()
     ).then((action) => {
       if (action.payload instanceof Error) {
         this.setState({ purgeActive: false })
@@ -63,6 +66,7 @@ export class Property extends React.Component {
       }
       else {
         this.setState({ purgeActive: false })
+        purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
         this.showNotification('Purge request succesfully submitted')
       }
     })
