@@ -193,7 +193,7 @@ const createToggledFilter = ( options ) => {
   //if all opts selected - remove filter
   if (options.size > 1) return undefined
 
-  return options
+  return options.toJS()
 }
 
 const toUnixTimestamp = ( date ) => {
@@ -413,4 +413,53 @@ export function getAccountByID(accounts, ids) {
   } else {
     return accounts.find(account => account.get('id') === ids)
   }
+}
+
+/**
+ * Get sorted data for tables
+ *
+ * @param data
+ * @param sortBy
+ * @param sortDir
+ * @param stateSortFunc
+ * @returns {string}
+ */
+export function getSortData(data, sortBy, sortDir, stateSortFunc) {
+  let sortFunc = ''
+  if (stateSortFunc === 'specific' && sortBy.indexOf(',') > -1) {
+    sortFunc = data.sort((a, b) => {
+      sortBy = sortBy.toString().split(',')
+
+      const lhs = a.get(sortBy[0])
+      const rhs = b.get(sortBy[0])
+
+      // the following conditionals handle cases where a & b contain null data
+      if (!lhs && rhs) {
+        return -1 * sortDir
+      }
+      if (lhs && !rhs) {
+        return 1 * sortDir
+      }
+      if (lhs && rhs) {
+        if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {
+          return -1 * sortDir
+        } else if (lhs.get(sortBy[1]) > rhs.get(sortBy[1])) {
+          return 1 * sortDir
+        }
+      }
+
+      return 0
+    })
+  } else {
+    sortFunc = data.sort((a, b) => {
+      if (a.get(sortBy) < b.get(sortBy)) {
+        return -1 * sortDir
+      }
+      else if (a.get(sortBy) > b.get(sortBy)) {
+        return 1 * sortDir
+      }
+      return 0
+    })
+  }
+  return sortFunc
 }
