@@ -89,6 +89,16 @@ export class CustomDatePicker extends React.Component {
     const { startDate } = this.props
     const { activeTab, dateRangeType, open, value } = this.state
 
+    // This is to fix a problem in the react-date-picker component
+    // (https://github.com/zippyui/react-date-picker/issues/167) which results
+    // from the component using local time, not utc. All the dates we use are utc,
+    // so we have to convert the startDate to local and offset it accordingly
+    // for the calendar to display selected days correctly
+    const startDateLocal = startDate.clone().local().subtract(moment().utcOffset(), 'minutes')
+
+    const calendarDate = dateRangeType === 'day' && startDateLocal ? startDateLocal : null
+    const monthDate = dateRangeType === 'month' && startDate ? startDate : null
+
     return (
       <Dropdown
         id="custom-date-picker"
@@ -117,7 +127,7 @@ export class CustomDatePicker extends React.Component {
           {activeTab === 'day' ?
             <Calendar
               dateFormat="MM/DD/YYYY"
-              date={dateRangeType === 'day' && startDate ? startDate.local() : null}
+              date={calendarDate}
               onChange={this.handleDateChange}
               weekNumbers={false}
               weekStartDay={0}
@@ -127,7 +137,7 @@ export class CustomDatePicker extends React.Component {
               locale="custom-locale" />
           : activeTab === 'month' ?
             <MonthPicker
-              date={dateRangeType === 'month' && startDate ? startDate : null}
+              date={monthDate}
               onChange={this.handleMonthChange} />
           : null}
         </Dropdown.Menu>
