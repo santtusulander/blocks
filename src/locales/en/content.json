@@ -28,6 +28,7 @@
   "portal.content.property.purgeStatus.section.title": "Purge History",
   "portal.content.property.purgeStatus.all.label": "All",
   "portal.content.property.purgeStatus.created.label": "Created",
+  "portal.content.property.purgeStatus.running.label": "In Progress",
   "portal.content.property.purgeStatus.completed.label": "Completed",
   "portal.content.property.purgeStatus.notFound.label": "No purge data found",
 

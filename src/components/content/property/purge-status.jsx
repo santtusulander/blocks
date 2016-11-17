@@ -12,6 +12,7 @@ import { formatUnixTimestamp, getSortData } from '../../../util/helpers'
 const filterOptions = [
   { value: 'all', label: <FormattedMessage id="portal.content.property.purgeStatus.all.label"/> },
   { value: 'created', label: <FormattedMessage id="portal.content.property.purgeStatus.created.label"/> },
+  { value: 'running', label: <FormattedMessage id="portal.content.property.purgeStatus.running.label"/> },
   { value: 'completed', label: <FormattedMessage id="portal.content.property.purgeStatus.completed.label"/> }
 ]
 
@@ -62,7 +63,6 @@ class PurgeHistoryReport extends React.Component {
   }
 
   render() {
-
     const { intl } = this.props
     const { sortedStats } = this.state
 
@@ -70,6 +70,12 @@ class PurgeHistoryReport extends React.Component {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
       activeDirection: this.state.sortDir
+    }
+
+    const formatTime = timestamp => formatUnixTimestamp(timestamp, 'MM/DD/YYYY HH:mm')
+    const getLabelForStatus = status => {
+      const option = filterOptions.find(option => option.value === status)
+      return option.label
     }
 
     return (
@@ -112,9 +118,9 @@ class PurgeHistoryReport extends React.Component {
               {sortedStats.map((data, i) => {
                 return (
                   <tr key={i}>
-                    <td>{data.get('status')}</td>
-                    <td>{formatUnixTimestamp(data.get('created_at'))}</td>
-                    <td>{data.get('completed_at') && formatUnixTimestamp(data.get('completed_at'))}</td>
+                    <td>{getLabelForStatus(data.get('status'))}</td>
+                    <td>{formatTime(data.get('created_at'))}</td>
+                    <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
                     <td>{data.get('created_by')}</td>
                     <td>{data.get('note')}</td>
                   </tr>
