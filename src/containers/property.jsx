@@ -197,18 +197,16 @@ export class Property extends React.Component {
     if(!this.props.activeHost || !this.props.activeHost.size || this.props.activeHostConfiguredName !== property) {
       this.fetchHost(property)
     }
-    Promise.all([
-      this.props.visitorsActions.fetchByCountry({
-        account: account,
-        group: group,
-        property: hostConfiguredName,
-        startDate: startDate,
-        endDate: endDate,
-        granularity: 'day',
-        aggregate_granularity: 'day',
-        max_countries: 3
-      })
-    ]).then(this.props.visitorsActions.finishFetching)
+
+    this.props.visitorsActions.fetchByTime({
+      account: account,
+      group: group,
+      property: hostConfiguredName,
+      startDate: startDate,
+      endDate: endDate,
+      granularity: 'hour'
+    }).then(this.props.visitorsActions.finishFetching)
+
     if(!this.props.properties || !this.props.properties.size) {
       this.props.hostActions.fetchHosts(brand, account, group)
     }
@@ -292,7 +290,7 @@ export class Property extends React.Component {
     if(this.props.fetching || !this.props.activeHost || !this.props.activeHost.size) {
       return <div>Loading...</div>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router } = this.props
+    const { hostActions: { deleteHost }, params: { brand, account, group }, router } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const startDate = safeMomentStartDate(this.props.location.query.startDate)
     const endDate = safeMomentEndDate(this.props.location.query.endDate)
@@ -323,7 +321,6 @@ export class Property extends React.Component {
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
-    const uniq_vis = this.props.visitorsByCountry.get('total')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const timespanAdjust = direction => time => time.set(
       'timestamp',
@@ -436,7 +433,7 @@ export class Property extends React.Component {
               <h3>
                 {this.props.fetching || this.props.visitorsFetching ?
                   <span>Loading...</span> :
-                  numeral(uniq_vis).format('0,0')
+                  numeral(this.props.visitorsByTimeAverage).format('0,0')
                 }
               </h3>
             </div>
@@ -528,7 +525,7 @@ export class Property extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+            deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}}
           invalid={true}
           verifyDelete={true}>
@@ -567,7 +564,7 @@ Property.propTypes = {
   router: React.PropTypes.object,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByTimeAverage: React.PropTypes.number,
   visitorsFetching: React.PropTypes.bool
 }
 Property.defaultProps = {
@@ -582,7 +579,7 @@ Property.defaultProps = {
     history: []
   }),
   properties: Immutable.List(),
-  visitorsByCountry: Immutable.Map()
+  visitorsByTimeAverage: 0
 }
 
 function mapStateToProps(state) {
@@ -597,7 +594,7 @@ function mapStateToProps(state) {
     fetching: state.host.get('fetching'),
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
-    visitorsByCountry: state.visitors.get('byCountry'),
+    visitorsByTimeAverage: state.visitors.get('byTimeAverage'),
     visitorsFetching: state.traffic.get('fetching')
   };
 }

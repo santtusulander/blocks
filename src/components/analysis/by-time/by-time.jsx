@@ -1,5 +1,4 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -51,17 +50,7 @@ class AnalysisByTime extends React.Component {
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
 
-    this.measureChartLabels = this.measureChartLabels.bind(this)
     this.formatY = this.formatY.bind(this)
-  }
-  componentDidMount() {
-    this.measureChartLabels()
-  }
-  measureChartLabels() {
-    this.setState({
-      primaryLabelWidth: this.refs.primaryLabel ? findDOMNode(this.refs.primaryLabel).getBBox().width : 0,
-      secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
-    })
   }
 
   moveMouse(xScale, yScale, datasets) {

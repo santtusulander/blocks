@@ -6,15 +6,20 @@ import {
   Modal,
   Input,
   ButtonToolbar,
-  Button
+  Button,
+  Table
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
+import ActionButtons from '../../components/action-buttons'
 
 import { checkForErrors, userIsContentProvider, userIsCloudProvider } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
+
+import { fetchHosts, startFetching as startFetchingHosts } from '../../redux/modules/host'
 
 import './group-form.scss'
 
@@ -51,6 +56,14 @@ class GroupForm extends React.Component {
     this.state = {
       usersToAdd: List(),
       usersToDelete: List()
+    }
+  }
+
+  componentWillMount() {
+    if(this.props.groupId) {
+      const { fetchHosts, startFetchingHosts, params: { brand, account }, groupId } = this.props
+      startFetchingHosts()
+      fetchHosts(brand, account, groupId)
     }
   }
 
@@ -138,6 +151,8 @@ class GroupForm extends React.Component {
 
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
+
+    const { hosts, onDeleteHost } = this.props
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -232,8 +247,41 @@ class GroupForm extends React.Component {
                 </ul>
               </div>
               */}
+
+              <hr/>
+
+              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+              {this.props.isFetchingHosts ? <LoadingSpinner/> :
+                !hosts.isEmpty() ?
+                  <Table striped={true}>
+                    <thead>
+                    <tr>
+                      <th>
+                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                      </th>
+                      <th width="8%"/>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {hosts.map((host, i) => {
+                      return (
+                        <tr key={i}>
+                          <td>{host}</td>
+                          <td>
+                            <ActionButtons
+                              onDelete={() => onDeleteHost(host)}/>
+                          </td>
+                        </tr>
+                      )
+                    })
+                    }
+                    </tbody>
+                  </Table>
+                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+              }
+
               <ButtonToolbar className="text-right extra-margin-top">
-                <Button className="btn-outline" onClick={onCancel}>Cancel</Button>
+                <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
                 <Button disabled={invalid} bsStyle="primary"
                         onClick={this.save}>{groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
               </ButtonToolbar>
@@ -247,25 +295,32 @@ class GroupForm extends React.Component {
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   canEditBilling: PropTypes.bool,
+  fetchHosts: PropTypes.func,
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groupId: PropTypes.number,
+  hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingHosts: PropTypes.bool,
   onCancel: PropTypes.func,
+  onDeleteHost: PropTypes.func,
   onSave: PropTypes.func,
-  show: PropTypes.bool
+  params: PropTypes.object,
+  show: PropTypes.bool,
+  startFetchingHosts: PropTypes.func
   // users: PropTypes.instanceOf(List)
 }
 
-// GroupForm.defaultProps = {
-//   users: List()
-// }
+GroupForm.defaultProps = {
+  users: List(),
+  hosts: List()
+}
 
 /**
  * If not editing a group, pass empty initial values
  */
-const determineInitialValues = (groupId, activeGroup) => {
+const determineInitialValues = (groupId, activeGroup = Map()) => {
   let initialValues = {}
   if (groupId) {
     const { charge_model, ...rest } = activeGroup.toJS()
@@ -274,14 +329,16 @@ const determineInitialValues = (groupId, activeGroup) => {
   return initialValues
 }
 
-function mapStateToProps({ user, group, account, form }, { groupId }) {
+function mapStateToProps({ user, host, group, account, form }, { groupId }) {
   const currentUser = user.get('currentUser')
   const canEditBilling = userIsCloudProvider(currentUser)
   const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
   return {
     canEditBilling,
     formValues: getValues(form.groupEdit),
-    // users: user.get('allUsers'),
+    users: user.get('allUsers'),
+    hosts: groupId && host.get('allHosts'),
+    isFetchingHosts: host.get('fetching'),
     account: account.get('activeAccount'),
     fields: canSeeBilling ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
     initialValues: determineInitialValues(groupId, group.get('activeGroup'))
@@ -292,4 +349,4 @@ export default reduxForm({
   fields: ['name', 'charge_id', 'charge_model'],
   form: 'groupEdit',
   validate
-}, mapStateToProps)(injectIntl(GroupForm))
+}, mapStateToProps, { fetchHosts, startFetchingHosts })(injectIntl(GroupForm))

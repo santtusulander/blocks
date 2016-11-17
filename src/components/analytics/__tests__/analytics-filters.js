@@ -27,14 +27,14 @@ describe('AnalyticsFilters', () => {
         onFilterChange: () => jest.fn(),
         params: {brand: 'udn'},
         showFilters: Immutable.List([
-          'date-range',
-          'service-provider',
-          'content-provider',
-          'on-off-net',
-          'service-type',
-          'record-type',
-          'error-code',
-          'status-code',
+          'dateRange',
+          'serviceProviders',
+          'contentProviders',
+          'onOffNet',
+          'serviceTypes',
+          'recordType',
+          'errorCodesode',
+          'statusCodes',
           'video'
         ])
       }
@@ -71,7 +71,7 @@ describe('AnalyticsFilters', () => {
   })
 
   it('should render error/status code filters', () => {
-    expect(subject().find('StatusCodes').length).toBe(2)
+    expect(subject().find('StatusCodes').length).toBe(1)
   })
 
   it('should render video filters', () => {

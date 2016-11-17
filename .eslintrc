@@ -235,6 +235,8 @@
     "react/style-prop-object": 1,
     "react/no-children-prop": 2,
     "react/no-unused-prop-types": 1,
+    "react/no-find-dom-node": 2,
+    "react/no-unescaped-entities": 2,
     "import/no-unresolved": [2, {commonjs: true, amd: true}],
     "import/named": 2,
     "import/namespace": 2,

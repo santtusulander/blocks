@@ -3,11 +3,16 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl'
+import PROVIDER_TYPES from '../../../constants/provider-types.js'
 
 import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-report.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import {buildAnalyticsOpts, changedParamsFiltersQS} from '../../../util/helpers.js'
+import { buildAnalyticsOpts, changedParamsFiltersQS } from '../../../util/helpers.js'
+import ProviderTypes from '../../../constants/provider-types'
+import { userHasRole } from '../../../util/helpers'
+
 
 class AnalyticsTabOnOffNet extends React.Component {
   componentDidMount() {
@@ -51,6 +56,18 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 
   render(){
+    const { activeAccount, currentUser } = this.props
+
+    // Check for Cloud Providers / UDN Admins
+    if (userHasRole(currentUser, PROVIDER_TYPES.CLOUD_PROVIDER) &&
+      (!activeAccount || activeAccount.get('provider_type') !== ProviderTypes.SERVICE_PROVIDER)) {
+      return (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectServiceProviderAccount.text" values={{ br: <br/> }}/>
+        </div>
+      )
+    }
+
     return (
       <AnalysisOnOffNetReport
         dateRangeLabel={this.props.filters.get('dateRangeLabel')}
@@ -66,7 +83,9 @@ class AnalyticsTabOnOffNet extends React.Component {
 }
 
 AnalyticsTabOnOffNet.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -85,12 +104,14 @@ AnalyticsTabOnOffNet.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
+    currentUser: state.user.get('currentUser'),
     fetching: state.traffic.get('fetching'),
+    filters: state.filters.get('filters'),
     onOffNetChartType: state.ui.get('analysisOnOffNetChartType'),
     onOffStats: state.traffic.get('onOffNet'),
-    onOffStatsToday: state.traffic.get('onOffNetToday'),
-    filters: state.filters.get('filters')
+    onOffStatsToday: state.traffic.get('onOffNetToday')
   }
 }
 

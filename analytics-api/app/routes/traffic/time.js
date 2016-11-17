@@ -38,7 +38,7 @@ function routeTrafficTime(req, res) {
     dimension    : 'global'
   };
 
-  db.getEgress(options).then((trafficData) => {
+  db.getTime(options).then((trafficData) => {
     let optionsFinal       = db._getQueryOptions(options);
     let finalTrafficData   = trafficData.map((data) => _.pick(data, ['timestamp', 'service_type', 'bytes', 'requests']));
     let groupedTrafficData = _.groupBy(finalTrafficData, 'service_type');
