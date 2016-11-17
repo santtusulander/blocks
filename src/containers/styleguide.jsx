@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
@@ -77,6 +78,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 
@@ -92,7 +94,8 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
-export default class Styleguide extends React.Component {
+class Styleguide extends React.Component {
+
   constructor(props) {
     super(props)
 
@@ -102,6 +105,7 @@ export default class Styleguide extends React.Component {
       customDatePickerStartDate: moment().startOf('day')
     }
   }
+
   render() {
     const spDashboardData = {
       "traffic": {
@@ -632,6 +636,10 @@ export default class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
+          <h1 className="page-header">MapBox</h1>
+
+          <MapBox />
+
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconAccount />
@@ -842,4 +850,14 @@ export default class Styleguide extends React.Component {
 }
 
 Styleguide.displayName = 'Styleguide'
-Styleguide.propTypes = {}
+Styleguide.propTypes = {
+  theme: React.PropTypes.string
+}
+
+const mapStateToProps = (state) => {
+  return {
+    theme: state.ui.get('theme')
+  }
+}
+
+export default connect(mapStateToProps)(Styleguide)
