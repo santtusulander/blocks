@@ -36,7 +36,9 @@ export class Property extends React.Component {
   }
 
   componentDidMount() {
-    this.props.hostActions.fetchHosts(this.props.params.brand, this.props.params.account, this.props.params.group);
+    const { brand, account, group, property} = this.props.params
+    this.props.hostActions.fetchHost(brand, account, group, property);
+    this.props.hostActions.fetchHosts(brand, account, group);
   }
 
   togglePurge() {
