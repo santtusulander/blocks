@@ -167,19 +167,17 @@ class PropertySummary extends React.Component {
     if (!this.props.activeHost || !this.props.activeHost.size || this.props.activeHostConfiguredName !== property) {
       this.fetchHost(property)
     }
-    Promise.all([
-      this.props.visitorsActions.fetchByCountry({
-        account: account,
-        group: group,
-        property: hostConfiguredName,
-        startDate: startDate,
-        endDate: endDate,
-        granularity: 'day',
-        aggregate_granularity: 'day',
-        max_countries: 3
-      })
-    ]).then(this.props.visitorsActions.finishFetching)
-    if (!this.props.properties || !this.props.properties.size) {
+
+    this.props.visitorsActions.fetchByTime({
+      account: account,
+      group: group,
+      property: hostConfiguredName,
+      startDate: startDate,
+      endDate: endDate,
+      granularity: 'hour'
+    }).then(this.props.visitorsActions.finishFetching)
+
+    if(!this.props.properties || !this.props.properties.size) {
       this.props.hostActions.fetchHosts(brand, account, group)
     }
     if (!this.props.activeAccount || !this.props.activeAccount.size) {
@@ -308,7 +306,6 @@ class PropertySummary extends React.Component {
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
     const avg_cache_hit_rate = totals && totals.get('chit_ratio')
     const avg_ttfb = totals && totals.get('avg_fbl')
-    const uniq_vis = this.props.visitorsByCountry.get('total')
     const sliceGranularity = endDate.diff(startDate, 'days') <= 1 ? null : 'day'
     const formatHistoryTooltip = (date, value) => {
       const formattedDate = moment.utc(date)
@@ -381,7 +378,7 @@ class PropertySummary extends React.Component {
             <h3>
               {this.props.fetching || this.props.visitorsFetching ?
                 <span>Loading...</span> :
-                numeral(uniq_vis).format('0,0')
+                numeral(this.props.visitorsByTimeAverage).format('0,0')
               }
             </h3>
           </div>
@@ -499,7 +496,7 @@ PropertySummary.propTypes = {
   trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
-  visitorsByCountry: React.PropTypes.instanceOf(Immutable.Map),
+  visitorsByTimeAverage: React.PropTypes.number,
   visitorsFetching: React.PropTypes.bool
 }
 PropertySummary.defaultProps = {
@@ -514,7 +511,7 @@ PropertySummary.defaultProps = {
     history: []
   }),
   properties: Immutable.List(),
-  visitorsByCountry: Immutable.Map()
+  visitorsByTimeAverage: 0
 }
 
 function mapStateToProps(state) {
@@ -531,7 +528,7 @@ function mapStateToProps(state) {
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
     trafficFetching: state.traffic.get('fetching'),
-    visitorsByCountry: state.visitors.get('byCountry'),
+    visitorsByTimeAverage: state.visitors.get('byTimeAverage'),
     visitorsFetching: state.traffic.get('fetching')
   };
 }

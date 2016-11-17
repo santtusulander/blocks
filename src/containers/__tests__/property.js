@@ -68,7 +68,7 @@ function uiActionsMaker() {
 function visitorsActionsMaker() {
   return {
     startFetching: jest.fn(),
-    fetchByCountry: jest.fn(),
+    fetchByTime: jest.fn(() => Promise.resolve()),
     finishFetching: jest.fn(),
     visitorsReset: jest.fn()
   }
