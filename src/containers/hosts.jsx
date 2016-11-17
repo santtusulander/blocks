@@ -34,7 +34,9 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeGroup || String(this.props.activeGroup.get('id')) !== this.props.params.group) {
+    if(!this.props.activeGroup ||
+      String(this.props.activeGroup.get('id')) !== this.props.params.group ||
+      this.props.configuredHostNames.size === 0) {
       this.startFetching();
       this.props.fetchGroupData()
         .then(this.stopFetching, this.stopFetching)
@@ -150,6 +152,7 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  configuredHostNames: React.PropTypes.instanceOf(Immutable.List),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
@@ -182,6 +185,7 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
+    configuredHostNames: state.host.get('configuredHostNames'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
