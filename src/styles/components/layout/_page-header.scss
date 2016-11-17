@@ -7,6 +7,7 @@ $page-header-secondary-vertical-padding: rem(18px);
 $page-header-dropdown-width: rem(250px);
 $page-header-secondary-dropdown-min-width: rem(180px);
 $action-padding-right: rem(30px);
+$details-item-margin: rem(6px);
 
 .page-header-container {
   padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
@@ -34,6 +35,33 @@ $action-padding-right: rem(30px);
 
     .selector-component {
       min-width: 0;
+    }
+  }
+
+  .page-header-details {
+
+    &,
+    > div {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    > div {
+      &:last-child p::after {
+        border-right: 0;
+      }
+
+      p > span:not(:last-child) {
+        &:after {
+          margin-right: 3px;
+          content: ',';
+        }
+      }
+    }
+
+    h5 {
+      margin-right: $details-item-margin;
     }
   }
 
