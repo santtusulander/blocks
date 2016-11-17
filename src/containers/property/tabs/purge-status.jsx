@@ -72,28 +72,16 @@ PurgeStatus.defaultProps = {
 }
 
 PurgeStatus.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Map),
-  activeGroup: React.PropTypes.instanceOf(Map),
-  activeHost: React.PropTypes.instanceOf(Map),
-  activePurge: React.PropTypes.instanceOf(Map),
-  allPurges: React.PropTypes.instanceOf(List),
   fetching: React.PropTypes.bool,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(List),
   purgeActions: React.PropTypes.object,
   purgeObjects: React.PropTypes.instanceOf(List)
 }
 
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
-    activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    activePurge: state.purge.get('activePurge'),
-    allPurges: state.purge.get('allPurges'),
     fetching: state.purge.get('fetching'),
-    properties: state.host.get('allHosts'),
     purgeObjects: state.purge.get('purgeObjects')
   };
 }

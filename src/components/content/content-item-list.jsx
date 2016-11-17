@@ -165,11 +165,8 @@ ContentItemList.propTypes = {
   avgTransfer: React.PropTypes.string,
   cacheHitRate: React.PropTypes.number,
   configurationLink: React.PropTypes.string,
-  delete: React.PropTypes.func,
-  description: React.PropTypes.string,
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  id: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
@@ -177,8 +174,7 @@ ContentItemList.propTypes = {
   name: React.PropTypes.string,
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
-  timeToFirstByte: React.PropTypes.string,
-  toggleActive: React.PropTypes.func
+  timeToFirstByte: React.PropTypes.string
 }
 ContentItemList.defaultProps = {
   primaryData: Immutable.List()

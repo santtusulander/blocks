@@ -270,8 +270,7 @@ PurgeModal.propTypes = {
   changePurge: React.PropTypes.func,
   hideAction: React.PropTypes.func,
   intl: React.PropTypes.object,
-  savePurge: React.PropTypes.func,
-  showNotification: React.PropTypes.func
+  savePurge: React.PropTypes.func
 }
 
 export default injectIntl(PurgeModal)

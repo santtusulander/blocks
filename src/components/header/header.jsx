@@ -296,10 +296,8 @@ class Header extends React.Component {
 Header.displayName = 'Header'
 
 Header.defaultProps = {
-  accounts: Immutable.List(),
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
-  activeHost: Immutable.Map(),
   breadcrumbs: null,
   /* FOR TEST only */
   isUDNAdmin: true,
@@ -307,22 +305,16 @@ Header.defaultProps = {
 }
 
 Header.propTypes = {
-  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  activeHost: React.PropTypes.instanceOf(Immutable.Map),
   className: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   handleThemeChange: React.PropTypes.func,
-  isAdmin:  React.PropTypes.bool,
-  location: React.PropTypes.object,
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
   router: React.PropTypes.object,
-  routes: React.PropTypes.array,
   theme: React.PropTypes.string,
-  toggleAccountManagementModal: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map)
 }
 

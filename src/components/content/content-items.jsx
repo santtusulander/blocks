@@ -451,7 +451,6 @@ ContentItems.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
   changeNotification: React.PropTypes.func,
-  className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
@@ -464,15 +463,16 @@ ContentItems.propTypes = {
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
   hideInfoDialog: React.PropTypes.func,
-  history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
-  selectionDisabled: React.PropTypes.bool,
-  selectionStartTier: React.PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionStartTier: React.PropTypes.string, // this is used in a helper render method
   showAnalyticsLink: React.PropTypes.bool,
   showInfoDialog: React.PropTypes.func,
   showSlices: React.PropTypes.bool,

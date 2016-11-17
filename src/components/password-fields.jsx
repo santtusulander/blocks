@@ -243,7 +243,6 @@ PasswordFields.propTypes = {
   inlinePassword: React.PropTypes.bool,
   intl: React.PropTypes.object,
   onChange: React.PropTypes.func,
-  passwordField: React.PropTypes.object,
   stackedPassword: React.PropTypes.bool,
   value: React.PropTypes.string
 };
