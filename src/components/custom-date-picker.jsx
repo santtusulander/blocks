@@ -94,9 +94,9 @@ export class CustomDatePicker extends React.Component {
     // from the component using local time, not utc. All the dates we use are utc,
     // so we have to convert the startDate to local and offset it accordingly
     // for the calendar to display selected days correctly
-    const startDateLocal = startDate.clone().local().subtract(moment().utcOffset(), 'minutes')
+    const startDateLocal = startDate ? startDate.clone().local().subtract(moment().utcOffset(), 'minutes') : null
 
-    const calendarDate = dateRangeType === 'day' && startDateLocal ? startDateLocal : null
+    const calendarDate = dateRangeType === 'day' ? startDateLocal : null
     const monthDate = dateRangeType === 'month' && startDate ? startDate : null
 
     return (
