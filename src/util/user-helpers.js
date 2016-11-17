@@ -13,4 +13,3 @@ export function getRoleSelectOptions(user) {
 
   return options
 }
-
