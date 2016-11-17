@@ -91,6 +91,7 @@ export class CustomDatePicker extends React.Component {
 
     return (
       <Dropdown
+        id="custom-date-picker"
         className="custom-date-picker dropdown-select"
         open={open}
         onToggle={this.toggleDropdown}>
