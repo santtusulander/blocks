@@ -117,7 +117,7 @@ export class CustomDatePicker extends React.Component {
           {activeTab === 'day' ?
             <Calendar
               dateFormat="MM/DD/YYYY"
-              date={dateRangeType === 'day' ? startDate.local() : null}
+              date={dateRangeType === 'day' && startDate ? startDate.local() : null}
               onChange={this.handleDateChange}
               weekNumbers={false}
               weekStartDay={0}
@@ -127,7 +127,7 @@ export class CustomDatePicker extends React.Component {
               locale="custom-locale" />
           : activeTab === 'month' ?
             <MonthPicker
-              date={dateRangeType === 'month' ? startDate : null}
+              date={dateRangeType === 'month' && startDate ? startDate : null}
               onChange={this.handleMonthChange} />
           : null}
         </Dropdown.Menu>
