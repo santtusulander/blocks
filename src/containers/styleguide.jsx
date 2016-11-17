@@ -98,8 +98,8 @@ export default class Styleguide extends React.Component {
 
     this.state = {
       activeTab: 1,
-      customDatePickerEndDate: moment().utc().endOf('day'),
-      customDatePickerStartDate: moment().utc().startOf('day')
+      customDatePickerEndDate: moment().endOf('day'),
+      customDatePickerStartDate: moment().startOf('day')
     }
   }
   render() {
@@ -608,7 +608,7 @@ export default class Styleguide extends React.Component {
               <CustomDatePicker
                 endDate={this.state.customDatePickerEndDate}
                 startDate={this.state.customDatePickerStartDate}
-                changeDateRange={(startDate, endDate) => this.setState({ endDate: endDate, startDate: startDate })} />
+                changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
             <Col xs={4}>
               <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
