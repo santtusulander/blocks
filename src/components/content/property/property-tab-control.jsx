@@ -18,7 +18,7 @@ const PropertyTabControl = (props) => {
     {
       key: 'purge-status',
       label: props.intl.formatMessage({ id: 'portal.content.property.tabs.purgeStatus.label' }),
-      permission: PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW
+      permission: PERMISSIONS.VIEW_PROPERTY_PURGE_STATUS
     }
   ]
 
