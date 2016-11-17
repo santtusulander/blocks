@@ -226,20 +226,28 @@ export class Configuration extends React.Component {
     }
     const { hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
+    const servicesConfig = this.props.activeHost.getIn(['services', 0]);
+    const updateMoment = moment(servicesConfig.get('updated'), 'X')
     const activeConfig = this.getActiveConfig()
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
+
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
         <PageHeader
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
-          pageHeaderDetails={[activeConfig.get('edge_configuration').get('origin_host_name'),
+          pageHeaderDetailsUpdated={[
+            updateMoment.format('MMM, D YYYY'),
+            updateMoment.format('h:MM a')
+          ]}
+          pageHeaderDetailsDeployed={[
             deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('H:MMa'),
-            activeConfig.get('configuration_status').get('last_edited_by')]}>
+            deployMoment.format('h:MM a'),
+            activeConfig.get('configuration_status').get('last_edited_by')
+          ]}>
           <AccountSelector
             as="configuration"
             params={this.props.params}
@@ -299,22 +307,22 @@ export class Configuration extends React.Component {
         <Tabs activeKey={children.props.route.path}>
           <li eventKey='details'>
             <Link to={baseUrl + '/details'} activeClassName="active">
-              <FormattedMessage id="portal.configuration.hostname.text"/>
+            <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
           <li eventKey='defaults'>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
-              <FormattedMessage id="portal.configuration.defaults.text"/>
+            <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
           <li eventKey='policies'>
             <Link to={baseUrl + '/policies'} activeClassName="active">
-              <FormattedMessage id="portal.configuration.policies.text"/>
+            <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
           <li eventKey='security'>
             <Link to={baseUrl + '/security'} activeClassName="active">
-              <FormattedMessage id="portal.configuration.security.text"/>
+            <FormattedMessage id="portal.configuration.security.text"/>
             </Link>
           </li>
 
