@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
+import moment from 'moment'
 
 // React-Bootstrap
 // ===============
@@ -29,10 +30,12 @@ import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
+import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
+import CustomDatePicker from '../components/custom-date-picker'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -94,7 +97,9 @@ export default class Styleguide extends React.Component {
     super(props)
 
     this.state = {
-      activeTab: 1
+      activeTab: 1,
+      customDatePickerEndDate: moment().utc().endOf('day'),
+      customDatePickerStartDate: moment().utc().startOf('day')
     }
   }
   render() {
@@ -496,6 +501,13 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Month Picker</h1>
+          <Row>
+            <Col xs={6}>
+              <MonthPicker />
+            </Col>
+          </Row>
+
           <h1 className="page-header">Stacked By Time Summary</h1>
           <Row>
             <Col xs={6}>
@@ -584,6 +596,23 @@ export default class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]} />
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Custom Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <CustomDatePicker
+                endDate={this.state.customDatePickerEndDate}
+                startDate={this.state.customDatePickerStartDate}
+                changeDateRange={(startDate, endDate) => this.setState({ endDate: endDate, startDate: startDate })} />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+            <Col xs={4}>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
 
