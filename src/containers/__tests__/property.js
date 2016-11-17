@@ -14,8 +14,8 @@ jest.mock('../../util/routes', () => ({ getContentUrl: jest.fn() }))
 
 jest.autoMockOff()
 
-jest.unmock('../property.jsx')
-import { Property } from '../property.jsx'
+jest.unmock('../property/property.jsx')
+import Property from '../property/property.jsx'
 
 function accountActionsMaker() {
   return {
@@ -338,24 +338,6 @@ describe('Property', () => {
         visitorsActions={visitorsActionsMaker()} />
     );
     expect(TestUtils.isCompositeComponent(property)).toBeTruthy();
-  });
-
-  it('should request data on mount', () => {
-    const hostActions = hostActionsMaker()
-    TestUtils.renderIntoDocument(
-      <Property
-        accountActions={accountActionsMaker()}
-        groupActions={groupActionsMaker()}
-        hostActions={hostActions}
-        metricsActions={metricsActionsMaker()} fetching={true}
-        params={urlParams} location={fakeLocation}
-        trafficActions={trafficActionsMaker()}
-        visitorsActions={visitorsActionsMaker()}/>
-    )
-    expect(hostActions.startFetching.mock.calls.length).toBe(1)
-    expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
-    expect(hostActions.fetchHost.mock.calls[0][1]).toBe('1')
-    expect(hostActions.fetchHost.mock.calls[0][2]).toBe('2')
   });
 
   it('should toggle property menu', () => {

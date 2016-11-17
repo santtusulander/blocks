@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',
   analyticsAccount: '/analysis/:brand/:account',
@@ -20,7 +20,16 @@ module.exports = {
   contentGroups: '/content/:brand/:account/groups',
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
+  contentPropertySummary: '/content/:brand/:account/groups/:group/:property/summary',
+  contentPropertyPurgeStatus: '/content/:brand/:account/groups/:group/:property/purge-status',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
+
+  configurationTabDetails: 'details',
+  configurationTabDefaults: 'defaults',
+  configurationTabPolicies: 'policies',
+  configurationTabSecurity: 'security',
+
+  configurationTabPoliciesEditPolicy: 'edit/id/:policyId/type/:policyType',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
@@ -74,8 +83,6 @@ module.exports = {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
-  dashboardGroup: '/dashboard/:brand/:account/:group',
-
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
