@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',
   analyticsAccount: '/analysis/:brand/:account',
@@ -23,6 +23,13 @@ module.exports = {
   contentPropertySummary: '/content/:brand/:account/groups/:group/:property/summary',
   contentPropertyPurgeStatus: '/content/:brand/:account/groups/:group/:property/purge-status',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
+
+  configurationTabDetails: 'details',
+  configurationTabDefaults: 'defaults',
+  configurationTabPolicies: 'policies',
+  configurationTabSecurity: 'security',
+
+  configurationTabPoliciesEditPolicy: 'edit/id/:policyId/type/:policyType',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',
