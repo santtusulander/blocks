@@ -213,8 +213,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   cancelChanges() {
     // If this started out as an empty rule, remove it
     if(Immutable.is(
-      this.state.originalConfig.getIn(this.props.rulePath),
-      DEFAULT_MATCH
+      this.state.originalConfig.getIn(this.props.rulePath).get('match'),
+      DEFAULT_MATCH.get('match')
     )) {
       const parentPath = this.props.rulePath.slice(0, -1)
       const newConfig = this.state.originalConfig.setIn(
