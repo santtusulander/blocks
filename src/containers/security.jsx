@@ -110,13 +110,12 @@ export class Security extends React.Component {
       accounts,
       groups,
       activeAccount,
-      activeCertificates,
       activeModal,
       fetchAccount,
       params,
       onDelete,
       sslCertificates,
-      securityActions: { toggleActiveCertificates, fetchSSLCertificate },
+      securityActions: { fetchSSLCertificate },
       toDelete,
       toggleModal
     } = this.props
@@ -130,10 +129,7 @@ export class Security extends React.Component {
 
     const sslListProps = {
       groups,
-      activeModal,
-      activeCertificates,
       certificates: sslCertificates,
-      onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
       editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
       deleteCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(DELETE_CERTIFICATE))
@@ -183,7 +179,6 @@ export class Security extends React.Component {
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   groups: PropTypes.instanceOf(List),
@@ -200,7 +195,6 @@ Security.propTypes = {
 function mapStateToProps(state, ownProps) {
   return {
     toDelete: state.security.get('certificateToEdit'),
-    activeCertificates: state.security.get('activeCertificates'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),

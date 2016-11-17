@@ -303,7 +303,6 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,
-  onCancel: PropTypes.func,
   onSave: PropTypes.func,
   resetForm: PropTypes.func,
   savingPassword: PropTypes.bool,

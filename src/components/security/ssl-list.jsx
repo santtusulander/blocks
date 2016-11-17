@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import ActionButtons from '../action-buttons'
 import { AccountManagementHeader } from '../account-management/account-management-header'
@@ -48,18 +48,14 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
 }
 
 SSLList.propTypes = {
-  activeCertificates: PropTypes.instanceOf(List),
-  activeModal: PropTypes.string,
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,
   editCertificate: PropTypes.func,
   groups: PropTypes.instanceOf(List),
-  intl: intlShape.isRequired,
-  onCheck: PropTypes.func,
   uploadCertificate: PropTypes.func
 }
 SSLList.defaultProps = {
   certificates: List()
 }
 
-export default injectIntl(SSLList)
+export default SSLList

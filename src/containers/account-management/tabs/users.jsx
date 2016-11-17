@@ -8,7 +8,6 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as permissionsActionCreators from '../../../redux/modules/permissions'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -514,7 +513,6 @@ AccountManagementAccountUsers.propTypes = {
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
-  permissionsActions: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
@@ -540,7 +538,6 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    permissionsActions: bindActionCreators(permissionsActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

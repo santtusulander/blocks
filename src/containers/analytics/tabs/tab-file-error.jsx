@@ -65,7 +65,6 @@ class AnalyticsTabFileError extends React.Component {
 
 AnalyticsTabFileError.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
-  fetching: React.PropTypes.bool,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
   fileErrorURLs: React.PropTypes.instanceOf(Immutable.List),
   filterActions: React.PropTypes.object,
@@ -84,7 +83,6 @@ AnalyticsTabFileError.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    fetching: state.reports.get('fetching'),
     filters: state.filters.get('filters'),
     fileErrorSummary: state.reports.get('fileErrorSummary'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
