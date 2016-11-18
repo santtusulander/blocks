@@ -208,6 +208,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analysis.filters.chart.title': 'Chart Type',
   'portal.analysis.filters.dateRange.title': 'Date Range',
+  'portal.analysis.filters.customDateRange.title': 'Date Range',
   'portal.analysis.filters.dateRangeFrom.title': 'From',
   'portal.analysis.filters.dateRangeTo.title': 'To',
   'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',

@@ -1,9 +1,15 @@
 // React Date Picker
 // =================
 
+$rdp-font-size: 14px;
+$rdp-width: rem(300px);
+$rdp-vertical-padding: em(15px, $rdp-font-size);
+$rdp-horizontal-padding: em(25px, $rdp-font-size);
+$rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+
 .react-date-picker__calendar {
-  width: 300px;
-  padding: 15px 25px 25px;
+  width: $rdp-width;
+  padding: $rdp-vertical-padding $rdp-horizontal-padding $rdp-horizontal-padding;
   font-family: inherit;
   font-size: inherit;
   border: 0;
@@ -13,7 +19,7 @@
   .light-theme & {
     color: $dt-text-color;
     background-color: $black;
-    background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+    background-image: $rdp-dark-bg-image;
     background-size: 100%;
   }
 }
@@ -45,7 +51,7 @@
   }
 
   .react-date-picker__nav-bar-date {
-    padding-bottom: 10px;
+    padding: 8px 0;
     font-size: inherit;
     font-weight: normal;
     color: inherit;
@@ -54,7 +60,7 @@
 
   .react-date-picker__nav-bar-arrow {
     position: absolute;
-    top: -8px;
+    top: 0;
     width: 36px;
     height: 36px;
     border: 0;
