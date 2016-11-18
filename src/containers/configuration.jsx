@@ -226,9 +226,8 @@ export class Configuration extends React.Component {
     }
     const { hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
-    const servicesConfig = this.props.activeHost.getIn(['services', 0]);
-    const updateMoment = moment(servicesConfig.get('updated'), 'X')
     const activeConfig = this.getActiveConfig()
+    const updateMoment = moment(activeConfig.get('config_updated'), 'X')
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const readOnly = this.isReadOnly()
