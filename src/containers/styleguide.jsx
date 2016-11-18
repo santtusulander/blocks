@@ -1,7 +1,9 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
+import moment from 'moment'
 
 // React-Bootstrap
 // ===============
@@ -29,10 +31,12 @@ import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
+import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
+import CustomDatePicker from '../components/custom-date-picker'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -74,6 +78,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 
@@ -89,14 +94,18 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
-export default class Styleguide extends React.Component {
+class Styleguide extends React.Component {
+
   constructor(props) {
     super(props)
 
     this.state = {
-      activeTab: 1
+      activeTab: 1,
+      customDatePickerEndDate: moment().utc().endOf('day'),
+      customDatePickerStartDate: moment().utc().startOf('day')
     }
   }
+
   render() {
     const spDashboardData = {
       "traffic": {
@@ -496,6 +505,13 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Month Picker</h1>
+          <Row>
+            <Col xs={6}>
+              <MonthPicker />
+            </Col>
+          </Row>
+
           <h1 className="page-header">Stacked By Time Summary</h1>
           <Row>
             <Col xs={6}>
@@ -587,6 +603,23 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Custom Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <CustomDatePicker
+                endDate={this.state.customDatePickerEndDate}
+                startDate={this.state.customDatePickerStartDate}
+                changeDateRange={(startDate, endDate) => this.setState({ endDate: endDate, startDate: startDate })} />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+            <Col xs={4}>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Dashboard Panel</h1>
 
           <DashboardPanels>
@@ -600,6 +633,10 @@ export default class Styleguide extends React.Component {
 
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+
+          <h1 className="page-header">MapBox</h1>
+
+          <MapBox />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -811,4 +848,14 @@ export default class Styleguide extends React.Component {
 }
 
 Styleguide.displayName = 'Styleguide'
-Styleguide.propTypes = {}
+Styleguide.propTypes = {
+  theme: React.PropTypes.string
+}
+
+const mapStateToProps = (state) => {
+  return {
+    theme: state.ui.get('theme')
+  }
+}
+
+export default connect(mapStateToProps)(Styleguide)

@@ -2,6 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow }  from 'enzyme'
 
+import MockedChild from '../../components/configuration/defaults'
+
 jest.disableAutomock() // Uses react-bootstrap extensively, so don't auto mock
 jest.unmock('../../util/status-codes')
 jest.unmock('../configuration.jsx')
@@ -238,6 +240,11 @@ const fakeHost = Immutable.fromJS({
   "description": ""
 })
 
+/**
+ *
+ * No need to test tab-changing functionality, since react-router handles it.
+ */
+
 let config = null
 let hostActions = null
 let uiActions = null
@@ -256,7 +263,9 @@ describe('Configuration', () => {
         params={urlParams}
         fetching={true}
         uiActions={uiActions}
-        location={fakeLocation}/>
+        location={fakeLocation}>
+        <MockedChild route={{ path: 'asd' }}/>
+      </Configuration>
     );
   });
 
@@ -271,130 +280,8 @@ describe('Configuration', () => {
     expect(hostActions.fetchHost.mock.calls[0][2]).toBe('2')
   });
 
-  it('should initially render details subcomponent', () => {
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(1);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render defaults subcomponent when tab is clicked', () => {
-    config.setState({activeTab: 'defaults'})
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(1);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render policies subcomponent when tab is clicked', () => {
-    config.setState({activeTab: 'policies'})
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(1);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render performance subcomponent when tab is clicked', () => {
-    config.setState({activeTab: 'performance'})
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(1);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render security subcomponent when tab is clicked', () => {
-    config.setState({activeTab: 'security'})
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(1);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render certificates subcomponent when tab is clicked', () => {
-    config.setState({activeTab: 'certificates'})
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(1);
-    expect(changelog.length).toEqual(0);
-  })
-
-  it('should render change-log change log when tab is clicked', () => {
-    config.setState({activeTab: 'change-log'})
-
-    let details = config.find('ConfigurationDetails');
-    let defaults = config.find('ConfigurationDefaults');
-    let policies = config.find('ConfigurationPolicies');
-    let performance = config.find('ConfigurationPerformance');
-    let security = config.find('ConfigurationSecurity');
-    let certs = config.find('ConfigurationCertificates');
-    let changelog = config.find('ConfigurationChangeLog');
-    expect(details.length).toEqual(0);
-    expect(defaults.length).toEqual(0);
-    expect(policies.length).toEqual(0);
-    expect(performance.length).toEqual(0);
-    expect(security.length).toEqual(0);
-    expect(certs.length).toEqual(0);
-    expect(changelog.length).toEqual(1);
+  it('should have a child component', () => {
+    expect(config.find('ConfigurationDefaults').length).toBe(1)
   })
 
   it('should make changes to the host', () => {
