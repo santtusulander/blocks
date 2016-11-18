@@ -25,7 +25,7 @@ export default Immutable.fromJS([
   },
   {
     key: 'visitors',
-    filters: ['dateRange'],
+    filters: ['customDateRange'],
     permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS
   },
   {
