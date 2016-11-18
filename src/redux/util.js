@@ -65,3 +65,13 @@ export function getDateRange( filters ) {
     endDate
   }
 }
+
+export function getCustomDateRange( filters ) {
+  const endDate = filters.getIn(['customDateRange', 'endDate']) || moment().utc().endOf('day')
+  const startDate = filters.getIn(['customDateRange', 'startDate']) || moment().utc().startOf('day')
+
+  return {
+    startDate,
+    endDate
+  }
+}
