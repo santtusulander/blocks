@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -14,6 +15,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
+
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 
 import PageContainer from '../components/layout/page-container'
@@ -31,8 +33,6 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 import IconCaretDown from '../components/icons/icon-caret-down'
-
-import { FormattedMessage } from 'react-intl'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 
