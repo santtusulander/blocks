@@ -10,6 +10,7 @@ import TruncatedTitle from '../truncated-title'
 // import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 // import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IconCaretDown from '../icons/icon-caret-down'
 import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
@@ -221,8 +222,7 @@ class Header extends React.Component {
         <div ref="gradient"
           className={this.state.animatingGradient ?
             'header__gradient animated' :
-            'header__gradient'}>
-        </div>
+            'header__gradient'} />
         <div className="header__content">
           <Nav className="header__left">
             <li className="header__logo">
@@ -248,7 +248,7 @@ class Header extends React.Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                    <span className="caret"></span>
+                    <IconCaretDown />
                   </div>
                 </AccountSelector>
               </IsAllowed>

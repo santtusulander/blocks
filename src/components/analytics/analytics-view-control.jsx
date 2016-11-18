@@ -12,6 +12,7 @@ import { getTabName } from '../../util/helpers.js'
 import { getAnalyticsUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
+import IconCaretDown from '../icons/icon-caret-down'
 
 const AnalyticsViewControl = (props) => {
 
@@ -180,7 +181,7 @@ const AnalyticsViewControl = (props) => {
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
-          <span className="caret"></span>
+          <IconCaretDown />
         </div>
       </AccountSelector>
       {props.params.account &&

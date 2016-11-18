@@ -107,7 +107,7 @@ describe('AccountManagementAccountGroups', () => {
     )
 
     groups.instance().saveNewGroup({name: 'zzz'})
-    expect(addGroup).toBeCalledWith('zzz')
+    expect(addGroup).toBeCalledWith({name: 'zzz'})
   })
 
   it('should save an edited group', () => {

@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal-analytics-api",
-  "version": "0.1.64",
+  "version": "0.1.66",
   "description": "A Node Express API server used by the Ericsson UDN Portal. The API responds to various GET requests with data from a remote MySQL database.",
   "main": "index.js",
   "scripts": {
@@ -32,8 +32,8 @@
     "winston": "^2.1.1"
   },
   "devDependencies": {
-    "eslint": "^1.10.3",
-    "eslint-plugin-react": "^3.16.1",
+    "eslint": "^3.9.1",
+    "eslint-plugin-react": "^6.5.0",
     "istanbul": "^0.4.2",
     "jasmine": "^2.4.1",
     "jasmine-spec-reporter": "^2.4.0",

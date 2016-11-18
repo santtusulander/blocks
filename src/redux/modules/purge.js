@@ -7,7 +7,8 @@ import { BASE_URL_NORTH, mapReducers } from '../util'
 
 const PURGE_CREATED = 'PURGE_CREATED'
 const PURGE_FETCHED = 'PURGE_FETCHED'
-const PURGE_FETCHED_ALL = 'PURGE_FETCHED_ALL'
+const PURGE_LIST_FETCHED = 'PURGE_LIST_FETCHED'
+const PURGE_OBJECTS_FETCHED = 'PURGE_OBJECTS_FETCHED'
 const PURGE_START_FETCH = 'PURGE_START_FETCH'
 const PURGE_RESET_ACTIVE = 'PURGE_RESET_ACTIVE'
 const PURGE_UPDATE_ACTIVE = 'PURGE_UPDATE_ACTIVE'
@@ -15,14 +16,14 @@ const PURGE_UPDATE_ACTIVE = 'PURGE_UPDATE_ACTIVE'
 export const emptyPurges = Immutable.Map({
   activePurge: null,
   fetching: false,
-  allPurges: Immutable.List()
+  purgeList: Immutable.List(),
+  purgeObjects: Immutable.List()
 })
 
 export const emptyPurge = Immutable.fromJS({
   action: 'purge',
   objects: [],
-  note: '',
-  feedback: null
+  note: ''
 })
 
 // REDUCERS
@@ -60,16 +61,30 @@ export function fetchFailure(state) {
   })
 }
 
-export function fetchAllSuccess(state, action) {
+export function fetchListSuccess(state, action) {
   return state.merge({
-    allPurges: Immutable.fromJS(action.payload),
+    purgeList: Immutable.fromJS(action.payload),
     fetching: false
   })
 }
 
-export function fetchAllFailure(state) {
+export function fetchListFailure(state) {
   return state.merge({
-    allPurges: Immutable.List(),
+    purgeList: Immutable.List(),
+    fetching: false
+  })
+}
+
+export function fetchObjectsSuccess(state, action) {
+  return state.merge({
+    purgeObjects: Immutable.fromJS(action.payload.purge_objects),
+    fetching: false
+  })
+}
+
+export function fetchObjectsFailure(state) {
+  return state.merge({
+    purgeObjects: Immutable.List(),
     fetching: false
   })
 }
@@ -88,8 +103,9 @@ export function updateActive(state, action) {
 
 export default handleActions({
   PURGE_CREATED: mapReducers(createRequestSuccess, createFailure),
-  PURGE_FETCHED: mapReducers(fetchAllSuccess, fetchFailure),
-  PURGE_FETCHED_ALL: mapReducers(fetchAllSuccess, fetchAllFailure),
+  PURGE_FETCHED: mapReducers(fetchListSuccess, fetchFailure),
+  PURGE_LIST_FETCHED: mapReducers(fetchListSuccess, fetchListFailure),
+  PURGE_OBJECTS_FETCHED: mapReducers(fetchObjectsSuccess, fetchObjectsFailure),
   PURGE_START_FETCH: startFetch,
   PURGE_RESET_ACTIVE: resetActive,
   PURGE_UPDATE_ACTIVE: updateActive
@@ -98,7 +114,7 @@ export default handleActions({
 // ACTIONS
 
 export const createPurge = createAction(PURGE_CREATED, (brand, account, group, property, newPurge) => {
-  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`, newPurge, {
+  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/purge_many`, newPurge, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -120,8 +136,17 @@ export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, pr
   });
 })
 
-export const fetchAllPurges = createAction(PURGE_FETCHED_ALL, (brand, account, group, property) => {
+export const fetchPurgeList = createAction(PURGE_LIST_FETCHED, (brand, account, group, property) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const fetchPurgeObjects = createAction(PURGE_OBJECTS_FETCHED, (brand, account, group, params = {}) => {
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/purge_many`, { params })
   .then((res) => {
     if(res) {
       return res.data;

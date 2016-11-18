@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { Nav } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { Map } from 'immutable'
@@ -9,6 +8,7 @@ import { getSupportUrlFromParams } from '../../util/routes'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 import SupportPageHeader from '../../components/support/support-page-header'
+import Tabs from '../../components/tabs'
 
 class Support extends React.Component {
 
@@ -48,28 +48,30 @@ class Support extends React.Component {
       params
     } = this.props;
     const baseUrl = getSupportUrlFromParams(params);
+    const routes = this.props.routes
+    const activeKey = routes[routes.length - 1].path
 
     return (
       <div>
         <SupportPageHeader {...this.props} />
-        <Nav bsStyle="tabs">
-          <li className="navbar">
+        <Tabs activeKey={activeKey}>
+          <li eventKey="tickets">
             <Link to={baseUrl + '/tickets'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
             </Link>
           </li>
           {/*Hide for 1.0 release
-          <li className="navbar">
+          <li eventKey="tools">
             <Link to={baseUrl + '/tools'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
             </Link>
           </li>*/}
-          <li className="navbar">
+          <li eventKey="documentation">
             <Link to={baseUrl + '/documentation'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
             </Link>
           </li>
-        </Nav>
+        </Tabs>
         <Content>
           {this.renderTabContent(children)}
         </Content>
@@ -84,7 +86,8 @@ Support.propTypes = {
   children: PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,
-  router: PropTypes.object
+  router: PropTypes.object,
+  routes: PropTypes.array
 }
 
 Support.defaultProps = {

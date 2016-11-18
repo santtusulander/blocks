@@ -151,20 +151,13 @@ class AnalyticsDB {
    * @private
    * @param  {object} options            Options object that contains keys for
    *                                     account, group, and/or property
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     For example, if the caller is trying to
-   *                                     list properties of a group, this function
-   *                                     needs to return 'property', but the caller
-   *                                     would only provide account and group values.
    * @return {string}                    Will return 'account', 'group', or 'property'
    *                                     Returns null if the level could not be determined
    */
-  _getAccountLevel(options, isListingChildren) {
+  _getAccountLevel(options) {
     let accountLevel;
-    isListingChildren = !!isListingChildren || false;
 
-    if (isListingChildren) {
+    if (options.list_children) {
 
       if (options.group && options.account) {
         accountLevel = 'property';
@@ -200,13 +193,13 @@ class AnalyticsDB {
    * @param  {object}  options Options that get piped into an SQL query
    * @return {Promise}         A promise that is fulfilled with the query results
    */
-  _getAggregateNumbers(options, isListingChildren) {
-    isListingChildren    = !!isListingChildren || false;
-    let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
-    let accountLevelData = this.accountLevelFieldMap[accountLevel];
-    let conditions       = [];
-    let queryOptions     = [];
+  _getAggregateNumbers(options) {
+    let optionsFinal      = this._getQueryOptions(options);
+    let isListingChildren = optionsFinal.list_children;
+    let accountLevel      = this._getAccountLevel(optionsFinal);
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let queryOptions      = [];
 
     // Build the table name
     let table = `${accountLevel}_global_${optionsFinal.granularity}`;
@@ -267,8 +260,7 @@ class AnalyticsDB {
    */
   getTraffic(options) {
     let optionsFinal      = this._getQueryOptions(options);
-    let isListingChildren = optionsFinal.list_children;
-    let accountLevel      = this._getAccountLevel(optionsFinal, isListingChildren);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
     let accountLevelData  = this.accountLevelFieldMap[accountLevel];
     let conditions        = [];
     let grouping          = [];
@@ -297,7 +289,7 @@ class AnalyticsDB {
       && queryOptions.push(optionsFinal.group);
 
     optionsFinal.property
-      && !isListingChildren
+      && !optionsFinal.list_children
       && conditions.push(this.accountLevelFieldMap.property.where)
       && queryOptions.push(optionsFinal.property);
 
@@ -336,7 +328,7 @@ class AnalyticsDB {
 
     return this._executeQuery(queryParameterized, queryOptions);
   }
-  
+
   /**
    * Get total and detailed Service Provider traffic information.
    *
@@ -345,7 +337,7 @@ class AnalyticsDB {
    */
   getSPTrafficTotals(options) {
     let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, true);
+    let accountLevel     = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -409,8 +401,9 @@ class AnalyticsDB {
    *                                     query results
    */
   getSpEgress(options) {
+    let isListingChildren = !!options.list_children || false;
     let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, true);
+    let accountLevel     = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -466,21 +459,23 @@ class AnalyticsDB {
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
-    grouping.push('epoch_start');
+    (selectedDimension || isListingChildren) && grouping.push('epoch_start');
     grouping.length && grouping.unshift(accountLevelData.field + ',\n        ');
 
     let queryParameterized = `
       SELECT
         epoch_start AS timestamp,
         ${accountLevelData.select},
-        sum(bytes) AS bytes
+        ${selectedDimension}service_type,
+        ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
       FROM ??
       WHERE ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join('')}
       ORDER BY
         ${selectedDimension}epoch_start,
-        ${accountLevelData.field}
+        ${accountLevelData.field},
+        service_type;
     `;
 
     return this._executeQuery(queryParameterized, queryOptions);
@@ -495,7 +490,7 @@ class AnalyticsDB {
    */
   getSpTraffic(options) {
     let optionsFinal      = this._getQueryOptions(options);
-    let accountLevel      = this._getAccountLevel(optionsFinal, true);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
 
     if (accountLevel === "account") {
       accountLevel = "sp_account_sp"
@@ -609,7 +604,7 @@ class AnalyticsDB {
     // Skipping SP data fetching in case of unsupported query options
     if (options.granularity !== "5min" && options.granularity !== "month" && options.property === null) {
       options.show_totals && queries.push(this.getSpTraffic(optionsTotals));
-      options.show_detail && queries.push(this.getSpTraffic(optionsDetail));  
+      options.show_detail && queries.push(this.getSpTraffic(optionsDetail));
     }
 
     return Promise.all(queries)
@@ -625,8 +620,13 @@ class AnalyticsDB {
           dataDetail = options.show_detail ? queryData[0] : [];
 
         } else if (queryData.length === 2) {
-          dataTotals = options.show_totals ? queryData[0] : [];
-          dataDetail = options.show_detail ? queryData[1] : [];
+          if (options.show_detail) {
+            dataTotals = options.show_totals ? queryData[0] : [];
+            dataDetail = options.show_detail ? queryData[1] : [];
+          } else {
+            dataTotals = options.show_totals ? queryData[0] : [];
+            spDataTotals = options.show_totals ? queryData[1] : [];
+          }
         } else if (queryData.length === 4) {
           dataTotals = options.show_totals ? queryData[0] : [];
           dataDetail = options.show_detail ? queryData[1] : [];
@@ -648,8 +648,8 @@ class AnalyticsDB {
    */
   getMetrics(options) {
     let queries = [
-      this.getEgressWithHistorical(options, true),
-      this._getAggregateNumbers(options, true),
+      this.getEgressWithHistorical(options),
+      this._getAggregateNumbers(options),
       this.getSPTrafficTotals(options),
       this.getSpEgressWithHistorical(options)
     ];
@@ -669,6 +669,56 @@ class AnalyticsDB {
 
         // NOTE: queryDataOrganized ends up looking something like this:
         // [trafficData, historicalTrafficData, aggregateData]
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account for a
+   * requested time frame AND the previous time frame of the same duration (both for SP and CP).
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the query results
+   */
+  getDataForCountry(options) {
+    let queries = [
+      this.getEgressWithHistorical(options),
+      this.getSpEgressWithHistorical(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        let queryDataOrganized = [];
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[1]);
+
+        log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
+        return queryDataOrganized;
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
+   * Get outbound traffic (egress) for a property, group, or account (both SP and CP).
+   *
+   * @param  {object}  options           Options that get piped into an SQL query
+   * @return {Promise}                   A promise that is fulfilled with the
+   *                                     query results
+   */
+  getTime(options) {
+    let queries = [
+      this.getEgress(options),
+      this.getSpEgress(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        let queryDataOrganized = [];
+        queryDataOrganized = queryDataOrganized.concat(queryData[0]);
+        queryDataOrganized = queryDataOrganized.concat(queryData[1]);
+
         log.info(`Successfully received data from ${queryDataOrganized.length} queries.`);
         return queryDataOrganized;
       })
@@ -734,23 +784,86 @@ class AnalyticsDB {
   }
 
   /**
+   * Get total outbound traffic (egress) for a SP for a month or day, for a property,
+   * group, or account.
+   *
+   * @param  {object}  options Options that get piped into an SQL query
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getSPEgressTotal(options) {
+    let optionsFinal    = this._getQueryOptions(options);
+    let conditions      = [];
+    let granularity = "day";
+
+    // Build the table name
+    let table = `spc_global_${granularity}`;
+
+    // Build the WHERE clause
+    if (granularity === 'day' || granularity === 'month') {
+      conditions.push("timezone = 'UTC' AND");
+    }
+
+    conditions.push('epoch_start BETWEEN ? AND ?');
+
+    optionsFinal.account  && conditions.push('AND sp_account_id = ?');
+    optionsFinal.group    && conditions.push('AND sp_group_id = ?');
+
+    let queryParameterized = `
+      SELECT
+        epoch_start AS timestamp,
+        sum(bytes) AS bytes
+      FROM ??
+      WHERE ${conditions.join('\n        ')};
+    `;
+
+    return this._executeQuery(queryParameterized, [
+      table,
+      optionsFinal.start,
+      optionsFinal.end,
+      optionsFinal.account,
+      optionsFinal.group
+    ]);
+  }
+
+  /**
+   * Get traffic data, cache hit rate, and transfer rates for all properties/groups
+   * in a group/account within a given time range.
+   *
+   * @param  {object}  options Options that get piped into SQL queries
+   * @return {Promise}         A promise that is fulfilled with the query results
+   */
+  getTotal(options) {
+    let queries = [
+      this.getEgressTotal(options),
+      this.getSPEgressTotal(options)
+    ];
+
+    return Promise.all(queries)
+      .then((queryData) => {
+        if (queryData[0][0].timestamp === null) {
+          return queryData[1];
+        } else {
+          return queryData[0]
+        }
+      })
+      .catch((err) => log.error(err));
+  }
+
+  /**
    * Get outbound traffic (egress) for a property, group, or account.
    *
    * @param  {object}  options           Options that get piped into an SQL query
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     See _getAccountLevel for more info.
    * @return {Promise}                   A promise that is fulfilled with the
    *                                     query results
    */
-  getEgress(options, isListingChildren) {
-    isListingChildren    = !!isListingChildren || false;
-    let optionsFinal     = this._getQueryOptions(options);
-    let accountLevel     = this._getAccountLevel(optionsFinal, isListingChildren);
-    let accountLevelData = this.accountLevelFieldMap[accountLevel];
-    let conditions       = [];
-    let grouping         = [];
-    let queryOptions     = [];
+  getEgress(options) {
+    let isListingChildren = !!options.list_children || false;
+    let optionsFinal      = this._getQueryOptions(options);
+    let accountLevel      = this._getAccountLevel(optionsFinal);
+    let accountLevelData  = this.accountLevelFieldMap[accountLevel];
+    let conditions        = [];
+    let grouping          = [];
+    let queryOptions      = [];
     let selectedDimension;
 
     // Build the SELECT clause
@@ -828,13 +941,9 @@ class AnalyticsDB {
    * requested time frame AND the previous time frame of the same duration.
    *
    * @param  {object}  options           Options that get piped into an SQL query
-   * @param  {boolean} isListingChildren Determines whether or not the caller
-   *                                     is trying to list children of a level.
-   *                                     See _getAccountLevel for more info.
    * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getEgressWithHistorical(options, isListingChildren) {
-    isListingChildren   = !!isListingChildren || false;
+  getEgressWithHistorical(options) {
     let optionsFinal    = this._getQueryOptions(options);
     let start           = parseInt(optionsFinal.start);
     let end             = parseInt(optionsFinal.end);
@@ -844,8 +953,8 @@ class AnalyticsDB {
       end: start - 1
     });
     let queries = [
-      this.getEgress(optionsFinal, isListingChildren),
-      this.getEgress(optionsHistoric, isListingChildren)
+      this.getEgress(optionsFinal),
+      this.getEgress(optionsHistoric)
     ];
 
     return Promise.all(queries)

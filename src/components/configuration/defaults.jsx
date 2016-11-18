@@ -17,8 +17,9 @@ import IsAllowed from '../is-allowed'
 import {getVaryHeaderRuleId} from '../../util/policy-config'
 import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
+import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
 
-const policyPath = Immutable.List(['default_policy', 'policy_rules'])
+const policyPath = Immutable.List([POLICY_TYPES.DEFAULT, 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
   .findIndex(policy => {
     if(policy.has('set')) {
@@ -44,19 +45,18 @@ class ConfigurationDefaults extends React.Component {
     this.toggleVaryHeaderRule = this.toggleVaryHeaderRule.bind(this)
     this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
     this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
+    this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
   }
   addRule(e) {
     e.preventDefault()
-    const defaultPolicies = this.props.config.getIn(['default_policy','policy_rules']).push(Immutable.fromJS(
-      {match: {field: null, cases: [['',[]]]}}
-    ))
-    this.props.changeValue(['default_policy', 'policy_rules'], defaultPolicies)
-    this.props.activateRule(['default_policy', 'policy_rules', defaultPolicies.size - 1])
-    this.props.activateMatch(['default_policy', 'policy_rules', defaultPolicies.size - 1, 'match'])
+    const defaultPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT, 'policy_rules']).push(Immutable.fromJS(DEFAULT_MATCH))
+    this.props.changeValue([POLICY_TYPES.DEFAULT, 'policy_rules'], defaultPolicies)
+    this.props.activateRule([POLICY_TYPES.DEFAULT, 'policy_rules', defaultPolicies.size - 1])
+    this.props.activateMatch([POLICY_TYPES.DEFAULT, 'policy_rules', defaultPolicies.size - 1, 'match'])
   }
   deleteRule(policyType, index) {
-    const newPolicies = this.props.config.getIn(['default_policy','policy_rules']).splice(index, 1)
-    this.props.changeValue(['default_policy', 'policy_rules'], newPolicies)
+    const newPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT,'policy_rules']).splice(index, 1)
+    this.props.changeValue([POLICY_TYPES.DEFAULT, 'policy_rules'], newPolicies)
   }
   handleChange(path) {
     return value => {
@@ -108,17 +108,17 @@ class ConfigurationDefaults extends React.Component {
         }
       })
 
-      const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
+      const rules = this.props.config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])
       const newRules = rules.push( varyHeaderRule )
-      this.props.changeValue(['response_policy', 'policy_rules'], newRules)
+      this.props.changeValue([POLICY_TYPES.RESPONSE, 'policy_rules'], newRules)
     }
   }
   /**
    * Removes Remove Vary Header Rule from response_policy
    */
   removeVaryHeaderRule( ruleId ){
-    const rules = this.props.config.getIn(['response_policy', 'policy_rules'])
-    this.props.changeValue(['response_policy', 'policy_rules'], rules.delete(ruleId) )
+    const rules = this.props.config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])
+    this.props.changeValue([POLICY_TYPES.RESPONSE, 'policy_rules'], rules.delete(ruleId) )
   }
 
   /**
@@ -130,6 +130,10 @@ class ConfigurationDefaults extends React.Component {
     } else {
       this.removeVaryHeaderRule( varyHeaderRuleId )
     }
+  }
+
+  toggleAllowCookie( val ) {
+    this.props.changeValue(['edge_configuration', 'allow_cookies'], val)
   }
 
   render() {
@@ -180,6 +184,20 @@ class ConfigurationDefaults extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.policy.edit.defaults.originCacheControl.text"/>} />
         <SectionContainer>
+
+          {/* Allow tracking cookies */}
+          <Row className="form-group">
+            <Col lg={4} xs={6} className="toggle-label">
+              <FormattedMessage id="portal.policy.edit.defaults.allowCookies.text"/>
+            </Col>
+            <Col lg={8} xs={6}>
+              <Toggle
+                readonly={readOnly}
+                value={config.getIn(['edge_configuration','allow_cookies'])}
+                changeValue={(val) => this.toggleAllowCookie(val)}/>
+            </Col>
+          </Row>
+
           {/* Remove Vary Header */}
           <Row className="form-group">
             <Col lg={4} xs={6} className="toggle-label">
@@ -288,7 +306,7 @@ class ConfigurationDefaults extends React.Component {
 
         <SectionContainer>
           <ConfigurationPolicyRules
-            defaultPolicies={config.getIn(['default_policy','policy_rules'])}
+            defaultPolicies={config.getIn([POLICY_TYPES.DEFAULT,'policy_rules'])}
             activateRule={this.props.activateRule}
             deleteRule={this.deleteRule}/>
           {this.props.activeRule ?

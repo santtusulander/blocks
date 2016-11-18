@@ -26,12 +26,12 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
       <h5><FormattedMessage id="portal.analysis.filters.onOffNet.title"/></h5>
       <div className="sidebar-content form-inline">
         <Input type="checkbox" label="On-Net"
-          checked={onOffNetValues.contains('on-net')}
-          onChange={toggle('on-net')}
+          checked={onOffNetValues.contains('on')}
+          onChange={toggle('on')}
         />
         <Input type="checkbox" label="Off-Net"
-          checked={onOffNetValues.contains('off-net')}
-          onChange={toggle('off-net')}
+          checked={onOffNetValues.contains('off')}
+          onChange={toggle('off')}
         />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonToolbar } from 'react-bootstrap'
+import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -22,6 +22,7 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
@@ -224,7 +225,7 @@ class ContentItems extends React.Component {
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret"></span>
+          <IconCaretDown />
         </div>
       </AccountSelector>
     )
@@ -300,20 +301,20 @@ class ContentItems extends React.Component {
               onSelect={this.handleSortChange}
               value={currentValue}
               options={sortOptions.map(opt => [opt.value, opt.label])}/>
-            <UDNButton bsStyle="primary"
-                       icon={true}
-                       toggleView={true}
-                       hidden={viewingChart}
-                       onClick={this.props.toggleChartView}>
-              <IconItemChart/>
-            </UDNButton>
-            <UDNButton bsStyle="primary"
-                       icon={true}
-                       toggleView={true}
-                       hidden={!viewingChart}
-                       onClick={this.props.toggleChartView}>
-              <IconItemList/>
-            </UDNButton>
+            <ButtonGroup>
+              <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
+                         active={viewingChart}
+                         icon={true}
+                         onClick={!viewingChart && this.props.toggleChartView}>
+                <IconItemChart/>
+              </UDNButton>
+              <UDNButton className={!viewingChart ? 'btn-tertiary' : 'btn-primary'}
+                         active={!viewingChart}
+                         icon={true}
+                         onClick={viewingChart && this.props.toggleChartView}>
+                <IconItemList/>
+              </UDNButton>
+            </ButtonGroup>
           </ButtonToolbar>
         </PageHeader>
 
@@ -390,9 +391,8 @@ class ContentItems extends React.Component {
           {this.state.showModal && this.getTier() === 'account' &&
             <GroupForm
               id="group-form"
-              users={this.props.user.get('allUsers')}
-              group={this.state.itemToEdit}
-              account={activeAccount}
+              params={this.props.params}
+              groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
               show={true}/>

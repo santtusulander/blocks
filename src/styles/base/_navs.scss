@@ -46,6 +46,26 @@ $lt-tab-color: $lt-text-color;
     border-color: rgba($black, 0.1);
   }
 
+  &.dropdown-tabs {
+    
+    .dark-theme &,
+    .light-theme & {
+      background-color: $black;
+      background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+      background-size: 100%;
+
+      > li > a {
+        color: $dt-tab-color;
+
+        &:hover,
+        &:focus,
+        &:hover:active {
+          color: $pale-blue;
+        }
+      }
+    }
+  }
+
   > li {
     min-height: 0;
     margin: 0 $nav-tab-horizontal-margin -#{$nav-tab-border-width};
@@ -60,17 +80,21 @@ $lt-tab-color: $lt-text-color;
         &,
         &:hover,
         &:focus {
-          font-weight: 700;
-          color: $pale-blue;
-          background-color: transparent;
-          border: 0;
-          border-bottom: 4px solid $pale-blue;
-          outline: 0;
+          .dark-theme &,
+          .light-theme & {
+            font-weight: 700;
+            color: $pale-blue;
+            background-color: transparent;
+            border: 0;
+            border-bottom: 4px solid $pale-blue;
+            outline: 0;
+          }
         }
       }
     }
 
-    > a {
+    > a,
+    .tabs-dropdown-toggle {
       padding: $nav-tab-vertical-padding $nav-tab-horizontal-padding;
       margin: 0;
       font-weight: 500;
@@ -94,7 +118,9 @@ $lt-tab-color: $lt-text-color;
       }
 
       &:hover,
+      &:hover:active,
       &:focus {
+        text-decoration: none;
         background-color: transparent;
         outline: 0;
 
@@ -114,6 +140,34 @@ $lt-tab-color: $lt-text-color;
           font-weight: 700;
           color: $pale-blue;
           border-bottom: 4px solid $pale-blue;
+        }
+      }
+    }
+
+    .tabs-dropdown-toggle {
+      padding-top: em(5px, $btn-font-size);
+      padding-bottom: 0;
+      background: none;
+
+      .light-theme & .icon {
+        fill: $lt-text-color;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .open .tabs-dropdown-toggle {
+
+      .dark-theme &,
+      .light-theme & {
+        font-weight: 700;
+        color: $pale-blue;
+        background: none;
+
+        .icon {
+          fill: $pale-blue;
         }
       }
     }

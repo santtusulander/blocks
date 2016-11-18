@@ -9,7 +9,7 @@ import { toggleAccountManagementModal } from '../../../redux/modules/ui'
 
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
-import { DNS_DOMAIN_EDIT, RECORD_EDIT } from '../../../constants/account-management-modals'
+import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import DomainToolbar from '../../../components/account-management/domain-toolbar'
@@ -67,9 +67,12 @@ class AccountManagementSystemDNS extends Component {
       activeModal,
       toggleModal } = this.props
 
-    const {domainSearch, recordSearch} = this.state
+    const { domainSearch, recordSearch, recordToDelete } = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+
+    // Handle concat here instead of in Redux action
+    const fullRecordName = recordToDelete && recordToDelete.name.concat('.' + activeDomain)
 
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
@@ -93,7 +96,7 @@ class AccountManagementSystemDNS extends Component {
       modalOpen: activeModal !== null,
       onAddEntry: () => {
         this.editingRecord = false
-        toggleModal(RECORD_EDIT)
+        toggleModal(EDIT_RECORD)
       },
       onDeleteEntry: (record) => {
         this.setState({
@@ -103,7 +106,7 @@ class AccountManagementSystemDNS extends Component {
       onEditEntry: id => {
         this.props.setActiveRecord(id)
         this.editingRecord = true
-        toggleModal(RECORD_EDIT)
+        toggleModal(EDIT_RECORD)
       },
       searchFunc: e => setSearchValue(e, 'recordSearch'),
       searchValue: this.state.recordSearch,
@@ -118,11 +121,12 @@ class AccountManagementSystemDNS extends Component {
             id='portal.account.dnsList.records.hiddenRecords'
             values={{ hiddenRecordCount }} /> : ''
     }
+
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
         {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
-        {activeModal === RECORD_EDIT &&
+        {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
           closeModal={() => toggleModal(null)}/>
@@ -142,7 +146,7 @@ class AccountManagementSystemDNS extends Component {
           loading={loadingRecords}
           invalid={false}>
           <p>
-            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: this.state.recordToDelete.name}}/>
+            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: fullRecordName}}/>
           </p>
         </ModalWindow>
         }
@@ -197,7 +201,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
     },
     deleteRecord: (domain, record, onResponse) => {
       startFetching()
-      removeResource(domain, record.name, record).then(onResponse)
+      return removeResource(domain, record.name, record).then(onResponse)
     },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,

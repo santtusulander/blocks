@@ -46,7 +46,7 @@
     > a,
     > span,
     &:not(.breadcrumb-back, :last-child)::after {
-      margin-top: 11.5px;
+      margin: 11.5px 0;
     }
 
     > a,
@@ -76,6 +76,14 @@
     + li::before,
     + li:last-child::after {
       display: none;
+    }
+
+    &:first-child {
+      > a,
+      > span {
+        padding-left: 20px;
+        border-left: 1px solid $silver-80;
+      }
     }
   }
 

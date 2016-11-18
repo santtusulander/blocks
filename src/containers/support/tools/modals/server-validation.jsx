@@ -35,7 +35,7 @@ class ModalServerValidation extends React.Component {
     const {handleCloseModal, showDetails, toggleShowDetails} = this.props
     const randomNumber = Math.floor(Math.random() * 2.9)
     const validationMessage = randomNumber === 0 ?
-      <tr>
+      (<tr>
         <td className="no-border" width="1%">
           <IconServerError
             className="three-tone pale-blue secondary-red"
@@ -45,7 +45,7 @@ class ModalServerValidation extends React.Component {
           <h2>123.123.123.12</h2>
           <h3><FormattedMessage id="portal.support.tools.serverValidation.modal.notUdnServer.text"/></h3>
         </td>
-      </tr>
+      </tr>)
     : randomNumber === 1 ?
       <tr>
         <td className="no-border" width="1%">
