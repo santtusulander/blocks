@@ -33,6 +33,12 @@ export class Property extends React.Component {
     this.togglePropertyMenu = this.togglePropertyMenu.bind(this)
   }
 
+  componentDidMount() {
+    const { account, brand, group, property} = this.props.params
+    this.props.hostActions.fetchHost(brand, account, group, property);
+    this.props.hostActions.fetchHosts(brand, account, group);
+  }
+
   togglePurge() {
     this.setState({
       purgeActive: !this.state.purgeActive
@@ -41,12 +47,15 @@ export class Property extends React.Component {
   }
 
   savePurge() {
-    this.props.purgeActions.createPurge(
-      this.props.params.brand,
-      this.props.params.account,
-      this.props.params.group,
-      this.props.activeHostConfiguredName,
-      this.props.activePurge.toJS()
+    const { account, brand, group, property } = this.props.params
+    const { activeHostConfiguredName, activePurge, purgeActions } = this.props
+
+    purgeActions.createPurge(
+      brand,
+      account,
+      group,
+      activeHostConfiguredName,
+      activePurge.toJS()
     ).then((action) => {
       if (action.payload instanceof Error) {
         this.setState({ purgeActive: false })
@@ -55,6 +64,7 @@ export class Property extends React.Component {
       }
       else {
         this.setState({ purgeActive: false })
+        purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
         this.showNotification('Purge request succesfully submitted')
       }
     })
@@ -108,9 +118,11 @@ export class Property extends React.Component {
         {this.state.purgeActive && <PurgeModal
           activeHost={this.props.activeHost}
           activePurge={this.props.activePurge}
+          allHosts={this.props.allHosts}
           changePurge={this.props.purgeActions.updateActivePurge}
           hideAction={this.togglePurge}
-          savePurge={this.savePurge}/>}
+          savePurge={this.savePurge}
+          showNotification={this.showNotification}/>}
         {this.state.deleteModal &&
         <ModalWindow
           title={<FormattedMessage id="portal.deleteModal.header.text" values={{ itemToDelete: "Property" }}/>}
@@ -139,6 +151,7 @@ Property.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  allHosts: React.PropTypes.instanceOf(Immutable.List),
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
@@ -153,6 +166,7 @@ Property.propTypes = {
 Property.defaultProps = {
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
+  allHosts: Immutable.List(),
   currentUser: Immutable.Map()
 }
 
@@ -161,6 +175,7 @@ function mapStateToProps(state) {
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
+    allHosts: state.host.get('allHosts'),
     currentUser: state.user.get('currentUser')
   };
 }
