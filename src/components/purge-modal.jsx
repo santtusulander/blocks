@@ -121,9 +121,6 @@ class PurgeModal extends React.Component {
   submitForm(e) {
     e.preventDefault()
     let hasErrors = false;
-    // if (this.state.type === 'url' || this.state.type === 'directories') {
-    //   hasErrors = this.validatePurgeObjects(this.props.activePurge.get('objects').get('0')) ? true : false
-    // }
     hasErrors = this.validateEmail() ? true : hasErrors
     if(!hasErrors) {
       this.props.savePurge()
