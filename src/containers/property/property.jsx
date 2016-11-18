@@ -106,6 +106,7 @@ export class Property extends React.Component {
         <PropertyHeader
           currentUser={currentUser}
           params={this.props.params}
+          currentTab={this.props.routes.slice(-1)[0].path}
           togglePurge={this.togglePurge}
           deleteProperty={() => this.setState({ deleteModal: true })}
         />
