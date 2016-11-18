@@ -1,7 +1,7 @@
 import moment from 'moment'
 import numeral from 'numeral'
 import { fromJS } from 'immutable'
-import { getDateRange } from '../redux/util.js'
+import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
@@ -162,7 +162,12 @@ export function buildAnalyticsOpts(params, filters, location ){
     filterValues[filterName] = filterValue && filterValue
   })
 
-  const {startDate, endDate} = visibleFilters.includes('dateRange') ? getDateRange(filters) : {startDate: undefined, endDate: undefined}
+  const { startDate, endDate } =
+    visibleFilters.includes('dateRange') ?
+    getDateRange(filters) :
+    visibleFilters.includes('customDateRange') ?
+    getCustomDateRange(filters) :
+    { startDate: undefined, endDate: undefined }
 
   const opts = {
     account: params.account,
