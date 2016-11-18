@@ -46,6 +46,26 @@ $lt-tab-color: $lt-text-color;
     border-color: rgba($black, 0.1);
   }
 
+  &.dropdown-tabs {
+    
+    .dark-theme &,
+    .light-theme & {
+      background-color: $black;
+      background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+      background-size: 100%;
+
+      > li > a {
+        color: $dt-tab-color;
+
+        &:hover,
+        &:focus,
+        &:hover:active {
+          color: $pale-blue;
+        }
+      }
+    }
+  }
+
   > li {
     min-height: 0;
     margin: 0 $nav-tab-horizontal-margin -#{$nav-tab-border-width};

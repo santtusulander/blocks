@@ -39,13 +39,16 @@ function routeTrafficCountry(req, res) {
     dimension    : 'country'
   };
 
-  db.getEgressWithHistorical(options).spread((trafficData, historicalTrafficData) => {
+  db.getDataForCountry(options).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
     let responseData = {
       total: 0,
       countries: []
     };
 
     if (trafficData && historicalTrafficData) {
+      trafficData = trafficData.concat(spTrafficData);
+      historicalTrafficData = historicalTrafficData.concat(spHistoricalTrafficData);
+
       let optionsFinal                    = db._getQueryOptions(options);
       let maxCountries                    = params.max_countries || 5;
       let allCountryTrafficData           = _.groupBy(trafficData, 'country');
