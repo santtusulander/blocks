@@ -32,7 +32,12 @@ class PurgeModal extends React.Component {
     this.setState({type: type})
 
     if (type == 'url' || type == 'directory') {
-      this.props.changePurge(this.props.activePurge.set('published_host_id', this.props.activeHost.get('published_host_id')))
+      this.props.changePurge(this.props.activePurge.set('objects', []).set('published_host_id', this.props.activeHost.get('published_host_id')))
+      this.setState({
+        purgeObjectsError: '',
+        purgeObjectsWarning: '',
+        purgeEmailError: ''
+      })
     } else {
       this.props.changePurge(this.props.activePurge.delete('published_host_id'))
     }
