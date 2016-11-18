@@ -77,22 +77,25 @@ class PurgeModal extends React.Component {
   }
   validatePurgeObjects(e) {
     const value = e.target.value
-    const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
     if(!value) {
       this.setState({
         purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
       })
       return true
     }
-    const errors = values.filter(val => {
-      return !isValidFQDN(val)
-    })
 
-    if(errors.length){
-      this.setState({
-        purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
+    if(this.state.type === 'url') {
+      const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
+      const errors = values.filter(val => {
+        return !isValidFQDN(val)
       })
-      return true
+
+      if(errors.length){
+        this.setState({
+          purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
+        })
+        return true
+      }
     }
   }
   validateEmail() {
