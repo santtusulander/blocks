@@ -91,20 +91,6 @@ export function filterMetricsByAccounts(metrics, accounts) {
 }
 
 /**
- * Test if string matches regExp-pattern
- * @param string
- * @param pattern
- * @returns {boolean}
- */
-export function matchesRegexp(string, pattern) {
-  if(!(pattern instanceof RegExp)) {
-    throw new Error(`${pattern} is not a valid RegExp string`);
-  }
-  var testPattern = new RegExp(pattern);
-  return testPattern.test(string);
-}
-
-/**
  * Removes properties from the given object.
  * This method is used for removing valid attributes from component props prior to rendering.
  *
@@ -146,6 +132,7 @@ export function getTabLink(location, tabName) {
 
   return linkArr.join('/') + location.search
 }
+
 /* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName(path) {
   let linkArr = path.split('/')
@@ -375,6 +362,20 @@ export function getRolesForUser(user, roles) {
     userRoles.push([role.id, role.name])
   })
   return userRoles
+}
+
+/**
+ * Check if string matches Regular expression
+ * @param string
+ * @param pattern
+ * @returns {boolean}
+ */
+export function matchesRegexp(string, pattern) {
+  if(!(pattern instanceof RegExp)) {
+    throw new Error(`${pattern} is not a valid RegExp string`);
+  }
+  var testPattern = new RegExp(pattern, 'i');
+  return testPattern.test(string);
 }
 
 export function userIsServiceProvider(user) {
