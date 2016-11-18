@@ -39,9 +39,9 @@ export class CustomDatePicker extends React.Component {
     this.isForceOpen = val
   }
 
-  handleDateChange(dateValue, date) {
-    const startMoment = date.dateMoment.clone().utc().startOf('day')
-    const endMoment = date.dateMoment.clone().utc().endOf('day')
+  handleDateChange(dateValue) {
+    const startMoment = moment.utc(dateValue).startOf('day')
+    const endMoment = moment.utc(dateValue).endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
     this.setState({
