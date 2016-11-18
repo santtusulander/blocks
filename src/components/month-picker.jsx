@@ -39,7 +39,9 @@ export class MonthPicker extends React.Component {
 
   setDates(year, month) {
     const startDate = moment().year(year).month(month).utc().startOf('month')
-    const endDate = moment().year(year).month(month).utc().endOf('month')
+    const currentMonth = moment().format('MMMM')
+    const endOfDateRange = month === currentMonth ? 'day' : 'month'
+    const endDate = moment().year(year).month(month).utc().endOf(endOfDateRange)
 
     this.props.onChange(startDate, endDate)
   }
