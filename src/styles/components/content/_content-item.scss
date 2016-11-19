@@ -1,8 +1,37 @@
 // Styles for both the Content Item Chart and List View
 // ====================================================
+$content-item-tag-font-size: rem(16px);
 
 .content-item-chart,
 .content-item-list {
+
+  &:hover .content-item-tag {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 250ms;
+  }
+
+  .content-item-tag {
+    position: absolute;
+    bottom: 12%;
+    left: 50%;
+    padding: 0 $content-item-tag-font-size;
+    font-size: $content-item-tag-font-size;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transform: translate(-50%, -32%);
+
+
+    .dark-theme & {
+      background-color: rgba($pale-blue, 0.3);
+    }
+
+    .light-theme & {
+      background-color: rgba($pale-blue, 0.6);
+    }
+  }
+
   .btn-icon {
     .dark-theme &,
     .light-theme & {
