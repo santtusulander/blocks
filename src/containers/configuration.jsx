@@ -28,6 +28,7 @@ import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
+
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
@@ -265,7 +266,7 @@ export class Configuration extends React.Component {
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+              <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
             </div>
           </AccountSelector>
