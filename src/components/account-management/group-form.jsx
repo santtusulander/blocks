@@ -15,6 +15,7 @@ import SelectWrapper from '../select-wrapper'
 // import IconClose from '../icons/icon-close.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
+import TruncatedTitle from '../../components/truncated-title'
 
 import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
@@ -255,20 +256,20 @@ class GroupForm extends React.Component {
                   <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
                   {this.props.isFetchingHosts ? <LoadingSpinner/> :
                     !hosts.isEmpty() ?
-                      <Table striped={true}>
+                      <Table striped={true} className="fixed-layout">
                         <thead>
                         <tr>
                           <th>
                             <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
                           </th>
-                          <th width="8%"/>
+                          <th className="one-button-cell" />
                         </tr>
                         </thead>
                         <tbody>
                         {hosts.map((host, i) => {
                           return (
                             <tr key={i}>
-                              <td>{host}</td>
+                              <td><TruncatedTitle content={host} /></td>
                               <td>
                                 <ActionButtons
                                   onDelete={() => onDeleteHost(host)}/>
