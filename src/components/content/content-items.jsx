@@ -5,7 +5,10 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
+} from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -185,6 +188,20 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  getTagText(isCloudProvider, providerType, trialMode) {
+    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
+    if (isCloudProvider && !trialMode) {
+      switch(providerType) {
+        case ACCOUNT_TYPE_CONTENT_PROVIDER:
+          tagText = 'portal.content.contentProvider'
+          break
+        case ACCOUNT_TYPE_SERVICE_PROVIDER:
+          tagText = 'portal.content.serviceProvider'
+        default: break
+      }
+    }
+    return { tagText: tagText }
+  }
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -347,8 +364,8 @@ class ContentItems extends React.Component {
                   const itemProps = {
                     id,
                     name,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
                     brightMode: isTrialHost,
-                    tagText: isTrialHost && 'portal.configuration.details.deploymentMode.trial',
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
