@@ -5,7 +5,10 @@ import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
+} from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -185,6 +188,20 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  getTagText(isCloudProvider, providerType, trialMode) {
+    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
+    if (isCloudProvider && !trialMode) {
+      switch(providerType) {
+        case ACCOUNT_TYPE_CONTENT_PROVIDER:
+          tagText = 'portal.content.contentProvider'
+          break
+        case ACCOUNT_TYPE_SERVICE_PROVIDER:
+          tagText = 'portal.content.serviceProvider'
+        default: break
+      }
+    }
+    return { tagText: tagText }
+  }
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -230,6 +247,7 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
+
   render() {
     const {
       sortValuePath,
@@ -253,12 +271,12 @@ class ContentItems extends React.Component {
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-
       // Remove the trial url from trial property names
       if (trialNameRegEx.test(item.get('id'))) {
         item = item.merge({
           id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1')
+          name: item.get('id').replace(trialNameRegEx, '$1'),
+          isTrialHost: true
         })
       }
       return Immutable.Map({
@@ -285,6 +303,7 @@ class ContentItems extends React.Component {
         opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
+    const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -292,7 +311,7 @@ class ContentItems extends React.Component {
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
-            {userIsCloudProvider(user.get('currentUser')) || activeAccount.size ?
+            {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
@@ -337,11 +356,16 @@ class ContentItems extends React.Component {
                   'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
+                  const id = item.get('id')
+                  const isTrialHost = item.get('isTrialHost')
+                  const name = item.get('name')
                   const contentMetrics = content.get('metrics')
-                  const id = String(item.get('id'))
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
-                    id: id,
+                    id,
+                    name,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                    brightMode: isTrialHost,
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
@@ -349,7 +373,6 @@ class ContentItems extends React.Component {
                       this.editItem(id)
                     } : null,
                     analyticsLink: this.props.analyticsURLBuilder(id),
-                    name: item.get('name'),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
