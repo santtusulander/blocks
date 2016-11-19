@@ -8,7 +8,7 @@ import moment from 'moment'
 describe('MonthPicker', () => {
   it('should exist', () => {
     const monthPicker = shallow(
-      <MonthPicker />
+      <MonthPicker date={null} />
     )
     expect(monthPicker).toBeDefined()
   })

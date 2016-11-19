@@ -35,11 +35,16 @@ class AnalyticsTabVisitors extends React.Component {
         property: hostConfiguredName
       })
     }
+
+    const { startDate, endDate } = filters.get('customDateRange').toJS();
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
-    this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: 'day'})
-    this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: 'day'})
+    const duration = endDate.diff(startDate, 'days')
+    const aggregateGranularity = duration ? 'month' : 'day'
+
+    this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: aggregateGranularity})
+    this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: aggregateGranularity})
     this.props.visitorsActions.fetchByTime(fetchOpts)
-    this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: 'day'})
+    this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: aggregateGranularity})
   }
 
   render() {

@@ -1,7 +1,7 @@
 import moment from 'moment'
 import numeral from 'numeral'
 import { fromJS } from 'immutable'
-import { getDateRange } from '../redux/util.js'
+import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
@@ -91,20 +91,6 @@ export function filterMetricsByAccounts(metrics, accounts) {
 }
 
 /**
- * Test if string matches regExp-pattern
- * @param string
- * @param pattern
- * @returns {boolean}
- */
-export function matchesRegexp(string, pattern) {
-  if(!(pattern instanceof RegExp)) {
-    throw new Error(`${pattern} is not a valid RegExp string`);
-  }
-  var testPattern = new RegExp(pattern);
-  return testPattern.test(string);
-}
-
-/**
  * Removes properties from the given object.
  * This method is used for removing valid attributes from component props prior to rendering.
  *
@@ -146,6 +132,7 @@ export function getTabLink(location, tabName) {
 
   return linkArr.join('/') + location.search
 }
+
 /* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName(path) {
   let linkArr = path.split('/')
@@ -175,7 +162,12 @@ export function buildAnalyticsOpts(params, filters, location ){
     filterValues[filterName] = filterValue && filterValue
   })
 
-  const {startDate, endDate} = visibleFilters.includes('dateRange') ? getDateRange(filters) : {startDate: undefined, endDate: undefined}
+  const { startDate, endDate } =
+    visibleFilters.includes('dateRange') ?
+    getDateRange(filters) :
+    visibleFilters.includes('customDateRange') ?
+    getCustomDateRange(filters) :
+    { startDate: undefined, endDate: undefined }
 
   const opts = {
     account: params.account,
@@ -370,6 +362,20 @@ export function getRolesForUser(user, roles) {
     userRoles.push([role.id, role.name])
   })
   return userRoles
+}
+
+/**
+ * Check if string matches Regular expression
+ * @param string
+ * @param pattern
+ * @returns {boolean}
+ */
+export function matchesRegexp(string, pattern) {
+  if(!(pattern instanceof RegExp)) {
+    throw new Error(`${pattern} is not a valid RegExp string`);
+  }
+  var testPattern = new RegExp(pattern, 'i');
+  return testPattern.test(string);
 }
 
 export function userIsServiceProvider(user) {
