@@ -251,7 +251,7 @@ class GroupForm extends React.Component {
 
               <hr/>
 
-              {!accountIsServiceProviderType(account) &&
+              {(!accountIsServiceProviderType(account) && groupId) &&
                 <div>
                   <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
                   {this.props.isFetchingHosts ? <LoadingSpinner/> :
