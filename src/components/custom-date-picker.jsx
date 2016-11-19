@@ -8,6 +8,8 @@ import MonthPicker from './month-picker'
 import IconCalendar from './icons/icon-calendar'
 import IconSelectCaret from './icons/icon-select-caret'
 
+const DATE_FORMAT = 'MM/DD/YYYY';
+
 export class CustomDatePicker extends React.Component {
   constructor(props) {
     super(props)
@@ -40,8 +42,8 @@ export class CustomDatePicker extends React.Component {
   }
 
   handleDateChange(dateValue) {
-    const startMoment = moment.utc(dateValue).startOf('day')
-    const endMoment = moment.utc(dateValue).endOf('day')
+    const startMoment = moment.utc(dateValue, DATE_FORMAT).startOf('day')
+    const endMoment = moment.utc(dateValue, DATE_FORMAT).endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
     this.setState({
@@ -112,7 +114,7 @@ export class CustomDatePicker extends React.Component {
           </Nav>
           {activeTab === 'day' ?
             <Calendar
-              dateFormat="MM/DD/YYYY"
+              dateFormat={DATE_FORMAT}
               date={calendarDate}
               onChange={this.handleDateChange}
               weekNumbers={false}
