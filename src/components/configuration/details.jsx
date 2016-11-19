@@ -1,8 +1,9 @@
 import React from 'react'
-
-import { Button, Col, Input, OverlayTrigger, Panel, Tooltip } from 'react-bootstrap'
-import Select from '../../components/select'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
+import { Button, Col, Input, OverlayTrigger, Panel, Tooltip } from 'react-bootstrap'
+
+import Select from '../../components/select'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
@@ -43,7 +44,16 @@ class ConfigurationDetails extends React.Component {
       <form className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
 
+      {/* Deployment Mode */}
 
+        <div className="control-label form-group">
+          <label className="col-xs-3">
+            <FormattedMessage id="portal.configuration.details.deploymentMode.text"/>
+          </label>
+          <div className="col-xs-9">
+            {this.props.deploymentMode}
+          </div>
+        </div>
         {/* Origin Hostname */}
 
         <Input type="text" label="Customer Origin"
@@ -230,4 +240,4 @@ ConfigurationDetails.propTypes = {
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationDetails
+export default ConfigurationDetails

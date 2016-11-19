@@ -230,6 +230,7 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
+
   render() {
     const {
       sortValuePath,
@@ -253,12 +254,12 @@ class ContentItems extends React.Component {
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-
       // Remove the trial url from trial property names
       if (trialNameRegEx.test(item.get('id'))) {
         item = item.merge({
           id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1')
+          name: item.get('id').replace(trialNameRegEx, '$1'),
+          isTrialHost: true
         })
       }
       return Immutable.Map({
@@ -285,6 +286,7 @@ class ContentItems extends React.Component {
         opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
+    const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -292,7 +294,7 @@ class ContentItems extends React.Component {
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
-            {userIsCloudProvider(user.get('currentUser')) || activeAccount.size ?
+            {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
@@ -337,11 +339,16 @@ class ContentItems extends React.Component {
                   'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
+                  const id = item.get('id')
+                  const isTrialHost = item.get('isTrialHost')
+                  const name = item.get('name')
                   const contentMetrics = content.get('metrics')
-                  const id = String(item.get('id'))
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
-                    id: id,
+                    id,
+                    name,
+                    brightMode: isTrialHost,
+                    tagText: isTrialHost && 'portal.configuration.details.deploymentMode.trial',
                     linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
@@ -349,7 +356,6 @@ class ContentItems extends React.Component {
                       this.editItem(id)
                     } : null,
                     analyticsLink: this.props.analyticsURLBuilder(id),
-                    name: item.get('name'),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
