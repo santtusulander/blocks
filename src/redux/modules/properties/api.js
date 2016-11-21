@@ -14,7 +14,7 @@ export const propertySchema = new Schema('properties', {idAttribute: 'published_
  */
 export const fetch = (brand, account, group, id) => {
   return fetchHost(brand, account, group, id)
-    .then( ({data}) => normalizeApiResponse(data, propertySchema ) )
+    .then( ({data}) => normalize(data, propertySchema ) )
 }
 
 /**
@@ -28,7 +28,7 @@ export const fetchAll = (brand, account, group) => {
   return fetchHostIds(brand, account, group)
     .then( ({data}) => {
       const objs = data.map( val => ({published_host_id: val}) )
-      return normalizeApiResponse(objs, arrayOf(propertySchema))
+      return normalize(objs, arrayOf(propertySchema))
     })
 }
 
@@ -53,10 +53,6 @@ export const fetchAllWithDetails = (brand, account, group) => {
       })
       return merged
     })
-}
-
-const normalizeApiResponse = (data, schema) => {
-  return normalize(data, schema)
 }
 
 /**
@@ -120,7 +116,7 @@ const fetchGroupProperties = (brand, account, groupIds) => {
       .then( (allData) => {
         //flatten data.data
         const data = allData.map( item => item.data)
-        return normalizeApiResponse(data, arrayOf(propertySchema))
+        return normalize(data, arrayOf(propertySchema))
       })
   }))
 }
