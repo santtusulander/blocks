@@ -43,7 +43,7 @@ const RolesEditForm = (props) => {
   }
   */
   const editPermsUI = Immutable.Map([
-    ...props.editRole.get('permissions').get('ui')
+    ...props.editRole.getIn(['permissions', 'ui'], Immutable.List())
   ])
 
   const getPermissionName = function(permissionKey, section) {
