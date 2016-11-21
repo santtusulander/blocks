@@ -41,6 +41,7 @@ class UserEditForm extends React.Component {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
       passwordVisible: false,
+      currentPassword: false,
       validPassword: false
     }
 
@@ -49,6 +50,7 @@ class UserEditForm extends React.Component {
     this.showMiddleName = this.showMiddleName.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.currentPassword = this.currentPassword.bind(this)
     this.changePassword = this.changePassword.bind(this)
   }
 
@@ -107,6 +109,9 @@ class UserEditForm extends React.Component {
     this.setState({
       passwordVisible: !this.state.passwordVisible
     })
+  }
+
+  currentPassword(e) {
   }
 
   changePassword(isPasswordValid) {
@@ -251,10 +256,19 @@ class UserEditForm extends React.Component {
 
                 {this.state.showPasswordField || savingPassword ?
                   <div>
+                    <Col xs={3}>
+                      <Input
+                        type="text"
+                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                        onChange={this.currentPassword}/>
+                    </Col>
                     <Col xs={6}>
                       <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
                     </Col>
-                    <Col xs={3} xsOffset={1}>
+                    <Col xs={10} xsOffset={2}>
+                      <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
+                    </Col>
+                    <Col xs={3} xsOffset={2}>
                       <ButtonToolbar>
                         <Button
                           className="btn-secondary"
@@ -263,17 +277,13 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!this.state.validPassword || savingPassword}
+                          disabled={!this.state.currentPassword || !this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
                           {savingPassword ? <FormattedMessage id="portal.button.CHANGING"/> : <FormattedMessage id="portal.button.CHANGE"/>}
                         </Button>
                       </ButtonToolbar>
-                    </Col>
-
-                    <Col xs={10} xsOffset={2}>
-                      <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
                     </Col>
                   </div>
                 :
