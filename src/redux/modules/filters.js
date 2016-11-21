@@ -22,6 +22,10 @@ const initialState = Immutable.fromJS({
       startDate: moment().utc().startOf('month'),
       endDate: moment().utc().endOf('day')
     },
+    customDateRange: {
+      startDate: moment().utc().startOf('day'),
+      endDate: moment().utc().endOf('day')
+    },
     includeComparison: false,
     dateRangeLabel: DateRanges.MONTH_TO_DATE,
     recordType: 'transfer_rates',

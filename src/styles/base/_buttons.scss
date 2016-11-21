@@ -199,6 +199,18 @@ $lt-caret-color: $silver-60;
     border-radius: 50%;
   }
 
+  // When date picker has light-theme styles this should be implemented
+  // separately for both themes
+  .btn-transparent > .icon {
+    fill: $dt-text-color;
+
+    &:hover,
+    &:focus,
+    &:hover:active {
+      fill: $white;
+    }
+  }
+
   // DROPDOWN BUTTONS (SELECT, TOGGLE)
   // =================================
   .dropdown-select {

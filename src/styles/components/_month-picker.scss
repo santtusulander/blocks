@@ -25,6 +25,8 @@ $mp-month-hover-bg-color: $pale-blue;
   .year-selector {
     display: flex;
     margin-bottom: $mp-year-margin-bottom;
+    color: $dt-text-color;
+    border-bottom: 1px solid rgba($white, 0.1);
     align-items: center;
     justify-content: space-between;
   }
@@ -59,9 +61,13 @@ $mp-month-hover-bg-color: $pale-blue;
       color: $dt-text-color;
       cursor: pointer;
 
-      &.selected,
       &:hover {
+        color: $white;
         text-decoration: none;
+      }
+
+      &.selected {
+        color: $white;
         background-color: $mp-month-hover-bg-color;
         border-radius: 2px;
       }

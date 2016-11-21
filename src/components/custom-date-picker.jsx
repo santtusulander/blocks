@@ -4,18 +4,22 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'
 
+import MonthPicker from './month-picker'
 import IconCalendar from './icons/icon-calendar'
 import IconSelectCaret from './icons/icon-select-caret'
+
+const DATE_FORMAT = 'MM/DD/YYYY';
 
 export class CustomDatePicker extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeTab: this.props.activeTab || 'day',
+      activeTab: 'day',
+      dateRangeType: 'day',
       forceOpen: false,
       open: false,
-      value: moment().utc().format('MM/DD/YYYY')
+      value: props.startDate.format('MM/DD/YYYY')
     }
 
     this.isForceOpen = false
@@ -23,27 +27,7 @@ export class CustomDatePicker extends React.Component {
     this.forceOpen = this.forceOpen.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
-
-    const { intl } = this.props
-
-    moment.locale('custom-locale', {
-      weekdaysShort : [
-        intl.formatMessage({id: 'portal.common.weekdayShort.sunday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.monday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.tuesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.wednesday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.thursday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.friday'}),
-        intl.formatMessage({id: 'portal.common.weekdayShort.saturday'})
-      ]
-    })
-  }
-
-  componentWillMount() {
-    this.setState({
-      endDate: this.props.endDate,
-      startDate: this.props.startDate
-    })
+    this.handleMonthChange = this.handleMonthChange.bind(this)
   }
 
   changeTab(key) {
@@ -57,15 +41,25 @@ export class CustomDatePicker extends React.Component {
     this.isForceOpen = val
   }
 
-  handleDateChange(dateValue, date) {
-    const startMoment = date.dateMoment.clone().startOf('day')
-    const endMoment = date.dateMoment.clone().endOf('day')
+  handleDateChange(dateValue) {
+    const startMoment = moment.utc(dateValue, DATE_FORMAT).startOf('day')
+    const endMoment = moment.utc(dateValue, DATE_FORMAT).endOf('day')
 
     this.props.changeDateRange(startMoment, endMoment)
     this.setState({
+      dateRangeType: 'day',
       value: dateValue
     })
-    this.toggleDropdown(false)
+  }
+
+  handleMonthChange(startDate, endDate) {
+    const monthValue = `${moment().month(startDate.get('month')).format("MMMM")} ${startDate.get('year')}`
+
+    this.props.changeDateRange(startDate, endDate)
+    this.setState({
+      dateRangeType: 'month',
+      value: monthValue
+    })
   }
 
   toggleDropdown(val) {
@@ -73,6 +67,7 @@ export class CustomDatePicker extends React.Component {
       this.forceOpen(false)
     } else {
       this.setState({
+        activeTab: this.state.dateRangeType,
         open: val
       })
     }
@@ -80,10 +75,21 @@ export class CustomDatePicker extends React.Component {
 
   render() {
     const { startDate } = this.props
-    const { activeTab, open, value } = this.state
+    const { activeTab, dateRangeType, open, value } = this.state
+
+    // This is to fix a problem in the react-date-picker component
+    // (https://github.com/zippyui/react-date-picker/issues/167) which results
+    // from the component using local time, not utc. All the dates we use are utc,
+    // so we have to convert the startDate to local and offset it accordingly
+    // for the calendar to display selected days correctly
+    const startDateLocal = startDate ? startDate.clone().local().subtract(moment().utcOffset(), 'minutes') : null
+
+    const calendarDate = dateRangeType === 'day' ? startDateLocal : null
+    const monthDate = dateRangeType === 'month' && startDate ? startDate : null
 
     return (
       <Dropdown
+        id="custom-date-picker"
         className="custom-date-picker dropdown-select"
         open={open}
         onToggle={this.toggleDropdown}>
@@ -108,17 +114,18 @@ export class CustomDatePicker extends React.Component {
           </Nav>
           {activeTab === 'day' ?
             <Calendar
-              dateFormat="MM/DD/YYYY"
-              date={startDate}
+              dateFormat={DATE_FORMAT}
+              date={calendarDate}
               onChange={this.handleDateChange}
               weekNumbers={false}
               weekStartDay={0}
               highlightWeekends={false}
               highlightToday={false}
-              theme={null}
-              locale="custom-locale" />
+              theme={null} />
           : activeTab === 'month' ?
-            <p>Month picker</p>
+            <MonthPicker
+              date={monthDate}
+              onChange={this.handleMonthChange} />
           : null}
         </Dropdown.Menu>
       </Dropdown>
@@ -128,7 +135,6 @@ export class CustomDatePicker extends React.Component {
 
 CustomDatePicker.displayName = 'DateRangeSelect'
 CustomDatePicker.propTypes = {
-  activeTab: React.PropTypes.string,
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
   intl: intlShape.isRequired,

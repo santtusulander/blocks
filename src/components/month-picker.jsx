@@ -9,37 +9,27 @@ export class MonthPicker extends React.Component {
     super(props)
 
     this.state = {
-      selectedMonth: moment().format('MMMM'),
-      selectedYear: moment().year(),
-      startDate: moment().utc().startOf('month').format('X'),
-      endDate: moment().utc().endOf('month').format('X')
+      selectedMonth: props.date ? moment().month(props.date.get('month')).format('MMMM') : null,
+      selectedYear: props.date ? props.date.get('year') : moment().year()
     }
 
-    this.previousYear = this.previousYear.bind(this)
-    this.nextYear = this.nextYear.bind(this)
+    this.changeYear = this.changeYear.bind(this)
     this.selectMonth = this.selectMonth.bind(this)
     this.setDates = this.setDates.bind(this)
   }
 
-  previousYear() {
-    const previousYear = this.state.selectedYear - 1
+  changeYear(years) {
+    const updatedYear = this.state.selectedYear + years
     this.setState({
-      selectedYear: previousYear
+      selectedYear: updatedYear
     })
-    this.setDates(previousYear, this.state.selectedMonth);
-  }
-
-  nextYear() {
-    const nextYear = this.state.selectedYear + 1
-    this.setState({
-      selectedYear: nextYear
-    })
-
-    this.setDates(nextYear, this.state.selectedMonth);
+    if (this.state.selectedMonth) {
+      this.setDates(updatedYear, this.state.selectedMonth)
+    }
   }
 
   selectMonth(month) {
-    const currentMonth = moment().month(month).format("MMMM")
+    const currentMonth = moment().month(month).format('MMMM')
     this.setState({
       selectedMonth: currentMonth
     })
@@ -48,30 +38,32 @@ export class MonthPicker extends React.Component {
   }
 
   setDates(year, month) {
-    this.setState({
-      startDate: moment().year(year).month(month).utc().startOf('month').format('X'),
-      endDate: moment().year(year).month(month).utc().endOf('month').format('X')
-    })
+    const startDate = moment().year(year).month(month).utc().startOf('month')
+    const currentMonth = moment().format('MMMM')
+    const endOfDateRange = month === currentMonth ? 'day' : 'month'
+    const endDate = moment().year(year).month(month).utc().endOf(endOfDateRange)
+
+    this.props.onChange(startDate, endDate)
   }
 
   render() {
     const months = []
     let monthIndex = 0
     while(monthIndex < 12) {
-      months.push(moment().month(monthIndex++).format("MMM"))
+      months.push(moment().month(monthIndex++).format('MMM'))
     }
 
     return (
       <div className="month-picker">
         <div className="year-selector">
-          <a className="btn btn-icon" onClick={this.previousYear}><IconArrowLeft /></a>
+          <a className="btn btn-icon btn-transparent" onClick={() => this.changeYear(-1)}><IconArrowLeft /></a>
           <div className="current-year">{this.state.selectedYear}</div>
-          <a className="btn btn-icon"onClick={this.nextYear}><IconArrowRight /></a>
+          <a className="btn btn-icon btn-transparent"onClick={() => this.changeYear(1)}><IconArrowRight /></a>
         </div>
 
         <ul className="months">
           {months.map((month, i) => {
-            const monthName = moment().month(i).format("MMMM")
+            const monthName = moment().month(i).format('MMMM')
             return (
               <li key={i}>
                 <a className={this.state.selectedMonth === monthName ? "selected" : ""}
@@ -89,7 +81,11 @@ export class MonthPicker extends React.Component {
 
 MonthPicker.displayName = 'MonthPicker'
 MonthPicker.propTypes = {
-  intl: React.PropTypes.object
+  date: React.PropTypes.instanceOf(moment),
+  onChange: React.PropTypes.func
+}
+MonthPicker.defaultProps = {
+  date: moment().utc().startOf('month').format('X')
 }
 
 export default MonthPicker

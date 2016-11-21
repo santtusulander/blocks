@@ -19,6 +19,7 @@ import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
+import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
@@ -137,6 +138,12 @@ const AnalyticsFilters = (props) => {
           showComparison={props.showFilters.includes('includeComparison')}
           onFilterChange={props.onFilterChange}
           includeComparison={props.filters.get('includeComparison')}/>}
+
+      {props.showFilters.includes('customDateRange') &&
+        <FilterCustomDateRange
+          startDate={props.filters.getIn(['customDateRange','startDate'])}
+          endDate={props.filters.getIn(['customDateRange','endDate'])}
+          onFilterChange={props.onFilterChange} />}
 
       {(props.showFilters.includes('serviceProviders') && spFilterOptions.length > 0) &&
         <FilterServiceProvider
