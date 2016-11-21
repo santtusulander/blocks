@@ -42,12 +42,17 @@ export const getByGroup = (state, groupId) => {
  * @return {} property
  */
 export const getById = (state, id) => {
-  return state.properties.properties.get(id)
-    //remove keys that we added when fetching host
-    .delete('brandId')
-    .delete('accountId')
-    .delete('groupId')
-    .toJS()
+  const property = state.properties.properties.get(id)
+
+  if (property) {
+    return property
+      .delete('brandId')
+      .delete('accountId')
+      .delete('groupId')
+      .toJS()
+  }
+
+  return null
 }
 
 /**
