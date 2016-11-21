@@ -12,6 +12,7 @@ import ConfigurationSidebar from './sidebar'
 import IsAllowed from '../is-allowed'
 
 import { getActiveMatchSetForm } from './helpers'
+import { isPolicyRuleEmpty } from '../../util/policy-config'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
 
@@ -28,6 +29,7 @@ class ConfigurationPolicies extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.handleHide = this.handleHide.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
   addRule(policyType) {
@@ -72,6 +74,15 @@ class ConfigurationPolicies extends React.Component {
     this.setState({ isEditingRule: true })
     this.props.activateRule(null)
   }
+  handleCancel() {
+    if (isPolicyRuleEmpty(this.props.config, this.props.activeRule)) {
+      const ruleType = this.props.activeRule.get(0)
+      const ruleIndex = this.props.activeRule.get(2)
+
+      this.deleteRule(ruleType, ruleIndex)
+    }
+    this.handleHide()
+  }
   render() {
     let config = this.props.config;
     if(!config || !config.size) {
@@ -112,7 +123,7 @@ class ConfigurationPolicies extends React.Component {
             <ConfigurationSidebar
               rightColVisible={!!activeEditForm}
               handleRightColClose={()=>this.props.activateMatch(null)}
-              onHide={()=>this.props.activateRule(null)}
+              onHide={this.handleCancel}
               rightColContent={activeEditForm}>
               <ConfigurationPolicyRuleEdit
                 activateMatch={this.props.activateMatch}
@@ -124,6 +135,7 @@ class ConfigurationPolicies extends React.Component {
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}
+                cancelAction={this.handleCancel}
                 hideAction={this.handleHide}
                 isEditingRule={this.state.isEditingRule}
               />
