@@ -61,6 +61,10 @@ $mp-month-hover-bg-color: $pale-blue;
       color: $dt-text-color;
       cursor: pointer;
 
+      &.current-month {
+        color: $pale-blue;
+      }
+
       &:hover {
         color: $white;
         text-decoration: none;
