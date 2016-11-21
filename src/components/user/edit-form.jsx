@@ -112,6 +112,9 @@ class UserEditForm extends React.Component {
   }
 
   currentPassword(e) {
+    this.setState({
+      'currentPassword': e.target.value !== ''
+    })
   }
 
   changePassword(isPasswordValid) {
@@ -258,7 +261,7 @@ class UserEditForm extends React.Component {
                   <div>
                     <Col xs={3}>
                       <Input
-                        type="text"
+                        type="password"
                         placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
                         onChange={this.currentPassword}/>
                     </Col>
