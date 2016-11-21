@@ -528,7 +528,14 @@ export class AccountManagement extends Component {
         />}
         {this.state.hostToDelete &&
         <ModalWindow
-          title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.hostToDelete}}/>}
+          title={
+            <div>
+              <div className="left">
+                <FormattedMessage id="portal.button.delete" />&nbsp;
+              </div>
+              <TruncatedTitle content={this.state.hostToDelete} tooltipPlacement="bottom" />
+            </div>
+          }
           content={<FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>}
           invalid={true}
           verifyDelete={true}
