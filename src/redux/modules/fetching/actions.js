@@ -10,10 +10,13 @@ import * as fetchingReducers from './reducers'
  * @returns {*}
  */
 export const createFetchingReducers = (actionTypes, prefix) => {
-  let mappedActions = Object.assign({}, {[`${prefix}/START_FETCHING`]: fetchingReducers.set})
-
+  let mappedActions = []
   Object.keys( actionTypes).forEach( actionType => {
-    mappedActions[`${prefix}/${actionType}`] = fetchingReducers.clear
+    if (actionType === 'START_FETCHING') {
+      mappedActions[`${prefix}/${actionType}`] = fetchingReducers.set
+    } else {
+      mappedActions[`${prefix}/${actionType}`] = fetchingReducers.clear
+    }
   })
 
   return handleActions(mappedActions, false)

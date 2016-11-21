@@ -5,7 +5,7 @@ import {mapReducers} from '../../util'
 import * as api from './api'
 import {receive, fail} from './reducers'
 
-import {FETCH,FETCH_ALL, FETCH_ALL_WITH_DETAILS} from './actionTypes'
+import {FETCH,FETCH_ALL, FETCH_ALL_WITH_DETAILS, START_FETCHING} from './actionTypes'
 
 const initialState = new Map()
 
@@ -22,7 +22,7 @@ export const fetchAllWithDetails = createAction(FETCH_ALL_WITH_DETAILS, (brand, 
   return api.fetchAllWithDetails( brand, account, group)
 })
 
-export const startFetching = createAction('properties/START_FETCHING')
+export const startFetching = createAction(START_FETCHING)
 
 export default handleActions({
   [FETCH]:  mapReducers(receive, fail),
