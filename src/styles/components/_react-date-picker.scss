@@ -146,6 +146,10 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   color: inherit;
   cursor: pointer;
 
+  &.react-date-picker__month-view-day--today {
+    color: $pale-blue;
+  }
+
   &:hover {
     color: $white;
   }
