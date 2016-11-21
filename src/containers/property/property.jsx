@@ -61,13 +61,12 @@ export class Property extends React.Component {
     ).then((action) => {
       if (action.payload instanceof Error) {
         this.setState({ purgeActive: false })
-        this.showNotification('Purge request failed: ' +
-          action.payload.message)
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{ reason: action.payload.message }}/>)
       }
       else {
         this.setState({ purgeActive: false })
         purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
-        this.showNotification('Purge request succesfully submitted')
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
       }
     })
   }
