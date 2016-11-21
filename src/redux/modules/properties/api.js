@@ -46,12 +46,7 @@ export const fetchAllWithDetails = (brand, account, group) => {
       return fetchGroupProperties(brand, account, groups)
     })
     .then( data => {
-      let merged
-
-      data.map( groupHosts => {
-        merged = Object.assign( {}, merged, groupHosts)
-      })
-      return merged
+      return normalize(data, arrayOf(propertySchema))
     })
 }
 
@@ -112,13 +107,20 @@ const fetchGroupProperties = (brand, account, groupIds) => {
       .then( ({data}) => {
         const promises = data.map( id => fetchHost(brand,account,group,id) )
         return Promise.all( promises )
-      })
-      .then( (allData) => {
+      }).then( hostData => {
         //flatten data.data
-        const data = allData.map( item => item.data)
-        return normalize(data, arrayOf(propertySchema))
+        const data = hostData.map( item => item.data)
+        return data
       })
   }))
+  .then( (allData) => {
+    //merge host / group to single array
+    const merged = allData.reduce( (merge, group) => {
+      return merge.concat(group)
+    }, [])
+
+    return merged
+  })
 }
 
 const getGroupIds = (brand, account, group) => {
