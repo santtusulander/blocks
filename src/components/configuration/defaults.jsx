@@ -47,6 +47,9 @@ class ConfigurationDefaults extends React.Component {
     this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
     this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
   }
+  componentWillUnmount() {
+    this.props.activateRule(null)
+  }
   addRule(e) {
     e.preventDefault()
     const defaultPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT, 'policy_rules']).push(Immutable.fromJS(DEFAULT_MATCH))
