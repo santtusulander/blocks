@@ -1,10 +1,11 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
+import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Select from './select'
-import { isValidEmail } from '../util/validators'
+import { isValidEmail, isValidFQDN } from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
@@ -27,14 +28,20 @@ class PurgeModal extends React.Component {
     this.validateEmail = this.validateEmail.bind(this)
     this.validatePurgeObjects = this.validatePurgeObjects.bind(this)
     this.purgeObjInput = this.purgeObjInput.bind(this)
+    this.parseTypeahead = this.parseTypeahead.bind(this)
   }
   showPurgeOption(type) {
-    this.setState({type: type})
-
+    this.setState({
+      purgeObjectsError: '',
+      purgeObjectsWarning: '',
+      type: type
+    })
     if (type == 'url' || type == 'directory') {
-      this.props.changePurge(this.props.activePurge.set('published_host_id', this.props.activeHost.get('published_host_id')))
-    } else {
-      this.props.changePurge(this.props.activePurge.delete('published_host_id'))
+      this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
+    } else if (type == 'hostname') {
+      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', Immutable.List()))
+    } else if (type == 'group') {
+      this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', (this.props.allHosts).toJS()))
     }
   }
   change(path) {
@@ -60,10 +67,6 @@ class PurgeModal extends React.Component {
         purgeObjectsError: ''
       })
     }
-    clearTimeout(this.purgeObjectsValidationTimeout)
-    this.purgeObjectsValidationTimeout = setTimeout(() => {
-      this.validatePurgeObjects(value)
-    }, 1000)
     if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
         purgeObjectsWarning: <FormattedMessage id="portal.analytics.purgeModal.maxAmount.error"/>
@@ -79,12 +82,31 @@ class PurgeModal extends React.Component {
       )
     }
   }
-  validatePurgeObjects(value) {
+  parseTypeahead(e) {
+    const parsedTypeahead = e.map(val => val.label)
+    this.props.changePurge(this.props.activePurge.set('published_hosts', Immutable.List(parsedTypeahead)))
+  }
+  validatePurgeObjects(e) {
+    const value = e.target.value
     if(!value) {
       this.setState({
         purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
       })
       return true
+    }
+
+    if(this.state.type === 'url') {
+      const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
+      const errors = values.filter(val => {
+        return !isValidFQDN(val)
+      })
+
+      if(errors.length){
+        this.setState({
+          purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
+        })
+        return true
+      }
     }
   }
   validateEmail() {
@@ -99,7 +121,6 @@ class PurgeModal extends React.Component {
   submitForm(e) {
     e.preventDefault()
     let hasErrors = false;
-    hasErrors = this.validatePurgeObjects(this.props.activePurge.get('objects').get('0')) ? true : false
     hasErrors = this.validateEmail() ? true : hasErrors
     if(!hasErrors) {
       this.props.savePurge()
@@ -129,6 +150,7 @@ class PurgeModal extends React.Component {
           help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
           placeholder={placeholder}
           value={this.props.activePurge.get('objects').join(',\n')}
+          onBlur={this.validatePurgeObjects}
           onChange={this.parsePurgeObjects}/>
         <hr/>
       </div>
@@ -136,6 +158,16 @@ class PurgeModal extends React.Component {
   }
   render() {
     const showPropertySelect = this.props.availableProperties && this.props.changeProperty
+    const allHosts = this.props.allHosts
+    const hostnamesArray = !allHosts ?
+    [] :
+    allHosts.map(host => {
+      return {
+        id: host,
+        label: host
+      }
+    }).toJS();
+
     return (
       <Modal show={true} dialogClassName="purge-modal configuration-sidebar"
         onHide={this.props.hideAction}>
@@ -176,9 +208,8 @@ class PurgeModal extends React.Component {
                 onSelect={(type) => this.showPurgeOption(type)}/>
               <hr/>
 
-              {this.state.type && this.state.type !== 'hostname'
-                && this.state.type !== 'group' && <div>
-
+              {this.state.type &&
+              <div>
                 {this.state.type === 'url' && <this.purgeObjInput
                   title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.title'})}
                   help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.url.help'})}
@@ -188,6 +219,16 @@ class PurgeModal extends React.Component {
                   title={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.title'})}
                   help={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.help'})}
                   placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.directory.placeholder'})}/>}
+
+                {this.state.type === 'hostname' &&
+                <div>
+                  <h3><FormattedMessage id="portal.analytics.purgeModal.hostname.title"/></h3>
+                  <Typeahead
+                    multiple={true}
+                    options={hostnamesArray}
+                    onChange={this.parseTypeahead}/>
+                  <hr/>
+                </div>}
 
                 {/* SECTION - Content Removal Method */}
                 <h3><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></h3>
@@ -244,14 +285,6 @@ class PurgeModal extends React.Component {
                 </ButtonToolbar>
               </div>}
 
-              {this.state.type === 'hostname' && <div>
-                <FormattedMessage id="portal.analytics.purgeModal.hostName.text"/>
-              </div>}
-
-              {this.state.type === 'group' && <div>
-                <FormattedMessage id="portal.analytics.purgeModal.group.text"/>
-              </div>}
-
             </form>
           }
         </Modal.Body>
@@ -265,6 +298,7 @@ PurgeModal.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeProperty: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
+  allHosts: React.PropTypes.instanceOf(Immutable.List),
   availableProperties: React.PropTypes.instanceOf(Immutable.List),
   changeProperty: React.PropTypes.func,
   changePurge: React.PropTypes.func,

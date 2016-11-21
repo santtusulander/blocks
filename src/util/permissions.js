@@ -59,6 +59,8 @@ permissionMapping[PERMISSIONS.DENY_ALWAYS] =
   () => false
 permissionMapping[PERMISSIONS.ALLOW_ALWAYS] =
   () => true
+permissionMapping[PERMISSIONS.VIEW_PROPERTY_PURGE_STATUS] =
+  (role) => role.getIn(['permissions', 'north', 'purge_many', 'list', 'allowed'])
 
 // Content Item listing
 permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =

@@ -1,7 +1,9 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
+import moment from 'moment'
 
 // React-Bootstrap
 // ===============
@@ -17,22 +19,24 @@ import {
   Input,
   Label,
   MenuItem,
+  NavItem,
   OverlayTrigger,
   Pagination,
   Popover,
   Row,
-  Table,
-  Tab,
-  Tabs
+  Table
 } from 'react-bootstrap';
 
 import SelectWrapper from '../components/select-wrapper'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
+import Tabs from '../components/tabs'
+import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
+import CustomDatePicker from '../components/custom-date-picker'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -74,6 +78,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 
@@ -89,7 +94,18 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
-export default class Styleguide extends React.Component {
+class Styleguide extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      activeTab: 1,
+      customDatePickerEndDate: moment().endOf('day'),
+      customDatePickerStartDate: moment().startOf('day')
+    }
+  }
+
   render() {
     const spDashboardData = {
       "traffic": {
@@ -214,24 +230,36 @@ export default class Styleguide extends React.Component {
 
           <h1 className="page-header">Tabs</h1>
 
-          <Tabs defaultActiveKey={1} className="styleguide-row">
-
-            <Tab eventKey={1} title="Tab 1">
-              <h4>Tab 1</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={2} title="Tab 2">
-              <h4>Tab 2</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
-            <Tab eventKey={3} title="Tab 3">
-              <h4>Tab 3</h4>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Tab>
-
+          <Tabs
+            activeKey={this.state.activeTab}
+            className="styleguide-row"
+            onSelect={key => this.setState({ activeTab: key })}>
+            <NavItem eventKey={1}>Tab Name 1</NavItem>
+            <NavItem eventKey={2}>Long Tab Name 2</NavItem>
+            <NavItem eventKey={3}>Longer Tab Name 3</NavItem>
+            <NavItem eventKey={4}>Even Longer Tab Name 4</NavItem>
+            <NavItem eventKey={5}>Can&apos;t believe how Long Tab Name 5</NavItem>
+            <NavItem eventKey={6}>Normal Tab Name 6</NavItem>
           </Tabs>
+
+          {this.state.activeTab === 1 &&
+            <div>Tab 1 content</div>
+          }
+          {this.state.activeTab === 2 &&
+            <div>Tab 2 content</div>
+          }
+          {this.state.activeTab === 3 &&
+            <div>Tab 3 content</div>
+          }
+          {this.state.activeTab === 4 &&
+            <div>Tab 4 content</div>
+          }
+          {this.state.activeTab === 5 &&
+            <div>Tab 5 content</div>
+          }
+          {this.state.activeTab === 6 &&
+            <div>Tab 6 content</div>
+          }
 
 
           <hr />
@@ -241,6 +269,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary">Primary</Button>
             <Button className="btn-secondary">Secondary</Button>
+            <Button className="btn-tertiary">Tertiary</Button>
             <Button bsStyle="danger">Destructive</Button>
             <Button bsStyle="success">Confirmation</Button>
             <Button bsStyle="link">Link button</Button>
@@ -251,6 +280,7 @@ export default class Styleguide extends React.Component {
           <ButtonToolbar className="styleguide-row">
             <Button bsStyle="primary" disabled={true}>Primary</Button>
             <Button className="btn-secondary" disabled={true}>Secondary</Button>
+            <Button className="btn-tertiary" disabled={true}>Tertiary</Button>
             <Button bsStyle="danger" disabled={true}>Destructive</Button>
             <Button bsStyle="success" disabled={true}>Confirmation</Button>
             <Button bsStyle="link" disabled={true}>Link button</Button>
@@ -475,6 +505,15 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Month Picker</h1>
+          <Row>
+            <Col xs={6}>
+              <MonthPicker
+                date={null}
+                onChange={() => null} />
+            </Col>
+          </Row>
+
           <h1 className="page-header">Stacked By Time Summary</h1>
           <Row>
             <Col xs={6}>
@@ -566,6 +605,23 @@ export default class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Custom Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <CustomDatePicker
+                endDate={this.state.customDatePickerEndDate}
+                startDate={this.state.customDatePickerStartDate}
+                changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.customDatePickerStartDate} (${this.state.customDatePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+            <Col xs={4}>
+              <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Dashboard Panel</h1>
 
           <DashboardPanels>
@@ -579,6 +635,10 @@ export default class Styleguide extends React.Component {
 
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+
+          <h1 className="page-header">MapBox</h1>
+
+          <MapBox />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -790,4 +850,14 @@ export default class Styleguide extends React.Component {
 }
 
 Styleguide.displayName = 'Styleguide'
-Styleguide.propTypes = {}
+Styleguide.propTypes = {
+  theme: React.PropTypes.string
+}
+
+const mapStateToProps = (state) => {
+  return {
+    theme: state.ui.get('theme')
+  }
+}
+
+export default connect(mapStateToProps)(Styleguide)

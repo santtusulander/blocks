@@ -22,6 +22,10 @@ const initialState = Immutable.fromJS({
       startDate: moment().utc().startOf('month'),
       endDate: moment().utc().endOf('day')
     },
+    customDateRange: {
+      startDate: moment().utc().startOf('day'),
+      endDate: moment().utc().endOf('day')
+    },
     includeComparison: false,
     dateRangeLabel: DateRanges.MONTH_TO_DATE,
     recordType: 'transfer_rates',
@@ -31,7 +35,7 @@ const initialState = Immutable.fromJS({
     contentProviderProperties: [],
     serviceProviders: [],
     serviceProviderGroups: [],
-    onOffNet: ['on-net', 'off-net'],
+    onOffNet: ['on', 'off'],
     errorCodes: getAnalysisErrorCodes(),
     statusCodes: getAnalysisStatusCodes(),
     video: '/elephant/169ar/elephant_master.m3u8'
@@ -44,7 +48,7 @@ const initialState = Immutable.fromJS({
     contentProviderProperties: [],
     serviceProviders: [],
     serviceProviderGroups: [],
-    onOffNet: [{label: 'On-Net', value: 'on-net'}, {label: 'Off-Net', value: 'off-net'}],
+    onOffNet: [{label: 'On-Net', value: 'on'}, {label: 'Off-Net', value: 'off'}],
     errorCodes: getAnalysisErrorCodes().map((obj) => { return { label: obj, value: obj } } ),
     statusCodes: getAnalysisStatusCodes().map((obj) => { return { label: obj, value: obj } } )
   },

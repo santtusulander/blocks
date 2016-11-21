@@ -19,6 +19,7 @@ import FilterServiceType from '../analysis/filters/service-type.jsx'
 import FilterVideo from '../analysis/filters/video.jsx'
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
+import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
@@ -128,17 +129,23 @@ const AnalyticsFilters = (props) => {
 
   return (
     <PageHeader secondaryPageHeader={true}>
-      {props.showFilters.includes('date-range') &&
 
+      {props.showFilters.includes('dateRange') &&
         <FilterDateRange
           startDate={props.filters.getIn(['dateRange','startDate'])}
           endDate={props.filters.getIn(['dateRange','endDate'])}
           dateRanges={props.dateRanges}
-          showComparison={props.showFilters.includes('comparison')}
+          showComparison={props.showFilters.includes('includeComparison')}
           onFilterChange={props.onFilterChange}
           includeComparison={props.filters.get('includeComparison')}/>}
 
-      {(props.showFilters.includes('service-provider') && spFilterOptions.length > 0) &&
+      {props.showFilters.includes('customDateRange') &&
+        <FilterCustomDateRange
+          startDate={props.filters.getIn(['customDateRange','startDate'])}
+          endDate={props.filters.getIn(['customDateRange','endDate'])}
+          onFilterChange={props.onFilterChange} />}
+
+      {(props.showFilters.includes('serviceProviders') && spFilterOptions.length > 0) &&
         <FilterServiceProvider
           visibleFields={spFilterOptions}
           changeServiceProvider={val => {
@@ -154,7 +161,7 @@ const AnalyticsFilters = (props) => {
           />
       }
 
-      {(props.showFilters.includes('content-provider') && cpFilterOptions.length > 0) &&
+      {(props.showFilters.includes('contentProviders') && cpFilterOptions.length > 0) &&
         <FilterContentProvider
           visibleFields={cpFilterOptions}
           changeContentProvider={val => {
@@ -175,7 +182,7 @@ const AnalyticsFilters = (props) => {
           />
       }
 
-      {props.showFilters.includes('on-off-net') &&
+      {props.showFilters.includes('onOffNet') &&
         <div className='action'>
           <FilterOnOffNet
             onOffNetValues={props.filters.get('onOffNet')}
@@ -189,7 +196,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('service-type') &&
+      {props.showFilters.includes('serviceTypes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.serviceTypes.title"/></h5>
 
@@ -205,7 +212,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('record-type') &&
+      {props.showFilters.includes('recordType') &&
         <div className='action'>
           <FilterRecordType
             recordType={props.filters.get('recordType')}
@@ -218,7 +225,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('error-code') &&
+      {props.showFilters.includes('errorCodes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes
@@ -229,7 +236,7 @@ const AnalyticsFilters = (props) => {
         </div>
       }
 
-      {props.showFilters.includes('status-code') &&
+      {props.showFilters.includes('statusCodes') &&
         <div className='action'>
           <h5><FormattedMessage id="portal.analysis.filters.statusCodes.title"/></h5>
           <StatusCodes

@@ -1,18 +1,21 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 import d3 from 'd3'
+import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
 import { Link } from 'react-router'
-import IconChart from '../icons/icon-chart.jsx'
-import IconConfiguration from '../icons/icon-configuration.jsx'
-import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IconChart from '../icons/icon-chart'
+import IconConfiguration from '../icons/icon-configuration'
+import IconQuestionMark from '../icons/icon-question-mark'
 
-import LoadingSpinner from '../loading-spinner/loading-spinner.jsx'
-import DifferenceTooltip from './difference-tooltip.jsx'
-import TrafficTooltip from './traffic-tooltip.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
+import DifferenceTooltip from './difference-tooltip'
+import ContentItemTag from './content-item-tag'
+import TrafficTooltip from './traffic-tooltip'
 import {formatBitsPerSecond} from '../../util/helpers'
 
 const dayHours = 24
@@ -52,21 +55,23 @@ class ContentItemChart extends React.Component {
     this.differenceHover = this.differenceHover.bind(this)
     this.sliceHover = this.sliceHover.bind(this)
   }
+
   differenceHover(hover) {
     return () => {
       this.setState({ showDiffLegend: hover })
     }
   }
+
   sliceHover(sliceData) {
     return () => {
       this.setState({ activeSlice: sliceData })
     }
   }
+
   render() {
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
-
     const primaryData = groupData(this.props.primaryData.toJS(), rayHours, 'bits_per_second');
     const secondaryData = groupData(this.props.secondaryData.toJS(), rayHours, 'bits_per_second');
     const differenceData = groupData(this.props.differenceData.toJS(), dayHours);
@@ -144,7 +149,7 @@ class ContentItemChart extends React.Component {
     const dayArc = d3.svg.arc()
       .innerRadius(innerRadius)
       .outerRadius(innerRadius + parseInt(this.props.barMaxHeight));
-    let {avgTransfer, maxTransfer, minTransfer} = this.props
+    let { avgTransfer, maxTransfer, minTransfer, tagText } = this.props
     const endDate = moment.utc().format('MMM D')
     const startDate = moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('MMM D')
     let tooltipDate = `${startDate} - ${endDate}`
@@ -175,7 +180,8 @@ class ContentItemChart extends React.Component {
       </Tooltip>)
     return (
       <OverlayTrigger placement="top" overlay={tooltip}>
-        <div className="content-item-chart grid-item"
+        <div
+          className={classnames({ 'content-item-chart': true, bright: this.props.brightMode, 'grid-item': true })}
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
           <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
@@ -289,6 +295,10 @@ class ContentItemChart extends React.Component {
                   </p>
                 </div>
               </div>
+              {!!tagText &&
+                <ContentItemTag>
+                  <FormattedMessage id={tagText}/>
+                </ContentItemTag>}
             </div>
           </LinkWrapper>
           <div className="content-item-toolbar">
@@ -347,6 +357,7 @@ ContentItemChart.propTypes = {
   avgTransfer: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
   barWidth: React.PropTypes.string,
+  brightMode: React.PropTypes.bool,
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
@@ -356,7 +367,7 @@ ContentItemChart.propTypes = {
   differenceData: React.PropTypes.instanceOf(Immutable.List),
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  id: React.PropTypes.string,
+  id: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
@@ -366,6 +377,7 @@ ContentItemChart.propTypes = {
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),
   showSlices: React.PropTypes.bool,
+  tagText: React.PropTypes.string,
   timeToFirstByte: React.PropTypes.string
 }
 ContentItemChart.defaultProps = {
@@ -375,4 +387,4 @@ ContentItemChart.defaultProps = {
   secondaryData: Immutable.List()
 }
 
-module.exports = ContentItemChart
+export default ContentItemChart

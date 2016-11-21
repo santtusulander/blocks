@@ -8,6 +8,7 @@
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
   "portal.common.search.text": "Search",
+  "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
   "portal.common.error.tokenExpire.content": "Due to inactivity you have been logged out. To continue your session please resubmit your username and password.",
@@ -76,5 +77,16 @@
   "portal.common.statusCode.510": "Not Extended",
   "portal.common.statusCode.511": "Network Authentication Required",
 
-  "portal.common.total.text": "Total"
+  "portal.common.total.text": "Total",
+
+  "portal.common.time.day": "Day",
+  "portal.common.time.month": "Month",
+
+  "portal.common.weekdayShort.sunday": "Su",
+  "portal.common.weekdayShort.monday": "Mo",
+  "portal.common.weekdayShort.tuesday": "Tu",
+  "portal.common.weekdayShort.wednesday": "We",
+  "portal.common.weekdayShort.thursday": "Th",
+  "portal.common.weekdayShort.friday": "Fr",
+  "portal.common.weekdayShort.saturday": "Sa"
 }
