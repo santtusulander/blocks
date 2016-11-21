@@ -47,9 +47,8 @@ $lt-tab-color: $lt-text-color;
   }
 
   &.dropdown-tabs {
-    
-    .dark-theme &,
-    .light-theme & {
+
+    .dark-theme & {
       background-color: $black;
       background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
       background-size: 100%;
