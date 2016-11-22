@@ -1,9 +1,12 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { fromJS } from 'immutable'
+import Immutable, { fromJS } from 'immutable'
 
 import { flatten } from '../util/helpers'
-import { POLICY_TYPES } from '../constants/property-config'
+import {
+  POLICY_TYPES,
+  DEFAULT_MATCH
+} from '../constants/property-config'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -254,7 +257,7 @@ export const getTokenAuthRules = (properties) => {
         const returnObj = {
           ruleId: key,
           propertyName: property.published_host_id,
-          encryption: 'HMAC-SHA1',  //Hardcoded for 1.03
+          encryption: 'HMAC-SHA1',  //Hardcoded for now
           schema: 'URL',            //
           created: config.config_created
         }
@@ -264,4 +267,15 @@ export const getTokenAuthRules = (properties) => {
   }
 
   return tokenAuthRules
+
+}
+
+/**
+ * Checks whether or not the rule at the given path is empty
+ * @param config a property configuration object
+ * @param rulePath the path to the rule in the configuration object (ex ['request_policy', 'policy_rule', 0])
+ * @return returns true if the rule at the given path is empty
+ */
+export const isPolicyRuleEmpty = (config, rulePath) => {
+  return Immutable.is(config.getIn(rulePath).get('match'), DEFAULT_MATCH.get('match'))
 }

@@ -157,27 +157,6 @@ describe('ConfigurationPolicyRuleEdit', () => {
     expect(activateSet.mock.calls[0][0]).toBe('aaa')
   });
 
-  it('should cancel changes', () => {
-    const changeValue = jest.fn()
-    const hideAction = jest.fn()
-    let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit
-        rule={fakeConfig}
-        config={Immutable.Map()}
-        rulePath={Immutable.List()}
-        activeAccount={fakeAccounts}
-        activeGroup={fakeGroups}
-        location={fakeLocation}
-        changeValue={changeValue}
-        hideAction={hideAction}/>
-    );
-    policyRule.state.originalConfig = fakeConfig
-    policyRule.cancelChanges()
-    expect(changeValue.mock.calls.length).toBe(1)
-    expect(changeValue.mock.calls[0][1]).toBe(fakeConfig)
-    expect(hideAction.mock.calls.length).toBe(1)
-  });
-
   it('should move a set', () => {
     const changeValue = jest.fn()
     const activateSet = jest.fn()
