@@ -8,7 +8,6 @@ import { Map, List } from 'immutable'
 import Tabs from '../../components/tabs'
 import { Link } from 'react-router'
 
-//import { getTabName } from '../../util/helpers'
 import { getSecurityUrlFromParams } from '../../util/routes'
 import * as accountActionCreators from '../../redux/modules/account'
 
