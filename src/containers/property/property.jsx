@@ -93,8 +93,7 @@ export class Property extends React.Component {
       params: {
         brand,
         account,
-        group,
-        property
+        group
       },
       router
     } = this.props
@@ -132,7 +131,7 @@ export class Property extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           submit={() => {
-            deleteHost(brand, account, group, property, this.props.activeHostConfiguredName)
+            deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}
           invalid={true}
