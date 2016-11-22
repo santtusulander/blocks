@@ -6,6 +6,7 @@ import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
 import TableSorter from '../../table-sorter'
 import SelectWrapper from '../../../components/select-wrapper'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import { formatUnixTimestamp, getSortData } from '../../../util/helpers'
 
@@ -63,6 +64,11 @@ class PurgeHistoryReport extends React.Component {
   }
 
   render() {
+
+    if(this.props.fetching){
+      return (<LoadingSpinner/>);
+    }
+
     const { intl } = this.props
     const { sortedStats } = this.state
 
@@ -139,6 +145,7 @@ class PurgeHistoryReport extends React.Component {
 
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
 PurgeHistoryReport.propTypes = {
+  fetching: React.PropTypes.bool,
   historyData: React.PropTypes.instanceOf(List),
   intl: React.PropTypes.object
 }

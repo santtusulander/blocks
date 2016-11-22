@@ -5,5 +5,6 @@
   "portal.security.tokenAuth.sharedSecretValue.text": "Secret",
   "portal.security.tokenAuth.created.text": "Created",
 
-  "portal.security.tokenAuth.noRules.text": "No Token Auth rules found"
+  "portal.security.tokenAuth.noRules.text": "No Token Auth rules found",
+  "portal.security.ssl.noCertificates.text": "No certificates"
 }

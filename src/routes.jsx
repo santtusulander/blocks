@@ -172,9 +172,9 @@ export const getRoutes = store => {
 
         {/* Properties - routes */}
         <Route path={routes.contentProperty} component={Property}>
-          <IndexRedirect to={getRoute('contentPropertySummary', { brand: 'udn' })}/>
-          <Route path={routes.contentPropertySummary} component={PropertySummary}/>
-          <Route path={routes.contentPropertyPurgeStatus} component={PurgeStatus}/>
+          <IndexRedirect to={routes.contentPropertyTabSummary}/>
+          <Route path={routes.contentPropertyTabSummary} component={PropertySummary}/>
+          <Route path={routes.contentPropertyTabPurgeStatus} component={PurgeStatus}/>
         </Route>
 
         {/* Property Configuration - routes */}

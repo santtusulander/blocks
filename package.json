@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.1.1-b6",
+  "version": "1.1.1-rc1",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -68,6 +68,7 @@
     "node-zendesk": "^1.1.10",
     "normalizr": "^2.2.1",
     "numeral": "^1.5.3",
+    "raven-js": "^3.8.0",
     "react": "^0.14.7",
     "react-addons-css-transition-group": "^0.14.7",
     "react-bootstrap": "^0.28.2",
