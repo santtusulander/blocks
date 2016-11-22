@@ -6,9 +6,6 @@ const TabContentTargeting = (props) => {
       <h1>
         Tab Content Targeting
       </h1>
-      <p>
-        {JSON.stringify(props)}
-      </p>
     </div>
   )
 }
