@@ -72,7 +72,11 @@ $mp-month-hover-bg-color: $pale-blue;
       cursor: pointer;
 
       &.current-month {
-        color: $pale-blue;
+        
+        .dark-theme &,
+        .light-theme & {
+          color: $pale-blue;
+        }
       }
 
       .dark-theme & {
