@@ -15,10 +15,6 @@ class TabTokenAuthentication extends Component {
     this.fetchData()
   }
 
-  shouldComponentUpdate(){
-    return true
-  }
-
   fetchData(){
     const {brand,account,group} = this.props.params
     this.props.fetchProperties(brand,account,group)
