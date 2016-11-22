@@ -6,5 +6,5 @@ import {createFetchingReducers} from '../fetching/actions'
 
 export default combineReducers({
   properties,
-  fetching: createFetchingReducers( actionTypes, 'properties')
+  fetching: createFetchingReducers( actionTypes )
 })
