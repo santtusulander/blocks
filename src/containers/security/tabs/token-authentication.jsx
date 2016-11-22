@@ -9,6 +9,7 @@ import {getProperties, isFetching} from '../../../redux/modules/properties/selec
 import {getTokenAuthRules} from '../../../util/policy-config'
 
 import TokenAuthList from '../../../components/security/token-auth-list'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 class TabTokenAuthentication extends Component {
   componentDidMount(){
@@ -24,7 +25,7 @@ class TabTokenAuthentication extends Component {
     const {properties, isFetching} = this.props
 
     if ( isFetching )
-      return <span>Loading...</span>
+      return <LoadingSpinner />
 
     const tokenAuthRules = getTokenAuthRules( properties )
 
@@ -47,8 +48,9 @@ TabTokenAuthentication.defaultProps = {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const {params: {brand, account, group} } = ownProps
   return {
-    properties: getProperties(state, ownProps.params.brand, parseInt(ownProps.params.account), parseInt(ownProps.params.group)),
+    properties: getProperties(state, brand, parseInt(account), parseInt(group)),
     isFetching: isFetching(state)
   }
 }
