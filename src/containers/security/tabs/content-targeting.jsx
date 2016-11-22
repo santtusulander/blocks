@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TabContentTargeting = (props) => {
+const TabContentTargeting = () => {
   return (
     <div>
       <h1>
