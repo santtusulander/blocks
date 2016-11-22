@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import {Link} from 'react-router'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { FormattedMessage, intlShape } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
@@ -50,4 +50,4 @@ TokenAuthList.defaultProps = {
   rules: []
 }
 
-export default injectIntl(TokenAuthList)
+export default TokenAuthList
