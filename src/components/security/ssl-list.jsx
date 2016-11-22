@@ -17,19 +17,22 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
-            <th width="30%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
-            <th width="30%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
+            <th width="33%"><FormattedMessage id="portal.security.ssl.title.text"/></th>
+            <th width="33%"><FormattedMessage id="portal.security.ssl.commonName.text"/></th>
+            <th width="33%"><FormattedMessage id="portal.security.ssl.group.text"/></th>
             <th width="1%" />
           </tr>
         </thead>
         <tbody>
           {!certificates.isEmpty() ? certificates.map((cert, index) => {
+            const title = cert.get('title')
             const commonName = cert.get('cn')
             const groupID = cert.get('group')
             const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
             const account = cert.get('account')
             return (
               <tr key={index}>
+                <td>{title}</td>
                 <td>{commonName}</td>
                 <td>{groupName}</td>
                 <td className="nowrap-column">
@@ -40,7 +43,13 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
                 </td>
               </tr>
             )
-          }) : <tr id="empty-msg"><td colSpan="4">No certificates</td></tr>}
+          }) : (
+            <tr id="empty-msg">
+              <td colSpan="4">
+                <FormattedMessage id="portal.security.ssl.noCertificates.text" />
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
