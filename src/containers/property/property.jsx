@@ -61,13 +61,12 @@ export class Property extends React.Component {
     ).then((action) => {
       if (action.payload instanceof Error) {
         this.setState({ purgeActive: false })
-        this.showNotification('Purge request failed: ' +
-          action.payload.message)
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{ reason: action.payload.message }}/>)
       }
       else {
         this.setState({ purgeActive: false })
         purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
-        this.showNotification('Purge request succesfully submitted')
+        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
       }
     })
   }
@@ -105,6 +104,7 @@ export class Property extends React.Component {
         <PropertyHeader
           currentUser={currentUser}
           params={this.props.params}
+          currentTab={this.props.routes.slice(-1)[0].path}
           togglePurge={this.togglePurge}
           deleteProperty={() => this.setState({ deleteModal: true })}
         />
@@ -170,6 +170,7 @@ Property.propTypes = {
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
+  routes: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
 Property.defaultProps = {
