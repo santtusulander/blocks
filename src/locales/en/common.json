@@ -77,5 +77,16 @@
   "portal.common.statusCode.510": "Not Extended",
   "portal.common.statusCode.511": "Network Authentication Required",
 
-  "portal.common.total.text": "Total"
+  "portal.common.total.text": "Total",
+
+  "portal.common.time.day": "Day",
+  "portal.common.time.month": "Month",
+
+  "portal.common.weekdayShort.sunday": "Su",
+  "portal.common.weekdayShort.monday": "Mo",
+  "portal.common.weekdayShort.tuesday": "Tu",
+  "portal.common.weekdayShort.wednesday": "We",
+  "portal.common.weekdayShort.thursday": "Th",
+  "portal.common.weekdayShort.friday": "Fr",
+  "portal.common.weekdayShort.saturday": "Sa"
 }

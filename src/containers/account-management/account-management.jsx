@@ -35,8 +35,7 @@ import {
   DELETE_ACCOUNT,
   DELETE_GROUP,
   EDIT_GROUP,
-  DELETE_USER,
-  DELETE_HOST
+  DELETE_USER
 } from '../../constants/account-management-modals.js'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -141,8 +140,8 @@ export class AccountManagement extends Component {
       .then(() => this.props.toggleModal(null))
   }
 
-  addGroupToActiveAccount(name) {
-    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), name)
+  addGroupToActiveAccount(data) {
+    return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
       .then(action => {
         this.props.hostActions.clearFetchedHosts()
         return action.payload
@@ -216,8 +215,7 @@ export class AccountManagement extends Component {
       params: {
         brand
       },
-      activeAccount,
-      toggleModal
+      activeAccount
     } = this.props
 
     const account = activeAccount.get('id')
@@ -237,7 +235,7 @@ export class AccountManagement extends Component {
           this.props.activeHost
         )
           .then(res => {
-            toggleModal(null)
+            this.setState({ hostToDelete: null })
             if (res.error) {
               uiActions.showInfoDialog({
                 title: 'Error',
@@ -373,18 +371,6 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancel: () => toggleModal(null),
           submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
-        }
-        break
-      case DELETE_HOST:
-        deleteModalProps = {
-          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.hostToDelete}}/>,
-          content: <FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>,
-          invalid: true,
-          verifyDelete: true,
-          cancelButton: true,
-          deleteButton: true,
-          cancel: () => toggleModal(null),
-          submit: () => this.deleteHost(this.state.hostToDelete)
         }
         break
     }
@@ -533,13 +519,31 @@ export class AccountManagement extends Component {
         <GroupForm
           id="group-form"
           params={this.props.params}
-          onDeleteHost={(host) => this.setState({ hostToDelete: host }, () => toggleModal(DELETE_HOST))}
+          onDeleteHost={(host) => this.setState({ hostToDelete: host })}
           account={activeAccount}
           groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
         />}
+        {this.state.hostToDelete &&
+        <ModalWindow
+          title={
+            <div>
+              <div className="left">
+                <FormattedMessage id="portal.button.delete" />&nbsp;
+              </div>
+              <TruncatedTitle content={this.state.hostToDelete} tooltipPlacement="bottom" />
+            </div>
+          }
+          content={<FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>}
+          invalid={true}
+          verifyDelete={true}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => this.setState({ hostToDelete: null })}
+          submit={() => this.deleteHost(this.state.hostToDelete)}/>
+        }
       </Content>
     )
   }
