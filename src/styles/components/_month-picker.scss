@@ -16,19 +16,30 @@ $mp-month-hover-bg-color: $pale-blue;
   width: $mp-width;
   padding: $mp-vertical-padding $mp-horizontal-padding;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     background-color: $mp-dark-bg-color;
     background-image: $mp-dark-bg-image;
+  }
+
+  .light-theme & {
+    background-color: $mp-light-bg-color;
   }
 
   .year-selector {
     display: flex;
     margin-bottom: $mp-year-margin-bottom;
-    color: $dt-text-color;
-    border-bottom: 1px solid rgba($white, 0.1);
     align-items: center;
     justify-content: space-between;
+
+    .dark-theme  & {
+      color: $dt-text-color;
+      border-bottom: 1px solid rgba($white, 0.1);
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+      border-bottom: 1px solid rgba($black, 0.2);
+    }
   }
 
   .months {
@@ -58,24 +69,40 @@ $mp-month-hover-bg-color: $pale-blue;
 
     a {
       padding: $mp-month-vertical-padding $mp-month-horizontal-padding;
-      color: $dt-text-color;
       cursor: pointer;
 
       &.current-month {
         color: $pale-blue;
       }
 
-      &:hover {
-        color: $white;
-        text-decoration: none;
+      .dark-theme & {
+        color: $dt-text-color;
+
+        &:hover {
+          color: $white;
+          text-decoration: none;
+        }
+      }
+
+      .light-theme & {
+        color: $lt-text-color;
+
+        &:not(.selected):hover {
+          color: $black;
+          text-decoration: none;
+        }
       }
 
       &.selected {
         color: $white;
         background-color: $mp-month-hover-bg-color;
         border-radius: 2px;
-      }
 
+        &:hover {
+          color: $white;
+          text-decoration: none;
+        }
+      }
     }
   }
 }
