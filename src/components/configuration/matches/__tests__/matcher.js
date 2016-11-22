@@ -8,7 +8,7 @@ jest.unmock('../../../../util/policy-config.js')
 const Matcher = require('../matcher.jsx')
 
 const fakeConfig = Immutable.fromJS({
-  "cases": [["foo"]]
+  "cases": [[""]]
 })
 
 const fakePath = Immutable.List(['foo', 'bar'])
@@ -125,15 +125,18 @@ describe('Matcher', () => {
         close={close}
         disableRuleSelector={true}/>
     )
+
     matcher.instance().handleMatchesChange('contains')
     expect(matcher.instance().validate()).toBe(false)
-    matcher.instance().handleContainsValChange({ target: { value: 'aaa' } })
+    matcher.instance().handleValChange({ target: { value: 'aaa' } })
+    matcher.instance().handleContainsValChange({ target: { value: 'bbb' } })
     expect(matcher.instance().validate()).toBe(true)
 
     matcher.instance().handleContainsValChange({ target: { } })
     matcher.instance().handleMatchesChange('does_not_contain')
     expect(matcher.instance().validate()).toBe(false)
-    matcher.instance().handleContainsValChange({ target: { value: 'aaa' } })
+    matcher.instance().handleValChange({ target: { value: 'ccc' } })
+    matcher.instance().handleContainsValChange({ target: { value: 'ddd' } })
     expect(matcher.instance().validate()).toBe(true)
   })
 })

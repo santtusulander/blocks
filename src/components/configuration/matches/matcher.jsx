@@ -58,13 +58,14 @@ class Matcher extends React.Component {
   validate() {
     const {
       activeFilter,
+      val,
       containsVal
     } = this.state
 
     switch (activeFilter) {
       case 'contains':
       case 'does_not_contain':
-        return !!containsVal
+        return !!val && !!containsVal
       default:
         return true
     }
