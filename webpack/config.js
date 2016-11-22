@@ -29,7 +29,6 @@ module.exports = {
       }
     ],*/
     loaders: [
-      { test: /\.jsx?$/, loaders: ['react-hot', 'jsx?harmony'], include: path.join(__dirname, 'src') },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,

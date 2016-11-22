@@ -14,6 +14,7 @@ var development = Object.assign({}, {
   // debug: true,
   devtool: useSourceMap() ? 'eval-source-map' : 'eval',
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
       'VERSION': JSON.stringify(require('../package.json').version)
@@ -21,7 +22,6 @@ var development = Object.assign({}, {
     new webpack.ProvidePlugin({
       // Polyfill here
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new WebpackNotifierPlugin({
       title: `UDN portal v.${require('../package.json').version}`
