@@ -26,6 +26,7 @@ export class User extends React.Component {
 
     this.notificationTimeout = null
     this.saveUser = this.saveUser.bind(this)
+    this.savePassword = this.savePassword.bind(this)
     this.showNotification = this.showNotification.bind(this)
   }
 
@@ -57,6 +58,9 @@ export class User extends React.Component {
     )
   }
 
+  savePassword(password) {
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
@@ -83,6 +87,7 @@ export class User extends React.Component {
           <UserEditForm
             initialValues={initialValues}
             onSave={this.saveUser}
+            onSavePassword={this.savePassword}
             savingPassword={this.state.savingPassword}
             savingUser={this.state.savingUser}/>
         </PageContainer>

@@ -50,8 +50,13 @@ class UserEditForm extends React.Component {
     this.showMiddleName = this.showMiddleName.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
-    this.currentPassword = this.currentPassword.bind(this)
     this.changePassword = this.changePassword.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      'currentPassword': nextProps.fields.current_password.value !== ''
+    })
   }
 
   save() {
@@ -80,16 +85,18 @@ class UserEditForm extends React.Component {
   savePassword() {
     const {
       fields: {
-        password
+        current_password,
+        new_password
       },
-      onSave
+      onSavePassword
     } = this.props
 
     let newValues = {
-      password: password.value
+      current_password: current_password.value,
+      new_password: new_password.value
     }
 
-    onSave(newValues)
+    onSavePassword(newValues)
     this.togglePasswordEditing()
   }
 
@@ -111,12 +118,6 @@ class UserEditForm extends React.Component {
     })
   }
 
-  currentPassword(e) {
-    this.setState({
-      'currentPassword': e.target.value !== ''
-    })
-  }
-
   changePassword(isPasswordValid) {
     this.setState({
       'validPassword': isPasswordValid
@@ -126,11 +127,12 @@ class UserEditForm extends React.Component {
   render() {
     const {
       fields: {
+        current_password,
         email,
         first_name,
         last_name,
         middle_name,
-        password,
+        new_password,
         phone_number/*,
         timezone*/
       },
@@ -263,10 +265,11 @@ class UserEditForm extends React.Component {
                       <Input
                         type="password"
                         placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
-                        onChange={this.currentPassword}/>
+                        onChange={this.currentPassword}
+                        {...current_password} />
                     </Col>
                     <Col xs={6}>
-                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
+                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
                     </Col>
                     <Col xs={10} xsOffset={2}>
                       <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
@@ -318,6 +321,7 @@ UserEditForm.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  onSavePassword: PropTypes.func,
   resetForm: PropTypes.func,
   savingPassword: PropTypes.bool,
   savingUser: PropTypes.bool
@@ -327,11 +331,12 @@ export default reduxForm({
   form: 'user-edit-form',
   fields: [
     'confirm',
+    'current_password',
     'email',
     'first_name',
     'last_name',
     'middle_name',
-    'password',
+    'new_password',
     'phone_number',
     'timezone'
   ],
