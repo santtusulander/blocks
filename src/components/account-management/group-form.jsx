@@ -15,8 +15,9 @@ import SelectWrapper from '../select-wrapper'
 // import IconClose from '../icons/icon-close.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
+import TruncatedTitle from '../../components/truncated-title'
 
-import { checkForErrors, userIsContentProvider, userIsCloudProvider } from '../../util/helpers'
+import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import { fetchHosts, startFetching as startFetchingHosts } from '../../redux/modules/host'
@@ -60,8 +61,8 @@ class GroupForm extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.groupId) {
-      const { fetchHosts, startFetchingHosts, params: { brand, account }, groupId } = this.props
+    const { fetchHosts, startFetchingHosts, params: { brand, account }, groupId } = this.props
+    if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetchingHosts()
       fetchHosts(brand, account, groupId)
     }
@@ -123,7 +124,9 @@ class GroupForm extends React.Component {
       onCancel,
       groupId,
       account,
-      intl } = this.props
+      intl,
+      hosts,
+      onDeleteHost } = this.props
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
      */
@@ -151,8 +154,6 @@ class GroupForm extends React.Component {
 
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
-
-    const { hosts, onDeleteHost } = this.props
 
     return (
       <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
@@ -250,34 +251,37 @@ class GroupForm extends React.Component {
 
               <hr/>
 
-              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-              {this.props.isFetchingHosts ? <LoadingSpinner/> :
-                !hosts.isEmpty() ?
-                  <Table striped={true}>
-                    <thead>
-                    <tr>
-                      <th>
-                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                      </th>
-                      <th width="8%"/>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {hosts.map((host, i) => {
-                      return (
-                        <tr key={i}>
-                          <td>{host}</td>
-                          <td>
-                            <ActionButtons
-                              onDelete={() => onDeleteHost(host)}/>
-                          </td>
+              {(!accountIsServiceProviderType(account) && groupId) &&
+                <div>
+                  <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+                  {this.props.isFetchingHosts ? <LoadingSpinner/> :
+                    !hosts.isEmpty() ?
+                      <Table striped={true} className="fixed-layout">
+                        <thead>
+                        <tr>
+                          <th>
+                            <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                          </th>
+                          <th className="one-button-cell" />
                         </tr>
-                      )
-                    })
-                    }
-                    </tbody>
-                  </Table>
-                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+                        </thead>
+                        <tbody>
+                        {hosts.map((host, i) => {
+                          return (
+                            <tr key={i}>
+                              <td><TruncatedTitle content={host} /></td>
+                              <td>
+                                <ActionButtons
+                                  onDelete={() => onDeleteHost(host)}/>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                        </tbody>
+                      </Table>
+                    : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+                  }
+                </div>
               }
 
               <ButtonToolbar className="text-right extra-margin-top">
