@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import {Link} from 'react-router'
-import { FormattedMessage, intlShape } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
@@ -43,7 +43,6 @@ const TokenAuthList = ({rules}) => {
 }
 
 TokenAuthList.propTypes = {
-  intl: intlShape.isRequired,
   rules: PropTypes.array
 }
 TokenAuthList.defaultProps = {
