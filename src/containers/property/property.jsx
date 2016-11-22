@@ -171,6 +171,7 @@ Property.propTypes = {
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
+  routes: React.PropTypes.object,
   uiActions: React.PropTypes.object
 }
 Property.defaultProps = {

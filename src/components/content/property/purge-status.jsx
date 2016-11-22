@@ -145,6 +145,7 @@ class PurgeHistoryReport extends React.Component {
 
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
 PurgeHistoryReport.propTypes = {
+  fetching: React.PropTypes.bool,
   historyData: React.PropTypes.instanceOf(List),
   intl: React.PropTypes.object
 }
