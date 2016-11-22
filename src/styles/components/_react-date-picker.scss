@@ -15,12 +15,16 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   border: 0;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
     background-image: $rdp-dark-bg-image;
     background-size: 100%;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
   }
 }
 
@@ -34,9 +38,12 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   border-bottom: 1px solid;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    border-color: rgba($black, 0.2);
   }
 
   // Make months unclickable
@@ -85,17 +92,23 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
       &::after {
         border-left: 0;
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-right-color: $dt-text-color;
+        }
+
+        .light-theme & {
+          border-right-color: $lt-text-color;
         }
       }
 
       &:hover::after {
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-right-color: $white;
+        }
+
+        .light-theme & {
+          border-right-color: $black;
         }
       }
     }
@@ -106,17 +119,23 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
       &::after {
         border-right: 0;
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-left-color: $dt-text-color;
+        }
+
+        .light-theme & {
+          border-left-color: $lt-text-color;
         }
       }
 
       &:hover::after {
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-left-color: $white;
+        }
+
+        .light-theme & {
+          border-left-color: $black;
         }
       }
     }
@@ -127,9 +146,12 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   margin-bottom: 5px;
   border-bottom: 1px solid;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    border-color: rgba($black, 0.1);
   }
 
   .dp-week-day-name {
@@ -147,18 +169,31 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   cursor: pointer;
 
   &:hover {
-    color: $white;
+    .dark-theme & {
+      color: $white;
+    }
+
+    .light-theme & {
+      color: $black;
+    }
   }
 
   &.react-date-picker__month-view-day--prev-month,
   &.react-date-picker__month-view-day--next-month {
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       color: rgba($dt-text-color, 0.5);
 
       &:hover {
         color: $white;
+      }
+    }
+
+    .light-theme & {
+      color: rgba($lt-text-color, 0.5);
+
+      &:hover {
+        color: $black;
       }
     }
   }

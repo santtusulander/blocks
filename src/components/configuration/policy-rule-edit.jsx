@@ -15,7 +15,6 @@ import {
 import Select from '../select'
 import {
   POLICY_TYPES,
-  DEFAULT_MATCH,
   DEFAULT_MATCH_JS
 } from '../../constants/property-config'
 
@@ -40,7 +39,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.moveContentTargetingSet = this.moveContentTargetingSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
-    this.cancelChanges = this.cancelChanges.bind(this)
     this.submitForm = this.submitForm.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -209,25 +207,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
   activateSet(newPath) {
     return () => this.props.activateSet(newPath)
-  }
-  cancelChanges() {
-    // If this started out as an empty rule, remove it
-    if(Immutable.is(
-      this.state.originalConfig.getIn(this.props.rulePath).get('match'),
-      DEFAULT_MATCH.get('match')
-    )) {
-      const parentPath = this.props.rulePath.slice(0, -1)
-      const newConfig = this.state.originalConfig.setIn(
-        parentPath,
-        this.state.originalConfig.getIn(parentPath)
-          .splice(this.props.rulePath.get(this.props.rulePath.size - 1), 1)
-      )
-      this.props.changeValue([], newConfig)
-    }
-    else {
-      this.props.changeValue([], this.state.originalConfig)
-    }
-    this.props.hideAction()
   }
   submitForm(e) {
     e.preventDefault()
@@ -418,7 +397,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             })}
           </div>
           <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" onClick={this.cancelChanges}>
+            <Button bsStyle="primary" onClick={this.props.cancelAction}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button bsStyle="primary"
@@ -440,6 +419,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activateSet: React.PropTypes.func,
   activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
   activeSetPath: React.PropTypes.instanceOf(Immutable.List),
+  cancelAction: React.PropTypes.func,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
