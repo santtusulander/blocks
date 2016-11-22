@@ -489,7 +489,7 @@ export class AccountManagementAccountUsers extends React.Component {
                       {this.props.permissions.get('ui').map((permission, i) => (
                         <tr key={i}>
                           <td className="no-border">{permission.get('title')}</td>
-                          <td><b>{role.get('permissions').get('ui').get(permission.get('name')) ? 'Yes' : 'No'}</b></td>
+                          <td><b>{role.getIn(['permissions', 'ui', 'name']) ? 'Yes' : 'No'}</b></td>
                         </tr>
                       ))}
                       </tbody>
