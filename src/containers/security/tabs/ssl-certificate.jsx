@@ -49,7 +49,7 @@ class TabSslCertificate extends Component {
       toDelete
       } = this.props
 
-    const modalTitle = EDIT_CERTIFICATE
+    const modalTitle = activeModal === EDIT_CERTIFICATE
       ? <FormattedMessage id="portal.security.editCertificate.text"/>
       : <FormattedMessage id="portal.security.uploadCertificate.text"/>
 
