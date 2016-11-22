@@ -16,41 +16,10 @@ const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
 const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
-const startOfLastWeek = () => {
-  let firstDayOfWeek = moment().utc()
-  let nextDayOfWeek = moment().utc().add(1, 'd')
-  return(
-    firstDayOfWeek.weekday() === 0 ?
-    nextDayOfWeek.startOf('isoWeek').subtract(1, 'w').subtract(1, 'd') :
-    firstDayOfWeek.startOf('isoWeek').subtract(1, 'w').subtract(1, 'd'))
-}
-const endOfLastWeek = () => {
-  let firstDayOfWeek = moment().utc()
-  let nextDayOfWeek = moment().utc().add(1, 'd')
-  return(
-    firstDayOfWeek.day() === 0 ?
-    nextDayOfWeek.endOf('isoWeek').subtract(1, 'w').subtract(1, 'd') :
-    firstDayOfWeek.endOf('isoWeek').subtract(1, 'w').subtract(1, 'd')
-  )
-}
-const startOfThisWeek = () => {
-  let firstDayOfWeek = moment().utc()
-  let nextDayOfWeek = moment().utc().add(1, 'd')
-  return(
-    firstDayOfWeek.weekday() === 0 ?
-    nextDayOfWeek.startOf('isoWeek').subtract(1, 'd') :
-    firstDayOfWeek.startOf('isoWeek').subtract(1, 'd')
-  )
-}
-const endOfThisWeek = () => {
-  let firstDayOfWeek = moment().utc()
-  let nextDayOfWeek = moment().utc().add(1, 'd')
-  return(
-    firstDayOfWeek.day() === 0 ?
-    nextDayOfWeek.endOf('isoWeek').subtract(1, 'd') :
-    firstDayOfWeek.endOf('isoWeek').subtract(1, 'd')
-  )
-}
+const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
+const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
+const startOfThisWeek = () => moment().utc().startOf('week')
+const endOfThisWeek = () => moment().utc().endOf('week')
 
 export class DateRangeSelect extends React.Component {
   constructor(props) {
