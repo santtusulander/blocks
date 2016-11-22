@@ -1,6 +1,16 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
+jest.mock('recharts', () => ({
+  BarChart: 'BarChart',
+  Bar: 'Bar',
+  XAxis: 'XAxis',
+  YAxis: 'YAxis',
+  Tooltip: 'Tooltip',
+  Legend: 'Legend',
+  ResponsiveContainer: 'ResponsiveContainer'
+}))
+
 jest.unmock('../bar-chart')
 import BarChart from '../bar-chart'
 
@@ -75,7 +85,7 @@ describe('BarChart', () => {
   });
 
   it('should handle max bar size-prop', () => {
-    expect(subject({ maxBarSize: 70 }).find('AnimationDecorator(BarChart)').props().maxBarSize).toBe(70)
+    expect(subject({ maxBarSize: 70 }).find('BarChart').props().maxBarSize).toBe(70)
   });
 
   it('should set default stackIds', () => {
