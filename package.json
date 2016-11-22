@@ -140,6 +140,7 @@
       "<rootDir>/node_modules/immutable",
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
+      "<rootDir>/node_modules/recharts",
       "<rootDir>/node_modules/react-redux",
       "<rootDir>/node_modules/intl",
       "<rootDir>/node_modules/react-intl",
