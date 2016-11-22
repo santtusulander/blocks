@@ -267,7 +267,6 @@ export const getTokenAuthRules = (properties) => {
   }
 
   return tokenAuthRules
-
 }
 
 /**
