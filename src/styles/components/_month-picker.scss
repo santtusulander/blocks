@@ -98,9 +98,13 @@ $mp-month-hover-bg-color: $pale-blue;
       }
 
       &.selected {
-        color: $white;
-        background-color: $mp-month-hover-bg-color;
-        border-radius: 2px;
+
+        .dark-theme &,
+        .light-theme & {
+          color: $white;
+          background-color: $mp-month-hover-bg-color;
+          border-radius: 2px;
+        }
 
         &:hover {
           color: $white;
