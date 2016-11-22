@@ -6,11 +6,11 @@ export const propertySchema = new Schema('properties', {idAttribute: 'published_
 
 /**
  * Fetch single host and normalize
- * @param  {[type]} brand   [description]
- * @param  {[type]} account [description]
- * @param  {[type]} group   [description]
- * @param  {[type]} id      [description]
- * @return {[type]}         [description]
+ * @param  {String} brand   brand (udn)
+ * @param  {Number} account account id
+ * @param  {Number} group   group id
+ * @param  {String} id      published_host_id
+ * @return {Object}         normalized API response
  */
 export const fetch = (brand, account, group, id) => {
   return fetchHost(brand, account, group, id)
@@ -19,10 +19,10 @@ export const fetch = (brand, account, group, id) => {
 
 /**
  * Fetch All host ids of a group
- * @param  {[type]} brand   [description]
- * @param  {[type]} account [description]
- * @param  {[type]} group   [description]
- * @return {[type]}         [description]
+ * @param  {String} brand   brand (udn)
+ * @param  {Number} account account id
+ * @param  {Number} group   group id (optional, if not provided fetches all groups for an account)
+ * @return {Object}         normalized API response
  */
 export const fetchAll = (brand, account, group) => {
   return fetchHostIds(brand, account, group)
@@ -35,10 +35,10 @@ export const fetchAll = (brand, account, group) => {
 
 /**
  * Get all hosts and their details for an account or group
- * @param  {brandId} brand   brandId
- * @param  {accountId} account accountId
- * @param  {groupId} group   groupId
- * @return {} Merged object with published_host_id as key
+ * @param  {String} brand   brand Id
+ * @param  {Number} account account Id
+ * @param  {Number} group   groupId
+ * @return {Object} Merged / Normalized API response
  */
 export const fetchAllWithDetails = (brand, account, group) => {
   return getGroupIds(brand, account, group)
@@ -122,7 +122,13 @@ const fetchGroupProperties = (brand, account, groupIds) => {
     return merged
   })
 }
-
+/**
+ * Helper to get groups for an account or return current group, if provided
+ * @param  {String} brand   [description]
+ * @param  {Number} account [description]
+ * @param  {Number} group   [description]
+ * @return {Array}          Array of group id(s)
+ */
 const getGroupIds = (brand, account, group) => {
   let groupIds = []
   if (group) {
