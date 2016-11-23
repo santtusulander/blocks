@@ -16,7 +16,6 @@ import {
   Col,
   Dropdown,
   Image,
-  Input,
   Label,
   MenuItem,
   NavItem,
@@ -304,29 +303,29 @@ class Styleguide extends React.Component {
 
 
           <h1 className="page-header">Charts</h1>
+          <Row>
+            <label>Stacked barchart, tooltip only on bar hover</label>
+            <SectionContainer className="analysis-contribution">
+              {<BarChart
+                chartLabel="Month to Date"
+                tooltipAlwaysActive={false}
+                chartData={stackedBarChartData}
+                barModels={[
+                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
+                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                  { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
+                ]}/>}
+            </SectionContainer>
+            </Row>
+            <hr />
             <Row>
-                <label>Stacked barchart, tooltip only on bar hover</label>
-                <SectionContainer className="analysis-contribution">
-                  {<BarChart
-                    chartLabel="Month to Date"
-                    tooltipAlwaysActive={false}
-                    chartData={stackedBarChartData}
-                    barModels={[
-                      { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
-                      { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
-                      { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-                      { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
-                    ]}/>}
-              </SectionContainer>
-              </Row>
-              <hr />
-              <Row>
-                <label>Normal barchart, tooltip always active</label>
-                <SectionContainer className="analysis-contribution">
-                  <BarChart
-                    chartLabel="This Week"
-                    chartData={singleBarChartData}
-                    barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
+              <label>Normal barchart, tooltip always active</label>
+              <SectionContainer className="analysis-contribution">
+                <BarChart
+                  chartLabel="This Week"
+                  chartData={singleBarChartData}
+                  barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
               </SectionContainer>
             </Row>
 
