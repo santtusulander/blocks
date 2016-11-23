@@ -185,7 +185,11 @@ class ContentItemChart extends React.Component {
           className={classnames({ 'content-item-chart': true, bright: this.props.brightMode, 'grid-item': true })}
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
+          <LinkWrapper
+            className="content-item-chart-link"
+            disableLinkTo={this.props.disableLinkTo}
+            linkTo={link}
+          >
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"

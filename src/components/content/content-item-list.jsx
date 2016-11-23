@@ -2,16 +2,16 @@ import React from 'react'
 import Immutable from 'immutable'
 import { ButtonToolbar, Col, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
+
 import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
 import TruncatedTitle from '../truncated-title'
 import { paleblue } from '../../constants/colors'
-
-import { FormattedMessage } from 'react-intl'
+import LinkWrapper from './link-wrapper'
 
 class ContentItemList extends React.Component {
   constructor(props) {
@@ -58,7 +58,11 @@ class ContentItemList extends React.Component {
     return (
       <div className="content-item-list">
         <div className="content-item-list-section section-lg">
-          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={this.props.linkTo}>
+          <LinkWrapper
+            className="content-item-list-link"
+            disableLinkTo={this.props.disableLinkTo}
+            linkTo={this.props.linkTo}
+          >
             <div className="content-item-details">
               <TruncatedTitle content={this.props.name} tooltipPlacement="top" className="content-item-list-name"/>
               {/*
@@ -141,22 +145,6 @@ class ContentItemList extends React.Component {
       </div>
     )
   }
-}
-
-const LinkWrapper = props => {
-  if(props.disableLinkTo) {
-    return <div>{props.children}</div>
-  }
-  return (
-    <Link className="content-item-list-link" to={props.linkTo}>
-      {props.children}
-    </Link>
-  )
-}
-LinkWrapper.propTypes = {
-  children: React.PropTypes.node,
-  disableLinkTo: React.PropTypes.bool,
-  linkTo: React.PropTypes.string
 }
 
 ContentItemList.displayName = 'ContentItemList'
