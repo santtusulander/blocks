@@ -72,8 +72,9 @@ class TabSslCertificate extends Component {
     }
 
     if ( !this.props.params.group) return (
-      <p className='text-center'>Please select a group<br/>
-        from top left to see SSL Ceritificates</p>
+      <p className='text-center'>
+        <FormattedMessage id="portal.security.ssl.selectGroup.text" />
+      </p>
     )
 
     if (this.props.isFetching) {

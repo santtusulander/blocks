@@ -35,15 +35,6 @@ export class Security extends React.Component {
 
     const securityBaseUrl = getSecurityUrlFromParams(params);
 
-    if (!params.account) {
-      return (
-        <Content className="tab-bodies">
-          <p className='text-center'>Please select an account<br/>
-            from top left to see security</p>
-        </Content>
-      )
-    }
-
     return (
       <Content>
         <SecurityPageHeader
@@ -54,26 +45,35 @@ export class Security extends React.Component {
           itemSelectorFunc={itemSelectorFunc}
           fetchAccount={fetchAccount}/>
 
-          <Tabs activeKey={this.props.children.props.route.path}>
-            <li className="navbar">
-              <Link to={`${securityBaseUrl}/ssl-certificate`} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
-            </li>
-            <li className="navbar">
-              <Link to={`${securityBaseUrl}/token-authentication`} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
-            </li>
-            { /* HIDE FOR 1.1.1
-              <li className="navbar">
-              <Link to={`${securityBaseUrl}/content-targeting`} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-            </li> */}
-          </Tabs>
+        {!params.account
+          ?
+            <p className='text-center'>
+              <FormattedMessage id="portal.security.selectAccount.text" />
+            </p>
+          :
+            <div>
+              <Tabs activeKey={this.props.children.props.route.path}>
+                <li className="navbar">
+                  <Link to={`${securityBaseUrl}/ssl-certificate`} activeClassName="active"><FormattedMessage id="portal.security.sslCertificate.text"/></Link>
+                </li>
+                <li className="navbar">
+                  <Link to={`${securityBaseUrl}/token-authentication`} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
+                </li>
+                { /* HIDE FOR 1.1.1
+                  <li className="navbar">
+                  <Link to={`${securityBaseUrl}/content-targeting`} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
+                </li> */}
+              </Tabs>
 
-          <PageContainer className="tab-bodies">
-          {
-            this.props.children && React.cloneElement(this.props.children, {
-              ...this.props
-            })
-          }
-          </PageContainer>
+              <PageContainer className="tab-bodies">
+              {
+                this.props.children && React.cloneElement(this.props.children, {
+                  ...this.props
+                })
+              }
+              </PageContainer>
+            </div>
+        }
       </Content>
     )
   }
