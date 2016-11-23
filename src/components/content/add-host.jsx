@@ -9,7 +9,7 @@ const validate = (values) => {
   errors = {}
 
   const {
-    hostName,
+    hostName
   } = values
 
   if(!hostName || !isValidHostName(hostName)) {
@@ -27,9 +27,7 @@ class AddHost extends React.Component {
     this.createHost = this.createHost.bind(this)
   }
 
-  createHost(e) {
-    e.preventDefault()
-
+  createHost() {
     const {
       fields: {
         hostName,
@@ -58,7 +56,7 @@ class AddHost extends React.Component {
 
     return (
       <form>
-        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.content.addHost.newHostanme.text'})} {...hostName} />
+        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.content.addHost.newHostanme.text'})} {...hostName} id="host_name"/>
         <label><FormattedMessage id="portal.content.addHost.deploymentMode.text"/></label>
         <Input type="radio"
                {...deploymentMode}
@@ -76,6 +74,7 @@ class AddHost extends React.Component {
             disabled={this.props.saving || !!Object.keys(errors).length}
             type="submit"
             bsStyle="primary"
+            id="save_button"
             onClick={this.createHost}>
             {this.props.saving ?
               <FormattedMessage id="portal.button.saving"/>
@@ -89,9 +88,9 @@ class AddHost extends React.Component {
 
 AddHost.displayName = 'AddHost'
 AddHost.propTypes = {
-  fields: React.PropTypes.object,
   cancelChanges: React.PropTypes.func,
   createHost: React.PropTypes.func,
+  fields: React.PropTypes.object,
   intl: React.PropTypes.object,
   saving: React.PropTypes.bool
 }
