@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Dropdown, MenuItem, Input } from 'react-bootstrap'
+import { Dropdown, MenuItem, FormControl } from 'react-bootstrap'
 
 import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
@@ -21,7 +21,7 @@ const SelectorComponent = ({
     <div className="selector-component__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
     <Dropdown.Menu>
       <li role="presentation" className="action-container">
-        <Input
+        <FormControl
           className="header-search-input"
           type="text"
           placeholder="Search"
