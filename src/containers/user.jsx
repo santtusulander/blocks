@@ -32,7 +32,6 @@ export class User extends React.Component {
 
   saveUser(user) {
     this.setState({
-      savingPassword: user.password && true,
       savingUser: !user.password && true
     })
     const message = user.password ?
@@ -51,7 +50,6 @@ export class User extends React.Component {
           })
         }
         this.setState({
-          savingPassword: false,
           savingUser: false
         })
       }
@@ -59,6 +57,27 @@ export class User extends React.Component {
   }
 
   savePassword(password) {
+    this.setState({
+      savingPassword: password && true
+    })
+
+    this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
+      .then((response) => {
+        if (!response.error) {
+          this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
+        } else {
+          this.props.uiActions.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            okButton: true,
+            cancel: this.props.uiActions.hideInfoDialog
+          })
+        }
+        this.setState({
+          savingPassword: false
+        })
+      }
+    )
   }
 
   showNotification(message) {

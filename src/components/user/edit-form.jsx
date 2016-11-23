@@ -274,7 +274,7 @@ class UserEditForm extends React.Component {
                     <Col xs={10} xsOffset={2}>
                       <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
                     </Col>
-                    <Col xs={3} xsOffset={2}>
+                    <Col xs={4} xsOffset={2}>
                       <ButtonToolbar>
                         <Button
                           className="btn-secondary"
