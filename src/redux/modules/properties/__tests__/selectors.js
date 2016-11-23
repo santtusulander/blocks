@@ -30,12 +30,12 @@ describe('Properties Module', () => {
   });
 
   it('should getProperties', () => {
-    const p = selectors.getProperties( initialState )
+    const p = selectors.getProperties( initialState ).toJS()
     expect(p).toEqual(properties)
   });
 
   it('should getByAccount', () => {
-    const p = selectors.getProperties( initialState, null, 3 )
+    const p = selectors.getProperties( initialState, null, 3 ).toJS()
     expect(p).toEqual( {bb: {
       published_host_id: 'bb',
       brandId: 'udn',
@@ -45,7 +45,7 @@ describe('Properties Module', () => {
   });
 
   it('should getByGroup', () => {
-    const p = selectors.getProperties( initialState, null, 1,2 )
+    const p = selectors.getProperties( initialState, null, 1,2 ).toJS()
     expect(p).toEqual( {  'aa': {
         published_host_id: 'aa',
         brandId: 'udn',
@@ -55,7 +55,7 @@ describe('Properties Module', () => {
   });
 
   it('should getById', () => {
-    const p = selectors.getById( initialState, 'aa' )
+    const p = selectors.getById( initialState, 'aa' ).toJS()
     expect(p).toEqual({
         published_host_id: 'aa'
     })
