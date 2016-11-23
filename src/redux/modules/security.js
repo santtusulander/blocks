@@ -12,6 +12,7 @@ const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
 const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
+const SECURITY_START_FETCHING = 'SECURITY_START_FETCHING'
 
 export const initialState = fromJS({
   groups: [],
@@ -22,6 +23,11 @@ export const initialState = fromJS({
 })
 
 // REDUCERS
+export const setFetching = (state) => {
+  return state.merge({
+    fetching: true
+  })
+}
 
 export function fetchGroupsSuccess(state, action) {
   return state.merge({
@@ -38,7 +44,11 @@ export function fetchGroupsFailure(state) {
 }
 
 export function fetchSSLCertificatesSuccess(state, action) {
-  return state.set('sslCertificates', fromJS(action.payload))
+  //return state.set('sslCertificates', fromJS(action.payload))
+  return state.merge({
+    sslCertificates: fromJS(action.payload),
+    fetching: false
+  })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -122,10 +132,13 @@ export default handleActions({
   SECURITY_SSL_CERTIFICATES_UPLOAD: mapReducers(uploadSSLCertificateSuccess, uploadSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_DELETE: mapReducers(deleteSSLCertificateSuccess, deleteSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_EDIT: mapReducers(editSSLCertificateSuccess, editSSLCertificateFailure),
-  SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset
+  SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset,
+  [SECURITY_START_FETCHING]: setFetching
 }, initialState)
 
 // ACTIONS
+export const startFetching = createAction(SECURITY_START_FETCHING)
+
 export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
   return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {

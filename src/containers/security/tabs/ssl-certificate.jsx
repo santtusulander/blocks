@@ -31,7 +31,7 @@ class TabSslCertificate extends Component {
 
   fetchData(props) {
     const { params: { brand, account, group } } = props
-
+    this.props.securityActions.startFetching()
     this.props.securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
   }
 
