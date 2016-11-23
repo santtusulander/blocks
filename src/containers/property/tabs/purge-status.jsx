@@ -24,21 +24,19 @@ class PurgeStatus extends React.Component {
   }
 
   componentWillMount() {
-    if (!this.props.purgeObjects.size) {
-      this.fetchData(this.props.params)
-    }
+    this.fetchData(this.props.params)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params !== this.props.params) {
-      this.fetchData(this.props.params)
+      this.fetchData(nextProps.params)
     }
   }
 
   fetchData(params) {
     const { purgeActions } = this.props
     const { brand, account, group, property } = params
-
+    purgeActions.startFetching()
     purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
   }
 
