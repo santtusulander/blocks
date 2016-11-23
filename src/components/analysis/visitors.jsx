@@ -51,8 +51,8 @@ class AnalysisVisitors extends React.Component {
   }
   measureContainers() {
     this.setState({
-      byLocationWidth: this.refs.byLocationHolder.clientWidth,
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
+      byLocationWidth: this.refs.byLocationHolder && this.refs.byLocationHolder.clientWidth,
+      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth
     })
   }
   changeCountrySort(column, direction, sortFunc) {
