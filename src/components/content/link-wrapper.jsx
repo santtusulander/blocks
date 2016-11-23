@@ -8,7 +8,7 @@ const LinkWrapper = props => {
     return <div>{props.children}</div>
   }
   return (
-    <Link className="content-item-chart-link" to={props.linkTo}>
+    <Link className={props.className} to={props.linkTo}>
       {props.children}
     </Link>
   )
@@ -16,6 +16,7 @@ const LinkWrapper = props => {
 
 LinkWrapper.propTypes = {
   children: React.PropTypes.node,
+  className: React.PropTypes.string,
   disableLinkTo: React.PropTypes.bool,
   linkTo: React.PropTypes.string
 }
