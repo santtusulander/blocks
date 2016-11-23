@@ -50,7 +50,7 @@ TabTokenAuthentication.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const {params: {brand, account, group} } = ownProps
   return {
-    properties: getProperties(state, brand, parseInt(account), parseInt(group)),
+    properties: getProperties(state, brand, parseInt(account), parseInt(group)).toJS(),
     isFetching: isFetching(state)
   }
 }
