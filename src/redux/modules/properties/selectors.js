@@ -24,7 +24,7 @@ export const getProperties = (state, brandId, accountId, groupId) => {
   else props = state.properties.properties
 
 
-  return props && props.toJS()
+  return props && props
 }
 
 export const getByAccount = (state, accountId) => {
@@ -46,10 +46,13 @@ export const getById = (state, id) => {
 
   if (property) {
     return property
+      /* Delete added keys to provide compatibility with old code
+      should replace with relations for brand/account/group
+      */
       .delete('brandId')
       .delete('accountId')
       .delete('groupId')
-      .toJS()
+      
   }
 
   return null
