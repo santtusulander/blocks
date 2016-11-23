@@ -100,7 +100,7 @@ export class Dashboard extends React.Component {
 
   render() {
     const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, params, user } = this.props
-    const showFilters = List(['date-range'])
+    const showFilters = List(['dateRange'])
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
     const onNetDataset = !trafficDetail ?
