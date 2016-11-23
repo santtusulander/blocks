@@ -64,7 +64,10 @@ export class User extends React.Component {
     this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
+          this.props.userActions.logIn(
+            this.props.currentUser.get('email'),
+            password.new_password
+          ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
         } else {
           this.props.uiActions.showInfoDialog({
             title: 'Error',
