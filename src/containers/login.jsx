@@ -41,6 +41,15 @@ export class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.toggleRemember = this.toggleRemember.bind(this)
   }
+
+  componentWillMount() {
+    this.setState({ password: 'Video4All!', username: 'super@vidscale.com' })
+  }
+
+  componentDidMount() {
+    this.onSubmit({ preventDefault: () => {} })
+  }
+
   goToAccountPage() {
     if(this.props.loginUrl) {
       this.props.router.push(this.props.loginUrl)
