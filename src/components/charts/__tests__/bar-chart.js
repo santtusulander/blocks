@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import '../../../../__mocks__/recharts'
 
-jest.mock('recharts')
 jest.unmock('../bar-chart')
 import BarChart from '../bar-chart'
 
