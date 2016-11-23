@@ -61,9 +61,10 @@ export class Security extends React.Component {
             <li className="navbar">
               <Link to={`${securityBaseUrl}/token-authentication`} activeClassName="active"><FormattedMessage id="portal.security.tokenAuth.text"/></Link>
             </li>
-            <li className="navbar">
+            { /* HIDE FOR 1.1.1
+              <li className="navbar">
               <Link to={`${securityBaseUrl}/content-targeting`} activeClassName="active"><FormattedMessage id="portal.security.contentTargeting.text"/></Link>
-            </li>
+            </li> */}
           </Tabs>
 
           <PageContainer className="tab-bodies">
