@@ -5759,6 +5759,10 @@ react-addons-test-utils@^0.14.7:
   version "15.4.0"
   resolved "https://registry.yarnpkg.com/react-addons-transition-group/-/react-addons-transition-group-15.4.0.tgz#dbcb8a6a466c6d54f347710345e0004b699a68e0"
 
+react-addons-transition-group@^0.14.7:
+  version "0.14.8"
+  resolved "https://registry.yarnpkg.com/react-addons-transition-group/-/react-addons-transition-group-0.14.8.tgz#3864f3bcfa180e1ab36f1efebee14fb481acf042"
+
 react-bootstrap-typeahead@^0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/react-bootstrap-typeahead/-/react-bootstrap-typeahead-0.9.4.tgz#957a68db0aa53cd05aed57e78bac58d890355875"
