@@ -8,10 +8,12 @@ jest.unmock('../../../components/action-buttons')
 jest.unmock('../../../components/icon')
 jest.unmock('../../../components/icons/icon-edit')
 jest.unmock('../../../components/icons/icon-trash')
+jest.unmock('../../sortable-table')
 jest.unmock('../../table-sorter')
 jest.unmock('../../button')
 jest.unmock('../dns-list')
-import DNSList, { SortableTable } from '../dns-list'
+import DNSList from '../dns-list'
+import { SortableTable } from '../../sortable-table'
 import recordTypes, { recordFields } from '../../../constants/dns-record-types'
 
 function intlMaker() {
