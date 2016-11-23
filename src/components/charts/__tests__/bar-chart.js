@@ -1,16 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.mock('recharts', () => ({
-  BarChart: 'BarChart',
-  Bar: 'Bar',
-  XAxis: 'XAxis',
-  YAxis: 'YAxis',
-  Tooltip: 'Tooltip',
-  Legend: 'Legend',
-  ResponsiveContainer: 'ResponsiveContainer'
-}))
-
+jest.mock('recharts')
 jest.unmock('../bar-chart')
 import BarChart from '../bar-chart'
 
