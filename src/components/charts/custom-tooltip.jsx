@@ -2,12 +2,16 @@ import React, { PropTypes } from 'react'
 
 import { formatBytes } from '../../util/helpers'
 
+/**
+ * Reverse payload to get tooltip entries in right order, concat to clone the array.
+ */
+
 const CustomTooltip = ({ payload = [], iconClass }) => {
   const total = formatBytes(payload.reduce((sum, { value }) => sum += value, 0))
   return (
     <div className="rechart-tooltip">
-      {payload.map(({ name, value, dataKey }, i) =>
-        <div key={i} id="tooltip-item" className="tooltip-item">
+      {payload.concat().reverse().map(({ name, value, dataKey }) =>
+        <div id="tooltip-item" className="tooltip-item">
           <span className="legend-label">
             <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
             {name}
@@ -15,8 +19,7 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
           <span id='legend-value' className='legend-value'>{formatBytes(value)}</span>
         </div>
       )}
-      <hr style={{ margin: '7px 0' }}
-      />
+      <hr style={{ margin: '7px 0' }}/>
       <div className="tooltip-item">
         <span className="legend-label">
           Total
