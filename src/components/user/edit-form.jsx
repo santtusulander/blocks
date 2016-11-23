@@ -271,11 +271,8 @@ class UserEditForm extends React.Component {
                     <Col xs={6}>
                       <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
                     </Col>
-                    <Col xs={10} xsOffset={2}>
-                      <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
-                    </Col>
                     <Col xs={4} xsOffset={2}>
-                      <ButtonToolbar>
+                      <ButtonToolbar className="extra-margin-top">
                         <Button
                           className="btn-secondary"
                           bsSize="small"
