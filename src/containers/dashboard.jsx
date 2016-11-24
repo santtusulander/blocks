@@ -85,7 +85,7 @@ export class Dashboard extends React.Component {
   }
 
   measureContainers() {
-    let containerWidth = this.refs.byLocationHolder.clientWidth
+    const containerWidth = this.refs.byLocationHolder &&  this.refs.byLocationHolder.clientWidth
     this.setState({
       byLocationWidth: containerWidth < 640 ? containerWidth : 640
     })

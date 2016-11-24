@@ -27,7 +27,7 @@ class AnalysisStorageUsageReport extends React.Component {
   }
   measureContainers() {
     this.setState({
-      chartWidth: this.refs.chartHolder.clientWidth
+      chartWidth: this.refs.chartHolder && this.refs.chartHolder.clientWidth
     })
   }
   render() {
