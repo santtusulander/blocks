@@ -32,7 +32,8 @@ var development = Object.assign({}, {
   )
 }, require('./config'));
 
-development.entry.app.push('webpack-dev-server/client?http://localhost:' + process.env.PORT);
-development.entry.app.push('webpack/hot/only-dev-server');
+development.entry.app.unshift('react-hot-loader/patch');
+development.entry.app.unshift('webpack/hot/only-dev-server');
+development.entry.app.unshift('webpack-dev-server/client?http://localhost:' + process.env.PORT);
 
 module.exports = development;
