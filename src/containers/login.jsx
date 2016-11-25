@@ -130,8 +130,13 @@ export class Login extends React.Component {
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
-    const userNameClass = classnames('input-addon-before', 'has-login-label', 'login-label-username', { active: this.state.usernameActive || this.state.username })
-    const passWordClass = classnames(
+    const usernameClass = classnames(
+      'input-addon-before',
+      'has-login-label',
+      'login-label-username',
+      { active: this.state.usernameActive || this.state.username }
+    )
+    const passwordClass = classnames(
       'input-addon-before',
       'has-login-label',
       'login-label-password',
@@ -155,7 +160,7 @@ export class Login extends React.Component {
               <div className="login-info">
                 <p>{this.state.loginError}</p>
               </div>}
-            <FormGroup className={userNameClass}>
+            <FormGroup className={usernameClass}>
               <InputGroup>
                 <InputGroup.Addon>
                   <IconEmail/>
@@ -169,7 +174,7 @@ export class Login extends React.Component {
                     onChange={this.changeField('username')}/>
               </InputGroup>
             </FormGroup>
-            <FormGroup className={passWordClass}>
+            <FormGroup className={passwordClass}>
             <InputGroup>
                 <InputGroup.Addon>
                   <IconPassword/>
