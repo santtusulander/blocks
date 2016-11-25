@@ -66,10 +66,11 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, cur
             ? getNetworkUrl(...params)
             : getContentUrl(...params)
 
+          const isOnPropertyTier = params[0] === 'property'
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
           if (url) {
-            router.push(`${url}/${currentTab}`)
+            router.push(isOnPropertyTier ? `${url}/${currentTab}` : url)
           }
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
