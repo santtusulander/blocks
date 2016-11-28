@@ -57,8 +57,9 @@ export class User extends React.Component {
   }
 
   savePassword(password) {
+    this.props.userActions.startFetching()
     this.setState({
-      savingPassword: password && true
+      savingPassword: this.props.userFetching
     })
 
     this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
@@ -76,8 +77,9 @@ export class User extends React.Component {
             cancel: this.props.uiActions.hideInfoDialog
           })
         }
+        this.props.userActions.finishFetching()
         this.setState({
-          savingPassword: false
+          savingPassword: this.props.userFetching
         })
       }
     )
@@ -124,7 +126,8 @@ User.propTypes = {
   intl: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  userActions: PropTypes.object
+  userActions: PropTypes.object,
+  userFetching: PropTypes.bool
 }
 
 User.defaultProps = {
@@ -135,7 +138,8 @@ User.defaultProps = {
 function mapStateToProps(state) {
   return {
     roles: state.roles.get('roles'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    userFetching: state.user.get('fetching')
   }
 }
 
