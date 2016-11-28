@@ -165,7 +165,10 @@ class UserEditForm extends React.Component {
           <Row>
             <Col xs={11}>
               <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
-              <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
+              <PasswordFields
+                {...password}
+                inlinePassword={true}
+                changePassword={this.changePassword}/>
               {/*
               <Row>
                 <Col xs={6}>
@@ -222,7 +225,7 @@ class UserEditForm extends React.Component {
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={!!Object.keys(errors).length || !this.state.validPassword} bsStyle="primary"
+          <Button disabled={this.props.invalid || !this.state.validPassword} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
