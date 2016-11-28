@@ -140,7 +140,7 @@ if (useRaven) {
   window.addEventListener('unhandledrejection', (data) => {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
-      console.error('Unrecoverable onunhandledrejection happened.')
+      console.error('Unrecoverable onunhandledrejection happened.', data)
       captureAndShowRavenError(store, data.reason, null, false)
       errorDisplayed = true
     }
@@ -149,8 +149,8 @@ if (useRaven) {
   window.addEventListener('error', (data) => {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
-      console.error('Unrecoverable error happened.')
-      captureAndShowRavenError(store, data.reson, null, false)
+      console.error('Unrecoverable error happened.', data)
+      captureAndShowRavenError(store, data.message, null, false)
       errorDisplayed = true;
     }
   })
