@@ -41,7 +41,7 @@ class UserEditForm extends React.Component {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
       passwordVisible: false,
-      currentPassword: false,
+      currentPasswordInputted: false,
       validPassword: false
     }
 
@@ -55,7 +55,7 @@ class UserEditForm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      'currentPassword': nextProps.fields.current_password.value !== ''
+      currentPasswordInputted: !!nextProps.fields.current_password.value
     })
   }
 
@@ -265,7 +265,6 @@ class UserEditForm extends React.Component {
                       <Input
                         type="password"
                         placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
-                        onChange={this.currentPassword}
                         {...current_password} />
                     </Col>
                     <Col xs={6}>
@@ -280,7 +279,7 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!this.state.currentPassword || !this.state.validPassword || savingPassword}
+                          disabled={!this.state.currentPasswordInputted || !this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
