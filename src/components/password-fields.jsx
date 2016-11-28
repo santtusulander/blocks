@@ -117,9 +117,9 @@ export class PasswordFields extends Component {
    * If not required and empty, consider as valid
    */
   validatePassword(password) {
-    return this.props.required || !!password.length ?
-      password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[ !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~])[0-9a-zA-Z !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~]{8,}$/) :
-      true
+    return this.props.required || !!password.length
+      ? password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[ !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~])[0-9a-zA-Z !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~]{8,}$/) !== null
+      : true
   }
 
   validatePasswordLengthValid(password) {
