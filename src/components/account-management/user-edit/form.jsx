@@ -33,7 +33,7 @@ class UserEditForm extends React.Component {
 
     this.state = {
       passwordVisible: false,
-      validPassword: false
+      validPassword: true
     }
 
     this.save = this.save.bind(this)
