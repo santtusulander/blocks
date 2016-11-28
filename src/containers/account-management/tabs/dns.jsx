@@ -125,7 +125,11 @@ class AccountManagementSystemDNS extends Component {
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
-        {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
+        {/* Removed loading spinner temporarily as it is causing UDNP-1929 on react 0.14. works on React 15.4.
+           (loadingDomains || loadingRecords) ? <LoadingSpinner/> : */ }
+
+        <DNSList {...DNSListProps}/>
+
         {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
