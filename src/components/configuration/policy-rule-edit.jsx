@@ -60,7 +60,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
       let newMatch = Immutable.fromJS([DEFAULT_MATCH_JS])
       if(currentSet) {
-        const newSetPath = [0, 'match'].concat(childPath)
+        const newSetPath = [0, 'match', 'cases', 0, 1]
         newMatch = newMatch.setIn(newSetPath, currentSet)
       }
       this.props.changeValue([],
