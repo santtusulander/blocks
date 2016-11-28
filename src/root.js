@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
 import { Provider } from 'react-redux'
-import { AppContainer } from 'react-hot-loader'
-import { Router, browserHistory, IndexRedirect, Route } from 'react-router'
+import { Router, browserHistory, Route } from 'react-router'
 import { IntlProvider } from 'react-intl'
 
 import { LogPageView } from './util/google-analytics'
@@ -10,7 +9,7 @@ import { getRoutes } from './routes'
 import Login from './containers/login'
 import TRANSLATED_MESSAGES from './locales/en/'
 
-export default ({ store }) =>
+const Root = ({ store }) =>
   <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
     <Provider store={store}>
       <Router onUpdate={LogPageView} history={browserHistory}>
@@ -19,3 +18,8 @@ export default ({ store }) =>
       </Router>
     </Provider>
   </IntlProvider>
+
+Root.propTypes = {
+  store: PropTypes.object.isRequired
+}
+export default Root

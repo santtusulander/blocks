@@ -8,16 +8,12 @@ import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 import Raven from 'raven-js'
 import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven';
-import { FormattedMessage, IntlProvider } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
-
-import { Provider } from 'react-redux'
-
-import TRANSLATED_MESSAGES from './locales/en/'
 
 import Root from './root'
 
