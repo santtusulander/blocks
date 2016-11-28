@@ -29,7 +29,7 @@ class MiniChart extends React.Component {
   }
   measureContainers() {
     this.setState({
-      byTimeWidth: this.refs.byTimeHolder.clientWidth
+      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth
     })
   }
   render() {
