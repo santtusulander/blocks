@@ -122,18 +122,18 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
         this.props.changeValue(
           matches[0].path.slice(0, -2),
-          this.props.config.getIn(matches[0].path.concat(['cases', 0, 1]))
+          this.props.config.getIn(matches[0].path.concat(childPath))
         )
         this.props.changeValue([],
          this.props.config.setIn(
-           matches[1].path.concat(childPath),
+           matches[1].path.concat(matchFilterChildPaths[matches[1].filterType]),
            currentSets
          )
         )
       }
 
       matches.map((match, key)=>{
-        if(key < i){
+        if(key < i && matches[key+1].path){
           this.props.changeValue(
             matches[key+1].path,
             this.props.config.getIn(match.path)
