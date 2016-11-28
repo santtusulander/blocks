@@ -54,7 +54,7 @@ export class FilterChecklistDropdown extends React.Component {
     let inputVal = this.state.filterValue
     if(this.state.filterValue.length) {
       return this.props.options.filter(
-        option => option.get('label').toString().toLowerCase().indexOf(inputVal) !== -1
+        option => option.get('label').toString().toLowerCase().indexOf(inputVal.toLowerCase()) !== -1
       )
     }
     else {
