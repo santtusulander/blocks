@@ -11,7 +11,8 @@ import { getRecordValueString } from '../../../util/dns-records-helpers'
 
 import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
 
-import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+//Remove loading spinner temporarily to fix UDNP-1929
+//import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import DomainToolbar from '../../../components/account-management/domain-toolbar'
 import DNSList from '../../../components/account-management/dns-list'
 // import SoaEditForm from '../soa-edit-form'
@@ -125,7 +126,11 @@ class AccountManagementSystemDNS extends Component {
     return (
       <div>
         <DomainToolbar {...domainHeaderProps}/>
-        {(loadingDomains || loadingRecords) ? <LoadingSpinner/> : <DNSList {...DNSListProps}/>}
+        {/* Removed loading spinner temporarily as it is causing UDNP-1929 on react 0.14. works on React 15.4.
+           (loadingDomains || loadingRecords) ? <LoadingSpinner/> : */ }
+
+        <DNSList {...DNSListProps}/>
+
         {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
