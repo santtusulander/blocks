@@ -1,11 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { FormattedMessage } from 'react-intl';
-import { bindActionCreators } from 'redux'
-import { Checkbox } from 'react-bootstrap'
+import {bindActionCreators} from 'redux'
+import {Input} from 'react-bootstrap'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import {injectIntl} from 'react-intl';
 
 class FilterIncludeComparison extends React.Component {
   constructor(props) {
@@ -15,11 +15,10 @@ class FilterIncludeComparison extends React.Component {
     return (
       <div>
         <div className="sidebar-content">
-          <Checkbox
+          <Input type="checkbox"
+            label={this.props.intl.formatMessage({id: 'portal.analysis.filters.includeComparison.label'})}
             checked={this.props.includeComparison}
-            onChange={() => this.props.toggleComparison(!this.props.includeComparison)}>
-            <FormattedMessage id="portal.analysis.filters.includeComparison.label" />
-          </Checkbox>
+            onChange={() => this.props.toggleComparison(!this.props.includeComparison)} />
         </div>
       </div>
     );
@@ -38,4 +37,4 @@ function mapDispatchToProps(dispatch) {
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
 }
-export default connect(null, mapDispatchToProps)(FilterIncludeComparison)
+export default connect(null, mapDispatchToProps)(injectIntl(FilterIncludeComparison))

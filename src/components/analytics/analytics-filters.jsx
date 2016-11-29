@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Checkbox } from 'react-bootstrap'
+import { Input } from 'react-bootstrap'
 import { List, Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
@@ -61,29 +61,26 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
       handleCheck={onChange}>
       {!errorCodesOnly &&
         <li role="presentation" className="children">
-          <Checkbox
+          <Input type="checkbox"
+            label='2XX'
             value={twoHundreds}
             checked={twoHundredsChecked}
-            onChange={handleCheck(twoHundreds, twoHundredsChecked)}>
-            2XX
-          </Checkbox>
+            onChange={handleCheck(twoHundreds, twoHundredsChecked)}/>
         </li>
       }
       <li role="presentation" className="children">
-        <Checkbox
+        <Input type="checkbox"
+          label='4XX'
           value={fourHundreds}
           checked={fourHundredsChecked}
-          onChange={handleCheck(fourHundreds, fourHundredsChecked)}>
-          4XX
-        </Checkbox>
+          onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
       </li>
       <li role="presentation" className="children">
-        <Checkbox
+        <Input type="checkbox"
+          label='5XX'
           value={fiveHundreds}
           checked={fiveHundredsChecked}
-          onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}>
-          5XX
-        </Checkbox>
+          onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
       </li>
     </FilterChecklistDropdown>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
-import { Checkbox, FormGroup } from 'react-bootstrap'
+import { Input } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
@@ -25,20 +25,14 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
     <div>
       <h5><FormattedMessage id="portal.analysis.filters.onOffNet.title"/></h5>
       <div className="sidebar-content form-inline">
-        <FormGroup>
-          <Checkbox
-            checked={onOffNetValues.contains('on')}
-            onChange={toggle('on')}>
-            <span>On-Net</span>
-          </Checkbox>
-        </FormGroup>
-        <FormGroup>
-          <Checkbox
-            checked={onOffNetValues.contains('off')}
-            onChange={toggle('off')}>
-            <span>Off-Net</span>
-          </Checkbox>
-        </FormGroup>
+        <Input type="checkbox" label="On-Net"
+          checked={onOffNetValues.contains('on')}
+          onChange={toggle('on')}
+        />
+        <Input type="checkbox" label="Off-Net"
+          checked={onOffNetValues.contains('off')}
+          onChange={toggle('off')}
+        />
       </div>
     </div>
   );
