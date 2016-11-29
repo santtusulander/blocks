@@ -113,7 +113,7 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-    const { router, pathname } = this.props,
+    const { router, pathname, user } = this.props,
       params = this.props.params
 
     if (router.isActive(getRoute('content'))) {
@@ -145,9 +145,10 @@ class Header extends React.Component {
       this.addPropertyLink(links, getAnalyticsUrl)
       this.addGroupLink(links, getAnalyticsUrl)
 
+      const tab = userIsServiceProvider(user) ? '/on-off-net' : ''
       links.push({
         label: <FormattedMessage id="portal.header.analytics.text"/>,
-        url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) : null
+        url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) + tab : null
       })
     } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
       links.push( {label:  'Account Management'} )
