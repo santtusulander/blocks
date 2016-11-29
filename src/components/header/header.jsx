@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
-import { Nav, Navbar } from 'react-bootstrap' // Button, Input
+import { Navbar } from 'react-bootstrap' // Button, Input
 import { FormattedMessage } from 'react-intl'
 
 import UserMenu from './user-menu'
@@ -22,7 +22,6 @@ import {
   getNetworkUrl,
   getUrl
 } from '../../util/routes.js'
-
 
 import {
   userIsServiceProvider,
@@ -224,7 +223,7 @@ class Header extends React.Component {
             'header__gradient animated' :
             'header__gradient'} />
         <div className="header__content">
-          <Nav className="header__left">
+          <ul className="header__left nav navbar-nav">
             <li className="header__logo">
               <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
                 <Link to={getRoute('content', { brand: 'udn' })} className="logo">
@@ -257,8 +256,8 @@ class Header extends React.Component {
               </IsAllowed>
             </li>
             {this.renderBreadcrumb()}
-          </Nav>
-          <Nav className="header__right" pullRight={true}>
+          </ul>
+          <ul className="header__right nav navbar-nav navbar-right">
             {/* Hide in 1.0 UDNP-1409
             <li>
               <Button className="btn-header btn-icon btn-round btn-alerts">
@@ -286,7 +285,7 @@ class Header extends React.Component {
                 goToAccountManagement={this.goToAccountManagement}
               />
             </li>
-          </Nav>
+          </ul>
         </div>
       </Navbar>
     );

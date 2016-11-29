@@ -5,7 +5,7 @@
 
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import { Dropdown, Nav } from 'react-bootstrap'
+import { Dropdown } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import IconSelectCaret from '../components/icons/icon-select-caret'
@@ -67,9 +67,9 @@ class Tabs extends React.Component {
     return findDOMNode(this.refs[ref]).getBoundingClientRect().top
   }
   render() {
-    const { activeKey, children, className, onSelect } = this.props
+    const { children, className, onSelect } = this.props
     return (
-      <Nav bsStyle="tabs" className={className} activeKey={activeKey} onSelect={onSelect}>
+      <ul role="tablist" className={'nav nav-tabs ' + className}>
         {children && children.length > 1 ?
           children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
@@ -103,7 +103,7 @@ class Tabs extends React.Component {
             </Dropdown>
           : null}
         </li>
-      </Nav>
+      </ul>
     );
   }
 }
