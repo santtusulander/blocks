@@ -4,6 +4,9 @@ import { Dropdown, MenuItem, FormControl } from 'react-bootstrap'
 import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
+const ToggleElement = ({ toggle, children }) =>
+  <div className="selector-component__toggle" onClick={toggle}>{children}</div>
+
 const SelectorComponent = ({
   items,
   drillable,
@@ -18,7 +21,7 @@ const SelectorComponent = ({
   onItemClick,
   onTopbarClick }) =>
   <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="selector-component">
-    <div className="selector-component__toggle" bsRole="toggle" onClick={toggle}>{children}</div>
+    <ToggleElement bsRole="toggle" toggle={toggle}>{children}</ToggleElement>
     <Dropdown.Menu>
       <li role="presentation" className="action-container">
         <FormControl
