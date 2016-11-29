@@ -74,8 +74,11 @@ export class Configuration extends React.Component {
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
     const nextHost = nextProps.activeHost
-    if(!currentHost && nextHost ||
-      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
+    if (
+      (!currentHost && nextHost)
+        || (currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath))
+        || (this.props.fetching && !nextProps.fetching)
+    ) {
       this.setState({
         activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
@@ -179,6 +182,7 @@ export class Configuration extends React.Component {
       ])
     )
 
+    this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,

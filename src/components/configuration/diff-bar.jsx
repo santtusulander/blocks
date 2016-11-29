@@ -19,10 +19,6 @@ class ConfigurationDiffBar extends React.Component {
   }
   render() {
     const configDiff = diff(this.props.originalConfig, this.props.currentConfig)
-    //filteredConfigDiff ignores the differences when they are just timestamps
-    const filteredConfigDiff = configDiff.filterNot(
-      change => (change.has('path') && (change.get('path') === '/config_created' || change.get('path') === '/config_updated'))
-    )
     return (
       <ReactCSSTransitionGroup
         component="div"
@@ -32,7 +28,7 @@ class ConfigurationDiffBar extends React.Component {
         transitionLeaveTimeout={350}
         transitionAppear={true}
         transitionAppearTimeout={10}>
-        {filteredConfigDiff.size != 0 &&
+        {configDiff.size != 0 &&
           <Dialog className="configuration-diff-bar">
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary"
@@ -47,10 +43,10 @@ class ConfigurationDiffBar extends React.Component {
             </ButtonToolbar>
             <div className="configuration-dialog-content">
               <p className="configuration-dialog-title">
-                {filteredConfigDiff.size} <FormattedMessage id="portal.configuration.changes.text" values={{numChanges: filteredConfigDiff.size}}/>
+                {configDiff.size} <FormattedMessage id="portal.configuration.changes.text" values={{numChanges: configDiff.size}}/>
               </p>
               <p>
-                {filteredConfigDiff.map((change, i) => {
+                {configDiff.map((change, i) => {
                   return(
                     <span key={i}>
                       [{change.get('op')} {change.get('path')}]

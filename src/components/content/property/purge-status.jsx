@@ -5,7 +5,9 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
 import TableSorter from '../../table-sorter'
-import SelectWrapper from '../../../components/select-wrapper'
+// TODO: temporarily hidden, see UDNP-1926 for more context
+// import SelectWrapper from '../../../components/select-wrapper'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import { formatUnixTimestamp, getSortData } from '../../../util/helpers'
 
@@ -21,7 +23,9 @@ class PurgeHistoryReport extends React.Component {
     super(props)
 
     this.state = {
-      sortBy: 'status',
+      // TODO: temporarily hidden, see UDNP-1926 for more context
+      // sortBy: 'status',
+      sortBy: 'created_at',
       sortDir: -1,
       sortFunc: '',
       filteredStatus: filterOptions[0].value,
@@ -63,6 +67,11 @@ class PurgeHistoryReport extends React.Component {
   }
 
   render() {
+
+    if(this.props.fetching){
+      return (<LoadingSpinner/>);
+    }
+
     const { intl } = this.props
     const { sortedStats } = this.state
 
@@ -73,16 +82,18 @@ class PurgeHistoryReport extends React.Component {
     }
 
     const formatTime = timestamp => formatUnixTimestamp(timestamp, 'MM/DD/YYYY HH:mm')
-    const getLabelForStatus = status => {
-      const option = filterOptions.find(option => option.value === status)
-      return option.label
-    }
+    // TODO: temporarily hidden, see UDNP-1926 for more context
+    // const getLabelForStatus = status => {
+    //   const option = filterOptions.find(option => option.value === status)
+    //   return option.label
+    // }
 
     return (
       <div>
         <SectionHeader
-          sectionHeaderTitle={intl.formatMessage({ id: 'portal.content.property.purgeStatus.section.title' })}>
-          <div className="form-group inline">
+          sectionHeaderTitle={intl.formatMessage({ id: 'portal.content.property.purgeStatus.section.title' })} />
+          {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+          {/*<div className="form-group inline">
             <SelectWrapper
               id='filtered-status'
               value={this.state.filteredStatus}
@@ -91,15 +102,16 @@ class PurgeHistoryReport extends React.Component {
               }}
               options={filterOptions}/>
           </div>
-        </SectionHeader>
+        </SectionHeader>*/}
         <SectionContainer>
           {sortedStats.size ?
             <table className="table table-striped table-analysis">
               <thead>
               <tr>
-                <TableSorter {...sorterProps} column="status">
+                {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+                {/*<TableSorter {...sorterProps} column="status">
                   <FormattedMessage id="portal.content.property.purgeStatus.table.status.label"/>
-                </TableSorter>
+                </TableSorter>*/}
                 <TableSorter {...sorterProps} column="created_at">
                   <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
                 </TableSorter>
@@ -118,7 +130,8 @@ class PurgeHistoryReport extends React.Component {
               {sortedStats.map((data, i) => {
                 return (
                   <tr key={i}>
-                    <td>{getLabelForStatus(data.get('status'))}</td>
+                    {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+                    {/*<td>{getLabelForStatus(data.get('status'))}</td>*/}
                     <td>{formatTime(data.get('created_at'))}</td>
                     <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
                     <td>{data.get('created_by')}</td>
@@ -139,6 +152,7 @@ class PurgeHistoryReport extends React.Component {
 
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
 PurgeHistoryReport.propTypes = {
+  fetching: React.PropTypes.bool,
   historyData: React.PropTypes.instanceOf(List),
   intl: React.PropTypes.object
 }
