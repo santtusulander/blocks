@@ -74,8 +74,11 @@ export class Configuration extends React.Component {
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
     const nextHost = nextProps.activeHost
-    if(!currentHost && nextHost ||
-      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
+    if (
+      (!currentHost && nextHost)
+        || (currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath))
+        || (this.props.fetching && !nextProps.fetching)
+    ) {
       this.setState({
         activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
@@ -179,6 +182,7 @@ export class Configuration extends React.Component {
       ])
     )
 
+    this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
@@ -228,9 +232,8 @@ export class Configuration extends React.Component {
       return <div className="container">Loading...</div>
     }
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
-    const servicesConfig = this.props.activeHost.getIn(['services', 0]);
-    const updateMoment = moment(servicesConfig.get('updated'), 'X')
     const activeConfig = this.getActiveConfig()
+    const updateMoment = moment(activeConfig.get('config_updated'), 'X')
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
@@ -245,11 +248,11 @@ export class Configuration extends React.Component {
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
             updateMoment.format('MMM, D YYYY'),
-            updateMoment.format('h:MM a')
+            updateMoment.format('h:mm a')
           ]}
           pageHeaderDetailsDeployed={[
             deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('h:MM a'),
+            deployMoment.format('h:mm a'),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector

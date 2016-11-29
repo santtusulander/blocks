@@ -82,28 +82,34 @@ class AnalysisByTime extends React.Component {
         i = i -1
       }
       const tooltipData = datasets.map(dataset => {
-        let realValue = dataset.data[i][this.props.dataKey]
-        if(dataset.stackedAgainst) {
-          const against = datasets
-            .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
-          if(against) {
-            realValue = realValue - against.data[i][this.props.dataKey]
+        //Workaround for UDNP-1793
+        //catch any TypeError: Cannot read property 'bits_per_second' of undefined(…)
+        try {
+          let realValue = dataset.data[i][this.props.dataKey]
+          if(dataset.stackedAgainst) {
+            const against = datasets
+              .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
+            if(against) {
+              realValue = realValue - against.data[i][this.props.dataKey]
+            }
           }
+          const formatter = dataset.xAxisFormatter ?
+            (date, val) => {
+              const dateMap = Immutable.fromJS({timestamp: date})
+              const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+              const formattedValue = this.formatY(val)
+              return `${formattedDate} ${formattedValue}`
+            }
+          : null
+          return configTooltip(
+            dataset.data[i].timestamp,
+            dataset.data[i][this.props.dataKey],
+            realValue,
+            formatter
+          )
+        } catch (e) {
+          return {}
         }
-        const formatter = dataset.xAxisFormatter ?
-          (date, val) => {
-            const dateMap = Immutable.fromJS({timestamp: date})
-            const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
-            const formattedValue = this.formatY(val)
-            return `${formattedDate} ${formattedValue}`
-          }
-        : null
-        return configTooltip(
-          dataset.data[i].timestamp,
-          dataset.data[i][this.props.dataKey],
-          realValue,
-          formatter
-        )
       })
       this.setState({
         tooltipText: tooltipData.map(tooltip => tooltip.text),

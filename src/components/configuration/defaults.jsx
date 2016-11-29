@@ -14,7 +14,10 @@ import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IsAllowed from '../is-allowed'
 
-import {getVaryHeaderRuleId} from '../../util/policy-config'
+import {
+  getVaryHeaderRuleId,
+  isPolicyRuleEmpty
+} from '../../util/policy-config'
 import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
@@ -39,6 +42,8 @@ class ConfigurationDefaults extends React.Component {
     this.changeTTLUnit = this.changeTTLUnit.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleHide = this.handleHide.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
     this.handleEtagChange = this.handleEtagChange.bind(this)
     this.updateCacheKeyQueryString = this.updateCacheKeyQueryString.bind(this)
 
@@ -46,6 +51,11 @@ class ConfigurationDefaults extends React.Component {
     this.removeVaryHeaderRule = this.removeVaryHeaderRule.bind(this)
     this.addVaryHeaderRule = this.addVaryHeaderRule.bind(this)
     this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
+  }
+  componentWillUnmount() {
+    if (this.props.activeRule) {
+      this.handleCancel()
+    }
   }
   addRule(e) {
     e.preventDefault()
@@ -65,6 +75,18 @@ class ConfigurationDefaults extends React.Component {
       }
       this.props.changeValue(path, value)
     }
+  }
+  handleHide() {
+    this.props.activateRule(null)
+  }
+  handleCancel() {
+    if (isPolicyRuleEmpty(this.props.config, this.props.activeRule)) {
+      const ruleType = this.props.activeRule.get(0)
+      const ruleIndex = this.props.activeRule.get(2)
+
+      this.deleteRule(ruleType, ruleIndex)
+    }
+    this.handleHide()
   }
   handleEtagChange(path) {
     return value => {
@@ -313,7 +335,7 @@ class ConfigurationDefaults extends React.Component {
             <ConfigurationSidebar
               rightColVisible={!!activeEditForm}
               handleRightColClose={()=>this.props.activateMatch(null)}
-              onHide={()=>this.props.activateRule(null)}
+              onHide={this.handleCancel}
               rightColContent={activeEditForm}>
               <ConfigurationPolicyRuleEdit
                 activateMatch={this.props.activateMatch}
@@ -325,7 +347,8 @@ class ConfigurationDefaults extends React.Component {
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}
-                hideAction={()=>this.props.activateRule(null)}/>
+                hideAction={this.handleHide}
+                cancelAction={this.handleCancel}/>
             </ConfigurationSidebar>
           : ''}
         </SectionContainer>
