@@ -15,7 +15,7 @@ export class PasswordFields extends Component {
       passwordActive: false,
       passwordError: null,
       passwordFocus: false,
-      passwordValid: false,
+      passwordValid: props.required ? false : true,
       passwordVisible: false,
       confirm: '',
       confirmActive: false,
@@ -62,14 +62,15 @@ export class PasswordFields extends Component {
       this.props.onChange(e)
     }
     this.changeField('password')(e)
+    const passwordValid = this.validatePassword(e.target.value)
     this.setState({
-      passwordValid: this.validatePassword(e.target.value),
+      passwordValid,
       passwordLengthValid: this.validatePasswordLengthValid(e.target.value),
       passwordUppercaseValid: this.validatePasswordUppercaseValid(e.target.value),
       passwordNumberValid: this.validatePasswordNumberValid(e.target.value),
       passwordSpecialCharValid: this.validatePasswordSpecialCharValid(e.target.value)
     })
-    this.doPasswordsMatch(e.target.value, this.state.confirm)
+    this.doPasswordsMatch(e.target.value, this.state.confirm, passwordValid)
   }
 
   toggleConfirmVisibility() {
@@ -89,7 +90,7 @@ export class PasswordFields extends Component {
 
   changeConfirm(e) {
     this.changeField('confirm')(e)
-    this.doPasswordsMatch(this.state.password, e.target.value)
+    this.doPasswordsMatch(this.state.password, e.target.value, this.state.passwordValid)
   }
 
   changeField(key) {
@@ -100,8 +101,9 @@ export class PasswordFields extends Component {
     }
   }
 
-  doPasswordsMatch(password, confirm) {
-    const validPassword = password === confirm && this.state.passwordValid
+  doPasswordsMatch(password, confirm, isValidString) {
+    const validPassword = password === confirm && isValidString
+
     this.setState({
       confirmValid: validPassword
     })
@@ -110,8 +112,14 @@ export class PasswordFields extends Component {
     }
   }
 
+  /**
+   * If required OR not required and has characters, test the password.
+   * If not required and empty, consider as valid
+   */
   validatePassword(password) {
-    return password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[ !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~])[0-9a-zA-Z !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~]{8,}$/) !== null
+    return this.props.required || !!password.length
+      ? password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[ !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~])[0-9a-zA-Z !"#$%&'()*+,-.\/:;<=>?@\[\\\]^_`{|}~]{8,}$/) !== null
+      : true
   }
 
   validatePasswordLengthValid(password) {
@@ -131,17 +139,20 @@ export class PasswordFields extends Component {
   }
 
   render() {
-    const { stackedPassword, inlinePassword, intl } = this.props
-    const showPasswordRequirements = this.state.passwordFocus && !this.state.passwordValid
-    const showPasswordError = !this.state.passwordValid && !this.state.passwordFocus && this.state.password !== ''
-    const showConfirmError = this.state.passwordValid && !this.state.confirmValid && !this.state.confirmFocus && this.state.confirm !== ''
+    const {
+      props: { stackedPassword, inlinePassword, intl },
+      state: { passwordValid, passwordFocus, password, confirm, confirmValid, confirmFocus }
+    } = this
+    const showPasswordRequirements = passwordFocus && !passwordValid
+    const showPasswordError = !passwordValid && !passwordFocus && password !== ''
+    const showConfirmError = passwordValid && !confirmValid && !confirmFocus && confirm !== ''
 
     let passwordWrapperClassName = classNames(
       {
         'input-addon-before input-addon-after-outside has-login-label': stackedPassword,
         'invalid': showPasswordError,
-        'valid': this.state.passwordValid,
-        'active': this.state.passwordFocus || this.state.password
+        'valid': passwordValid && !!password.length,
+        'active': passwordFocus || password
       },
       'login-label-password'
     )
@@ -150,8 +161,8 @@ export class PasswordFields extends Component {
       {
         'input-addon-before has-login-label login-label-confirm': stackedPassword,
         'invalid': showConfirmError,
-        'valid': this.state.passwordValid && this.state.confirmValid && this.state.confirm !== '',
-        'active': this.state.confirmFocus || this.state.confirm
+        'valid': passwordValid && confirmValid && confirm !== '',
+        'active': confirmFocus || confirm
       },
       'input-addon-after-outside'
     )
@@ -244,6 +255,7 @@ PasswordFields.propTypes = {
   intl: React.PropTypes.object,
   onChange: React.PropTypes.func,
   passwordField: React.PropTypes.object,
+  required: React.PropTypes.bool,
   stackedPassword: React.PropTypes.bool,
   value: React.PropTypes.string
 };

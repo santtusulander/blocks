@@ -33,7 +33,9 @@ class ConfigurationPolicies extends React.Component {
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
   componentWillUnmount() {
-    this.props.activateRule(null)
+    if (this.props.activeRule) {
+      this.handleCancel()
+    }
   }
   addRule(policyType) {
     this.setState({ isEditingRule: false })
