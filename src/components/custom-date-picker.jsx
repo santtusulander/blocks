@@ -120,7 +120,7 @@ export class CustomDatePicker extends React.Component {
               weekNumbers={false}
               weekStartDay={0}
               highlightWeekends={false}
-              highlightToday={false}
+              highlightToday={true}
               theme={null} />
           : activeTab === 'month' ?
             <MonthPicker
