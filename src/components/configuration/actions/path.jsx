@@ -92,7 +92,7 @@ class Path extends React.Component {
 Path.displayName = 'Path'
 Path.propTypes = {
   changeValue: React.PropTypes.func,
-  intl: intlShape.isREquired,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }
