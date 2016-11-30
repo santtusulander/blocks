@@ -62,8 +62,7 @@ export default class BarChart extends Component {
                 tickFormatter={formatBytes}/>
               {showTooltip &&
                 <Tooltip
-                  animationDelay={500}
-                  animationEase="linear"
+                  animationEasing="linear"
                   offset={toolTipOffset}
                   content={<CustomTooltip iconClass={tooltipIconClass}/>}/>}
               <Legend

@@ -9,14 +9,14 @@ import { formatBytes } from '../../util/helpers'
 const CustomTooltip = ({ payload = [], iconClass }) => {
   const total = formatBytes(payload.reduce((sum, { value }) => sum += value, 0))
   return (
-    <div className="rechart-tooltip">
-      {payload.concat().reverse().map(({ name, value, dataKey }) =>
-        <div id="tooltip-item" className="tooltip-item">
+    <div className="bar-chart-tooltip">
+      {payload.concat().reverse().map(({ name, value, dataKey }, i) =>
+        <div key={i} className="tooltip-item">
           <span className="legend-label">
             <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
             {name}
           </span>
-          <span id='legend-value' className='legend-value'>{formatBytes(value)}</span>
+          <span className='legend-value'>{formatBytes(value)}</span>
         </div>
       )}
       <hr style={{ margin: '7px 0' }}/>

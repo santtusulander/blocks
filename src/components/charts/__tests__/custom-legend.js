@@ -19,6 +19,6 @@ describe('Custom Legend', () => {
     expect(subject).toBeDefined()
   });
   it('should show all items', () => {
-    expect(subject.find('#legend-item').length).toBe(4)
+    expect(subject.find('.legend-item').length).toBe(4)
   });
 })
