@@ -29,4 +29,4 @@ Notification.propTypes = {
   handleClose: React.PropTypes.func
 }
 
-module.exports = Notification
+export default Notification
