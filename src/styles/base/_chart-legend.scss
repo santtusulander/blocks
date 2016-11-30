@@ -1,10 +1,12 @@
-.chart-legend {
-  background-color: rgba($black, .2);
+@import './colors';
+
+%chart-legend {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   min-width: 400px;
   padding: 10px;
-  position: absolute;
-  right: 10px;
-  top: 10px;
+  background-color: rgba($black, 0.2);
 
   .legend-label {
     white-space: nowrap;
@@ -14,7 +16,7 @@
     }
 
     &.comparison .legend-line {
-      opacity: .4;
+      opacity: 0.4;
     }
   }
 
@@ -33,16 +35,16 @@
     }
   }
 
-  .legend-item {
+  %legend-item {
     display: flex;
+    width: auto;
     height: 20px;
     justify-content: space-between;
-    width: auto;
   }
 
   .legend-value {
-    font-weight: bold;
     min-width: 130px;
+    font-weight: bold;
     text-align: right;
   }
 }

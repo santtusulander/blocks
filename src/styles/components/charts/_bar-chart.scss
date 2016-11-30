@@ -1,28 +1,28 @@
 @import '../../base/chart-legend';
 
 .bar-chart-container {
-  background-color: rgba($black, .2);
   height: 100%;
+  background-color: rgba($black, 0.2);
 
   .bar-chart-tooltip {
-    @extend .chart-legend;
-    background-color: rgba($black, .8);
+    @extend %chart-legend;
+    position: relative;
+    top: auto;
+    right: auto;
     min-width: auto;
     padding: 8px 0;
-    position: relative;
-    right: auto;
-    top: auto;
+    background-color: rgba($black, 0.8);
 
     .tooltip-item {
-      @extend .legend-item;
+      @extend %legend-item;
       padding: 0 8px;
     }
   }
 
   text {
     @include print {
-      fill: $black !important;
       font-size: $font-size;
+      fill: $black !important;
     }
 
     .dark-theme & {
@@ -35,24 +35,24 @@
   }
 
   .bar-chart-label {
-    font-weight: bold;
-    left: 30px;
     position: absolute;
     top: 20px;
+    left: 30px;
+    font-weight: bold;
   }
 
   .legend-icon {
-    font-weight: bold;
     margin-right: 7.5px;
+    font-weight: bold;
   }
 
   .bar-chart-legend {
-    background-color: rgba($black, .4);
     padding: 15px 80px 15px 15px;
+    background-color: rgba($black, 0.4);
   }
 
   .recharts-bar-rectangle:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
 
   .recharts-bar-cursor {
