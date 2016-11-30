@@ -482,20 +482,25 @@ export class AccountManagementAccountUsers extends React.Component {
             closeButton={true}
             cancel={this.togglePermissionModal}>
               {this.props.roles.map((role, i) => (
+                role.getIn(['permissions', 'ui']) ?
                 <PanelGroup accordion={true} key={i} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={i}>
                     <Table striped={true} key={i}>
                       <tbody>
-                      {this.props.permissions.get('ui').map((permission, i) => (
-                        <tr key={i}>
-                          <td className="no-border">{permission.get('title')}</td>
-                          <td><b>{role.get('permissions').get('ui').get(permission.get('name')) ? 'Yes' : 'No'}</b></td>
-                        </tr>
-                      ))}
+                      {this.props.permissions.get('ui').map((uiPermission, i) => {
+                        const permissionTitle = uiPermission.get('title')
+                        const permissionName = uiPermission.get('name')
+                        return(
+                          <tr key={i}>
+                            <td className="no-border">{permissionTitle}</td>
+                            <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>
+                          </tr>
+                        )}
+                      )}
                       </tbody>
                     </Table>
                   </Panel>
-                </PanelGroup>
+                </PanelGroup> : null
               ))}
           </ModalWindow>
         }

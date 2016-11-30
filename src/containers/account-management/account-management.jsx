@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
-import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { getRoute } from '../../routes'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
@@ -50,8 +49,7 @@ export class AccountManagement extends Component {
     this.accountToUpdate = null
     this.state = {
       groupToDelete: null,
-      groupToUpdate: null,
-      hostToDelete: null
+      groupToUpdate: null
     }
 
     this.notificationTimeout = null
@@ -69,7 +67,6 @@ export class AccountManagement extends Component {
     this.showDeleteGroupModal = this.showDeleteGroupModal.bind(this)
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
-    this.deleteHost = this.deleteHost.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
   }
@@ -208,51 +205,6 @@ export class AccountManagement extends Component {
     }
   }
 
-  deleteHost(host) {
-    const {
-      uiActions,
-      hostActions,
-      params: {
-        brand
-      },
-      activeAccount
-    } = this.props
-
-    const account = activeAccount.get('id')
-    const group = this.state.groupToUpdate
-
-    hostActions.fetchHost(
-      brand,
-      account,
-      group,
-      host
-    )
-      .then(() => {
-        hostActions.deleteHost(
-          brand,
-          account,
-          group,
-          this.props.activeHost
-        )
-          .then(res => {
-            this.setState({ hostToDelete: null })
-            if (res.error) {
-              uiActions.showInfoDialog({
-                title: 'Error',
-                content: res.payload.data.message,
-                buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
-                  id="portal.accountManagement.accoutnUpdated.text"/></Button>
-              })
-            } else {
-              this.showNotification(<FormattedMessage
-                id="portal.accountManagement.propertyDeleted.text"
-                values={{propertyName: host}} />
-              )
-            }
-          })
-      })
-  }
-
   editAccount(brandId, accountId, data) {
     return this.props.accountActions.updateAccount(brandId, accountId, data)
       .then(() => {
@@ -358,7 +310,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           deleteButton: true,
           cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, account, router)
+          submit: () => onDelete(brand, this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
@@ -519,31 +471,11 @@ export class AccountManagement extends Component {
         <GroupForm
           id="group-form"
           params={this.props.params}
-          onDeleteHost={(host) => this.setState({ hostToDelete: host })}
-          account={activeAccount}
           groupId={this.state.groupToUpdate}
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
         />}
-        {this.state.hostToDelete &&
-        <ModalWindow
-          title={
-            <div>
-              <div className="left">
-                <FormattedMessage id="portal.button.delete" />&nbsp;
-              </div>
-              <TruncatedTitle content={this.state.hostToDelete} tooltipPlacement="bottom" />
-            </div>
-          }
-          content={<FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>}
-          invalid={true}
-          verifyDelete={true}
-          cancelButton={true}
-          deleteButton={true}
-          cancel={() => this.setState({ hostToDelete: null })}
-          submit={() => this.deleteHost(this.state.hostToDelete)}/>
-        }
       </Content>
     )
   }
@@ -555,7 +487,6 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  activeHost: PropTypes.instanceOf(Map),
   activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -582,7 +513,6 @@ AccountManagement.propTypes = {
 }
 AccountManagement.defaultProps = {
   activeAccount: Map(),
-  activeHost: Map(),
   dnsData: Map(),
   groups: List(),
   hosts: List(),
@@ -595,7 +525,6 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
-    activeHost: state.host.get('activeHost'),
     activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
     groups: state.group.get('allGroups'),

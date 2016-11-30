@@ -53,7 +53,9 @@ class ConfigurationDefaults extends React.Component {
     this.toggleAllowCookie = this.toggleAllowCookie.bind(this)
   }
   componentWillUnmount() {
-    this.props.activateRule(null)
+    if (this.props.activeRule) {
+      this.handleCancel()
+    }
   }
   addRule(e) {
     e.preventDefault()

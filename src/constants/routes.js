@@ -20,9 +20,10 @@ export default {
   contentGroups: '/content/:brand/:account/groups',
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
-  contentPropertySummary: '/content/:brand/:account/groups/:group/:property/summary',
-  contentPropertyPurgeStatus: '/content/:brand/:account/groups/:group/:property/purge-status',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
+
+  contentPropertyTabSummary: 'summary',
+  contentPropertyTabPurgeStatus: 'purge-status',
 
   configurationTabDetails: 'details',
   configurationTabDefaults: 'defaults',
