@@ -62,6 +62,7 @@ export class User extends React.Component {
       savingPassword: this.props.userFetching
     })
 
+    // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
     this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
       .then((response) => {
         if (!response.error) {
