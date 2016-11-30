@@ -1,10 +1,9 @@
 import React from 'react';
-import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
+// import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
+import ReactMapboxGl, { Layer, Feature, Popup, GeoJSONLayer } from 'react-mapbox-gl';
 import * as topojson from 'topojson-client'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
-
-import './poc.scss'
 
 const heatMapColors = [
   '#e32119', //red dark
@@ -114,18 +113,18 @@ class MapPoc extends React.Component {
     const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
     const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
 
-    const cityCircles = cities.map( city => {
-      const cityHeat = getScore(cityMedian, city.bytes)
-      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
-
-      return (
-        <Circle key={city.id} center={city.position} radius={cityHeat * 10000} color={cityColor} >
-          <Popup>
-            <span>{city.name}</span>
-          </Popup>
-        </Circle>
-      )
-    })
+    // const cityCircles = cities.map( city => {
+    //   const cityHeat = getScore(cityMedian, city.bytes)
+    //   const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+    //
+    //   return (
+    //     <Circle key={city.id} center={city.position} radius={cityHeat * 10000} color={cityColor} >
+    //       <Popup>
+    //         <span>{city.name}</span>
+    //       </Popup>
+    //     </Circle>
+    //   )
+    // })
 
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -134,6 +133,15 @@ class MapPoc extends React.Component {
                     && topojson.feature(this.props.geoData, this.props.geoData.objects.countries)
 
     return (
+      <ReactMapboxGl
+        accessToken="pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA"
+        style={mapboxUrl}
+        containerStyle={{
+          height: '600px'
+        }}
+        minZoom={1}
+        />
+      /*
       <Map
         center={cities[0].position}
         zoom={this.state.zoom}
@@ -155,6 +163,8 @@ class MapPoc extends React.Component {
         />}
 
       </Map>
+      */
+
     )
   }
 }
