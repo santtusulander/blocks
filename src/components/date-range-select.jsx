@@ -200,7 +200,7 @@ export class DateRangeSelect extends React.Component {
                   onChange={this.handleStartDateChange}
                   onFocus={this.handleOnFocus}
                   onBlur={this.handleOnBlur}
-                  weekStart={0}/>
+                  weekStart='0'/>
               </div>
             </Col>
             <Col xs={6}>
@@ -219,7 +219,7 @@ export class DateRangeSelect extends React.Component {
                   onChange={this.handleEndDateChange}
                   onFocus={this.handleOnFocus}
                   onBlur={this.handleOnBlur}
-                  weekStart={0}/>
+                  weekStart='0'/>
               </div>
             </Col>
           </Row>
