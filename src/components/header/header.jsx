@@ -18,6 +18,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import {
   getAccountManagementUrlFromParams,
   getAnalyticsUrl,
+  getAnalyticsUrlFromParams,
   getContentUrl,
   getNetworkUrl,
   getUrl
@@ -113,7 +114,7 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-    const { router, pathname, user } = this.props,
+    const { router, pathname, roles, user } = this.props,
       params = this.props.params
 
     if (router.isActive(getRoute('content'))) {
@@ -145,10 +146,10 @@ class Header extends React.Component {
       this.addPropertyLink(links, getAnalyticsUrl)
       this.addGroupLink(links, getAnalyticsUrl)
 
-      const tab = userIsServiceProvider(user) ? '/on-off-net' : ''
+      const accountParams = { 'brand': params.brand, 'account': params.account }
       links.push({
         label: <FormattedMessage id="portal.header.analytics.text"/>,
-        url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) + tab : null
+        url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
       })
     } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
       links.push( {label:  'Account Management'} )
@@ -320,6 +321,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
