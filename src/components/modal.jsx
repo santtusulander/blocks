@@ -26,6 +26,7 @@ class ModalWindow extends React.Component {
           <p>{content}</p>}
           {verifyDelete &&
           <Input
+            autoFocus={true}
             type="text"
             label={intl.formatMessage({id: 'portal.deleteModal.validation.label'})}
             placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
