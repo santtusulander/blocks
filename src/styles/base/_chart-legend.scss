@@ -1,0 +1,50 @@
+@import './colors';
+
+.chart-legend {
+  background-color: rgba($black, .2);
+  min-width: 400px;
+  padding: 10px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+  .legend-label {
+    white-space: nowrap;
+
+    .legend-line {
+      font-weight: bold;
+    }
+
+    &.comparison .legend-line {
+      opacity: .4;
+    }
+  }
+
+  .comparison {
+
+    .legend-label {
+      margin-right: 5px;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    .secondary-label {
+      margin-right: 5px;
+    }
+  }
+
+  .legend-item {
+    display: flex;
+    height: 20px;
+    justify-content: space-between;
+    width: auto;
+  }
+
+  .legend-value {
+    font-weight: bold;
+    min-width: 130px;
+    text-align: right;
+  }
+}
