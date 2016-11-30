@@ -1,17 +1,17 @@
-@import "../../../components/analysis/by-time/legend.scss";
+@import '../../base/chart-legend';
 
 .bar-chart-container {
-  background-color: rgba($black, 0.2);
+  background-color: rgba($black, .2);
   height: 100%;
 
-  .rechart-tooltip {
+  .bar-chart-tooltip {
     @extend .chart-legend;
-    position: relative;
-    background-color: rgba($black, 0.8);
-    padding: 8px 0;
-    top: auto;
-    right: auto;
+    background-color: rgba($black, .8);
     min-width: auto;
+    padding: 8px 0;
+    position: relative;
+    right: auto;
+    top: auto;
 
     .tooltip-item {
       @extend .legend-item;
@@ -21,8 +21,8 @@
 
   text {
     @include print {
-      font-size: $font-size;
       fill: $black !important;
+      font-size: $font-size;
     }
 
     .dark-theme & {
@@ -35,10 +35,10 @@
   }
 
   .bar-chart-label {
-    top: 20px;
+    font-weight: bold;
     left: 30px;
     position: absolute;
-    font-weight: bold;
+    top: 20px;
   }
 
   .legend-icon {
@@ -46,13 +46,13 @@
     margin-right: 7.5px;
   }
 
-  .rechart-legend {
+  .bar-chart-legend {
+    background-color: rgba($black, .4);
     padding: 15px 80px 15px 15px;
-    background-color: rgba($black, 0.4);
   }
 
   .recharts-bar-rectangle:hover {
-    opacity: 0.8;
+    opacity: .8;
   }
 
   .recharts-bar-cursor {
