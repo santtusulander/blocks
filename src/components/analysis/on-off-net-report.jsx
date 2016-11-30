@@ -45,7 +45,7 @@ class AnalysisOnOffNetReport extends React.Component {
   }
   measureContainers() {
     this.setState({
-      stacksWidth: this.refs.stacksHolder.clientWidth
+      stacksWidth: this.refs.stacksHolder && this.refs.stacksHolder.clientWidth
     })
   }
   changeSort(column, direction, sortFunc) {
