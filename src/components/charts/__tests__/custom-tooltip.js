@@ -20,7 +20,7 @@ describe('Custom Tooltip', () => {
     expect(subject).toBeDefined()
   });
   it('should show lines for every item', () => {
-    expect(subject.find('.tooltip-item').length).toBe(2)
+    expect(subject.find('.tooltip-item').length).toBe(3)
   });
   it('should call className getter correctly', () => {
     expect(subject.find('.1')).toBeDefined()
