@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import classnames from 'classnames'
 
 import IconArrowRight     from './icons/icon-arrow-right'
 import IconArrowLeft     from './icons/icon-arrow-left'
@@ -10,7 +11,8 @@ export class MonthPicker extends React.Component {
 
     this.state = {
       selectedMonth: props.date ? moment().month(props.date.get('month')).format('MMMM') : null,
-      selectedYear: props.date ? props.date.get('year') : moment().year()
+      selectedYear: props.date ? props.date.get('year') : moment().year(),
+      shownYear: props.date ? props.date.get('year') : moment().year()
     }
 
     this.changeYear = this.changeYear.bind(this)
@@ -19,22 +21,20 @@ export class MonthPicker extends React.Component {
   }
 
   changeYear(years) {
-    const updatedYear = this.state.selectedYear + years
+    const updatedYear = this.state.shownYear + years
     this.setState({
-      selectedYear: updatedYear
+      shownYear: updatedYear
     })
-    if (this.state.selectedMonth) {
-      this.setDates(updatedYear, this.state.selectedMonth)
-    }
   }
 
   selectMonth(month) {
     const currentMonth = moment().month(month).format('MMMM')
     this.setState({
-      selectedMonth: currentMonth
+      selectedMonth: currentMonth,
+      selectedYear: this.state.shownYear
     })
 
-    this.setDates(this.state.selectedYear, currentMonth);
+    this.setDates(this.state.shownYear, currentMonth);
   }
 
   setDates(year, month) {
@@ -47,6 +47,7 @@ export class MonthPicker extends React.Component {
   }
 
   render() {
+    const { selectedMonth, selectedYear, shownYear } = this.state
     const months = []
     let monthIndex = 0
     while(monthIndex < 12) {
@@ -56,9 +57,13 @@ export class MonthPicker extends React.Component {
     return (
       <div className="month-picker">
         <div className="year-selector">
-          <a className="btn btn-icon btn-transparent" onClick={() => this.changeYear(-1)}><IconArrowLeft /></a>
-          <div className="current-year">{this.state.selectedYear}</div>
-          <a className="btn btn-icon btn-transparent"onClick={() => this.changeYear(1)}><IconArrowRight /></a>
+          <a className="btn btn-icon btn-transparent" onClick={() => this.changeYear(-1)}>
+            <IconArrowLeft />
+            </a>
+          <div className="current-year">{shownYear}</div>
+          <a className="btn btn-icon btn-transparent"onClick={() => this.changeYear(1)}>
+            <IconArrowRight />
+          </a>
         </div>
 
         <ul className="months">
@@ -66,9 +71,12 @@ export class MonthPicker extends React.Component {
             const monthName = moment().month(i).format('MMMM')
             return (
               <li key={i}>
-                <a className={this.state.selectedMonth === monthName ? "selected" : ""}
-                   onClick={() => this.selectMonth(monthName)}>
-                   {month}
+                <a className={classnames(
+                    {'selected' : (selectedMonth === monthName && shownYear === selectedYear)},
+                    {'current-month': (shownYear === moment().year() && i === moment().month())}
+                  )}
+                  onClick={() => this.selectMonth(monthName)}>
+                  {month}
                 </a>
               </li>
             )
