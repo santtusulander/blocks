@@ -8,10 +8,12 @@ jest.unmock('../../../components/action-buttons')
 jest.unmock('../../../components/icon')
 jest.unmock('../../../components/icons/icon-edit')
 jest.unmock('../../../components/icons/icon-trash')
+jest.unmock('../dns-record-table')
 jest.unmock('../../table-sorter')
 jest.unmock('../../button')
 jest.unmock('../dns-list')
-import DNSList, { SortableTable } from '../dns-list'
+import DNSList from '../dns-list'
+import { DNSRecordTable } from '../dns-record-table'
 import recordTypes, { recordFields } from '../../../constants/dns-record-types'
 
 function intlMaker() {
@@ -73,7 +75,7 @@ describe('DNSList', () => {
 
 })
 
-describe('SortableTable', () => {
+describe('DNSRecordTable', () => {
   let subject = null
   let props = {}
   beforeEach(() => {
@@ -81,7 +83,7 @@ describe('SortableTable', () => {
       props = {
         content: sortingFunc => sortingFunc(recs).map((item, index) => <tr key={index} id={`${item.name}-${index}`}/>)
       }
-      return shallow(<SortableTable {...props}/>)
+      return shallow(<DNSRecordTable {...props}/>)
     }
   })
 

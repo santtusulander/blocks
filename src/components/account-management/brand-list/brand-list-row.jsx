@@ -1,15 +1,8 @@
 import React from 'react'
 import moment from 'moment'
 
-import ActionButtons from '../../components/action-buttons.jsx'
-import { AccountManagementHeader } from './account-management-header.jsx'
-import BrandEditForm from './brand-edit-form.jsx'
-
-const AVAILABILITY_SHARED = 'Shared'
-const AVAILABILITY_PRIVATE = 'Private'
-import { EDIT_BRAND } from '../../constants/account-management-modals.js'
-
-import { FormattedMessage } from 'react-intl'
+import ActionButtons from '../../action-buttons.jsx'
+import BrandlistUsedBy from './brand-list-used-by'
 
 const BrandListRow = (props) => {
   return (
@@ -48,94 +41,4 @@ BrandListRow.propTypes = {
   usedBy: React.PropTypes.string
 }
 
-const BrandlistUsedBy = (props) => {
-  let content
-
-  if ( Array.isArray(props.fieldVal) ) {
-    return (
-      <a>
-        {props.fieldVal.length} accounts
-      </a>
-
-      /* TODO: create a tooltip
-      content = props.fieldVal.map( ( item ) => {
-       return (
-       <a>{item.accountName}</a>
-       )
-       }); */
-
-    )
-  } else {
-    content = props.fieldVal
-  }
-
-  return (
-    <span>
-      {content}
-    </span>
-  )
-}
-
-BrandlistUsedBy.propTypes = {
-  fieldVal: React.PropTypes.object
-}
-
-const BrandList = (props) => {
-
-  const brandsFormInitialValues = {}
-
-  const tableRows = props.brands.map( (brand, i) => {
-    return (
-      <BrandListRow key={i} {... brand} onEdit={() => props.toggleModal(EDIT_BRAND)} onDelete={props.onDelete}  />
-    );
-  });
-
-  return (
-    <div className='brandList'>
-
-      <AccountManagementHeader title={`${props.brands.length} Brands`} onAdd={() => props.toggleModal(EDIT_BRAND)}/>
-
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th><FormattedMessage id="portal.brand.list.brand.text"/></th>
-            <th><FormattedMessage id="portal.brand.list.availability.text"/></th>
-            <th><FormattedMessage id="portal.brand.list.lastEdited.text"/></th>
-            <th><FormattedMessage id="portal.brand.list.usedBy.text"/></th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {tableRows}
-        </tbody>
-
-      </table>
-
-      {props.accountManagementModal === EDIT_BRAND &&
-        <BrandEditForm
-          id="brand-edit-form"
-          show={props.accountManagementModal === EDIT_BRAND}
-          edit={true}
-          onSave={() => {}}
-          onCancel={() => props.toggleModal(null)}
-          {...brandsFormInitialValues}
-        />
-        }
-    </div>
-  )
-}
-
-BrandList.propTypes = {
-  accountManagementModal: React.PropTypes.string,
-  brands: React.PropTypes.array,
-  brandsFormInitialValues: React.PropTypes.object,
-  toggleModal: React.PropTypes.func
-}
-
-module.exports = {
-  BrandList,
-  BrandListRow,
-  AVAILABILITY_SHARED,
-  AVAILABILITY_PRIVATE
-};
+export default BrandListRow
