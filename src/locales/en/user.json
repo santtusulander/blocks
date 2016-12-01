@@ -9,6 +9,7 @@
   "portal.user.edit.passwordDoNotMatch.text": "Passwords do not match",
   "portal.user.edit.roleRequired.text": "Role is required",
   "portal.user.edit.emailRequired.text": "Email is required",
+  "portal.user.edit.currentPasswordRequired.text": "Current password is required",
   "portal.user.edit.email.text": "Email",
   "portal.user.edit.firstName.text": "First Name",
   "portal.user.edit.middleName.text": "Middle Name",

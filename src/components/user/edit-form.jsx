@@ -18,16 +18,16 @@ const validate = (values) => {
 
   const {
     email,
-    password,
-    confirm
+    current_password
   } = values
+
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
   }
 
-  if(password && password !== confirm) {
-    passwordErrors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
+  if(!current_password || current_password.length === 0) {
+    passwordErrors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
   }
 
   return errors, passwordErrors;
@@ -41,7 +41,6 @@ class UserEditForm extends React.Component {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
       passwordVisible: false,
-      currentPasswordInputted: false,
       validPassword: false
     }
 
@@ -51,12 +50,6 @@ class UserEditForm extends React.Component {
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.changePassword = this.changePassword.bind(this)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      currentPasswordInputted: !!nextProps.fields.current_password.value
-    })
   }
 
   save() {
@@ -279,7 +272,7 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!this.state.currentPasswordInputted || !this.state.validPassword || savingPassword}
+                          disabled={this.props.invalid || !this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
@@ -315,6 +308,7 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   onSavePassword: PropTypes.func,
