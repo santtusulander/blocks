@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 
-const CustomTooltip = ({ payload = [], iconClass, valueFormatter }) => {
+import { formatBytes } from '../../util/helpers'
+
+const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }) => {
   const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0))
   return (
     <div className="bar-chart-tooltip">
