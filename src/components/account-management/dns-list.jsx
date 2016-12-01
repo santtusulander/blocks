@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import PageContainer from '../layout/page-container'
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
-import { SortableTable } from '../sortable-table'
+import { DNSRecordTable } from './dns-record-table'
 import UDNButton from '../button'
 import ActionButtons from '../action-buttons'
 import IsAllowed from '../is-allowed'
@@ -75,7 +75,7 @@ class DNSList extends Component {
             <SectionHeader
               sectionSubHeaderTitle={`${type} ${intl.formatMessage({id: 'portal.account.dnsList.records.header'})}`}
               subHeaderId={'table-label-' + index} />
-            <SortableTable shouldHavePrio={recordFields.prio.includes(type)} content={getContent(type)}/>
+            <DNSRecordTable shouldHavePrio={recordFields.prio.includes(type)} content={getContent(type)}/>
           </SectionContainer>
         )
       }

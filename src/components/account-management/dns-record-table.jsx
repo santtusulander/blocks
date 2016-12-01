@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import TableSorter from './table-sorter'
+import TableSorter from '../table-sorter'
 
-export class SortableTable extends Component {
+export class DNSRecordTable extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -50,7 +50,7 @@ export class SortableTable extends Component {
   }
 }
 
-SortableTable.propTypes = {
+DNSRecordTable.propTypes = {
   content: PropTypes.func,
   shouldHavePrio: PropTypes.bool
 }
