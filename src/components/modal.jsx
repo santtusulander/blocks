@@ -9,13 +9,22 @@ import IconClose from './icons/icon-close.jsx'
 class ModalWindow extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleOnEntered = this.handleOnEntered.bind(this)
+  }
+
+  handleOnEntered(){
+    const { verifyDelete } = this.props
+    if (verifyDelete) {
+      this.refs.deleteInput.refs.input.focus()
+    }
   }
 
   render() {
     const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, submit, submitButton, title, verifyDelete } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-window">
+      <Modal show={true} dialogClassName="modal-window" onEntered={this.handleOnEntered}>
         <Modal.Header>
           <h1>{title}</h1>
         </Modal.Header>
@@ -28,6 +37,7 @@ class ModalWindow extends React.Component {
           <Input
             autoFocus={true}
             type="text"
+            ref="deleteInput"
             label={intl.formatMessage({id: 'portal.deleteModal.validation.label'})}
             placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
             {...modalField} />
