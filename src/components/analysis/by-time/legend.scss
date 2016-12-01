@@ -6,6 +6,7 @@
 
 .by-time-legend {
   @extend %chart-legend;
+  min-width: 400px;
 
   .by-time-legend-item {
     @extend %legend-item;

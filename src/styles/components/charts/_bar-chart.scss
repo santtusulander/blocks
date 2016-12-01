@@ -2,16 +2,21 @@
 
 .bar-chart-container {
   height: 100%;
-  background-color: rgba($black, 0.2);
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
 
   .bar-chart-tooltip {
     @extend %chart-legend;
     position: relative;
     top: auto;
     right: auto;
-    min-width: auto;
     padding: 8px 0;
-    background-color: rgba($black, 0.8);
+
+    .dark-theme & {
+      background-color: rgba($black, 0.8);
+    }
 
     .tooltip-item {
       @extend %legend-item;
@@ -47,8 +52,12 @@
   }
 
   .bar-chart-legend {
+    @extend %chart-legend;
     padding: 15px 80px 15px 15px;
-    background-color: rgba($black, 0.4);
+
+    .bar-chart-legend-item {
+      @extend %legend-item;
+    }
   }
 
   .recharts-bar-rectangle:hover {
