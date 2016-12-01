@@ -98,51 +98,85 @@ const handleFeature = ( feature, layer) => {
 class MapPoc extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {zoom: 2, countryGeoJson: null}
+    this.state = {
+      zoom: 2,
+      countryGeoJson: null,
+      popupCoords: [],
+      popupContent: null
+    }
+
+    this.countryGeoJson = {
+      type: 'FeatureCollection',
+      features: []
+    }
 
   }
   componentDidMount() {
-    //this fixes a bug of map not being drawn correctly on reload
-    window.dispatchEvent(new Event('resize'));
+    this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
+      const countryExists = countries.some(country => country.id === data.id)
+
+      if (countryExists) {
+        return data
+      }
+    })
   }
 
   zoomEnd(e){
-    this.setState({zoom: e.target._zoom})
+    // debugger;
+    this.setState({zoom: e.transform.scale})
   }
-  render() {
+
+  cityPopup(city) {
+    this.setState({ popupContent: city.name, popupCoords: city.position })
+  }
+
+  cityCircles() {
     const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
     const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
 
-    const cityCircles = cities.map( (city, i) => {
+    return cities.map((city, i) => {
       const cityHeat = getScore(cityMedian, city.bytes)
       const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
 
       return (
-          <Layer
-            key={i}
-            type="circle"
-            paint={{
-              'circle-radius': cityHeat * 10,
-              'circle-color': cityColor
-            }}>
-            <Feature
-              coordinates={city.position}
-              />
-          </Layer>
-        )})
-    //     <Circle key={city.id} center={city.position} radius={cityHeat * 10000} color={cityColor} >
-    //       <Popup>
-    //         <span>{city.name}</span>
-    //       </Popup>
-    //     </Circle>
-    //   )
-    // })
+        <Layer
+          key={i}
+          type="circle"
+          paint={{
+            'circle-radius': cityHeat * (this.state.zoom / 5),
+            'circle-color': cityColor,
+            'circle-opacity': 0.5
+          }}>
+          <Feature
+            coordinates={city.position}
+            onClick={this.cityPopup.bind(this, city)}
+            />
+        </Layer>
+      )
+    })
+  }
 
+  mouseMove(e, t) {
+    let test = e.queryRenderedFeatures(t.point, { layers: ['country-fill'] })
+    if (test.length) {
+      e.setFilter('country-fill-hover', ['==', 'name', test[0].properties.name])
+      document.body.style.cursor = 'pointer';
+    } else {
+      e.setFilter('country-fill-hover', ['==', 'name', ''])
+      document.body.style.cursor = 'default';
+    }
+
+  }
+
+  mapLoaded(e) {
+    e.addSource('geo', {
+      type: 'geojson',
+      data: this.countryGeoJson
+    })
+  }
+
+  render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
-
-    const geoJSON = this.props.geoData
-                    && this.props.geoData.objects
-                    && topojson.feature(this.props.geoData, this.props.geoData.objects.countries)
 
     return (
       <ReactMapboxGl
@@ -153,8 +187,38 @@ class MapPoc extends React.Component {
         }}
         minZoom={1}
         center={cities[0].position}
-        >
-        {cityCircles}
+        onZoom={this.zoomEnd.bind(this)}
+        onMouseMove={this.mouseMove.bind(this)}
+        onStyleLoad={this.mapLoaded.bind(this)}>
+
+        <Layer
+          id="country-fill"
+          type="fill"
+          sourceId="geo"
+          paint={{
+            'fill-color': '#00abd6',
+            'fill-opacity': 0.3
+          }}/>
+
+        <Layer
+          id="country-fill-hover"
+          type="line"
+          sourceId="geo"
+          paint={{
+            'line-color': '#00abd6',
+            'line-width': 3
+          }}
+          layerOptions={{
+            filter: ['==', 'name', '']
+          }}/>
+
+          {this.cityCircles()}
+
+        {!!this.state.popupContent &&
+          <Popup closeButton={true} coordinates={this.state.popupCoords}>
+            <span>{this.state.popupContent}</span>
+          </Popup>
+        }
       </ReactMapboxGl>
       /*
       <Map
