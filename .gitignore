@@ -44,6 +44,9 @@ Session.vim
 ## WebStorm
 .idea/
 
+## VSCode
+.vscode/
+
 ## Eclipse
 .project
 # Compiled
