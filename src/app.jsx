@@ -1,26 +1,23 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, browserHistory } from 'react-router'
+import { browserHistory } from 'react-router'
+import { AppContainer } from 'react-hot-loader';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 import Raven from 'raven-js'
 import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
-import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
-import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
 
-import TRANSLATED_MESSAGES from './locales/en/'
+import Root from './root'
 
 const useRaven = process.env.NODE_ENV === 'production'
-
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
   useRaven
@@ -105,16 +102,24 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error)
 });
 
-const runApp = () => {
+
+function renderWithHotReload(NextApp) {
   ReactDOM.render(
-    <IntlProvider locale="en" messages={TRANSLATED_MESSAGES}>
-      <Provider store={store}>
-        <Router onUpdate={LogPageView} history={browserHistory}>
-        {getRoutes(store)}
-        </Router>
-      </Provider>
-    </IntlProvider>, document.getElementById('content')
+    <AppContainer>
+      <NextApp store={store}/>
+    </AppContainer>,
+    document.getElementById('content')
   );
+}
+
+const runApp = () => {
+  renderWithHotReload(Root)
+  if (module.hot) {
+    module.hot.accept('./root', () => {
+      const Next = require('./root').default
+      renderWithHotReload(Next)
+    })
+  }
 }
 
 let startApp = runApp
@@ -156,8 +161,8 @@ if (!window.Intl) {
     require('intl');
     require('intl/locale-data/jsonp/en.js');
 
-    startApp();
+    startApp(Root);
   });
 } else {
-  startApp();
+  startApp(Root);
 }
