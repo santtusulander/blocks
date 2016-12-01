@@ -1,7 +1,7 @@
 import React from 'react'
 
 import PageContainer from '../../../components/layout/page-container'
-import { BrandList, AVAILABILITY_PRIVATE }  from '../brand-list.jsx'
+import { BrandList, AVAILABILITY_PRIVATE }  from '../brand-list/brand-list.jsx'
 
 const fakeBrands = [
   {id: 1, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_PRIVATE, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},
