@@ -23,9 +23,8 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDi
     <div className={finalClassName}>
       {onArrowUp &&
       <Button
-        id='arrow-down-button'
         onClick={onArrowUp}
-        className="btn btn-icon"
+        className="btn btn-icon arrow-down-button"
         disabled={arrowUpDisabled}>
         <IconArrowUp />
       </Button>
@@ -33,9 +32,8 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDi
 
       {onArrowDown &&
       <Button
-        id='arrow-up-button'
         onClick={onArrowDown}
-        className="btn btn-icon"
+        className="btn btn-icon arrow-up-button"
         disabled={arrowDownDisabled}>
         <IconArrowDown />
       </Button>
@@ -44,9 +42,8 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDi
       {onEdit &&
       <IsAllowed to={permissions ? permissions.modify : ALLOW_ALWAYS}>
         <Button
-          id='edit-button'
           onClick={onEdit}
-          className="btn btn-icon">
+          className="btn btn-icon edit-button">
           <IconEdit />
         </Button>
       </IsAllowed>
@@ -55,9 +52,8 @@ const ActionButtons = ({ arrowDownDisabled, arrowUpDisabled, className, deleteDi
       {onDelete &&
       <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
         <Button
-          id='delete-button'
           onClick={onDelete}
-          className="btn btn-icon"
+          className="btn btn-icon delete-button"
           disabled={deleteDisabled}>
           <IconTrash/>
         </Button>

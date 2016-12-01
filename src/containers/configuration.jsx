@@ -33,6 +33,7 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 import IconCaretDown from '../components/icons/icon-caret-down'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -229,7 +230,7 @@ export class Configuration extends React.Component {
     const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     if(this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
-      return <div className="container">Loading...</div>
+      return <LoadingSpinner/>
     }
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()
