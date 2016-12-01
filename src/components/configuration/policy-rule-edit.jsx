@@ -133,7 +133,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       }
 
       matches.map((match, key)=>{
-        if(key < i && matches[key+1].path){
+        if(key < i){
           this.props.changeValue(
             matches[key+1].path,
             this.props.config.getIn(match.path)
