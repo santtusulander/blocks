@@ -10,6 +10,7 @@ export default class BarChart extends Component {
   constructor(props) {
     super(props)
     this.state = { showTooltip: props.tooltipAlwaysActive }
+    this.bars = props.barModels.map(barModel => this.getBarProps(barModel))
   }
 
   /**
@@ -18,25 +19,25 @@ export default class BarChart extends Component {
    * each bar belongs in. Otherwise delete the property as Recharts throws an error.
    * Defaulting all bars representing data for one entity to one stack.
    */
-  getBarProps(props) {
+  getBarProps(bar) {
     if (!this.props.tooltipAlwaysActive) {
-      props.onMouseEnter = () => this.setState({ showTooltip: true })
-      props.onMouseLeave = () => this.setState({ showTooltip: false })
+      bar.onMouseEnter = () => this.setState({ showTooltip: true })
+      bar.onMouseLeave = () => this.setState({ showTooltip: false })
     }
     if (this.props.barModels.length > 1) {
-      props.stackId = props.stackId || 0
-    } else if (props.stackId) {
-      delete props.stackId
+      bar.stackId = bar.stackId || 0
+    } else if (bar.stackId) {
+      delete bar.stackId
     }
-    return props
+    return bar
   }
 
   renderBars() {
-    return this.props.barModels.map((barProps, index) =>
+    return this.bars.map((bar, index) =>
       <Bar
         key={index}
         isAnimationActive={false}
-        {...this.getBarProps(barProps)}/>
+        {...bar}/>
     )
   }
 

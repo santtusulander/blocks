@@ -312,10 +312,10 @@ class Styleguide extends React.Component {
                 tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
-                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
-                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
                   { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
+                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
                 ]}/>}
             </SectionContainer>
             </Row>
