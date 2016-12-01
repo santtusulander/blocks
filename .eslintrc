@@ -25,7 +25,7 @@
     "import"
   ],
   "settings": {
-    "import/resolver": { "node": { "extensions": ['.js', '.jsx'] } }
+    "import/resolver": { "node": { "extensions": [".js", ".jsx"] } }
   },
   "rules": {
     "no-alert": 0,
@@ -217,7 +217,7 @@
     "react/no-danger": 1,
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
-    "react/no-multi-comp": 0,
+    "react/no-multi-comp": 1,
     "react/no-unknown-property": 1,
     "react/prop-types": 1,
     "react/react-in-jsx-scope": 1,
@@ -236,7 +236,7 @@
     "react/no-children-prop": 2,
     "react/no-find-dom-node": 2,
     "react/no-unescaped-entities": 2,
-    "import/no-unresolved": [2, {commonjs: true, amd: true}],
+    "import/no-unresolved": [2, { "commonjs": true, "amd": true}],
     "import/named": 2,
     "import/namespace": 2,
     "import/default": 2,
