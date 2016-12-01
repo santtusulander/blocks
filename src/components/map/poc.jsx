@@ -14,14 +14,14 @@ const heatMapColors = [
 ]
 
 const cities = [
-  { id: 'LDN', countryId: 'GBR', name: 'London', bytes: 500000, requests: 10000, position: [51.505, -0.09] },
-  { id: 'MCR', countryId: 'GBR', name: 'Manchester', bytes: 300000, requests: 10000, position: [53.4807593, -2.2426305000000184] },
-  { id: 'NYC', countryId: 'USA', name: 'New York', bytes: 400000, requests: 20000, position: [40.785091, -73.968285] },
-  { id: 'BTN', countryId: 'USA', name: 'Boston', bytes: 300000, requests: 20000, position: [42.3600825, -71.05888010000001] },
-  { id: 'WCR', countryId: 'USA', name: 'Worchester', bytes: 200000, requests: 20000, position: [42.261573789394745, -71.79908395742189] },
-  { id: 'HEL', countryId: 'FIN', name: 'Helsinki', bytes: 300000, requests: 30000, position: [60.17083, 24.93750] },
-  { id: 'TKU', countryId: 'FIN', name: 'Turku', bytes: 200000, requests: 40000, position: [60.454510, 22.264824] },
-  { id: 'BJN', countryId: 'CHN', name: 'Beijing', bytes: 100000, requests: 50000, position: [39.9042, 116.4074] }
+  { id: 'LDN', countryId: 'GBR', name: 'London', bytes: 500000, requests: 10000, position: [-0.1278, 51.5074] },
+  { id: 'MCR', countryId: 'GBR', name: 'Manchester', bytes: 300000, requests: 10000, position: [-2.2426, 53.4808] },
+  { id: 'NYC', countryId: 'USA', name: 'New York', bytes: 400000, requests: 20000, position: [-74.0059, 40.7128] },
+  { id: 'BTN', countryId: 'USA', name: 'Boston', bytes: 300000, requests: 20000, position: [-71.0589, 42.3601] },
+  { id: 'WCR', countryId: 'USA', name: 'Worchester', bytes: 200000, requests: 20000, position: [-71.8023, 42.2626] },
+  { id: 'HEL', countryId: 'FIN', name: 'Helsinki', bytes: 300000, requests: 30000, position: [24.9384, 60.1699] },
+  { id: 'TKU', countryId: 'FIN', name: 'Turku', bytes: 200000, requests: 40000, position: [22.2666, 60.4518] },
+  { id: 'BJN', countryId: 'CHN', name: 'Beijing', bytes: 100000, requests: 50000, position: [116.4074, 39.9042] }
 ]
 
 const countries = [
@@ -113,11 +113,23 @@ class MapPoc extends React.Component {
     const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
     const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
 
-    // const cityCircles = cities.map( city => {
-    //   const cityHeat = getScore(cityMedian, city.bytes)
-    //   const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
-    //
-    //   return (
+    const cityCircles = cities.map( (city, i) => {
+      const cityHeat = getScore(cityMedian, city.bytes)
+      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+
+      return (
+          <Layer
+            key={i}
+            type="circle"
+            paint={{
+              'circle-radius': cityHeat * 10,
+              'circle-color': cityColor
+            }}>
+            <Feature
+              coordinates={city.position}
+              />
+          </Layer>
+        )})
     //     <Circle key={city.id} center={city.position} radius={cityHeat * 10000} color={cityColor} >
     //       <Popup>
     //         <span>{city.name}</span>
@@ -140,7 +152,10 @@ class MapPoc extends React.Component {
           height: '600px'
         }}
         minZoom={1}
-        />
+        center={cities[0].position}
+        >
+        {cityCircles}
+      </ReactMapboxGl>
       /*
       <Map
         center={cities[0].position}
