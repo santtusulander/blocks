@@ -1,9 +1,7 @@
 import React, { PropTypes } from 'react'
 
-import { formatBytes } from '../../util/helpers'
-
-const CustomTooltip = ({ payload = [], iconClass }) => {
-  const total = formatBytes(payload.reduce((sum, { value }) => sum += value, 0))
+const CustomTooltip = ({ payload = [], iconClass, valueFormatter }) => {
+  const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0))
   return (
     <div className="bar-chart-tooltip">
       {payload.map(({ name, value, dataKey }, i) =>
@@ -12,7 +10,7 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
             <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
             {name}
           </span>
-          <span className='legend-value'>{formatBytes(value)}</span>
+          <span className='legend-value'>{valueFormatter(value)}</span>
         </div>
       )}
       <hr style={{ margin: '7px 0' }}/>
@@ -28,7 +26,8 @@ const CustomTooltip = ({ payload = [], iconClass }) => {
 
 CustomTooltip.propTypes = {
   iconClass: PropTypes.func,
-  payload: PropTypes.array
+  payload: PropTypes.array,
+  valueFormatter: PropTypes.func
 }
 
 export default CustomTooltip

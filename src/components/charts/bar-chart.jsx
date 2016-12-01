@@ -42,7 +42,9 @@ export default class BarChart extends Component {
   }
 
   render() {
-    const { props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset }, state: { showTooltip } } = this
+    const {
+      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter },
+      state: { showTooltip } } = this
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
         <div className="bar-chart-container">
@@ -60,12 +62,16 @@ export default class BarChart extends Component {
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={formatBytes}/>
+                tickFormatter={valueFormatter}/>
               {showTooltip &&
                 <Tooltip
                   animationEasing="linear"
                   offset={toolTipOffset}
-                  content={<CustomTooltip iconClass={tooltipIconClass}/>}/>}
+                  content={
+                    <CustomTooltip
+                      valueFormatter={valueFormatter}
+                      iconClass={tooltipIconClass}/>}
+                    />}
               <Legend
                 verticalAlign="top"
                 wrapperStyle={{ top: 25 }}
@@ -81,6 +87,7 @@ export default class BarChart extends Component {
 }
 
 BarChart.defaultProps = {
+  valueFormatter: formatBytes,
   tooltipAlwaysActive: true,
   toolTipOffset: 40,
   maxBarSize: 80
@@ -98,5 +105,6 @@ BarChart.propTypes = {
   chartLabel: PropTypes.string,
   maxBarSize: PropTypes.number,
   toolTipOffset: PropTypes.number,
-  tooltipAlwaysActive: PropTypes.bool
+  tooltipAlwaysActive: PropTypes.bool,
+  valueFormatter: PropTypes.func
 }
