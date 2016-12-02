@@ -16,7 +16,7 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
 
   const byCountryDataFormat = recordType === 'transfer_rates'
     ? val => formatBitsPerSecond(val, true)
-    : val => numeral(val).format('0,0')
+    : val => val ? numeral(val).format('0,0') : '-'
 
   const byCountryDataKey = recordType === 'transfer_rates'
     ? 'average_bits_per_second'
