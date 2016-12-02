@@ -66,7 +66,7 @@ class MapPoc extends React.Component {
     this.state = {
       zoom: 2,
       countryGeoJson: null,
-      popupCoords: [],
+      popupCoords: [0, 0],
       popupContent: null,
       layers: [],
       hoveredLayer: null
@@ -94,8 +94,12 @@ class MapPoc extends React.Component {
     this.setState({zoom: e.transform.scale})
   }
 
-  cityPopup(city) {
-    this.setState({ popupContent: city.name, popupCoords: city.position })
+  openPopup(content, coords) {
+    this.setState({ popupContent: content, popupCoords: coords })
+  }
+
+  closePopup() {
+    this.setState({ popupContent: null });
   }
 
   cityCircles() {
@@ -116,7 +120,7 @@ class MapPoc extends React.Component {
           }}>
           <Feature
             coordinates={city.position}
-            onClick={this.cityPopup.bind(this, city)}
+            onClick={this.openPopup.bind(this, city.name, city.position)}
             />
         </Layer>
       )
@@ -141,6 +145,22 @@ class MapPoc extends React.Component {
         map.setFilter(this.state.hoveredLayer, ['==', 'name', ''])
         document.body.style.cursor = 'default'
       }
+    }
+  }
+
+  onClick(map, feature) {
+    if (map.style._loaded) {
+      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
+
+      if (features.length) {
+        const popupContent = features[0].properties.name
+        const popupCoords = [feature.lngLat.lng, feature.lngLat.lat]
+        this.setState({ popupContent, popupCoords })
+
+      } else {
+        this.closePopup()
+      }
+
     }
   }
 
@@ -186,6 +206,8 @@ class MapPoc extends React.Component {
                 layerOptions={{
                   filter: ['==', 'name', '']
                 }}/>
+
+
             </div>
       )
     })
@@ -207,13 +229,14 @@ class MapPoc extends React.Component {
         center={cities[0].position}
         onZoom={this.zoomEnd.bind(this)}
         onMouseMove={this.mouseMove.bind(this)}
-        onStyleLoad={this.mapLoaded.bind(this)}>
+        onStyleLoad={this.mapLoaded.bind(this)}
+        onClick={this.onClick.bind(this)}>
 
           {this.renderCountryHighlight()}
           {this.cityCircles()}
 
         {!!this.state.popupContent &&
-          <Popup closeButton={true} coordinates={this.state.popupCoords}>
+          <Popup coordinates={this.state.popupCoords}>
             <span>{this.state.popupContent}</span>
           </Popup>
         }
