@@ -90,44 +90,19 @@ class MapPoc extends React.Component {
     })
   }
 
-  zoomEnd(e){
-    this.setState({zoom: e.transform.scale})
-  }
+  onStyleLoaded(e) {
+    const layers = this.countryGeoJson.features.map(country => 'country-fill-' + country.id )
+    this.setState({ layers })
 
-  openPopup(content, coords) {
-    this.setState({ popupContent: content, popupCoords: coords })
-  }
-
-  closePopup() {
-    this.setState({ popupContent: null });
-  }
-
-  cityCircles() {
-    const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
-
-    return cities.map((city, i) => {
-      const cityHeat = getScore(cityMedian, city.bytes)
-      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
-
-      return (
-        <Layer
-          key={i}
-          type="circle"
-          paint={{
-            'circle-radius': cityHeat * (this.state.zoom / 5),
-            'circle-color': cityColor,
-            'circle-opacity': 0.5
-          }}>
-          <Feature
-            coordinates={city.position}
-            onClick={this.openPopup.bind(this, city.name, city.position)}
-            />
-        </Layer>
-      )
+    this.countryGeoJson.features.forEach((country) => {
+      e.addSource('geo-' + country.id, {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [country] }
+      })
     })
   }
 
-  mouseMove(map, feature) {
+  onMouseMove(map, feature) {
     if (map.style._loaded) {
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
 
@@ -148,7 +123,7 @@ class MapPoc extends React.Component {
     }
   }
 
-  onClick(map, feature) {
+  onMapClick(map, feature) {
     if (map.style._loaded) {
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
 
@@ -164,16 +139,16 @@ class MapPoc extends React.Component {
     }
   }
 
-  mapLoaded(e) {
-    const layers = this.countryGeoJson.features.map(country => 'country-fill-' + country.id )
-    this.setState({ layers })
+  onZoomEnd(e){
+    this.setState({zoom: e.transform.scale})
+  }
 
-    this.countryGeoJson.features.forEach((country) => {
-      e.addSource('geo-' + country.id, {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: [country] }
-      })
-    })
+  openPopup(content, coords) {
+    this.setState({ popupContent: content, popupCoords: coords })
+  }
+
+  closePopup() {
+    this.setState({ popupContent: null });
   }
 
   renderCountryHighlight() {
@@ -215,6 +190,31 @@ class MapPoc extends React.Component {
     return highlights
   }
 
+  renderCityCircles() {
+    const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
+
+    return cities.map((city, i) => {
+      const cityHeat = getScore(cityMedian, city.bytes)
+      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+
+      return (
+        <Layer
+          key={i}
+          type="circle"
+          paint={{
+            'circle-radius': cityHeat * (this.state.zoom / 5),
+            'circle-color': cityColor,
+            'circle-opacity': 0.5
+          }}>
+          <Feature
+            coordinates={city.position}
+            onClick={this.openPopup.bind(this, city.name, city.position)}
+            />
+        </Layer>
+      )
+    })
+  }
+
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -227,13 +227,13 @@ class MapPoc extends React.Component {
         }}
         minZoom={1}
         center={cities[0].position}
-        onZoom={this.zoomEnd.bind(this)}
-        onMouseMove={this.mouseMove.bind(this)}
-        onStyleLoad={this.mapLoaded.bind(this)}
-        onClick={this.onClick.bind(this)}>
+        onZoom={this.onZoomEnd.bind(this)}
+        onMouseMove={this.onMouseMove.bind(this)}
+        onStyleLoad={this.onStyleLoaded.bind(this)}
+        onClick={this.onMapClick.bind(this)}>
 
           {this.renderCountryHighlight()}
-          {this.cityCircles()}
+          {this.renderCityCircles()}
 
         {!!this.state.popupContent &&
           <Popup coordinates={this.state.popupCoords}>
