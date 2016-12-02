@@ -40,15 +40,11 @@ const StackedAreaChart = ({data, dataKeys}) => {
 
   return (
     <ResponsiveContainer minHeight={200} aspect={2.5} >
-
-    { /*!dataKeys || data.length === 0
-      ? <div/>
-      :*/
       <AreaChart data={data} >
 
-        {/*<defs>
+        <defs>
         {
-          dataKeys.map( (key, i) => {
+          dataKeys && dataKeys.map( (key,i) => {
             let opacity = 0.8
             if ( key.includes('comparison')) { opacity = 0.5 }
 
@@ -61,7 +57,6 @@ const StackedAreaChart = ({data, dataKeys}) => {
           })
         }
         </defs>
-        */}
 
         <XAxis dataKey="timestamp" tickFormatter={(ts) => formatUnixTimestamp(ts, dateFormat)}/>
         <YAxis tickFormatter={(val) => formatBitsPerSecond(val, true)}/>
@@ -73,13 +68,11 @@ const StackedAreaChart = ({data, dataKeys}) => {
             let stackId = "data"
             if ( key.includes('comparison')) { stackId = "comparison" }
             // return <Area className={key} type='monotone' key={key} stackId={stackId} dataKey={key} stroke={AREA_COLORS[i]} strokeWidth='2' fill={`url(#color-${key})`} />
-            return <Area className={key} type='monotone' key={key} stackId={stackId} dataKey={key} />
+            return <Area className={key} type='monotone' key={key} stackId={stackId} dataKey={key} stroke={AREA_COLORS[i]} strokeWidth='2' fill={`url(#color-${key})`} />
           }).reverse()
         }
 
       </AreaChart>
-    }
-
   </ResponsiveContainer>
   )
 }
