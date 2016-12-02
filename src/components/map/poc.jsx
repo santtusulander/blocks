@@ -102,7 +102,9 @@ class MapPoc extends React.Component {
       zoom: 2,
       countryGeoJson: null,
       popupCoords: [],
-      popupContent: null
+      popupContent: null,
+      layers: [],
+      hoveredLayer: null
     }
 
     this.countryGeoJson = {
@@ -112,6 +114,8 @@ class MapPoc extends React.Component {
 
   }
   componentDidMount() {
+    // TODO: Move this to be handled either a on parent level or in a reducer / API
+    // GeoJSON should just passed in as a prop.
     this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
       const countryExists = countries.some(country => country.id === data.id)
 
@@ -122,7 +126,6 @@ class MapPoc extends React.Component {
   }
 
   zoomEnd(e){
-    // debugger;
     this.setState({zoom: e.transform.scale})
   }
 
@@ -132,7 +135,6 @@ class MapPoc extends React.Component {
 
   cityCircles() {
     const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
-    const countryMedian = calculateMedian( countries.map( (country => country.total_traffic) ) )
 
     return cities.map((city, i) => {
       const cityHeat = getScore(cityMedian, city.bytes)
@@ -156,23 +158,74 @@ class MapPoc extends React.Component {
     })
   }
 
-  mouseMove(e, t) {
-    let test = e.queryRenderedFeatures(t.point, { layers: ['country-fill'] })
-    if (test.length) {
-      e.setFilter('country-fill-hover', ['==', 'name', test[0].properties.name])
-      document.body.style.cursor = 'pointer';
-    } else {
-      e.setFilter('country-fill-hover', ['==', 'name', ''])
-      document.body.style.cursor = 'default';
-    }
+  mouseMove(map, feature) {
+    if (map.style._loaded) {
+      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
 
+      if (features.length) {
+        const hoveredLayer = features[0].layer.id + '-hover'
+
+        map.setFilter(hoveredLayer, ['==', 'name', features[0].properties.name])
+        document.body.style.cursor = 'pointer';
+
+        if (this.state.hoveredLayer !== hoveredLayer) {
+          this.setState({ hoveredLayer })
+        }
+
+      } else if (this.state.hoveredLayer) {
+        map.setFilter(this.state.hoveredLayer, ['==', 'name', ''])
+        document.body.style.cursor = 'default'
+      }
+    }
   }
 
   mapLoaded(e) {
-    e.addSource('geo', {
-      type: 'geojson',
-      data: this.countryGeoJson
+    const layers = this.countryGeoJson.features.map(country => 'country-fill-' + country.id )
+    this.setState({ layers })
+
+    this.countryGeoJson.features.forEach((country) => {
+      e.addSource('geo-' + country.id, {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [country] }
+      })
     })
+  }
+
+  renderCountryHighlight() {
+    const countryMedian = calculateMedian(countries.map((country => country.total_traffic)))
+
+    const highlights = this.countryGeoJson.features.map((country, i) => {
+      const trafficCountry = countries.find(c => c.id === country.id)
+      const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total_traffic)
+      const countryColor = trafficCountry ? heatMapColors[trafficHeat - 1] : '#00a9d4'
+
+      return (
+            <div key={i}>
+              <Layer
+                id={`country-fill-${country.id}`}
+                type="fill"
+                sourceId={`geo-${country.id}`}
+                paint={{
+                  'fill-color': countryColor,
+                  'fill-opacity': 0.5
+                }}/>
+
+              <Layer
+                id={`country-fill-${country.id}-hover`}
+                type="line"
+                sourceId={`geo-${country.id}`}
+                paint={{
+                  'line-color': countryColor,
+                  'line-width': 3
+                }}
+                layerOptions={{
+                  filter: ['==', 'name', '']
+                }}/>
+            </div>
+      )
+    })
+
+    return highlights
   }
 
   render() {
@@ -191,27 +244,7 @@ class MapPoc extends React.Component {
         onMouseMove={this.mouseMove.bind(this)}
         onStyleLoad={this.mapLoaded.bind(this)}>
 
-        <Layer
-          id="country-fill"
-          type="fill"
-          sourceId="geo"
-          paint={{
-            'fill-color': '#00abd6',
-            'fill-opacity': 0.3
-          }}/>
-
-        <Layer
-          id="country-fill-hover"
-          type="line"
-          sourceId="geo"
-          paint={{
-            'line-color': '#00abd6',
-            'line-width': 3
-          }}
-          layerOptions={{
-            filter: ['==', 'name', '']
-          }}/>
-
+          {this.renderCountryHighlight()}
           {this.cityCircles()}
 
         {!!this.state.popupContent &&
