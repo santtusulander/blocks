@@ -1,7 +1,5 @@
 import React from 'react';
-// import { Map, Popup, GeoJson, TileLayer, Circle } from 'react-leaflet'
-import ReactMapboxGl, { Layer, Feature, Popup, GeoJSONLayer } from 'react-mapbox-gl';
-import * as topojson from 'topojson-client'
+import ReactMapboxGl, { Layer, Feature, Popup } from 'react-mapbox-gl';
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
@@ -30,22 +28,6 @@ const countries = [
   {id: 'FIN', total_traffic: 700000},
   {id: 'CHN', total_traffic: 300000}
 ]
-
-const getCountryStyle = ( median, feature ) => {
-
-  const trafficCountry = countries.find( c => c.id === feature.id )
-  const trafficHeat = trafficCountry && getScore(median, trafficCountry.total_traffic)
-  const countryColor = trafficCountry ? heatMapColors[ trafficHeat - 1] : '#00a9d4'
-
-  const fillOpacity =  trafficCountry ? 0.5 : 0
-
-  return {
-    color: countryColor,
-    fillOpacity: fillOpacity,
-    opacity: 0,
-    weight: 2
-  }
-}
 
 /**
  * Calculate Median -value
@@ -76,23 +58,6 @@ const getScore = (median, value, steps = 5) => {
   const score = Math.ceil(diff * (steps / 2)) ;
 
   return score;
-}
-
-const handleFeature = ( feature, layer) => {
-  layer.bindPopup(feature.id);
-  layer.on({
-    mouseover: () => {
-      layer.setStyle({
-        weight:2.5,
-        opacity: 0.5
-      });
-    },
-    mouseout: () => {
-      layer.setStyle({
-        weight:0
-      });
-    }
-  })
 }
 
 class MapPoc extends React.Component {
@@ -253,30 +218,6 @@ class MapPoc extends React.Component {
           </Popup>
         }
       </ReactMapboxGl>
-      /*
-      <Map
-        center={cities[0].position}
-        zoom={this.state.zoom}
-        onZoomEnd={(e)=>this.zoomEnd(e)}
-      >
-        <TileLayer
-          url={mapboxUrl}
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          accessToken='pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA'
-        />
-
-        {cityCircles}
-
-        {this.state.zoom < 6 && geoJSON &&
-        <GeoJson
-          data={geoJSON}
-          style={(feature) => getCountryStyle(countryMedian, feature)}
-          onEachFeature={handleFeature}
-        />}
-
-      </Map>
-      */
-
     )
   }
 }
