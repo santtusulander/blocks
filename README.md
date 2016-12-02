@@ -5,10 +5,7 @@
 
 This is a portal for administering the Ericsson UDN.
 
-## Development Requirements
-This project requires the use of Node and Sass.
-
-### Contribution
+## Contribution
 
 Every pull request to this project must pass lint checks and unit tests before being reviewed. We are currently using eslint for JavaScript linting, sass-lint for Sass linting, and Jest for unit tests.
 
@@ -31,44 +28,33 @@ The following plugins can be helpful as well:
 
 ## Installation
 
-### NodeJS
-This project requires Node version 4.2.1 and npm version 2.14.7.
+### Development Requirements
+| Required Global Dependency | Check Version    | Download                            |
+|:---------------------------|:-----------------|:------------------------------------|
+| node v4.2.4                | `node -v`        | https://nodejs.org/en/download/     |
+| npm v2.14.12               | `npm -v`         | Included with node                  |
+| yarn v0.17.4               | `yarn --version` | https://yarnpkg.com/en/docs/install |
 
-Download at https://nodejs.org/en/download/
+**NOTE:** It is recommended that you use n to manage multiple versions of node on your computer, if necessary. See the [n GitHub repo](https://github.com/tj/n) for more information.
 
 ### Install the project
 
-1. Clone the repo
-   ```shell
-   $ git clone git@github.com:VidScale/udnportal.git
-   ```
-
-2. Navigate to the cloned directory
-   ```shell
-   $ cd udnportal/
-   ```
-
-3. Install dependencies
-   ```shell
-   $ npm install
-   ```
+| #  | Description                                            | Command                                                                                            |
+|:---|:-------------------------------------------------------|:---------------------------------------------------------------------------------------------------|
+| 1. | Clone the repo                                         | `$ git clone git@github.com:VidScale/udnportal.git`                                                |
+| 2. | Navigate to the cloned directory                       | `$ cd udnportal/`                                                                                  |
+| 3. | Install dependencies                                   | `$ yarn`                                                                                           |
+| 4. | Rename `.env.example` to `.env` and configure settings | NOTE: you shouldn't need to edit anything in this file, but ask another developer if you're unsure |
+| 5. | Follow the instructions to set up the Analytics API    | https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md                         |
 
 ## Running the application
 
 ### Development mode
-1. Rename .env.example to .env and configure settings
+| #  | Description                       | Command                                                                                  |
+|:---|:----------------------------------|:-----------------------------------------------------------------------------------------|
+| 1. | Run dev server                    | `$ npm start` OR `$ npm start -- --source-map` (slower build that generates source maps) |
+| 2. | Navigate to http://localhost:3000 |                                                                                          |
 
-2. Run dev server
-   ```shell
-   $ npm start
-   ```
-
-  or with source-maps (slower build)
-  ```shell
-  $ npm start -- --source-map
-  ```
-
-3. Navigate to http://localhost:3000
 
 ### Building for deployment
 
