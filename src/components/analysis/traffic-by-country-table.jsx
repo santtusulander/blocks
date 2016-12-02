@@ -2,11 +2,10 @@ import React, {PropTypes} from 'react'
 import {Table, Tr, Td} from 'reactable'
 import {injectIntl} from 'react-intl'
 import Immutable from 'immutable'
-import numeral from 'numeral'
 
 import TinyAreaChart from '../charts/tiny-area-chart'
 
-import { formatBitsPerSecond } from '../../util/helpers'
+import { formatBitsPerSecond, formatRequests } from '../../util/helpers'
 
 const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
 
@@ -14,13 +13,13 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
     ? 'bits_per_second'
     : 'requests'
 
-  const byCountryDataFormat = recordType === 'transfer_rates'
-    ? val => formatBitsPerSecond(val, true)
-    : val => val ? numeral(val).format('0,0') : '-'
-
   const byCountryDataKey = recordType === 'transfer_rates'
     ? 'average_bits_per_second'
     : 'requests'
+
+  const byCountryDataFormat = recordType === 'transfer_rates'
+    ? val => formatBitsPerSecond(val, true)
+    : val => formatRequests(val)
 
   return (
     <Table className="table" sortable={true} >
