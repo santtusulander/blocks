@@ -64,7 +64,7 @@ class MapPoc extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      zoom: 2,
+      zoom: 1,
       countryGeoJson: null,
       popupCoords: [0, 0],
       popupContent: null,
@@ -236,7 +236,7 @@ class MapPoc extends React.Component {
           height: '600px'
         }}
         zoom={[this.state.zoom]}
-        minZoom={2}
+        minZoom={1}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
