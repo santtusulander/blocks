@@ -77,6 +77,8 @@ class MapPoc extends React.Component {
       features: []
     }
 
+    this.setHoverStyle = this.setHoverStyle.bind(this);
+
   }
   componentDidMount() {
     // TODO: Move this to be handled either a on parent level or in a reducer / API
@@ -90,7 +92,7 @@ class MapPoc extends React.Component {
     })
   }
 
-  onStyleLoaded(e) {
+  onStyleLoaded(map) {
     const layers = this.countryGeoJson.features.map(country => 'country-fill-' + country.id )
     cities.forEach((city) => {
       layers.push(city.name.split(' ').join('-').toLowerCase())
@@ -98,7 +100,7 @@ class MapPoc extends React.Component {
     this.setState({ layers })
 
     this.countryGeoJson.features.forEach((country) => {
-      e.addSource('geo-' + country.id, {
+      map.addSource('geo-' + country.id, {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [country] }
       })
@@ -106,7 +108,7 @@ class MapPoc extends React.Component {
   }
 
   onZoomEnd(e){
-    this.setState({zoom: e.transform.scale})
+    this.setState({ scale: e.transform.scale, zoom: e.transform._zoom })
   }
 
   openPopup(content, coords) {
@@ -117,11 +119,10 @@ class MapPoc extends React.Component {
     this.setState({ popupContent: null })
   }
 
-  onCountryHover(map, feature) {
+  onMouseMove(map, feature) {
     if (map.style._loaded) {
       if (this.state.hoveredLayer) {
-        map.setPaintProperty(this.state.hoveredLayer.id, this.state.hoveredLayer.type + '-opacity', 0.5)
-        map.getCanvas().style.cursor = 'default'
+        this.setHoverStyle(map)('opacity', 0.5)('default')
         this.setState({ hoveredLayer: null })
         this.closePopup();
       }
@@ -131,21 +132,29 @@ class MapPoc extends React.Component {
       if (features.length) {
         const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
 
-        if (this.state.hoveredLayer !== hoveredLayer) {
-          map.setPaintProperty(hoveredLayer.id, hoveredLayer.type + '-opacity', 0.8)
-          map.getCanvas().style.cursor = 'pointer'
-          this.setState({ hoveredLayer })
-        }
+        this.setState({ hoveredLayer })
+        this.setHoverStyle(map)('opacity', 0.9)('pointer')
         this.openPopup(features[0].properties.name, [feature.lngLat.lng, feature.lngLat.lat])
       }
     }
   }
 
-  onCountryHoverEnd(e) {
-    e.map.setFilter(this.state.hoveredLayer, ['==', 'name', ''])
-    e.map.getCanvas().style.cursor = 'default'
-    this.setState({ hoveredLayer: null })
-    this.closePopup()
+  /**
+   * Set hover style for a hovered layer. Style param should match one of the
+   * paint property names defined in Mapbox Style Spec
+   * https://www.mapbox.com/mapbox-gl-style-spec/#layer-paint
+   * The type prefix (e.g. 'fill') is not needed as it's already being gotten
+   * from this.state.hoveredLayer.
+   * @param map
+   * @param style, value
+   * @param cursor
+   * @returns {function}
+   */
+  setHoverStyle(map) {
+    return (style, value) => (cursor) => {
+      map.setPaintProperty(this.state.hoveredLayer.id, this.state.hoveredLayer.type + '-' + style, value)
+      map.getCanvas().style.cursor = cursor
+    }
   }
 
   renderCountryHighlight() {
@@ -202,7 +211,7 @@ class MapPoc extends React.Component {
           key={i}
           type="circle"
           paint={{
-            'circle-radius': cityHeat * (this.state.zoom / 5),
+            'circle-radius': cityHeat * (this.state.scale / 5),
             'circle-color': cityColor,
             'circle-opacity': 0.5
           }}>
@@ -226,11 +235,12 @@ class MapPoc extends React.Component {
         containerStyle={{
           height: '600px'
         }}
-        minZoom={1}
+        zoom={[this.state.zoom]}
+        minZoom={2}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
-        onMouseMove={this.onCountryHover.bind(this)}>
+        onMouseMove={this.onMouseMove.bind(this)}>
 
           {this.renderCountryHighlight()}
           {this.renderCityCircles()}
