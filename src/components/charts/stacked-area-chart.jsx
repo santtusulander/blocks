@@ -29,6 +29,7 @@ const StackedAreaChart = ({data, dataKeys}) => {
     timeRange = lastItem.timestamp - firstItem.timestamp
   }
 
+  //TODO: Fix X-axis time ranges
   //if less than 24h, show HH:MM
   if (timeRange <= 60 * 60 * 24) {
     dateFormat = "HH:mm"

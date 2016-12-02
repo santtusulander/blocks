@@ -37,7 +37,7 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
               data={byCountryDataFormat(country.get(byCountryDataKey))}
             />
             <Td column="Period Trend">
-              <TinyAreaChart data={country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
+              <TinyAreaChart data={country && country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
             </Td>
           </Tr>
         )
