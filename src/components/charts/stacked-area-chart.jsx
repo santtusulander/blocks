@@ -12,7 +12,7 @@ const AREA_COLORS = [
 ]
 
 const StackedAreaChart = ({data, dataKeys}) => {
-  let dateFormat, xTickCount, timeRange;
+  let dateFormat, timeRange;
 
   // try to get dataKeys from 1st object keys
   if (!dataKeys && data && data[0]) {
@@ -31,10 +31,8 @@ const StackedAreaChart = ({data, dataKeys}) => {
 
   //if less than 24h, show HH:MM
   if (timeRange <= 60 * 60 * 24) {
-    xTickCount=24
     dateFormat = "HH:mm"
   } else {
-    xTickCount = Math.ceil(timeRange / (60 * 60 * 24))
     dateFormat = "DD"
   }
 
@@ -67,7 +65,6 @@ const StackedAreaChart = ({data, dataKeys}) => {
           dataKeys && dataKeys.map( (key,i) => {
             let stackId = "data"
             if ( key.includes('comparison')) { stackId = "comparison" }
-            // return <Area className={key} type='monotone' key={key} stackId={stackId} dataKey={key} stroke={AREA_COLORS[i]} strokeWidth='2' fill={`url(#color-${key})`} />
             return <Area className={key} type='monotone' key={key} stackId={stackId} dataKey={key} stroke={AREA_COLORS[i]} strokeWidth='2' fill={`url(#color-${key})`} />
           }).reverse()
         }
