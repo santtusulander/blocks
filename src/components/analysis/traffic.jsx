@@ -241,7 +241,7 @@ class AnalysisTraffic extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.trafficOverview.byCountry.text"/>} />
         <SectionContainer>
-          {!sortedCountries.size 
+          {!sortedCountries.size
            ? <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
            : <table className="table table-striped table-analysis">
               <thead>
