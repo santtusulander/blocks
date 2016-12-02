@@ -265,7 +265,7 @@ export class Configuration extends React.Component {
               hostActions.startFetching()
               hostActions.fetchHost(brand, account, group, value).then(() => {
                 const url = getContentUrl('propertyConfiguration', value, params)
-                this.props.router.push(url)
+                this.props.router.push(`${url}/${children.props.route.path}`)
               })
             }}
             drillable={true}>
