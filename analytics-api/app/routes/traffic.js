@@ -201,19 +201,19 @@ function routeTraffic(req, res) {
             let bytesSum       = _.sumBy(records, (record) => record.bytes);
             let bytesMax       = _.maxBy(records, (record) => record.bytes);
             bytesMax           = bytesMax ? bytesMax.bytes : null;
-            let bytesMin       = _.minBy(records, (record) => record.bytes);
+            let bytesMin       = _.minBy(records, (record) => record.bytes || 0);
             bytesMin           = bytesMin ? bytesMin.bytes : null;
             let bytesAvg       = _.meanBy(records, (record) => record.bytes);
             let requestsSum    = _.sumBy(records, (record) => record.requests);
             let requestsMax    = _.maxBy(records, (record) => record.requests);
             requestsMax        = requestsMax ? requestsMax.requests : null;
-            let requestsMin    = _.minBy(records, (record) => record.requests);
+            let requestsMin    = _.minBy(records, (record) => record.requests || 0);
             requestsMin        = requestsMin ? requestsMin.requests : null;
             let requestsAvg    = _.meanBy(records, (record) => record.requests);
             let connectionsSum = _.sumBy(records, (record) => record.connections);
             let connectionsMax = _.maxBy(records, (record) => record.connections);
             connectionsMax     = connectionsMax ? connectionsMax.connections : null;
-            let connectionsMin = _.minBy(records, (record) => record.connections);
+            let connectionsMin = _.minBy(records, (record) => record.connections || 0);
             connectionsMin     = connectionsMin ? connectionsMin.connections : null;
             let connectionsAvg = _.meanBy(records, (record) => record.connections);
 
