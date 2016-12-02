@@ -92,6 +92,9 @@ class MapPoc extends React.Component {
 
   onStyleLoaded(e) {
     const layers = this.countryGeoJson.features.map(country => 'country-fill-' + country.id )
+    cities.forEach((city) => {
+      layers.push(city.name.split(' ').join('-').toLowerCase())
+    });
     this.setState({ layers })
 
     this.countryGeoJson.features.forEach((country) => {
@@ -114,18 +117,27 @@ class MapPoc extends React.Component {
     this.setState({ popupContent: null })
   }
 
-  onCountryHover(e) {
-    const hoveredLayer = e.feature.layer.id + '-hover'
-    const features = e.map.queryRenderedFeatures(e.point, { layers: this.state.layers })
-
-    if (features.length) {
-      if (this.state.hoveredLayer !== hoveredLayer) {
-        e.map.setFilter(hoveredLayer, ['==', 'name', features[0].properties.name])
-        e.map.getCanvas().style.cursor = 'pointer'
-        this.setState({ hoveredLayer })
+  onCountryHover(map, feature) {
+    if (map.style._loaded) {
+      if (this.state.hoveredLayer) {
+        map.setPaintProperty(this.state.hoveredLayer.id, this.state.hoveredLayer.type + '-opacity', 0.5)
+        map.getCanvas().style.cursor = 'default'
+        this.setState({ hoveredLayer: null })
+        this.closePopup();
       }
 
-      this.openPopup(features[0].properties.name, [e.lngLat.lng, e.lngLat.lat])
+      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
+
+      if (features.length) {
+        const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
+
+        if (this.state.hoveredLayer !== hoveredLayer) {
+          map.setPaintProperty(hoveredLayer.id, hoveredLayer.type + '-opacity', 0.8)
+          map.getCanvas().style.cursor = 'pointer'
+          this.setState({ hoveredLayer })
+        }
+        this.openPopup(features[0].properties.name, [feature.lngLat.lng, feature.lngLat.lat])
+      }
     }
   }
 
@@ -158,22 +170,16 @@ class MapPoc extends React.Component {
                     properties={{
                       name: country.properties.name
                     }}
-                    coordinates={country.geometry.coordinates}
-                    onHover={this.onCountryHover.bind(this)}
-                    onEndHover={this.onCountryHoverEnd.bind(this)}
-                    />
+                    coordinates={country.geometry.coordinates}/>
               </Layer>
 
               <Layer
-                id={`country-fill-${country.id}-hover`}
+                id={`country-stroke-${country.id}`}
                 type="line"
                 sourceId={`geo-${country.id}`}
                 paint={{
                   'line-color': countryColor,
-                  'line-width': 3
-                }}
-                layerOptions={{
-                  filter: ['==', 'name', '']
+                  'line-width': 2
                 }}/>
             </div>
       )
@@ -188,9 +194,11 @@ class MapPoc extends React.Component {
     return cities.map((city, i) => {
       const cityHeat = getScore(cityMedian, city.bytes)
       const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+      const cityId = city.name.split(' ').join('-').toLowerCase()
 
       return (
         <Layer
+          id={cityId}
           key={i}
           type="circle"
           paint={{
@@ -200,8 +208,9 @@ class MapPoc extends React.Component {
           }}>
           <Feature
             coordinates={city.position}
-            onHover={this.openPopup.bind(this, city.name, city.position)}
-            />
+            properties={{
+              name: city.name
+            }} />
         </Layer>
       )
     })
@@ -220,7 +229,8 @@ class MapPoc extends React.Component {
         minZoom={1}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
-        onStyleLoad={this.onStyleLoaded.bind(this)}>
+        onStyleLoad={this.onStyleLoaded.bind(this)}
+        onMouseMove={this.onCountryHover.bind(this)}>
 
           {this.renderCountryHighlight()}
           {this.renderCityCircles()}
