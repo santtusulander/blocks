@@ -10,9 +10,10 @@ import IsAllowed from '../is-allowed'
 import DomainSelector from '../global-account-selector/selector-component'
 import IconAdd from '../icons/icon-add'
 import IconEdit from '../icons/icon-edit'
+import IconTrash from '../icons/icon-trash'
 import IconCaretDown from '../icons/icon-caret-down'
 
-const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
+const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain, onEditDomain, onDeleteDomain, searchFunc, searchValue, emptyDomainsTxt }) => {
   const sortedDomains = domains.sort((a,b) => {
     if (a.id.toLowerCase() < b.id.toLowerCase()) return -1
     if (a.id.toLowerCase() > b.id.toLowerCase()) return 1
@@ -52,6 +53,16 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
             <IconEdit/>
           </Button>
         </IsAllowed>}
+        {activeDomain &&
+        <IsAllowed to={MODIFY_ZONE}>
+          <Button
+            id="delete-domain"
+            bsStyle="danger"
+            className="btn-icon"
+            onClick={() => onDeleteDomain(activeDomain)}>
+            <IconTrash/>
+          </Button>
+        </IsAllowed>}
       </ButtonToolbar>
     </PageHeader>
   )
@@ -65,6 +76,7 @@ DomainToolbar.propTypes = {
   emptyDomainsTxt: PropTypes.string,
   fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
+  onDeleteDomain: PropTypes.func,
   onEditDomain: PropTypes.func,
   searchFunc: PropTypes.func,
   searchValue: PropTypes.string
