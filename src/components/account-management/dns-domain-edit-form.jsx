@@ -92,12 +92,6 @@ const DnsDomainEditForm = (props) => {
       {negative_ttl.touched && negative_ttl.error && <div className='error-msg'>{negative_ttl.error}</div>}
 
       <ButtonToolbar className="text-right extra-margin-top">
-        {props.edit &&
-        <Button disabled={fetching} bsStyle="danger" className="pull-left"
-          onClick={() => props.onDelete(props.fields.name.value)}>
-          <FormattedMessage id="portal.button.delete"/>
-        </Button>
-          }
         <Button className="btn-outline" onClick={props.onCancel}>
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
