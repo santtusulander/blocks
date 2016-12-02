@@ -3,6 +3,7 @@ import moment from 'moment'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import DatePicker from 'react-datepicker'
 import { Col, Row } from 'react-bootstrap'
+import classnames from 'classnames'
 
 import Select from './select'
 import DateRanges from '../constants/date-ranges'
@@ -171,13 +172,17 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate, value )
+      this.props.changeDateRange(startDate, endDate, value)
     })
   }
 
   render() {
     const ranges = this.props.availableRanges.map(range => [range, this.props.intl.formatMessage({id: range})])
-
+    const classes = startOrEnd => classnames(
+      { 'datepicker-open': this.state.datepickerOpen },
+      'react-datepicker-input-wrapper',
+      startOrEnd
+    )
     return (
       <div className="date-range-select">
         <Select className="btn-block"
@@ -188,11 +193,9 @@ export class DateRangeSelect extends React.Component {
           <Row className="no-gutters">
             <Col xs={6}>
               <h5><FormattedMessage id="portal.analysis.filters.dateRangeFrom.title"/></h5>
-              <div ref="startDateHolder"
-                   className={'datepicker-input-wrapper start-date' +
-                (this.state.datepickerOpen ?
-                ' datepicker-open' : '')}>
+              <div ref="startDateHolder" className={classes('start-date')}>
                 <DatePicker
+                  className="react-datepicker__input"
                   dateFormat="MM/DD/YYYY"
                   selected={this.state.startDate}
                   startDate={this.state.startDate}
@@ -206,10 +209,9 @@ export class DateRangeSelect extends React.Component {
             <Col xs={6}>
               <h5><FormattedMessage id="portal.analysis.filters.dateRangeTo.title"/></h5>
               <div ref="endDateHolder"
-                   className={'datepicker-input-wrapper end-date' +
-                (this.state.datepickerOpen ?
-                ' datepicker-open' : '')}>
+                   className={classes('end-date')}>
                 <DatePicker
+                  className="react-datepicker__input"
                   popoverAttachment='top right'
                   popoverTargetAttachment='bottom right'
                   dateFormat="MM/DD/YYYY"
