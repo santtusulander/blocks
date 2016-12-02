@@ -16,8 +16,8 @@ class Select extends Component {
     this.getSelectedItem = this.getSelectedItem.bind(this)
   }
 
-  selectOption(e, value) {
-    this.props.onSelect(this.props.numericValues ? Number(value) : value)
+  selectOption(eventKey) {
+    this.props.onSelect(this.props.numericValues ? Number(eventKey) : eventKey)
   }
 
   getMenuItem(option, i) {
