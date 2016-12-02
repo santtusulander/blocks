@@ -102,43 +102,6 @@ class MapPoc extends React.Component {
     })
   }
 
-  onMouseMove(map, feature) {
-    if (map.style._loaded) {
-      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
-
-      if (features.length) {
-        const hoveredLayer = features[0].layer.id + '-hover'
-
-        map.setFilter(hoveredLayer, ['==', 'name', features[0].properties.name])
-        document.body.style.cursor = 'pointer';
-
-        if (this.state.hoveredLayer !== hoveredLayer) {
-          this.setState({ hoveredLayer })
-        }
-
-      } else if (this.state.hoveredLayer) {
-        map.setFilter(this.state.hoveredLayer, ['==', 'name', ''])
-        document.body.style.cursor = 'default'
-      }
-    }
-  }
-
-  onMapClick(map, feature) {
-    if (map.style._loaded) {
-      const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
-
-      if (features.length) {
-        const popupContent = features[0].properties.name
-        const popupCoords = [feature.lngLat.lng, feature.lngLat.lat]
-        this.setState({ popupContent, popupCoords })
-
-      } else {
-        this.closePopup()
-      }
-
-    }
-  }
-
   onZoomEnd(e){
     this.setState({zoom: e.transform.scale})
   }
@@ -148,7 +111,29 @@ class MapPoc extends React.Component {
   }
 
   closePopup() {
-    this.setState({ popupContent: null });
+    this.setState({ popupContent: null })
+  }
+
+  onCountryHover(e) {
+    const hoveredLayer = e.feature.layer.id + '-hover'
+    const features = e.map.queryRenderedFeatures(e.point, { layers: this.state.layers })
+
+    if (features.length) {
+      if (this.state.hoveredLayer !== hoveredLayer) {
+        e.map.setFilter(hoveredLayer, ['==', 'name', features[0].properties.name])
+        e.map.getCanvas().style.cursor = 'pointer'
+        this.setState({ hoveredLayer })
+      }
+
+      this.openPopup(features[0].properties.name, [e.lngLat.lng, e.lngLat.lat])
+    }
+  }
+
+  onCountryHoverEnd(e) {
+    e.map.setFilter(this.state.hoveredLayer, ['==', 'name', ''])
+    e.map.getCanvas().style.cursor = 'default'
+    this.setState({ hoveredLayer: null })
+    this.closePopup()
   }
 
   renderCountryHighlight() {
@@ -168,7 +153,16 @@ class MapPoc extends React.Component {
                 paint={{
                   'fill-color': countryColor,
                   'fill-opacity': 0.5
-                }}/>
+                }}>
+                  <Feature
+                    properties={{
+                      name: country.properties.name
+                    }}
+                    coordinates={country.geometry.coordinates}
+                    onHover={this.onCountryHover.bind(this)}
+                    onEndHover={this.onCountryHoverEnd.bind(this)}
+                    />
+              </Layer>
 
               <Layer
                 id={`country-fill-${country.id}-hover`}
@@ -181,8 +175,6 @@ class MapPoc extends React.Component {
                 layerOptions={{
                   filter: ['==', 'name', '']
                 }}/>
-
-
             </div>
       )
     })
@@ -208,7 +200,7 @@ class MapPoc extends React.Component {
           }}>
           <Feature
             coordinates={city.position}
-            onClick={this.openPopup.bind(this, city.name, city.position)}
+            onHover={this.openPopup.bind(this, city.name, city.position)}
             />
         </Layer>
       )
@@ -228,9 +220,7 @@ class MapPoc extends React.Component {
         minZoom={1}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}
-        onStyleLoad={this.onStyleLoaded.bind(this)}
-        onClick={this.onMapClick.bind(this)}>
+        onStyleLoad={this.onStyleLoaded.bind(this)}>
 
           {this.renderCountryHighlight()}
           {this.renderCityCircles()}
