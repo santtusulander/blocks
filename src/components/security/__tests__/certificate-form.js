@@ -24,7 +24,7 @@ describe('SoaEditForm', () => {
           group: { touched, error, value: '' },
           title: { touched, error, value: '' },
           privateKey: { touched, error, value: '' },
-          interMediateCert: { touched, error, value: '' },
+          intermediateCertificates: { touched, error, value: '' },
           certificate: { touched, error, value: '' }
         }
       }

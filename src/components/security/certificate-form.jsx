@@ -6,7 +6,7 @@ import SelectWrapper from '../select-wrapper.jsx'
 import UDNButton from '../button'
 
 export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
-  const { group, title, privateKey, certificate } = fields
+  const { group, title, privateKey, certificate, intermediateCertificates } = fields
   const groupsOptions = groups.map(group => [group.get('id'), group.get('name')])
 
   return (
@@ -35,6 +35,14 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
           className="fixed-size-textarea"
           {...privateKey}/>
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
+        <hr/>
+      </div>
+      <div id="intermediateCertificates">
+        <Input type="textarea"
+          label="Intermediate Certificate"
+          className="fixed-size-textarea"
+          {...intermediateCertificates}/>
+        {intermediateCertificates.touched && intermediateCertificates.error && <div className="error-msg">{intermediateCertificates.error}</div>}
         <hr/>
       </div>
       <div id="certificate">
