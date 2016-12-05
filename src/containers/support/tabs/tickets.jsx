@@ -166,10 +166,17 @@ class SupportTabTickets extends React.Component {
         <div>
           <SectionHeader sectionHeaderTitle="5 Open Tickets">
             <div className="form-group inline">
-              <SelectWrapper options={[[1, 'All Types'], [2, 'Alerts']]} value={1}/>
+              <SelectWrapper
+                onChange={() => {}}
+                options={[[1, 'All Types'], [2, 'Alerts']]}
+                value={1}/>
             </div>
             <div className="form-group inline">
-              <SelectWrapper options={[[1, 'All Priorities'], [2, 'Critical']]} value={1}/>
+              <SelectWrapper
+                onChange={() => {}}
+                options={[[1, 'All Priorities'], [2, 'Critical']]}
+                value={1}
+              />
             </div>
             <UDNButton bsStyle="success" icon={true} addNew={true}>
               <IconAdd/>
