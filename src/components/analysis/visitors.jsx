@@ -211,7 +211,7 @@ class AnalysisVisitors extends React.Component {
             </thead>
             <tbody>
               {this.props.fetching ?
-                <tr><td colSpan="5">Loading...</td></tr> :
+                <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
                 sortedCountries.map((country, i) => {
                   const countryData = country.get('detail').map(datapoint => {
                     return datapoint.set(
