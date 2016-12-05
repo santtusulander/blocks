@@ -20,7 +20,7 @@ const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSe
 
     return (
       <div>
-        Date: {formatUnixTimestamp( ts, "DD.MM.YYYY") }
+        Date: {formatUnixTimestamp( ts, "MM/DD/YYYY, HH:mm") }
 
         {payload.map(({ name, value, dataKey }, i) =>
           <div key={i} className="tooltip-item">

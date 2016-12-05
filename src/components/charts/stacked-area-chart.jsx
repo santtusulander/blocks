@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react'
 import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} from 'recharts'
+
+import d3 from 'd3'
+
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
 
 
-import { formatBitsPerSecond, formatUnixTimestamp } from '../../util/helpers'
+import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
 import { paleblue, green, darkblue, darkgreen } from '../../constants/colors'
 import './stacked-area-chart.scss'
@@ -46,30 +49,33 @@ const getAreaColor = (key, i) => {
 }
 
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) => {
-  let dateFormat, /*xTickCount,*/ timeRange;
+  let dateFormat = "MM/DD"
 
-  const firstItem = data && data[0]
-  const lastItem = data && data[data.length - 1]
+  const getTicks = (data) => {
+    if (!data || !data.length ) {return [];}
 
-  if (lastItem && lastItem.timestamp && firstItem && firstItem.timestamp) {
-    timeRange = lastItem.timestamp - firstItem.timestamp
-  }
+    const start = unixTimestampToDate(data[0].timestamp).valueOf()
+    const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()
 
-  //TODO: Fix X-axis time ranges
-  //if less than 24h, show HH:MM
-  if (timeRange <= 60 * 60 * 24) {
-    //xTickCount=24
-    dateFormat = "HH:mm"
-  } else {
-    //xTickCount = Math.ceil(timeRange / (60 * 60 * 24))
-    dateFormat = "DD"
-  }
+    const steps = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? d3.time.hour.utc : d3.time.day.utc
+
+    dateFormat = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? dateFormat = "HH:mm" : "MM/DD"
+
+    const scale = d3.time
+                    .scale
+                    .utc()
+                    .domain([start, end])
+                    .range([0,1])
+
+
+    const ticks = scale.ticks(steps, 1);
+    return ticks.map(entry => +(entry/1000) );
+  };
 
   const renderGradients = (areas) => {
     return areas.map( (area,i) => {
       let opacity = 0.8
       const {dataKey} = area
-      //if ( key.includes('comparison')) { opacity = 0.5 }
 
       return (
         <linearGradient key={i} id={`color-${dataKey}`} x1="0" y1="0" x2="0" y2="100%">
@@ -103,7 +109,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
         { renderAreas(areas) }
 
-        <XAxis dataKey="timestamp" tickFormatter={(ts) => formatUnixTimestamp(ts, dateFormat)}/>
+        <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)}/>
         <YAxis tickFormatter={(val) => valueFormatter(val, true)}/>
 
         <Legend
