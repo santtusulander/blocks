@@ -39,7 +39,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
       </div>
       <div id="intermediateCertificates">
         <Input type="textarea"
-          label="Intermediate Certificate"
+          label="Intermediate Certificates"
           className="fixed-size-textarea"
           {...intermediateCertificates}/>
         {intermediateCertificates.touched && intermediateCertificates.error && <div className="error-msg">{intermediateCertificates.error}</div>}
