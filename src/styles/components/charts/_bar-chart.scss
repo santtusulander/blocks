@@ -1,0 +1,70 @@
+@import '../../base/chart-legend';
+
+.bar-chart-container {
+  height: 100%;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .bar-chart-tooltip {
+    @extend %chart-legend;
+    position: relative;
+    top: auto;
+    right: auto;
+    padding: 8px 0;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.8);
+    }
+
+    .tooltip-item {
+      @extend %legend-item;
+      padding: 0 8px;
+    }
+  }
+
+  text {
+    @include print {
+      font-size: $font-size;
+      fill: $black !important;
+    }
+
+    .dark-theme & {
+      fill: $dt-text-color;
+    }
+
+    .light-theme & {
+      fill: $lt-text-color;
+    }
+  }
+
+  .bar-chart-label {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-weight: bold;
+  }
+
+  .legend-icon {
+    margin-right: 7.5px;
+    font-weight: bold;
+  }
+
+  .bar-chart-legend {
+    @extend %chart-legend;
+    padding: 15px 80px 15px 15px;
+
+    .bar-chart-legend-item {
+      @extend %legend-item;
+    }
+  }
+
+  .recharts-bar-rectangle:hover {
+    opacity: 0.8;
+  }
+
+  .recharts-bar-cursor {
+    display: none;
+  }
+}
