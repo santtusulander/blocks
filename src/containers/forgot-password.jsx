@@ -106,6 +106,7 @@ export class ForgotPassword extends React.Component {
 
               <Row>
                 <Col xs={12}>
+                  <Link to="/login" className="pull-left back-to-login-btn"><FormattedMessage id="portal.common.backToLogin.button"/></Link>
                   <Button type="submit" bsStyle="primary" className="pull-right"
                     disabled={this.props.fetching}>
                     {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
