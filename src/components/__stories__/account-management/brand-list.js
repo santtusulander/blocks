@@ -7,7 +7,7 @@ import {
   BrandList,
   AVAILABILITY_PRIVATE,
   AVAILABILITY_SHARED
-} from '../../account-management/brand-list.jsx'
+} from '../../account-management/brand-list/brand-list.jsx'
 
 const brandList = Immutable.fromJS([
   {id: 1, logo: null, brand: 'Lorem Ipsum', availability: AVAILABILITY_SHARED, lastEdited: new Date().toString(), usedBy: 'Account Name #1'},

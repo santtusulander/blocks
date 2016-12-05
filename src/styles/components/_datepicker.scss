@@ -21,12 +21,17 @@
   border: 0;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
     background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
     background-size: 100%;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -40,9 +45,12 @@
   border-bottom: 1px solid;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    border-color: rgba($black, 0.2);
   }
 }
 
@@ -90,17 +98,23 @@
     &::after {
       border-left: 0;
 
-      .dark-theme &,
-      .light-theme & {
+      .dark-theme & {
         border-right-color: $dt-text-color;
+      }
+
+      .light-theme & {
+        border-right-color: $lt-text-color;
       }
     }
 
     &:hover::after {
 
-      .dark-theme &,
-      .light-theme & {
+      .dark-theme & {
         border-right-color: $white;
+      }
+
+      .light-theme & {
+        border-right-color: $black;
       }
     }
   }
@@ -111,17 +125,23 @@
     &::after {
       border-right: 0;
 
-      .dark-theme &,
-      .light-theme & {
+      .dark-theme & {
         border-left-color: $dt-text-color;
+      }
+
+      .light-theme & {
+        border-left-color: $lt-text-color;
       }
     }
 
     &:hover::after {
 
-      .dark-theme &,
-      .light-theme & {
+      .dark-theme & {
         border-left-color: $white;
+      }
+
+      .light-theme & {
+        border-left-color: $black;
       }
     }
   }
@@ -154,9 +174,12 @@
       background-color: inherit;
     }
 
-    .dark-theme &:not(.datepicker__day--disabled),
-    .light-theme &:not(.datepicker__day--disabled) {
+    .dark-theme &:not(.datepicker__day--disabled) {
       color: $white;
+    }
+
+    .light-theme &:not(.datepicker__day--disabled) {
+      color: $black;
     }
   }
 
@@ -188,7 +211,6 @@
     width: $bar-height / 2;
     height: $bar-height / 2;
     margin: (-$bar-height / 4) 0 0 (-$bar-height / 4);
-    border: 1px solid;
     border-radius: 50%;
     content: ' ';
 
@@ -198,9 +220,8 @@
       margin: (-$md-bar-height / 4) 0 0 (-$md-bar-height / 4);
     }
 
-    .dark-theme &,
-    .light-theme & {
-      border-color: $white;
+    .dark-theme & {
+      border: 1px solid $white;
     }
   }
 }
@@ -317,9 +338,7 @@
   }
 
   &.datepicker-open .datepicker__input {
-
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       background: $black;
       background-image: linear-gradient(rgba($purple, 0.025), rgba($purple, 0.025)), linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
       background-size: 100%;
@@ -328,6 +347,14 @@
         background: $black;
         background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
         background-size: 100%;
+      }
+    }
+
+    .light-theme & {
+      background: $white;
+
+      &.datepicker__tether-enabled {
+        background: $white;
       }
     }
   }
@@ -356,10 +383,15 @@
       }
     }
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       background: url('../assets/icons/dt-icon-calendar.svg') rgba($black, 0.2) right center no-repeat;
       background-size: $bar-height;
+    }
+
+    .light-theme & {
+      background: url('../assets/icons/dt-icon-calendar.svg') $white right center no-repeat;
+      background-size: $bar-height;
+      border: 1px solid rgba($black, 0.1);
     }
   }
 }

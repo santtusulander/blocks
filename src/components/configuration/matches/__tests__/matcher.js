@@ -8,7 +8,7 @@ jest.unmock('../../../../util/policy-config.js')
 const Matcher = require('../matcher.jsx')
 
 const fakeConfig = Immutable.fromJS({
-  "cases": [["foo"]]
+  "cases": [[""]]
 })
 
 const fakePath = Immutable.List(['foo', 'bar'])
@@ -97,5 +97,46 @@ describe('Matcher', () => {
     )
     const inputSelects = matcher.find('Select')
     expect(inputSelects.length).toEqual(0)
+  })
+
+  it('should validate for "exists" matches', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        disableRuleSelector={true}/>
+    )
+    matcher.instance().handleMatchesChange('exists')
+    expect(matcher.instance().validate()).toBe(true)
+  })
+
+  it('should validate for "contains" matches', () => {
+    const changeValue = jest.fn()
+    const close = jest.fn()
+    const matcher = shallow(
+      <Matcher
+        changeValue={changeValue}
+        match={fakeConfig}
+        path={fakePath}
+        close={close}
+        disableRuleSelector={true}/>
+    )
+
+    matcher.instance().handleMatchesChange('contains')
+    expect(matcher.instance().validate()).toBe(false)
+    matcher.instance().handleValChange({ target: { value: 'aaa' } })
+    matcher.instance().handleContainsValChange({ target: { value: 'bbb' } })
+    expect(matcher.instance().validate()).toBe(true)
+
+    matcher.instance().handleContainsValChange({ target: { } })
+    matcher.instance().handleMatchesChange('does_not_contain')
+    expect(matcher.instance().validate()).toBe(false)
+    matcher.instance().handleValChange({ target: { value: 'ccc' } })
+    matcher.instance().handleContainsValChange({ target: { value: 'ddd' } })
+    expect(matcher.instance().validate()).toBe(true)
   })
 })
