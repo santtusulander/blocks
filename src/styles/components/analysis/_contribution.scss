@@ -1,12 +1,17 @@
 .analysis-contribution {
   position: relative;
+  height: 33vw;
 
   .line-0 {
 
     .dark-theme &,
     .light-theme & {
-      fill: $link-blue;
-      stroke: $link-blue;
+      &,
+      & .recharts-bar-rectangle {
+          color: $link-blue;
+          fill: $link-blue;
+          stroke: $link-blue;
+      }
     }
   }
 
@@ -14,8 +19,12 @@
 
     .dark-theme &,
     .light-theme & {
-      fill: $pale-blue;
-      stroke: $pale-blue;
+      &,
+      & .recharts-bar-rectangle {
+        color: $pale-blue;
+        fill: $pale-blue;
+        stroke: $pale-blue;
+      }
     }
   }
 
@@ -23,8 +32,12 @@
 
     .dark-theme &,
     .light-theme & {
-      fill: $orange;
-      stroke: $orange;
+      &,
+      & .recharts-bar-rectangle {
+        color: $orange;
+        fill: $orange;
+        stroke: $orange;
+      }
     }
   }
 
@@ -32,8 +45,12 @@
 
     .dark-theme &,
     .light-theme & {
-      fill: $yellow;
-      stroke: $yellow;
+      &,
+      & .recharts-bar-rectangle {
+        color: $yellow;
+        fill: $yellow;
+        stroke: $yellow;
+      }
     }
   }
 

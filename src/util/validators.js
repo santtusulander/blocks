@@ -87,7 +87,7 @@ export function isValidHostName(hostName) {
  */
 export function isValidAccountName(name) {
   const accountNameRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
-  return accountNameRegexp.test(name) && !isOnlyWhiteSpace(name)
+  return name && accountNameRegexp.test(name) && !isOnlyWhiteSpace(name)
 }
 
 /**
