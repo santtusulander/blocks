@@ -1,12 +1,13 @@
 import React from 'react'
 import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router'
+import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
+import ReCAPTCHA from '../components/recaptcha'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -19,6 +20,7 @@ export class ForgotPassword extends React.Component {
       email: '',
       emailActive: false,
       emailError: null,
+      recaptcha: '',
       submitted: false
     }
 
@@ -60,6 +62,8 @@ export class ForgotPassword extends React.Component {
     }
   }
   render() {
+    const disableSubmit = this.props.fetching || !this.state.email || !this.state.recaptcha
+
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
@@ -104,10 +108,17 @@ export class ForgotPassword extends React.Component {
                 value={this.state.username}
                 onChange={this.changeField('email')}/>
 
+              <ReCAPTCHA
+                className="form-group pull-right"
+                onChange={recaptcha => this.setState({ recaptcha })}
+                onExpired={() => this.setState({ recaptcha: '' })}
+                sitekey={GOOGLE_SITE_KEY}
+              />
+
               <Row>
                 <Col xs={12}>
                   <Button type="submit" bsStyle="primary" className="pull-right"
-                    disabled={this.props.fetching}>
+                    disabled={disableSubmit}>
                     {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
                   </Button>
                 </Col>
@@ -124,7 +135,6 @@ export class ForgotPassword extends React.Component {
 ForgotPassword.displayName = 'ForgotPassword'
 ForgotPassword.propTypes = {
   fetching: React.PropTypes.bool,
-  router: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
 
@@ -140,4 +150,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ForgotPassword));
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

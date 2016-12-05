@@ -6,7 +6,8 @@
     "ANALYTICS_BASE_URI_PRODUCTION": false,
     "TOPO_BASE_URI_DEVELOPMENT": false,
     "TOPO_BASE_URI_PRODUCTION": false,
-    "GA_TRACKING_ID": false
+    "GA_TRACKING_ID": false,
+    "GOOGLE_SITE_KEY": false
   },
   "ecmaFeatures": {
     "jsx": true,
