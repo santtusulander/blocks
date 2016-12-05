@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
-import { Link, withRouter } from 'react-router'
+import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -17,7 +17,9 @@ import {
 import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
+import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
+import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import Content from '../layout/content'
@@ -26,7 +28,6 @@ import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IconCaretDown from '../icons/icon-caret-down.jsx'
-import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
@@ -445,28 +446,6 @@ class ContentItems extends React.Component {
     )
   }
 }
-
-const AnalyticsLink = props => {
-  return (
-    <Link
-      className="btn btn-primary btn-icon"
-      to={props.url()}>
-      <IconChart />
-   </Link>
-  )
-}
-AnalyticsLink.propTypes = { url: React.PropTypes.func }
-
-const NoContentItems = props => {
-  return (
-    <p className="fetching-info text-center">
-      {props.content}
-      <br/>
-      You can create new properties by clicking the Add New (+) button
-    </p>
-  )
-}
-NoContentItems.propTypes = { content: React.PropTypes.string }
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
