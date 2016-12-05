@@ -1,6 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import numeral from 'numeral'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 class AnalysisHorizontalBar extends React.Component {
   formatX(val) {
@@ -12,7 +13,7 @@ class AnalysisHorizontalBar extends React.Component {
   }
   render() {
     if(!this.props.width || !this.props.data) {
-      return <div>Loading...</div>
+      return <LoadingSpinner/>
     }
 
     const maxX = d3.max(this.props.data, d => d[this.props.dataKey])
