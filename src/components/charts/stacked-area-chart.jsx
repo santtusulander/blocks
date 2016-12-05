@@ -1,8 +1,10 @@
 import React, {PropTypes} from 'react'
-import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area} from 'recharts'
+import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} from 'recharts'
 import AreaTooltip from './area-tooltip'
+import CustomLegend from './custom-legend'
 
-import { formatBitsPerSecond, formatRequests, formatUnixTimestamp } from '../../util/helpers'
+
+import { formatBitsPerSecond, formatUnixTimestamp } from '../../util/helpers'
 
 import { paleblue, green, darkblue, darkgreen } from '../../constants/colors'
 import './stacked-area-chart.scss'
@@ -92,7 +94,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
   }
 
   return (
-    <ResponsiveContainer minHeight={200} aspect={2.5} >
+    <ResponsiveContainer minHeight={200} aspect={2.5} className='stacked-area-chart-container'>
       <AreaChart data={data} >
 
         <defs>
@@ -103,6 +105,12 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
         <XAxis dataKey="timestamp" tickFormatter={(ts) => formatUnixTimestamp(ts, dateFormat)}/>
         <YAxis tickFormatter={(val) => valueFormatter(val, true)}/>
+
+        <Legend
+          wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
+          margin={{top: 0, left: 0, right: 0, bottom: 0}}
+          content={<CustomLegend data={areas}/>}
+        />
 
         <Tooltip
           animationEasing="linear"

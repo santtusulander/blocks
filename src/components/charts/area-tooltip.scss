@@ -1,0 +1,43 @@
+@import '../../styles/base/colors';
+@import '../../styles/base/chart-legend';
+
+.area-chart-tooltip {
+  @extend %chart-legend;
+  position: relative;
+  top: auto;
+  right: auto;
+  padding: 8px;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.8);
+  }
+
+  .tooltip-item {
+    @extend %legend-item;
+    padding: 0 8px;
+  }
+}
+
+.legend-icon {
+  &.http {
+    color: $pale-blue;
+  }
+
+  &.https {
+    color: $green;
+  }
+
+  &.comparison_http {
+    color: $dark-blue;
+  }
+
+  &.comparison_https {
+    color: $dark-green;
+  }
+}
+
+.bar-chart-legend {
+  @extend %chart-legend;
+  top: 0;
+  right: 0;
+}
