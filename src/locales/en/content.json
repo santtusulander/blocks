@@ -1,4 +1,8 @@
 {
+  "portal.content.createNewProperties": "You can create new properties by clicking the Add New (+) button",
+
+  "portal.content.contentProvider": "CP",
+  "portal.content.serviceProvider": "SP",
   "portal.content.property.topBar.property.label": "Back to Groups",
   "portal.content.property.topBar.group.label": "Back to Accounts",
   "portal.content.property.topBar.account.label": "UDN Admin",

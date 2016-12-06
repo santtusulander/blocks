@@ -85,7 +85,7 @@ export class Dashboard extends React.Component {
   }
 
   measureContainers() {
-    let containerWidth = this.refs.byLocationHolder.clientWidth
+    const containerWidth = this.refs.byLocationHolder &&  this.refs.byLocationHolder.clientWidth
     this.setState({
       byLocationWidth: containerWidth < 640 ? containerWidth : 640
     })
@@ -100,7 +100,7 @@ export class Dashboard extends React.Component {
 
   render() {
     const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, user } = this.props
-    const showFilters = List(['date-range'])
+    const showFilters = List(['dateRange'])
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
     const onNetDataset = !trafficDetail ?

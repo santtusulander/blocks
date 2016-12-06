@@ -128,7 +128,7 @@ class RolesList extends React.Component {
                      this.props.permissions.get('north')
                      ).toArray(),*/
                       ...this.labelPermissions(
-                      role.get('permissions').get('ui').filter(permission => permission),
+                      role.getIn(['permissions', 'ui'], Immutable.List()).filter(permission => permission),
                       this.props.permissions.get('ui')
                       ).toArray()
                     ]} />

@@ -33,40 +33,11 @@ const TRANSLATED_MESSAGES = {
   'portal.account.list.searchWithParams.empty.text': 'No accounts found with the search term {searchTerm}',
   'portal.account.list.search.empty.text': 'No accounts found',
 
-  'portal.user.list.accountNotSelected.text': 'Please select an account{br}from top left to see users',
-  'portal.user.list.name.column.title': 'NAME',
-  'portal.user.list.role.column.title': 'ROLE',
-  'portal.user.list.email.column.title': 'EMAIL',
-  'portal.user.list.noUsers.text': 'No users',
-
-  'portal.user.edit.contact.text': 'Contact',
-  'portal.user.edit.passwordDoNotMatch.text': 'Passwords do not match',
-  'portal.user.edit.roleRequired.text': 'Role is required',
-  'portal.user.edit.emailRequired.text': 'Email is required',
-  'portal.user.edit.email.text': 'Email',
-  'portal.user.edit.firstName.text': 'First Name',
-  'portal.user.edit.middleName.text': 'Middle Name',
-  'portal.user.edit.lastName.text': 'Last Name',
-  'portal.user.edit.name.text': 'Name',
-  'portal.user.edit.password.text': 'Password',
-  'portal.user.edit.phoneNumber.text': 'Phone Number',
-  'portal.user.edit.photo.text': 'Photo',
-  'portal.user.edit.newPassword.text': 'New Password',
-  'portal.user.edit.confirmNewPassword.text': 'Confirm New Password',
-  'portal.user.edit.resetPassword.text': 'Reset Password',
-  'portal.user.edit.role.text': 'Role',
-  'portal.user.edit.currentDate.text': 'Current Date',
-  'portal.user.edit.timezone.text': 'Timezone',
-  'portal.user.edit.addMiddleName.text': 'Add Middle Name',
-  'portal.user.edit.unsavedChanges.text': 'Profile has unsaved changes.',
-
   'portal.dnsRecord.delete.title': 'Delete Record?',
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
   'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain will also delete all the records related to it.',
-
-  'portal.user.delete.disclaimer.text': 'Will lose access to UDN immediately and will not be able to log in anymore.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
   'portal.brand.edit.newBrand.title': 'New Brand',
@@ -208,6 +179,7 @@ const TRANSLATED_MESSAGES = {
 
   'portal.analysis.filters.chart.title': 'Chart Type',
   'portal.analysis.filters.dateRange.title': 'Date Range',
+  'portal.analysis.filters.customDateRange.title': 'Date Range',
   'portal.analysis.filters.dateRangeFrom.title': 'From',
   'portal.analysis.filters.dateRangeTo.title': 'To',
   'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',

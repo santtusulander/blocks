@@ -1,9 +1,11 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -14,7 +16,9 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
+
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
+import { deploymentModes } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -31,8 +35,7 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 import IconCaretDown from '../components/icons/icon-caret-down'
-
-import { FormattedMessage } from 'react-intl'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 
@@ -72,8 +75,11 @@ export class Configuration extends React.Component {
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
     const nextHost = nextProps.activeHost
-    if(!currentHost && nextHost ||
-      currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath)) {
+    if (
+      (!currentHost && nextHost)
+        || (currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath))
+        || (this.props.fetching && !nextProps.fetching)
+    ) {
       this.setState({
         activeConfigOriginal: nextHost.getIn(['services',0,'configurations',this.state.activeConfig])
       })
@@ -177,6 +183,7 @@ export class Configuration extends React.Component {
       ])
     )
 
+    this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
       this.props.params.brand,
       this.props.params.account,
@@ -220,17 +227,18 @@ export class Configuration extends React.Component {
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
-      || (!this.props.activeHost || !this.props.activeHost.size)) {
-      return <div className="container">Loading...</div>
+    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
+    if(this.props.fetching && (!activeHost || !activeHost.size)
+      || (!activeHost || !activeHost.size)) {
+      return <LoadingSpinner/>
     }
-    const { hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
-    const servicesConfig = this.props.activeHost.getIn(['services', 0]);
-    const updateMoment = moment(servicesConfig.get('updated'), 'X')
     const activeConfig = this.getActiveConfig()
+    const updateMoment = moment(activeConfig.get('config_updated'), 'X')
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
+    const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
+    const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
 
@@ -241,11 +249,11 @@ export class Configuration extends React.Component {
           pageSubTitle={<FormattedMessage id="portal.configuration.header.text"/>}
           pageHeaderDetailsUpdated={[
             updateMoment.format('MMM, D YYYY'),
-            updateMoment.format('h:MM a')
+            updateMoment.format('h:mm a')
           ]}
           pageHeaderDetailsDeployed={[
             deployMoment.format('MMM, D YYYY'),
-            deployMoment.format('h:MM a'),
+            deployMoment.format('h:mm a'),
             activeConfig.get('configuration_status').get('last_edited_by')
           ]}>
           <AccountSelector
@@ -257,12 +265,12 @@ export class Configuration extends React.Component {
               hostActions.startFetching()
               hostActions.fetchHost(brand, account, group, value).then(() => {
                 const url = getContentUrl('propertyConfiguration', value, params)
-                this.props.router.push(url)
+                this.props.router.push(`${url}/${children.props.route.path}`)
               })
             }}
             drillable={true}>
             <div className="btn btn-link dropdown-toggle header-toggle">
-              <h1><TruncatedTitle content={this.props.params.property} tooltipPlacement="bottom" className="account-management-title"/></h1>
+              <h1><TruncatedTitle content={property} tooltipPlacement="bottom" className="account-management-title"/></h1>
               <IconCaretDown />
             </div>
           </AccountSelector>
@@ -354,6 +362,7 @@ export class Configuration extends React.Component {
             changeValue: this.changeValue,
             changeValues: this.changeValues,
             config: activeConfig,
+            deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates
@@ -434,6 +443,7 @@ Configuration.propTypes = {
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
+  intl: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
@@ -474,4 +484,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Configuration));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Configuration)));

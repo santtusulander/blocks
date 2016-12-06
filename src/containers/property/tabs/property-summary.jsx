@@ -198,11 +198,9 @@ class PropertySummary extends React.Component {
   }
 
   measureContainers() {
-    if (this.refs.byTimeHolder) {
-      this.setState({
-        byTimeWidth: this.refs.byTimeHolder.clientWidth
-      })
-    }
+    this.setState({
+      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth
+    })
   }
 
   togglePurge() {
@@ -291,7 +289,7 @@ class PropertySummary extends React.Component {
       this.props.hourlyTraffic.getIn(['history', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates', 'average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
     const metrics_traffic = !totals ?
@@ -299,7 +297,7 @@ class PropertySummary extends React.Component {
       this.props.hourlyTraffic.getIn(['now', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates', 'average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')

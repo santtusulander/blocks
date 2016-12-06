@@ -5,7 +5,7 @@ import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Select from './select'
-import { isValidEmail } from '../util/validators'
+import { isValidEmail, isValidFQDN } from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
@@ -31,7 +31,11 @@ class PurgeModal extends React.Component {
     this.parseTypeahead = this.parseTypeahead.bind(this)
   }
   showPurgeOption(type) {
-    this.setState({type: type})
+    this.setState({
+      purgeObjectsError: '',
+      purgeObjectsWarning: '',
+      type: type
+    })
     if (type == 'url' || type == 'directory') {
       this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
     } else if (type == 'hostname') {
@@ -63,10 +67,6 @@ class PurgeModal extends React.Component {
         purgeObjectsError: ''
       })
     }
-    clearTimeout(this.purgeObjectsValidationTimeout)
-    this.purgeObjectsValidationTimeout = setTimeout(() => {
-      this.validatePurgeObjects(value)
-    }, 1000)
     if(this.state.purgeObjectsWarning === '' && parsedObjs.length > maxObjects) {
       this.setState({
         purgeObjectsWarning: <FormattedMessage id="portal.analytics.purgeModal.maxAmount.error"/>
@@ -86,12 +86,27 @@ class PurgeModal extends React.Component {
     const parsedTypeahead = e.map(val => val.label)
     this.props.changePurge(this.props.activePurge.set('published_hosts', Immutable.List(parsedTypeahead)))
   }
-  validatePurgeObjects(value) {
+  validatePurgeObjects(e) {
+    const value = e.target.value
     if(!value) {
       this.setState({
         purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
       })
       return true
+    }
+
+    if(this.state.type === 'url') {
+      const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
+      const errors = values.filter(val => {
+        return !isValidFQDN(val)
+      })
+
+      if(errors.length){
+        this.setState({
+          purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
+        })
+        return true
+      }
     }
   }
   validateEmail() {
@@ -106,9 +121,6 @@ class PurgeModal extends React.Component {
   submitForm(e) {
     e.preventDefault()
     let hasErrors = false;
-    if (this.state.type === 'url' || this.state.type === 'directories') {
-      hasErrors = this.validatePurgeObjects(this.props.activePurge.get('objects').get('0')) ? true : false
-    }
     hasErrors = this.validateEmail() ? true : hasErrors
     if(!hasErrors) {
       this.props.savePurge()
@@ -138,6 +150,7 @@ class PurgeModal extends React.Component {
           help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
           placeholder={placeholder}
           value={this.props.activePurge.get('objects').join(',\n')}
+          onBlur={this.validatePurgeObjects}
           onChange={this.parsePurgeObjects}/>
         <hr/>
       </div>

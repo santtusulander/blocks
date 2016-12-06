@@ -23,7 +23,7 @@ import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
 import IconCaretDown from '../../icons/icon-caret-down'
 
-const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, togglePurge }) => {
+const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, currentTab, togglePurge }) => {
 
   const itemSelectorTexts = {
     property: intl.formatMessage({ id: 'portal.content.property.topBar.property.label' }),
@@ -66,10 +66,11 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, tog
             ? getNetworkUrl(...params)
             : getContentUrl(...params)
 
+          const isOnPropertyTier = params[0] === 'property'
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
           if (url) {
-            router.push(url)
+            router.push(isOnPropertyTier ? `${url}/${currentTab}` : url)
           }
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
@@ -102,7 +103,11 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, tog
     </PageHeader>
   )
 }
+PropertyHeader.defaultProps = {
+  currentTab: 'summary'
+}
 PropertyHeader.propTypes = {
+  currentTab: React.PropTypes.string,
   currentUser: React.PropTypes.instanceOf(Map),
   deleteProperty: React.PropTypes.func,
   intl: React.PropTypes.object,

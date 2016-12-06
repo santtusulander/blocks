@@ -1,20 +1,30 @@
 // React Date Picker
 // =================
 
+$rdp-font-size: 14px;
+$rdp-width: rem(300px);
+$rdp-vertical-padding: em(15px, $rdp-font-size);
+$rdp-horizontal-padding: em(25px, $rdp-font-size);
+$rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+
 .react-date-picker__calendar {
-  width: 300px;
-  padding: 15px 25px 25px;
+  width: $rdp-width;
+  padding: $rdp-vertical-padding $rdp-horizontal-padding $rdp-horizontal-padding;
   font-family: inherit;
   font-size: inherit;
   border: 0;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     color: $dt-text-color;
     background-color: $black;
-    background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+    background-image: $rdp-dark-bg-image;
     background-size: 100%;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+    background-color: $white;
   }
 }
 
@@ -28,9 +38,12 @@
   border-bottom: 1px solid;
   border-radius: 0;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    border-color: rgba($black, 0.2);
   }
 
   // Make months unclickable
@@ -45,7 +58,7 @@
   }
 
   .react-date-picker__nav-bar-date {
-    padding-bottom: 10px;
+    padding: 8px 0;
     font-size: inherit;
     font-weight: normal;
     color: inherit;
@@ -54,7 +67,7 @@
 
   .react-date-picker__nav-bar-arrow {
     position: absolute;
-    top: -8px;
+    top: 0;
     width: 36px;
     height: 36px;
     border: 0;
@@ -79,17 +92,23 @@
       &::after {
         border-left: 0;
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-right-color: $dt-text-color;
+        }
+
+        .light-theme & {
+          border-right-color: $lt-text-color;
         }
       }
 
       &:hover::after {
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-right-color: $white;
+        }
+
+        .light-theme & {
+          border-right-color: $black;
         }
       }
     }
@@ -100,17 +119,23 @@
       &::after {
         border-right: 0;
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-left-color: $dt-text-color;
+        }
+
+        .light-theme & {
+          border-left-color: $lt-text-color;
         }
       }
 
       &:hover::after {
 
-        .dark-theme &,
-        .light-theme & {
+        .dark-theme & {
           border-left-color: $white;
+        }
+
+        .light-theme & {
+          border-left-color: $black;
         }
       }
     }
@@ -121,9 +146,12 @@
   margin-bottom: 5px;
   border-bottom: 1px solid;
 
-  .dark-theme &,
-  .light-theme & {
+  .dark-theme & {
     border-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    border-color: rgba($black, 0.1);
   }
 
   .dp-week-day-name {
@@ -140,19 +168,36 @@
   color: inherit;
   cursor: pointer;
 
+  &.react-date-picker__month-view-day--today {
+    color: $pale-blue;
+  }
+
   &:hover {
-    color: $white;
+    .dark-theme & {
+      color: $white;
+    }
+
+    .light-theme & {
+      color: $black;
+    }
   }
 
   &.react-date-picker__month-view-day--prev-month,
   &.react-date-picker__month-view-day--next-month {
 
-    .dark-theme &,
-    .light-theme & {
+    .dark-theme & {
       color: rgba($dt-text-color, 0.5);
 
       &:hover {
         color: $white;
+      }
+    }
+
+    .light-theme & {
+      color: rgba($lt-text-color, 0.5);
+
+      &:hover {
+        color: $black;
       }
     }
   }

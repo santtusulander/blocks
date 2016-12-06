@@ -50,13 +50,16 @@ const AnalyticsTabControl = (props) => {
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.urlReport.label'}),
       propertyOnly: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_URL
-    },
+    }
+    // UDNP-1938: Temporarily hide Playback Demo since it's not needed at the moment
+    // and we don't have time to fix the errors on it for 1.1.1
+    /*,
     {
       key: 'playback-demo',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.playbackDemo.label'}),
       permission: PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO,
       hideHierarchy: true
-    }
+    }*/
   ]
 
   const { params } = props
