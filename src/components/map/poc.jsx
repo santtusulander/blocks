@@ -1,5 +1,6 @@
-import React from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
+import React from 'react'
+import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl'
+import Typeahead from 'react-bootstrap-typeahead'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
@@ -246,8 +247,23 @@ class MapPoc extends React.Component {
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}>
 
-          {this.renderCountryHighlight()}
-          {this.renderCityCircles()}
+        <div className="map-search">
+          <Typeahead
+            minLength={1}
+            onChange={() => null}
+            options={[
+              {id: 'BY', label: 'Belarus'},
+              {id: 'CA', label: 'Canada'},
+              {id: 'FI', label: 'Finland'},
+              {id: 'DE', label: 'Germany'},
+              {id: 'SE', label: 'Sweden'},
+              {id: 'UA', label: 'Ukraine'},
+              {id: 'US', label: 'United States'}
+            ]}/>
+        </div>
+
+        {this.renderCountryHighlight()}
+        {this.renderCityCircles()}
 
         {!!this.state.popupContent &&
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>

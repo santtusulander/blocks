@@ -39,7 +39,7 @@
   min-width: 32px;
   min-height: 32px;
   cursor: pointer;
-  background: rgba($black, 0.5);
+  background: $black;
 }
 
 .map-controls {
@@ -69,8 +69,7 @@
         min-width: 32px;
         min-height: 32px;
         color: $white;
-        background: rgba($black, 0.5) !important;
-        content: '+';
+        background: $black !important;
       }
     }
   }
@@ -83,4 +82,34 @@ input[type='range'].zoom-level {
   width: 32px;
   height: calc(100% - 96px);
   appearance: slider-vertical;
+}
+
+.map-search {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  width: 25%;
+  margin: 0 auto;
+  background-position: 5px center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+
+  .form-control {
+    padding-left: 2.5em;
+  }
+
+  .dark-theme & {
+    background-image: url('../assets/icons/dt-icon-search.svg');
+
+    .form-control,
+    .dropdown-menu {
+      background: rgba($black, 0.5);
+    }
+  }
+
+  .light-theme & {
+    background-image: url('../assets/icons/lt-icon-search.svg');
+  }
 }
