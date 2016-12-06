@@ -116,6 +116,7 @@ export class CustomDatePicker extends React.Component {
             <Calendar
               dateFormat={DATE_FORMAT}
               date={calendarDate}
+              enableHistoryView={false}
               onChange={this.handleDateChange}
               weekNumbers={false}
               weekStartDay={0}
@@ -133,7 +134,7 @@ export class CustomDatePicker extends React.Component {
   }
 }
 
-CustomDatePicker.displayName = 'DateRangeSelect'
+CustomDatePicker.displayName = 'CustomDatePicker'
 CustomDatePicker.propTypes = {
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
