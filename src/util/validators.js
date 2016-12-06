@@ -62,6 +62,16 @@ export function isValidFQDN(domainName, opts = {}) {
 }
 
 /**
+ * Check if valid URL
+ * @credit http://stackoverflow.com/a/3809435/2715
+ * @param url
+ * @returns {boolean|*}
+ */
+export function isValidURL(url) {
+  return matchesRegexp(url, /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/)
+}
+
+/**
  * Check if valid host-name
  * @param hostName
  * @param opts
