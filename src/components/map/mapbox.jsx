@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import {getTheme} from '../../redux/modules/ui'
 import {fetchCountries, getCountryTopo, clearCountries} from '../../redux/modules/topo'
 
+import * as countriesGeoJSON from '../../assets/topo/countries.geo.json';
+
 import MapPoc from './poc'
 
 class MapBox extends Component {
@@ -32,7 +34,7 @@ class MapBox extends Component {
 
     return (
       <MapPoc
-        geoData={geoData}
+        geoData={countriesGeoJSON}
         theme={theme}
       />
     )
