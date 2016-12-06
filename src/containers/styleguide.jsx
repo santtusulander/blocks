@@ -27,7 +27,9 @@ import {
   Table
 } from 'react-bootstrap';
 
+import SectionContainer from '../components/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
+import BarChart from '../components/charts/bar-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import AccountSelector from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
@@ -169,6 +171,79 @@ class Styleguide extends React.Component {
       }
     }
 
+    const stackedBarChartData = [
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905,
+        "onNetHttps": 27260875504858,
+        "offNetHttp": 16598076780724,
+        "offNetHttps": 6941781887919
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
+      }
+    ]
+
+    const singleBarChartData = [
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      }
+    ]
+
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_on || 0,
@@ -231,6 +306,33 @@ class Styleguide extends React.Component {
             </BreadcrumbItem>
           </Breadcrumb>
 
+
+          <h1 className="page-header">Charts</h1>
+          <Row>
+            <label>Stacked barchart, tooltip only on bar hover</label>
+            <SectionContainer className="analysis-contribution">
+              {<BarChart
+                chartLabel="Month to Date"
+                tooltipAlwaysActive={false}
+                chartData={stackedBarChartData}
+                barModels={[
+                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
+                  { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
+                ]}/>}
+            </SectionContainer>
+            </Row>
+            <hr />
+            <Row>
+              <label>Normal barchart, tooltip always active</label>
+              <SectionContainer className="analysis-contribution">
+                <BarChart
+                  chartLabel="This Week"
+                  chartData={singleBarChartData}
+                  barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
+              </SectionContainer>
+            </Row>
 
           <h1 className="page-header">Tabs</h1>
 
@@ -373,7 +475,6 @@ class Styleguide extends React.Component {
               </tr>
             </tbody>
           </Table>
-
 
           <h1 className="page-header">Forms</h1>
 

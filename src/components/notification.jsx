@@ -12,7 +12,10 @@ class Notification extends React.Component {
         {this.props.children}
         <a className="notification-close btn-icon"
           onClick={this.props.handleClose}>
-          <IconClose/>
+          <IconClose
+            width={30}
+            height={30}
+          />
         </a>
       </div>
     );
@@ -26,4 +29,4 @@ Notification.propTypes = {
   handleClose: React.PropTypes.func
 }
 
-module.exports = Notification
+export default Notification
