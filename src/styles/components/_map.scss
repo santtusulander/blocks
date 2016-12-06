@@ -113,3 +113,25 @@ input[type='range'].zoom-level {
     background-image: url('../assets/icons/lt-icon-search.svg');
   }
 }
+
+.map-heat-legend {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  width: 30%;
+  padding: 10px;
+  margin: 0 auto;
+  background: rgba($black, 0.5);
+  flex-direction: row;
+  align-items: center;
+
+  .heat-gradient {
+    height: 15px;
+    margin: 0 10px;
+    background: linear-gradient(to right, $dark-green-60, $yellow-80);
+    flex: 1;
+  }
+}

@@ -293,6 +293,12 @@ class MapPoc extends React.Component {
           <div className="control map-minimap" />
         </div>
 
+        <div className="map-heat-legend">
+          <span>Low</span>
+          <div className="heat-gradient" />
+          <span>High</span>
+        </div>
+
       </ReactMapboxGl>
     )
   }
