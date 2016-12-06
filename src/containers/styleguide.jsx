@@ -27,59 +27,61 @@ import {
   Table
 } from 'react-bootstrap';
 
-import SectionContainer from '../components/layout/section-container'
-import SelectWrapper from '../components/select-wrapper'
-import BarChart from '../components/charts/bar-chart'
-import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-import AccountSelector from '../components/global-account-selector/selector-component'
-import Tabs from '../components/tabs'
-import MonthPicker from '../components/month-picker'
-import StackedByTimeSummary from '../components/stacked-by-time-summary'
-import MiniChart from '../components/mini-chart'
-import DashboardPanel from '../components/dashboard/dashboard-panel'
-import DashboardPanels from '../components/dashboard/dashboard-panels'
-import CustomDatePicker from '../components/custom-date-picker'
+//
+// import SectionContainer from '../components/layout/section-container'
+// import SelectWrapper from '../components/select-wrapper'
+// import BarChart from '../components/charts/bar-chart'
+// import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+// import AccountSelector from '../components/global-account-selector/selector-component'
+// import Tabs from '../components/tabs'
+// import MonthPicker from '../components/month-picker'
+// import StackedByTimeSummary from '../components/stacked-by-time-summary'
+// import MiniChart from '../components/mini-chart'
+// import DashboardPanel from '../components/dashboard/dashboard-panel'
+// import DashboardPanels from '../components/dashboard/dashboard-panels'
+// import CustomDatePicker from '../components/custom-date-picker'
+//
+// import IconAccount       from '../components/icons/icon-account'
+// import IconAdd           from '../components/icons/icon-add'
+// import IconAlerts        from '../components/icons/icon-alerts'
+// import IconAnalytics     from '../components/icons/icon-analytics'
+// import IconArrowDown     from '../components/icons/icon-arrow-down'
+// import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
+// import IconArrowRight     from '../components/icons/icon-arrow-right'
+// import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
+// import IconArrowLeft     from '../components/icons/icon-arrow-left'
+// import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
+// import IconArrowUp       from '../components/icons/icon-arrow-up'
+// import IconCaretRight    from '../components/icons/icon-caret-right'
+// import IconCaretDown     from '../components/icons/icon-caret-down'
+// import IconChart         from '../components/icons/icon-chart'
+// import IconClose         from '../components/icons/icon-close'
+// import IconComments      from '../components/icons/icon-comments'
+// import IconConfiguration from '../components/icons/icon-configuration'
+// import IconContent       from '../components/icons/icon-content'
+// import IconDelete        from '../components/icons/icon-delete'
+// import IconEdit          from '../components/icons/icon-edit'
+// import IconEmail         from '../components/icons/icon-email'
+// import IconEricsson      from '../components/icons/icon-ericsson'
+// import IconExport        from '../components/icons/icon-export'
+// import IconEye           from '../components/icons/icon-eye'
+// import IconHeaderCaret   from '../components/icons/icon-header-caret'
+// import IconIncident      from '../components/icons/icon-incident'
+// import IconInfo          from '../components/icons/icon-info'
+// import IconIntegration   from '../components/icons/icon-integration'
+// import IconItemChart     from '../components/icons/icon-item-chart'
+// import IconItemList      from '../components/icons/icon-item-list'
+// import IconPassword      from '../components/icons/icon-password'
+// import IconProblem       from '../components/icons/icon-problem'
+// import IconQuestion      from '../components/icons/icon-question'
+// import IconQuestionMark  from '../components/icons/icon-question-mark'
+// import IconSecurity      from '../components/icons/icon-security'
+// import IconSelectCaret   from '../components/icons/icon-select-caret'
+// import IconServices      from '../components/icons/icon-services'
+// import IconSupport       from '../components/icons/icon-support'
+// import IconTask          from '../components/icons/icon-task'
+// import IconTrash         from '../components/icons/icon-trash'
 
-import IconAccount       from '../components/icons/icon-account'
-import IconAdd           from '../components/icons/icon-add'
-import IconAlerts        from '../components/icons/icon-alerts'
-import IconAnalytics     from '../components/icons/icon-analytics'
-import IconArrowDown     from '../components/icons/icon-arrow-down'
-import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
-import IconArrowRight     from '../components/icons/icon-arrow-right'
-import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
-import IconArrowLeft     from '../components/icons/icon-arrow-left'
-import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
-import IconArrowUp       from '../components/icons/icon-arrow-up'
-import IconCaretRight    from '../components/icons/icon-caret-right'
-import IconCaretDown     from '../components/icons/icon-caret-down'
-import IconChart         from '../components/icons/icon-chart'
-import IconClose         from '../components/icons/icon-close'
-import IconComments      from '../components/icons/icon-comments'
-import IconConfiguration from '../components/icons/icon-configuration'
-import IconContent       from '../components/icons/icon-content'
-import IconDelete        from '../components/icons/icon-delete'
-import IconEdit          from '../components/icons/icon-edit'
-import IconEmail         from '../components/icons/icon-email'
-import IconEricsson      from '../components/icons/icon-ericsson'
-import IconExport        from '../components/icons/icon-export'
-import IconEye           from '../components/icons/icon-eye'
-import IconHeaderCaret   from '../components/icons/icon-header-caret'
-import IconIncident      from '../components/icons/icon-incident'
-import IconInfo          from '../components/icons/icon-info'
-import IconIntegration   from '../components/icons/icon-integration'
-import IconItemChart     from '../components/icons/icon-item-chart'
-import IconItemList      from '../components/icons/icon-item-list'
-import IconPassword      from '../components/icons/icon-password'
-import IconProblem       from '../components/icons/icon-problem'
-import IconQuestion      from '../components/icons/icon-question'
-import IconQuestionMark  from '../components/icons/icon-question-mark'
-import IconSecurity      from '../components/icons/icon-security'
-import IconSelectCaret   from '../components/icons/icon-select-caret'
-import IconServices      from '../components/icons/icon-services'
-import IconSupport       from '../components/icons/icon-support'
-import IconTask          from '../components/icons/icon-task'
-import IconTrash         from '../components/icons/icon-trash'
 import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -265,7 +267,7 @@ class Styleguide extends React.Component {
       <div className="styleguide-page">
 
         <div className="container">
-
+          {/*
           <h1 className="page-header">Ericsson UDN Styleguide</h1>
 
           <h1 className="page-header">Typography</h1>
@@ -312,10 +314,17 @@ class Styleguide extends React.Component {
                 tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
+<<<<<<< HEAD
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
                   { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
                   { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
                   { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
+=======
+                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
+                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
+                  { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
+                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
+>>>>>>> 0f62d247aa36e1d0e14972eff4046ba661c0d227
                 ]}/>}
             </SectionContainer>
             </Row>
@@ -942,7 +951,12 @@ class Styleguide extends React.Component {
             <br />
             IconTrash
           </span>
+          */}
 
+
+          <h1 className="page-header">MapBox</h1>
+
+          <MapBox />
         </div>
 
       </div>
