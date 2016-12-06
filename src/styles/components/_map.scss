@@ -122,7 +122,7 @@ input[type='range'].zoom-level {
   z-index: 2;
   display: flex;
   width: 30%;
-  padding: 10px;
+  padding: 6px 10px;
   margin: 0 auto;
   background: rgba($black, 0.5);
   flex-direction: row;
@@ -133,5 +133,18 @@ input[type='range'].zoom-level {
     margin: 0 10px;
     background: linear-gradient(to right, $dark-green-60, $yellow-80);
     flex: 1;
+  }
+}
+
+.mapboxgl-ctrl-bottom-right {
+  right: auto;
+  left: 0;
+}
+
+.mapboxgl-ctrl-attrib {
+  font-size: 0.8rem;
+
+  .dark-theme & {
+    background: rgba($black, 0.5);
   }
 }
