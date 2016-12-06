@@ -124,7 +124,7 @@ class MapPoc extends React.Component {
       if (this.state.hoveredLayer) {
         this.setHoverStyle(map)('opacity', 0.5)('default')
         this.setState({ hoveredLayer: null })
-        this.closePopup();
+        this.closePopup()
       }
 
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
@@ -225,6 +225,10 @@ class MapPoc extends React.Component {
     })
   }
 
+  onZoomClick(map, value) {
+    return value < 0 ? map.zoomOut() : map.zoomIn();
+  }
+
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -250,6 +254,29 @@ class MapPoc extends React.Component {
             <span>{this.state.popupContent}</span>
           </Popup>
         }
+
+        <div className="map-controls">
+          <div className="control map-fullscreen" />
+          <div className="control map-zoom">
+            <ZoomControl
+              style={{
+                height: 'calc(100% - 32px)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                boxShadow: 'none',
+                border: 0,
+                position: 'relative',
+                top: 'auto',
+                right: 'auto',
+                zIndex: 1
+              }}
+              onControlClick={this.onZoomClick.bind(this)} />
+            <input orientation="vertical" className="zoom-level" type="range" />
+            <div className="map-zoom-reset" />
+          </div>
+          <div className="control map-minimap" />
+        </div>
+
       </ReactMapboxGl>
     )
   }

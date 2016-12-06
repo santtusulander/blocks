@@ -32,3 +32,55 @@
     border-radius: 0;
   }
 }
+
+%map-control-style {
+  position: relative;
+  display: block;
+  min-width: 32px;
+  min-height: 32px;
+  cursor: pointer;
+  background: rgba($black, 0.5);
+}
+
+.map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  height: calc(100% - 20px);
+  flex-direction: column;
+  justify-content: space-between;
+
+  .map-zoom-reset {
+    @extend %map-control-style;
+    margin-top: 2px;
+  }
+
+  .control {
+    @extend %map-control-style;
+
+    &.map-zoom {
+      height: 50%;
+      background: none;
+
+      button {
+        display: block;
+        min-width: 32px;
+        min-height: 32px;
+        color: $white;
+        background: rgba($black, 0.5) !important;
+        content: '+';
+      }
+    }
+  }
+}
+
+input[type='range'].zoom-level {
+  position: absolute;
+  top: 32px;
+  z-index: 2;
+  width: 32px;
+  height: calc(100% - 96px);
+  appearance: slider-vertical;
+}
