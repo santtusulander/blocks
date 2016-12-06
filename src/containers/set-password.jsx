@@ -52,7 +52,7 @@ export class SetPassword extends React.Component {
         }
         else {
           this.setState({
-            passwordError: action.payload.data.message
+            formError: action.payload.data.message || action.payload.message
           })
         }
       })
@@ -83,6 +83,13 @@ export class SetPassword extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
+            {this.state.formError ?
+              <div className="login-info">
+                <p>{this.state.formError}</p>
+              </div>
+              : ''
+            }
+
             <PasswordFields
               ref="passwordFields"
               stackedPassword={true}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
+import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -19,7 +19,7 @@ export class ForgotPassword extends React.Component {
     this.state = {
       email: '',
       emailActive: false,
-      emailError: null,
+      formError: null,
       recaptcha: '',
       submitted: false
     }
@@ -41,7 +41,7 @@ export class ForgotPassword extends React.Component {
         }
         else {
           this.setState({
-            emailError: action.payload.data.message,
+            formError: action.payload.data.message || action.payload.message,
             recaptcha: ''
           })
           this.refs.recaptcha.reset()
@@ -53,7 +53,7 @@ export class ForgotPassword extends React.Component {
       if(hasFocus || !this.state.email) {
         this.setState({
           emailActive: hasFocus,
-          emailError: null
+          formError: null
         })
       }
     }
@@ -99,16 +99,16 @@ export class ForgotPassword extends React.Component {
                 <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
               </div>
 
-              {this.state.emailError ?
-                <Tooltip id="password-not-valid" placement="top" className="input-tooltip in">
-                  {this.state.emailError}
-                </Tooltip>
-              : null}
+              {this.state.formError ?
+                <div className="login-info">
+                  <p>{this.state.formError}</p>
+                </div>
+                : ''
+              }
 
               <Input type="text" id="username"
                 wrapperClassName={'input-addon-before has-login-label '
                   + 'login-label-email'
-                  + (this.state.emailError ? ' invalid' : '')
                   + (this.state.emailActive || this.state.email ? ' active' : '')}
                 addonBefore={<IconEmail/>}
                 onFocus={this.checkEmailActive(true)}
