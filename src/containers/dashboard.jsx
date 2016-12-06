@@ -162,10 +162,7 @@ export class Dashboard extends React.Component {
       DateRanges.MONTH_TO_DATE,
       DateRanges.LAST_MONTH,
       DateRanges.THIS_WEEK,
-      DateRanges.LAST_WEEK,
-      DateRanges.TODAY,
-      DateRanges.YESTERDAY,
-      DateRanges.CUSTOM_TIMERANGE
+      DateRanges.LAST_WEEK
     ]
 
     return (
