@@ -46,6 +46,7 @@ Session.vim
 
 ## VSCode
 .vscode/
+jsconfig.json
 
 ## Eclipse
 .project
