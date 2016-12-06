@@ -29,13 +29,40 @@ The following plugins can be helpful as well:
 ## Installation
 
 ### Development Requirements
-| Required Global Dependency | Check Version    | Download                            |
-|:---------------------------|:-----------------|:------------------------------------|
-| node v4.2.4                | `node -v`        | https://nodejs.org/en/download/     |
-| npm v2.14.12               | `npm -v`         | Included with node                  |
-| yarn v0.17.4               | `yarn --version` | https://yarnpkg.com/en/docs/install |
 
-**NOTE:** It is recommended that you use n to manage multiple versions of node on your computer, if necessary. See the [n GitHub repo](https://github.com/tj/n) for more information.
+**NOTE ON INSTALLING NODE:** It is recommended that you use n (recommended) or nvm to manage multiple versions of node on your computer.
+<table>
+  <thead>
+    <tr>
+      <th>Required Global Dependency</th>
+      <th>Check Version</th>
+      <th>Download</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>node v4.2.4</td>
+      <td><code>node -v</code></td>
+      <td>
+        <strong>n:</strong> https://github.com/tj/n
+        <br>
+        <strong>nvm:</strong> https://github.com/creationix/nvm
+        <br>
+        <strong>plain node:</strong> https://nodejs.org/en/download/
+      </td>
+    </tr>
+    <tr>
+      <td>npm v2.14.12</td>
+      <td><code>npm -v</code></td>
+      <td>Included with node</td>
+    </tr>
+    <tr>
+      <td>yarn v0.17.4</td>
+      <td><code>yarn --version</code></td>
+      <td>https://yarnpkg.com/en/docs/install</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Install the project
 
