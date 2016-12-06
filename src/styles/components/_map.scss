@@ -39,7 +39,14 @@
   min-width: 32px;
   min-height: 32px;
   cursor: pointer;
-  background: $black;
+
+  .dark-theme & {
+    background: $black;
+  }
+
+  .light-theme & {
+    background: $white;
+  }
 }
 
 .map-controls {
@@ -68,8 +75,14 @@
         display: block;
         min-width: 32px;
         min-height: 32px;
-        color: $white;
-        background: $black !important;
+
+        .dark-theme & {
+          background: $black !important;
+        }
+
+        .light-theme & {
+          background: $white !important;
+        }
       }
     }
   }
@@ -124,9 +137,16 @@ input[type='range'].zoom-level {
   width: 30%;
   padding: 6px 10px;
   margin: 0 auto;
-  background: rgba($black, 0.5);
   flex-direction: row;
   align-items: center;
+
+  .dark-theme & {
+    background: rgba($black, 0.5);
+  }
+
+  .light-theme & {
+    background: rgba($white, 0.5);
+  }
 
   .heat-gradient {
     height: 15px;
