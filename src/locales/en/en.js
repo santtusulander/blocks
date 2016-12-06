@@ -783,6 +783,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.add': 'Add',
   'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
+  'portal.button.submitting': 'Submitting...',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',
   'portal.button.continue': 'Continue',

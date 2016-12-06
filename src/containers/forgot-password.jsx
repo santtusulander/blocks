@@ -31,25 +31,29 @@ export class ForgotPassword extends React.Component {
   onSubmit(e) {
     e.preventDefault()
     this.setState({emailError: null})
-    // TODO: API connections
-    // this.props.userActions.startFetching()
-    // this.props.userActions.logIn(
-    //   this.state.username,
-    //   this.state.password
-    // ).then(action => {
-    //   if(!action.error) {
-    //     this.setState({submitted: true})
-    //   }
-    //   else {
-    //     this.setState({emailError: action.payload.message})
-    //   }
-    // })
+
+    this.props.userActions.startFetching()
+    this.props.userActions
+      .requestPasswordReset(this.state.email, this.state.recaptcha)
+      .then(action => {
+        if(!action.error) {
+          this.setState({submitted: true})
+        }
+        else {
+          this.setState({
+            emailError: action.payload.data.message,
+            recaptcha: ''
+          })
+          this.refs.recaptcha.reset()
+        }
+      })
   }
   checkEmailActive(hasFocus) {
     return () => {
       if(hasFocus || !this.state.email) {
         this.setState({
-          emailActive: hasFocus
+          emailActive: hasFocus,
+          emailError: null
         })
       }
     }
@@ -79,10 +83,14 @@ export class ForgotPassword extends React.Component {
 
           {this.state.submitted ?
             <div className="login-info">
-              <p><FormattedMessage id="portal.forgotPassword.instructions.text"/></p>
-              <Link to={`/login`} className="btn btn-primary pull-right">
-                OK
-              </Link>
+              <p className="form-group"><FormattedMessage id="portal.forgotPassword.instructions.text"/></p>
+              <Row>
+                <Col xs={12}>
+                  <Link to={`/login`} className="btn btn-primary pull-right">
+                    <FormattedMessage id="portal.button.ok"/>
+                  </Link>
+                </Col>
+              </Row>
             </div>
             :
             <form onSubmit={this.onSubmit}>
@@ -109,6 +117,7 @@ export class ForgotPassword extends React.Component {
                 onChange={this.changeField('email')}/>
 
               <ReCAPTCHA
+                ref="recaptcha"
                 className="form-group pull-right"
                 onChange={recaptcha => this.setState({ recaptcha })}
                 onExpired={() => this.setState({ recaptcha: '' })}

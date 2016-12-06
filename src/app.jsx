@@ -66,6 +66,7 @@ axios.interceptors.response.use(function (response) {
     if (status === 401) {
       if(!location.href.includes('/login')
         && !location.href.includes('/set-password')
+        && !location.href.includes('/reset-password')
         && !location.href.includes('/forgot-password')) {
 
         const loggedIn = store.getState().user.get('loggedIn') === true
