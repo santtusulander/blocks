@@ -18,6 +18,7 @@ const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
 const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
+const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -52,6 +53,12 @@ export function updateSuccess(state, action) {
 }
 
 export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function updatePasswordSuccess(state) {
   return state.merge({
     fetching: false
   })
@@ -200,7 +207,8 @@ export default handleActions({
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
   USER_NAME_SAVED: userNameSave,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
-  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure)
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -303,6 +311,15 @@ export const createUser = createAction(USER_CREATED, user =>
 
 export const updateUser = createAction(USER_UPDATED, (email, user) => {
   return axios.put(`${BASE_URL_AAA}/users/${email}`, user, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
+export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
+  return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
     headers: {
       'Content-Type': 'application/json'
     }
