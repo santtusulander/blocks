@@ -37,6 +37,7 @@ import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
+import DateRangeSelect from '../components/date-range-select'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -81,6 +82,7 @@ import IconTrash         from '../components/icons/icon-trash'
 import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
+import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1', checked: true },
@@ -102,7 +104,9 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day')
+      customDatePickerStartDate: moment().startOf('day'),
+      datePickerEndDate: moment().utc().endOf('day'),
+      datePickerStartDate: moment().utc().startOf('month')
     }
   }
 
@@ -602,6 +606,29 @@ class Styleguide extends React.Component {
                   {bytes: 180000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
                   {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')}
                 ]} />
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <DateRangeSelect
+                endDate={this.state.datePickerEndDate}
+                startDate={this.state.datePickerStartDate}
+                changeDateRange={(start, end) => this.setState({ datePickerEndDate: end, datePickerStartDate: start })}
+                availableRanges={[
+                  DateRanges.MONTH_TO_DATE,
+                  DateRanges.LAST_MONTH,
+                  DateRanges.THIS_WEEK,
+                  DateRanges.LAST_WEEK
+                ]} />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+            <Col xs={4}>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
 
