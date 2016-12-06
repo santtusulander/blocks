@@ -7,9 +7,16 @@
     width: 1px;
     height: 20px;
     margin-left: 3px;
-    background: $black;
     border: 0;
     transform: rotate(35deg);
+
+    .dark-theme & {
+      background: $black;
+    }
+
+    .light-theme & {
+      background: $white;
+    }
 
     &::after {
       position: absolute;
@@ -19,17 +26,31 @@
       width: 5px;
       height: 5px;
       margin: 0 auto;
-      background: $black;
       border-radius: 50%;
       content: '';
+
+      .dark-theme & {
+        background: $black;
+      }
+
+      .light-theme & {
+        background: $white;
+      }
     }
   }
 
   .mapboxgl-popup-content {
     top: 3px;
     left: 9px;
-    background: $black;
     border-radius: 0;
+
+    .dark-theme & {
+      background: $black;
+    }
+
+    .light-theme & {
+      background: $white;
+    }
   }
 }
 
