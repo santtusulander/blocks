@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
@@ -15,6 +16,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
+
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 import { deploymentModes } from '../constants/configuration'
 
@@ -33,8 +35,7 @@ import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
 import ConfigurationDiffBar from '../components/configuration/diff-bar'
 import IconCaretDown from '../components/icons/icon-caret-down'
-
-import { FormattedMessage } from 'react-intl'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 
@@ -229,7 +230,7 @@ export class Configuration extends React.Component {
     const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
     if(this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
-      return <div className="container">Loading...</div>
+      return <LoadingSpinner/>
     }
     const toggleDelete = () => this.setState({ deleteModal: !this.state.deleteModal })
     const activeConfig = this.getActiveConfig()

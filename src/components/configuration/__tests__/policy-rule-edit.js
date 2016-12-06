@@ -176,7 +176,7 @@ describe('ConfigurationPolicyRuleEdit', () => {
     const set = sets.at(0)
     const actionButtons = set.find('ActionButtons').shallow()
     const buttons = actionButtons.find('Button')
-    buttons.at(0).simulate('click', { preventDefault: jest.fn(), stopPropagation: jest.fn() })
+    buttons.at(1).simulate('click', { preventDefault: jest.fn(), stopPropagation: jest.fn() })
     expect(changeValue.mock.calls.length).toBe(1)
     expect(activateSet.mock.calls.length).toBe(1)
   });
