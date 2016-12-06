@@ -137,7 +137,6 @@ export class CustomDatePicker extends React.Component {
 CustomDatePicker.displayName = 'CustomDatePicker'
 CustomDatePicker.propTypes = {
   changeDateRange: React.PropTypes.func,
-  endDate: React.PropTypes.instanceOf(moment),
   intl: intlShape.isRequired,
   startDate: React.PropTypes.instanceOf(moment)
 }

@@ -738,7 +738,6 @@ class Styleguide extends React.Component {
           <Row>
             <Col xs={4}>
               <CustomDatePicker
-                endDate={this.state.customDatePickerEndDate}
                 startDate={this.state.customDatePickerStartDate}
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
