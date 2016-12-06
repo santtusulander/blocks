@@ -31,6 +31,7 @@ The following plugins can be helpful as well:
 ### Development Requirements
 
 **NOTE ON INSTALLING NODE:** It is recommended that you use n (recommended) or nvm to manage multiple versions of node on your computer.
+
 <table>
   <thead>
     <tr>
@@ -65,22 +66,72 @@ The following plugins can be helpful as well:
 </table>
 
 ### Install the project
-
-| #  | Description                                            | Command                                                                                            |
-|:---|:-------------------------------------------------------|:---------------------------------------------------------------------------------------------------|
-| 1. | Clone the repo                                         | `$ git clone git@github.com:VidScale/udnportal.git`                                                |
-| 2. | Navigate to the cloned directory                       | `$ cd udnportal/`                                                                                  |
-| 3. | Install dependencies                                   | `$ yarn`                                                                                           |
-| 4. | Rename `.env.example` to `.env` and configure settings | NOTE: you shouldn't need to edit anything in this file, but ask another developer if you're unsure |
-| 5. | Follow the instructions to set up the Analytics API    | https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md                         |
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Description</th>
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.</td>
+      <td>Clone the repo</td>
+      <td><code>$ git clone git@github.com:VidScale/udnportal.git</code></td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td>Navigate to the cloned directory</td>
+      <td><code>$ cd udnportal/</code></td>
+    </tr>
+    <tr>
+      <td>3.</td>
+      <td>Install dependencies</td>
+      <td><code>$ yarn</code></td>
+    </tr>
+    <tr>
+      <td>4.</td>
+      <td>Rename <code>.env.example</code> to <code>.env</code> and configure settings</td>
+      <td>NOTE: you shouldn't need to edit anything in this file, but ask another developer if you're unsure</td>
+    </tr>
+    <tr>
+      <td>5.</td>
+      <td>Follow the instructions to set up the Analytics API</td>
+      <td><a href="https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md">https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md</a></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Running the application
 
 ### Development mode
-| #  | Description                       | Command                                                                                  |
-|:---|:----------------------------------|:-----------------------------------------------------------------------------------------|
-| 1. | Run dev server                    | `$ npm start` OR `$ npm start -- --source-map` (slower build that generates source maps) |
-| 2. | Navigate to http://localhost:3000 |                                                                                          |
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Description</th>
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.</td>
+      <td>Run dev server</td>
+      <td>
+        <strong>normal:</strong> <code>$ npm start</code>
+        <br>
+        <strong>source maps:</strong> <code>$ npm start -- --source-map</code>
+        <br>
+        <small><em>slower build that generates source maps</em></small>
+      </td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td colspan="2">Navigate to <a href="http://localhost:3000">http://localhost:3000</a></td>
+    </tr>
+  </tbody>
+</table>
 
 
 ### Building for deployment
