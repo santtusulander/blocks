@@ -1,0 +1,34 @@
+.mapboxgl-popup {
+  margin-top: 3px;
+}
+
+.mapboxgl-popup-anchor-bottom-left {
+  .mapboxgl-popup-tip {
+    width: 1px;
+    height: 20px;
+    margin-left: 3px;
+    background: $black;
+    border: 0;
+    transform: rotate(35deg);
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: -2px;
+      display: block;
+      width: 5px;
+      height: 5px;
+      margin: 0 auto;
+      background: $black;
+      border-radius: 50%;
+      content: '';
+    }
+  }
+
+  .mapboxgl-popup-content {
+    top: 3px;
+    left: 9px;
+    background: $black;
+    border-radius: 0;
+  }
+}
