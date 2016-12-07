@@ -3,13 +3,12 @@ import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
-
-import { FormattedMessage } from 'react-intl'
-
+import CopyrightNotice from '../components/copyright-notice'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -119,6 +118,7 @@ export class ForgotPassword extends React.Component {
               </Row>
             </form>
           }
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 
