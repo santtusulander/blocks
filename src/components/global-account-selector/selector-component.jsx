@@ -1,11 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem, FormControl } from 'react-bootstrap'
 
+import ToggleElement from './toggle-element'
 import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
-
-const ToggleElement = ({ toggle, children }) =>
-  <div className="selector-component__toggle" onClick={toggle}>{children}</div>
 
 const SelectorComponent = ({
   items,
