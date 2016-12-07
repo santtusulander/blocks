@@ -120,6 +120,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
         <Tooltip
           animationEasing="linear"
+          offset={0}
           content={
             <AreaTooltip
               iconClass={() => 'tooltip-class'}
