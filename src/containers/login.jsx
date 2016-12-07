@@ -42,15 +42,36 @@ export class Login extends React.Component {
     this.toggleRemember = this.toggleRemember.bind(this)
   }
 
-  componentWillMount(){
-    this.props.userActions.startFetching()
-    this.props.userActions.checkToken()
-      .then( () => {
-        this.props.userActions.finishFetching()
-      })
+  componentDidMount(){
+    const token = localStorage.getItem('EricssonUDNUserToken')
+    const redirect = this.props.location.query.redirect
+    const expiry = this.props.location.query.sessionExpired
+
+    if (expiry) {
+      console.log("Session expired!")
+      return
+    } else if ( redirect && token ) {
+      //  If we have a token and a redirect is not set, could be reload => try to go to original location
+      //  this.props.userActions.setLogin(true)
+      this.props.router.push(this.props.location)
+      return
+
+    } else if ( redirect ) {
+      //we had redirect but no token
+      console.log('No token.')
+    }
+
+    // TOken will be validated in Main.jsx
+    // this.props.userActions.startFetching()
+    // this.props.userActions.checkToken()
+    //   .then( () => {
+    //     this.props.userActions.finishFetching()
+    //   })
   }
 
   goToAccountPage() {
+    //TODO: figure out how to redirect to correct CONTENT -page
+    
     /*if(this.props.loginUrl) {
       this.props.router.push(this.props.loginUrl)
       this.props.uiActions.setLoginUrl(null)
@@ -73,12 +94,12 @@ export class Login extends React.Component {
    * to get before redirecting the user.
    * @return {Promise}
    */
-  getLoggedInData() {
-    return Promise.all([
-      this.props.rolesActions.fetchRoles(),
-      this.props.userActions.fetchUser(this.state.username)
-    ])
-  }
+  // getLoggedInData() {
+  //   return Promise.all([
+  //     this.props.rolesActions.fetchRoles(),
+  //     this.props.userActions.fetchUser(this.state.username)
+  //   ])
+  // }
   onSubmit(e) {
     e.preventDefault()
     this.setState({loginError: null})
@@ -97,11 +118,13 @@ export class Login extends React.Component {
         else {
           this.props.userActions.saveName()
         }
-        return this.getLoggedInData()
-          .then(() => {
-            this.goToAccountPage()
-            this.props.userActions.finishFetching()
-          })
+
+        // return this.getLoggedInData()
+        //   .then(() => {
+        //     this.goToAccountPage()
+        //     this.props.userActions.finishFetching()
+        //   })
+
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -150,6 +173,13 @@ export class Login extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
+
+            { this.props.location.query.sessionExpired &&
+              <div className="login-info">
+                <p>Session was expired - please re-enter your password.</p>
+              </div>
+            }
+
             {this.state.loginError ?
               <div className="login-info">
                 <p>{this.state.loginError}</p>

@@ -17,10 +17,10 @@ const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
+const SET_LOGIN = 'user/SET_LOGIN'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
-
 
 const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
@@ -105,6 +105,7 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
+  localStorage.removeItem('EricssonUDNUserName')
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.set('loggedIn', false)
@@ -152,6 +153,7 @@ export function userTokenChecked(state, action){
   }
   else {
     localStorage.removeItem('EricssonUDNUserToken')
+    localStorage.removeItem('EricssonUDNUserName')
     delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
@@ -168,6 +170,10 @@ export function userNameSave(state, action){
   return state.set('username', action.payload)
 }
 
+export const setLoggedIn = (state, action) => {
+  return state.set('loggedIn', action.payload)
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -180,10 +186,14 @@ export default handleActions({
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
   USER_NAME_SAVED: userNameSave,
-  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
+  [SET_LOGIN]: setLoggedIn
 }, emptyUser)
 
 // ACTIONS
+export const setLogin = createAction(SET_LOGIN, (value) => {
+  return value
+})
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
@@ -214,6 +224,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
     loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
+    localStorage.removeItem('EricssonUDNUserToken')
   }
 
   return Promise.resolve()

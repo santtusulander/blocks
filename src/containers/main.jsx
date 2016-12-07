@@ -32,29 +32,29 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
-  componentWillMount() {
+  componentDidMount() {
 
     console.log('main--componentWillMount', this.props)
 
-    // this.props.userActions.checkToken()
-    //   .then(action => {
-    //     if(action.error) {
-    //       /*if(!this.pageAllowsAnon()) {
-    //         this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
-    //         this.props.router.push('/login')
-    //       }*/
-    //       return false
-    //     }
-    //     else {
-          this.props.userActions.fetchUser(/*action.payload.username*/ this.props.user.get('username'))
+    this.props.userActions.checkToken()
+      .then(action => {
+        if(action.error) {
+          /*if(!this.pageAllowsAnon()) {
+            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
+            this.props.router.push('/login')
+          }*/
+          return false
+        }
+        else {
+          this.props.userActions.fetchUser(action.payload.username/*, this.props.user.get('username'*/)
           this.props.rolesActions.fetchRoles()
           const accountId = this.props.activeAccount.size ?
             this.props.activeAccount.get('id') :
             this.props.params.account
 
           return this.fetchAccountData(accountId, this.props.accounts)
-      //   }
-      // })
+        }
+      })
   }
 
   //update account if account prop changed (in url) or clear active if there is no account in route
@@ -79,7 +79,9 @@ export class Main extends React.Component {
   }
   logOut() {
     this.props.userActions.logOut()
-    this.props.router.push('/login')
+      .then(() => {
+        this.props.router.push('/login')
+      })
   }
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
