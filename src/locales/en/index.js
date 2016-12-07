@@ -8,6 +8,7 @@ import security from './security.json'
 import services from './security.json'
 import support from './support.json'
 import user from './user.json'
+import password from './password.json'
 
 //TODO: Should be removed when all strings have been moved to separate files
 import en from './en.js'
@@ -23,5 +24,6 @@ export default Object.assign({},
   services,
   support,
   user,
+  password,
   en
 )

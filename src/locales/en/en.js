@@ -571,10 +571,6 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.yesterday': 'Yesterday',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
 
-  'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
-  'portal.forgotPassword.instructions.text': 'You will receive instructions email shortly to reset your password.',
-  'portal.forgotPassword.enterEmail.text': 'Enter your email address to receive instructions to reset your password.',
-
   'portal.groups.accountSummary.text': 'Account Summary',
   'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
