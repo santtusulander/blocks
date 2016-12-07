@@ -16,8 +16,8 @@ class Select extends Component {
     this.getSelectedItem = this.getSelectedItem.bind(this)
   }
 
-  selectOption(e, value) {
-    this.props.onSelect(this.props.numericValues ? Number(value) : value)
+  selectOption(eventKey) {
+    this.props.onSelect(this.props.numericValues ? Number(eventKey) : eventKey)
   }
 
   getMenuItem(option, i) {
@@ -75,7 +75,7 @@ class Select extends Component {
     }
 
     return (
-      <Dropdown id="" disabled={this.props.disabled} className={className}
+      <Dropdown id="select" disabled={this.props.disabled} className={className}
                 onSelect={this.selectOption}>
         <Dropdown.Toggle noCaret={true} className={this.props.disabled && 'disabled'}>
           <IconSelectCaret/>

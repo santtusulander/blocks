@@ -315,16 +315,20 @@ textarea {
   }
 }
 
-.checkbox,
-.radio {
-  margin: 0;
+.checkbox label,
+.radio label,
+.radio-inline {
+  position: relative;
+  padding-left: 0;
+  font-size: rem(14px);
+  font-weight: 500;
+  cursor: default;
+}
 
-  label {
-    padding-left: 0;
-    font-size: rem(14px);
-    font-weight: 500;
-    cursor: default;
-  }
+.checkbox,
+.radio,
+.radio-inline {
+  margin: 0;
 
   input {
     display: none;
@@ -392,10 +396,8 @@ textarea {
   }
 }
 
-.radio {
-  label {
-    position: relative;
-  }
+.radio,
+.radio-inline {
 
   input {
     + span::before {
