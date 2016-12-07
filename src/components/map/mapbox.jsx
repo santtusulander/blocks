@@ -63,11 +63,11 @@ class Mapbox extends React.Component {
     super(props)
     this.state = {
       zoom: 1,
-      countryGeoJson: null,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
-      hoveredLayer: null
+      hoveredLayer: null,
+      map: null
     }
 
     this.countryGeoJson = {
@@ -75,21 +75,20 @@ class Mapbox extends React.Component {
       features: []
     }
 
-    this.map = null;
-
     this.setHoverStyle = this.setHoverStyle.bind(this);
 
   }
 
   componentWillReceiveProps(nextProps) {
+    const layers = this.state.layers
+
     if (nextProps.countryData !== this.props.countryData) {
       this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
         const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
-        const layers = this.state.layers;
 
         if (countryExists) {
-          if (!this.map.getSource('geo-' + data.properties.iso_a3)) {
-            this.map.addSource('geo-' + data.properties.iso_a3, {
+          if (!this.state.map.getSource('geo-' + data.properties.iso_a3)) {
+            this.state.map.addSource('geo-' + data.properties.iso_a3, {
               type: 'geojson',
               data: { type: 'FeatureCollection', features: [data] }
             })
@@ -102,10 +101,24 @@ class Mapbox extends React.Component {
         }
       })
     }
+
+    if (nextProps.cityData !== this.props.cityData) {
+      this.props.cityData.forEach((city) => {
+        const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
+
+        if (layerExists) {
+          layers.push(city.name.split(' ').join('-').toLowerCase())
+        }
+
+      })
+
+      this.setState({ layers });
+    }
+
   }
 
   onStyleLoaded(map) {
-    this.map = map;
+    this.setState({ map })
   }
 
   onZoomEnd(e){
@@ -159,10 +172,11 @@ class Mapbox extends React.Component {
   }
 
   renderCountryHighlight() {
-    const countryMedian = calculateMedian(this.props.countryData.map((country => country.total)))
+    const countries = this.props.countryData
+    const countryMedian = calculateMedian(countries.map((country => country.total)))
 
     const highlights = this.countryGeoJson.features.map((country, i) => {
-      const trafficCountry = this.props.countryData.find(c => c.code === country.properties.iso_a3)
+      const trafficCountry = countries.find(c => c.code === country.properties.iso_a3)
       const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
       const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#00a9d4'
 
@@ -199,11 +213,12 @@ class Mapbox extends React.Component {
   }
 
   renderCityCircles() {
-    const cityMedian = calculateMedian( cities.map( (city => city.bytes) ) )
+    const cities = this.props.cityData
+    const cityMedian = calculateMedian(cities.map((city => city.bytes)))
 
     return cities.map((city, i) => {
       const cityHeat = getScore(cityMedian, city.bytes)
-      const cityColor = cityHeat ? heatMapColors[ cityHeat - 1 ] : '#000000'
+      const cityColor = cityHeat && cityHeat < heatMapColors.length ? heatMapColors[ cityHeat - 1 ] : '#000000'
       const cityId = city.name.split(' ').join('-').toLowerCase()
 
       return (
@@ -217,7 +232,7 @@ class Mapbox extends React.Component {
             'circle-opacity': 0.5
           }}>
           <Feature
-            coordinates={city.position}
+            coordinates={[city.lon, city.lat]}
             properties={{
               name: city.name
             }} />
@@ -243,7 +258,6 @@ class Mapbox extends React.Component {
         zoom={[this.state.zoom]}
         minZoom={1}
         maxZoom={13}
-        center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}>
