@@ -1,7 +1,12 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { fromJS } from 'immutable'
-import _ from 'underscore'
+import Immutable, { fromJS } from 'immutable'
+
+import { flatten } from '../util/helpers'
+import {
+  POLICY_TYPES,
+  DEFAULT_MATCH
+} from '../constants/property-config'
 
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
@@ -65,6 +70,10 @@ export function policyContainsSetComponent(policy, setComponent) {
 export function matchIsContentTargeting(match) {
   return !!(match.get('field') === 'request_host'
           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
+}
+
+export function actionIsTokenAuth(sets) {
+  return sets.some( set => (set.setkey === 'tokenauth') )
 }
 
 export function parsePolicy(policy, path) {
@@ -168,7 +177,7 @@ export const getScriptLua = ( policy ) => {
 export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
   const countries = scriptLua.target.geo[0].country
 
-  return _.flatten(countries.filter( c => {
+  return flatten(countries.filter( c => {
     return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
   }).map( c => {
     const cArray = c.in || c.not_in
@@ -177,12 +186,12 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
 }
 
 /**
- *
+ * Gets Vary Header Rule from config
  * @param config
- * @returns {number|*}
+ * @returns Boolean
  */
 export const getVaryHeaderRuleId = ( config ) => {
-  const path = config.getIn(['response_policy', 'policy_rules'])
+  const path = config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])
 
   return path.findIndex( rule => {
     return 'Vary' === rule.getIn(['set', 'header','header'])
@@ -215,4 +224,14 @@ const setContentTargetingActionName = action => {
       {redirLocationPart}
     </span>
   )
+}
+
+/**
+ * Checks whether or not the rule at the given path is empty
+ * @param config a property configuration object
+ * @param rulePath the path to the rule in the configuration object (ex ['request_policy', 'policy_rule', 0])
+ * @return returns true if the rule at the given path is empty
+ */
+export const isPolicyRuleEmpty = (config, rulePath) => {
+  return Immutable.is(config.getIn(rulePath).get('match'), DEFAULT_MATCH.get('match'))
 }

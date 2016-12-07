@@ -157,31 +157,10 @@ describe('ConfigurationPolicyRuleEdit', () => {
     expect(activateSet.mock.calls[0][0]).toBe('aaa')
   });
 
-  it('should cancel changes', () => {
-    const changeValue = jest.fn()
-    const hideAction = jest.fn()
-    let policyRule = TestUtils.renderIntoDocument(
-      <ConfigurationPolicyRuleEdit
-        rule={fakeConfig}
-        config={Immutable.Map()}
-        rulePath={Immutable.List()}
-        activeAccount={fakeAccounts}
-        activeGroup={fakeGroups}
-        location={fakeLocation}
-        changeValue={changeValue}
-        hideAction={hideAction}/>
-    );
-    policyRule.state.originalConfig = fakeConfig
-    policyRule.cancelChanges()
-    expect(changeValue.mock.calls.length).toBe(1)
-    expect(changeValue.mock.calls[0][1]).toBe(fakeConfig)
-    expect(hideAction.mock.calls.length).toBe(1)
-  });
-
   it('should move a set', () => {
     const changeValue = jest.fn()
     const activateSet = jest.fn()
-    let policyRule = TestUtils.renderIntoDocument(
+    let policyRule = shallow(
       <ConfigurationPolicyRuleEdit
         rule={fakeConfig}
         config={fakeConfig}
@@ -192,11 +171,14 @@ describe('ConfigurationPolicyRuleEdit', () => {
         activateSet={activateSet}
         location={fakeLocation}/>
     );
-      let conditions = TestUtils.scryRenderedDOMComponentsWithClass(policyRule, 'conditions');
-      let btns = TestUtils.scryRenderedDOMComponentsWithTag(policyRule, 'button');
-      TestUtils.Simulate.click(btns[4])
-      expect(changeValue.mock.calls.length).toBe(1)
-      expect(activateSet.mock.calls.length).toBe(1)
+    const conditions = policyRule.find('.condition')
+    const sets = conditions.at(1)
+    const set = sets.at(0)
+    const actionButtons = set.find('ActionButtons').shallow()
+    const buttons = actionButtons.find('Button')
+    buttons.at(1).simulate('click', { preventDefault: jest.fn(), stopPropagation: jest.fn() })
+    expect(changeValue.mock.calls.length).toBe(1)
+    expect(activateSet.mock.calls.length).toBe(1)
   });
 
   it('should show current matches', () => {

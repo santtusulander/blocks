@@ -35,7 +35,7 @@ class ConfigurationDiffBar extends React.Component {
                 onClick={this.resetConfig}>
                 <FormattedMessage id="portal.button.CANCEL"/>
               </Button>
-              <Button className="btn btn-save"
+              <Button bsStyle="primary"
                 onClick={this.props.saveConfig}
                 disabled={this.props.saving}>
                 {this.props.saving ? <FormattedMessage id="portal.button.saving"/> : <FormattedMessage id="portal.button.SAVE"/>}
@@ -43,7 +43,7 @@ class ConfigurationDiffBar extends React.Component {
             </ButtonToolbar>
             <div className="configuration-dialog-content">
               <p className="configuration-dialog-title">
-                {configDiff.size} Change{configDiff.size > 1 && 's'}
+                {configDiff.size} <FormattedMessage id="portal.configuration.changes.text" values={{numChanges: configDiff.size}}/>
               </p>
               <p>
                 {configDiff.map((change, i) => {

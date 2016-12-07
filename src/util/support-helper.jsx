@@ -22,7 +22,7 @@ import {
   TYPE_PROBLEM,
   TYPE_INCIDENT,
   TYPE_QUESTION,
-  TYPE_TASK,
+  TYPE_TASK
 } from '../constants/ticket'
 
 export function getTicketPriorities() {
@@ -66,7 +66,7 @@ export function getTicketTypes() {
     TYPE_PROBLEM,
     TYPE_INCIDENT,
     TYPE_QUESTION,
-    TYPE_TASK,
+    TYPE_TASK
   ]
 }
 
@@ -83,7 +83,7 @@ export function getTicketPriorityOptions() {
     { value: PRIORITY_URGENT, label: 'Urgent', icon: getTicketPriorityIcon(PRIORITY_URGENT) },
     { value: PRIORITY_HIGHT, label: 'High', icon: getTicketPriorityIcon(PRIORITY_HIGHT) },
     { value: PRIORITY_NORMAL, label: 'Normal', icon: getTicketPriorityIcon(PRIORITY_NORMAL) },
-    { value: PRIORITY_LOW, label: 'Low', icon: getTicketPriorityIcon(PRIORITY_LOW) },
+    { value: PRIORITY_LOW, label: 'Low', icon: getTicketPriorityIcon(PRIORITY_LOW) }
   ]
 }
 
@@ -94,7 +94,7 @@ export function getTicketStatusOptions() {
     { value: STATUS_PENDING, label: 'Pending' },
     { value: STATUS_HOLD, label: 'Hold' },
     { value: STATUS_SOLVED, label: 'Solved' },
-    { value: STATUS_CLOSED, label: 'Closed' },
+    { value: STATUS_CLOSED, label: 'Closed' }
   ]
 }
 
@@ -103,7 +103,7 @@ export function getTicketTypeOptions() {
     { value: TYPE_PROBLEM, label: 'Problem', icon: getTicketTypeIcon(TYPE_PROBLEM) },
     { value: TYPE_INCIDENT, label: 'Incident', icon: getTicketTypeIcon(TYPE_INCIDENT) },
     { value: TYPE_QUESTION, label: 'Question', icon: getTicketTypeIcon(TYPE_QUESTION) },
-    { value: TYPE_TASK, label: 'Task', icon: getTicketTypeIcon(TYPE_TASK) },
+    { value: TYPE_TASK, label: 'Task', icon: getTicketTypeIcon(TYPE_TASK) }
   ]
 }
 
@@ -122,12 +122,13 @@ export function getTicketTypeIcon(type) {
   }
 }
 
+// eslint-disable-next-line react/no-multi-comp
 export function getTicketPriorityIcon(priority) {
   const className = classNames('support-ticket__priority-icon', {
     [`support-ticket__priority-icon--${priority.toLowerCase()}`]: true
   })
 
-  return (<div className={className}></div>)
+  return (<div className={className} />)
 }
 
 export function getTicketPriorityLabel(priority) {

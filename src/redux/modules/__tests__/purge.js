@@ -1,20 +1,22 @@
 const Immutable = require('immutable');
 
-jest.dontMock('../purge.js')
+jest.unmock('../purge.js')
 
-const {
+import {
   createRequestSuccess,
   createFailure,
   fetchSuccess,
   fetchFailure,
-  fetchAllSuccess,
-  fetchAllFailure,
+  fetchListSuccess,
+  fetchListFailure,
+  fetchObjectsSuccess,
+  fetchObjectsFailure,
   startFetch,
   updateActive,
   resetActive,
   emptyPurges,
   emptyPurge
-} = require('../purge.js');
+} from '../purge.js'
 
 describe('Purge Module', () => {
 
@@ -53,17 +55,31 @@ describe('Purge Module', () => {
     expect(newState.get('fetching')).toBeFalsy();
   });
 
-  it('should handle fetch all success', () => {
+  it('should handle fetch list success', () => {
     const state = Immutable.fromJS({ fetching: true });
-    const newState = fetchAllSuccess(state, {payload: [1, 2, 3]});
-    expect(newState.get('allPurges').size).toBe(3);
+    const newState = fetchListSuccess(state, {payload: [1, 2, 3]});
+    expect(newState.get('purgeList').size).toBe(3);
     expect(newState.get('fetching')).toBeFalsy();
   });
 
-  it('should handle fetch all failure', () => {
+  it('should handle fetch list failure', () => {
     const state = Immutable.fromJS({ fetching: true });
-    const newState = fetchAllFailure(state);
-    expect(newState.get('allPurges').size).toBe(0);
+    const newState = fetchListFailure(state);
+    expect(newState.get('purgeList').size).toBe(0);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch objects success', () => {
+    const state = Immutable.fromJS({ fetching: true });
+    const newState = fetchObjectsSuccess(state, {payload: {purge_objects: [1, 2, 3]}});
+    expect(newState.get('purgeObjects').size).toBe(3);
+    expect(newState.get('fetching')).toBeFalsy();
+  });
+
+  it('should handle fetch objects failure', () => {
+    const state = Immutable.fromJS({ fetching: true });
+    const newState = fetchObjectsFailure(state);
+    expect(newState.get('purgeObjects').size).toBe(0);
     expect(newState.get('fetching')).toBeFalsy();
   });
 

@@ -1,8 +1,8 @@
 import React from 'react'
-
+import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 import { Button, Col, Input, OverlayTrigger, Panel, Tooltip } from 'react-bootstrap'
 import Select from '../../components/select'
-import Immutable from 'immutable'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
@@ -43,6 +43,15 @@ class ConfigurationDetails extends React.Component {
       <form className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
 
+        {/* Deployment Mode */}
+        <div className="control-label form-group">
+          <label className="col-xs-3">
+            <FormattedMessage id="portal.configuration.details.deploymentMode.text"/>
+          </label>
+          <div className="col-xs-9">
+            {this.props.deploymentMode}
+          </div>
+        </div>
 
         {/* Origin Hostname */}
 
@@ -107,7 +116,7 @@ class ConfigurationDetails extends React.Component {
 
         <div className="form-groups">
           <div className={'input-connector col-xs-offset-3' +
-            (isOtherHostHeader ? ' show' : '')}></div>
+            (isOtherHostHeader ? ' show' : '')} />
 
           <div className="form-group">
             <label className="col-xs-3 control-label">Host Header Value</label>
@@ -225,8 +234,10 @@ class ConfigurationDetails extends React.Component {
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
+  deploymentMode: React.PropTypes.string,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
+  readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func
 }
 
-module.exports = ConfigurationDetails
+export default ConfigurationDetails

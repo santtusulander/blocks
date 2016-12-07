@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button, ButtonToolbar, Col, Input, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
 
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 import { secondsToUnit, secondsFromUnit } from '../helpers'
 
 class Cache extends React.Component {
@@ -33,9 +33,9 @@ class Cache extends React.Component {
 
     this.state = {
       checkEtag: props.set.get('check_etag') || 'false',
-      honorOrigin: props.set.get('honor_origin'),
+      honorOrigin: props.set.get('honor_origin') || false,
       maxAge: maxAge,
-      noStore: props.set.get('no_store'),
+      noStore: props.set.get('no_store') || false,
       ttlType: ttlType
     }
 
@@ -169,7 +169,7 @@ class Cache extends React.Component {
           </Input>
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               Cancel
             </Button>
             <Button bsStyle="primary" onClick={this.saveChanges}>
@@ -187,6 +187,7 @@ Cache.displayName = 'Cache'
 Cache.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

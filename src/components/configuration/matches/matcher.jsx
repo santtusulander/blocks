@@ -6,7 +6,8 @@ import Select from '../../select'
 import InputConnector from '../../input-connector'
 import {
   matchFilterChildPaths,
-  getMatchFilterType
+  getMatchFilterType,
+  WILDCARD_REGEXP
 } from '../../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -27,6 +28,7 @@ class Matcher extends React.Component {
     this.handleValChange = this.handleValChange.bind(this)
     this.handleMatchesChange = this.handleMatchesChange.bind(this)
     this.handleContainsValChange = this.handleContainsValChange.bind(this)
+    this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -53,6 +55,21 @@ class Matcher extends React.Component {
       containsVal: ''
     })
   }
+  validate() {
+    const {
+      activeFilter,
+      val,
+      containsVal
+    } = this.state
+
+    switch (activeFilter) {
+      case 'contains':
+      case 'does_not_contain':
+        return !!val && !!containsVal
+      default:
+        return true
+    }
+  }
   saveChanges() {
     // matches with a contain value put val in field_detail and use containsVal
     // as child key
@@ -65,7 +82,7 @@ class Matcher extends React.Component {
         case 'exists':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              ['.*', children]
+              [WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
@@ -79,7 +96,7 @@ class Matcher extends React.Component {
         case 'does_not_exist':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              ['.*', []]
+              [WILDCARD_REGEXP, []]
             ]))
             .set('default', children)
           break
@@ -87,7 +104,7 @@ class Matcher extends React.Component {
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
               [this.state.containsVal, []],
-              ['.*', children]
+              [WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
@@ -100,14 +117,14 @@ class Matcher extends React.Component {
         case 'exists':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              [this.state.val, children]
+              [this.state.val || WILDCARD_REGEXP, children]
             ]))
             .delete('default')
           break
         case 'does_not_exist':
           newMatch = newMatch
             .set('cases', Immutable.fromJS([
-              [this.state.val, []]
+              [this.state.val || WILDCARD_REGEXP, []]
             ]))
             .set('default', children)
           break
@@ -127,6 +144,7 @@ class Matcher extends React.Component {
       matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
       matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
     }
+    const isValid = this.validate()
     return (
       <div>
         <Modal.Header>
@@ -162,10 +180,10 @@ class Matcher extends React.Component {
           }
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges}>
+            <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
           </ButtonToolbar>

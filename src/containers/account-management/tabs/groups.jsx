@@ -136,7 +136,7 @@ class AccountManagementAccountGroups extends React.Component {
 
   // TODO: Now that this is a container, no need to pass this in
   saveNewGroup(values) {
-    this.props.addGroup(values.name)
+    this.props.addGroup(values)
       .then(newGroup => {
         return Promise.all(this.state.newUsers.map(email => {
           const foundUser = this.props.users
@@ -243,7 +243,6 @@ class AccountManagementAccountGroups extends React.Component {
     const groupText = sortedGroups.size === 1 ? ` ${this.props.intl.formatMessage({id: 'portal.account.groups.single.text'})}` : ` ${this.props.intl.formatMessage({id: 'portal.account.groups.multiple.text'})}`
     const hiddenGroupText = numHiddenGroups ? ` (${numHiddenGroups} ${this.props.intl.formatMessage({id: 'portal.account.groups.hidden.text'})})` : ''
     const finalGroupText = groupSize + groupText + hiddenGroupText
-
     return (
       <PageContainer className="account-management-account-groups">
        <SectionHeader sectionHeaderTitle={finalGroupText}>
@@ -282,7 +281,6 @@ class AccountManagementAccountGroups extends React.Component {
             validate={this.validateInlineAdd}
             fields={['name']}
             inputs={inlineAddInputs}
-            cancel={this.cancelAdding}
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
           {sortedGroups.map((group, i) => {

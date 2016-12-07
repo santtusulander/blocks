@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../redirection.jsx')
-const Redirection = require('../redirection.jsx')
+jest.unmock('../redirection.jsx')
+import Redirection from '../redirection.jsx'
 
 function intlMaker() {
   return {

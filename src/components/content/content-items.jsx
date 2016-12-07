@@ -1,16 +1,25 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonToolbar } from 'react-bootstrap'
-import { Link, withRouter } from 'react-router'
+import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
+import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import { ACCOUNT_TYPE_SERVICE_PROVIDER } from '../../constants/account-management-options'
+import {
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
+} from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
-import { getContentUrl } from '../../util/routes'
+import {
+  getContentUrl,
+  getNetworkUrl
+} from '../../util/routes'
+import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
+import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
+import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import Content from '../layout/content'
@@ -18,14 +27,13 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
-import IconChart from '../icons/icon-chart.jsx'
+import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupForm from '../../components/account-management/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
-import { Button } from 'react-bootstrap'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
 
@@ -152,7 +160,11 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        this.props.router.push(getContentUrl('brand', 'udn', {}))
+        if (this.props.router.isActive('network')) {
+          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
+        } else {
+          this.props.router.push(getContentUrl('brand', 'udn', {}))
+        }
         break
     }
   }
@@ -177,6 +189,20 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  getTagText(isCloudProvider, providerType, trialMode) {
+    let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
+    if (isCloudProvider && !trialMode) {
+      switch(providerType) {
+        case ACCOUNT_TYPE_CONTENT_PROVIDER:
+          tagText = 'portal.content.contentProvider'
+          break
+        case ACCOUNT_TYPE_SERVICE_PROVIDER:
+          tagText = 'portal.content.serviceProvider'
+        default: break
+      }
+    }
+    return { tagText: tagText }
+  }
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -195,16 +221,34 @@ class ContentItems extends React.Component {
         startTier={props.selectionStartTier}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        onSelect={(...params) => props.router.push(getContentUrl(...params))}>
+        onSelect={(...params) => {
+          // This check is done to prevent UDN admin from accidentally hitting
+          // the account detail endpoint, which they don't have permission for
+          const currentUser = props.user.get('currentUser')
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
+
+          const url = props.router.isActive('network')
+                        ? getNetworkUrl(...params)
+                        : getContentUrl(...params)
+
+          // We perform this check to prevent routing to unsupported routes
+          // For example, prevent clicking to SP group route (not yet supported)
+          if (url) {
+            props.router.push(url)
+          }
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
             <TruncatedTitle content={props.headerText.label} tooltipPlacement="bottom"/>
           </h1>
-          <span className="caret"></span>
+          <IconCaretDown />
         </div>
       </AccountSelector>
     )
   }
+
   render() {
     const {
       sortValuePath,
@@ -216,7 +260,8 @@ class ContentItems extends React.Component {
       analyticsURLBuilder,
       fetchingMetrics,
       showAnalyticsLink,
-      viewingChart
+      viewingChart,
+      user
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -227,12 +272,12 @@ class ContentItems extends React.Component {
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-
       // Remove the trial url from trial property names
       if (trialNameRegEx.test(item.get('id'))) {
         item = item.merge({
           id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1')
+          name: item.get('id').replace(trialNameRegEx, '$1'),
+          isTrialHost: true
         })
       }
       return Immutable.Map({
@@ -259,33 +304,37 @@ class ContentItems extends React.Component {
         opt.direction === sortDirection
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
+    const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
           {this.renderAccountSelector(this.props, this.itemSelectorTopBarAction)}
           <ButtonToolbar>
             {showAnalyticsLink ? <AnalyticsLink url={analyticsURLBuilder}/> : null}
-            <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-              <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
-            </IsAllowed>
+            {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
+            {isCloudProvider || activeAccount.size ?
+              <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
+                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+              </IsAllowed>
+            : null}
             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
               options={sortOptions.map(opt => [opt.value, opt.label])}/>
-            <UDNButton bsStyle="primary"
-                       icon={true}
-                       toggleView={true}
-                       hidden={viewingChart}
-                       onClick={this.props.toggleChartView}>
-              <IconItemChart/>
-            </UDNButton>
-            <UDNButton bsStyle="primary"
-                       icon={true}
-                       toggleView={true}
-                       hidden={!viewingChart}
-                       onClick={this.props.toggleChartView}>
-              <IconItemList/>
-            </UDNButton>
+            <ButtonGroup>
+              <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
+                         active={viewingChart}
+                         icon={true}
+                         onClick={!viewingChart && this.props.toggleChartView}>
+                <IconItemChart/>
+              </UDNButton>
+              <UDNButton className={!viewingChart ? 'btn-tertiary' : 'btn-primary'}
+                         active={!viewingChart}
+                         icon={true}
+                         onClick={viewingChart && this.props.toggleChartView}>
+                <IconItemList/>
+              </UDNButton>
+            </ButtonGroup>
           </ButtonToolbar>
         </PageHeader>
 
@@ -308,19 +357,23 @@ class ContentItems extends React.Component {
                   'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
+                  const id = item.get('id')
+                  const isTrialHost = item.get('isTrialHost')
+                  const name = item.get('name')
                   const contentMetrics = content.get('metrics')
-                  const id = String(item.get('id'))
                   const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
                   const itemProps = {
-                    id: id,
-                    linkTo: this.props.nextPageURLBuilder(id),
+                    id,
+                    name,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                    brightMode: isTrialHost,
+                    linkTo: this.props.nextPageURLBuilder(id, item),
                     disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
                     configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
                     onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
                       this.editItem(id)
                     } : null,
                     analyticsLink: this.props.analyticsURLBuilder(id),
-                    name: item.get('name'),
                     dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
                     description: 'Desc',
                     delete: this.props.deleteItem,
@@ -362,9 +415,8 @@ class ContentItems extends React.Component {
           {this.state.showModal && this.getTier() === 'account' &&
             <GroupForm
               id="group-form"
-              users={this.props.user.get('allUsers')}
-              group={this.state.itemToEdit}
-              account={activeAccount}
+              params={this.props.params}
+              groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
               show={true}/>
@@ -394,28 +446,6 @@ class ContentItems extends React.Component {
     )
   }
 }
-
-const AnalyticsLink = props => {
-  return (
-    <Link
-      className="btn btn-primary btn-icon"
-      to={props.url()}>
-      <IconChart />
-   </Link>
-  )
-}
-AnalyticsLink.propTypes = { url: React.PropTypes.func }
-
-const NoContentItems = props => {
-  return (
-    <p className="fetching-info text-center">
-      {props.content}
-      <br/>
-      You can create new properties by clicking the Add New (+) button
-    </p>
-  )
-}
-NoContentItems.propTypes = { content: React.PropTypes.string }
 
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {

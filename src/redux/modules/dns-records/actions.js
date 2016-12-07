@@ -1,9 +1,9 @@
-import _ from 'underscore'
 import uniqid from 'uniqid'
-import {fromJS} from 'immutable'
+import { fromJS } from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
 
 import { mapReducers } from '../../util'
+import { flatten } from '../../../util/helpers'
 
 export const DNS_RECORDS_CREATED = 'DNS_RECORDS_CREATED'
 export const DNS_RECORDS_RECEIVE_RESOURCES = 'DNS_RECORDS_RECEIVE_RESOURCES'
@@ -66,7 +66,6 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
-  data.name = data.name.concat('.' + zone)
   return dnsRecordsApi.remove(zone, resource.concat('.' + zone), data)
 })
 
@@ -84,11 +83,12 @@ export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DE
   return dnsRecordsApi.fetchAll(zone)
     .then(({ data }) => {
       let recArray = []
-      _.forEach(data, (record) => {
-        recArray.push( record )
+
+      Object.keys(data).map(key => {
+        recArray.push( data[key] )
       })
 
-      return _.flatten(recArray).map( record => {
+      return flatten(recArray).map( record => {
         record.id = uniqid()
         record.name = domainlessRecordName(zone, record.name)
         return record

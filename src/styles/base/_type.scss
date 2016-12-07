@@ -125,12 +125,10 @@ h5 {
 
 
 p {
-  .right-separator {
-    display: inline-block;
-    margin-right: 12px;
-
-    &:not(:last-child)::after {
-      margin-left: 12px;
+  &.right-separator {
+    &::after {
+      margin-right: 6px;
+      margin-left: 6px;
       content: '';
 
       .dark-theme & {

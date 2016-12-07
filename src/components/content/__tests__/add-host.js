@@ -1,9 +1,10 @@
 import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
+import { shallow, mount } from 'enzyme'
 
-jest.dontMock('../add-host.jsx')
-const AddHost = require('../add-host.jsx')
+jest.unmock('../add-host.jsx')
+import AddHost from '../add-host'
 
 function intlMaker() {
   return {
@@ -12,22 +13,32 @@ function intlMaker() {
 }
 
 describe('AddHost', () => {
+  const createHost = jest.genMockFunction()
+  const cancelChanges = jest.genMockFunction()
+  let subject, error, props = null
+  let touched = false
+  beforeEach(() => {
+    subject = () => {
+      props = {
+        intl: intlMaker(),
+        errors: {},
+        createHost,
+        cancelChanges,
+        fields: {
+          hostName: { touched, error, value: 'new' },
+          deploymentMode: { touched, error, value: 'trial' }
+        }
+      }
+      return shallow(<AddHost {...props}/>)
+    }
+  })
   it('should exist', () => {
-    let addHost = TestUtils.renderIntoDocument(
-      <AddHost group={Immutable.Map()} intl={intlMaker()}/>
-    );
-    expect(TestUtils.isCompositeComponent(addHost)).toBeTruthy();
+    expect(subject().length).toBe(1)
   })
   it('should create host on submit', () => {
-    let createHost = jest.genMockFunction()
-    let addHost = TestUtils.renderIntoDocument(
-      <AddHost group={Immutable.Map()} createHost={createHost}
-        intl={intlMaker()}/>
-    )
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(addHost, 'input')
-    inputs[0].value = 'new'
-    let form = TestUtils.findRenderedDOMComponentWithTag(addHost, 'form')
-    TestUtils.Simulate.submit(form)
+
+    const input = subject().find('#host_name')
+    subject().find('#save_button').simulate('click')
     expect(createHost.mock.calls[0][0]).toEqual('new')
     expect(createHost.mock.calls[0][1]).toEqual('trial')
   })

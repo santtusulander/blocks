@@ -9,6 +9,8 @@
 // ===================
 
 @import '../../node_modules/react-datepicker/dist/react-datepicker.css';
+@import '../../node_modules/react-date-picker/index.css';
+
 
 // Vendor / ReactTelephoneInput
 // ===================
@@ -70,10 +72,13 @@
 @import 'components/user-menu-dropdown';
 @import 'components/inline-add';
 @import 'components/input-connector';
+@import 'components/mini-chart';
 @import 'components/modal-window';
 @import 'components/modal-form-panel';
+@import 'components/month-picker';
 @import 'components/notification';
 @import 'components/permission-selection';
+@import 'components/react-date-picker';
 @import 'components/react-telephone-input';
 @import 'components/select';
 @import 'components/side-panel';
@@ -102,6 +107,8 @@
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
 @import 'components/analysis/contribution';
+//Charts
+@import 'components/charts/bar-chart';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
@@ -120,6 +127,8 @@
 @import 'components/content/content-item';
 @import 'components/content/content-item-chart';
 @import 'components/content/content-item-list';
+// SP Dashboard
+@import 'components/stacked-by-time-summary';
 
 // Transitions
 // ===========

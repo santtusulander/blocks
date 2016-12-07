@@ -112,7 +112,7 @@ class ContentTargeting extends React.Component {
           <hr />
 
           <ButtonToolbar className="text-right">
-            <Button bsStyle="default" onClick={this.props.close}>
+            <Button className="btn-secondary" onClick={this.props.close}>
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
             <Button bsStyle="primary"

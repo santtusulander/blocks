@@ -54,6 +54,11 @@ export const defaultUI = fromJS({
   policyActiveSet: null
 })
 
+//SELECTORS
+export const getTheme = (state) => {
+  return state.ui.get('theme')
+}
+
 // REDUCERS
 
 export function accountManagementModalToggled(state, action) {

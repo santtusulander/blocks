@@ -1,75 +1,89 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
-import { Input } from 'react-bootstrap'
+import { Input, Button, Table } from 'react-bootstrap'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map, List } from 'immutable'
-// import { Map, List, fromJS } from 'immutable'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { reduxForm, getValues } from 'redux-form'
+import { bindActionCreators } from 'redux'
+import * as hostActionCreators from '../../redux/modules/host'
+import * as uiActionCreators from '../../redux/modules/ui'
 
-import SidePanel from '../side-panel'
+import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
+import ActionButtons from '../../components/action-buttons'
+import TruncatedTitle from '../../components/truncated-title'
+import ModalWindow from '../../components/modal'
+import SidePanel from '../side-panel'
 
+import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
 
-let errors = {}
-
-const validate = (values) => {
-  const {name} = values
-  errors = {}
-  if(!name || name.length === 0) {
-    errors.name = <FormattedMessage id="portal.account.groups.name.error.required"/>
+const validate = ({ name }) => {
+  const conditions = {
+    name: {
+      condition: !isValidAccountName(name),
+      errorText:
+        <div>
+          <FormattedMessage id="portal.account.groupForm.name.validation.error"/>,
+          <div key={1}>
+            <div style={{marginTop: '0.5em'}}>
+              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+              <ul>
+                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    }
   }
-
-  if( name && !isValidAccountName(name) ) {
-    errors.name = <FormattedMessage id="portal.account.groups.name.error.invalid" />
-  }
-
-  return errors;
+  return checkForErrors(
+    { name },
+    conditions,
+    { name: <FormattedMessage id="portal.account.groupForm.name.required.error"/> }
+  )
 }
 
 class GroupForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.save = this.save.bind(this)
     this.state = {
+      hostToDelete: null,
       usersToAdd: List(),
       usersToDelete: List()
     }
+
+    this.notificationTimeout = null
+
+    this.save = this.save.bind(this)
   }
 
   componentWillMount() {
-    if (!this.props.group.isEmpty()) {
-      const {
-        group,
-        fields: {
-          name
-        }
-      } = this.props
-
-      name.onChange(group.get('name'))
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId } = this.props
+    if (groupId && !accountIsServiceProviderType(this.props.account)) {
+      startFetching()
+      fetchHosts(brand, account, groupId)
     }
   }
 
   save() {
-    if(!Object.keys(errors).length) {
-      const {
-        fields: { name }
-      } = this.props
+    const { formValues, groupId, invalid, onSave } = this.props
+    if(!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
-
-      if (!this.props.group.isEmpty()) {
-        this.props.onSave(
-          this.props.group.get('id'),
-          { name: name.value },
+      if (groupId) {
+        onSave(
+          groupId,
+          formValues,
           this.state.usersToAdd,
           this.state.usersToDelete
         )
       } else {
-        this.props.onSave({ name: name.value }, this.state.usersToAdd)
+        onSave(this.props.formValues, this.state.usersToAdd)
       }
     }
   }
@@ -96,59 +110,156 @@ class GroupForm extends React.Component {
   }
 
   isEdited() {
-    const {fields: {name}} = this.props
-    return name.value !== name.initialValue || this.state.usersToAdd.size || this.state.usersToDelete.size
+    return this.state.usersToAdd.size || this.state.usersToDelete.size
+  }
+
+
+  deleteHost(host) {
+    const {
+      uiActions,
+      hostActions,
+      params: {
+        brand
+      },
+      account,
+      groupId
+    } = this.props
+
+    const accountId = account.get('id')
+
+    hostActions.fetchHost(
+      brand,
+      accountId,
+      groupId,
+      host
+    )
+      .then(() => {
+        hostActions.deleteHost(
+          brand,
+          accountId,
+          groupId,
+          this.props.activeHost
+        )
+          .then(res => {
+            this.setState({ hostToDelete: null })
+            if (res.error) {
+              uiActions.showInfoDialog({
+                title: 'Error',
+                content: res.payload.data.message,
+                buttons: <Button onClick={this.props.uiActions.hideInfoDialog} bsStyle="primary"><FormattedMessage
+                  id="portal.accountManagement.accoutnUpdated.text"/></Button>
+              })
+            } else {
+              this.showNotification(
+                this.props.intl.formatMessage(
+                  { id: 'portal.accountManagement.propertyDeleted.text' },
+                  { propertyName: host }
+                )
+              )
+            }
+          })
+      })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   render() {
-    const { fields: {name}, show, onCancel } = this.props
-    /*
-    const currentMembers = this.props.users.reduce((members, user) => {
-      if (this.state.usersToAdd.includes(user.get('email'))) {
-        return [user.set('toAdd', true), ...members]
-      }
-      if (this.state.usersToDelete.includes(user.get('email'))) {
-        return [...members, user.set('toDelete', true)]
-      }
-      if (user.get('group_id').includes(this.props.group.get('id'))) {
-        return [...members, user]
-      }
-      return members
-    }, [])
+    const {
+      fields: {
+        name,
+        charge_id,
+        charge_model
+      },
+      invalid,
+      show,
+      canEditBilling,
+      onCancel,
+      groupId,
+      account,
+      intl,
+      hosts } = this.props
+    /**
+     * This logic is for handling members of a group. Not yet supported in the API.
+     */
+    // const currentMembers = this.props.users.reduce((members, user) => {
+    //   if (this.state.usersToAdd.includes(user.get('email'))) {
+    //     return [user.set('toAdd', true), ...members]
+    //   }
+    //   if (this.state.usersToDelete.includes(user.get('email'))) {
+    //     return [...members, user.set('toDelete', true)]
+    //   }
+    //   if (user.get('group_id').includes(this.props.group.get('id'))) {
+    //     return [...members, user]
+    //   }
+    //   return members
+    // }, [])
 
 
-    const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
-      const userEmail = user.get('email')
-      if(!user.get('group_id').includes(this.props.group.get('id'))) {
-        return [...arr, {label: userEmail, value: userEmail}]
-      }
-      return arr;
-    }, []))
-    */
+    // const addMembersOptions = fromJS(this.props.users.reduce((arr, user) => {
+    //   const userEmail = user.get('email')
+    //   if(!user.get('group_id').includes(this.props.group.get('id'))) {
+    //     return [...arr, {label: userEmail, value: userEmail}]
+    //   }
+    //   return arr;
+    // }, []))
 
-    const title = !this.props.group.isEmpty() ? <FormattedMessage id="portal.group.edit.editGroup.title"/> : <FormattedMessage id="portal.group.edit.newGroup.title"/>
-    const subTitle = !this.props.group.isEmpty() ? `${this.props.account.get('name')} / ${this.props.group.get('name')}` : this.props.account.get('name')
+    const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
+    const subTitle = groupId ? `${account.get('name')} / ${name.value}` : account.get('name')
 
     return (
-      <SidePanel
+      <div>
+        <SidePanel
         show={show}
         title={title}
         subTitle={subTitle}
         cancelButton={true}
         submitButton={true}
-        submitText={!this.props.group.isEmpty()}
+        submitText={groupId}
         cancel={onCancel}
         submit={this.save}
-        invalid={!!Object.keys(errors).length || !this.isEdited()}>
+        invalid={invalid}>
         <form>
           <Input
             {...name}
             type="text"
-            label={this.props.intl.formatMessage({id: 'portal.group.edit.name.label'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.group.edit.name.enter.text'})}/>
+            label={intl.formatMessage({id: 'portal.account.groupForm.name.label'})}
+            placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}/>
           {name.touched && name.error &&
           <div className='error-msg'>{name.error}</div>}
 
+          {charge_id &&
+          <div>
+            <Input
+              {...charge_id}
+              disabled={!canEditBilling}
+              type="text"
+              label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
+              placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
+            {charge_id.touched && charge_id.error &&
+            <div className='error-msg'>{charge_id.error}</div>}
+          </div>
+          }
+
+          {charge_model &&
+          <div>
+            <SelectWrapper
+              {...charge_model}
+              disabled={!canEditBilling}
+              numericValues={true}
+              options={[
+                [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
+                [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
+              ]}
+              value={charge_model.value}
+              label={intl.formatMessage({id: 'portal.account.groupForm.charge_model.label'})}/>
+            {charge_model.touched && charge_model.error &&
+            <div className='error-msg'>{charge_model.error}</div>}
+          </div>
+          }
           {/*
             Disable until API support allows listing groups for user with some assigned
           <hr/>
@@ -195,30 +306,133 @@ class GroupForm extends React.Component {
             </ul>
           </div>
           */}
+
+          <hr/>
+
+          {(!accountIsServiceProviderType(account) && groupId) &&
+          <div>
+            <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+            {this.props.isFetchingHosts ? <LoadingSpinner/> :
+              !hosts.isEmpty() ?
+                <Table striped={true} className="fixed-layout">
+                  <thead>
+                  <tr>
+                    <th>
+                      <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                    </th>
+                    <th className="one-button-cell" />
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {hosts.map((host, i) => {
+                    return (
+                      <tr key={i}>
+                        <td><TruncatedTitle content={host} /></td>
+                        <td>
+                          <ActionButtons
+                            onDelete={() => this.setState({ hostToDelete: host })}/>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                  </tbody>
+                </Table>
+              : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+            }
+          </div>
+          }
         </form>
       </SidePanel>
+
+      {this.state.hostToDelete &&
+        <ModalWindow
+          title={
+            <div>
+              <div className="left">
+                <FormattedMessage id="portal.button.delete" />&nbsp;
+              </div>
+              <TruncatedTitle content={this.state.hostToDelete} tooltipPlacement="bottom" />
+            </div>
+          }
+          content={<FormattedMessage id="portal.accountManagement.deletePropertyConfirmation.text"/>}
+          invalid={true}
+          verifyDelete={true}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={() => this.setState({ hostToDelete: null })}
+          submit={() => this.deleteHost(this.state.hostToDelete)}/>
+      }
+      </div>
     )
   }
 }
 
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
+  activeHost: PropTypes.instanceOf(Map),
+  canEditBilling: PropTypes.bool,
+  fetchHosts: PropTypes.func,
   fields: PropTypes.object,
-  group: PropTypes.instanceOf(Map),
-  intl: PropTypes.object,
+  formValues: PropTypes.object,
+  groupId: PropTypes.number,
+  hostActions: PropTypes.object,
+  hosts: PropTypes.instanceOf(List),
+  intl: intlShape.isRequired,
+  invalid: PropTypes.bool,
+  isFetchingHosts: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  params: PropTypes.object,
   show: PropTypes.bool,
+  uiActions: PropTypes.object,
   users: PropTypes.instanceOf(List)
 }
 
 GroupForm.defaultProps = {
+  account: Map(),
+  activeHost: Map(),
   users: List(),
-  group: Map()
+  hosts: List()
+}
+
+/**
+ * If not editing a group, pass empty initial values
+ */
+const determineInitialValues = (groupId, activeGroup = Map()) => {
+  let initialValues = {}
+  if (groupId) {
+    const { charge_model, ...rest } = activeGroup.toJS()
+    initialValues = charge_model ? { charge_model, ...rest } : { ...rest }
+  }
+  return initialValues
+}
+
+function mapStateToProps({ user, host, group, account, form }, { groupId }) {
+  const currentUser = user.get('currentUser')
+  const canEditBilling = userIsCloudProvider(currentUser)
+  const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
+  return {
+    activeHost: host.get('activeHost'),
+    canEditBilling,
+    formValues: getValues(form.groupEdit),
+    users: user.get('allUsers'),
+    hosts: groupId && host.get('allHosts'),
+    isFetchingHosts: host.get('fetching'),
+    account: account.get('activeAccount'),
+    fields: canSeeBilling ? [ 'name', 'charge_model', 'charge_id' ] : ['name'],
+    initialValues: determineInitialValues(groupId, group.get('activeGroup'))
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    hostActions: bindActionCreators(hostActionCreators, dispatch),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  }
 }
 
 export default reduxForm({
-  fields: ['name'],
-  form: 'group-edit',
+  fields: ['name', 'charge_id', 'charge_model'],
+  form: 'groupEdit',
   validate
-})(injectIntl(GroupForm))
+}, mapStateToProps, mapDispatchToProps)(injectIntl(GroupForm))

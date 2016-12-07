@@ -101,7 +101,7 @@ class RolesList extends React.Component {
               <TableSorter {...sorterProps} column="name"><FormattedMessage id="portal.role.list.header.role.title"/></TableSorter>
               <th><FormattedMessage id="portal.role.list.header.permissions.title"/></th>
               <th><FormattedMessage id="portal.role.list.header.assignedTo.title"/></th>
-              <th width="1%"></th>
+              <th width="1%" />
             </tr>
           </thead>
 
@@ -128,7 +128,7 @@ class RolesList extends React.Component {
                      this.props.permissions.get('north')
                      ).toArray(),*/
                       ...this.labelPermissions(
-                      role.get('permissions').get('ui').filter(permission => permission),
+                      role.getIn(['permissions', 'ui'], Immutable.List()).filter(permission => permission),
                       this.props.permissions.get('ui')
                       ).toArray()
                     ]} />

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
 import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
+import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -15,6 +16,7 @@ const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
+const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -49,6 +51,12 @@ export function updateSuccess(state, action) {
 }
 
 export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function updatePasswordSuccess(state) {
   return state.merge({
     fetching: false
   })
@@ -171,7 +179,8 @@ export default handleActions({
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
-  USER_NAME_SAVED: userNameSave
+  USER_NAME_SAVED: userNameSave,
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -281,4 +290,33 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
     .then(parseResponseData)
 })
 
+export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
+  return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
 export const saveName = createAction(USER_NAME_SAVED)
+
+/**
+ * Selector for getting roles from currentUser
+ * @param  {[type]} state [description]
+ * @return {[type]}       [description]
+ */
+export const getUserRoles = ( state ) => {
+  return state.getIn(['roles'])
+}
+
+/**
+ * Check if user has role for UDN Admin
+ * @param  {state}  currentUser state
+ * @return {Boolean}
+ */
+export const isUdnAdmin = ( state ) => {
+  if (state && state.get('roles') && state.get('roles').contains(UDN_ADMIN_ROLE_ID)) return true
+
+  return false
+}

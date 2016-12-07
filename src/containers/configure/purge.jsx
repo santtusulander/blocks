@@ -1,16 +1,5 @@
 import React from 'react'
 
-// React-Bootstrap
-// ===============
-
-import {
-  Button,
-  ButtonToolbar,
-  Input,
-  Panel
-} from 'react-bootstrap';
-
-
 class Purge extends React.Component {
   constructor(props) {
     super(props);

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 
@@ -6,6 +7,7 @@ import routes from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
+  UserCanViewAccountDetail,
   UserCanManageAccounts,
   UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
@@ -32,6 +34,10 @@ import AnalyticsTabContribution from './containers/analytics/tabs/tab-contributi
 import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
 import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
+import ConfigurationDetails from './components/configuration/details'
+import ConfigurationDefaults from './components/configuration/defaults'
+import ConfigurationPolicies from './components/configuration/policies'
+import ConfigurationSecurity from './components/configuration/security'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
@@ -40,9 +46,10 @@ import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
-import Network from './containers/network'
 import NotFoundPage from './containers/not-found-page'
-import Property from './containers/property'
+import Property from './containers/property/property'
+import PropertySummary from './containers/property/tabs/property-summary'
+import PurgeStatus from './containers/property/tabs/purge-status'
 import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
@@ -91,7 +98,7 @@ const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
-  [PERMISSIONS.VIEW_PLAYBACK_DEMO, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
+  [PERMISSIONS.VIEW_ANALYTICS_PLAYBACK_DEMO, routes.analyticsTabPlaybackDemo, AnalyticsTabPlaybackDemo]
 ]
 
 /* helper for creating Analytics Tab-Routes */
@@ -122,7 +129,6 @@ function getSupportTabRoutes() {
 }
 
 export const getRoutes = store => {
-
   return (
     <Route path="/" component={Main}>
       <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
@@ -151,19 +157,43 @@ export const getRoutes = store => {
         </Route>
       </Route>
 
-      {/* Content - routes */}
+      {/* Content / CP Accounts - routes */}
       <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
         <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
         <Route component={ContentTransition}>
           <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-          <Route path={routes.contentAccount} component={Groups}/>
+          <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+          <Route path={routes.contentGroups} component={Groups}/>
           <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
         </Route>
-        <Route path={routes.contentProperty} component={Property} />
-        <Route path={routes.contentPropertyAnalytics} component={AnalyticsContainer} >
-          {getAnalyticsTabRoutes(store)}
+
+        {/* Properties - routes */}
+        <Route path={routes.contentProperty} component={Property}>
+          <IndexRedirect to={routes.contentPropertyTabSummary}/>
+          <Route path={routes.contentPropertyTabSummary} component={PropertySummary}/>
+          <Route path={routes.contentPropertyTabPurgeStatus} component={PurgeStatus}/>
         </Route>
-        <Route path={routes.contentPropertyConfiguration} component={Configuration} />
+
+        {/* Property Configuration - routes */}
+        <Route path={routes.contentPropertyConfiguration} component={Configuration}>
+          <IndexRedirect to={routes.configurationTabDetails} />
+          <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
+          <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
+          <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
+          <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
+            <Route path={routes.configurationTabPoliciesEditPolicy}/>
+          </Route>
+        </Route>
+      </Route>
+
+      {/* Network / SP Accounts - routes */}
+      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
+        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
+        <Route component={ContentTransition}>
+          <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+          <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+          <Route path={routes.networkGroups} component={Groups}/>
+        </Route>
       </Route>
 
       {/* Security - routes */}
@@ -255,16 +285,12 @@ export const getRoutes = store => {
         <Route path={routes.userAccount} component={User}/>
       </Route>
 
-      {/* TEMP UDNP-1545 - routes */}
-      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+      {/* Dashboard - routes */}
+      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION, store)}>
         <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
         <Route path={routes.dashboardBrand} component={Dashboard}/>
         <Route path={routes.dashboardAccount} component={Dashboard}/>
-      </Route>
-      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
-        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-        <Route path={routes.networkBrand} component={Network}/>
-        <Route path={routes.networkAccount} component={Network}/>
+        <Route path={routes.dashboardGroup} component={Dashboard}/>
       </Route>
 
       <Route path="*" component={NotFoundPage} />

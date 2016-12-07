@@ -9,9 +9,10 @@ import * as PERMISSIONS from '../../constants/permissions'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import { getTabName } from '../../util/helpers.js'
-import { getAnalyticsUrl, getContentUrl } from '../../util/routes.js'
+import { getAnalyticsUrl } from '../../util/routes.js'
 import TruncatedTitle from '../truncated-title'
 import AnalyticsExport from '../../containers/analytics/export.jsx'
+import IconCaretDown from '../icons/icon-caret-down'
 
 const AnalyticsViewControl = (props) => {
 
@@ -138,15 +139,11 @@ const AnalyticsViewControl = (props) => {
   else if(account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
-  const isContentAnalytics = props.router.isActive('/content')
   const topBarTexts = {
     property: 'Back to Groups',
     group: 'Back to Accounts',
     account: 'UDN Admin',
     brand: 'UDN Admin'
-  }
-  if(property && isContentAnalytics) {
-    delete topBarTexts.property
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account, brand } = IDs
@@ -172,10 +169,8 @@ const AnalyticsViewControl = (props) => {
         topBarTexts={topBarTexts}
         topBarAction={topBarFunc}
         onSelect={(...params) => {
-          let url = isContentAnalytics ?
-            `${getContentUrl(...params)}/analytics` :
-            getAnalyticsUrl(...params)
-          if(active && !isContentAnalytics) {
+          let url = getAnalyticsUrl(...params)
+          if (active) {
             let tab = active.key
             if(active.propertyOnly && params[0] !== 'property') {
               tab = ''
@@ -186,7 +181,7 @@ const AnalyticsViewControl = (props) => {
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
-          <span className="caret"></span>
+          <IconCaretDown />
         </div>
       </AccountSelector>
       {props.params.account &&

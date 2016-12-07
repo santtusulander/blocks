@@ -2,8 +2,8 @@ import React from 'react'
 import { Map } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../header.jsx')
-const Header = require('../header.jsx')
+jest.unmock('../header.jsx')
+import Header from '../header.jsx'
 
 function intlMaker() {
   return {
@@ -35,8 +35,5 @@ describe('Header', () => {
     expect(header.state('activeActivity')).toBe('set')
     header.instance().handleSelectChange('activeActivity')('foo')
     expect(header.state('activeActivity')).toBe('foo')
-    expect(header.state('activeDirection')).toBe('to_origin')
-    header.instance().handleSelectChange('activeDirection')('bar')
-    expect(header.state('activeDirection')).toBe('bar')
   })
 })

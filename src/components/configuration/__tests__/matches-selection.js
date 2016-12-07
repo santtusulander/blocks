@@ -1,13 +1,17 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
 import { shallow } from 'enzyme'
+import Immutable from 'immutable'
 
-jest.dontMock('../matches-selection.jsx')
-const MatchesSelection = require('../matches-selection.jsx')
+jest.unmock('../matches-selection.jsx')
+import MatchesSelection from '../matches-selection.jsx'
 
 describe('ConditionSelection', () => {
   it('should exist', () => {
-    const matchesSelection = shallow(<MatchesSelection />)
+    const matchesSelection = shallow(
+      <MatchesSelection
+        path={Immutable.fromJS(['request_policy'])}
+        rule={Immutable.Map()} />
+    )
     expect(matchesSelection).toBeDefined()
   });
 });

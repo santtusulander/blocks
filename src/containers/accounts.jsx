@@ -4,18 +4,27 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
+import {
+  getAnalyticsUrlFromParams,
+  getContentUrl,
+  getNetworkUrl
+} from '../util/routes.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import { filterMetricsByAccounts } from '../util/helpers'
+import {
+  filterMetricsByAccounts,
+  userIsCloudProvider,
+  userIsServiceProvider
+} from '../util/helpers'
 
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
 import checkPermissions from '../util/permissions'
+import PROVIDER_TYPES from '../constants/provider-types'
 
 import { FormattedMessage } from 'react-intl';
 
@@ -28,10 +37,13 @@ export class Accounts extends React.Component {
     this.sortItems = this.sortItems.bind(this)
   }
   componentWillMount() {
-    this.props.fetchData(
-      this.props.metrics,
-      this.props.accounts,
-      this.props.dailyTraffic)
+    const { fetchData, metrics, accounts, dailyTraffic, roles, user } = this.props;
+    fetchData(
+      metrics,
+      accounts,
+      dailyTraffic,
+      checkPermissions(roles, user.get('currentUser'), PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
+    )
   }
   createAccount(brand, data) {
     return this.props.accountActions.createAccount(brand, data)
@@ -48,10 +60,12 @@ export class Accounts extends React.Component {
   render() {
     const { brand } = this.props.params
     const {
+      activeAccount,
       accounts,
       fetching,
       fetchingMetrics,
       metrics,
+      params,
       roles,
       sortDirection,
       sortValuePath,
@@ -59,10 +73,25 @@ export class Accounts extends React.Component {
       user,
       uiActions } = this.props
 
-    const filteredMetrics = filterMetricsByAccounts(metrics, accounts)
+    // Only UDN admins can see list of all accounts
+    const currentUser = user.get('currentUser')
+    const showAccountList = activeAccount.isEmpty() && userIsCloudProvider(currentUser)
+    const contentItems = showAccountList
+                      ? accounts
+                      : Immutable.List.of(activeAccount)
+    const headerTextLabel = showAccountList
+                              ? <FormattedMessage id='portal.brand.allAccounts.message'/>
+                              : activeAccount.get('name')
+    const selectionDisabled = !showAccountList && userIsServiceProvider(currentUser)
 
-    const nextPageURLBuilder = (accountID) => {
-      return getContentUrl('account', accountID, this.props.params)
+    const filteredMetrics = filterMetricsByAccounts(metrics, contentItems)
+
+    const nextPageURLBuilder = (accountID, account) => {
+      if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
+        return getContentUrl('groups', accountID, this.props.params)
+      } else {
+        return getNetworkUrl('groups', accountID, this.props.params)
+      }
     }
     const analyticsURLBuilder = (...account) => {
       return getAnalyticsUrlFromParams(
@@ -75,25 +104,26 @@ export class Accounts extends React.Component {
       <ContentItems
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
-        params={this.props.params}
+        params={params}
         className="groups-container"
         createNewItem={this.createAccount}
         editItem={this.editAccount}
-        contentItems={accounts}
+        contentItems={contentItems}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteGroup}
         fetching={fetching}
         fetchingMetrics={fetchingMetrics}
-        headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: <FormattedMessage id='portal.brand.allAccounts.message'/> }}
-        isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_ACCOUNTS)}
+        headerText={{ summary: <FormattedMessage id='portal.brand.summary.message'/>, label: headerTextLabel }}
+        isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
+        selectionDisabled={selectionDisabled}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}
         toggleChartView={uiActions.toggleChartView}
         type='account'
-        user={this.props.user}
+        user={user}
         viewingChart={viewingChart}
         fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
       />
@@ -149,13 +179,18 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  const metricsOpts = {
+  let metricsOpts = {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
+
   return {
-    fetchData: (metrics, accounts, dailyTraffic) => {
-      if(accounts.isEmpty()) {
+    fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
+      if (!canListAccounts) {
+        metricsOpts.account = ownProps.params.account;
+      }
+      metricsOpts.list_children = !!canListAccounts;
+      if(accounts.isEmpty() && canListAccounts) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
       }

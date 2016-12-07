@@ -1,11 +1,10 @@
 import React from 'react'
 import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
-
-import {FormattedMessage, formatMessage, injectIntl} from 'react-intl'
 
 class QueryString extends React.Component {
   constructor(props) {
@@ -142,6 +141,7 @@ class QueryString extends React.Component {
 QueryString.displayName = 'QueryString'
 QueryString.propTypes = {
   changeValue: React.PropTypes.func,
+  intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map)
 }

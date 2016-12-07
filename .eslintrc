@@ -21,8 +21,12 @@
     "jest": true
   },
   "plugins": [
-    "react"
+    "react",
+    "import"
   ],
+  "settings": {
+    "import/resolver": { "node": { "extensions": [".js", ".jsx"] } }
+  },
   "rules": {
     "no-alert": 0,
     "no-array-constructor": 0,
@@ -213,13 +217,29 @@
     "react/no-danger": 1,
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
-    "react/no-multi-comp": 0,
+    "react/no-multi-comp": 1,
     "react/no-unknown-property": 1,
     "react/prop-types": 1,
     "react/react-in-jsx-scope": 1,
     "react/require-extension": 0,
     "react/self-closing-comp": 1,
     "react/sort-comp": 1,
-    "react/wrap-multilines": 1
+    "react/jsx-wrap-multilines": 1,
+    "react/no-deprecated": 2,
+    "react/no-danger-with-children": 2,
+    "react/no-direct-mutation-state": 2,
+    "react/no-is-mounted": 2,
+    "react/no-render-return-value": 2,
+    "react/prefer-es6-class": 1,
+    "react/require-render-return": 2,
+    "react/style-prop-object": 1,
+    "react/no-children-prop": 2,
+    "react/no-find-dom-node": 2,
+    "react/no-unescaped-entities": 2,
+    "import/no-unresolved": [2, { "commonjs": true, "amd": true}],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
   }
 }

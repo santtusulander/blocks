@@ -3,9 +3,8 @@ import { reduxForm } from 'redux-form'
 import { Button, ButtonToolbar, Col, Input, Row } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 // import moment from 'moment'
-
+import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
-import IconEye from '../icons/icon-eye.jsx'
 // import IconUser from '../icons/icon-user.jsx'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
@@ -19,16 +18,16 @@ const validate = (values) => {
 
   const {
     email,
-    password,
-    confirm
+    current_password
   } = values
+
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
   }
 
-  if(password && password !== confirm) {
-    passwordErrors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
+  if(!current_password || current_password.length === 0) {
+    passwordErrors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
   }
 
   return errors, passwordErrors;
@@ -41,7 +40,8 @@ class UserEditForm extends React.Component {
     this.state = {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
-      passwordVisible: false
+      passwordVisible: false,
+      validPassword: false
     }
 
     this.save = this.save.bind(this)
@@ -49,6 +49,7 @@ class UserEditForm extends React.Component {
     this.showMiddleName = this.showMiddleName.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.changePassword = this.changePassword.bind(this)
   }
 
   save() {
@@ -77,16 +78,18 @@ class UserEditForm extends React.Component {
   savePassword() {
     const {
       fields: {
-        password
+        current_password,
+        new_password
       },
-      onSave
+      onSavePassword
     } = this.props
 
     let newValues = {
-      password: password.value
+      current_password: current_password.value,
+      new_password: new_password.value
     }
 
-    onSave(newValues)
+    onSavePassword(newValues)
     this.togglePasswordEditing()
   }
 
@@ -108,15 +111,21 @@ class UserEditForm extends React.Component {
     })
   }
 
+  changePassword(isPasswordValid) {
+    this.setState({
+      'validPassword': isPasswordValid
+    });
+  }
+
   render() {
     const {
       fields: {
-        confirm,
+        current_password,
         email,
         first_name,
         last_name,
         middle_name,
-        password,
+        new_password,
         phone_number/*,
         timezone*/
       },
@@ -247,31 +256,15 @@ class UserEditForm extends React.Component {
                   <div>
                     <Col xs={3}>
                       <Input
-                        {...password}
-                        type={this.state.passwordVisible ? 'text' : 'password'}
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.newPassword.text'})} />
-                      {password.touched && password.error && !password.active && !confirm.active &&
-                        <div className="error-msg">{password.error}</div>
-                      }
+                        type="password"
+                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                        {...current_password} />
                     </Col>
-
-                    <Col xs={3}>
-                      <Input
-                        {...confirm}
-                        type={this.state.passwordVisible ? 'text' : 'password'}
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
-                        wrapperClassName="input-addon-after-outside"
-                        addonAfter={
-                          <a className={'input-addon-link' +
-                            (this.state.passwordVisible ? ' active' : '')}
-                            onClick={this.togglePasswordVisibility}>
-                            <IconEye/>
-                          </a>
-                        }/>
+                    <Col xs={6}>
+                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
                     </Col>
-
-                    <Col xs={3} xsOffset={1}>
-                      <ButtonToolbar>
+                    <Col xs={4} xsOffset={2}>
+                      <ButtonToolbar className="extra-margin-top">
                         <Button
                           className="btn-secondary"
                           bsSize="small"
@@ -279,17 +272,13 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!!Object.keys(passwordErrors).length || !password.value || savingPassword}
+                          disabled={this.props.invalid || !this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
                           {savingPassword ? <FormattedMessage id="portal.button.CHANGING"/> : <FormattedMessage id="portal.button.CHANGE"/>}
                         </Button>
                       </ButtonToolbar>
-                    </Col>
-
-                    <Col xs={10} xsOffset={2}>
-                      <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
                     </Col>
                   </div>
                 :
@@ -319,8 +308,10 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  onSavePassword: PropTypes.func,
   resetForm: PropTypes.func,
   savingPassword: PropTypes.bool,
   savingUser: PropTypes.bool
@@ -330,11 +321,12 @@ export default reduxForm({
   form: 'user-edit-form',
   fields: [
     'confirm',
+    'current_password',
     'email',
     'first_name',
     'last_name',
     'middle_name',
-    'password',
+    'new_password',
     'phone_number',
     'timezone'
   ],

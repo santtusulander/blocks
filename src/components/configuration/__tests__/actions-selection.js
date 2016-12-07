@@ -1,14 +1,19 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
+jest.autoMockOff()
 jest.dontMock('../actions-selection.jsx')
 const ActionsSelection = require('../actions-selection.jsx')
 
 describe('ConditionSelection', () => {
   it('should exist', () => {
-    const actionsSelection = shallow(<ActionsSelection />)
+    const actionsSelection = shallow(
+      <ActionsSelection
+        path={Immutable.fromJS(['request_policy'])}
+        rule={Immutable.Map()} />
+    )
     expect(actionsSelection).toBeDefined()
   });
 
@@ -19,7 +24,7 @@ describe('ConditionSelection', () => {
       <ActionsSelection
         changeValue={changeValue}
         activateSet={activateSet}
-        path={Immutable.List()}
+        path={Immutable.fromJS(['request_policy'])}
         config={Immutable.Map()} />
     );
     let links = TestUtils.scryRenderedDOMComponentsWithTag(actionsSelection, 'a');

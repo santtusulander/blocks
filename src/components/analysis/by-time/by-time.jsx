@@ -1,5 +1,4 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
 import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
@@ -51,17 +50,7 @@ class AnalysisByTime extends React.Component {
     this.moveMouse = this.moveMouse.bind(this)
     this.deactivateTooltip = this.deactivateTooltip.bind(this)
 
-    this.measureChartLabels = this.measureChartLabels.bind(this)
     this.formatY = this.formatY.bind(this)
-  }
-  componentDidMount() {
-    this.measureChartLabels()
-  }
-  measureChartLabels() {
-    this.setState({
-      primaryLabelWidth: this.refs.primaryLabel ? findDOMNode(this.refs.primaryLabel).getBBox().width : 0,
-      secondaryLabelWidth: this.refs.secondaryLabel ? findDOMNode(this.refs.secondaryLabel).firstElementChild.getBBox().width : 0
-    })
   }
 
   moveMouse(xScale, yScale, datasets) {
@@ -93,28 +82,34 @@ class AnalysisByTime extends React.Component {
         i = i -1
       }
       const tooltipData = datasets.map(dataset => {
-        let realValue = dataset.data[i][this.props.dataKey]
-        if(dataset.stackedAgainst) {
-          const against = datasets
-            .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
-          if(against) {
-            realValue = realValue - against.data[i][this.props.dataKey]
+        //Workaround for UDNP-1793
+        //catch any TypeError: Cannot read property 'bits_per_second' of undefined(…)
+        try {
+          let realValue = dataset.data[i][this.props.dataKey]
+          if(dataset.stackedAgainst) {
+            const against = datasets
+              .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
+            if(against) {
+              realValue = realValue - against.data[i][this.props.dataKey]
+            }
           }
+          const formatter = dataset.xAxisFormatter ?
+            (date, val) => {
+              const dateMap = Immutable.fromJS({timestamp: date})
+              const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
+              const formattedValue = this.formatY(val)
+              return `${formattedDate} ${formattedValue}`
+            }
+          : null
+          return configTooltip(
+            dataset.data[i].timestamp,
+            dataset.data[i][this.props.dataKey],
+            realValue,
+            formatter
+          )
+        } catch (e) {
+          return {}
         }
-        const formatter = dataset.xAxisFormatter ?
-          (date, val) => {
-            const dateMap = Immutable.fromJS({timestamp: date})
-            const formattedDate = moment.utc(dataset.xAxisFormatter(dateMap)).format('MMM D H:mm')
-            const formattedValue = this.formatY(val)
-            return `${formattedDate} ${formattedValue}`
-          }
-        : null
-        return configTooltip(
-          dataset.data[i].timestamp,
-          dataset.data[i][this.props.dataKey],
-          realValue,
-          formatter
-        )
       })
       this.setState({
         tooltipText: tooltipData.map(tooltip => tooltip.text),
@@ -180,7 +175,10 @@ class AnalysisByTime extends React.Component {
         this.props.padding * (this.props.axes ? 3 : 1),
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
-      .nice(d3.time.day.utc, 1);
+
+    if(!this.props.noXNice) {
+      xScale.nice(d3.time.day.utc, 1)
+    }
 
     const trafficLine = d3.svg.line()
       .y(d => yScale(d[this.props.dataKey]))
@@ -210,8 +208,8 @@ class AnalysisByTime extends React.Component {
 
     return (
       <div className={className}
-      onMouseMove={this.moveMouse(xScale, yScale, stackedDatasets)}
-      onMouseOut={this.deactivateTooltip}>
+      onMouseMove={!this.props.noHover && this.moveMouse(xScale, yScale, stackedDatasets)}
+      onMouseOut={!this.props.noHover && this.deactivateTooltip}>
         <svg
           viewBox={`0 0 ${this.props.width} ${this.props.height}`}
           width={this.props.width}
@@ -238,7 +236,7 @@ class AnalysisByTime extends React.Component {
               </g>
             )
           })}
-          {this.state.tooltipText.map((text, i) => {
+          {!this.props.noHover && this.state.tooltipText.map((text, i) => {
             return(
               <g key={i}>
                 <circle r="5"
@@ -341,6 +339,8 @@ AnalysisByTime.propTypes = {
   formatSecondaryTooltip: React.PropTypes.func,
   height: React.PropTypes.number,
   hoverSlice: React.PropTypes.func,
+  noHover: React.PropTypes.bool,
+  noXNice: React.PropTypes.bool,
   padding: React.PropTypes.number,
   selectSlice: React.PropTypes.func,
   showLegend: React.PropTypes.bool,

@@ -1,16 +1,9 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import {
-  Input,
-  ButtonToolbar,
-  Button,
-  Row,
-  Col
-} from 'react-bootstrap'
+import { Input, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
-import SelectWrapper from '../../select-wrapper.jsx'
-
-import IconEye from '../../icons/icon-eye.jsx'
+import SelectWrapper from '../../select-wrapper'
+import PasswordFields from '../../password-fields'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
@@ -20,17 +13,11 @@ const validate = (values) => {
 
   const {
     email,
-    password,
-    confirm,
     role
   } = values
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
-  }
-
-  if(password && password !== confirm) {
-    errors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
   }
 
   if(!role || role.length === 0) {
@@ -45,12 +32,14 @@ class UserEditForm extends React.Component {
     super(props)
 
     this.state = {
-      passwordVisible: false
+      passwordVisible: false,
+      validPassword: true
     }
 
     this.save = this.save.bind(this)
     this.resetPassword = this.resetPassword.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
+    this.changePassword = this.changePassword.bind(this)
   }
 
   save() {
@@ -91,6 +80,12 @@ class UserEditForm extends React.Component {
     })
   }
 
+  changePassword(isPasswordValid) {
+    this.setState({
+      'validPassword': isPasswordValid
+    });
+  }
+
   render() {
     const {
       fields: {
@@ -98,7 +93,6 @@ class UserEditForm extends React.Component {
         first_name,
         last_name,
         password,
-        confirm,
         phone_number,
         role
       },
@@ -171,6 +165,11 @@ class UserEditForm extends React.Component {
           <Row>
             <Col xs={11}>
               <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
+              <PasswordFields
+                {...password}
+                inlinePassword={true}
+                changePassword={this.changePassword}/>
+              {/*
               <Row>
                 <Col xs={6}>
                   <Input
@@ -194,6 +193,7 @@ class UserEditForm extends React.Component {
                       </a>}/>
                 </Col>
               </Row>
+              */}
             </Col>
           </Row>
         </div>
@@ -225,7 +225,7 @@ class UserEditForm extends React.Component {
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
+          <Button disabled={this.props.invalid || !this.state.validPassword} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
@@ -237,6 +237,7 @@ UserEditForm.propTypes = {
   fields: PropTypes.object,
   groupOptions: PropTypes.array,
   intl: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   roleOptions: PropTypes.array

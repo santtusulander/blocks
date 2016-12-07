@@ -1,3 +1,3 @@
 {
-  "portal.security.xxx": "value xxx"
+  "portal.security.ssl.noCertificates.text": "No certificates"
 }

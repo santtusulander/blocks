@@ -1,8 +1,8 @@
 import React from 'react'
 import moment from 'moment'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import DatePicker from 'react-datepicker'
 import { Col, Row } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
 
 import Select from './select'
 import DateRanges from '../constants/date-ranges'
@@ -13,13 +13,13 @@ const endOfThisDay = () => moment().utc().endOf('day')
 const startOfYesterday = () => startOfThisDay().subtract(1, 'day')
 const endOfYesterday = () => endOfThisDay().subtract(1, 'day')
 const startOfLastMonth = () => startOfThisMonth().subtract(1, 'month')
-const endOfLastMonth = () => moment().utc().endOf('month').subtract(1, 'month')
+const endOfLastMonth = () => moment().utc().subtract(1, 'month').endOf('month')
 const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
 const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
 const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
-const startOfThisWeek = () => moment().utc().startOf('isoWeek')
-const endOfThisWeek = () => moment().utc().endOf('isoWeek')
+const startOfThisWeek = () => moment().utc().startOf('week')
+const endOfThisWeek = () => moment().utc().endOf('week')
 
 export class DateRangeSelect extends React.Component {
   constructor(props) {
@@ -171,12 +171,13 @@ export class DateRangeSelect extends React.Component {
     this.setState({
       activeDateRange: value
     }, () => {
-      this.props.changeDateRange(startDate, endDate, value)
+      this.props.changeDateRange(startDate, endDate, value )
     })
   }
 
   render() {
-    const ranges = this.props.availableRanges.map(range => [range, range])
+    const ranges = this.props.availableRanges.map(range => [range, this.props.intl.formatMessage({id: range})])
+
     return (
       <div className="date-range-select">
         <Select className="btn-block"
@@ -198,7 +199,8 @@ export class DateRangeSelect extends React.Component {
                   endDate={this.state.endDate}
                   onChange={this.handleStartDateChange}
                   onFocus={this.handleOnFocus}
-                  onBlur={this.handleOnBlur}/>
+                  onBlur={this.handleOnBlur}
+                  weekStart={0}/>
               </div>
             </Col>
             <Col xs={6}>
@@ -216,7 +218,8 @@ export class DateRangeSelect extends React.Component {
                   endDate={this.state.endDate}
                   onChange={this.handleEndDateChange}
                   onFocus={this.handleOnFocus}
-                  onBlur={this.handleOnBlur}/>
+                  onBlur={this.handleOnBlur}
+                  weekStart={0}/>
               </div>
             </Col>
           </Row>
@@ -232,7 +235,8 @@ DateRangeSelect.propTypes = {
   availableRanges: React.PropTypes.array,
   changeDateRange: React.PropTypes.func,
   endDate: React.PropTypes.instanceOf(moment),
+  intl: React.PropTypes.object,
   startDate: React.PropTypes.instanceOf(moment)
 }
 
-module.exports = DateRangeSelect
+export default injectIntl(DateRangeSelect)

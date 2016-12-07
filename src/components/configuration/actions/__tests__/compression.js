@@ -1,8 +1,8 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 
-jest.dontMock('../compression.jsx')
-const Compression = require('../compression.jsx')
+jest.unmock('../compression.jsx')
+import Compression from '../compression.jsx'
 
 describe('Compression', () => {
   it('should exist', () => {

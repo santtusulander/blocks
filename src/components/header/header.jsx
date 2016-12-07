@@ -3,22 +3,32 @@ import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
 import { getRoute } from '../../routes.jsx'
 import { Nav, Navbar } from 'react-bootstrap' // Button, Input
+import { FormattedMessage } from 'react-intl'
 
 import UserMenu from './user-menu'
 import TruncatedTitle from '../truncated-title'
 // import IconAlerts from '../icons/icon-alerts.jsx'
 import IconEricsson from '../icons/icon-ericsson.jsx'
 // import IconQuestionMark from '../icons/icon-question-mark.jsx'
+import IconCaretDown from '../icons/icon-caret-down'
 import IsAllowed from '../is-allowed'
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs.jsx'
 import AccountSelector from '../global-account-selector/global-account-selector.jsx'
 import * as PERMISSIONS from '../../constants/permissions.js'
-import { getAccountManagementUrlFromParams, getAnalyticsUrl, getContentUrl,
-  getUrl } from '../../util/routes.js'
+import {
+  getAccountManagementUrlFromParams,
+  getAnalyticsUrl,
+  getAnalyticsUrlFromParams,
+  getContentUrl,
+  getNetworkUrl,
+  getUrl
+} from '../../util/routes.js'
 
-import { FormattedMessage } from 'react-intl'
 
-import { userIsServiceProvider } from '../../util/helpers.js'
+import {
+  userIsServiceProvider,
+  userIsCloudProvider
+} from '../../util/helpers.js'
 
 class Header extends React.Component {
   constructor(props) {
@@ -104,12 +114,12 @@ class Header extends React.Component {
 
   getBreadcrumbLinks() {
     let links = [];
-    const { router, pathname } = this.props,
+    const { router, pathname, roles, user } = this.props,
       params = this.props.params
 
     if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
-      if (router.isActive(getRoute('contentPropertyAnalytics', params))) {
+      if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
           label:  <FormattedMessage id="portal.header.analytics.text"/>
         })
@@ -130,15 +140,16 @@ class Header extends React.Component {
 
       links.push({
         label:  <FormattedMessage id="portal.header.content.text"/>,
-        url: params.account && links.length > 0 ? getContentUrl('account', params.account, params) : null
+        url: params.account && links.length > 0 ? getContentUrl('groups', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(links, getAnalyticsUrl)
       this.addGroupLink(links, getAnalyticsUrl)
 
+      const accountParams = { 'brand': params.brand, 'account': params.account }
       links.push({
         label: <FormattedMessage id="portal.header.analytics.text"/>,
-        url: links.length > 0 ? getAnalyticsUrl('account', params.account, params) : null
+        url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
       })
     } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
       links.push( {label:  'Account Management'} )
@@ -181,6 +192,14 @@ class Header extends React.Component {
       className = className + ' ' + this.props.className
     }
     const itemSelectorFunc = (...params) => {
+      // This check is done to prevent UDN admin from accidentally hitting
+      // the account detail endpoint, which they don't have permission for
+      if(router.isActive('/content') || router.isActive('/network')) {
+        if (params[0] === 'account' && userIsCloudProvider(user)) {
+          params[0] = 'groups'
+        }
+      }
+
       if(router.isActive('/content')) {
         router.push(getContentUrl(...params))
       } else if(router.isActive('/analysis')) {
@@ -192,21 +211,20 @@ class Header extends React.Component {
       } else if(router.isActive('/support')) {
         router.push(getUrl('/support', ...params))
       } else if(router.isActive('/network')) {
-        router.push(getContentUrl(...params))
+        router.push(getNetworkUrl(...params))
       } else if(router.isActive('/dashboard')) {
-        router.push(getContentUrl(...params))
+        router.push(getUrl('/dashboard', ...params))
       }
     }
     const logoLink = userIsServiceProvider(user) ?
-      `/network/udn/${this.props.activeAccount.get('id')}` :
+      getRoute('networkAccount', {brand: 'udn', account: user.get('account_id')}) :
       getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
     return (
       <Navbar className={className} fixedTop={true} fluid={true}>
         <div ref="gradient"
           className={this.state.animatingGradient ?
             'header__gradient animated' :
-            'header__gradient'}>
-        </div>
+            'header__gradient'} />
         <div className="header__content">
           <Nav className="header__left">
             <li className="header__logo">
@@ -232,7 +250,7 @@ class Header extends React.Component {
                   restrictedTo="account">
                   <div className="btn btn-link dropdown-toggle header-toggle">
                     <TruncatedTitle content={activeAccount && activeAccountName} tooltipPlacement="bottom" className="account-property-title"/>
-                    <span className="caret"></span>
+                    <IconCaretDown />
                   </div>
                 </AccountSelector>
               </IsAllowed>
@@ -303,6 +321,7 @@ Header.propTypes = {
   logOut: React.PropTypes.func,
   params: React.PropTypes.object,
   pathname: React.PropTypes.string,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   routes: React.PropTypes.array,
   theme: React.PropTypes.string,
