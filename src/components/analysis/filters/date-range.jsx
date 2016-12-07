@@ -5,25 +5,43 @@ import { FormattedMessage } from 'react-intl';
 import FilterIncludeComparison from './include-comparison.jsx'
 import DateRangeSelect from '../../../components/date-range-select'
 
-const FilterDateRange = ({ onFilterChange, startDate, endDate, showComparison, includeComparison, dateRanges }) =>
-  <div className='action'>
-    <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
-    <DateRangeSelect
-      startDate={startDate}
-      endDate={endDate}
-      availableRanges={dateRanges}
-      changeDateRange={(startDate, endDate, activeDateRange) => {
-        onFilterChange('dateRange', { startDate, endDate })
-        onFilterChange('dateRangeLabel', activeDateRange)
-      }}/>
-    {showComparison &&
-      <FilterIncludeComparison
-        includeComparison={includeComparison}
-        toggleComparison={val => {
-          onFilterChange('includeComparison', val)
-        }}/>
+class FilterDateRange extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  componentWillReceiveProps(nextProps) {
+    // If user already selected over 4 months date range and then chooses to
+    // compare data, we will trim the date range from the end to 4 months long
+    const { endDate, startDate } = nextProps
+    if (nextProps.includeComparison && endDate.diff(startDate, 'months') >= 4) {
+      nextProps.onFilterChange('dateRange', { startDate, endDate: startDate.clone().add(4, 'months').subtract(1, 'day') })
     }
-  </div>
+  }
+  render() {
+    const { onFilterChange, startDate, endDate, showComparison, includeComparison, dateRanges } = this.props
+    return (
+      <div className='action'>
+        <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
+        <DateRangeSelect
+          startDate={startDate}
+          endDate={endDate}
+          availableRanges={dateRanges}
+          limitRange={includeComparison}
+          changeDateRange={(startDate, endDate, activeDateRange) => {
+            onFilterChange('dateRange', { startDate, endDate })
+            onFilterChange('dateRangeLabel', activeDateRange)
+          }}/>
+        {showComparison &&
+          <FilterIncludeComparison
+            includeComparison={includeComparison}
+            toggleComparison={val => {
+              onFilterChange('includeComparison', val)
+            }}/>
+        }
+      </div>
+    )
+  }
+}
 
 FilterDateRange.displayName = 'FilterDateRange'
 FilterDateRange.propTypes = {
