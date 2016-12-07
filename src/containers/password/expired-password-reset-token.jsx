@@ -71,7 +71,7 @@ export class ExpiredPasswordResetToken extends React.Component {
 
   render() {
 
-    const disableSubmit = this.props.fetching || !!this.state.emailError || !this.state.email
+    const disableSubmit = this.props.fetching || !isValidEmail(this.state.email)
 
     return (
       <Modal.Dialog className="login-modal">
