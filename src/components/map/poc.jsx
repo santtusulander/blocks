@@ -4,6 +4,10 @@ import Typeahead from 'react-bootstrap-typeahead'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
+import IconExpand from '../icons/icon-expand';
+import IconMinimap from '../icons/icon-minimap';
+import IconGlobe from '../icons/icon-globe';
+
 const heatMapColors = [
   '#e32119', //red dark
   '#e32119', //red light
@@ -227,7 +231,7 @@ class MapPoc extends React.Component {
   }
 
   onZoomClick(map, value) {
-    return value < 0 ? map.zoomOut() : map.zoomIn();
+    return value < 0 ? map.zoomOut() : map.zoomIn()
   }
 
   render() {
@@ -242,6 +246,7 @@ class MapPoc extends React.Component {
         }}
         zoom={[this.state.zoom]}
         minZoom={1}
+        maxZoom={13}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
@@ -272,7 +277,9 @@ class MapPoc extends React.Component {
         }
 
         <div className="map-controls">
-          <div className="control map-fullscreen" />
+          <div className="control map-fullscreen">
+            <IconExpand width={32} height={32} />
+          </div>
           <div className="control map-zoom">
             <ZoomControl
               style={{
@@ -287,10 +294,13 @@ class MapPoc extends React.Component {
                 zIndex: 1
               }}
               onControlClick={this.onZoomClick.bind(this)} />
-            <input orientation="vertical" className="zoom-level" type="range" />
-            <div className="map-zoom-reset" />
+            <div className="map-zoom-reset">
+              <IconGlobe width={32} height={32} />
+            </div>
           </div>
-          <div className="control map-minimap" />
+          <div className="control map-minimap">
+            <IconMinimap width={32} height={32} />
+          </div>
         </div>
 
         <div className="map-heat-legend">
