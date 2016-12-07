@@ -37,7 +37,16 @@ import IconSupport from '../icons/icon-support.jsx'
 
 import './navigation.scss'
 
+import axios from 'axios'
+
 import { FormattedMessage } from 'react-intl'
+
+//TODO:removet
+//this is FOR TESTING token expiration
+const killToken = () => {
+  axios.defaults.headers.common['X-Auth-Token'] = 'aaa';
+  console.log("Token set to: 'aaa'")
+}
 
 const Navigation = (props) => {
   const params = props.params,
@@ -60,7 +69,8 @@ const Navigation = (props) => {
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
-
+        {/* TODO: Remove button - only for testing */ }
+        <li><button onClick={()=> killToken()}>KILL TOKEN</button></li>
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
