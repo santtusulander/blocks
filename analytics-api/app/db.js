@@ -132,6 +132,7 @@ class AnalyticsDB {
       asset        : null,
       net_type     : null,
       service_type : null,
+      components   : null,
       dimension    : 'global',
       granularity  : 'hour',
       sort_dir     : 'DESC'
@@ -421,9 +422,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use components if provided
+    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -682,7 +683,7 @@ class AnalyticsDB {
    * @param  {object}  options           Options that get piped into an SQL query
    * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getDataForCountry(options) {
+  getDataForGeo(options) {
     let queries = [
       this.getEgressWithHistorical(options),
       this.getSpEgressWithHistorical(options)
@@ -868,9 +869,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use components if provided
+    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -982,14 +983,14 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension}`;
+    // undefined or the default value of 'global', or use components if provided
+    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
 
-    let isTrafficTable = !!(optionsFinal.dimension === 'country' || optionsFinal.dimension === 'global');
+    let isTrafficTable = !!(['global', 'country', 'region', 'city'].includes(optionsFinal.dimension));
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
@@ -1047,7 +1048,7 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getVisitorWithTotals(options) {
-    let shouldQueryGlobalTotals = options.dimension === 'country';
+    let shouldQueryGlobalTotals = ['country', 'region', 'city'].includes(options.dimension);
     let aggregateGranularity    = options.aggregate_granularity || 'month';
     let dimensionTotalOptions   = {granularity: aggregateGranularity, isAggregate: true};
     let globalTotalOptions      = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};

@@ -4,11 +4,9 @@ require('express-jsend');
 let log             = require('../../logger');
 let validator       = require('../../validator');
 let routeTrafficGeo = require('./geo');
-let dataUtils       = require('../../data-utils');
-// let testData        = require('./country-data');
 
-function routeTrafficCountry(req, res) {
-  log.info('Getting traffic/country');
+function routeTrafficCity(req, res) {
+  log.info('Getting traffic/city');
   log.debug('query params:', req.query);
 
   let params = req.query;
@@ -20,19 +18,16 @@ function routeTrafficCountry(req, res) {
     property     : {required: false, type: 'Property'},
     service_type : {required: false, type: 'Service'},
     granularity  : {required: false, type: 'Granularity'},
-    max_countries : {required: false, type: 'Number'}
+    max_cities   : {required: false, type: 'Number'}
   });
 
   if (errors) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  let maxCountries = params.max_countries || 5;
+  let maxCities = params.max_cities || 5;
 
-  routeTrafficGeo(params, res, ['country'], 'countries', maxCountries, (countryRecord, countryCode) => {
-    countryRecord.code = dataUtils.get3CharCountryCodeFromCode(countryCode);
-    countryRecord.name = dataUtils.getCountryNameFromCode(countryCode);
-  });
+  routeTrafficGeo(params, res, ['country', 'city'], 'cities', maxCities);
 }
 
-module.exports = routeTrafficCountry;
+module.exports = routeTrafficCity;
