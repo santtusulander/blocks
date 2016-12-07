@@ -116,6 +116,15 @@ export class ForgotPassword extends React.Component {
                 value={this.state.username}
                 onChange={this.changeField('email')}/>
 
+              {/*
+                * NOTE: for the reCAPTCHA to work in local dev environment, you must visit the
+                * portal at 127.0.0.1, not localhost. Google's site key won't work with localhost
+                * unless the site key has been whitelisted for localhost.
+                *
+                * ALSO, the development environment expects the portal to be running on localhost,
+                * not 127.0.0.1, so there may be some odd behaviors like analytics API not working.
+                */}
+
               <ReCAPTCHA
                 ref="recaptcha"
                 className="form-group pull-right"
