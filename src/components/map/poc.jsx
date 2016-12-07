@@ -1,7 +1,12 @@
-import React from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup } from 'react-mapbox-gl';
+import React from 'react'
+import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl'
+import Typeahead from 'react-bootstrap-typeahead'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
+
+import IconExpand from '../icons/icon-expand';
+import IconMinimap from '../icons/icon-minimap';
+import IconGlobe from '../icons/icon-globe';
 
 const heatMapColors = [
   '#e32119', //red dark
@@ -124,7 +129,7 @@ class MapPoc extends React.Component {
       if (this.state.hoveredLayer) {
         this.setHoverStyle(map)('opacity', 0.5)('default')
         this.setState({ hoveredLayer: null })
-        this.closePopup();
+        this.closePopup()
       }
 
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
@@ -166,31 +171,31 @@ class MapPoc extends React.Component {
       const countryColor = trafficCountry ? heatMapColors[trafficHeat - 1] : '#00a9d4'
 
       return (
-            <div key={i}>
-              <Layer
-                id={`country-fill-${country.id}`}
-                type="fill"
-                sourceId={`geo-${country.id}`}
-                paint={{
-                  'fill-color': countryColor,
-                  'fill-opacity': 0.5
-                }}>
-                  <Feature
-                    properties={{
-                      name: country.properties.name
-                    }}
-                    coordinates={country.geometry.coordinates}/>
-              </Layer>
+        <div key={i}>
+          <Layer
+            id={`country-fill-${country.id}`}
+            type="fill"
+            sourceId={`geo-${country.id}`}
+            paint={{
+              'fill-color': countryColor,
+              'fill-opacity': 0.5
+            }}>
+              <Feature
+                properties={{
+                  name: country.properties.name
+                }}
+                coordinates={country.geometry.coordinates}/>
+          </Layer>
 
-              <Layer
-                id={`country-stroke-${country.id}`}
-                type="line"
-                sourceId={`geo-${country.id}`}
-                paint={{
-                  'line-color': countryColor,
-                  'line-width': 2
-                }}/>
-            </div>
+          <Layer
+            id={`country-stroke-${country.id}`}
+            type="line"
+            sourceId={`geo-${country.id}`}
+            paint={{
+              'line-color': countryColor,
+              'line-width': 2
+            }}/>
+        </div>
       )
     })
 
@@ -225,6 +230,10 @@ class MapPoc extends React.Component {
     })
   }
 
+  onZoomClick(map, value) {
+    return value < 0 ? map.zoomOut() : map.zoomIn()
+  }
+
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -237,19 +246,69 @@ class MapPoc extends React.Component {
         }}
         zoom={[this.state.zoom]}
         minZoom={1}
+        maxZoom={13}
         center={cities[0].position}
         onZoom={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}>
 
-          {this.renderCountryHighlight()}
-          {this.renderCityCircles()}
+        <div className="map-search">
+          <Typeahead
+            minLength={1}
+            onChange={() => null}
+            options={[
+              {id: 'BY', label: 'Belarus'},
+              {id: 'CA', label: 'Canada'},
+              {id: 'FI', label: 'Finland'},
+              {id: 'DE', label: 'Germany'},
+              {id: 'SE', label: 'Sweden'},
+              {id: 'UA', label: 'Ukraine'},
+              {id: 'US', label: 'United States'}
+            ]}/>
+        </div>
+
+        {this.renderCountryHighlight()}
+        {this.renderCityCircles()}
 
         {!!this.state.popupContent &&
-          <Popup coordinates={this.state.popupCoords}>
+          <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <span>{this.state.popupContent}</span>
           </Popup>
         }
+
+        <div className="map-controls">
+          <div className="control map-fullscreen">
+            <IconExpand width={32} height={32} />
+          </div>
+          <div className="control map-zoom">
+            <ZoomControl
+              style={{
+                height: 'calc(100% - 32px)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                boxShadow: 'none',
+                border: 0,
+                position: 'relative',
+                top: 'auto',
+                right: 'auto',
+                zIndex: 1
+              }}
+              onControlClick={this.onZoomClick.bind(this)} />
+            <div className="map-zoom-reset">
+              <IconGlobe width={32} height={32} />
+            </div>
+          </div>
+          <div className="control map-minimap">
+            <IconMinimap width={32} height={32} />
+          </div>
+        </div>
+
+        <div className="map-heat-legend">
+          <span>Low</span>
+          <div className="heat-gradient" />
+          <span>High</span>
+        </div>
+
       </ReactMapboxGl>
     )
   }
