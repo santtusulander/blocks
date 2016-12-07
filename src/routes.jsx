@@ -54,6 +54,7 @@ import Purge from './containers/configure/purge'
 import Security from './containers/security'
 import Services from './containers/services'
 import SetPassword from './containers/set-password'
+import ExpiredPasswordResetToken from './containers/password/expired-password-reset-token'
 import Support from './containers/support/support'
 import SupportTabTickets from './containers/support/tabs/tickets'
 import SupportTabTools from './containers/support/tabs/tools'
@@ -138,6 +139,7 @@ export const getRoutes = store => {
       <Route path="/login" component={Login}/>
       <Route path="/set-password" component={SetPassword}/>
       <Route path="/forgot-password" component={ForgotPassword}/>
+      <Route path="/password-reset-token-expired" component={ExpiredPasswordResetToken}/>
 
       {/* Analytics - routes */}
       <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
