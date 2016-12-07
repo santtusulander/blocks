@@ -3,14 +3,13 @@ import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
+import CopyrightNotice from '../components/copyright-notice'
 import ReCAPTCHA from '../components/recaptcha'
-
-import { FormattedMessage } from 'react-intl'
-
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -133,16 +132,20 @@ export class ForgotPassword extends React.Component {
                 sitekey={GOOGLE_SITE_KEY}
               />
 
-              <Row>
+              <Row className="action-button-container">
                 <Col xs={12}>
-                  <Button type="submit" bsStyle="primary" className="pull-right"
-                    disabled={disableSubmit}>
-                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
+                  <Link to="/login" className="btn btn-outline back-to-login-btn">
+                    <FormattedMessage id="portal.button.cancel"/>
+                  </Link>
+                  <Button type="submit" bsStyle="primary" disabled={disableSubmit}>
+                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> :
+                      <FormattedMessage id="portal.button.send"/>}
                   </Button>
                 </Col>
               </Row>
             </form>
           }
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 
