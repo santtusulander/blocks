@@ -41,8 +41,17 @@ export class Login extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.toggleRemember = this.toggleRemember.bind(this)
   }
+
+  componentWillMount(){
+    this.props.userActions.startFetching()
+    this.props.userActions.checkToken()
+      .then( () => {
+        this.props.userActions.finishFetching()
+      })
+  }
+
   goToAccountPage() {
-    if(this.props.loginUrl) {
+    /*if(this.props.loginUrl) {
       this.props.router.push(this.props.loginUrl)
       this.props.uiActions.setLoginUrl(null)
     }
@@ -56,7 +65,7 @@ export class Login extends React.Component {
       } else {
         this.props.router.push(getContentUrl('brand', 'udn', {}))
       }
-    }
+    }*/
   }
   /**
    * Set data on the redux store after login. This method blocks redirecting the

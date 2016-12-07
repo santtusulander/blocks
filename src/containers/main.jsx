@@ -33,25 +33,28 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
-    this.props.userActions.checkToken()
-      .then(action => {
-        if(action.error) {
-          if(!this.pageAllowsAnon()) {
-            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
-            this.props.router.push('/login')
-          }
-          return false
-        }
-        else {
-          this.props.userActions.fetchUser(action.payload.username)
+
+    console.log('main--componentWillMount', this.props)
+
+    // this.props.userActions.checkToken()
+    //   .then(action => {
+    //     if(action.error) {
+    //       /*if(!this.pageAllowsAnon()) {
+    //         this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
+    //         this.props.router.push('/login')
+    //       }*/
+    //       return false
+    //     }
+    //     else {
+          this.props.userActions.fetchUser(/*action.payload.username*/ this.props.user.get('username'))
           this.props.rolesActions.fetchRoles()
           const accountId = this.props.activeAccount.size ?
             this.props.activeAccount.get('id') :
             this.props.params.account
 
           return this.fetchAccountData(accountId, this.props.accounts)
-        }
-      })
+      //   }
+      // })
   }
 
   //update account if account prop changed (in url) or clear active if there is no account in route
@@ -87,17 +90,12 @@ export class Main extends React.Component {
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
-  pageAllowsAnon() {
-    return this.props.location.pathname === '/login' ||
-    this.props.location.pathname === '/forgot-password' ||
-    this.props.location.pathname === '/set-password' ||
-    this.props.location.pathname === '/starburst-help' ||
-    this.props.location.pathname === '/styleguide'
-  }
+
   render() {
-    if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
+    if((!this.props.currentUser.size || !this.props.roles.size)  /*&& !this.pageAllowsAnon()*/) {
       return <LoadingSpinner />
     }
+
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
@@ -115,7 +113,6 @@ export class Main extends React.Component {
 
     return (
       <div className={classNames}>
-      {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
         <Navigation
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
@@ -125,9 +122,7 @@ export class Main extends React.Component {
           pathname={this.props.location.pathname}
           roles={this.props.roles}
           />
-        : ''
-      }
-        {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
+
           <Header
             accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
@@ -146,14 +141,12 @@ export class Main extends React.Component {
             roles={this.props.roles}
             toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
             user={this.props.currentUser}/>
-          : ''
-        }
+
         <div className="content-container">
           {this.props.children}
-          {this.props.user.get('loggedIn') && !this.pageAllowsAnon() && !this.props.fetching ?
-            <Footer />
-            : null}
         </div>
+
+        <Footer />
 
         {this.props.showErrorDialog &&
         <ModalWindow

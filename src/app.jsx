@@ -12,7 +12,9 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
-import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
+import { showInfoDialog, hideInfoDialog /*, setLoginUrl*/ } from './redux/modules/ui'
+import {setLogin, logOut} from './redux/modules/user'
+
 import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
@@ -35,12 +37,20 @@ const createStoreWithMiddleware =
       promiseMiddleware
     )(createStore)
 
+const rootReducer = (state, action) => {
+  if (action.type === 'USER_LOGGED_OUT') {
+    return undefined
+  }
+
+  return stateReducer(state, action)
+}
+
 const stateReducer = combineReducers(reducers)
 const store =
   process.env.NODE_ENV === 'development' ?
     // enable redux-devtools-extension in development environment
-    createStoreWithMiddleware(stateReducer, window.devToolsExtension && window.devToolsExtension()) :
-    createStoreWithMiddleware(stateReducer)
+    createStoreWithMiddleware(rootReducer, window.devToolsExtension && window.devToolsExtension()) :
+    createStoreWithMiddleware(rootReducer)
 
 // Enable Webpack hot module replacement for reducers
 if (module.hot) {
@@ -73,17 +83,24 @@ axios.interceptors.response.use(function (response) {
         const method = error.config.method.toLowerCase()
         const tokenDidExpire = loggedIn && method === 'get'
 
-        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
-
         if (tokenDidExpire) {
-          store.dispatch(showInfoDialog({
-            title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
-            content: <FormattedMessage id='portal.common.error.tokenExpire.content'/>,
-            loginButton: true
-          }));
-        } else {
-          browserHistory.push('/login')
+          return store.dispatch( logOut(false) )
+            .then( () => {
+              console.log('Token Expired at location: ', location.pathname)
+
+              browserHistory.push({
+                pathname: '/login',
+                query: {
+                  sessionExpired: true,
+                  redirect: location.pathname
+                }
+              })
+
+              return Promise.reject(error)
+            })
         }
+
+        console.log("Error: 401", error)
       }
     }
     else if (status === 403) {
