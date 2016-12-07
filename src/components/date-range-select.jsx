@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import moment from 'moment'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { MultiMonthView } from 'react-date-picker'
@@ -25,15 +25,20 @@ export class DateRangeSelect extends React.Component {
     super(props)
 
     this.state = {
-      activeDateRange: props.intl.formatMessage({ id: DateRanges.MONTH_TO_DATE }),
+      activeDateRange: this.constructActiveDateRange(DateRanges.MONTH_TO_DATE),
       endDate: null,
+      maxDate: null,
+      minDate: null,
       open: false,
+      selectingRange: false,
       startDate: null
     }
 
     this.applyChanges = this.applyChanges.bind(this)
+    this.constructActiveDateRange = this.constructActiveDateRange.bind(this)
+    this.handleActiveDateChange = this.handleActiveDateChange.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
-    this.handleTimespanChange = this.handleTimespanChange.bind(this)
+    this.handlePresetChange = this.handlePresetChange.bind(this)
     this.makeLocal = this.makeLocal.bind(this)
     this.matchActiveDateRange = this.matchActiveDateRange.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
@@ -71,8 +76,39 @@ export class DateRangeSelect extends React.Component {
   }
 
   applyChanges() {
-    this.props.changeDateRange(this.state.startDate, this.state.endDate)
+    const { endDate, startDate } = this.state
+    const activeDateRange = this.matchActiveDateRange(startDate, endDate)
+
+    this.props.changeDateRange(startDate, endDate, activeDateRange.id)
     this.toggleDropdown()
+  }
+
+  constructActiveDateRange(id, value) {
+    return {
+      id: id,
+      value: value || this.props.intl.formatMessage({ id: id })
+    }
+  }
+
+  handleActiveDateChange(dateValue, date) {
+    const { selectingRange } = this.state
+    const newSelectingRangeVal = !selectingRange
+
+    this.setState({
+      maxDate: null,
+      minDate: null,
+      selectingRange: newSelectingRangeVal
+    }, () => {
+      // selectingRange is used to determine wether the user clicked on the
+      // start date or end date. We only apply the limitation after the start
+      // date has been chosen
+      if (newSelectingRangeVal && this.props.limitRange) {
+        this.setState({
+          maxDate: date.dateMoment.clone().add(4, 'months').subtract(1, 'day'),
+          minDate: date.dateMoment.clone().subtract(4, 'months').add(1, 'day')
+        })
+      }
+    })
   }
 
   handleDateChange(dateValues) {
@@ -91,7 +127,7 @@ export class DateRangeSelect extends React.Component {
     }
   }
 
-  handleTimespanChange(value) {
+  handlePresetChange(value) {
     let startDate = this.props.startDate
     let endDate   = this.props.endDate
     if (value === DateRanges.MONTH_TO_DATE) {
@@ -111,7 +147,7 @@ export class DateRangeSelect extends React.Component {
       endDate   = endOfThisDay()
     }
     this.setState({
-      activeDateRange: this.props.intl.formatMessage({ id: value }),
+      activeDateRange: this.constructActiveDateRange(value),
       endDate: endDate,
       startDate: startDate
     }, () => {
@@ -128,28 +164,27 @@ export class DateRangeSelect extends React.Component {
   }
 
   matchActiveDateRange(start, end) {
-    const { intl } = this.props
     let dateRange = ''
     if (this.props.availableRanges.indexOf(DateRanges.MONTH_TO_DATE) !== -1 &&
       (!start && !end ||
       startOfThisMonth().isSame(start, 'day') && endOfThisDay().isSame(end, 'day'))) {
-      dateRange = intl.formatMessage({ id: DateRanges.MONTH_TO_DATE })
+      dateRange = this.constructActiveDateRange(DateRanges.MONTH_TO_DATE)
     } else if (this.props.availableRanges.indexOf(DateRanges.THIS_WEEK) !== -1 &&
       startOfThisWeek().isSame(start, 'hour') && endOfThisWeek().isSame(end, 'hour')) {
-      dateRange = intl.formatMessage({ id: DateRanges.THIS_WEEK })
+      dateRange = this.constructActiveDateRange(DateRanges.THIS_WEEK)
     } else if (this.props.availableRanges.indexOf(DateRanges.LAST_MONTH) !== -1 &&
       startOfLastMonth().isSame(start, 'day') && endOfLastMonth().isSame(end, 'day')) {
-      dateRange = intl.formatMessage({ id: DateRanges.LAST_MONTH })
+      dateRange = this.constructActiveDateRange(DateRanges.LAST_MONTH)
     } else if (this.props.availableRanges.indexOf(DateRanges.LAST_WEEK) !== -1 &&
       startOfLastWeek().isSame(start, 'hour') && endOfLastWeek().isSame(end, 'hour')) {
-      dateRange = intl.formatMessage({ id: DateRanges.LAST_WEEK })
+      dateRange = this.constructActiveDateRange(DateRanges.LAST_WEEK)
     } else if (this.props.availableRanges.indexOf(DateRanges.LAST_28) !== -1 &&
       startOfLast28().isSame(start, 'day') && endOfThisDay().isSame(end, 'day')) {
-      dateRange = intl.formatMessage({ id: DateRanges.LAST_28 })
+      dateRange = this.constructActiveDateRange(DateRanges.LAST_28)
     } else {
       const startDate = start.format('MM/DD/YYYY')
       const endDate = end.format('MM/DD/YYYY')
-      dateRange = startDate + (startDate !== endDate ? ` - ${endDate}` : '')
+      dateRange = this.constructActiveDateRange(DateRanges.CUSTOM_TIMERANGE, startDate + (startDate !== endDate ? ` - ${endDate}` : ''))
     }
     return dateRange
   }
@@ -162,6 +197,9 @@ export class DateRangeSelect extends React.Component {
     if (!open) {
       this.setState({
         endDate: endDate,
+        maxDate: null,
+        minDate: null,
+        selectingRange: false,
         startDate: startDate
       })
     }
@@ -172,7 +210,7 @@ export class DateRangeSelect extends React.Component {
   }
 
   render() {
-    const { activeDateRange, endDate, open, startDate } = this.state
+    const { activeDateRange, endDate, maxDate, minDate, open, startDate } = this.state
     const ranges = this.props.availableRanges.map(range => [range, this.props.intl.formatMessage({id: range})])
 
     return (
@@ -185,7 +223,7 @@ export class DateRangeSelect extends React.Component {
           className="date-picker-dropdown-toggle has-left-icon"
           noCaret={true}>
           <IconCalendar className="left" />
-          {activeDateRange}
+          {activeDateRange.value}
           <IconSelectCaret/>
         </Dropdown.Toggle>
         <Dropdown.Menu className="date-picker-dropdown-menu multi-month-view">
@@ -194,7 +232,7 @@ export class DateRangeSelect extends React.Component {
               <a
                 className="date-range-select-link"
                 key={`date-range-select-link-${i}`}
-                onClick={() => this.handleTimespanChange(range[0])}>
+                onClick={() => this.handlePresetChange(range[0])}>
                 {range[1]}
               </a>
             )}
@@ -207,6 +245,9 @@ export class DateRangeSelect extends React.Component {
             highlightRangeOnMouseMove={true}
             highlightToday={true}
             highlightWeekends={false}
+            minDate={minDate}
+            maxDate={maxDate}
+            onActiveDateChange={this.handleActiveDateChange}
             onRangeChange={this.handleDateChange}
             theme={null}
             weekNumbers={false}
@@ -224,11 +265,12 @@ export class DateRangeSelect extends React.Component {
 
 DateRangeSelect.displayName = 'DateRangeSelect'
 DateRangeSelect.propTypes = {
-  availableRanges: React.PropTypes.array,
-  changeDateRange: React.PropTypes.func,
-  endDate: React.PropTypes.instanceOf(moment),
+  availableRanges: PropTypes.array,
+  changeDateRange: PropTypes.func,
+  endDate: PropTypes.instanceOf(moment),
   intl: intlShape.isRequired,
-  startDate: React.PropTypes.instanceOf(moment)
+  limitRange: PropTypes.bool,
+  startDate: PropTypes.instanceOf(moment)
 }
 
 export default injectIntl(DateRangeSelect)
