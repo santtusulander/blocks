@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 
 jest.autoMockOff()
 jest.unmock('../forgot-password.jsx')
-import { ForgotPassword } from '../forgot-password.jsx'
+import { ForgotPassword } from '../password/forgot-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {

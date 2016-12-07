@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import * as userActionCreators from '../redux/modules/user'
+import * as userActionCreators from '../../redux/modules/user'
 
-import IconEmail from '../components/icons/icon-email.jsx'
+import IconEmail from '../../components/icons/icon-email.jsx'
 
 import { FormattedMessage } from 'react-intl'
 

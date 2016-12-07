@@ -12,7 +12,7 @@ jest.mock('../../util/routes', () => {
 
 jest.unmock('../set-password.jsx')
 jest.unmock('../../redux/modules/filters')
-import { SetPassword } from '../set-password.jsx'
+import { SetPassword } from '../password/set-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
