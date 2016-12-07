@@ -93,7 +93,10 @@ class ContentItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={this.props.linkTo}>
+        <LinkWrapper
+          className="content-item-list-link"
+          disableLinkTo={this.props.disableLinkTo}
+          linkTo={this.props.linkTo}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
               <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{this.props.maxTransfer}</b></p>
