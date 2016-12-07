@@ -4,7 +4,7 @@ import { Dropdown, MenuItem, Input } from 'react-bootstrap'
 import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
-export const SelectorComponent = ({
+const SelectorComponent = ({
   items,
   drillable,
   children,
