@@ -10,7 +10,7 @@ jest.mock('../../util/routes', () => {
   }
 })
 
-jest.unmock('../set-password.jsx')
+jest.unmock('../password/set-password.jsx')
 jest.unmock('../../redux/modules/filters')
 import { SetPassword } from '../password/set-password.jsx'
 
