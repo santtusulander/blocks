@@ -385,10 +385,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={4} className="text-right">
                     <ActionButtons
                       className="secondary"
-                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
                       arrowUpDisabled={i <= 0}
                       onArrowDown={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(set.path, i+1) : ''}
+                        this.moveSet(set.path, i+1) : () => false}
                       arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
                       onDelete={this.deleteSet(set.path)} />
                   </Col>

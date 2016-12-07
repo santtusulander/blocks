@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 
@@ -128,7 +129,6 @@ function getSupportTabRoutes() {
 }
 
 export const getRoutes = store => {
-
   return (
     <Route path="/" component={Main}>
       <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
