@@ -108,6 +108,7 @@ class Styleguide extends React.Component {
       customDatePickerEndDate: moment().endOf('day'),
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
+      datePickerLimit: false,
       datePickerStartDate: moment().utc().startOf('month')
     }
   }
@@ -717,6 +718,7 @@ class Styleguide extends React.Component {
               <DateRangeSelect
                 endDate={this.state.datePickerEndDate}
                 startDate={this.state.datePickerStartDate}
+                limitRange={this.state.datePickerLimit}
                 changeDateRange={(start, end) => this.setState({ datePickerEndDate: end, datePickerStartDate: start })}
                 availableRanges={[
                   DateRanges.MONTH_TO_DATE,
@@ -726,9 +728,24 @@ class Styleguide extends React.Component {
                 ]} />
             </Col>
             <Col xs={4}>
-              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <Input
+                type="checkbox"
+                label="Limit range to 4 months"
+                checked={this.state.datePickerLimit}
+                onClick={
+                  () => {
+                    const { datePickerEndDate, datePickerStartDate, datePickerLimit } = this.state
+                    if (!datePickerLimit && datePickerEndDate.diff(datePickerStartDate, 'months') >= 4) {
+                      this.setState({
+                        datePickerEndDate: this.state.datePickerStartDate.clone().add(4, 'months').subtract(1, 'day')
+                      })
+                    }
+                    this.setState({ datePickerLimit: !datePickerLimit })
+                  }
+                } />
             </Col>
             <Col xs={4}>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
               <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
             </Col>
           </Row>
