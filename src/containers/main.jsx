@@ -91,6 +91,7 @@ export class Main extends React.Component {
     return this.props.location.pathname === '/login' ||
     this.props.location.pathname === '/forgot-password' ||
     this.props.location.pathname === '/set-password' ||
+    this.props.location.pathname === '/password-reset-token-expired' ||
     this.props.location.pathname === '/starburst-help' ||
     this.props.location.pathname === '/styleguide'
   }
