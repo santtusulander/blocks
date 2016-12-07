@@ -80,16 +80,12 @@ class Mapbox extends React.Component {
     this.setHoverStyle = this.setHoverStyle.bind(this);
 
   }
-  componentDidMount() {
-    // TODO: Move this to be handled either a on parent level or in a reducer / API
-    // GeoJSON should just passed in as a prop.
-
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.countryData !== this.props.countryData) {
       this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
         const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
+        const layers = this.state.layers;
 
         if (countryExists) {
           if (!this.map.getSource('geo-' + data.properties.iso_a3)) {
@@ -98,7 +94,9 @@ class Mapbox extends React.Component {
               data: { type: 'FeatureCollection', features: [data] }
             })
 
-            this.setState({ layers: this.state.layers.push('country-fill-' + data.properties.iso_a3) })
+            layers.push('country-fill-' + data.properties.iso_a3)
+
+            this.setState({ layers });
           }
           return data
         }
