@@ -20,13 +20,37 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
     }
   }
 
+  .no-data {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    font-weight: normal;
+
+    &.by-time-summary {
+      padding-top: 15px;
+      padding-bottom: 0;
+    }
+
+    &.mini-chart-container {
+      padding-top: 10px;
+      padding-bottom: 40px;
+    }
+  }
+
   .dark-theme & {
     background-color: $dashboard-panel-bg;
+
+    .no-data {
+      color: $dt-text-color;
+    }
   }
 
   .light-theme & {
     background-color: $white;
     box-shadow: 0 5px 10px $dashboard-panel-header-bg;
+
+    .no-data {
+      color: $lt-text-color;
+    }
   }
 
   .dashboard-panel-header,
