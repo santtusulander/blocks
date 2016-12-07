@@ -133,11 +133,10 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 const UserIsLoggedIn = UserAuthWrapper({
   authSelector: state => state.user,
-  authenticatingSelector: state => state.user.get('fetching'),
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserIsLoggedIn',
   predicate: (user) => {
-    return ( user.get('loggedIn') === true )
+    return ( user && user.get('loggedIn') === true )
   },
   allowRedirectBack: true
 })
