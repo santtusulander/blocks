@@ -144,6 +144,7 @@ export class FilterChecklistDropdown extends React.Component {
     return (
       <div className="form-group">
         <Dropdown
+          id=""
           open={open}
           onToggle={() => {/*because we pass an open-prop, this needs a handler or react-bs throws a failed proptype-warning.*/}}
           className={className}>
