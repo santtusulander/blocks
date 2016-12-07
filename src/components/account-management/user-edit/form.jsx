@@ -30,13 +30,15 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.resetPassword = this.resetPassword.bind(this)
+    // TODO: uncomment once UDNP-2008 is unblocked
+    // this.resetPassword = this.resetPassword.bind(this)
     this.save = this.save.bind(this)
   }
 
-  resetPassword() {
-    // TODO: call password reset function and display toast on success?
-  }
+  // TODO: uncomment and implement once UDNP-2008 is unblocked
+  // resetPassword() {
+  //   // TODO: call password reset function and display toast on success
+  // }
 
   save() {
     const {
@@ -118,6 +120,7 @@ class UserEditForm extends React.Component {
           <div className="error-msg">{phone_number.error}</div>}
         </div>
 
+        {/* TODO: uncomment once UDNP-2008 is unblocked
         <hr/>
 
         <div className="form-group password-reset">
@@ -136,6 +139,7 @@ class UserEditForm extends React.Component {
             </p>
           </div>
         </div>
+        */}
 
         <hr/>
 
