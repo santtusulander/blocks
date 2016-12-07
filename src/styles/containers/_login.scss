@@ -140,8 +140,12 @@ $login-modal-logo-left-padding: rem(12px);
   margin-bottom: 20px;
 }
 
-.back-to-login-btn {
-  margin-top: 6px;
+.action-button-container {
+  text-align: right;
+
+  .btn-outline {
+    margin-right: 1rem;
+  }
 }
 
 // This is hacky code that should be removed when we no longer allow a light

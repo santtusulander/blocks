@@ -104,12 +104,16 @@ export class ForgotPassword extends React.Component {
                 value={this.state.username}
                 onChange={this.changeField('email')}/>
 
-              <Row>
+              <Row className="action-button-container">
                 <Col xs={12}>
-                  <Link to="/login" className="pull-left back-to-login-btn"><FormattedMessage id="portal.common.backToLogin.button"/></Link>
-                  <Button type="submit" bsStyle="primary" className="pull-right"
-                    disabled={this.props.fetching}>
-                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
+                  <Link to="/login" className="btn btn-outline back-to-login-btn">
+                    <FormattedMessage id="portal.button.cancel"/>
+                  </Link>
+                  <Button type="submit"
+                          bsStyle="primary"
+                          disabled={this.props.fetching}>
+                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> :
+                      <FormattedMessage id="portal.button.send"/>}
                   </Button>
                 </Col>
               </Row>
