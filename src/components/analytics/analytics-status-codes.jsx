@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { List } from 'immutable'
-import { Input } from 'react-bootstrap'
+import { Checkbox } from 'react-bootstrap'
 
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
@@ -34,26 +34,29 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
       handleCheck={onChange}>
       {!errorCodesOnly &&
       <li role="presentation" className="children">
-        <Input type="checkbox"
-               label='2XX'
-               value={twoHundreds}
-               checked={twoHundredsChecked}
-               onChange={handleCheck(twoHundreds, twoHundredsChecked)}/>
+        <Checkbox
+          value={twoHundreds}
+          checked={twoHundredsChecked}
+          onChange={handleCheck(twoHundreds, twoHundredsChecked)}>
+          2XX
+        </Checkbox>
       </li>
-      }
-      <li role="presentation" className="children">
-        <Input type="checkbox"
-               label='4XX'
-               value={fourHundreds}
-               checked={fourHundredsChecked}
-               onChange={handleCheck(fourHundreds, fourHundredsChecked)}/>
-      </li>
-      <li role="presentation" className="children">
-        <Input type="checkbox"
-               label='5XX'
-               value={fiveHundreds}
-               checked={fiveHundredsChecked}
-               onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}/>
+    }
+    <li role="presentation" className="children">
+      <Checkbox
+        value={fourHundreds}
+        checked={fourHundredsChecked}
+        onChange={handleCheck(fourHundreds, fourHundredsChecked)}>
+        4XX
+      </Checkbox>
+    </li>
+    <li role="presentation" className="children">
+      <Checkbox
+        value={fiveHundreds}
+        checked={fiveHundredsChecked}
+        onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}>
+        5XX
+      </Checkbox>
       </li>
     </FilterChecklistDropdown>
   )

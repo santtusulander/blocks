@@ -4,16 +4,16 @@
 // scss-lint:disable SelectorFormat SelectorDepth NestingDepth
 // Need to override default styles
 
-.datepicker__tether-element {
+.react-datepicker__tether-element {
   z-index: 1030;
 
-  &.datepicker__tether-element-attached-bottom,
-  &.datepicker__tether-element-attached-top {
+  &.react-datepicker__tether-element-attached-bottom,
+  &.react-datepicker__tether-element-attached-top {
     margin-top: -10px;
   }
 }
 
-.datepicker {
+.react-datepicker {
   width: 300px;
   padding: 15px 25px 25px;
   font-family: inherit;
@@ -35,11 +35,11 @@
   }
 }
 
-.datepicker__triangle {
+.react-datepicker__triangle {
   display: none;
 }
 
-.datepicker__header {
+.react-datepicker__header {
   padding: 0;
   background-color: transparent;
   border-bottom: 1px solid;
@@ -54,7 +54,7 @@
   }
 }
 
-.datepicker__current-month {
+.react-datepicker__current-month {
   padding-bottom: 15px;
   font-size: inherit;
   font-weight: normal;
@@ -72,15 +72,14 @@
   }
 }
 
-.datepicker__navigation {
+.react-datepicker__navigation {
   position: absolute;
-  top: -5px;
   width: 40px;
   height: 40px;
   border: 0;
 
   @include md {
-    top: -10px;
+    top: 8px;
   }
 
   &::after {
@@ -92,8 +91,8 @@
     content: ' ';
   }
 
-  &.datepicker__navigation--previous {
-    left: -5px;
+  &.react-datepicker__navigation--previous {
+    left: 20px;
 
     &::after {
       border-left: 0;
@@ -119,8 +118,8 @@
     }
   }
 
-  &.datepicker__navigation--next {
-    right: -5px;
+  &.react-datepicker__navigation--next {
+    right: 20px;
 
     &::after {
       border-right: 0;
@@ -147,11 +146,17 @@
   }
 }
 
-.datepicker__month {
+.react-datepicker__month-container {
+  display: block;
+  float: none;
+}
+
+.react-datepicker__month {
   margin: 5px 0 0;
 }
 
-.datepicker__day {
+.react-datepicker__day,
+.react-datepicker__day-name {
   position: relative;
   width: calc(100% / 7);
   padding: 0;
@@ -167,31 +172,31 @@
     margin: 2px 0;
   }
 
-  &:not(.datepicker__day--selected):hover {
+  &:not(.react-datepicker__day--selected):hover {
     border-radius: 0;
 
-    &:not(.datepicker__day--in-range) {
+    &:not(.react-datepicker__day--in-range) {
       background-color: inherit;
     }
 
-    .dark-theme &:not(.datepicker__day--disabled) {
+    .dark-theme &:not(.react-datepicker__day--disabled) {
       color: $white;
     }
 
-    .light-theme &:not(.datepicker__day--disabled) {
+    .light-theme &:not(.react-datepicker__day--disabled) {
       color: $black;
     }
   }
 
-  &:not(.datepicker__day--outside-month) {
+  &:not(.react-datepicker__day--outside-month) {
 
-    .datepicker__header & {
+    .react-datepicker__header & {
       margin: 2px 0;
       background-color: transparent;
     }
   }
 
-  &.datepicker__day--outside-month {
+  &.react-datepicker__day--outside-month {
 
     .dark-theme &,
     .light-theme & {
@@ -200,7 +205,7 @@
   }
 }
 
-.datepicker__day--today {
+.react-datepicker__day--today {
   font-weight: normal;
   border-radius: 0;
 
@@ -226,7 +231,7 @@
   }
 }
 
-.datepicker__day--in-range {
+.react-datepicker__day--in-range {
 
   &,
   &:hover {
@@ -235,7 +240,7 @@
   }
 }
 
-.datepicker__day--selected {
+.react-datepicker__day--selected {
 
   &,
   &:hover {
@@ -267,9 +272,9 @@
   }
 }
 
-.datepicker__tether-element-attached-right {
+.react-datepicker__tether-element-attached-right {
 
-  .datepicker__day--selected {
+  .react-datepicker__day--selected {
 
     &,
     &:hover {
@@ -286,7 +291,7 @@
   }
 }
 
-.datepicker-input-wrapper {
+.react-datepicker-input-wrapper {
   position: relative;
 
   &.datepicker-open::after {
@@ -319,7 +324,7 @@
       }
     }
 
-    &:not(.datepicker-open) .datepicker__input {
+    &:not(.datepicker-open) .react-datepicker__input {
 
       &,
       &:hover,
@@ -337,13 +342,17 @@
     }
   }
 
-  &.datepicker-open .datepicker__input {
+  &.datepicker-open .react-datepicker__input {
     .dark-theme & {
       background: $black;
       background-image: linear-gradient(rgba($purple, 0.025), rgba($purple, 0.025)), linear-gradient(rgba($pale-blue, 0.1), rgba($pale-blue, 0.1));
       background-size: 100%;
 
-      &.datepicker__tether-enabled {
+      &.react-datepicker-ignore-onclickoutside {
+        &:focus {
+          outline: none;
+        }
+
         background: $black;
         background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
         background-size: 100%;
@@ -353,13 +362,13 @@
     .light-theme & {
       background: $white;
 
-      &.datepicker__tether-enabled {
+      &.react-datepicker__tether-enabled {
         background: $white;
       }
     }
   }
 
-  .datepicker__input {
+  .react-datepicker__input {
 
     &,
     &:hover,
