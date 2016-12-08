@@ -13,8 +13,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog /*, setLoginUrl*/ } from './redux/modules/ui'
-import {setLogin, logOut} from './redux/modules/user'
-
+import { logOut } from './redux/modules/user'
 import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
@@ -83,11 +82,15 @@ axios.interceptors.response.use(function (response) {
         const method = error.config.method.toLowerCase()
         const tokenDidExpire = loggedIn && method === 'get'
 
+        //If UI state == loggedIn, but getting 401s from API => token expired
+        //(NOTE: this might not be 100% true, might be eg. forbidden resource)
+        //Should check expiration from  expires_at -key
         if (tokenDidExpire) {
           return store.dispatch( logOut(false) )
             .then( () => {
               console.log('Token Expired at location: ', location.pathname)
 
+              //redirect to login 
               browserHistory.push({
                 pathname: '/login',
                 query: {
