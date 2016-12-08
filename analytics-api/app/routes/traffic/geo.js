@@ -18,12 +18,15 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
     property     : params.property,
     service_type : params.service_type,
     granularity  : params.granularity,
+    country_code : params.country_code,
+    latitude_min : params.latitude_min,
+    latitude_max : params.latitude_max,
+    longitude_min: params.longitude_min,
+    longitude_max: params.longitude_max,
     components   : area,
     dimension    : area[area.length-1]
   };
 
-log.debug('options before: ' + JSON.stringify(options));
-log.debug('options.components before: ' + JSON.stringify(options.components));
 
   db.getDataForGeo(options).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
     let responseData = {
@@ -36,8 +39,6 @@ log.debug('options.components before: ' + JSON.stringify(options.components));
       historicalTrafficData = historicalTrafficData.concat(spHistoricalTrafficData);
 
       let optionsFinal                = db._getQueryOptions(options);
-log.debug('options: ' + JSON.stringify(options));
-log.debug('optionsFinal: ' + JSON.stringify(optionsFinal));
       let allGeoTrafficData           = _.groupBy(trafficData,           (r) => { let components = []; for (let i = area.length; i; --i) components.push(r[area[i-1]]); return components.join(', '); });
       let allHistoricalGeoTrafficData = _.groupBy(historicalTrafficData, (r) => { let components = []; for (let i = area.length; i; --i) components.push(r[area[i-1]]); return components.join(', '); });
 

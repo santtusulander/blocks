@@ -20,6 +20,11 @@ function routeTrafficCountry(req, res) {
     property     : {required: false, type: 'Property'},
     service_type : {required: false, type: 'Service'},
     granularity  : {required: false, type: 'Granularity'},
+    country_code : {required: false, type: 'Country_Code'},
+    latitude_min : {required: false, type: 'Latitude'},
+    latitude_max : {required: false, type: 'Latitude'},
+    longitude_min: {required: false, type: 'Longitude'},
+    longitude_max: {required: false, type: 'Longitude'},
     max_countries : {required: false, type: 'Number'}
   });
 

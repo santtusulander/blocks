@@ -458,6 +458,10 @@ class AnalyticsDB {
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    optionsFinal.country_code
+      && conditions.push('AND country = ?')
+      && queryOptions.push(optionsFinal.country_code);
+
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
     (selectedDimension || isListingChildren) && grouping.push('epoch_start');
@@ -909,6 +913,10 @@ class AnalyticsDB {
     optionsFinal.service_type
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
+
+    optionsFinal.country_code
+      && conditions.push('AND country = ?')
+      && queryOptions.push(optionsFinal.country_code);
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
