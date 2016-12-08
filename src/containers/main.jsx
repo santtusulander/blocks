@@ -32,7 +32,7 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
-  componentDidMount() {
+  componentWillMount() {
     // Validate token
     this.props.userActions.checkToken()
       .then(action => {
