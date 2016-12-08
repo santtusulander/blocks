@@ -138,8 +138,7 @@ class RolesList extends React.Component {
                   </td>
                   <td className="nowrap-column">
                     <ActionButtons
-                      onEdit={() => this.props.onEdit(role.get('id'))}
-                      onDelete={() => this.props.onDelete(role.get('id'))}/>
+                      onEdit={() => this.props.onEdit(role.get('id'))}/>
                   </td>
                 </tr>
               );
