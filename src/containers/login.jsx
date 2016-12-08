@@ -1,11 +1,10 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Button, Col, FormControl, FormGroup, InputGroup, Checkbox, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import classnames from 'classnames'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   getContentUrl,
@@ -21,6 +20,7 @@ import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
+import CopyrightNotice from '../components/copyright-notice'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ export class Login extends React.Component {
       password: '',
       passwordActive: false,
       rememberUsername: !!props.username,
-      username: props.username || '',
+      username: props.username,
       usernameActive: false
     }
 
@@ -71,7 +71,6 @@ export class Login extends React.Component {
       this.props.userActions.fetchUser(this.state.username)
     ])
   }
-
   onSubmit(e) {
     e.preventDefault()
     this.setState({loginError: null})
@@ -130,19 +129,6 @@ export class Login extends React.Component {
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
-    const usernameClass = classnames(
-      'input-addon-before',
-      'has-login-label',
-      'login-label-username',
-      { active: this.state.usernameActive || this.state.username }
-    )
-    const passwordClass = classnames(
-      'input-addon-before',
-      'has-login-label',
-      'login-label-password',
-      'input-addon-after-outside',
-      { active: this.state.passwordActive || this.state.password }
-    )
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
@@ -156,46 +142,37 @@ export class Login extends React.Component {
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            {this.state.loginError &&
+            {this.state.loginError ?
               <div className="login-info">
                 <p>{this.state.loginError}</p>
-              </div>}
-            <FormGroup className={usernameClass}>
-              <InputGroup>
-                <InputGroup.Addon>
-                  <IconEmail/>
-                </InputGroup.Addon>
-                  <FormControl
-                    type="text"
-                    id="username"
-                    onFocus={this.checkUsernameActive(true)}
-                    onBlur={this.checkUsernameActive(false)}
-                    value={this.state.username}
-                    onChange={this.changeField('username')}/>
-              </InputGroup>
-            </FormGroup>
-            <FormGroup className={passwordClass}>
-            <InputGroup>
-                <InputGroup.Addon>
-                  <IconPassword/>
-                </InputGroup.Addon>
-                <FormControl
-                  id="password"
-                  type="password"
-                  onFocus={this.checkPasswordActive(true)}
-                  onBlur={this.checkPasswordActive(false)}
-                  value={this.state.password}
-                  onChange={this.changeField('password')}/>
-              </InputGroup>
-            </FormGroup>
+              </div>
+              : ''
+            }
+            <Input type="text" id="username"
+              wrapperClassName={'input-addon-before has-login-label '
+                + 'login-label-username'
+                + (this.state.usernameActive || this.state.username ? ' active' : '')}
+              addonBefore={<IconEmail/>}
+              onFocus={this.checkUsernameActive(true)}
+              onBlur={this.checkUsernameActive(false)}
+              value={this.state.username}
+              onChange={this.changeField('username')}/>
+            <Input id="password"
+              type="password"
+              wrapperClassName={'input-addon-before input-addon-after-outside '
+                + 'has-login-label login-label-password'
+                + (this.state.passwordActive || this.state.password ? ' active' : '')}
+              addonBefore={<IconPassword/>}
+              onFocus={this.checkPasswordActive(true)}
+              onBlur={this.checkPasswordActive(false)}
+              value={this.state.password}
+              onChange={this.changeField('password')}/>
             <Row>
               <Col xs={4}>
                 <div className="remember-checkbox">
-                  <Checkbox
+                  <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
                     onChange={this.toggleRemember}
-                    checked={this.state.rememberUsername}>
-                    <FormattedMessage id="portal.login.rememberMe.text" />
-                  </Checkbox>
+                    checked={this.state.rememberUsername} />
                 </div>
               </Col>
               <Col xs={8}>
@@ -216,10 +193,7 @@ export class Login extends React.Component {
               </Col>
             </Row>
           </form>
-          <p className="text-sm login-copyright">
-            <FormattedMessage id="portal.login.copyright.text" /><br/>
-            <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
-          </p>
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 

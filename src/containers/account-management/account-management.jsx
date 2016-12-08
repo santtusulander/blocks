@@ -5,8 +5,8 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
+
 import { getRoute } from '../../routes'
-import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
@@ -40,6 +40,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
+import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 export class AccountManagement extends Component {
   constructor(props) {
