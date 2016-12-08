@@ -13,7 +13,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog /*, setLoginUrl*/ } from './redux/modules/ui'
-import { logOut } from './redux/modules/user'
+import { logOut, destroyStore } from './redux/modules/user'
 import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
@@ -37,7 +37,7 @@ const createStoreWithMiddleware =
     )(createStore)
 
 const rootReducer = (state, action) => {
-  if (action.type === 'USER_LOGGED_OUT') {
+  if (action.type === 'DESTROY_STORE') {
     return undefined
   }
 
@@ -83,22 +83,24 @@ axios.interceptors.response.use(function (response) {
         const tokenDidExpire = loggedIn && method === 'get'
 
         //If UI state == loggedIn, but getting 401s from API => token expired
-        //(NOTE: this might not be 100% true, might be eg. forbidden resource)
-        //Should check expiration from  expires_at -key
+        //(NOTE: this might not be 100% true, might be eg. forbidden resource
+        //Should check expiration from  expires_at -key)
         if (tokenDidExpire) {
+          const returnPath = location.pathname
           return store.dispatch( logOut(false) )
             .then( () => {
-              console.log('Token Expired at location: ', location.pathname)
+              console.log('Token Expired at location: ', returnPath)
 
-              //redirect to login 
+              //redirect to login
               browserHistory.push({
                 pathname: '/login',
                 query: {
                   sessionExpired: true,
-                  redirect: location.pathname
+                  redirect: returnPath
                 }
               })
 
+              store.dispatch( destroyStore() )
               return Promise.reject(error)
             })
         }
