@@ -9,11 +9,12 @@ import IconMinimap from '../icons/icon-minimap';
 import IconGlobe from '../icons/icon-globe';
 
 const heatMapColors = [
-  '#e32119', //red dark
-  '#e32119', //red light
-  '#00a9d4', //cyan
-  '#009f80', //green
-  '#89ba17'  //lime
+  '#fdc844', //red dark
+  '#ddbf54', //red light
+  '#c1b761', //red light
+  '#a1ae70', //red light
+  '#84a57e', //cyan
+  '#549895'  //lime
 ]
 
 /**
@@ -56,7 +57,8 @@ class Mapbox extends React.Component {
       popupContent: null,
       layers: [],
       hoveredLayer: null,
-      map: null
+      map: null,
+      theme: props.theme || 'dark'
     }
 
     this.countryGeoJson = {
@@ -64,50 +66,17 @@ class Mapbox extends React.Component {
       features: []
     }
 
-    this.setHoverStyle = this.setHoverStyle.bind(this);
-
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const layers = this.state.layers
-
-    if (nextProps.countryData !== this.props.countryData) {
-      this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
-        const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
-
-        if (countryExists) {
-          if (!this.state.map.getSource('geo-' + data.properties.iso_a3)) {
-            this.state.map.addSource('geo-' + data.properties.iso_a3, {
-              type: 'geojson',
-              data: { type: 'FeatureCollection', features: [data] }
-            })
-
-            layers.push('country-fill-' + data.properties.iso_a3)
-
-            this.setState({ layers });
-          }
-          return data
-        }
-      })
-    }
-
-    if (nextProps.cityData !== this.props.cityData) {
-      this.props.cityData.forEach((city) => {
-        const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
-
-        if (layerExists) {
-          layers.push(city.name.split(' ').join('-').toLowerCase())
-        }
-
-      })
-
-      this.setState({ layers });
-    }
+    this.setHoverStyle = this.setHoverStyle.bind(this)
+    this.addCountryLayers = this.addCountryLayers.bind(this)
+    this.addCityLayers = this.addCityLayers.bind(this)
+    this.onStyleLoaded = this.onStyleLoaded.bind(this)
 
   }
 
   onStyleLoaded(map) {
     this.setState({ map })
+    this.addCountryLayers(this.state.layers)
+    this.addCityLayers(this.state.layers)
   }
 
   onZoomEnd(e){
@@ -167,7 +136,7 @@ class Mapbox extends React.Component {
     const highlights = this.countryGeoJson.features.map((country, i) => {
       const trafficCountry = countries.find(c => c.code === country.properties.iso_a3)
       const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
-      const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#00a9d4'
+      const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#549895'
 
       return (
         <div key={i}>
@@ -199,6 +168,7 @@ class Mapbox extends React.Component {
     })
 
     return highlights
+
   }
 
   renderCityCircles() {
@@ -232,6 +202,41 @@ class Mapbox extends React.Component {
 
   onZoomClick(map, value) {
     return value < 0 ? map.zoomOut() : map.zoomIn()
+  }
+
+  addCountryLayers(layers) {
+    this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
+      const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
+      const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+
+      if (countryExists) {
+        if (!this.state.map.getSource('geo-' + data.properties.iso_a3)) {
+          this.state.map.addSource('geo-' + data.properties.iso_a3, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [data] }
+          })
+
+          if (!layerExists) {
+            layers.push('country-fill-' + data.properties.iso_a3)
+            this.setState({ layers });
+          }
+
+        }
+        return data
+      }
+    })
+  }
+
+  addCityLayers(layers) {
+    this.props.cityData.forEach((city) => {
+      const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
+
+      if (layerExists) {
+        layers.push(city.name.split(' ').join('-').toLowerCase())
+      }
+    })
+
+    this.setState({ layers });
   }
 
   render() {
