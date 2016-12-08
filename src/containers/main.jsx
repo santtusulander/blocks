@@ -34,26 +34,26 @@ export class Main extends React.Component {
   }
   componentDidMount() {
 
-    console.log('main--componentWillMount', this.props)
+    console.log('main--componentDidMount', this.props)
 
+    // Validate token
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
-          /*if(!this.pageAllowsAnon()) {
-            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
-            this.props.router.push('/login')
-          }*/
+
+          console.log('Main -- checkToken failed')
+
           return false
         }
-        else {
-          this.props.userActions.fetchUser(action.payload.username/*, this.props.user.get('username'*/)
-          this.props.rolesActions.fetchRoles()
-          const accountId = this.props.activeAccount.size ?
-            this.props.activeAccount.get('id') :
-            this.props.params.account
 
-          return this.fetchAccountData(accountId, this.props.accounts)
-        }
+        this.props.userActions.fetchUser(action.payload.username)
+        this.props.rolesActions.fetchRoles()
+
+        const accountId = this.props.activeAccount && this.props.activeAccount.size
+          ? this.props.activeAccount.get('id')
+          : this.props.params.account
+
+        this.fetchAccountData(accountId, this.props.accounts)
       })
   }
 
