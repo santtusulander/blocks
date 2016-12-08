@@ -46,13 +46,17 @@ import { FormattedMessage } from 'react-intl'
 const expireToken = () => {
   axios.defaults.headers.common['X-Auth-Token'] = 'aaa';
   localStorage.setItem('EricssonUDNUserToken', 'aaa')
+  /* eslint-disable no-console */
   console.log("Token set to: 'aaa' in axios to simulate expiration")
+  /* eslint-enable no-console */
 }
 
 const removeToken = () => {
   localStorage.removeItem('EricssonUDNUserToken')
   delete axios.defaults.headers.common['X-Auth-Token']
+  /* eslint-disable no-console */
   console.log("Removed token.")
+  /* eslint-enable no-console */
 }
 
 
