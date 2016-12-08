@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
 jest.unmock('../url-list')
 import URLList from '../url-list'
@@ -35,7 +35,7 @@ describe('URLList', () => {
         intl: { formatMessage: jest.fn() },
         searchState: ''
       }
-      return mount(<URLList {...props}/>)
+      return shallow(<URLList {...props}/>)
     }
   })
   it('should exist', () => {
@@ -45,28 +45,12 @@ describe('URLList', () => {
     expect(subject().find('tr').length).toBe(4)
   })
 
-  it('should sort the table by url (asc and desc)', () => {
+  it('should change the state by calling changeSort', () => {
     const component = subject()
     component.instance().changeSort('url', 1)
-    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
+    expect(component.state().sortDir).toBe(1);
     component.instance().changeSort('url', -1)
-    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
-  })
-
-  it('should sort the table by bytes (asc and desc)', () => {
-    const component = subject()
-    component.instance().changeSort('bytes', 1)
-    expect(component.find('td').at(1).props().children).toContain('www.def.com')
-    component.instance().changeSort('bytes', -1)
-    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
-  })
-
-  it('should sort the table by requests (asc and desc)', () => {
-    const component = subject()
-    component.instance().changeSort('requests', 1)
-    expect(component.find('td').at(1).props().children).toContain('www.ghi.com')
-    component.instance().changeSort('requests', -1)
-    expect(component.find('td').at(1).props().children).toContain('www.abc.com')
+    expect(component.state().sortDir).toBe(-1);
   })
 
   it('should filter out urls according to search value', () => {
