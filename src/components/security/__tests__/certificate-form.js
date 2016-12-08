@@ -6,6 +6,12 @@ import CertificateForm from '../certificate-form.jsx'
 
 const REQUIRED = 'Required'
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('SoaEditForm', () => {
   const onSave = jest.genMockFunction()
   const onCancel = jest.genMockFunction()
@@ -14,6 +20,7 @@ describe('SoaEditForm', () => {
   beforeEach(() => {
     subject = () => {
       props = {
+        intl: intlMaker(),
         errors: {},
         accounts: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
         groups: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
