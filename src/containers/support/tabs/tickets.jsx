@@ -1,7 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
-import { Image } from 'react-bootstrap'
 // import { connect } from 'react-redux'
 // import { withRouter } from 'react-router'
 // import { bindActionCreators } from 'redux'
@@ -24,18 +23,15 @@ import { Image } from 'react-bootstrap'
 //   getOpenTicketStatuses
 // } from '../../../util/support-helper'
 
-import { userIsServiceProvider } from '../../../util/helpers.js'
 
-import SectionContainer from '../../../components/layout/section-container'
-import SectionHeader from '../../../components/layout/section-header'
-import SelectWrapper from '../../../components/select-wrapper'
-import UDNButton from '../../../components/button'
-import IconAdd from '../../../components/icons/icon-add.jsx'
+// import SectionContainer from '../../../components/layout/section-container'
+// import SectionHeader from '../../../components/layout/section-header'
+// import SelectWrapper from '../../../components/select-wrapper'
+// import UDNButton from '../../../components/button'
+// import IconAdd from '../../../components/icons/icon-add.jsx'
 
-import './tickets.scss'
+// import './tickets.scss'
 
-import '../../../assets/img/temp-support-open-tickets.png'
-import '../../../assets/img/temp-support-closed-tickets.png'
 
 // Most of the code in here has been disabled until we get Zendesk integration working
 class SupportTabTickets extends React.Component {
@@ -162,7 +158,7 @@ class SupportTabTickets extends React.Component {
   render() {
     return (
       <div>
-      {userIsServiceProvider(this.props.currentUser) ?
+      { /*
         <div>
           <SectionHeader sectionHeaderTitle="5 Open Tickets">
             <div className="form-group inline">
@@ -182,21 +178,8 @@ class SupportTabTickets extends React.Component {
               <IconAdd/>
             </UDNButton>
           </SectionHeader>
-          <SectionContainer>
-            <Image
-              className="center-block"
-              responsive={true}
-              src="../../../assets/img/temp-support-open-tickets.png"/>
-          </SectionContainer>
-          <SectionHeader sectionHeaderTitle="5 Closed Tickets" />
-          <SectionContainer>
-            <Image
-              className="center-block"
-              responsive={true}
-              src="../../../assets/img/temp-support-closed-tickets.png"/>
-          </SectionContainer>
         </div>
-      :
+      */ }
         <div className="account-support-tickets text-center">
           <p className="lead"><FormattedMessage id="portal.support.tickets.body.text" values={{br: <br/>}}/></p>
           <p>
@@ -207,7 +190,6 @@ class SupportTabTickets extends React.Component {
             </a>
           </p>
         </div>
-      }
       </div>
     )
   }
