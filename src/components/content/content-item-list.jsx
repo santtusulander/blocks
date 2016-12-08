@@ -155,7 +155,7 @@ ContentItemList.propTypes = {
   description: React.PropTypes.string,
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  id: React.PropTypes.string,
+  id: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.number ]),
   isAllowedToConfigure: React.PropTypes.bool,
   linkTo: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
