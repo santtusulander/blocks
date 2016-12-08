@@ -50,15 +50,19 @@ export class Login extends React.Component {
     if (expiry) {
       console.log("Session expired!")
       return
+
     } else if ( redirect && token ) {
-      //  If we have a token and a redirect is not set, could be reload => try to go to original location
-      //  this.props.userActions.setLogin(true)
-      this.props.router.push(this.props.location)
+      console.log('Token and redirect found --- trying to redirect to:', redirect)
+
+      //  If we have a token and a redirect is set, could be reload => set login to true
+      //  and  try to go to original location where token will be checked
+      this.props.userActions.setLogin(true)
+      this.props.router.push(redirect)
       return
 
     } else if ( redirect ) {
       //we had redirect but no token
-      console.log('No token.')
+      console.log('No token. Login required.')
     }
 
     // TOken will be validated in Main.jsx
@@ -71,7 +75,7 @@ export class Login extends React.Component {
 
   goToAccountPage() {
     //TODO: figure out how to redirect to correct CONTENT -page
-    
+
     /*if(this.props.loginUrl) {
       this.props.router.push(this.props.loginUrl)
       this.props.uiActions.setLoginUrl(null)
@@ -176,7 +180,7 @@ export class Login extends React.Component {
 
             { this.props.location.query.sessionExpired &&
               <div className="login-info">
-                <p>Session was expired - please re-enter your password.</p>
+                <p>Due to inactivity you have been logged out. To continue your session please resubmit your username and password.</p>
               </div>
             }
 
