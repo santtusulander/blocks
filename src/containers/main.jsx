@@ -98,7 +98,7 @@ export class Main extends React.Component {
   }
 
   render() {
-    if((!this.props.currentUser.size || !this.props.roles.size)  /*&& !this.pageAllowsAnon()*/) {
+    if((!this.props.currentUser.size || !this.props.roles.size) ) {
       return <LoadingSpinner />
     }
 

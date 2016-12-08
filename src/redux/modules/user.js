@@ -23,6 +23,7 @@ const DESTROY_STORE = 'DESTROY_STORE'
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
+//
 //const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
   allUsers: List(),
@@ -104,8 +105,6 @@ export function fetchAllFailure(state) {
 }
 
 export function userLoggedOutSuccess(state){
-  console.log('userLoggedOutSuccess')
-
   localStorage.removeItem('EricssonUDNUserToken')
   delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -226,10 +225,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
-    //localStorage.removeItem('EricssonUDNUserToken')
   }
-  //return {}
-  //return Promise.resolve()
 })
 
 export const startFetching = createAction(USER_START_FETCH)
