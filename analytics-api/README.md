@@ -4,12 +4,12 @@ This is a Node Express API that returns analytics data from a remote MySQL datab
 
 ## Setup
 
-| #  | Command       | Description                       |
-|----|---------------|-----------------------------------|
-| 1. | `node -v`     | Ensure node 4.2.1 is installed    |
-| 2. | `npm -v`      | Ensure npm 2.14.7 is installed    |
-| 3. | `npm install` | Install dependencies              |
-| 4. | `npm start`   | Start API server                  |
+| #  | Command       | Description                     |
+|:---|:--------------|:--------------------------------|
+| 1. | `node -v`     | Ensure node 4.2.4 is installed  |
+| 2. | `npm -v`      | Ensure npm 2.14.12 is installed |
+| 3. | `npm install` | Install dependencies            |
+| 4. | `npm start`   | Start API server                |
 
 The API is served on port 3030 by default (i.e. http://localhost:3030).
 
@@ -61,7 +61,7 @@ Winston is configured to have six log levels:
 Morgan logs requests based on status code. Winston is configured to log messages to files in `./app/logs/`, as well as to the console for the process running the Express server.
 
 | status code | log level | location                             |
-|-------------|-----------|--------------------------------------|
+|:------------|:----------|:-------------------------------------|
 | `< 400`     | info      | `level-1-warn.log` level 1 and below |
 | `>= 400`    | error     | `level-2-info.log` level 2 and below |
 | `all`       | debug     | `console` level 4 and below          |
