@@ -18,6 +18,7 @@ const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
+const DESTROY_STORE = 'DESTROY_STORE'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -103,10 +104,12 @@ export function fetchAllFailure(state) {
 }
 
 export function userLoggedOutSuccess(state){
+  console.log('userLoggedOutSuccess')
+
   localStorage.removeItem('EricssonUDNUserToken')
   delete axios.defaults.headers.common['X-Auth-Token']
 
-  return state.set('loggedIn', false)
+  return state.merge({'loggedIn': false, 'fetching': false})
 }
 
 export function userStartFetch(state){
@@ -188,6 +191,8 @@ export default handleActions({
 }, emptyUser)
 
 // ACTIONS
+export const destroyStore = createAction(DESTROY_STORE);
+
 export const setLogin = createAction(SET_LOGIN, (value) => {
   return value
 })
@@ -218,13 +223,13 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = localStorage.getItem('EricssonUDNUserToken')
 
   if (token) {
-    loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
+    return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
-    localStorage.removeItem('EricssonUDNUserToken')
+    //localStorage.removeItem('EricssonUDNUserToken')
   }
-
-  return Promise.resolve()
+  //return {}
+  //return Promise.resolve()
 })
 
 export const startFetching = createAction(USER_START_FETCH)
@@ -246,9 +251,8 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
       }
     })
   }
-  else {
-    return Promise.reject({data:{message:"No token"}})
-  }
+
+  return Promise.reject({data:{message:"No token"}})
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
