@@ -51,7 +51,6 @@ import Property from './containers/property/property'
 import PropertySummary from './containers/property/tabs/property-summary'
 import PurgeStatus from './containers/property/tabs/purge-status'
 import Purge from './containers/configure/purge'
-import Session from './containers/session'
 import Security from './containers/security'
 import Services from './containers/services'
 import SetPassword from './containers/set-password'
@@ -133,6 +132,7 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 const UserIsLoggedIn = UserAuthWrapper({
   authSelector: state => state.user,
+  authenticatingSelector: state => state.user.get('fetching') && ( state.user.get('loggedIn') === false ),
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserIsLoggedIn',
   predicate: (user) => {
