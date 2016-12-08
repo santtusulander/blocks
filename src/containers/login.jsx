@@ -6,12 +6,12 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-import {
-  getContentUrl,
-  getNetworkUrl
-} from '../util/routes'
-
-import { userIsServiceProvider } from '../util/helpers.js'
+// import {
+//   getContentUrl,
+//   getNetworkUrl
+// } from '../util/routes'
+//
+// import { userIsServiceProvider } from '../util/helpers.js'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
@@ -64,46 +64,8 @@ export class Login extends React.Component {
       //we had redirect but no token
       console.log('No token. Login required.')
     }
-
-    // TOken will be validated in Main.jsx
-    // this.props.userActions.startFetching()
-    // this.props.userActions.checkToken()
-    //   .then( () => {
-    //     this.props.userActions.finishFetching()
-    //   })
   }
 
-  goToAccountPage() {
-    //TODO: figure out how to redirect to correct CONTENT -page
-
-    /*if(this.props.loginUrl) {
-      this.props.router.push(this.props.loginUrl)
-      this.props.uiActions.setLoginUrl(null)
-    }
-    else {
-      if(userIsServiceProvider(this.props.currentUser)) {
-        if(this.props.currentUser.get('account_id')) {
-          this.props.router.push(getNetworkUrl('brand', 'udn', {account: this.props.currentUser.get('account_id')}))
-        } else {
-          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
-        }
-      } else {
-        this.props.router.push(getContentUrl('brand', 'udn', {}))
-      }
-    }*/
-  }
-  /**
-   * Set data on the redux store after login. This method blocks redirecting the
-   * user after a successful login. In this method, only get data that is absolutely necessary
-   * to get before redirecting the user.
-   * @return {Promise}
-   */
-  // getLoggedInData() {
-  //   return Promise.all([
-  //     this.props.rolesActions.fetchRoles(),
-  //     this.props.userActions.fetchUser(this.state.username)
-  //   ])
-  // }
   onSubmit(e) {
     e.preventDefault()
     this.setState({loginError: null})
@@ -113,22 +75,12 @@ export class Login extends React.Component {
       this.state.password
     ).then(action => {
       if(!action.error) {
-        // NOTE: We wait to go to the account page until we receive data because
-        // we need to know about roles and permissions before determining what
-        // the user is allowed to see.
         if(this.state.rememberUsername) {
           this.props.userActions.saveName(this.state.username)
         }
         else {
           this.props.userActions.saveName()
         }
-
-        // return this.getLoggedInData()
-        //   .then(() => {
-        //     this.goToAccountPage()
-        //     this.props.userActions.finishFetching()
-        //   })
-
       }
       else {
         this.setState({loginError: action.payload.message})
@@ -267,7 +219,7 @@ Login.defaultProps = {
 function mapStateToProps(state) {
   return {
     currentUser: state.user.get('currentUser'),
-    fetching: state.user.get('fetching') || state.account.get('fetching'),
+    fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching') ,
     loggedIn: state.user.get('loggedIn'),
     loginUrl: state.ui.get('loginUrl'),
     username: state.user.get('username')
