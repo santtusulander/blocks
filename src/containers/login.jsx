@@ -37,7 +37,6 @@ export class Login extends React.Component {
     this.checkUsernameActive = this.checkUsernameActive.bind(this)
     this.checkPasswordActive = this.checkPasswordActive.bind(this)
     this.changeField = this.changeField.bind(this)
-    this.goToAccountPage = this.goToAccountPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.toggleRemember = this.toggleRemember.bind(this)
   }
