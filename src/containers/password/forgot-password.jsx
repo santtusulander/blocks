@@ -3,13 +3,12 @@ import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../redux/modules/user'
 
 import IconEmail from '../../components/icons/icon-email.jsx'
-
-import { FormattedMessage } from 'react-intl'
-
+import CopyrightNotice from '../../components/copyright-notice'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -104,16 +103,22 @@ export class ForgotPassword extends React.Component {
                 value={this.state.username}
                 onChange={this.changeField('email')}/>
 
-              <Row>
+              <Row className="action-button-container">
                 <Col xs={12}>
-                  <Button type="submit" bsStyle="primary" className="pull-right"
-                    disabled={this.props.fetching}>
-                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
+                  <Link to="/login" className="btn btn-outline back-to-login-btn">
+                    <FormattedMessage id="portal.button.cancel"/>
+                  </Link>
+                  <Button type="submit"
+                          bsStyle="primary"
+                          disabled={this.props.fetching}>
+                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> :
+                      <FormattedMessage id="portal.button.send"/>}
                   </Button>
                 </Col>
               </Row>
             </form>
           }
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 
