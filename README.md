@@ -5,10 +5,7 @@
 
 This is a portal for administering the Ericsson UDN.
 
-## Development Requirements
-This project requires the use of Node and Sass.
-
-### Contribution
+## Contribution
 
 Every pull request to this project must pass lint checks and unit tests before being reviewed. We are currently using eslint for JavaScript linting, sass-lint for Sass linting, and Jest for unit tests.
 
@@ -31,44 +28,111 @@ The following plugins can be helpful as well:
 
 ## Installation
 
-### NodeJS
-This project requires Node version 4.2.1 and npm version 2.14.7.
+### Development Requirements
 
-Download at https://nodejs.org/en/download/
+**NOTE ON INSTALLING NODE:** It is recommended that you use n (recommended) or nvm to manage multiple versions of node on your computer.
+
+<table>
+  <thead>
+    <tr>
+      <th>Required Global Dependency</th>
+      <th>Check Version</th>
+      <th>Download</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>node v4.2.4</td>
+      <td><code>node -v</code></td>
+      <td>
+        <strong>n:</strong> https://github.com/tj/n
+        <br>
+        <strong>nvm:</strong> https://github.com/creationix/nvm
+        <br>
+        <strong>plain node:</strong> https://nodejs.org/en/download/
+      </td>
+    </tr>
+    <tr>
+      <td>npm v2.14.12</td>
+      <td><code>npm -v</code></td>
+      <td>Included with node</td>
+    </tr>
+    <tr>
+      <td>yarn v0.17.4</td>
+      <td><code>yarn --version</code></td>
+      <td>https://yarnpkg.com/en/docs/install</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Install the project
-
-1. Clone the repo
-   ```shell
-   $ git clone git@github.com:VidScale/udnportal.git
-   ```
-
-2. Navigate to the cloned directory
-   ```shell
-   $ cd udnportal/
-   ```
-
-3. Install dependencies
-   ```shell
-   $ npm install
-   ```
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Description</th>
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.</td>
+      <td>Clone the repo</td>
+      <td><code>$ git clone git@github.com:VidScale/udnportal.git</code></td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td>Navigate to the cloned directory</td>
+      <td><code>$ cd udnportal/</code></td>
+    </tr>
+    <tr>
+      <td>3.</td>
+      <td>Install dependencies</td>
+      <td><code>$ yarn</code></td>
+    </tr>
+    <tr>
+      <td>4.</td>
+      <td>Rename <code>.env.example</code> to <code>.env</code> and configure settings</td>
+      <td>NOTE: you shouldn't need to edit anything in this file, but ask another developer if you're unsure</td>
+    </tr>
+    <tr>
+      <td>5.</td>
+      <td>Follow the instructions to set up the Analytics API</td>
+      <td><a href="https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md">https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md</a></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Running the application
 
 ### Development mode
-1. Rename .env.example to .env and configure settings
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Description</th>
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.</td>
+      <td>Run dev server</td>
+      <td>
+        <strong>normal:</strong> <code>$ npm start</code>
+        <br>
+        <strong>source maps:</strong> <code>$ npm start -- --source-map</code>
+        <br>
+        <small><em>slower build that generates source maps</em></small>
+      </td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td colspan="2">Navigate to <a href="http://localhost:3000">http://localhost:3000</a></td>
+    </tr>
+  </tbody>
+</table>
 
-2. Run dev server
-   ```shell
-   $ npm start
-   ```
-
-  or with source-maps (slower build)
-  ```shell
-  $ npm start -- --source-map
-  ```
-
-3. Navigate to http://localhost:3000
 
 ### Building for deployment
 
