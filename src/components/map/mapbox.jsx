@@ -8,6 +8,8 @@ import IconExpand from '../icons/icon-expand';
 import IconMinimap from '../icons/icon-minimap';
 import IconGlobe from '../icons/icon-globe';
 
+import { formatBitsPerSecond } from '../../util/helpers.js'
+
 const heatMapColors = [
   '#fdc844', //red dark
   '#ddbf54', //red light
@@ -103,10 +105,11 @@ class Mapbox extends React.Component {
 
       if (features.length) {
         const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
-
         this.setState({ hoveredLayer })
         this.setHoverStyle(map)('opacity', 0.9)('pointer')
-        this.openPopup(features[0].properties.name, [feature.lngLat.lng, feature.lngLat.lat])
+        this.openPopup(
+          { title: features[0].properties.name, total: features[0].properties.total },
+          [feature.lngLat.lng, feature.lngLat.lat])
       }
     }
   }
@@ -150,7 +153,8 @@ class Mapbox extends React.Component {
             }}>
               <Feature
                 properties={{
-                  name: country.properties.name
+                  name: country.properties.name,
+                  total: trafficCountry.bits_per_second
                 }}
                 coordinates={country.geometry.coordinates}/>
           </Layer>
@@ -276,7 +280,15 @@ class Mapbox extends React.Component {
 
         {!!this.state.popupContent &&
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
-            <span>{this.state.popupContent}</span>
+            <div>
+              <span className="popup-title bold">{this.state.popupContent.title}</span>
+              <table>
+                <tr>
+                  <td className="bold">Total</td>
+                  <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
+                </tr>
+              </table>
+            </div>
           </Popup>
         }
 
