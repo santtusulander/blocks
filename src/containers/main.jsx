@@ -76,6 +76,7 @@ export class Main extends React.Component {
     }
   }
   logOut() {
+    console.log('logout')
     this.props.userActions.setLogin(false)
 
     this.props.userActions.logOut()
@@ -99,7 +100,7 @@ export class Main extends React.Component {
   }
 
   render() {
-    if((!this.props.currentUser.size || !this.props.roles.size) ) {
+    if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
     }
 
@@ -168,7 +169,6 @@ export class Main extends React.Component {
         <ModalWindow
           {...infoDialogOptions}/>
         }
-
 
         <ReactCSSTransitionGroup
           component="div"
