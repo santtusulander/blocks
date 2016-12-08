@@ -50,7 +50,7 @@ describe('AnalysisStackedByTime', () => {
     const wrapper = shallow(
       <AnalysisStackedByTime/>
     )
-    expect(wrapper.text()).toContain('Loading');
+    expect(wrapper.find({id: 'portal.loading.text'}).length).toBe(1)
   });
 
   it('should have data lines', () => {
