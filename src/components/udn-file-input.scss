@@ -1,6 +1,6 @@
 @import '../styles/base/colors';
 @import '../styles/base/variables';
-@import '../styles/base/buttons';
+// @import '../styles/base/buttons';
 
 .udn-file-input {
 
@@ -14,7 +14,7 @@
   }
 
   label.file-input-label {
-    @extend .btn-primary;
+    // @extend .btn-primary;
 
     font-weight: normal;
     height: 40px;
