@@ -76,7 +76,7 @@ export class TokenAuthentication extends React.Component {
             </label>
             <Select className="input-select"
               disabled={true}
-              onSelect={() => { /* no-op */ }}
+              onSelect={() => {/* no-op */}}
               options={placeholderEncryptionOptions}
               value={placeholderEncryptionValue} />
           </div>
@@ -90,7 +90,7 @@ export class TokenAuthentication extends React.Component {
             </label>
             <Select className="input-select"
               disabled={true}
-              onSelect={() => { /* no-op */ }}
+              onSelect={() => {/* no-op */}}
               options={placeholderSchemaOptions}
               value={placeholderSchemaValue} />
           </div>
