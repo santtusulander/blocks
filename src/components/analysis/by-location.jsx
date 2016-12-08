@@ -23,7 +23,7 @@ class AnalysisByLocation extends React.Component {
 
   render() {
     if(!this.props.width || !this.props.countries || !this.props.countries.size
-      || this.props.fetching || !this.props.countryData) {
+      || this.props.fetching || !this.props.countryData.size) {
       return <div>Loading...</div>
     }
 
@@ -35,7 +35,7 @@ class AnalysisByLocation extends React.Component {
           geoData={countriesGeoJSON}
           countryData={this.props.countryData.toJS()}
           cityData={[]}
-          theme="dark" />
+          theme={this.props.theme} />
       </div>
     )
   }
@@ -55,6 +55,7 @@ AnalysisByLocation.propTypes = {
   noBg: React.PropTypes.bool,
   stateData: React.PropTypes.instanceOf(Immutable.List),
   states: React.PropTypes.instanceOf(Immutable.Map),
+  theme: React.PropTypes.string,
   timelineKey: React.PropTypes.string,
   tooltipCustomFormat: React.PropTypes.func,
   topoActions: React.PropTypes.object,
@@ -77,7 +78,8 @@ function mapStateToProps(state) {
     cities: state.topo.get('cities'),
     countries: state.topo.get('countries'),
     states: state.topo.get('states'),
-    fetching: state.topo.get('fetching')
+    fetching: state.topo.get('fetching'),
+    theme: state.ui.get('theme')
   };
 }
 
