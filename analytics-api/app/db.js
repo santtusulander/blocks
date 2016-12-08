@@ -462,6 +462,22 @@ class AnalyticsDB {
       && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
 
+    optionsFinal.latitude_min
+      && conditions.push('AND lat >= ?')
+      && queryOptions.push(optionsFinal.latitude_min);
+
+    optionsFinal.latitude_max
+      && conditions.push('AND lat <= ?')
+      && queryOptions.push(optionsFinal.latitude_max);
+
+    optionsFinal.longitude_min
+      && conditions.push('AND lon >= ?')
+      && queryOptions.push(optionsFinal.longitude_min);
+
+    optionsFinal.longitude_max
+      && conditions.push('AND lon <= ?')
+      && queryOptions.push(optionsFinal.longitude_max);
+
     let joinLatLon = '';
     if (optionsFinal.include_geo) {
       // we'll just add to selectedDimension, as this will get us in the group by clause as well, which is needed for proper SQL compliance
@@ -926,9 +942,26 @@ class AnalyticsDB {
       && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
 
+    optionsFinal.latitude_min
+      && conditions.push('AND lat >= ?')
+      && queryOptions.push(optionsFinal.latitude_min);
+
+    optionsFinal.latitude_max
+      && conditions.push('AND lat <= ?')
+      && queryOptions.push(optionsFinal.latitude_max);
+
+    optionsFinal.longitude_min
+      && conditions.push('AND lon >= ?')
+      && queryOptions.push(optionsFinal.longitude_min);
+
+    optionsFinal.longitude_max
+      && conditions.push('AND lon <= ?')
+      && queryOptions.push(optionsFinal.longitude_max);
+
     let joinLatLon = '';
     if (optionsFinal.include_geo) {
-      // we'll just add to selectedDimension, as this will get us in the group by clause as well, which is needed for proper SQL compliance
+      // we'll just add to selectedDimension, as this will get us in the group by clause as well,
+      // which is needed for proper SQL compliance
       selectedDimension += 'lat, lon, ';
       joinLatLon = 'left outer join city_location cl on cl.country=t.country and cl.region=t.region and cl.city=t.city'
     }

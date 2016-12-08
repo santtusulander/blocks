@@ -28,6 +28,9 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
     dimension    : area[area.length-1]
   };
 
+  // if you've limited results by geo coords, then we'll assume you want geo (and we also need the table joined to do the
+  // filter so this is the easiest way to be sure).
+  if (options.latitude_min || options.latitude_max || options.longitude_min || options.longitude_max) options.include_geo = true;
 
   db.getDataForGeo(options).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
     let responseData = {
@@ -62,6 +65,10 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
 	// add fields further qualifying name
         for (let i = 0; i < (area.length - 1); ++i) {
           areaRecord[area[i]] = areaData[0][area[i]];
+        }
+        if (options.include_geo) {
+          areaRecord.lat = areaData[0].lat;
+          areaRecord.lon = areaData[0].lon;
         }
 
         // Set the detail array on the areaRecord
