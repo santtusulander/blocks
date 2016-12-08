@@ -23,6 +23,7 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
     latitude_max : params.latitude_max,
     longitude_min: params.longitude_min,
     longitude_max: params.longitude_max,
+    include_geo  : params.include_geo,
     components   : area,
     dimension    : area[area.length-1]
   };

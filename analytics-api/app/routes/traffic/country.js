@@ -32,6 +32,9 @@ function routeTrafficCountry(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
+  // we don't support geo for country yet, so be sure we don't try to process
+  params.include_geo = false;
+
   let maxCountries = params.max_countries || 5;
 
   routeTrafficGeo(params, res, ['country'], 'countries', maxCountries, (countryRecord, countryCode) => {

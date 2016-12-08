@@ -23,6 +23,7 @@ function routeTrafficCity(req, res) {
     latitude_max : {required: false, type: 'Latitude'},
     longitude_min: {required: false, type: 'Longitude'},
     longitude_max: {required: false, type: 'Longitude'},
+    include_geo  : {required: false, type: 'Boolean'},
     max_cities   : {required: false, type: 'Number'}
   });
 
@@ -32,7 +33,7 @@ function routeTrafficCity(req, res) {
 
   let maxCities = params.max_cities || 5;
 
-  routeTrafficGeo(params, res, ['country', 'city'], 'cities', maxCities);
+  routeTrafficGeo(params, res, ['country', 'region', 'city'], 'cities', maxCities);
 }
 
 module.exports = routeTrafficCity;

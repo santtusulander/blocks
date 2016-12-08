@@ -424,7 +424,7 @@ class AnalyticsDB {
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global', or use components if provided
     if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
+      selectedDimension = `t.${optionsFinal.components ? optionsFinal.components.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -432,8 +432,6 @@ class AnalyticsDB {
     // Build the table name
     let table = `spc_${optionsFinal.dimension}_${optionsFinal.granularity}`;
     queryOptions.push(table);
-    queryOptions.push(optionsFinal.start);
-    queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
     if (optionsFinal.granularity === 'day') {
@@ -441,6 +439,8 @@ class AnalyticsDB {
     }
 
     conditions.push('epoch_start BETWEEN ? AND ?');
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
 
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.sp_account.where)
@@ -459,8 +459,15 @@ class AnalyticsDB {
       && queryOptions.push(optionsFinal.service_type);
 
     optionsFinal.country_code
-      && conditions.push('AND country = ?')
+      && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
+
+    let joinLatLon = '';
+    if (optionsFinal.include_geo) {
+      // we'll just add to selectedDimension, as this will get us in the group by clause as well, which is needed for proper SQL compliance
+      selectedDimension += 'lat, lon, ';
+      joinLatLon = 'left outer join city_location cl on cl.country=t.country and cl.region=t.region and cl.city=t.city'
+    }
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
@@ -473,7 +480,8 @@ class AnalyticsDB {
         ${accountLevelData.select},
         ${selectedDimension}service_type,
         ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
-      FROM ??
+      FROM ?? t
+      ${joinLatLon}
       WHERE ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join('')}
@@ -875,7 +883,7 @@ class AnalyticsDB {
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global', or use components if provided
     if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
+      selectedDimension = `t.${optionsFinal.components ? optionsFinal.components.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -915,8 +923,15 @@ class AnalyticsDB {
       && queryOptions.push(optionsFinal.service_type);
 
     optionsFinal.country_code
-      && conditions.push('AND country = ?')
+      && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
+
+    let joinLatLon = '';
+    if (optionsFinal.include_geo) {
+      // we'll just add to selectedDimension, as this will get us in the group by clause as well, which is needed for proper SQL compliance
+      selectedDimension += 'lat, lon, ';
+      joinLatLon = 'left outer join city_location cl on cl.country=t.country and cl.region=t.region and cl.city=t.city'
+    }
 
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
@@ -930,7 +945,8 @@ class AnalyticsDB {
         ${selectedDimension}service_type,
         ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'},
         ${(selectedDimension || isListingChildren) ? 'sum(requests) AS requests' : 'requests'}
-      FROM ??
+      FROM ?? t
+      ${joinLatLon}
       WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'
       ${grouping.length ? 'GROUP BY' : ''}
