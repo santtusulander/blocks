@@ -78,9 +78,13 @@ export class Main extends React.Component {
     }
   }
   logOut() {
+    this.props.userActions.setLogin(false)
+
     this.props.userActions.logOut()
       .then(() => {
         this.props.router.push('/login')
+        this.props.userActions.destroyStore();
+        console.log('logging out -- redirect to login page')
       })
   }
   showNotification(message) {
