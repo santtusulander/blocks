@@ -22,13 +22,13 @@ const SET_LOGIN = 'user/SET_LOGIN'
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
-const username = localStorage.getItem('EricssonUDNUserName') || null
+//const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
   fetching: false,
   loggedIn: false,
-  username: username
+  username: null
 })
 
 // REDUCERS
@@ -64,7 +64,6 @@ export function updatePasswordSuccess(state) {
 
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
@@ -105,7 +104,6 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
-  localStorage.removeItem('EricssonUDNUserName')
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.set('loggedIn', false)
@@ -153,7 +151,6 @@ export function userTokenChecked(state, action){
   }
   else {
     localStorage.removeItem('EricssonUDNUserToken')
-    localStorage.removeItem('EricssonUDNUserName')
     delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
