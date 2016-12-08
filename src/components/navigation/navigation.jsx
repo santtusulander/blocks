@@ -43,10 +43,18 @@ import { FormattedMessage } from 'react-intl'
 
 //TODO:removet
 //this is FOR TESTING token expiration
-const killToken = () => {
+const expireToken = () => {
   axios.defaults.headers.common['X-Auth-Token'] = 'aaa';
-  console.log("Token set to: 'aaa'")
+  localStorage.setItem('EricssonUDNUserToken', 'aaa')
+  console.log("Token set to: 'aaa' in axios to simulate expiration")
 }
+
+const removeToken = () => {
+  localStorage.removeItem('EricssonUDNUserToken')
+  delete axios.defaults.headers.common['X-Auth-Token']
+  console.log("Removed token.")
+}
+
 
 const Navigation = (props) => {
   const params = props.params,
@@ -70,7 +78,10 @@ const Navigation = (props) => {
     <nav className='navigation-sidebar text-sm'>
       <ul>
         {/* TODO: Remove button - only for testing */ }
-        <li><button onClick={()=> killToken()}>KILL TOKEN</button></li>
+        <li>
+          <button className='btn-warning' onClick={()=> expireToken()}>EXPIRE TOKEN</button>
+          <button className='btn-danger' onClick={()=> removeToken()}>REMOVE TOKEN</button>
+        </li>
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
