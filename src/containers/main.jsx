@@ -33,15 +33,13 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
   componentDidMount() {
-
-    console.log('main--componentDidMount', this.props)
-
     // Validate token
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
-
+          /* eslint-disable no-console */
           console.log('Main -- checkToken failed')
+          /* eslint-enable no-console */
 
           return false
         }
@@ -84,7 +82,10 @@ export class Main extends React.Component {
       .then(() => {
         this.props.router.push('/login')
         this.props.userActions.destroyStore();
+        /* eslint-disable no-console */
         console.log('logging out -- redirect to login page')
+        /* eslint-enable no-console */
+
       })
   }
   showNotification(message) {

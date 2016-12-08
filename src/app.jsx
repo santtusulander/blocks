@@ -89,7 +89,9 @@ axios.interceptors.response.use(function (response) {
           const returnPath = location.pathname
           return store.dispatch( logOut(false) )
             .then( () => {
+              /* eslint-disable no-console */
               console.log('Token Expired at location: ', returnPath)
+              /* eslint-enable no-console */
 
               //redirect to login
               browserHistory.push({
@@ -105,7 +107,9 @@ axios.interceptors.response.use(function (response) {
             })
         }
 
+        /* eslint-disable no-console */
         console.log("Error: 401", error)
+        /* eslint-enable no-console */
       }
     }
     else if (status === 403) {
@@ -155,6 +159,7 @@ if (useRaven) {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable onunhandledrejection happened.', data)
+      /* eslint-enable no-console */
       captureAndShowRavenError(store, data.reason, null, false)
       errorDisplayed = true
     }
@@ -164,6 +169,7 @@ if (useRaven) {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable error happened.', data)
+      /* eslint-enable no-console */
       captureAndShowRavenError(store, data.message, null, false)
       errorDisplayed = true;
     }
