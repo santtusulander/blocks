@@ -6,13 +6,6 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-// import {
-//   getContentUrl,
-//   getNetworkUrl
-// } from '../util/routes'
-//
-// import { userIsServiceProvider } from '../util/helpers.js'
-
 import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -47,12 +40,15 @@ export class Login extends React.Component {
     const expiry = this.props.location.query.sessionExpired
 
     if (expiry) {
+      /* eslint-disable no-console */
       console.log("Session expired!")
+      /* eslint-enable no-console */
       return
 
     } else if ( redirect && token ) {
+      /* eslint-disable no-console */
       console.log('Token and redirect found --- trying to redirect to:', redirect)
-
+      /* eslint-enable no-console */
       //  If we have a token and a redirect is set, could be reload => set login to true
       //  and  try to go to original location where token will be checked
       this.props.userActions.setLogin(true)
@@ -61,7 +57,10 @@ export class Login extends React.Component {
 
     } else if ( redirect ) {
       //we had redirect but no token
+      /* eslint-disable no-console */
       console.log('No token. Login required.')
+      /* eslint-enable no-console */
+
     }
   }
 
@@ -203,6 +202,7 @@ Login.propTypes = {
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
+  location: React.PropTypes.object,
   loggedIn: React.PropTypes.bool,
   loginUrl: React.PropTypes.string,
   rolesActions: React.PropTypes.object,
