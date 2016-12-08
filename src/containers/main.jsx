@@ -76,7 +76,6 @@ export class Main extends React.Component {
     }
   }
   logOut() {
-    console.log('logout')
     this.props.userActions.setLogin(false)
 
     this.props.userActions.logOut()
