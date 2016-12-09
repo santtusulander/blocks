@@ -249,7 +249,7 @@ class AnalysisOnOffNetReport extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.onOffNet.text"/>} />
         <SectionContainer>
           <div ref="stacksHolder">
-            {!this.props.fetching ?
+            {this.props.fetching ?
               <LoadingSpinner/> : chart}
           </div>
         </SectionContainer>
