@@ -11,6 +11,7 @@ var environment = helpers.parseDotenvConfig(
 const googleSiteKey = environment.GOOGLE_SITE_KEY || '6LfO1AoUAAAAAKy1rnqNJzAqDXxoHnUAKdRfY5vB'
 
 module.exports = Object.assign({}, {
+  devtool: 'source-map',
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"production"',
