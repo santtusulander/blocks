@@ -215,17 +215,14 @@ export default handleActions({
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${BASE_URL_AAA}/tokens`,
-    {
-      "username": username,
-      "password": password
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "password": password
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  )
+  })
   .then((res) => {
     if(res) {
       return {token: res.data}
