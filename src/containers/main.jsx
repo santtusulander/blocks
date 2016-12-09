@@ -43,8 +43,8 @@ export class Main extends React.Component {
           return false
         }
 
-          this.props.userActions.fetchUser(action.payload.username)
-          this.props.rolesActions.fetchRoles()
+        this.props.userActions.fetchUser(action.payload.username)
+        this.props.rolesActions.fetchRoles()
 
         const accountId = this.props.activeAccount && this.props.activeAccount.size
           ? this.props.activeAccount.get('id')
@@ -79,7 +79,7 @@ export class Main extends React.Component {
 
     this.props.userActions.logOut()
       .then(() => {
-    this.props.router.push('/login')
+        this.props.router.push('/login')
         this.props.userActions.destroyStore();
         /* eslint-disable no-console */
         console.log('logging out -- redirect to login page')

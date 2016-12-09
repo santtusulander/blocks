@@ -214,8 +214,7 @@ export default handleActions({
   PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
   [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
-  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
-  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -228,12 +227,12 @@ export const setLogin = createAction(SET_LOGIN, (value) => {
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
-      "username": username,
-      "password": password
+    "username": username,
+    "password": password
   }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    headers: {
+      'Content-Type': 'application/json'
+    }
   })
   .then((res) => {
     if(res) {
@@ -274,7 +273,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     })
   }
 
-    return Promise.reject({data:{message:"No token"}})
+  return Promise.reject({data:{message:"No token"}})
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
