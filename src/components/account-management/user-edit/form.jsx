@@ -235,8 +235,9 @@ class UserEditForm extends React.Component {
 
 UserEditForm.propTypes = {
   fields: PropTypes.object,
-  groupOptions: PropTypes.array,
+  // groupOptions: PropTypes.array,
   intl: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   roleOptions: PropTypes.array

@@ -83,9 +83,9 @@ ConfigurationVersions.propTypes = {
   addVersion: React.PropTypes.func,
   configurations: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object,
-  propertyName: React.PropTypes.string,
-  status: React.PropTypes.number
+  intl: React.PropTypes.object
+  // propertyName: React.PropTypes.string,
+  // status: React.PropTypes.number
 }
 
 module.exports = injectIntl(ConfigurationVersions)

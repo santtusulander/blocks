@@ -44,6 +44,10 @@ Session.vim
 ## WebStorm
 .idea/
 
+## VSCode
+.vscode/
+jsconfig.json
+
 ## Eclipse
 .project
 # Compiled

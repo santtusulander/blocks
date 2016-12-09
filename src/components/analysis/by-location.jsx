@@ -260,19 +260,19 @@ class AnalysisByLocation extends React.Component {
 
 AnalysisByLocation.displayName = 'AnalysisByLocation'
 AnalysisByLocation.propTypes = {
-  activeCountry: React.PropTypes.string,
-  activeState: React.PropTypes.string,
-  cities: React.PropTypes.instanceOf(Immutable.Map),
-  cityData: React.PropTypes.instanceOf(Immutable.List),
+  // activeCountry: React.PropTypes.string,
+  // activeState: React.PropTypes.string,
+  // cities: React.PropTypes.instanceOf(Immutable.Map),
+  // cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
   countryData: React.PropTypes.instanceOf(Immutable.List),
   dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
   noBg: React.PropTypes.bool,
-  stateData: React.PropTypes.instanceOf(Immutable.List),
-  states: React.PropTypes.instanceOf(Immutable.Map),
-  timelineKey: React.PropTypes.string,
+  // stateData: React.PropTypes.instanceOf(Immutable.List),
+  // states: React.PropTypes.instanceOf(Immutable.Map),
+  // timelineKey: React.PropTypes.string,
   tooltipCustomFormat: React.PropTypes.func,
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
