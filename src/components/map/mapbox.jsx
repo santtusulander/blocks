@@ -58,26 +58,17 @@ class Mapbox extends React.Component {
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
-      hoveredLayer: null,
-      map: null,
-      theme: props.theme || 'dark'
+      hoveredLayer: null
     }
 
     this.countryGeoJson = {
       type: 'FeatureCollection',
       features: []
     }
-
-    this.setHoverStyle = this.setHoverStyle.bind(this)
-    this.addCountryLayers = this.addCountryLayers.bind(this)
-    this.addCityLayers = this.addCityLayers.bind(this)
-    this.onStyleLoaded = this.onStyleLoaded.bind(this)
-
   }
 
   onStyleLoaded(map) {
-    this.setState({ map })
-    this.addCountryLayers(this.state.layers)
+    this.addCountryLayers(map, this.state.layers)
     this.addCityLayers(this.state.layers)
   }
 
@@ -105,10 +96,15 @@ class Mapbox extends React.Component {
 
       if (features.length) {
         const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
+        const trafficCountry = this.props.countryData.find(c => c.code === features[0].properties.iso_a3)
+
         this.setState({ hoveredLayer })
         this.setHoverStyle(map)('opacity', 0.9)('pointer')
         this.openPopup(
-          { title: features[0].properties.name, total: features[0].properties.total },
+          {
+            title: features[0].properties.name,
+            total: trafficCountry.bits_per_second
+          },
           [feature.lngLat.lng, feature.lngLat.lat])
       }
     }
@@ -132,46 +128,74 @@ class Mapbox extends React.Component {
     }
   }
 
-  renderCountryHighlight() {
+  addCountryLayers(map, layers) {
+    this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
+      const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
+      const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+
+      if (countryExists) {
+        if (!map.getSource('geo-' + data.properties.iso_a3)) {
+          map.addSource('geo-' + data.properties.iso_a3, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [data] }
+          })
+
+          if (!layerExists) {
+            layers.push('country-fill-' + data.properties.iso_a3)
+            layers.push('country-stroke-' + data.properties.iso_a3)
+            this.setState({ layers });
+          }
+
+        }
+        return data
+      }
+    })
+
+    this.renderCountryHighlight(map)
+
+  }
+
+  addCityLayers(layers) {
+    this.props.cityData.forEach((city) => {
+      const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
+
+      if (layerExists) {
+        layers.push(city.name.split(' ').join('-').toLowerCase())
+      }
+    })
+
+    this.setState({ layers });
+  }
+
+  renderCountryHighlight(map) {
     const countries = this.props.countryData
     const countryMedian = calculateMedian(countries.map((country => country.total)))
 
-    const highlights = this.countryGeoJson.features.map((country, i) => {
+    this.countryGeoJson.features.forEach((country) => {
       const trafficCountry = countries.find(c => c.code === country.properties.iso_a3)
       const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
       const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#fdc844'
 
-      return (
-        <div key={i}>
-          <Layer
-            id={`country-fill-${country.properties.iso_a3}`}
-            type="fill"
-            sourceId={`geo-${country.properties.iso_a3}`}
-            paint={{
-              'fill-color': countryColor,
-              'fill-opacity': 0.5
-            }}>
-              <Feature
-                properties={{
-                  name: country.properties.name,
-                  total: trafficCountry.bits_per_second
-                }}
-                coordinates={country.geometry.coordinates}/>
-          </Layer>
+      map.addLayer({
+        id: `country-fill-${country.properties.iso_a3}`,
+        source: `geo-${country.properties.iso_a3}`,
+        paint: {
+          'fill-color': countryColor,
+          'fill-opacity': 0.5
+        },
+        type: 'fill'
+      })
 
-          <Layer
-            id={`country-stroke-${country.properties.iso_a3}`}
-            type="line"
-            sourceId={`geo-${country.properties.iso_a3}`}
-            paint={{
-              'line-color': countryColor,
-              'line-width': 2
-            }}/>
-        </div>
-      )
+      map.addLayer({
+        id: `country-stroke-${country.properties.iso_a3}`,
+        source: `geo-${country.properties.iso_a3}`,
+        paint: {
+          'line-color': countryColor,
+          'line-width': 2
+        },
+        type: 'line'
+      })
     })
-
-    return highlights
 
   }
 
@@ -208,41 +232,6 @@ class Mapbox extends React.Component {
     return value < 0 ? map.zoomOut() : map.zoomIn()
   }
 
-  addCountryLayers(layers) {
-    this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
-      const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
-      const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
-
-      if (countryExists) {
-        if (!this.state.map.getSource('geo-' + data.properties.iso_a3)) {
-          this.state.map.addSource('geo-' + data.properties.iso_a3, {
-            type: 'geojson',
-            data: { type: 'FeatureCollection', features: [data] }
-          })
-
-          if (!layerExists) {
-            layers.push('country-fill-' + data.properties.iso_a3)
-            this.setState({ layers });
-          }
-
-        }
-        return data
-      }
-    })
-  }
-
-  addCityLayers(layers) {
-    this.props.cityData.forEach((city) => {
-      const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
-
-      if (layerExists) {
-        layers.push(city.name.split(' ').join('-').toLowerCase())
-      }
-    })
-
-    this.setState({ layers });
-  }
-
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -275,7 +264,6 @@ class Mapbox extends React.Component {
             ]}/>
         </div>
 
-        {this.renderCountryHighlight()}
         {this.renderCityCircles()}
 
         {!!this.state.popupContent &&
@@ -283,10 +271,12 @@ class Mapbox extends React.Component {
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
               <table>
-                <tr>
-                  <td className="bold">Total</td>
-                  <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td className="bold">Total</td>
+                    <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </Popup>
