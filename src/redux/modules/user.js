@@ -19,18 +19,20 @@ const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
 const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
+const SET_LOGIN = 'user/SET_LOGIN'
+const DESTROY_STORE = 'DESTROY_STORE'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
-
-const username = localStorage.getItem('EricssonUDNUserName') || null
+//
+//const username = localStorage.getItem('EricssonUDNUserName') || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
   fetching: false,
   loggedIn: false,
-  username: username
+  username: null
 })
 
 // REDUCERS
@@ -66,7 +68,6 @@ export function updatePasswordSuccess(state) {
 
 export function userLoggedInSuccess(state, action){
   localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
@@ -109,7 +110,7 @@ export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
   delete axios.defaults.headers.common['X-Auth-Token']
 
-  return state.set('loggedIn', false)
+  return state.merge({'loggedIn': false, 'fetching': false})
 }
 
 export function userStartFetch(state){
@@ -170,6 +171,10 @@ export function userNameSave(state, action){
   return state.set('username', action.payload)
 }
 
+export const setLoggedIn = (state, action) => {
+  return state.set('loggedIn', action.payload)
+}
+
 export function requestPasswordResetSuccess(state) {
   return state.merge({
     fetching: false
@@ -206,22 +211,29 @@ export default handleActions({
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
   USER_NAME_SAVED: userNameSave,
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
+  [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
   USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
   PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
+export const destroyStore = createAction(DESTROY_STORE);
+
+export const setLogin = createAction(SET_LOGIN, (value) => {
+  return value
+})
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
   return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
-    "username": username,
-    "password": password
+      "username": username,
+      "password": password
   }, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
+      headers: {
+        'Content-Type': 'application/json'
+      }
   })
   .then((res) => {
     if(res) {
@@ -236,12 +248,10 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   const token = localStorage.getItem('EricssonUDNUserToken')
 
   if (token) {
-    loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
+    return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
   }
-
-  return Promise.resolve()
 })
 
 export const startFetching = createAction(USER_START_FETCH)
@@ -263,9 +273,8 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
       }
     })
   }
-  else {
+
     return Promise.reject({data:{message:"No token"}})
-  }
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
