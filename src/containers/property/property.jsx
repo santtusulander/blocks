@@ -160,7 +160,7 @@ Property.propTypes = {
   params: React.PropTypes.object,
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  routes: React.PropTypes.object,
+  routes: React.PropTypes.array,
   uiActions: React.PropTypes.object
 }
 Property.defaultProps = {

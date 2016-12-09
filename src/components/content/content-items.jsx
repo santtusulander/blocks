@@ -36,6 +36,7 @@ import GroupForm from '../../components/account-management/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -317,10 +318,11 @@ class ContentItems extends React.Component {
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
             : null}
-            <Select
+            {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
+             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
-              options={sortOptions.map(opt => [opt.value, opt.label])}/>
+              options={sortOptions.map(opt => [opt.value, opt.label])}/> : null}
             <ButtonGroup>
               <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={viewingChart}

@@ -4,7 +4,7 @@ import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   getContentUrl,
@@ -19,6 +19,7 @@ import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
+import CopyrightNotice from '../components/copyright-notice'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -84,9 +85,6 @@ export class Login extends React.Component {
         if(this.state.rememberUsername) {
           this.props.userActions.saveName(this.state.username)
         }
-        else {
-          this.props.userActions.saveName()
-        }
         return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
@@ -124,6 +122,10 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
+    if (this.state.rememberUsername) {
+      this.props.userActions.saveName()
+    }
+
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
@@ -191,10 +193,7 @@ export class Login extends React.Component {
               </Col>
             </Row>
           </form>
-          <p className="text-sm login-copyright">
-            <FormattedMessage id="portal.login.copyright.text" /><br/>
-            <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
-          </p>
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 

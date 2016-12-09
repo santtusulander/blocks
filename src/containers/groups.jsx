@@ -21,6 +21,7 @@ import PROVIDER_TYPES from '../constants/provider-types'
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -149,7 +150,7 @@ export class Groups extends React.Component {
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
-        type='group'
+        type={CONTENT_ITEMS_TYPES.GROUP}
         user={this.props.user}
         viewingChart={this.props.viewingChart}
         fetchItem={(id) => { return this.props.groupActions.fetchGroup(brand, account, id) }}
