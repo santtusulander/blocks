@@ -34,5 +34,5 @@ storiesOf('AccountManagement', module)
     </ThemeWrap>
   ))
   .add('RolesList', () => (
-      <RolesList roles={RolesListData} onAdd={action('onAdd')} onEdit={action('onEdit')}  />
+      <RolesList roles={RolesListData} onEdit={action('onEdit')}  />
   ))
