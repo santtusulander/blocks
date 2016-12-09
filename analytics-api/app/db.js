@@ -1047,7 +1047,7 @@ class AnalyticsDB {
       selectedDimension = '';
     }
 
-    let isTrafficTable = !!(['global', 'country', 'region', 'city'].includes(optionsFinal.dimension));
+    let isTrafficTable = (['global', 'country', 'region', 'city'].indexOf(optionsFinal.dimension) > -1);
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
@@ -1105,7 +1105,7 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getVisitorWithTotals(options) {
-    let shouldQueryGlobalTotals = ['country', 'region', 'city'].includes(options.dimension);
+    let shouldQueryGlobalTotals = (['country', 'region', 'city'].indexOf(options.dimension) > -1);
     let aggregateGranularity    = options.aggregate_granularity || 'month';
     let dimensionTotalOptions   = {granularity: aggregateGranularity, isAggregate: true};
     let globalTotalOptions      = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};
