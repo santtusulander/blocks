@@ -123,11 +123,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
         this.props.changeValue(
           matches[0].path.slice(0, -2),
-          this.props.config.getIn(matches[0].path.concat(['cases', 0, 1]))
+          this.props.config.getIn(matches[0].path.concat(childPath))
         )
         this.props.changeValue([],
          this.props.config.setIn(
-           matches[1].path.concat(childPath),
+           matches[1].path.concat(matchFilterChildPaths[matches[1].filterType]),
            currentSets
          )
         )
@@ -427,8 +427,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   hideAction: React.PropTypes.func,
   isEditingRule: React.PropTypes.bool,
   rule: React.PropTypes.instanceOf(Immutable.Map),
-  rulePath: React.PropTypes.instanceOf(Immutable.List),
-  saveChanges: React.PropTypes.func
+  rulePath: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = ConfigurationPolicyRuleEdit

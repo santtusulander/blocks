@@ -171,31 +171,24 @@ export default handleActions({
 // ACTIONS
 
 export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
-  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`,
-    {
-      services:[
-        {
-          service_type: "large",
-          deployment_mode: deploymentMode,
-          configurations: [
-            {
-              edge_configuration: {
-                published_name: id
-              },
-              configuration_status: {
-                last_edited_by: "Test User"
-              }
-            }
-          ]
+  return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
+    services:[{
+      service_type: "large",
+      deployment_mode: deploymentMode,
+      configurations: [{
+        edge_configuration: {
+          published_name: id
+        },
+        configuration_status: {
+          last_edited_by: "Test User"
         }
-      ]
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      }]
+    }]
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  )
+  })
   .then(res => {
     if(res) {
       return Immutable.fromJS(res.data).set('id', id)

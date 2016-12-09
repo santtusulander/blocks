@@ -1,15 +1,15 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
+import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router'
+import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
-
-import { FormattedMessage } from 'react-intl'
-
+import CopyrightNotice from '../components/copyright-notice'
+import ReCAPTCHA from '../components/recaptcha'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -18,7 +18,8 @@ export class ForgotPassword extends React.Component {
     this.state = {
       email: '',
       emailActive: false,
-      emailError: null,
+      formError: null,
+      recaptcha: '',
       submitted: false
     }
 
@@ -29,25 +30,29 @@ export class ForgotPassword extends React.Component {
   onSubmit(e) {
     e.preventDefault()
     this.setState({emailError: null})
-    // TODO: API connections
-    // this.props.userActions.startFetching()
-    // this.props.userActions.logIn(
-    //   this.state.username,
-    //   this.state.password
-    // ).then(action => {
-    //   if(!action.error) {
-    //     this.setState({submitted: true})
-    //   }
-    //   else {
-    //     this.setState({emailError: action.payload.message})
-    //   }
-    // })
+
+    this.props.userActions.startFetching()
+    this.props.userActions
+      .requestPasswordReset(this.state.email, this.state.recaptcha)
+      .then(action => {
+        if(!action.error) {
+          this.setState({submitted: true})
+        }
+        else {
+          this.setState({
+            formError: action.payload.data.message || action.payload.message,
+            recaptcha: ''
+          })
+          this.refs.recaptcha.reset()
+        }
+      })
   }
   checkEmailActive(hasFocus) {
     return () => {
       if(hasFocus || !this.state.email) {
         this.setState({
-          emailActive: hasFocus
+          emailActive: hasFocus,
+          formError: null
         })
       }
     }
@@ -60,6 +65,8 @@ export class ForgotPassword extends React.Component {
     }
   }
   render() {
+    const disableSubmit = this.props.fetching || !this.state.email || !this.state.recaptcha
+
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
@@ -75,10 +82,14 @@ export class ForgotPassword extends React.Component {
 
           {this.state.submitted ?
             <div className="login-info">
-              <p><FormattedMessage id="portal.forgotPassword.instructions.text"/></p>
-              <Link to={`/login`} className="btn btn-primary pull-right">
-                OK
-              </Link>
+              <p className="form-group"><FormattedMessage id="portal.forgotPassword.instructions.text"/></p>
+              <Row>
+                <Col xs={12}>
+                  <Link to={`/login`} className="btn btn-primary pull-right">
+                    <FormattedMessage id="portal.button.ok"/>
+                  </Link>
+                </Col>
+              </Row>
             </div>
             :
             <form onSubmit={this.onSubmit}>
@@ -87,16 +98,16 @@ export class ForgotPassword extends React.Component {
                 <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
               </div>
 
-              {this.state.emailError ?
-                <Tooltip id="password-not-valid" placement="top" className="input-tooltip in">
-                  {this.state.emailError}
-                </Tooltip>
-              : null}
+              {this.state.formError ?
+                <div className="login-info">
+                  <p>{this.state.formError}</p>
+                </div>
+                : ''
+              }
 
               <Input type="text" id="username"
                 wrapperClassName={'input-addon-before has-login-label '
                   + 'login-label-email'
-                  + (this.state.emailError ? ' invalid' : '')
                   + (this.state.emailActive || this.state.email ? ' active' : '')}
                 addonBefore={<IconEmail/>}
                 onFocus={this.checkEmailActive(true)}
@@ -104,16 +115,37 @@ export class ForgotPassword extends React.Component {
                 value={this.state.username}
                 onChange={this.changeField('email')}/>
 
-              <Row>
+              {/*
+                * NOTE: for the reCAPTCHA to work in local dev environment, you must visit the
+                * portal at 127.0.0.1, not localhost. Google's site key won't work with localhost
+                * unless the site key has been whitelisted for localhost.
+                *
+                * ALSO, the development environment expects the portal to be running on localhost,
+                * not 127.0.0.1, so there may be some odd behaviors like analytics API not working.
+                */}
+
+              <ReCAPTCHA
+                ref="recaptcha"
+                className="form-group pull-right"
+                onChange={recaptcha => this.setState({ recaptcha })}
+                onExpired={() => this.setState({ recaptcha: '' })}
+                sitekey={GOOGLE_SITE_KEY}
+              />
+
+              <Row className="action-button-container">
                 <Col xs={12}>
-                  <Button type="submit" bsStyle="primary" className="pull-right"
-                    disabled={this.props.fetching}>
-                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> : <FormattedMessage id="portal.button.submit"/>}
+                  <Link to="/login" className="btn btn-outline back-to-login-btn">
+                    <FormattedMessage id="portal.button.cancel"/>
+                  </Link>
+                  <Button type="submit" bsStyle="primary" disabled={disableSubmit}>
+                    {this.props.fetching ? <FormattedMessage id="portal.button.submitting"/> :
+                      <FormattedMessage id="portal.button.send"/>}
                   </Button>
                 </Col>
               </Row>
             </form>
           }
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 
@@ -124,7 +156,6 @@ export class ForgotPassword extends React.Component {
 ForgotPassword.displayName = 'ForgotPassword'
 ForgotPassword.propTypes = {
   fetching: React.PropTypes.bool,
-  router: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
 
@@ -140,4 +171,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ForgotPassword));
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

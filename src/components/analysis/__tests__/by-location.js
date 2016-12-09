@@ -1,6 +1,7 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
 
 // This component connects to redux, so mock that
 const reactRedux = require('react-redux')
@@ -146,11 +147,10 @@ describe('AnalysisByLocation', () => {
   });
 
   it('should show loading message if there is no width or data', () => {
-    let byLocation = TestUtils.renderIntoDocument(
+    let byLocation = shallow(
       <AnalysisByLocation topoActions={topoActionsMaker()}/>
     );
-    let div = TestUtils.findRenderedDOMComponentWithTag(byLocation, 'div')
-    expect(div.textContent).toContain('Loading');
+    expect(byLocation.find({id: 'portal.loading.text'}).length).toBe(1)
   });
 
   it('should show countries', () => {

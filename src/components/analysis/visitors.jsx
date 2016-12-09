@@ -211,7 +211,7 @@ class AnalysisVisitors extends React.Component {
             </thead>
             <tbody>
               {this.props.fetching ?
-                <tr><td colSpan="5">Loading...</td></tr> :
+                <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
                 sortedCountries.map((country, i) => {
                   const countryData = country.get('detail').map(datapoint => {
                     return datapoint.set(
@@ -416,8 +416,7 @@ AnalysisVisitors.propTypes = {
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  intl: React.PropTypes.object
 }
 
 AnalysisVisitors.defaultProps = {
