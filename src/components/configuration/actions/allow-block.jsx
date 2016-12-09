@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Input, Modal, Panel } from 'react-bootstrap'
-import Immutable from 'immutable'
+// import Immutable from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -96,9 +96,9 @@ class AllowBlock extends React.Component {
 AllowBlock.displayName = 'AllowBlock'
 AllowBlock.propTypes = {
   changeValue: React.PropTypes.func,
-  intl: intlShape.isRequired,
-  path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  intl: intlShape.isRequired
+  // path: React.PropTypes.instanceOf(Immutable.List),
+  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = injectIntl(AllowBlock)

@@ -103,8 +103,6 @@ class AnalysisURLReport extends React.Component {
 AnalysisURLReport.displayName = 'AnalysisURLReport'
 AnalysisURLReport.propTypes = {
   intl: React.PropTypes.object,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
-  statusCodes: React.PropTypes.instanceOf(Immutable.List),
   urlMetrics: React.PropTypes.instanceOf(Immutable.List)
 }
 AnalysisURLReport.defaultProps = {

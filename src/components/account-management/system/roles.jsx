@@ -62,7 +62,6 @@ class AccountManagementSystemRoles extends React.Component {
             permissions={this.props.permissions}
             onCancel={this.hideAddNewRoleDialog}
             onSave={this.saveRole}
-            onAdd={this.showAddNewRoleDialog}
             onEdit={this.editRole}
             showAddNewDialog={this.state.showAddNewDialog} />
         }
