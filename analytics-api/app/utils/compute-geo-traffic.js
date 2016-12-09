@@ -2,49 +2,49 @@
 
 require('express-jsend');
 let _         = require('lodash');
-let dataUtils = require('../../data-utils');
-let db        = require('../../db');
-let log       = require('../../logger');
+let dataUtils = require('../data-utils');
+let db        = require('../db');
+let log       = require('../logger');
 
-function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord) {
+function computeGeoTraffic(options) {
 
-  maxAreas = maxAreas || 5;
+  options.maxAreas = options.maxAreas || 5;
 
-  let options = {
-    start        : params.start,
-    end          : params.end,
-    account      : params.account,
-    group        : params.group,
-    property     : params.property,
-    service_type : params.service_type,
-    granularity  : params.granularity,
-    country_code : params.country_code,
-    latitude_min : params.latitude_min,
-    latitude_max : params.latitude_max,
-    longitude_min: params.longitude_min,
-    longitude_max: params.longitude_max,
-    include_geo  : params.include_geo,
-    components   : area,
-    dimension    : area[area.length-1]
+  let opts = {
+    start         : options.params.start,
+    end           : options.params.end,
+    account       : options.params.account,
+    group         : options.params.group,
+    property      : options.params.property,
+    service_type  : options.params.service_type,
+    granularity   : options.params.granularity,
+    country_code  : options.params.country_code,
+    latitude_min  : options.params.latitude_min,
+    latitude_max  : options.params.latitude_max,
+    longitude_min : options.params.longitude_min,
+    longitude_max : options.params.longitude_max,
+    include_geo   : options.params.include_geo,
+    geo_resolution: options.geo_resolution,
+    dimension     : options.geo_resolution[options.geo_resolution.length-1]
   };
 
   // if you've limited results by geo coords, then we'll assume you want geo (and we also need the table joined to do the
   // filter so this is the easiest way to be sure).
-  if (options.latitude_min || options.latitude_max || options.longitude_min || options.longitude_max) options.include_geo = true;
+  if (opts.latitude_min || opts.latitude_max || opts.longitude_min || opts.longitude_max) opts.include_geo = true;
 
-  db.getDataForGeo(options).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
+  db.getDataForGeo(opts).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
     let responseData = {
       total: 0
     };
-    responseData[areasName] = [];
+    responseData[options.areasName] = [];
 
     if (trafficData && historicalTrafficData) {
       trafficData = trafficData.concat(spTrafficData);
       historicalTrafficData = historicalTrafficData.concat(spHistoricalTrafficData);
 
-      let optionsFinal                = db._getQueryOptions(options);
-      let allGeoTrafficData           = _.groupBy(trafficData,           (r) => { let components = []; for (let i = area.length; i; --i) components.push(r[area[i-1]]); return components.join(', '); });
-      let allHistoricalGeoTrafficData = _.groupBy(historicalTrafficData, (r) => { let components = []; for (let i = area.length; i; --i) components.push(r[area[i-1]]); return components.join(', '); });
+      let optionsFinal                = db._getQueryOptions(opts);
+      let allGeoTrafficData           = _.groupBy(trafficData,           (r) => { let components = []; for (let i = opts.geo_resolution.length; i; --i) components.push(r[opts.geo_resolution[i-1]]); return components.join(', '); });
+      let allHistoricalGeoTrafficData = _.groupBy(historicalTrafficData, (r) => { let components = []; for (let i = opts.geo_resolution.length; i; --i) components.push(r[opts.geo_resolution[i-1]]); return components.join(', '); });
 
       _.forOwn(allGeoTrafficData, (areaData, areaKey) => {
         let trafficRecords;
@@ -54,7 +54,7 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
         let areaRecord = {
           // default name to areaKey;
           // let caller provide a record decorator if they wish to adjust (e.g., country)
-          name: areaData[0][area[area.length-1]],
+          name: areaData[0][opts.geo_resolution[opts.geo_resolution.length-1]],
           percent_change: 0.10,
           percent_total: 0.20,
           historical_total: 0,
@@ -63,10 +63,10 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
           detail: []
         };
 	// add fields further qualifying name
-        for (let i = 0; i < (area.length - 1); ++i) {
-          areaRecord[area[i]] = areaData[0][area[i]];
+        for (let i = 0; i < (opts.geo_resolution.length - 1); ++i) {
+          areaRecord[opts.geo_resolution[i]] = areaData[0][opts.geo_resolution[i]];
         }
-        if (options.include_geo) {
+        if (opts.include_geo) {
           areaRecord.lat = areaData[0].lat;
           areaRecord.lon = areaData[0].lon;
         }
@@ -133,32 +133,32 @@ function routeTrafficGeo(params, res, area, areasName, maxAreas, decorateRecord)
         areaRecord.detail = trafficRecords;
 
 	// Allow caller to provide additional per record processing
-        if (decorateRecord) decorateRecord(areaRecord, areaKey);
+        if (options.decorateRecord) options.decorateRecord(areaRecord, areaKey);
 
         // Add the areaRecord to the response data
-        responseData[areasName].push(areaRecord);
+        responseData[options.areasName].push(areaRecord);
 
       });
 
       // Calculate percent total for each area
-      responseData[areasName].forEach((areaRecord) => {
+      responseData[options.areasName].forEach((areaRecord) => {
         areaRecord.percent_total = parseFloat((areaRecord.total / responseData.total).toFixed(4));
       });
 
       // Sort the countries by their total in descending order
-      responseData[areasName] = _.sortBy(responseData[areasName], 'total').reverse();
+      responseData[options.areasName] = _.sortBy(responseData[options.areasName], 'total').reverse();
 
       // Only include the number of countries specified by maxAreas
-      responseData[areasName] = _.take(responseData[areasName], maxAreas);
+      responseData[options.areasName] = _.take(responseData[options.areasName], options.maxAreas);
     }
 
-    res.jsend(responseData);
+    if (options.success) options.success(responseData);
 
   }).catch((err) => {
     log.error(err);
-    res.status(500).jerror('Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
+    if (options.failure) options.failure(500, 'Database', 'There was a problem with the analytics database. Check the analytics-api logs for more information.');
   });
 
 }
 
-module.exports = routeTrafficGeo;
+module.exports = computeGeoTraffic;

@@ -1,11 +1,11 @@
 'use strict';
 
 require('express-jsend');
-let log             = require('../../logger');
-let validator       = require('../../validator');
-let routeTrafficGeo = require('./geo');
-let dataUtils       = require('../../data-utils');
-// let testData        = require('./country-data');
+let log               = require('../../logger');
+let validator         = require('../../validator');
+let computeGeoTraffic = require('../../utils/compute-geo-traffic');
+let dataUtils         = require('../../data-utils');
+// let testData          = require('./country-data');
 
 function routeTrafficCountry(req, res) {
   log.info('Getting traffic/country');
@@ -35,11 +35,21 @@ function routeTrafficCountry(req, res) {
   // we don't support geo for country yet, so be sure we don't try to process
   params.include_geo = false;
 
-  let maxCountries = params.max_countries || 5;
-
-  routeTrafficGeo(params, res, ['country'], 'countries', maxCountries, (countryRecord, countryCode) => {
-    countryRecord.code = dataUtils.get3CharCountryCodeFromCode(countryCode);
-    countryRecord.name = dataUtils.getCountryNameFromCode(countryCode);
+  computeGeoTraffic({
+    params         : params,
+    geo_resolution : ['country'],
+    areasName      : 'countries',
+    maxAreas       : params.max_countries || 5,
+    decorateRecord : (countryRecord, countryCode) => {
+      countryRecord.code = dataUtils.get3CharCountryCodeFromCode(countryCode);
+      countryRecord.name = dataUtils.getCountryNameFromCode(countryCode);
+    },
+    success        : (responseData) => {
+      res.jsend(responseData);
+    },
+    failure        : (code, category, message) => {
+      res.status(code).jerror(category, message);
+    }
   });
 }
 

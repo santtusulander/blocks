@@ -132,7 +132,6 @@ class AnalyticsDB {
       asset        : null,
       net_type     : null,
       service_type : null,
-      components   : null,
       dimension    : 'global',
       granularity  : 'hour',
       sort_dir     : 'DESC'
@@ -422,9 +421,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global', or use components if provided
-    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `t.${optionsFinal.components ? optionsFinal.components.join(', t.') : optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `t.${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -897,9 +896,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global', or use components if provided
-    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `t.${optionsFinal.components ? optionsFinal.components.join(', t.') : optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `t.${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -1040,9 +1039,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global', or use components if provided
-    if (optionsFinal.components || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `${optionsFinal.components ? optionsFinal.components.join(', ') : optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', ') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }

@@ -1,9 +1,9 @@
 'use strict';
 
 require('express-jsend');
-let log             = require('../../logger');
-let validator       = require('../../validator');
-let routeTrafficGeo = require('./geo');
+let log               = require('../../logger');
+let validator         = require('../../validator');
+let computeGeoTraffic = require('../../utils/compute-geo-traffic');
 
 function routeTrafficCity(req, res) {
   log.info('Getting traffic/city');
@@ -31,9 +31,18 @@ function routeTrafficCity(req, res) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  let maxCities = params.max_cities || 5;
-
-  routeTrafficGeo(params, res, ['country', 'region', 'city'], 'cities', maxCities);
+  computeGeoTraffic({
+    params         : params,
+    geo_resolution : ['country', 'region', 'city'],
+    areasName      : 'cities',
+    maxAreas       : params.max_cities || 5,
+    success        : (responseData) => {
+      res.jsend(responseData);
+    },
+    failure        : (code, category, message) => {
+      res.status(code).jerror(category, message);
+    }
+  });
 }
 
 module.exports = routeTrafficCity;
