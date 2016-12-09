@@ -141,7 +141,7 @@ const UserIsLoggedIn = UserAuthWrapper({
   allowRedirectBack: true
 })
 
-const UserIsNotLoggedLogin = UserAuthWrapper({
+const UserIsNotLoggedIn = UserAuthWrapper({
   authSelector: state => state.user,
   wrapperDisplayName: 'UserIsNotLoggedIn',
   predicate: (user) => user.get('loggedIn') === false,
@@ -157,8 +157,8 @@ const UserIsNotLoggedLogin = UserAuthWrapper({
 export const getRoutes = store => {
   return (
     <Route path="/">
-      <Route path="/login" component={UserIsNotLoggedLogin(Login)}/>
-      <Route path="/forgot-password" component={UserIsNotLoggedLogin(ForgotPassword)}/>
+      <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
+      <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
       <Route path="/set-password" component={SetPassword}/>
 
       { /* Routes below are protected by login*/}
