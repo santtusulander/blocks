@@ -178,7 +178,6 @@ class AnalysisCacheHitRate extends React.Component {
 AnalysisCacheHitRate.displayName = 'AnalysisCacheHitRate'
 AnalysisCacheHitRate.propTypes = {
   fetching: React.PropTypes.bool,
-  onOffNetChartType: React.PropTypes.string,
   traffic: React.PropTypes.instanceOf(Immutable.List)
 }
 

@@ -416,8 +416,7 @@ AnalysisVisitors.propTypes = {
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  intl: React.PropTypes.object
 }
 
 AnalysisVisitors.defaultProps = {

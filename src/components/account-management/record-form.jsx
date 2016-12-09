@@ -83,8 +83,7 @@ RecordForm.propTypes = {
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
   shouldShowField: PropTypes.func,
-  submit: PropTypes.func,
-  values: PropTypes.object
+  submit: PropTypes.func
 }
 
 export default injectIntl(keyStrokeSupport(RecordForm))
