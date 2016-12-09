@@ -201,8 +201,7 @@ Login.propTypes = {
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
-    username: state.user.get('username')
-
+    username: state.user.get('username') || localStorage.getItem('EricssonUDNUserName') || null
   };
 }
 
