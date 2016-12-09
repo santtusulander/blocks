@@ -68,14 +68,14 @@ const AnalyticsTabControl = (props) => {
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || props.params.property) {
             const tabContent = tab.permission ?
-              (<IsAllowed key={tab.key} to={tab.permission} eventKey={tab.key}>
+              (<IsAllowed key={tab.key} to={tab.permission} data-eventKey={tab.key}>
                 <li role="tab">
                   <Link to={getTabLink(props.location, tab.key)}
                   activeClassName='active'>{tab.label}</Link>
                 </li>
               </IsAllowed>)
             :
-              (<li key={tab.key} role="tab" eventKey={tab.key}>
+              (<li key={tab.key} role="tab" data-eventKey={tab.key}>
                 <Link to={getTabLink(props.location, tab.key)}
                 activeClassName='active'>{tab.label}</Link>
               </li>)
