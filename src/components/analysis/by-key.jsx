@@ -4,6 +4,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 
 import Tooltip from '../tooltip'
+import {FormattedMessage} from 'react-intl'
 
 class AnalysisByKey extends React.Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class AnalysisByKey extends React.Component {
   }
   render() {
     if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
     const yPrimaryExtent = this.props.primaryData && this.props.primaryData.length ?
