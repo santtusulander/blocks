@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Checkbox } from 'react-bootstrap'
+
+import Checkbox from './checkbox'
 
 const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   const handleChange = (option, hasValue, index, e) => {
@@ -68,7 +69,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
         <Checkbox
           checked={isAllChecked()}
           onChange={toggleAll}>
-          <span>{headerText}</span>
+          {headerText}
         </Checkbox>
       </div>
       }
@@ -82,7 +83,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
                 checked={hasValue}
                 disabled={disabled}
                 onChange={e => handleChange(checkbox, hasValue, index, e)}>
-                <span>{checkbox.label}</span>
+                {checkbox.label}
               </Checkbox>
             </div>
           )
