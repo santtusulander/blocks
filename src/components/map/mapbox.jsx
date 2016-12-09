@@ -142,7 +142,6 @@ class Mapbox extends React.Component {
 
           if (!layerExists) {
             layers.push('country-fill-' + data.properties.iso_a3)
-            layers.push('country-stroke-' + data.properties.iso_a3)
             this.setState({ layers });
           }
 
