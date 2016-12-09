@@ -394,7 +394,7 @@ class ContentItems extends React.Component {
                   }
 
                   return (
-                    <ContentItem key={id}
+                    <ContentItem key={`content-item-${id}`}
                       isChart={viewingChart}
                       itemProps={itemProps}
                       scaledWidth={scaledWidth}
