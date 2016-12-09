@@ -73,12 +73,10 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 }
 
 CertificateForm.propTypes = {
-  accounts: PropTypes.instanceOf(List),
   editMode: PropTypes.bool,
   errors: PropTypes.object,
   fields: PropTypes.object,
   groups: PropTypes.instanceOf(List),
-  initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   onCancel: PropTypes.func,
   onSave: PropTypes.func

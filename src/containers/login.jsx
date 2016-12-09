@@ -13,7 +13,6 @@ import {
 
 import { userIsServiceProvider } from '../util/helpers.js'
 
-import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
@@ -86,9 +85,6 @@ export class Login extends React.Component {
         if(this.state.rememberUsername) {
           this.props.userActions.saveName(this.state.username)
         }
-        else {
-          this.props.userActions.saveName()
-        }
         return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
@@ -126,6 +122,10 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
+    if (this.state.rememberUsername) {
+      this.props.userActions.saveName()
+    }
+
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
@@ -203,11 +203,9 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
-  accountActions: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  loggedIn: React.PropTypes.bool,
   loginUrl: React.PropTypes.string,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -223,7 +221,6 @@ function mapStateToProps(state) {
   return {
     currentUser: state.user.get('currentUser'),
     fetching: state.user.get('fetching') || state.account.get('fetching'),
-    loggedIn: state.user.get('loggedIn'),
     loginUrl: state.ui.get('loginUrl'),
     username: state.user.get('username')
   };
@@ -231,7 +228,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)

@@ -2,16 +2,18 @@ import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import Toggle from '../toggle'
+/* [UDNP-1792] */
+// import Toggle from '../toggle'
 import Select from '../select'
 
 import { FormattedMessage } from 'react-intl'
 
 const securityPath = Immutable.List(['edge_configuration'])
 const securityPaths = {
-  enabled_edge_ssl: securityPath.push('enabled_edge_ssl'),
-  enabled_origin_ssl: securityPath.push('enabled_origin_ssl'),
-  enabled_midgress_ssl: securityPath.push('enabled_midgress_ssl'),
+  /* [UDNP-1792] */
+  // enabled_edge_ssl: securityPath.push('enabled_edge_ssl'),
+  // enabled_origin_ssl: securityPath.push('enabled_origin_ssl'),
+  // enabled_midgress_ssl: securityPath.push('enabled_midgress_ssl'),
   ssl_certificate_id: securityPath.push('ssl_certificate_id')
 }
 
@@ -19,22 +21,24 @@ class ConfigurationSecurity extends React.Component {
   constructor(props) {
     super(props)
 
-    this.toggleHTTPS = this.toggleHTTPS.bind(this)
+    /* [UDNP-1792] */
+    // this.toggleHTTPS = this.toggleHTTPS.bind(this)
     this.setSSLCertificate = this.setSSLCertificate.bind(this)
   }
 
-  toggleHTTPS() {
-    return enabled => {
-      const { changeValues } = this.props
+  /* [UDNP-1792] */
+  // toggleHTTPS() {
+  //   return enabled => {
+  //     const { changeValues } = this.props
 
-      changeValues([
-        [securityPaths.enabled_edge_ssl, enabled],
-        [securityPaths.enabled_origin_ssl, enabled],
-        [securityPaths.enabled_midgress_ssl, enabled],
-        [securityPaths.ssl_certificate_id, ""]
-      ])
-    }
-  }
+  //     changeValues([
+  //       [securityPaths.enabled_edge_ssl, enabled],
+  //       [securityPaths.enabled_origin_ssl, enabled],
+  //       [securityPaths.enabled_midgress_ssl, enabled],
+  //       [securityPaths.ssl_certificate_id, ""]
+  //     ])
+  //   }
+  // }
 
   setSSLCertificate() {
     return certificateId => {
@@ -51,10 +55,11 @@ class ConfigurationSecurity extends React.Component {
       readOnly
     } = this.props
 
-    const sslEnabled =
-      config.getIn(securityPaths.enabled_edge_ssl) === true &&
-      config.getIn(securityPaths.enabled_origin_ssl) === true &&
-      config.getIn(securityPaths.enabled_midgress_ssl) === true
+    /* [UDNP-1792] */
+    // const sslEnabled =
+    //   config.getIn(securityPaths.enabled_edge_ssl) === true &&
+    //   config.getIn(securityPaths.enabled_origin_ssl) === true &&
+    //   config.getIn(securityPaths.enabled_midgress_ssl) === true
 
     const sslCertificateId = config.getIn(securityPaths.ssl_certificate_id)
     const sslCertificateOptionsMapping = option => Immutable.fromJS({ value: option.get('cn'), label: option.get('title') })
@@ -63,31 +68,32 @@ class ConfigurationSecurity extends React.Component {
     return (
       <div className="configuration-security">
         <h3><FormattedMessage id="portal.policy.edit.security.text"/></h3>
-        <Row className="form-group">
-          <Col xs={3} className="toggle-label">
-            <FormattedMessage id="portal.configuration.security.enable.text"/>
-          </Col>
-          <Col xs={9}>
-            <Toggle
-              readonly={readOnly}
-              value={sslEnabled}
-              changeValue={this.toggleHTTPS()}
-            />
-          </Col>
-        </Row>
-        {sslEnabled === true &&
+        {/* [UDNP-1792]
           <Row className="form-group">
             <Col xs={3} className="toggle-label">
-              <FormattedMessage id="portal.configuration.security.sslCertificate.text"/>
+              <FormattedMessage id="portal.configuration.security.enable.text"/>
             </Col>
-            <Col xs={4}>
-              <Select className="input-select"
-                disabled={readOnly}
-                onSelect={this.setSSLCertificate()}
-                value={sslCertificateId}
-                options={sslCertificateOptions}/>
+            <Col xs={9}>
+              <Toggle
+                readonly={readOnly}
+                value={sslEnabled}
+                changeValue={this.toggleHTTPS()}
+              />
             </Col>
-          </Row>}
+          </Row>
+        */}
+        <Row className="form-group">
+          <Col xs={3} className="toggle-label">
+            <FormattedMessage id="portal.configuration.security.sslCertificate.text"/>
+          </Col>
+          <Col xs={4}>
+            <Select className="input-select"
+              disabled={readOnly}
+              onSelect={this.setSSLCertificate()}
+              value={sslCertificateId}
+              options={sslCertificateOptions}/>
+          </Col>
+        </Row>
       </div>
     )
   }
@@ -96,7 +102,8 @@ class ConfigurationSecurity extends React.Component {
 ConfigurationSecurity.displayName = 'ConfigurationSecurity'
 ConfigurationSecurity.propTypes = {
   changeValue: React.PropTypes.func,
-  changeValues: React.PropTypes.func,
+  /* [UDNP-1792] */
+  // changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   readOnly: React.PropTypes.bool,
   sslCertificates: React.PropTypes.instanceOf(Immutable.List)

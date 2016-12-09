@@ -62,6 +62,26 @@ export function isValidFQDN(domainName, opts = {}) {
 }
 
 /**
+ * Check if valid URL (absolute path)
+ * @credit http://stackoverflow.com/a/31431911/2715
+ * @param url
+ * @returns {boolean|*}
+ */
+export function isValidURL(url) {
+  return matchesRegexp(url, /^([a-z0-9]*:|.{0})\/\/.*$/)
+}
+
+/**
+ * Check if valid relative path
+ * @credit http://stackoverflow.com/a/31431911/2715
+ * @param path
+ * @returns {boolean|*}
+ */
+export function isValidRelativePath(path) {
+  return matchesRegexp(path, /^[^\/]+\/[^\/].*$|^\/[^\/].*$/)
+}
+
+/**
  * Check if valid host-name
  * @param hostName
  * @param opts

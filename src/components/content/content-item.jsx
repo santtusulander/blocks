@@ -12,8 +12,7 @@ const ContentItem = ({
     return (
       <ContentItemChart
         {...itemProps}
-        delete={deleteItem}
-        barWidth="1" />
+        delete={deleteItem} />
     )
   }
   else {
