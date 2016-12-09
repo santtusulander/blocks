@@ -143,7 +143,6 @@ export const SoaEditForm = props => {
 SoaEditForm.propTypes = {
   activeDomain: PropTypes.instanceOf(Map),
   fields: PropTypes.object,
-  initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func

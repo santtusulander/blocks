@@ -16,6 +16,9 @@ const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
+const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
+const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
+const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -50,6 +53,12 @@ export function updateSuccess(state, action) {
 }
 
 export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function updatePasswordSuccess(state) {
   return state.merge({
     fetching: false
   })
@@ -161,6 +170,30 @@ export function userNameSave(state, action){
   return state.set('username', action.payload)
 }
 
+export function requestPasswordResetSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function requestPasswordResetFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -172,24 +205,24 @@ export default handleActions({
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
-  USER_NAME_SAVED: userNameSave
+  USER_NAME_SAVED: userNameSave,
+  USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${BASE_URL_AAA}/tokens`,
-    {
-      "username": username,
-      "password": password
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "password": password
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-  )
+  })
   .then((res) => {
     if(res) {
       return {token: res.data}
@@ -282,7 +315,32 @@ export const updateUser = createAction(USER_UPDATED, (email, user) => {
     .then(parseResponseData)
 })
 
+export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
+  return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
 export const saveName = createAction(USER_NAME_SAVED)
+
+export const requestPasswordReset = createAction(USER_PASSWORD_RESET_REQUESTED, (email, recaptcha_response) => {
+  return axios.post(
+    `${BASE_URL_AAA}/users/${email}/reset_password`,
+    { recaptcha_response },
+    { headers: { 'Content-Type': 'application/json' }}
+  ).then(parseResponseData)
+})
+
+export const resetPassword = createAction(USER_PASSWORD_RESET, (email, password, reset_token_id) => {
+  return axios.post(
+    `${BASE_URL_AAA}/users/${email}/reset_password`,
+    { password, reset_token_id },
+    { headers: { 'Content-Type': 'application/json' }}
+  ).then(parseResponseData)
+})
 
 /**
  * Selector for getting roles from currentUser

@@ -1,0 +1,59 @@
+@import './colors';
+
+%chart-legend {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+
+  .dark-theme & {
+    background-color: rgba($black, 0.2);
+  }
+
+  .light-theme & {
+    background-color: $white;
+    box-shadow: 0 5px 10px 0 rgba($black, 0.34);
+  }
+
+  hr {
+    border-color: $silver;
+  }
+
+  .legend-label {
+    white-space: nowrap;
+
+    .legend-line {
+      font-weight: bold;
+    }
+
+    &.comparison .legend-line {
+      opacity: 0.4;
+    }
+  }
+
+  .comparison {
+
+    .legend-label {
+      margin-right: 5px;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    .secondary-label {
+      margin-right: 5px;
+    }
+  }
+
+  %legend-item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .legend-value {
+    min-width: 130px;
+    font-weight: bold;
+    text-align: right;
+  }
+}

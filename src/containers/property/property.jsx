@@ -5,8 +5,6 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 
-import * as accountActionCreators from '../../redux/modules/account'
-import * as groupActionCreators from '../../redux/modules/group'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as purgeActionCreators from '../../redux/modules/purge'
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -149,9 +147,6 @@ export class Property extends React.Component {
 Property.displayName = 'Property'
 Property.propTypes = {
   account: React.PropTypes.string,
-  accountActions: React.PropTypes.object,
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
@@ -159,47 +154,34 @@ Property.propTypes = {
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  description: React.PropTypes.string,
   group: React.PropTypes.string,
-  groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
-  id: React.PropTypes.string,
   location: React.PropTypes.object,
-  name: React.PropTypes.string,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  routes: React.PropTypes.object,
+  routes: React.PropTypes.array,
   uiActions: React.PropTypes.object
 }
 Property.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
   allHosts: Immutable.List(),
-  currentUser: Immutable.Map(),
-  properties: Immutable.List()
+  currentUser: Immutable.Map()
 }
 
 function mapStateToProps(state) {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     activePurge: state.purge.get('activePurge'),
     allHosts: state.host.get('allHosts'),
-    currentUser: state.user.get('currentUser'),
-    properties: state.host.get('allHosts')
+    currentUser: state.user.get('currentUser')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)

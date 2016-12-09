@@ -18,8 +18,8 @@ const startOfLast28 = () => endOfThisDay().add(1,'second').subtract(28, 'days')
 
 const startOfLastWeek = () => moment().utc().startOf('week').subtract(1, 'week')
 const endOfLastWeek = () => moment().utc().endOf('week').subtract(1, 'week')
-const startOfThisWeek = () => moment().utc().startOf('isoWeek')
-const endOfThisWeek = () => moment().utc().endOf('isoWeek')
+const startOfThisWeek = () => moment().utc().startOf('week')
+const endOfThisWeek = () => moment().utc().endOf('week')
 
 export class DateRangeSelect extends React.Component {
   constructor(props) {
@@ -200,7 +200,7 @@ export class DateRangeSelect extends React.Component {
                   onChange={this.handleStartDateChange}
                   onFocus={this.handleOnFocus}
                   onBlur={this.handleOnBlur}
-                  weekStart={0}/>
+                  weekStart='0'/>
               </div>
             </Col>
             <Col xs={6}>
@@ -219,7 +219,7 @@ export class DateRangeSelect extends React.Component {
                   onChange={this.handleEndDateChange}
                   onFocus={this.handleOnFocus}
                   onBlur={this.handleOnBlur}
-                  weekStart={0}/>
+                  weekStart='0'/>
               </div>
             </Col>
           </Row>

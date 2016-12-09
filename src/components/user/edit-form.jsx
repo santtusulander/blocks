@@ -18,16 +18,16 @@ const validate = (values) => {
 
   const {
     email,
-    password,
-    confirm
+    current_password
   } = values
+
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
   }
 
-  if(password && password !== confirm) {
-    passwordErrors.password = <FormattedMessage id="portal.user.edit.passwordDoNotMatch.text"/>
+  if(!current_password || current_password.length === 0) {
+    passwordErrors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
   }
 
   return errors, passwordErrors;
@@ -78,16 +78,18 @@ class UserEditForm extends React.Component {
   savePassword() {
     const {
       fields: {
-        password
+        current_password,
+        new_password
       },
-      onSave
+      onSavePassword
     } = this.props
 
     let newValues = {
-      password: password.value
+      current_password: current_password.value,
+      new_password: new_password.value
     }
 
-    onSave(newValues)
+    onSavePassword(newValues)
     this.togglePasswordEditing()
   }
 
@@ -118,11 +120,12 @@ class UserEditForm extends React.Component {
   render() {
     const {
       fields: {
+        current_password,
         email,
         first_name,
         last_name,
         middle_name,
-        password,
+        new_password,
         phone_number/*,
         timezone*/
       },
@@ -251,11 +254,17 @@ class UserEditForm extends React.Component {
 
                 {this.state.showPasswordField || savingPassword ?
                   <div>
-                    <Col xs={6}>
-                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...password} />
+                    <Col xs={3}>
+                      <Input
+                        type="password"
+                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                        {...current_password} />
                     </Col>
-                    <Col xs={3} xsOffset={1}>
-                      <ButtonToolbar>
+                    <Col xs={6}>
+                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
+                    </Col>
+                    <Col xs={4} xsOffset={2}>
+                      <ButtonToolbar className="extra-margin-top">
                         <Button
                           className="btn-secondary"
                           bsSize="small"
@@ -263,17 +272,13 @@ class UserEditForm extends React.Component {
                           <FormattedMessage id="portal.button.CANCEL"/>
                         </Button>
                         <Button
-                          disabled={!this.state.validPassword || savingPassword}
+                          disabled={this.props.invalid || !this.state.validPassword || savingPassword}
                           bsStyle="success"
                           bsSize="small"
                           onClick={this.savePassword}>
                           {savingPassword ? <FormattedMessage id="portal.button.CHANGING"/> : <FormattedMessage id="portal.button.CHANGE"/>}
                         </Button>
                       </ButtonToolbar>
-                    </Col>
-
-                    <Col xs={10} xsOffset={2}>
-                      <p><FormattedMessage id="portal.user.edit.password.helperText"/></p>
                     </Col>
                   </div>
                 :
@@ -303,8 +308,9 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,
-  onCancel: PropTypes.func,
+  invalid: PropTypes.bool,
   onSave: PropTypes.func,
+  onSavePassword: PropTypes.func,
   resetForm: PropTypes.func,
   savingPassword: PropTypes.bool,
   savingUser: PropTypes.bool
@@ -314,11 +320,12 @@ export default reduxForm({
   form: 'user-edit-form',
   fields: [
     'confirm',
+    'current_password',
     'email',
     'first_name',
     'last_name',
     'middle_name',
-    'password',
+    'new_password',
     'phone_number',
     'timezone'
   ],

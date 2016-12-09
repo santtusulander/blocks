@@ -2,9 +2,9 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   getContentUrl,
@@ -13,13 +13,13 @@ import {
 
 import { userIsServiceProvider } from '../util/helpers.js'
 
-import * as accountActionCreators from '../redux/modules/account'
 import * as rolesActionCreators from '../redux/modules/roles'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
+import CopyrightNotice from '../components/copyright-notice'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -85,9 +85,6 @@ export class Login extends React.Component {
         if(this.state.rememberUsername) {
           this.props.userActions.saveName(this.state.username)
         }
-        else {
-          this.props.userActions.saveName()
-        }
         return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
@@ -125,6 +122,10 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
+    if (this.state.rememberUsername) {
+      this.props.userActions.saveName()
+    }
+
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
@@ -180,22 +181,13 @@ export class Login extends React.Component {
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
 
-                <a href='mailto:support@ericssonudn.com?subject=Forgot Password&body=Please email us at support@ericssonudn.com to request a password change using the email address associated with your UDN account. Our support team will verify your account information before sending resetting your password. Thank you.' className="btn btn-link pull-right">
+                <Link to={`/forgot-password`} className="btn btn-link pull-right">
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </a>
-
-                {/* Maybe needed in future?
-                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                    <FormattedMessage id="portal.login.forgotPassword.text"/>
-                  </Link>
-                */}
+                </Link>
               </Col>
             </Row>
           </form>
-          <p className="text-sm login-copyright">
-            <FormattedMessage id="portal.login.copyright.text" /><br/>
-            <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
-          </p>
+          <CopyrightNotice />
         </Modal.Body>
       </Modal.Dialog>
 
@@ -205,11 +197,9 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
-  accountActions: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  loggedIn: React.PropTypes.bool,
   loginUrl: React.PropTypes.string,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -225,7 +215,6 @@ function mapStateToProps(state) {
   return {
     currentUser: state.user.get('currentUser'),
     fetching: state.user.get('fetching') || state.account.get('fetching'),
-    loggedIn: state.user.get('loggedIn'),
     loginUrl: state.ui.get('loginUrl'),
     username: state.user.get('username')
   };
@@ -233,7 +222,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
