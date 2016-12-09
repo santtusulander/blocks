@@ -86,9 +86,6 @@ export class Login extends React.Component {
         if(this.state.rememberUsername) {
           this.props.userActions.saveName(this.state.username)
         }
-        else {
-          this.props.userActions.saveName()
-        }
         return this.getLoggedInData()
           .then(() => {
             this.goToAccountPage()
@@ -126,6 +123,10 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
+    if (this.state.rememberUsername) {
+      this.props.userActions.saveName()
+    }
+
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
