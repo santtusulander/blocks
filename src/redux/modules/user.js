@@ -16,6 +16,8 @@ const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
+const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
+const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
 const DESTROY_STORE = 'DESTROY_STORE'
@@ -173,6 +175,30 @@ export const setLoggedIn = (state, action) => {
   return state.set('loggedIn', action.payload)
 }
 
+export function requestPasswordResetSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function requestPasswordResetFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -186,7 +212,10 @@ export default handleActions({
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
   USER_NAME_SAVED: userNameSave,
   PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
-  [SET_LOGIN]: setLoggedIn
+  [SET_LOGIN]: setLoggedIn,
+  USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -198,17 +227,14 @@ export const setLogin = createAction(SET_LOGIN, (value) => {
 
 export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   // TODO: This is not the right url but works now to check credentials
-  return loginAxios.post(`${BASE_URL_AAA}/tokens`,
-    {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
       "username": username,
       "password": password
-    },
-    {
+  }, {
       headers: {
         'Content-Type': 'application/json'
       }
-    }
-  )
+  })
   .then((res) => {
     if(res) {
       return {token: res.data}
@@ -248,7 +274,7 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
     })
   }
 
-  return Promise.reject({data:{message:"No token"}})
+    return Promise.reject({data:{message:"No token"}})
 })
 
 export const fetchUser = createAction(USER_FETCHED, (username) => {
@@ -308,6 +334,22 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
+
+export const requestPasswordReset = createAction(USER_PASSWORD_RESET_REQUESTED, (email, recaptcha_response) => {
+  return axios.post(
+    `${BASE_URL_AAA}/users/${email}/reset_password`,
+    { recaptcha_response },
+    { headers: { 'Content-Type': 'application/json' }}
+  ).then(parseResponseData)
+})
+
+export const resetPassword = createAction(USER_PASSWORD_RESET, (email, password, reset_token_id) => {
+  return axios.post(
+    `${BASE_URL_AAA}/users/${email}/reset_password`,
+    { password, reset_token_id },
+    { headers: { 'Content-Type': 'application/json' }}
+  ).then(parseResponseData)
+})
 
 /**
  * Selector for getting roles from currentUser

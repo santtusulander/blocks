@@ -159,7 +159,8 @@ export const getRoutes = store => {
     <Route path="/">
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
-      <Route path="/set-password" component={SetPassword}/>
+      <Route path="/set-password/:token" component={SetPassword}/>
+      <Route path="/reset-password/:token" component={SetPassword}/>
 
       { /* Routes below are protected by login*/}
       <Route component={UserIsLoggedIn(Main)}>

@@ -5,7 +5,11 @@ import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import Select from './select'
-import { isValidEmail, isValidFQDN } from '../util/validators'
+import {
+  isValidEmail,
+  isValidURL,
+  isValidRelativePath
+} from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
@@ -98,7 +102,7 @@ class PurgeModal extends React.Component {
     if(this.state.type === 'url') {
       const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
       const errors = values.filter(val => {
-        return !isValidFQDN(val)
+        return !isValidURL(val) && !isValidRelativePath(val)
       })
 
       if(errors.length){

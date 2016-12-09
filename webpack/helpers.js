@@ -39,9 +39,6 @@ module.exports = {
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
-      {from: 'src/assets/pdf/CP_User_Guide.pdf', to: 'assets/pdf'},
-      {from: 'src/assets/pdf/SP_User_Guide.pdf', to: 'assets/pdf'},
-      {from: 'src/assets/pdf/UDN_Admin_Guide.pdf', to: 'assets/pdf'},
       {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
     ])
   ]

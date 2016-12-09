@@ -133,7 +133,7 @@ describe('AnalysisVisitors', () => {
         serviceTypes={Immutable.List()}
         intl={intlMaker()}/>
     );
-    expect(visitors.find({ id: 'portal.loading.text' }).length).toBe(4);
+    expect(visitors.find({ id: 'portal.loading.text' }).length).toBe(5);
   });
 
   it('should show data in tables', () => {
