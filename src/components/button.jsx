@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { removeProps } from '../util/helpers'
 
 const ButtonWrapper = props =>
-  <Button {...removeProps(props, ['hidden'])} className={createButtonClassName(props)}/>
+  <Button {...removeProps(props, ['hidden', 'addNew', 'outLine'])} className={createButtonClassName(props)}/>
 
 const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link']
 ButtonWrapper.propTypes = {
