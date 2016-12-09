@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -181,15 +181,9 @@ export class Login extends React.Component {
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
 
-                <a href='mailto:support@ericssonudn.com?subject=Forgot Password&body=Please email us at support@ericssonudn.com to request a password change using the email address associated with your UDN account. Our support team will verify your account information before sending resetting your password. Thank you.' className="btn btn-link pull-right">
+                <Link to={`/forgot-password`} className="btn btn-link pull-right">
                   <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </a>
-
-                {/* Maybe needed in future?
-                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                    <FormattedMessage id="portal.login.forgotPassword.text"/>
-                  </Link>
-                */}
+                </Link>
               </Col>
             </Row>
           </form>

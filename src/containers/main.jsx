@@ -89,7 +89,8 @@ export class Main extends React.Component {
   pageAllowsAnon() {
     return this.props.location.pathname === '/login' ||
     this.props.location.pathname === '/forgot-password' ||
-    this.props.location.pathname === '/set-password' ||
+    this.props.location.pathname.indexOf('/set-password') !== -1 ||
+    this.props.location.pathname.indexOf('/reset-password') !== -1 ||
     this.props.location.pathname === '/starburst-help' ||
     this.props.location.pathname === '/styleguide'
   }

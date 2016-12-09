@@ -5716,7 +5716,7 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raven-js@^3.9.0:
+raven-js@^3.9.1:
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.9.1.tgz#d0482100849ea0ab91058308dfa1ec97bc073bac"
   dependencies:
@@ -5746,6 +5746,10 @@ react-addons-test-utils@^0.14.7:
 "react-addons-transition-group@^0.14.0 || ^15.0.0", react-addons-transition-group@^0.14.7:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/react-addons-transition-group/-/react-addons-transition-group-0.14.8.tgz#3864f3bcfa180e1ab36f1efebee14fb481acf042"
+
+react-async-script@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-async-script/-/react-async-script-0.6.0.tgz#b37513d62f25a7fc71b5a4586c389c38f1904853"
 
 react-bootstrap-typeahead@^0.9.4:
   version "0.9.4"

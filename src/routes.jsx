@@ -136,7 +136,8 @@ export const getRoutes = store => {
       <Route path="styleguide" component={Styleguide}/>
       <Route path="configure/purge" component={Purge}/>
       <Route path="/login" component={Login}/>
-      <Route path="/set-password" component={SetPassword}/>
+      <Route path="/set-password/:token" component={SetPassword}/>
+      <Route path="/reset-password/:token" component={SetPassword}/>
       <Route path="/forgot-password" component={ForgotPassword}/>
 
       {/* Analytics - routes */}
