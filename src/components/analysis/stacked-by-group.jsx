@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 
 import Tooltip from '../tooltip'
 import { formatBytes } from '../../util/helpers'
+import {FormattedMessage} from 'react-intl'
 
 const maxStrokeWidth = 100
 const minStrokeWidth = 20
@@ -22,7 +23,7 @@ class AnalysisStackedByGroup extends React.Component {
   }
   render() {
     if(!this.props.width || !this.props.datasets) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
     const totals = this.props.datasets.map(dataSet => {

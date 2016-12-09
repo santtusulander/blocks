@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
+import {FormattedMessage} from 'react-intl'
 
 import * as topoActionCreators from '../../redux/modules/topo'
 import Tooltip from '../tooltip'
@@ -113,7 +114,7 @@ class AnalysisByLocation extends React.Component {
   render() {
     if(!this.props.width || !this.props.countries || !this.props.countries.size
       || this.props.fetching || !this.props.countryData) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
     const projection = d3.geo.mercator().scale(this.props.width / 7)

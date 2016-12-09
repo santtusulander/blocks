@@ -10,6 +10,7 @@ import ConfigurationPolicyRuleEdit from './policy-rule-edit'
 import IconAdd from '../icons/icon-add.jsx'
 import ConfigurationSidebar from './sidebar'
 import IsAllowed from '../is-allowed'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 import { getActiveMatchSetForm } from './helpers'
 import { isPolicyRuleEmpty } from '../../util/policy-config'
@@ -92,7 +93,7 @@ class ConfigurationPolicies extends React.Component {
     let config = this.props.config;
     if(!config || !config.size) {
       return (
-        <div className="container">Loading...</div>
+        <div className="container"><LoadingSpinner /></div>
       )
     }
     const activeEditFormActions = {
