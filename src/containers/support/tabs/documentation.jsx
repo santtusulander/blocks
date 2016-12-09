@@ -19,13 +19,13 @@ class SupportTabDocumentation extends React.Component {
 
     switch (accountType) {
       case ACCOUNT_TYPE_CONTENT_PROVIDER:
-        documentPath = "/assets/pdf/CP_User_Guide.pdf"
+        documentPath = "https://docs.google.com/uc?id=0B7P_-quuMHdqNlBLMV9xOG1VY1k&export=pdf"
         break
       case ACCOUNT_TYPE_SERVICE_PROVIDER:
-        documentPath = "/assets/pdf/SP_User_Guide.pdf"
+        documentPath = "https://docs.google.com/uc?id=0B7P_-quuMHdqcVlPbkVFTUR5d0U&export=pdf"
         break
       case ACCOUNT_TYPE_CLOUD_PROVIDER:
-        documentPath = "/assets/pdf/UDN_Admin_Guide.pdf"
+        documentPath = "https://docs.google.com/uc?id=0B7P_-quuMHdqN0xRLXltY0Zjb1U&export=pdf"
         break
     }
 
