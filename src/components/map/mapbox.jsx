@@ -11,12 +11,12 @@ import IconGlobe from '../icons/icon-globe';
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
 const heatMapColors = [
-  '#fdc844', //red dark
-  '#ddbf54', //red light
-  '#c1b761', //red light
-  '#a1ae70', //red light
-  '#84a57e', //cyan
-  '#549895'  //lime
+  '#549895',
+  '#84a57e',
+  '#a1ae70',
+  '#c1b761',
+  '#ddbf54',
+  '#fdc844'
 ]
 
 /**
@@ -139,7 +139,7 @@ class Mapbox extends React.Component {
     const highlights = this.countryGeoJson.features.map((country, i) => {
       const trafficCountry = countries.find(c => c.code === country.properties.iso_a3)
       const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
-      const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#549895'
+      const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#fdc844'
 
       return (
         <div key={i}>
