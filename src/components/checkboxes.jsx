@@ -67,9 +67,10 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
       {headerText &&
       <div className="checkbox-array__header">
         <Checkbox
-          label={headerText}
           checked={isAllChecked()}
-          onChange={toggleAll}/>
+          onChange={toggleAll}>
+          {headerText}
+        </Checkbox>
       </div>
       }
       <div className="checkbox-array__items">
@@ -81,8 +82,9 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
               <Checkbox
                 checked={hasValue}
                 disabled={disabled}
-                label={checkbox.label}
-                onChange={e => handleChange(checkbox, hasValue, index, e)}/>
+                onChange={e => handleChange(checkbox, hasValue, index, e)}>
+                {checkbox.label}
+              </Checkbox>
             </div>
           )
         })}

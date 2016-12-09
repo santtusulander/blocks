@@ -3,12 +3,12 @@ import { Checkbox as BSCheckbox } from 'react-bootstrap'
 
 const Checkbox = (props) => (
   <BSCheckbox {...props}>
-    <span>{props.label}</span>
+    <span>{props.children}</span>
   </BSCheckbox>
 )
 
 Checkbox.propTypes = {
-  label: PropTypes.string
+  children: PropTypes.node
 }
 
 export default Checkbox
