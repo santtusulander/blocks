@@ -571,6 +571,10 @@ const TRANSLATED_MESSAGES = {
   'portal.constants.date-ranges.yesterday': 'Yesterday',
   'portal.constants.date-ranges.custom_timerange': 'Custom Date Range',
 
+  'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
+  'portal.forgotPassword.instructions.text': 'A password reset link has been sent to your email address.',
+  'portal.forgotPassword.enterEmail.text': 'Enter your email to receive instructions to reset your password.',
+
   'portal.groups.accountSummary.text': 'Account Summary',
   'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
@@ -750,6 +754,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.add': 'Add',
   'portal.button.adding': 'Adding...',
   'portal.button.submit': 'Submit',
+  'portal.button.submitting': 'Submitting...',
   'portal.button.goBack': 'GO BACK',
   'portal.button.back': 'Back',
   'portal.button.continue': 'Continue',

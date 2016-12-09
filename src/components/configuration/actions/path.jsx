@@ -1,6 +1,6 @@
 import React from 'react'
 import { Input, Modal } from 'react-bootstrap'
-import Immutable from 'immutable'
+// import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
@@ -92,9 +92,7 @@ class Path extends React.Component {
 Path.displayName = 'Path'
 Path.propTypes = {
   changeValue: React.PropTypes.func,
-  intl: intlShape.isRequired,
-  path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  intl: intlShape.isRequired
 }
 
 module.exports = injectIntl(Path)

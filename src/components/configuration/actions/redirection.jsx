@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Input, Modal, Row } from 'react-bootstrap'
-import Immutable from 'immutable'
+// import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
@@ -147,9 +147,9 @@ class Redirection extends React.Component {
 Redirection.displayName = 'Redirection'
 Redirection.propTypes = {
   changeValue: React.PropTypes.func,
-  intl: intlShape.isRequired,
-  path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  intl: intlShape.isRequired
+  // path: React.PropTypes.instanceOf(Immutable.List),
+  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = injectIntl(Redirection)

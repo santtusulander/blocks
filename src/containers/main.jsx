@@ -10,7 +10,6 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
-import * as hostActionCreators from '../redux/modules/host'
 import * as rolesActionCreators from '../redux/modules/roles'
 
 import Header from '../components/header/header'
@@ -90,8 +89,9 @@ export class Main extends React.Component {
   pageAllowsAnon() {
     return this.props.location.pathname === '/login' ||
     this.props.location.pathname === '/forgot-password' ||
-    this.props.location.pathname === '/set-password' ||
     this.props.location.pathname === '/password-reset-token-expired' ||
+    this.props.location.pathname.indexOf('/set-password') !== -1 ||
+    this.props.location.pathname.indexOf('/reset-password') !== -1 ||
     this.props.location.pathname === '/starburst-help' ||
     this.props.location.pathname === '/styleguide'
   }
@@ -203,12 +203,10 @@ Main.propTypes = {
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
-  hostActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -228,7 +226,6 @@ Main.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   currentUser: Immutable.Map(),
-  properties: Immutable.List(),
   roles: Immutable.List(),
   user: Immutable.Map()
 }
@@ -248,7 +245,6 @@ function mapStateToProps(state) {
       state.traffic.get('fetching') ||
       state.visitors.get('fetching'),
     notification: state.ui.get('notification'),
-    properties: state.host.get('allHosts'),
     roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),
     showInfoDialog: state.ui.get('showInfoDialog'),
@@ -264,7 +260,6 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch)

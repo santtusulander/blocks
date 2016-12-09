@@ -309,7 +309,6 @@ UserEditForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
-  onCancel: PropTypes.func,
   onSave: PropTypes.func,
   onSavePassword: PropTypes.func,
   resetForm: PropTypes.func,

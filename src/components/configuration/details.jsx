@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import { Button, Col, Input, OverlayTrigger, Panel, Tooltip } from 'react-bootstrap'
 import Select from '../../components/select'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class ConfigurationDetails extends React.Component {
   render() {
     if(!this.props.edgeConfiguration) {
       return (
-        <div className="container">Loading...</div>
+        <LoadingSpinner/>
       )
     }
     const { readOnly } = this.props
