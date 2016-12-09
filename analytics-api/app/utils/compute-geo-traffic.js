@@ -11,26 +11,26 @@ function computeGeoTraffic(options) {
   options.maxAreas = options.maxAreas || 5;
 
   let opts = {
-    start         : options.params.start,
-    end           : options.params.end,
-    account       : options.params.account,
-    group         : options.params.group,
-    property      : options.params.property,
-    service_type  : options.params.service_type,
-    granularity   : options.params.granularity,
-    country_code  : options.params.country_code,
-    latitude_min  : options.params.latitude_min,
-    latitude_max  : options.params.latitude_max,
-    longitude_min : options.params.longitude_min,
-    longitude_max : options.params.longitude_max,
-    include_geo   : options.params.include_geo,
-    geo_resolution: options.geo_resolution,
-    dimension     : options.geo_resolution[options.geo_resolution.length-1]
+    start           : options.params.start,
+    end             : options.params.end,
+    account         : options.params.account,
+    group           : options.params.group,
+    property        : options.params.property,
+    service_type    : options.params.service_type,
+    granularity     : options.params.granularity,
+    country_code    : options.params.country_code,
+    latitude_south  : options.params.latitude_south,
+    longitude_west  : options.params.longitude_west,
+    latitude_north  : options.params.latitude_north,
+    longitude_east  : options.params.longitude_east,
+    include_geo     : options.params.include_geo,
+    geo_resolution  : options.geo_resolution,
+    dimension       : options.geo_resolution[options.geo_resolution.length-1]
   };
 
   // if you've limited results by geo coords, then we'll assume you want geo (and we also need the table joined to do the
   // filter so this is the easiest way to be sure).
-  if (opts.latitude_min || opts.latitude_max || opts.longitude_min || opts.longitude_max) opts.include_geo = true;
+  if (opts.latitude_south || opts.latitude_north || opts.longitude_west || opts.longitude_east) opts.include_geo = true;
 
   db.getDataForGeo(opts).spread((trafficData, historicalTrafficData, spTrafficData, spHistoricalTrafficData) => {
     let responseData = {

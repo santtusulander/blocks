@@ -461,21 +461,31 @@ class AnalyticsDB {
       && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
 
-    optionsFinal.latitude_min
+    optionsFinal.latitude_south
       && conditions.push('AND lat >= ?')
-      && queryOptions.push(optionsFinal.latitude_min);
+      && queryOptions.push(optionsFinal.latitude_south);
 
-    optionsFinal.latitude_max
+    optionsFinal.latitude_north
       && conditions.push('AND lat <= ?')
-      && queryOptions.push(optionsFinal.latitude_max);
+      && queryOptions.push(optionsFinal.latitude_north);
 
-    optionsFinal.longitude_min
-      && conditions.push('AND lon >= ?')
-      && queryOptions.push(optionsFinal.longitude_min);
-
-    optionsFinal.longitude_max
-      && conditions.push('AND lon <= ?')
-      && queryOptions.push(optionsFinal.longitude_max);
+    // if we've crossed the antimeridian, we need to do some magic
+    // e.g.,           179  |  -179
+    if (optionsFinal.longitude_west && optionsFinal.longitude_east && parseFloat(optionsFinal.longitude_west) > parseFloat(optionsFinal.longitude_east)) {
+      conditions.push('AND (lon >= ? OR lon <= ?)')
+      queryOptions.push(optionsFinal.longitude_west);
+      queryOptions.push(optionsFinal.longitude_east);
+    }
+    else {
+      optionsFinal.longitude_west
+        && conditions.push('AND lon >= ?')
+        && queryOptions.push(optionsFinal.longitude_west);
+  
+      optionsFinal.longitude_east
+        && conditions.push('AND lon <= ?')
+        && queryOptions.push(optionsFinal.longitude_east);
+    }
+    // we're ignoring the poles for now. who uses internet at the poles?
 
     let joinLatLon = '';
     if (optionsFinal.include_geo) {
@@ -941,21 +951,31 @@ class AnalyticsDB {
       && conditions.push('AND t.country = ?')
       && queryOptions.push(optionsFinal.country_code);
 
-    optionsFinal.latitude_min
+    optionsFinal.latitude_south
       && conditions.push('AND lat >= ?')
-      && queryOptions.push(optionsFinal.latitude_min);
+      && queryOptions.push(optionsFinal.latitude_south);
 
-    optionsFinal.latitude_max
+    optionsFinal.latitude_north
       && conditions.push('AND lat <= ?')
-      && queryOptions.push(optionsFinal.latitude_max);
+      && queryOptions.push(optionsFinal.latitude_north);
 
-    optionsFinal.longitude_min
-      && conditions.push('AND lon >= ?')
-      && queryOptions.push(optionsFinal.longitude_min);
-
-    optionsFinal.longitude_max
-      && conditions.push('AND lon <= ?')
-      && queryOptions.push(optionsFinal.longitude_max);
+    // if we've crossed the antimeridian, we need to do some magic
+    // e.g.,           179  |  -179
+    if (optionsFinal.longitude_west && optionsFinal.longitude_east && parseFloat(optionsFinal.longitude_west) > parseFloat(optionsFinal.longitude_east)) {
+      conditions.push('AND (lon >= ? OR lon <= ?)')
+      queryOptions.push(optionsFinal.longitude_west);
+      queryOptions.push(optionsFinal.longitude_east);
+    }
+    else {
+      optionsFinal.longitude_west
+        && conditions.push('AND lon >= ?')
+        && queryOptions.push(optionsFinal.longitude_west);
+  
+      optionsFinal.longitude_east
+        && conditions.push('AND lon <= ?')
+        && queryOptions.push(optionsFinal.longitude_east);
+    }
+    // we're ignoring the poles for now. who uses internet at the poles?
 
     let joinLatLon = '';
     if (optionsFinal.include_geo) {

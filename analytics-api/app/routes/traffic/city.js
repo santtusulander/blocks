@@ -11,20 +11,20 @@ function routeTrafficCity(req, res) {
 
   let params = req.query;
   let errors = validator.validate(params, {
-    start        : {required: true, type: 'Timestamp'},
-    end          : {required: false, type: 'Timestamp'},
-    account      : {required: true, type: 'ID'},
-    group        : {required: false, type: 'ID'},
-    property     : {required: false, type: 'Property'},
-    service_type : {required: false, type: 'Service'},
-    granularity  : {required: false, type: 'Granularity'},
-    country_code : {required: false, type: 'Country_Code'},
-    latitude_min : {required: false, type: 'Latitude'},
-    latitude_max : {required: false, type: 'Latitude'},
-    longitude_min: {required: false, type: 'Longitude'},
-    longitude_max: {required: false, type: 'Longitude'},
-    include_geo  : {required: false, type: 'Boolean'},
-    max_cities   : {required: false, type: 'Number'}
+    start          : {required: true,  type: 'Timestamp'},
+    end            : {required: false, type: 'Timestamp'},
+    account        : {required: true,  type: 'ID'},
+    group          : {required: false, type: 'ID'},
+    property       : {required: false, type: 'Property'},
+    service_type   : {required: false, type: 'Service'},
+    granularity    : {required: false, type: 'Granularity'},
+    country_code   : {required: false, type: 'Country_Code'},
+    latitude_south : {required: false, type: 'Latitude'},
+    longitude_west : {required: false, type: 'Longitude'},
+    latitude_north : {required: false, type: 'Latitude'},
+    longitude_east : {required: false, type: 'Longitude'},
+    include_geo    : {required: false, type: 'Boolean'},
+    max_cities     : {required: false, type: 'Number'}
   });
 
   if (errors) {
