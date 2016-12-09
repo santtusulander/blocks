@@ -52,8 +52,7 @@ function mapStateToProps(state) {
 
 SupportTabDocumentation.displayName = 'SupportTabDocumentation'
 SupportTabDocumentation.propTypes = {
-  currentUserRole: PropTypes.number,
-  documentPath: PropTypes.string
+  currentUserRole: PropTypes.number
 }
 
 export default connect(mapStateToProps)(SupportTabDocumentation)

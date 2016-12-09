@@ -19,7 +19,6 @@ const IconCaretRight = (props) => {
 
 IconCaretRight.propTypes = {
   className: React.PropTypes.string,
-  count: React.PropTypes.string,
   height: React.PropTypes.number,
   width: React.PropTypes.number
 }
