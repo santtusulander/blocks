@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import Immutable from 'immutable'
+// import Immutable from 'immutable'
 
 import Toggle from '../../toggle'
 
@@ -47,9 +47,9 @@ class RemoveVary extends React.Component {
 
 RemoveVary.displayName = 'RemoveVary'
 RemoveVary.propTypes = {
-  changeValue: React.PropTypes.func,
-  path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  changeValue: React.PropTypes.func
+  // path: React.PropTypes.instanceOf(Immutable.List),
+  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = RemoveVary

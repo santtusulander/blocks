@@ -169,7 +169,6 @@ const Navigation = (props) => {
 
 Navigation.displayName = 'Navigation'
 Navigation.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),

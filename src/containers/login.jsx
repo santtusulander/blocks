@@ -1,14 +1,10 @@
 import React from 'react'
-import Immutable from 'immutable'
 import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as rolesActionCreators from '../redux/modules/roles'
-import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
@@ -112,6 +108,10 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
+    if (this.state.rememberUsername) {
+      this.props.userActions.saveName()
+    }
+
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
@@ -131,7 +131,7 @@ export class Login extends React.Component {
 
             { this.props.location.query.sessionExpired &&
               <div className="login-info">
-                <p>Due to inactivity you have been logged out. To continue your session please resubmit your username and password.</p>
+                <p><FormattedMessage id="portal.login.sessionExpired.text" /></p>
               </div>
             }
 
@@ -196,39 +196,25 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
-  accountActions: React.PropTypes.object,
-  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
   location: React.PropTypes.object,
-  loggedIn: React.PropTypes.bool,
-  loginUrl: React.PropTypes.string,
-  rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
-}
-Login.defaultProps = {
-  currentUser: Immutable.Map()
 }
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.user.get('currentUser'),
-    fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching') ,
-    loggedIn: state.user.get('loggedIn'),
-    loginUrl: state.ui.get('loginUrl'),
+    fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
     username: state.user.get('username')
+
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-    userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
 

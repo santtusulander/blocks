@@ -205,7 +205,6 @@ AnalyticsFilters.propTypes = {
   filterOptions: PropTypes.instanceOf(Map),
   filters: PropTypes.instanceOf(Map),
   onFilterChange: PropTypes.func,
-  params: PropTypes.object,
   showFilters: PropTypes.instanceOf(List)
 }
 

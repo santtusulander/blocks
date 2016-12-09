@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router'
+import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 
@@ -128,9 +128,8 @@ export class ForgotPassword extends React.Component {
 
 ForgotPassword.displayName = 'ForgotPassword'
 ForgotPassword.propTypes = {
-  fetching: React.PropTypes.bool,
-  router: React.PropTypes.object,
-  userActions: React.PropTypes.object
+  fetching: React.PropTypes.bool
+  // userActions: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -145,4 +144,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ForgotPassword));
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);
