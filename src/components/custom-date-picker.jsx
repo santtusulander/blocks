@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Calendar } from 'react-date-picker'
 import { Dropdown, Nav, NavItem } from 'react-bootstrap'
 
@@ -137,8 +137,7 @@ export class CustomDatePicker extends React.Component {
 CustomDatePicker.displayName = 'CustomDatePicker'
 CustomDatePicker.propTypes = {
   changeDateRange: React.PropTypes.func,
-  intl: intlShape.isRequired,
   startDate: React.PropTypes.instanceOf(moment)
 }
 
-export default injectIntl(CustomDatePicker)
+export default CustomDatePicker

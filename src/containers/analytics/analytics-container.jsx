@@ -122,7 +122,6 @@ class AnalyticsContainer extends React.Component {
         activeAccountProviderType={activeAccountProviderType}
         currentUser={user}
         dateRanges={dateRanges}
-        params={params}
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
@@ -161,9 +160,6 @@ class AnalyticsContainer extends React.Component {
     const {
       params,
       children,
-      brands,
-      accounts,
-      groups,
       filters,
       activeAccount,
       activeGroup,
@@ -174,9 +170,6 @@ class AnalyticsContainer extends React.Component {
         <AnalyticsViewControl
           activeAccount={activeAccount}
           activeGroup={activeGroup}
-          brands={brands}
-          accounts={accounts}
-          groups={groups}
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
@@ -195,16 +188,13 @@ class AnalyticsContainer extends React.Component {
 
 AnalyticsContainer.propTypes = {
   accountActions: React.PropTypes.object,
-  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  brands: React.PropTypes.instanceOf(Immutable.List),
   children: React.PropTypes.node,
   filterOptions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   filtersActions: React.PropTypes.object,
   groupActions: React.PropTypes.object,
-  groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
   propertyActions: React.PropTypes.object,
@@ -213,10 +203,7 @@ AnalyticsContainer.propTypes = {
 }
 
 AnalyticsContainer.defaultProps = {
-  accounts: Immutable.List(),
-  brands: Immutable.List(),
   filters: Immutable.Map(),
-  groups: Immutable.List(),
   roles: Immutable.List(),
   user: Immutable.Map()
 }
@@ -225,9 +212,6 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    brands: Immutable.fromJS([{id: 'udn', name: 'UDN'}]),
-    accounts: state.account.get('allAccounts'),
-    groups: state.group.get('allGroups'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
     roles: state.roles.get('roles'),

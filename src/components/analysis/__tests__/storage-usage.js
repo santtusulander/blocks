@@ -1,5 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 
 jest.unmock('../storage-usage.jsx')
 import AnalysisStorageUsage from '../storage-usage.jsx'
@@ -22,9 +22,9 @@ import AnalysisStorageUsage from '../storage-usage.jsx'
 
 describe('AnalysisStorageUsage', () => {
   it('should exist', () => {
-    let storage = TestUtils.renderIntoDocument(
+    let storage = shallow(
       <AnalysisStorageUsage fetching={true} />
     );
-    expect(TestUtils.isCompositeComponent(storage)).toBeTruthy();
+    expect(storage).toBeTruthy();
   });
 });
