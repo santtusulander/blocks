@@ -54,7 +54,7 @@ class Tabs extends React.Component {
         reverseTabs.forEach((tab, i) => {
           if (this.getDOMNodeTop('hiddenTabs') > this.getDOMNodeTop('tab0')) {
             // Don't hide active tab
-            if(tab.props.eventKey !== this.props.activeKey) {
+            if(tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
               this.setState({ hiddenTabs: hiddenTabs })
             }
@@ -71,7 +71,7 @@ class Tabs extends React.Component {
     return (
       <ul role="tablist" className={'nav nav-tabs ' + className}>
         {children && children.length > 1 ?
-          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
+          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).concat().map((tab, i) => {
             return React.cloneElement(
               tab, {
                 ref: `tab${i}`,
@@ -89,12 +89,12 @@ class Tabs extends React.Component {
                 <IconSelectCaret/>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-wide-menu">
-                {children.map((tab, i) => {
+                {children.concat().map((tab, i) => {
                   if (this.state.hiddenTabs.includes(i)) {
                     return React.cloneElement(
                       tab, {
                         key: i,
-                        onClick: () => onSelect && onSelect(tab.props.eventKey)
+                        onClick: () => onSelect && onSelect(tab.props['data-eventKey'])
                       }
                     )
                   }

@@ -15,7 +15,7 @@ import Content from '../components/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
 
-export class User extends React.Component {
+class User extends React.Component {
   constructor(props) {
     super (props);
 
@@ -118,6 +118,5 @@ function mapDispatchToProps(dispatch) {
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User));

@@ -262,17 +262,16 @@ export class AccountManagement extends Component {
           condition: !isValidAccountName(accountName),
           errorText:
             <div key={accountName}>
-              {[
-                <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
-                  <div style={{marginTop: '0.5em'}}>
-                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                    <ul>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                    </ul>
-                  </div>
+              <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>
+              <div>
+                <div style={{marginTop: '0.5em'}}>
+                  <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                  <ul>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                  </ul>
                 </div>
-              ]}
+              </div>
             </div>
         }
       ]
@@ -383,6 +382,7 @@ export class AccountManagement extends Component {
       users: this.props.users,
       currentUser: this.props.currentUser
     }
+
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
@@ -426,7 +426,7 @@ export class AccountManagement extends Component {
           {/*<li>
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
            <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
@@ -440,7 +440,6 @@ export class AccountManagement extends Component {
            </li>
            */}
         </Tabs>}
-
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 

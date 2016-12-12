@@ -84,13 +84,14 @@ class DNSList extends Component {
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={<span id="record-amount-label">{visibleRecordCount}{hiddenRecordCount}</span>}>
-          <FormGroup bsClass="search-input-group">
-          <FormControl
-            type="text"
-            className="search-input"
-            placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
-            value={searchValue}
-            onChange={searchFunc}/>
+
+          <FormGroup className="search-input-group">
+            <FormControl
+              type="text"
+              className="search-input"
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
+              value={searchValue}
+              onChange={searchFunc}/>
           </FormGroup>
 
           <IsAllowed to={CREATE_RECORD}>
