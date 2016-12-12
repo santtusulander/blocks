@@ -69,11 +69,24 @@ class Mapbox extends React.Component {
 
   onStyleLoaded(map) {
     this.addCountryLayers(map, this.state.layers)
-    this.addCityLayers(this.state.layers)
+    this.addCityLayers(map, this.state.layers)
   }
 
-  onZoomEnd(e){
+  onZoom(e) {
     this.setState({ scale: e.transform.scale, zoom: e.transform._zoom })
+  }
+
+  onZoomEnd(e) {
+    if (this.state.zoom > 5) {
+      this.state.layers.forEach((layer) => {
+        if (!layer.includes('country')) {
+          e.setPaintProperty(layer, 'circle-radius',
+            e.getLayer(layer).metadata.radius * (this.state.scale / 10)
+          )
+        }
+      })
+    }
+
   }
 
   openPopup(content, coords) {
@@ -96,14 +109,13 @@ class Mapbox extends React.Component {
 
       if (features.length) {
         const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
-        const trafficCountry = this.props.countryData.find(c => c.code === features[0].properties.iso_a3)
 
         this.setState({ hoveredLayer })
         this.setHoverStyle(map)('opacity', 0.9)('pointer')
         this.openPopup(
           {
             title: features[0].properties.name,
-            total: trafficCountry.bits_per_second
+            total: features[0].properties.total
           },
           [feature.lngLat.lng, feature.lngLat.lat])
       }
@@ -131,13 +143,24 @@ class Mapbox extends React.Component {
   addCountryLayers(map, layers) {
     this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
       const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
+      const trafficCountry = this.props.countryData.find(c => c.code === data.properties.iso_a3)
       const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
 
       if (countryExists) {
         if (!map.getSource('geo-' + data.properties.iso_a3)) {
           map.addSource('geo-' + data.properties.iso_a3, {
             type: 'geojson',
-            data: { type: 'FeatureCollection', features: [data] }
+            data: {
+              type: 'FeatureCollection',
+              features: [{
+                type: data.type,
+                properties: {
+                  name: data.properties.name,
+                  total: trafficCountry.bits_per_second
+                },
+                geometry: data.geometry
+              }]
+            }
           })
 
           if (!layerExists) {
@@ -154,16 +177,38 @@ class Mapbox extends React.Component {
 
   }
 
-  addCityLayers(layers) {
+  addCityLayers(map, layers) {
     this.props.cityData.forEach((city) => {
-      const layerExists = layers.some(layer => layer === city.name.split(' ').join('-').toLowerCase())
+      const cityName = city.city.split(' ').join('-').toLowerCase()
+      const layerExists = layers.some(layer => layer === cityName)
 
-      if (layerExists) {
-        layers.push(city.name.split(' ').join('-').toLowerCase())
+      if (!map.getSource('geo-' + cityName)) {
+        map.addSource('geo-' + cityName, {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [{
+              type: 'Feature',
+              properties: {
+                name: city.city,
+                total: city.bits_per_second
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [city.lon, city.lat]
+              }
+            }]
+          }
+        })
+      }
+
+      if (!layerExists) {
+        layers.push(cityName)
+        this.setState({ layers })
       }
     })
 
-    this.setState({ layers });
+    this.renderCityCircles(map)
   }
 
   renderCountryHighlight(map) {
@@ -178,6 +223,7 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: `country-fill-${country.properties.iso_a3}`,
         source: `geo-${country.properties.iso_a3}`,
+        maxzoom: 5,
         paint: {
           'fill-color': countryColor,
           'fill-opacity': 0.5
@@ -188,6 +234,7 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: `country-stroke-${country.properties.iso_a3}`,
         source: `geo-${country.properties.iso_a3}`,
+        maxzoom: 5,
         paint: {
           'line-color': countryColor,
           'line-width': 2
@@ -196,34 +243,33 @@ class Mapbox extends React.Component {
       })
     })
 
+    this.setState({ map })
+
   }
 
-  renderCityCircles() {
+  renderCityCircles(map) {
     const cities = this.props.cityData
-    const cityMedian = calculateMedian(cities.map((city => city.bytes)))
+    const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
 
-    return cities.map((city, i) => {
-      const cityHeat = getScore(cityMedian, city.bytes)
+    cities.forEach((city) => {
+      const cityHeat = getScore(cityMedian, city.bits_per_second)
       const cityColor = cityHeat && cityHeat < heatMapColors.length ? heatMapColors[ cityHeat - 1 ] : '#000000'
-      const cityId = city.name.split(' ').join('-').toLowerCase()
+      const cityId = city.city.split(' ').join('-').toLowerCase()
 
-      return (
-        <Layer
-          id={cityId}
-          key={i}
-          type="circle"
-          paint={{
-            'circle-radius': cityHeat * (this.state.scale / 5),
-            'circle-color': cityColor,
-            'circle-opacity': 0.5
-          }}>
-          <Feature
-            coordinates={[city.lon, city.lat]}
-            properties={{
-              name: city.name
-            }} />
-        </Layer>
-      )
+      map.addLayer({
+        id: cityId,
+        source: 'geo-' + cityId,
+        type: 'circle',
+        minzoom: 5,
+        paint: {
+          'circle-radius': cityHeat,
+          'circle-color': cityColor,
+          'circle-opacity': 0.5
+        },
+        metadata: {
+          radius: cityHeat
+        }
+      })
     })
   }
 
@@ -244,7 +290,8 @@ class Mapbox extends React.Component {
         zoom={[this.state.zoom]}
         minZoom={1}
         maxZoom={13}
-        onZoom={this.onZoomEnd.bind(this)}
+        onZoom={this.onZoom.bind(this)}
+        onZoomEnd={this.onZoomEnd.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}>
 
@@ -262,8 +309,6 @@ class Mapbox extends React.Component {
               {id: 'US', label: 'United States'}
             ]}/>
         </div>
-
-        {this.renderCityCircles()}
 
         {!!this.state.popupContent &&
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
