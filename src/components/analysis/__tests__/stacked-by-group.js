@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.unmock('../stacked-by-group.jsx')
@@ -37,11 +38,10 @@ describe('AnalysisStackedByGroup', () => {
   })
 
   it('should show loading message if there is no width or data', () => {
-    let stacks = TestUtils.renderIntoDocument(
+    let stacks = shallow(
       <AnalysisStackedByGroup/>
     )
-    let div = TestUtils.findRenderedDOMComponentWithTag(stacks, 'div')
-    expect(div.textContent).toContain('Loading')
+    expect(stacks.find({id: 'portal.loading.text'}).length).toBe(1)
   })
 
   it('should have data lines', () => {

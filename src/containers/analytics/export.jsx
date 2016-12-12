@@ -67,7 +67,6 @@ class AnalyticsExport extends React.Component {
 AnalyticsExport.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),
-  activeHost: PropTypes.instanceOf(Map),
   activeTab: PropTypes.string,
   contribution: PropTypes.instanceOf(List),
   fileErrorURLs: PropTypes.instanceOf(List),
@@ -83,7 +82,6 @@ AnalyticsExport.propTypes = {
 AnalyticsExport.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
-  activeHost: Map(),
   fileErrorURLs: List(),
   onOffStats: List(),
   serviceTypes: List(),
@@ -96,7 +94,6 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    activeHost: state.host.get('activeHost'),
     contribution: state.traffic.get('contribution'),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     onOffStats: state.traffic.get('onOffNet').get('detail'),

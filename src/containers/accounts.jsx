@@ -25,6 +25,7 @@ import ContentItems from '../components/content/content-items'
 import * as PERMISSIONS from '../constants/permissions'
 import checkPermissions from '../util/permissions'
 import PROVIDER_TYPES from '../constants/provider-types'
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 
 import { FormattedMessage } from 'react-intl';
 
@@ -122,7 +123,7 @@ export class Accounts extends React.Component {
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}
         toggleChartView={uiActions.toggleChartView}
-        type='account'
+        type={CONTENT_ITEMS_TYPES.ACCOUNT}
         user={user}
         viewingChart={viewingChart}
         fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
@@ -140,9 +141,7 @@ Accounts.propTypes = {
   fetchData: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
-  history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
-  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,

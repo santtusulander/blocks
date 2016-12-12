@@ -81,7 +81,6 @@ import {
 // import IconSupport       from '../components/icons/icon-support'
 // import IconTask          from '../components/icons/icon-task'
 // import IconTrash         from '../components/icons/icon-trash'
-
 import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -314,17 +313,10 @@ class Styleguide extends React.Component {
                 tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
-<<<<<<< HEAD
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
                   { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
                   { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
                   { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }
-=======
-                  { dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' },
-                  { dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' },
-                  { dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' },
-                  { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' }
->>>>>>> 0f62d247aa36e1d0e14972eff4046ba661c0d227
                 ]}/>}
             </SectionContainer>
             </Row>
@@ -415,12 +407,12 @@ class Styleguide extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
+              <SelectorComponent items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1>Select Account</h1>
                   <IconCaretDown />
                 </div>
-              </AccountSelector>
+              </SelectorComponent>
             </div>
           </div>
 

@@ -43,7 +43,12 @@ class CertificateFormContainer extends Component {
           'udn',
           Number(formValues.account),
           Number(formValues.group),
-          { title: formValues.title, private_key: formValues.privateKey, certificate: formValues.certificate }
+          {
+            title: formValues.title,
+            private_key: formValues.privateKey,
+            certificate: formValues.certificate,
+            intermediate_certificates: formValues.intermediateCertificates
+          }
         ]
         if(cert) {
           data.push(cert)
@@ -82,7 +87,7 @@ CertificateFormContainer.propTypes = {
 }
 
 export default reduxForm({
-  fields: ['account', 'group', 'title', 'privateKey', 'certificate'],
+  fields: ['account', 'group', 'title', 'privateKey', 'certificate', 'intermediateCertificates'],
   form: 'certificateForm',
   validate
 }, function mapStateToProps(state) {

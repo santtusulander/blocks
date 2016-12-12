@@ -15,6 +15,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
@@ -139,7 +140,7 @@ export class Hosts extends React.Component {
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
-        type='property'
+        type={CONTENT_ITEMS_TYPES.PROPERTY}
         user={this.props.user}
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
@@ -157,7 +158,6 @@ Hosts.propTypes = {
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
-  history: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),

@@ -127,7 +127,6 @@ class AnalyticsTabContribution extends React.Component {
         fetching={this.props.fetching}
         sectionHeaderTitle={sectionHeaderTitle}
         stats={this.props.contribution}
-        accounts={this.props.accounts}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
       />
@@ -137,14 +136,12 @@ class AnalyticsTabContribution extends React.Component {
 
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
-  accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
-  filterOptions: React.PropTypes.instanceOf(Immutable.Map),
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -152,7 +149,6 @@ AnalyticsTabContribution.propTypes = {
 }
 
 AnalyticsTabContribution.defaultProps = {
-  accounts: Immutable.List(),
   currentUser: Immutable.Map(),
   filters: Immutable.Map(),
   contribution: Immutable.List()
@@ -165,7 +161,6 @@ function mapStateToProps(state) {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
-    accounts: state.account.get('allAccounts'),
     filters: state.filters.get('filters'),
     currentUser: state.user.get('currentUser')
   }
