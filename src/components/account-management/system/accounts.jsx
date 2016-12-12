@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Input } from 'react-bootstrap'
+import { Button, FormControl, FormGroup } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
@@ -95,7 +95,7 @@ class AccountList extends Component {
 
   getInlineAddFields() {
     return [
-      [ { input: <Input id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.accountName.placeholder.text'})} type="text"/> } ],
+      [ { input: <FormControl id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.accountName.placeholder.text'})}/> } ],
       [ { input: <SelectWrapper
             numericValues={true}
             id='provider_type'
@@ -194,13 +194,13 @@ class AccountList extends Component {
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={finalAccountsText}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder="Search"
-            value={this.state.search}
-            onChange={({ target: { value } }) => this.setState({ search: value })} />
+          <FormGroup className="search-input-group">
+            <FormControl
+              className="search-input"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={({ target: { value } }) => this.setState({ search: value })} />
+          </FormGroup>
           <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
             <IconAdd/>
           </Button>
@@ -258,7 +258,6 @@ class AccountList extends Component {
 AccountList.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
-  addAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   intl: PropTypes.object,

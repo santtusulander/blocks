@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Panel, PanelGroup, Table, Button, Input } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, FormGroup, FormControl } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -8,7 +8,6 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as permissionsActionCreators from '../../../redux/modules/permissions'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -180,7 +179,7 @@ export class AccountManagementAccountUsers extends React.Component {
      */
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
-      [{ input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> }],
+      [{ input: <FormControl ref="emails" id='email' placeholder=" Email"/> }],
       [{ input: <PasswordFields id="password" inlinePassword={true} changePassword={this.changePassword} /> }],
       [
         {
@@ -373,13 +372,13 @@ export class AccountManagementAccountUsers extends React.Component {
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={finalUserText}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group inline"
-            placeholder="Search"
-            value={this.state.search}
-            onChange={this.changeSearch} />
+          <FormGroup className="search-input-group inline">
+            <FormControl
+              className="search-input"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
+          </FormGroup>
           <div className="form-group inline">
             <SelectWrapper
               id='filtered-roles'
@@ -519,7 +518,6 @@ AccountManagementAccountUsers.propTypes = {
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
-  permissionsActions: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
@@ -545,7 +543,6 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    permissionsActions: bindActionCreators(permissionsActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

@@ -1,9 +1,12 @@
 import React, { PropTypes } from 'react'
-import { Input, ButtonToolbar } from 'react-bootstrap'
+import { FormGroup, FormControl, ControlLabel, ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
-import SelectWrapper from '../select-wrapper.jsx'
+import SelectWrapper from '../select-wrapper'
 import UDNButton from '../button'
+
+const getValidationState = field => field.touched && field.error ? "error" : null
 
 export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
   const { group, title, privateKey, certificate } = fields
@@ -20,30 +23,32 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
           value={group.value}
           className="input-select"
           options={groupsOptions.toJS()}/>
-        <hr/>
       </div>
-      <div id="sslCertTitle">
-        <Input type="text"
-          label="SSL Cert Title"
-          {...title}/>
+
+      <hr/>
+
+      <FormGroup controlId="title" validationState={getValidationState(title)}>
+        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certTitle.text" /></ControlLabel>
+        <FormControl componentClass="input" {...title} />
         {title.touched && title.error && <div className="error-msg">{title.error}</div>}
-        <hr/>
-      </div>
-      <div id="privateKey">
-        <Input type="textarea"
-          label="Private Key"
-          className="fixed-size-textarea"
-          {...privateKey}/>
+      </FormGroup>
+
+      <hr/>
+
+      <FormGroup controlId="privateKey" validationState={getValidationState(privateKey)}>
+        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.privateKey.text" /></ControlLabel>
+        <FormControl componentClass="textarea" className="fixed-size-textarea" {...privateKey} />
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
-        <hr/>
-      </div>
-      <div id="certificate">
-        <Input type="textarea"
-          label="Certificate"
-          className="fixed-size-textarea"
-          {...certificate}/>
+      </FormGroup>
+
+      <hr/>
+
+      <FormGroup controlId="certificate" validationState={getValidationState(certificate)}>
+        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certificate.text" /></ControlLabel>
+        <FormControl componentClass="textarea" className="fixed-size-textarea" {...certificate} />
         {certificate.touched && certificate.error && <div className="error-msg">{certificate.error}</div>}
-      </div>
+      </FormGroup>
+
       <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
           id="cancel_button"
@@ -64,12 +69,10 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 }
 
 CertificateForm.propTypes = {
-  accounts: PropTypes.instanceOf(List),
   editMode: PropTypes.bool,
   errors: PropTypes.object,
   fields: PropTypes.object,
   groups: PropTypes.instanceOf(List),
-  initialValues: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }

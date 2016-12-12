@@ -5,8 +5,8 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
+
 import { getRoute } from '../../routes'
-import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
@@ -40,6 +40,7 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
+import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 export class AccountManagement extends Component {
   constructor(props) {
@@ -262,17 +263,16 @@ export class AccountManagement extends Component {
           condition: !isValidAccountName(accountName),
           errorText:
             <div key={accountName}>
-              {[
-                <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
-                  <div style={{marginTop: '0.5em'}}>
-                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                    <ul>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                    </ul>
-                  </div>
+              <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>
+              <div>
+                <div style={{marginTop: '0.5em'}}>
+                  <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                  <ul>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                  </ul>
                 </div>
-              ]}
+              </div>
             </div>
         }
       ]
@@ -383,6 +383,7 @@ export class AccountManagement extends Component {
       users: this.props.users,
       currentUser: this.props.currentUser
     }
+
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
@@ -406,41 +407,40 @@ export class AccountManagement extends Component {
           </IsAllowed>
         </PageHeader>
         {account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li eventKey="details">
+          <li data-eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li eventKey="groups">
+          <li data-eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li eventKey="users">
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li eventKey="accounts">
+          <li data-eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li eventKey="users">
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li eventKey="brands">
+          {/*<li data-eventKey="brands">
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
            <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li eventKey="roles">
+          <li data-eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li eventKey="services">
+           <li data-eventKey="services">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
         </Tabs>}
-
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
@@ -487,17 +487,14 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
-  activeRecordType: PropTypes.string,
+  // activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
   dnsActions: PropTypes.object,
   dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
-  groups: PropTypes.instanceOf(List),
-  history: PropTypes.object,
   hostActions: PropTypes.object,
-  hosts: PropTypes.object,
   onDelete: PropTypes.func,
   params: PropTypes.object,
   permissions: PropTypes.instanceOf(Map),
@@ -514,8 +511,6 @@ AccountManagement.propTypes = {
 AccountManagement.defaultProps = {
   activeAccount: Map(),
   dnsData: Map(),
-  groups: List(),
-  hosts: List(),
   roles: List(),
   users: List()
 }
@@ -525,10 +520,8 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount') || Map({}),
-    activeRecordType: state.dns.get('activeRecordType'),
+    // activeRecordType: state.dns.get('activeRecordType'),
     dnsData: state.dns,
-    groups: state.group.get('allGroups'),
-    hosts: state.host.get('allHosts'),
     permissions: state.permissions,
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,

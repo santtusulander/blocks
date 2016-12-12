@@ -15,7 +15,7 @@ import Content from '../components/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
 
-export class User extends React.Component {
+class User extends React.Component {
   constructor(props) {
     super (props);
 
@@ -26,12 +26,12 @@ export class User extends React.Component {
 
     this.notificationTimeout = null
     this.saveUser = this.saveUser.bind(this)
+    this.savePassword = this.savePassword.bind(this)
     this.showNotification = this.showNotification.bind(this)
   }
 
   saveUser(user) {
     this.setState({
-      savingPassword: user.password && true,
       savingUser: !user.password && true
     })
     const message = user.password ?
@@ -50,8 +50,37 @@ export class User extends React.Component {
           })
         }
         this.setState({
-          savingPassword: false,
           savingUser: false
+        })
+      }
+    )
+  }
+
+  savePassword(password) {
+    this.props.userActions.startFetching()
+    this.setState({
+      savingPassword: this.props.userFetching
+    })
+
+    // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
+    this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
+      .then((response) => {
+        if (!response.error) {
+          this.props.userActions.logIn(
+            this.props.currentUser.get('email'),
+            password.new_password
+          ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
+        } else {
+          this.props.uiActions.showInfoDialog({
+            title: 'Error',
+            content: response.payload.data.message,
+            okButton: true,
+            cancel: this.props.uiActions.hideInfoDialog
+          })
+        }
+        this.props.userActions.finishFetching()
+        this.setState({
+          savingPassword: this.props.userFetching
         })
       }
     )
@@ -83,6 +112,7 @@ export class User extends React.Component {
           <UserEditForm
             initialValues={initialValues}
             onSave={this.saveUser}
+            onSavePassword={this.savePassword}
             savingPassword={this.state.savingPassword}
             savingUser={this.state.savingUser}/>
         </PageContainer>
@@ -97,7 +127,8 @@ User.propTypes = {
   intl: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  userActions: PropTypes.object
+  userActions: PropTypes.object,
+  userFetching: PropTypes.bool
 }
 
 User.defaultProps = {
@@ -108,7 +139,8 @@ User.defaultProps = {
 function mapStateToProps(state) {
   return {
     roles: state.roles.get('roles'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    userFetching: state.user.get('fetching')
   }
 }
 
@@ -118,6 +150,5 @@ function mapDispatchToProps(dispatch) {
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(User));

@@ -127,7 +127,6 @@ class AnalysisFileError extends React.Component {
 
 AnalysisFileError.displayName = 'AnalysisFileError'
 AnalysisFileError.propTypes = {
-  fetching: PropTypes.bool,
   intl: intlShape.isRequired,
   serviceTypes: PropTypes.instanceOf(List),
   statusCodes: PropTypes.instanceOf(List),

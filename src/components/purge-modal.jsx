@@ -1,6 +1,16 @@
 import React from 'react'
 import Immutable from 'immutable'
-import { Modal, Input, Button, ButtonToolbar, Panel, Row, Col } from 'react-bootstrap';
+import {
+  Modal,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
+  Radio,
+  Checkbox,
+  Button,
+  ButtonToolbar,
+  Panel } from 'react-bootstrap';
 import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -137,21 +147,24 @@ class PurgeModal extends React.Component {
     })
   }
   purgeObjInput({title, help, placeholder}) {
+    help = this.state.purgeObjectsError || this.state.purgeObjectsWarning || help
+
     return (
       <div>
-        <Row>
-          <Col sm={6}>
-            <h3>{title}</h3>
-          </Col>
-          <Col sm={6} className="text-right">{help}</Col>
-        </Row>
-        <Input type="textarea" id="purge__objects"
-          bsStyle={this.state.purgeObjectsError ? 'error' : 'warning'}
-          help={this.state.purgeObjectsError || this.state.purgeObjectsWarning}
-          placeholder={placeholder}
-          value={this.props.activePurge.get('objects').join(',\n')}
-          onBlur={this.validatePurgeObjects}
-          onChange={this.parsePurgeObjects}/>
+        <FormGroup
+          controlId="purge__objects"
+          validationState={this.state.purgeObjectsError ? 'error' : null}
+        >
+          <ControlLabel>{title}</ControlLabel>
+          <HelpBlock className="pull-right">{help}</HelpBlock>
+          <FormControl
+            componentClass="textarea"
+            placeholder={placeholder}
+            value={this.props.activePurge.get('objects').join(',\n')}
+            onBlur={this.validatePurgeObjects}
+            onChange={this.parsePurgeObjects}
+          />
+        </FormGroup>
         <hr/>
       </div>
     )
@@ -231,46 +244,65 @@ class PurgeModal extends React.Component {
                 </div>}
 
                 {/* SECTION - Content Removal Method */}
-                <h3><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></h3>
+                <FormGroup>
+                  <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.invalidate.section.title"/></ControlLabel>
 
-                {/* Invalidate content on platform */}
-                <Input type="radio" name="purge__content-removal-method-invalidate"
-                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.invalidate.label'})}
-                  value="invalidate"
-                  checked={this.props.activePurge.get('action') === 'invalidate'}
-                  onChange={this.change(['action'])}/>
+                  {/* Invalidate content on platform */}
+                  <Radio
+                    id="purge__content-removal-method-invalidate"
+                    value="invalidate"
+                    checked={this.props.activePurge.get('action') === 'invalidate'}
+                    onChange={this.change(['action'])}
+                  ><FormattedMessage id="portal.analytics.purgeModal.invalidate.label" /></Radio>
 
-                {/* Delete content from platform */}
-                <Input type="radio" name="purge__content-removal-method-delete"
-                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.delete.label'})}
-                  value="purge"
-                  checked={this.props.activePurge.get('action') === 'purge'}
-                  onChange={this.change(['action'])}/>
+                  {/* Delete content from platform */}
+                  <Radio
+                    id="purge__content-removal-method-delete"
+                    value="purge"
+                    checked={this.props.activePurge.get('action') === 'purge'}
+                    onChange={this.change(['action'])}
+                  ><FormattedMessage id="portal.analytics.purgeModal.delete.label" /></Radio>
+
+                </FormGroup>
+
                 <hr/>
 
                 {/* SECTION - Notification */}
-                <h3><FormattedMessage id="portal.analytics.purgeModal.notification.section.title"/></h3>
-                <Input type="checkbox" name="purge__notification"
-                  label={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.notification.label'})}
-                  checked={!!this.props.activePurge.get('feedback')}
-                  onChange={this.toggleNotification}/>
+                <FormGroup controlId="purge__notification">
+                  <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.notification.section.title"/></ControlLabel>
+                  <Checkbox
+                    checked={!!this.props.activePurge.get('feedback')}
+                    onChange={this.toggleNotification}
+                  ><FormattedMessage id="portal.analytics.purgeModal.notification.label" /></Checkbox>
+                </FormGroup>
 
                 {/* Email Address */}
                 <Panel className="form-panel" collapsible={true}
                   expanded={!!this.props.activePurge.get('feedback')}>
-                  <Input type="text"
-                    bsStyle={this.state.purgeEmailError ? 'error' : null}
-                    help={this.state.purgeEmailError}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.email.label'})}
-                    value={this.props.activePurge.getIn(['feedback','email'])}
-                    onChange={this.change(['feedback','email'])}/>
+                  <FormGroup controlId="purge__email">
+                    {this.state.purgeEmailError &&
+                      <HelpBlock>{this.state.purgeEmailError}</HelpBlock>
+                    }
+                    <FormControl
+                      placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.email.label'})}
+                      value={this.props.activePurge.getIn(['feedback','email'], "")}
+                      onChange={this.change(['feedback','email'])}
+                    />
+                  </FormGroup>
                 </Panel>
+
                 <hr/>
-                <h3><FormattedMessage id="portal.analytics.purgeModal.note.section.title"/></h3>
-                <Input type="textarea" id="purge__note"
-                  placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.note.placeholder'})}
-                  value={this.props.activePurge.get('note')}
-                  onChange={this.change(['note'])}/>
+
+                {/* SECTION - Note */}
+                <FormGroup controlId="purge__note">
+                  <ControlLabel><FormattedMessage id="portal.analytics.purgeModal.note.section.title"/></ControlLabel>
+                  <FormControl
+                    componentClass="textarea"
+                    placeholder={this.props.intl.formatMessage({id: 'portal.analytics.purgeModal.note.placeholder'})}
+                    value={this.props.activePurge.get('note')}
+                    onChange={this.change(['note'])}
+                  />
+                </FormGroup>
 
                 {/* Action buttons */}
                 <ButtonToolbar className="text-right">
@@ -304,8 +336,7 @@ PurgeModal.propTypes = {
   changePurge: React.PropTypes.func,
   hideAction: React.PropTypes.func,
   intl: React.PropTypes.object,
-  savePurge: React.PropTypes.func,
-  showNotification: React.PropTypes.func
+  savePurge: React.PropTypes.func
 }
 
 export default injectIntl(PurgeModal)

@@ -4,10 +4,10 @@ import './legend.scss'
 
 const Legend = ({dataSets, values}) => {
   return (
-    <div className='chart-legend'>
+    <div className='by-time-legend'>
       {dataSets.map((dataset, i) => {
         return (
-          <div key={i} className="legend-item">
+          <div key={i} className="by-time-legend-item">
             <span className={classNames({
               'legend-label': true,
               'comparison': dataset.comparisonData})}>

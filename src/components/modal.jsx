@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, ButtonToolbar, Input, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, FormGroup, ControlLabel, FormControl, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm } from 'redux-form'
 
@@ -9,13 +9,22 @@ import IconClose from './icons/icon-close.jsx'
 class ModalWindow extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleOnEntered = this.handleOnEntered.bind(this)
+  }
+
+  handleOnEntered(){
+    const { verifyDelete } = this.props
+    if (verifyDelete) {
+      this.refs.deleteInput.refs.input.focus()
+    }
   }
 
   render() {
     const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, submit, submitButton, title, verifyDelete } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-window">
+      <Modal show={true} dialogClassName="modal-window" onEntered={this.handleOnEntered}>
         <Modal.Header>
           <h1>{title}</h1>
         </Modal.Header>
@@ -23,13 +32,16 @@ class ModalWindow extends React.Component {
         <Modal.Body>
           {children}
           {content &&
-          <p>{content}</p>}
+            <p>{content}</p>
+          }
           {verifyDelete &&
-          <Input
-            type="text"
-            label={intl.formatMessage({id: 'portal.deleteModal.validation.label'})}
-            placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
-            {...modalField} />
+            <FormGroup>
+              <ControlLabel><FormattedMessage id="portal.deleteModal.validation.label" /></ControlLabel>
+              <FormControl
+                placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
+                {...modalField}
+              />
+            </FormGroup>
           }
         </Modal.Body>
 

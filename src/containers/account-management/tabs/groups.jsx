@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Table, Button } from 'react-bootstrap'
+import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
@@ -220,7 +220,7 @@ class AccountManagementAccountGroups extends React.Component {
     const inlineAddInputs = [
       [
         {
-          input: <Input id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})} type="text"/>
+          input: <FormControl id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}/>
         }
       ],
       [
@@ -245,14 +245,15 @@ class AccountManagementAccountGroups extends React.Component {
     const finalGroupText = groupSize + groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
-       <SectionHeader sectionHeaderTitle={finalGroupText}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder={this.props.intl.formatMessage({id: 'portal.common.search.text'})}
-            value={this.state.search}
-            onChange={this.changeSearch} />
+        <SectionHeader sectionHeaderTitle={finalGroupText}>
+          <FormGroup className="search-input-group">
+            <FormControl
+              type="text"
+              className="search-input"
+              placeholder={this.props.intl.formatMessage({id: 'portal.common.search.text'})}
+              value={this.state.search}
+              onChange={this.changeSearch} />
+          </FormGroup>
           <IsAllowed to={CREATE_GROUP}>
             <Button bsStyle="success" className="btn-icon" onClick={this.addGroup}>
               <IconAdd />
@@ -330,7 +331,6 @@ AccountManagementAccountGroups.propTypes    = {
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
-  toggleModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)
