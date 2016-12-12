@@ -292,6 +292,10 @@ export class Dashboard extends React.Component {
                   })}
                 </tbody>
               </Table>
+              {!topCPs.size &&
+                <div className="no-data">
+                  <FormattedMessage id="portal.common.no-data.text"/>
+                </div>}
             </DashboardPanel>
           </DashboardPanels>
         </PageContainer>}

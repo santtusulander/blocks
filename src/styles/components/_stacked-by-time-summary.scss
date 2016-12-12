@@ -17,6 +17,10 @@
     align-items: flex-end;
 
     .dataset-col {
+
+      &.empty {
+        align-self: flex-start;
+      }
       padding-right: 6%;
       font-weight: bold;
       white-space: nowrap;

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
+import classnames from 'classnames'
 
 import AnalysisByTime from './analysis/by-time'
 import { paleblue, yellow } from '../constants/colors'
@@ -78,42 +79,56 @@ class StackedByTimeSummary extends React.Component {
         xAxisFormatter: false
       })
     }
-
+    const total = Number(totalDatasetValue)
+    const dataSetBColClasses = classnames('dataset-col', { empty: !total })
     return (
       <div className="stacked-by-time-summary">
         <div className="dataset-label"><FormattedMessage id='portal.common.total.text'/></div>
 
         <div className="stacked-by-time-summary-container">
-          <div className="dataset-col total">
-            <span className="value">{totalDatasetValue}</span>
-            <span className="suffix">{totalDatasetUnit}</span>
-          </div>
+          {total > 0 ? [
+            <div className="dataset-col total">
+              <span className="value">{totalDatasetValue}</span>
+              <span className="suffix">{totalDatasetUnit}</span>
+            </div>,
 
-          <div ref="byTimeHolder" className="dataset-col chart">
-            <AnalysisByTime
-              dataKey={dataKey}
-              dataSets={datasets}
-              className="bg-transparent"
-              padding={2}
-              width={this.state.byTimeWidth}
-              height={72}
-              showTooltip={false}
-              showLegend={false}
-              noHover={true}
-              noXNice={true} />
-          </div>
+            <div ref="byTimeHolder" className="dataset-col chart">
+              <AnalysisByTime
+                dataKey={dataKey}
+                dataSets={datasets}
+                className="bg-transparent"
+                padding={2}
+                width={this.state.byTimeWidth}
+                height={72}
+                showTooltip={false}
+                showLegend={false}
+                noHover={true}
+                noXNice={true} />
+            </div>
+          ] : <div className="dataset-col chart">
+              <div className="no-data by-time-summary">
+                <FormattedMessage id="portal.common.no-data.text"/>
+              </div>
+            </div>}
 
           <div className="dataset-col">
             <div className="dataset-label dataset-a">{datasetALabel}</div>
-            <span className="value">{datasetAValue}</span>
-            {datasetAUnit && <span className="suffix">{datasetAUnit}</span>}
+            {total > 0 ? [
+              <span className="value">{datasetAValue}</span>,
+              datasetAUnit && <span className="suffix">{datasetAUnit}</span>
+            ] : <div className="no-data by-time-summary">
+                <FormattedMessage id="portal.common.no-data.text"/>
+              </div>
+            }
           </div>
 
           {datasetBArray &&
-          <div className="dataset-col">
+          <div className={dataSetBColClasses}>
             {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
-            {datasetBValue && <span className="value">{datasetBValue}</span>}
-            {datasetBUnit && <span className="suffix">{datasetBUnit}</span>}
+            {totalDatasetValue > 0 && [
+              datasetBValue && <span className="value">{datasetBValue}</span>,
+              datasetBUnit && <span className="suffix">{datasetBUnit}</span>
+            ]}
           </div>
           }
         </div>
