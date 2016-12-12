@@ -3,7 +3,6 @@ import { reduxForm } from 'redux-form'
 import { Input, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 import SelectWrapper from '../../select-wrapper'
-import PasswordFields from '../../password-fields'
 
 import {FormattedMessage, injectIntl} from 'react-intl';
 
@@ -31,23 +30,21 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      passwordVisible: false,
-      validPassword: true
-    }
-
+    // TODO: uncomment once UDNP-2008 is unblocked
+    // this.resetPassword = this.resetPassword.bind(this)
     this.save = this.save.bind(this)
-    this.resetPassword = this.resetPassword.bind(this)
-    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
-    this.changePassword = this.changePassword.bind(this)
   }
+
+  // TODO: uncomment and implement once UDNP-2008 is unblocked
+  // resetPassword() {
+  //   // TODO: call password reset function and display toast on success
+  // }
 
   save() {
     const {
       fields: {
         first_name,
         last_name,
-        password,
         phone_number,
         groups,
         role
@@ -62,28 +59,7 @@ class UserEditForm extends React.Component {
       roles: [ role.value ]
     }
 
-    if(password && password.value.length !== 0) {
-      newValues.password = password.value
-    }
-
     this.props.onSave(newValues)
-  }
-
-  resetPassword() {
-    //noinspection Eslint
-    // console.log('UserEditForm.resetPassword()')
-  }
-
-  togglePasswordVisibility() {
-    this.setState({
-      passwordVisible: !this.state.passwordVisible
-    })
-  }
-
-  changePassword(isPasswordValid) {
-    this.setState({
-      'validPassword': isPasswordValid
-    });
   }
 
   render() {
@@ -92,7 +68,6 @@ class UserEditForm extends React.Component {
         email,
         first_name,
         last_name,
-        password,
         phone_number,
         role
       },
@@ -145,58 +120,26 @@ class UserEditForm extends React.Component {
           <div className="error-msg">{phone_number.error}</div>}
         </div>
 
+        {/* TODO: uncomment once UDNP-2008 is unblocked
         <hr/>
 
-        {/* TODO: Finish once functionality allows it (not in 0.8)
         <div className="form-group password-reset">
-          <label className="control-label">Password</label>
+          <label className="control-label">
+            <FormattedMessage id="portal.user.edit.resetPassword.text"/>
+          </label>
           <div className="password-reset__wrapper">
-            <Button bsStyle="primary" onClick={this.resetPassword}>Reset</Button>
+            <Button bsStyle="primary" onClick={this.resetPassword}>
+              <FormattedMessage id="portal.user.edit.resetPassword.button.text" />
+            </Button>
             <p className="password-reset__description">
-              Sends the user a link with instructions
-              <br/>on how to reset their password
+              <FormattedMessage
+                id="portal.user.edit.resetPassword.instructions.text"
+                values={{br: <br />}}
+              />
             </p>
           </div>
         </div>
         */}
-
-        {/* This is a temporary solution for password reset in 0.8 */}
-        <div className="user-form__password">
-          <Row>
-            <Col xs={11}>
-              <label><FormattedMessage id="portal.user.edit.resetPassword.text"/></label>
-              <PasswordFields
-                {...password}
-                inlinePassword={true}
-                changePassword={this.changePassword}/>
-              {/*
-              <Row>
-                <Col xs={6}>
-                  <Input
-                    {...password}
-                    type={this.state.passwordVisible ? 'text' : 'password'}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.newPassword.text'})} />
-                  {password.touched && password.error && !password.active && !confirm.active &&
-                    <div className="error-msg">{password.error}</div>}
-                </Col>
-
-                <Col xs={6}>
-                  <Input
-                    {...confirm}
-                    type={this.state.passwordVisible ? 'text' : 'password'}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
-                    wrapperClassName="input-addon-after-outside"
-                    addonAfter={<a className={'input-addon-link' +
-                        (this.state.passwordVisible ? ' active' : '')}
-                        onClick={this.togglePasswordVisibility}>
-                          <IconEye/>
-                      </a>}/>
-                </Col>
-              </Row>
-              */}
-            </Col>
-          </Row>
-        </div>
 
         <hr/>
 
@@ -225,7 +168,7 @@ class UserEditForm extends React.Component {
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={this.props.invalid || !this.state.validPassword} bsStyle="primary"
+          <Button disabled={this.props.invalid} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
@@ -235,7 +178,7 @@ class UserEditForm extends React.Component {
 
 UserEditForm.propTypes = {
   fields: PropTypes.object,
-  groupOptions: PropTypes.array,
+  // groupOptions: PropTypes.array,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -249,8 +192,6 @@ export default reduxForm({
     'email',
     'first_name',
     'last_name',
-    'password',
-    'confirm',
     'phone_number',
     'role',
     'groups'

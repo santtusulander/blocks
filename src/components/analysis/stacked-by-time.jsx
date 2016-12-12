@@ -3,6 +3,7 @@ import d3 from 'd3'
 import numeral from 'numeral'
 
 import TimeAxisLabels from './time-axis-labels'
+import {FormattedMessage} from 'react-intl'
 
 class AnalysisStackedByTime extends React.Component {
   formatY(data) {
@@ -17,7 +18,7 @@ class AnalysisStackedByTime extends React.Component {
     const dataKey = this.props.dataKey
 
     if(!this.props.width || !this.props.dataSets) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     const totals = this.props.dataSets.reduce((total, dataSet) => {
       return dataSet.map((datapoint, i) => {

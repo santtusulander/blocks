@@ -6,7 +6,8 @@
     "ANALYTICS_BASE_URI_PRODUCTION": false,
     "TOPO_BASE_URI_DEVELOPMENT": false,
     "TOPO_BASE_URI_PRODUCTION": false,
-    "GA_TRACKING_ID": false
+    "GA_TRACKING_ID": false,
+    "GOOGLE_SITE_KEY": false
   },
   "ecmaFeatures": {
     "jsx": true,
@@ -234,6 +235,7 @@
     "react/require-render-return": 2,
     "react/style-prop-object": 1,
     "react/no-children-prop": 2,
+    "react/no-unused-prop-types": [1, {skipShapeProps: true}],
     "react/no-find-dom-node": 2,
     "react/no-unescaped-entities": 2,
     "import/no-unresolved": [2, { "commonjs": true, "amd": true}],

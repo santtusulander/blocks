@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import classNames from 'classnames'
+import {FormattedMessage} from 'react-intl'
 
 import * as topoActionCreators from '../../redux/modules/topo'
 
@@ -24,7 +25,7 @@ class AnalysisByLocation extends React.Component {
   render() {
     if(!this.props.width || !this.props.countries || !this.props.countries.size
       || this.props.fetching || !this.props.countryData.size) {
-      return <div>Loading...</div>
+      return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
     return (
@@ -43,20 +44,20 @@ class AnalysisByLocation extends React.Component {
 
 AnalysisByLocation.displayName = 'AnalysisByLocation'
 AnalysisByLocation.propTypes = {
-  activeCountry: React.PropTypes.string,
-  activeState: React.PropTypes.string,
-  cities: React.PropTypes.instanceOf(Immutable.Map),
-  cityData: React.PropTypes.instanceOf(Immutable.List),
+  // activeCountry: React.PropTypes.string,
+  // activeState: React.PropTypes.string,
+  // cities: React.PropTypes.instanceOf(Immutable.Map),
+  // cityData: React.PropTypes.instanceOf(Immutable.List),
   countries: React.PropTypes.instanceOf(Immutable.Map),
   countryData: React.PropTypes.instanceOf(Immutable.List),
   dataKey: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   height: React.PropTypes.number,
   noBg: React.PropTypes.bool,
-  stateData: React.PropTypes.instanceOf(Immutable.List),
-  states: React.PropTypes.instanceOf(Immutable.Map),
   theme: React.PropTypes.string,
-  timelineKey: React.PropTypes.string,
+  // stateData: React.PropTypes.instanceOf(Immutable.List),
+  // states: React.PropTypes.instanceOf(Immutable.Map),
+  // timelineKey: React.PropTypes.string,
   tooltipCustomFormat: React.PropTypes.func,
   topoActions: React.PropTypes.object,
   width: React.PropTypes.number
