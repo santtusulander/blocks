@@ -1,6 +1,9 @@
 import React from 'react'
 import {
-  Input,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  InputGroup,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -47,34 +50,43 @@ class ExportEmailForm extends React.Component {
     return (
       <form className='ExportEmailForm' onSubmit={this.onSubmit}>
 
-        <Input
-          type="text"
-          label={this.props.intl.formatMessage({id: 'portal.exportEmail.recipients.text'})}
-          placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.recipients.placeholder'})}
-          addonBefore="To"
-          onChange={this.changeValue(['to'])}
-        />
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.exportEmail.recipients.text" /></ControlLabel>
+          <InputGroup>
+            <InputGroup.Addon><FormattedMessage id="portal.exportEmail.to.text" /></InputGroup.Addon>
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.recipients.placeholder'})}
+              onChange={this.changeValue(['to'])}
+            />
+          </InputGroup>
+        </FormGroup>
 
-        <Input
-          type="text"
-          addonBefore={this.props.intl.formatMessage({id: 'portal.exportEmail.cc.text'})}
-          placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.cc.placeholder'})}
-          onChange={this.changeValue(['cc'])}
-        />
+        <FormGroup>
+          <InputGroup>
+            <InputGroup.Addon><FormattedMessage id="portal.exportEmail.cc.text" /></InputGroup.Addon>
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.exportEmail.cc.placeholder'})}
+              onChange={this.changeValue(['cc'])}
+            />
+          </InputGroup>
+        </FormGroup>
 
-        <Input
-          type='text'
-          label={this.props.intl.formatMessage({id: 'portal.exportEmail.subject.text'})}
-          placeholder={subject}
-          onChange={this.changeValue(['subject'])}
-        />
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.exportEmail.subject.text" /></ControlLabel>
+          <FormControl
+            placeholder={subject}
+            onChange={this.changeValue(['subject'])}
+          />
+        </FormGroup>
 
-        <Input
-          type='textarea'
-          label={this.props.intl.formatMessage({id: 'portal.exportEmail.message.text'})}
-          placeholder=''
-          onChange={this.changeValue(['message'])}
-        />
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.exportEmail.message.text" /></ControlLabel>
+          <FormControl
+            type='textarea'
+            placeholder={subject}
+            onChange={this.changeValue(['message'])}
+          />
+        </FormGroup>
 
       {/* This needs
       <FormGroup controlId="frequencySelect">

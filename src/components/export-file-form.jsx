@@ -1,6 +1,8 @@
 import React from 'react'
 import {
-  Input,
+  FormGroup,
+  ControlLabel,
+  Radio,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -51,17 +53,17 @@ export class ExportFileForm extends React.Component {
         <h4>Select file type</h4>
 
         <div className="file-types">
-            {fileTypes.map((fileType) => (
-              <Input
-              key={fileType.value}
-              type="radio"
-              name="exportFile"
-              label={fileType.label}
-              checked={fileType.value == this.state.fileType}
-              className="export-input-list-item"
-              onChange={this.onChange(fileType.value)}
+          {fileTypes.map((fileType) => (
+            <FormGroup key={`radio-${fileType.value}`}>
+              <ControlLabel>{fileType.label}</ControlLabel>
+              <Radio
+                name="exportFile"
+                checked={fileType.value == this.state.fileType}
+                className="export-input-list-item"
+                onChange={this.onChange(fileType.value)}
               />
-            ))}
+            </FormGroup>
+          ))}
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
