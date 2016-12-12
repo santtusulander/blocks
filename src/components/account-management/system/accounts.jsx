@@ -258,7 +258,6 @@ class AccountList extends Component {
 AccountList.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
-  addAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   intl: PropTypes.object,

@@ -258,11 +258,11 @@ AccountManagementAccountDetails.propTypes = {
   fields: React.PropTypes.object,
   intl: React.PropTypes.object,
   invalid: React.PropTypes.bool,
-  onAdd: React.PropTypes.func,
+  // onAdd: React.PropTypes.func,
   onSave: React.PropTypes.func,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
-  toggleModal: React.PropTypes.func,
+  // toggleModal: React.PropTypes.func,
   uiActions: React.PropTypes.object
 }
 AccountManagementAccountDetails.defaultProps = {

@@ -16,6 +16,7 @@ const USER_DELETED = 'USER_DELETED'
 const USER_CREATED = 'USER_CREATED'
 const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
+const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -50,6 +51,12 @@ export function updateSuccess(state, action) {
 }
 
 export function updateFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function updatePasswordSuccess(state) {
   return state.merge({
     fetching: false
   })
@@ -172,7 +179,8 @@ export default handleActions({
   USER_DELETED: mapReducers(deleteUserSuccess, deleteUserFailure),
   USER_CREATED: mapReducers(createUserSuccess, createUserFailure),
   USER_UPDATED: mapReducers(updateSuccess, updateFailure),
-  USER_NAME_SAVED: userNameSave
+  USER_NAME_SAVED: userNameSave,
+  PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure)
 }, emptyUser)
 
 // ACTIONS
@@ -275,6 +283,15 @@ export const createUser = createAction(USER_CREATED, user =>
 
 export const updateUser = createAction(USER_UPDATED, (email, user) => {
   return axios.put(`${BASE_URL_AAA}/users/${email}`, user, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(parseResponseData)
+})
+
+export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) => {
+  return axios.post(`${BASE_URL_AAA}/users/${email}/password`, password, {
     headers: {
       'Content-Type': 'application/json'
     }

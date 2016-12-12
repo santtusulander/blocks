@@ -229,11 +229,8 @@ export class Login extends React.Component {
 
 Login.displayName = 'Login'
 Login.propTypes = {
-  accountActions: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object,
-  loggedIn: React.PropTypes.bool,
   loginUrl: React.PropTypes.string,
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,

@@ -331,7 +331,6 @@ AccountManagementAccountGroups.propTypes    = {
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
-  toggleModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)

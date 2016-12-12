@@ -36,6 +36,7 @@ import GroupForm from '../../components/account-management/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -305,6 +306,7 @@ class ContentItems extends React.Component {
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
+    const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -317,21 +319,22 @@ class ContentItems extends React.Component {
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
             : null}
-            <Select
+            {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
+             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
-              options={sortOptions.map(opt => [opt.value, opt.label])}/>
+              options={sortOptions.map(opt => [opt.value, opt.label])}/> : null}
             <ButtonGroup>
               <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={viewingChart}
                          icon={true}
-                         onClick={!viewingChart && this.props.toggleChartView}>
+                         onClick={toggleView(!viewingChart)}>
                 <IconItemChart/>
               </UDNButton>
               <UDNButton className={!viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={!viewingChart}
                          icon={true}
-                         onClick={viewingChart && this.props.toggleChartView}>
+                         onClick={toggleView(viewingChart)}>
                 <IconItemList/>
               </UDNButton>
             </ButtonGroup>
@@ -393,7 +396,7 @@ class ContentItems extends React.Component {
                   }
 
                   return (
-                    <ContentItem key={id}
+                    <ContentItem key={`content-item-${id}`}
                       isChart={viewingChart}
                       itemProps={itemProps}
                       scaledWidth={scaledWidth}
@@ -453,7 +456,6 @@ ContentItems.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
   changeNotification: React.PropTypes.func,
-  className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
@@ -466,15 +468,16 @@ ContentItems.propTypes = {
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
   hideInfoDialog: React.PropTypes.func,
-  history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
-  selectionDisabled: React.PropTypes.bool,
-  selectionStartTier: React.PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionStartTier: React.PropTypes.string, // this is used in a helper render method
   showAnalyticsLink: React.PropTypes.bool,
   showInfoDialog: React.PropTypes.func,
   showSlices: React.PropTypes.bool,

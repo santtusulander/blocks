@@ -139,8 +139,7 @@ class RolesList extends React.Component {
                   </td>
                   <td className="nowrap-column">
                     <ActionButtons
-                      onEdit={() => this.props.onEdit(role.get('id'))}
-                      onDelete={() => this.props.onDelete(role.get('id'))}/>
+                      onEdit={() => this.props.onEdit(role.get('id'))}/>
                   </td>
                 </tr>
               );
@@ -173,9 +172,7 @@ RolesList.displayName  = 'RolesList'
 RolesList.propTypes = {
   editRole: React.PropTypes.object,
   intl: React.PropTypes.object,
-  onAdd: React.PropTypes.func,
   onCancel: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
   onEdit: React.PropTypes.func,
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
