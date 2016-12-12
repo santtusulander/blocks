@@ -138,9 +138,7 @@ export class ExpiredPasswordResetToken extends React.Component {
 
 ExpiredPasswordResetToken.displayName = 'ExpiredPasswordResetToken'
 ExpiredPasswordResetToken.propTypes = {
-  fetching: React.PropTypes.bool,
-  router: React.PropTypes.object,
-  userActions: React.PropTypes.object
+  fetching: React.PropTypes.bool
 }
 
 function mapStateToProps(state) {
