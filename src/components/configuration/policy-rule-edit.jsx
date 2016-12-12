@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Input, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
+import {Button, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ActionButtons from '../action-buttons'
@@ -261,15 +261,17 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <div className="form-group">
+          <FormGroup>
             <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
-            <Input type="text" id="configure__edge__add-cache-rule__rule-name"
+            <FormControl
+              type="text"
+              id="configure__edge__add-cache-rule__rule-name"
               value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
               onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
-          </div>
+          </FormGroup>
 
           {ruleType !== POLICY_TYPES.DEFAULT &&
-            <div className="form-group">
+            <FormGroup>
               <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
               <Select
                 className="input-select"
@@ -280,7 +282,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   { label: 'Response', value: POLICY_TYPES.RESPONSE }
                 ]}
               />
-            </div>
+            </FormGroup>
           }
 
           <Row className="header-btn-row">
