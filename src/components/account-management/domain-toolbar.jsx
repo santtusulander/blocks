@@ -74,7 +74,6 @@ DomainToolbar.propTypes = {
   changeActiveDomain: PropTypes.func,
   domains: PropTypes.array,
   emptyDomainsTxt: PropTypes.string,
-  fetchDomains: PropTypes.func,
   onAddDomain: PropTypes.func,
   onDeleteDomain: PropTypes.func,
   onEditDomain: PropTypes.func,

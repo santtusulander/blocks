@@ -18,7 +18,7 @@ const displayTooltipRules = (attributes) => {
         attributes.touched  &&
         attributes.active &&
         (
-          attributes.name !== 'password' && attributes.name !== 'confirmPw' || attributes.error !== 'Required'
+          attributes.error !== 'Required'
         )
 }
 
@@ -32,7 +32,7 @@ const errorClassnameRules = (attributes) => {
         attributes.error &&
         attributes.touched &&
         (
-          attributes.name !== 'password' && attributes.name !== 'confirmPw' || attributes.error !== 'Required'
+          attributes.error !== 'Required'
         )
 }
 
@@ -57,7 +57,7 @@ const generateBsClasses = (attributes, input) => {
   return input.props.bsStyle ? { bsStyle: input.props.bsStyle } : {}
 }
 
-const InlineAdd = ({save, inputs, fields, invalid, passwordValid, values, unmount}) =>
+const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
   <tr className="inline-add-row">
     {inputs.map((cell, index) =>
       <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
@@ -72,7 +72,7 @@ const InlineAdd = ({save, inputs, fields, invalid, passwordValid, values, unmoun
         })}
         {index === inputs.length - 1 &&
         <ButtonToolbar className="pull-right">
-          <UDNButton disabled={invalid || !passwordValid} onClick={() => save(values)}>
+          <UDNButton disabled={invalid} onClick={() => save(values)}>
             <FormattedMessage id="portal.button.SAVE"/>
           </UDNButton>
           <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
@@ -83,15 +83,10 @@ const InlineAdd = ({save, inputs, fields, invalid, passwordValid, values, unmoun
     )}
   </tr>
 
-InlineAdd.defaultProps = {
-  passwordValid: true
-}
-
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array,
   invalid: PropTypes.bool,
-  passwordValid: PropTypes.bool,
   save: PropTypes.func,
   unmount: PropTypes.func,
   values: PropTypes.object

@@ -16,8 +16,8 @@ const DnsDomainEditForm = (props) => {
       refresh,
       ttl,
       negative_ttl
-      }
-    } = props
+    }
+  } = props
 
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> : edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
 
@@ -111,9 +111,7 @@ DnsDomainEditForm.propTypes = {
   fields: React.PropTypes.object.isRequired,
   intl: React.PropTypes.shape(intlShape),
   onCancel: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
-  onSave: React.PropTypes.func,
-  values: React.PropTypes.object
+  onSave: React.PropTypes.func
 }
 
 export default injectIntl(DnsDomainEditForm)
