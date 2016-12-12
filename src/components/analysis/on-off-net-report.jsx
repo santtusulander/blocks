@@ -10,6 +10,7 @@ import SectionContainer from '../layout/section-container'
 import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import {formatBytes} from '../../util/helpers'
 import { paleblue } from '../../constants/colors'
 import {getTrafficByDateRangeLabel} from './helpers'
@@ -249,7 +250,7 @@ class AnalysisOnOffNetReport extends React.Component {
         <SectionContainer>
           <div ref="stacksHolder">
             {this.props.fetching ?
-              <div>Loading...</div> : chart}
+              <LoadingSpinner/> : chart}
           </div>
         </SectionContainer>
 

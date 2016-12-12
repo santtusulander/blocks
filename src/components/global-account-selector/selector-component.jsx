@@ -50,7 +50,6 @@ const SelectorComponent = ({
 SelectorComponent.displayName = 'SelectorComponent'
 SelectorComponent.propTypes = {
   children: PropTypes.object,
-  classname: PropTypes.string,
   drillable: PropTypes.bool,
   items: PropTypes.array,
   onCaretClick: PropTypes.func,

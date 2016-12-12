@@ -44,15 +44,25 @@ function rolesActionsMaker() {
   }
 }
 
+const subject = () => {
+  return (
+    <Login
+      userActions={userActionsMaker({})}
+      intl={intlMaker()}
+      location={{query: {}}}
+    />
+  )
+}
+
 describe('Login', () => {
   it('should exist', () => {
-    const login = shallow(<Login userActions={userActionsMaker({})} intl={intlMaker()}/>)
+    const login = shallow( subject() )
     expect(login.length).toBe(1)
   })
 
   it('toggles username remember', () => {
     const login = shallow(
-      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
+      subject()
     )
     const inputs = login.find('Input')
     expect(login.state('rememberUsername')).toBe(false)
@@ -62,7 +72,7 @@ describe('Login', () => {
 
   it('maintains form state', () => {
     const login = shallow(
-      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
+      subject()
     )
     const inputs = login.find('Input')
     inputs.at(0).simulate('change',{target: {value: 'aaa'}})
@@ -73,7 +83,7 @@ describe('Login', () => {
 
   it('toggles active class when focused and blurred', () => {
     const login = shallow(
-      <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
+      subject()
     )
     const inputs = login.find('Input')
 
@@ -95,7 +105,11 @@ describe('Login', () => {
     const failedAction = {error: true, payload: {message: 'Test fail'}}
     const userActions = userActionsMaker(failedAction)
     const login = shallow(
-      <Login userActions={userActions} intl={intlMaker()}/>
+      <Login
+        userActions={userActions}
+        intl={intlMaker()}
+        location={{query: {}}}
+      />
     )
     login.setState({username: 'aaa', password: 'bbb'})
     const form = login.find('form')
@@ -124,13 +138,14 @@ describe('Login', () => {
         accountActions={accountActions}
         rolesActions={rolesActions}
         router={fakeRouter}
+        location={{query: {}}}
         intl={intlMaker()}/>
     )
     login.setState({username: 'aaa', password: 'bbb', rememberUsername: true})
     const form = login.find('form')
     form.simulate('submit', { preventDefault: () => {/* noop */} })
     expect(userActions.saveName.mock.calls[0][0]).toBe('aaa')
-    expect(rolesActions.fetchRoles.mock.calls.length).toBe(1)
-    expect(userActions.fetchUser.mock.calls[0][0]).toBe('aaa')
+    expect(userActions.logIn.mock.calls[0][0]).toBe('aaa')
+    expect(userActions.logIn.mock.calls[0][1]).toBe('bbb')
   })
 })

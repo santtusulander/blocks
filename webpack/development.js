@@ -8,6 +8,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 var environment = helpers.parseDotenvConfig(
   require('dotenv').config(path.resolve(__dirname, '../.env'))
 );
+const googleSiteKey = environment.GOOGLE_SITE_KEY || '6LfO1AoUAAAAAKy1rnqNJzAqDXxoHnUAKdRfY5vB'
 const useSourceMap = () => (process.argv.indexOf('--source-map') !== -1)
 
 var development = Object.assign({}, {
@@ -16,6 +17,7 @@ var development = Object.assign({}, {
   plugins: [
     new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
+      'GOOGLE_SITE_KEY': `"${googleSiteKey}"`,
       'VERSION': JSON.stringify(require('../package.json').version)
     }, environment)),
     new webpack.ProvidePlugin({

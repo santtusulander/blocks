@@ -315,34 +315,34 @@ class GroupForm extends React.Component {
 
               {(!accountIsServiceProviderType(account) && groupId) &&
                 <div>
-                  <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-                  {this.props.isFetchingHosts ? <LoadingSpinner/> :
-                    !hosts.isEmpty() ?
+              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+              {this.props.isFetchingHosts ? <LoadingSpinner/> :
+                !hosts.isEmpty() ?
                       <Table striped={true} className="fixed-layout">
-                        <thead>
-                        <tr>
-                          <th>
-                            <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                          </th>
+                    <thead>
+                    <tr>
+                      <th>
+                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                      </th>
                           <th className="one-button-cell" />
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {hosts.map((host, i) => {
-                          return (
-                            <tr key={i}>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {hosts.map((host, i) => {
+                      return (
+                        <tr key={i}>
                               <td><TruncatedTitle content={host} /></td>
-                              <td>
-                                <ActionButtons
+                          <td>
+                            <ActionButtons
                                   onDelete={() => this.setState({ hostToDelete: host })}/>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                        </tbody>
-                      </Table>
-                    : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
-                  }
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </Table>
+                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+              }
                 </div>
               }
 
@@ -382,7 +382,6 @@ GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
   canEditBilling: PropTypes.bool,
-  fetchHosts: PropTypes.func,
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groupId: PropTypes.number,
@@ -395,14 +394,14 @@ GroupForm.propTypes = {
   onSave: PropTypes.func,
   params: PropTypes.object,
   show: PropTypes.bool,
-  uiActions: PropTypes.object,
-  users: PropTypes.instanceOf(List)
+  uiActions: PropTypes.object
+  // users: PropTypes.instanceOf(List)
 }
 
 GroupForm.defaultProps = {
   account: Map(),
   activeHost: Map(),
-  users: List(),
+  // users: List(),
   hosts: List()
 }
 
@@ -426,7 +425,7 @@ function mapStateToProps({ user, host, group, account, form }, { groupId }) {
     activeHost: host.get('activeHost'),
     canEditBilling,
     formValues: getValues(form.groupEdit),
-    users: user.get('allUsers'),
+    // users: user.get('allUsers'),
     hosts: groupId && host.get('allHosts'),
     isFetchingHosts: host.get('fetching'),
     account: account.get('activeAccount'),

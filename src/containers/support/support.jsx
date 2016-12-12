@@ -82,11 +82,11 @@ class Support extends React.Component {
 
 Support.displayName = 'Support'
 Support.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Map),
+  // activeAccount: React.PropTypes.instanceOf(Map),
   children: PropTypes.node,
-  currentUser: React.PropTypes.instanceOf(Map),
+  // currentUser: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,
-  router: PropTypes.object,
+  // router: PropTypes.object,
   routes: PropTypes.array
 }
 

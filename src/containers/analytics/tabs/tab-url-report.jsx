@@ -42,7 +42,7 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.filterActions.resetFilters()
+    this.props.filterActions.resetStatusFilters()
   }
 
   fetchData(params, filters, hostConfiguredName){
@@ -68,8 +68,6 @@ class AnalyticsTabUrlReport extends React.Component {
 
     return (
       <AnalysisURLReport fetching={this.props.fetching}
-        statusCodes={this.props.filters.get('statusCodes')}
-        serviceTypes={this.props.filters.get('serviceTypes')}
         urlMetrics={this.props.urlMetrics}/>
     )
   }
@@ -80,7 +78,6 @@ AnalyticsTabUrlReport.propTypes = {
   fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
-  location: React.PropTypes.object,
   params: React.PropTypes.object,
   reportsActions: React.PropTypes.object,
   urlMetrics: React.PropTypes.instanceOf(Immutable.List)
