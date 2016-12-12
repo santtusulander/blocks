@@ -12,7 +12,8 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 
 import { getRoutes } from './routes'
 import * as reducers from './redux/modules'
-import { showInfoDialog, hideInfoDialog, setLoginUrl } from './redux/modules/ui'
+import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
+import { logOut, destroyStore } from './redux/modules/user'
 import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
@@ -35,12 +36,20 @@ const createStoreWithMiddleware =
       promiseMiddleware
     )(createStore)
 
+const rootReducer = (state, action) => {
+  if (action.type === 'DESTROY_STORE') {
+    return undefined
+  }
+
+  return stateReducer(state, action)
+}
+
 const stateReducer = combineReducers(reducers)
 const store =
   process.env.NODE_ENV === 'development' ?
     // enable redux-devtools-extension in development environment
-    createStoreWithMiddleware(stateReducer, window.devToolsExtension && window.devToolsExtension()) :
-    createStoreWithMiddleware(stateReducer)
+    createStoreWithMiddleware(rootReducer, window.devToolsExtension && window.devToolsExtension()) :
+    createStoreWithMiddleware(rootReducer)
 
 // Enable Webpack hot module replacement for reducers
 if (module.hot) {
@@ -74,17 +83,34 @@ axios.interceptors.response.use(function (response) {
         const method = error.config.method.toLowerCase()
         const tokenDidExpire = loggedIn && method === 'get'
 
-        store.dispatch(setLoginUrl(`${location.pathname}${location.search}`))
-
+        //If UI state == loggedIn, but getting 401s from API => token expired
+        //(NOTE: this might not be 100% true, might be eg. forbidden resource
+        //Should check expiration from  expires_at -key)
         if (tokenDidExpire) {
-          store.dispatch(showInfoDialog({
-            title: <FormattedMessage id='portal.common.error.tokenExpire.title'/>,
-            content: <FormattedMessage id='portal.common.error.tokenExpire.content'/>,
-            loginButton: true
-          }));
-        } else {
-          browserHistory.push('/login')
+          const returnPath = location.pathname
+          return store.dispatch( logOut(false) )
+            .then( () => {
+              /* eslint-disable no-console */
+              console.log('Token Expired at location: ', returnPath)
+              /* eslint-enable no-console */
+
+              //redirect to login
+              browserHistory.push({
+                pathname: '/login',
+                query: {
+                  sessionExpired: true,
+                  redirect: returnPath
+                }
+              })
+
+              store.dispatch( destroyStore() )
+              return Promise.reject(error)
+            })
         }
+
+        /* eslint-disable no-console */
+        console.log("Error: 401", error)
+        /* eslint-enable no-console */
       }
     }
     else if (status === 403) {
@@ -134,6 +160,7 @@ if (useRaven) {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable onunhandledrejection happened.', data)
+      /* eslint-enable no-console */
       captureAndShowRavenError(store, data.reason, null, false)
       errorDisplayed = true
     }
@@ -143,6 +170,7 @@ if (useRaven) {
     if (!errorDisplayed) {
       /* eslint-disable no-console */
       console.error('Unrecoverable error happened.', data)
+      /* eslint-enable no-console */
       captureAndShowRavenError(store, data.message, null, false)
       errorDisplayed = true;
     }
