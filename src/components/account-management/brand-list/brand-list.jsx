@@ -12,8 +12,6 @@ export const AVAILABILITY_PRIVATE = 'Private'
 
 export const BrandList = (props) => {
 
-  const brandsFormInitialValues = {}
-
   const tableRows = props.brands.map( (brand, i) => {
     return (
       <BrandListRow key={i} {... brand} onEdit={() => props.toggleModal(EDIT_BRAND)} onDelete={props.onDelete}  />
@@ -49,7 +47,7 @@ export const BrandList = (props) => {
           edit={true}
           onSave={() => {}}
           onCancel={() => props.toggleModal(null)}
-          {...brandsFormInitialValues}
+          {...props.brandsFormInitialValues}
         />
         }
     </div>

@@ -8,7 +8,6 @@ import { change, focus } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
-import * as permissionsActionCreators from '../../../redux/modules/permissions'
 import * as rolesActionCreators from '../../../redux/modules/roles'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
@@ -18,7 +17,6 @@ import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/action-buttons'
 import InlineAdd from '../../../components/inline-add'
-import PasswordFields from '../../../components/password-fields'
 import IconAdd from '../../../components/icons/icon-add'
 import IconInfo from '../../../components/icons/icon-info'
 import TableSorter from '../../../components/table-sorter'
@@ -45,8 +43,6 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
-      passwordVisible: false,
-      validPassword: false,
       usersGroups: List(),
       existingMail: null,
       existingMailMsg: null
@@ -62,8 +58,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
-    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
-    this.changePassword = this.changePassword.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.changeSearch = this.changeSearch.bind(this)
@@ -105,10 +99,9 @@ export class AccountManagementAccountUsers extends React.Component {
     })
   }
 
-  newUser({ password, email, roles }) {
+  newUser({ email, roles }) {
     const { userActions: { createUser }, params: { brand, account }, formFieldFocus } = this.props
     const requestBody = {
-      password,
       email,
       roles: [roles],
       brand_id: brand,
@@ -181,7 +174,6 @@ export class AccountManagementAccountUsers extends React.Component {
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
       [{ input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> }],
-      [{ input: <PasswordFields id="password" inlinePassword={true} changePassword={this.changePassword} /> }],
       [
         {
           input: <SelectWrapper
@@ -221,18 +213,6 @@ export class AccountManagementAccountUsers extends React.Component {
 
   togglePermissionModal() {
     this.setState({ showPermissionsModal: !this.state.showPermissionsModal })
-  }
-
-  togglePasswordVisibility() {
-    this.setState({
-      passwordVisible: !this.state.passwordVisible
-    })
-  }
-
-  changePassword(isPasswordValid) {
-    this.setState({
-      'validPassword': isPasswordValid
-    });
   }
 
   getGroupsForUser(user) {
@@ -408,11 +388,10 @@ export class AccountManagementAccountUsers extends React.Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="email" width="20%">
+              <TableSorter {...sorterProps} column="email" width="40%">
                 Email
               </TableSorter>
-              <th width="20%">Password</th>
-              <th width="20%">Role</th>
+              <th width="19%">Role</th>
               <th width="20%">Groups</th>
               <th width="1%"/>
             </tr>
@@ -420,19 +399,15 @@ export class AccountManagementAccountUsers extends React.Component {
           <tbody>
             {this.state.addingNew && <InlineAdd
               validate={this.validateInlineAdd}
-              fields={['email', 'password', 'roles', 'group_id']}
+              fields={['email', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
-              save={this.newUser}
-              passwordValid={this.state.validPassword}/>}
+              save={this.newUser}/>}
             {sortedUsers.map((user, i) => {
               return (
                 <tr key={i}>
                   <td>
                     {this.getEmailForUser(user)}
-                  </td>
-                  <td>
-                    ********
                   </td>
                   <ArrayCell items={this.getRolesForUser(user)} maxItemsShown={4}/>
                   <ArrayCell items={this.getGroupsForUser(user)} maxItemsShown={4}/>
@@ -519,7 +494,6 @@ AccountManagementAccountUsers.propTypes = {
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
   permissions: React.PropTypes.instanceOf(Map),
-  permissionsActions: React.PropTypes.object,
   resetRoles: React.PropTypes.func,
   roles: React.PropTypes.instanceOf(List),
   rolesActions: React.PropTypes.object,
@@ -545,7 +519,6 @@ function mapDispatchToProps(dispatch) {
   return {
     resetRoles: () => dispatch(change('inlineAdd', 'roles', '')),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    permissionsActions: bindActionCreators(permissionsActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),

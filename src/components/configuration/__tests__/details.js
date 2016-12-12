@@ -1,16 +1,17 @@
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
+import { shallow } from 'enzyme'
 
 jest.unmock('../details.jsx')
 import ConfigurationDetails from '../details.jsx'
 
 describe('ConfigurationDetails', () => {
   it('should exist', () => {
-    let details = TestUtils.renderIntoDocument(
+    let details = shallow(
       <ConfigurationDetails />
     );
-    expect(TestUtils.isCompositeComponent(details)).toBeTruthy();
+    expect(details).toBeTruthy();
   });
 
   it('should change values', () => {
