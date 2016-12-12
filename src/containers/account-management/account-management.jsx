@@ -407,24 +407,24 @@ export class AccountManagement extends Component {
           </IsAllowed>
         </PageHeader>
         {account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li data-eventKey="details">
+          <li>
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li data-eventKey="groups">
+          <li>
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li data-eventKey="users">
+          <li>
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li data-eventKey="accounts">
+          <li>
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li data-eventKey="users">
+          <li>
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li data-eventKey="brands">
+          {/*<li>
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
           <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
@@ -432,11 +432,11 @@ export class AccountManagement extends Component {
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li data-eventKey="roles">
+          <li>
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li data-eventKey="services">
+           <li>
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
