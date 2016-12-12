@@ -21,6 +21,7 @@ import PROVIDER_TYPES from '../constants/provider-types'
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -149,7 +150,7 @@ export class Groups extends React.Component {
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
         toggleChartView={this.props.uiActions.toggleChartView}
-        type='group'
+        type={CONTENT_ITEMS_TYPES.GROUP}
         user={this.props.user}
         viewingChart={this.props.viewingChart}
         fetchItem={(id) => { return this.props.groupActions.fetchGroup(brand, account, id) }}
@@ -170,13 +171,11 @@ Groups.propTypes = {
   fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
-  history: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  toggleModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   updateUser: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -230,7 +229,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
   }
   return {
-    toggleModal: uiActions.toggleAccountManagementModal,
     fetchData: fetchData,
     groupActions: groupActions,
     clearFetchedHosts: () => dispatch(clearFetchedHosts()),

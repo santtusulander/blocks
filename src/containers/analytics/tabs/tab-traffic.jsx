@@ -8,7 +8,6 @@ import moment from 'moment'
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
-import * as metricsActionCreators from '../../../redux/modules/metrics'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 import DateRanges from '../../../constants/date-ranges'
@@ -136,7 +135,6 @@ class AnalyticsTabTraffic extends React.Component {
         byCountry={this.props.trafficByCountry}
         byTime={this.props.trafficByTime}
         byTimeComparison={filters.getIn(['includeComparison']) ? this.props.trafficByTimeComparison : Immutable.List()}
-        dateRange={this.props.filters.get('dateRangeLabel')}
         fetching={false}
         lowTraffic={this.formatTotals(lowTraffic)}
         peakTraffic={this.formatTotals(peakTraffic)}
@@ -152,8 +150,6 @@ AnalyticsTabTraffic.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
-  metrics: React.PropTypes.instanceOf(Immutable.Map),
-  metricsActions: React.PropTypes.object,
   params: React.PropTypes.object,
   totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
@@ -165,7 +161,6 @@ AnalyticsTabTraffic.propTypes = {
 
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
-  metrics: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List(),
@@ -175,7 +170,6 @@ AnalyticsTabTraffic.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    metrics: state.metrics,
     totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
     trafficByTimeComparison: state.traffic.get('byTimeComparison'),
@@ -186,8 +180,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
-    metricsActions: bindActionCreators(metricsActionCreators, dispatch)
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
 }
 

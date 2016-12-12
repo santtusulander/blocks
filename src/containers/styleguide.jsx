@@ -31,7 +31,7 @@ import SectionContainer from '../components/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
 import BarChart from '../components/charts/bar-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-import AccountSelector from '../components/global-account-selector/selector-component'
+import SelectorComponent from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
@@ -408,12 +408,12 @@ class Styleguide extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <AccountSelector items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
+              <SelectorComponent items={[[1, 'Item 1'], [2, 'Item 2'], [3, 'Dropdown Item 3']]} drillable={true}>
                 <div className="btn btn-link dropdown-toggle header-toggle">
                   <h1>Select Account</h1>
                   <IconCaretDown />
                 </div>
-              </AccountSelector>
+              </SelectorComponent>
             </div>
           </div>
 

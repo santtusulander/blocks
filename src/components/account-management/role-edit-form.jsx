@@ -28,7 +28,10 @@ const validate = values => {
 
 const RolesEditForm = (props) => {
 
-  const { fields: { roleName } } = props
+  const {
+    fields: { roleName },
+    permissions
+  } = props
   /*TODO: Enable in the future when roles are editable, after 0.8
   const rolesArray = props.roles.map((role) => {
     return {
@@ -47,7 +50,7 @@ const RolesEditForm = (props) => {
   ])
 
   const getPermissionName = function(permissionKey, section) {
-    return props.permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
+    return permissions.get(section).find(value => value.get('name') === permissionKey).get('title')
   }
 
   return (
@@ -141,7 +144,7 @@ RolesEditForm.propTypes = {
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   permissions: React.PropTypes.instanceOf(Immutable.Map),
-  roles: React.PropTypes.object,
+  // roles: React.PropTypes.object,
   show: React.PropTypes.bool
 }
 

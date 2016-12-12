@@ -2,6 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 
 import AnalysisStackedByTime from './stacked-by-time'
+import {FormattedMessage} from 'react-intl'
 
 class AnalysisStorageUsageReport extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class AnalysisStorageUsageReport extends React.Component {
         <h3>Storage Volume Reporting</h3>
         <div ref="chartHolder">
           {this.props.fetching ?
-            <div>Loading...</div> :
+            <div><FormattedMessage id="portal.loading.text"/></div> :
             <AnalysisStackedByTime padding={40}
               dataSets={[stats.toJS()]}
               width={this.state.chartWidth} height={this.state.chartWidth / 3}/>}
