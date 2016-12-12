@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
-import { Input } from 'react-bootstrap'
+import { FormGroup, FormControl } from 'react-bootstrap'
 
 import SectionHeader from '../../components/layout/section-header'
 import RolesEditForm from './role-edit-form.jsx'
@@ -87,13 +87,14 @@ class RolesList extends React.Component {
     return (
       <div className='roles-list'>
         <SectionHeader sectionHeaderTitle={finalRolesText}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder={this.props.intl.formatMessage({id: 'portal.role.list.search.placeholder'})}
-            value={this.state.search}
-            onChange={({ target: { value } }) => this.setState({ search: value })} />
+          <FormGroup className="search-input-group">
+            <FormControl
+              type="text"
+              className="search-input"
+              placeholder={this.props.intl.formatMessage({id: 'portal.role.list.search.placeholder'})}
+              value={this.state.search}
+              onChange={({ target: { value } }) => this.setState({ search: value })} />
+          </FormGroup>
         </SectionHeader>
         <table className="table table-striped">
           <thead>

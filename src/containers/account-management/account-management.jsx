@@ -263,17 +263,16 @@ export class AccountManagement extends Component {
           condition: !isValidAccountName(accountName),
           errorText:
             <div key={accountName}>
-              {[
-                <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>, <div key={1}>
-                  <div style={{marginTop: '0.5em'}}>
-                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                    <ul>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                    </ul>
-                  </div>
+              <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>
+              <div>
+                <div style={{marginTop: '0.5em'}}>
+                  <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                  <ul>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                  </ul>
                 </div>
-              ]}
+              </div>
             </div>
         }
       ]
@@ -384,6 +383,7 @@ export class AccountManagement extends Component {
       users: this.props.users,
       currentUser: this.props.currentUser
     }
+
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
@@ -407,41 +407,40 @@ export class AccountManagement extends Component {
           </IsAllowed>
         </PageHeader>
         {account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li eventKey="details">
+          <li data-eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li eventKey="groups">
+          <li data-eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li eventKey="users">
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li eventKey="accounts">
+          <li data-eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li eventKey="users">
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-          {/*<li eventKey="brands">
+          {/*<li data-eventKey="brands">
             <Link to={baseUrl + '/brands'} activeClassName="active">BRANDS</Link>
           </li>*/}
-          <IsAllowed to={PERMISSIONS.VIEW_DNS} eventKey="dns">
+          <IsAllowed to={PERMISSIONS.VIEW_DNS} data-eventKey="dns">
            <li>
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li eventKey="roles">
+          <li data-eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li eventKey="services">
+           <li data-eventKey="services">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
         </Tabs>}
-
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 

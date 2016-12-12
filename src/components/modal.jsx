@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, ButtonToolbar, Input, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, FormGroup, ControlLabel, FormControl, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm } from 'redux-form'
 
@@ -32,15 +32,16 @@ class ModalWindow extends React.Component {
         <Modal.Body>
           {children}
           {content &&
-          <p>{content}</p>}
+            <p>{content}</p>
+          }
           {verifyDelete &&
-          <Input
-            autoFocus={true}
-            type="text"
-            ref="deleteInput"
-            label={intl.formatMessage({id: 'portal.deleteModal.validation.label'})}
-            placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
-            {...modalField} />
+            <FormGroup>
+              <ControlLabel><FormattedMessage id="portal.deleteModal.validation.label" /></ControlLabel>
+              <FormControl
+                placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
+                {...modalField}
+              />
+            </FormGroup>
           }
         </Modal.Body>
 

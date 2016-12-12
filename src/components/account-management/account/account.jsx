@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar } from 'react-bootstrap'
+import { Col, /*OverlayTrigger, Tooltip,*/ ButtonToolbar, FormControl } from 'react-bootstrap'
 import { Map, is, fromJS } from 'immutable'
 import { reduxForm } from 'redux-form'
 import { withRouter } from 'react-router'
@@ -165,9 +165,8 @@ class AccountManagementAccountDetails extends React.Component {
             <Col xs={8}>
               {/* <div className="input-group"> */}
               <IsAllowed to={MODIFY_ACCOUNTS}>
-                <input
+                <FormControl
                   {...accountName}
-                  type="text"
                   placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
                   className="form-control"/>
               </IsAllowed>

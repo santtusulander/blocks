@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Button, ButtonToolbar, Col, Input, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, FormControl, Row } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 // import moment from 'moment'
 import PasswordFields from '../password-fields'
@@ -163,9 +163,8 @@ class UserEditForm extends React.Component {
                   <FormattedMessage id="portal.user.edit.name.text"/>
                 </label>
                 <Col xs={3}>
-                  <Input
+                  <FormControl
                     {...first_name}
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
                   {first_name.touched && first_name.error &&
                   <div className="error-msg">{first_name.error}</div>}
@@ -173,9 +172,8 @@ class UserEditForm extends React.Component {
 
                 {this.state.showMiddleNameField ?
                   <Col xs={3}>
-                    <Input
+                    <FormControl
                       {...middle_name}
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}/>
                     {last_name.touched && last_name.error &&
                       <div className="error-msg">{middle_name.error}</div>
@@ -184,9 +182,8 @@ class UserEditForm extends React.Component {
                 : null}
 
                 <Col xs={3}>
-                  <Input
+                  <FormControl
                     {...last_name}
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
                   {last_name.touched && last_name.error &&
                     <div className="error-msg">{last_name.error}</div>
@@ -233,9 +230,8 @@ class UserEditForm extends React.Component {
                 </label>
                 <Col xs={3}>
                   <div className="form-group">
-                    <Input
+                    <FormControl
                       {...timezone}
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.timezone.text'})}/>
                   </div>
                 </Col>
