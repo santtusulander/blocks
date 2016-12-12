@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Input, Tooltip } from 'react-bootstrap'
+import { FormControl, FormGroup, InputGroup, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 
 import IconPassword from '../components/icons/icon-password.jsx'
@@ -184,26 +184,32 @@ export class PasswordFields extends Component {
     : null
 
     const passwordField = (
-      <Input
-        wrapperClassName={passwordWrapperClassName}
-        addonBefore={stackedPassword && <IconPassword/>}
-        addonAfter={stackedPassword && <a
-          className={'input-addon-link' +
-          (this.state.confirmVisible ? ' active' : '')}
-          onClick={this.togglePasswordVisibility}>
-            <IconEye/>
-        </a>}>
+      <FormGroup>
         {requirementsTooltip}
-        <input
-          id="password"
-          type={this.state.passwordVisible || (!stackedPassword && this.state.confirmVisible) ? 'text' : 'password'}
-          placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
-          className="form-control"
-          onFocus={this.passwordFocus(true)}
-          onBlur={this.passwordFocus(false)}
-          onChange={this.changePassword}
-          value={this.props.value || this.state.password} />
-      </Input>
+        <InputGroup className={passwordWrapperClassName}>
+          {stackedPassword &&
+            <InputGroup.Addon>
+                <IconPassword/>
+            </InputGroup.Addon>}
+          <FormControl
+            id="password"
+            type={this.state.passwordVisible || (!stackedPassword && this.state.confirmVisible) ? 'text' : 'password'}
+            placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.newPassword.text'}) : ''}
+            className="form-control"
+            onFocus={this.passwordFocus(true)}
+            onBlur={this.passwordFocus(false)}
+            onChange={this.changePassword}
+            value={this.props.value || this.state.password}/>
+        {stackedPassword &&
+          <InputGroup.Addon>
+            <a
+              className={classNames('input-addon-link', { active: this.state.confirmVisible })}
+              onClick={this.togglePasswordVisibility}>
+              <IconEye/>
+            </a>
+          </InputGroup.Addon>}
+      </InputGroup>
+    </FormGroup>
     )
 
     const confirmErrorTooltip = (
@@ -217,26 +223,31 @@ export class PasswordFields extends Component {
     )
 
     const confirmationField = (
-      <Input
-        wrapperClassName={confirmWrapperClassName}
-        addonBefore={stackedPassword && <IconPassword/>}
-        addonAfter={<a
-          className={'input-addon-link' +
-          (this.state.confirmVisible ? ' active' : '')}
-          onClick={this.toggleConfirmVisibility}>
-            <IconEye/>
-        </a>}>
+      <FormGroup>
         {confirmErrorTooltip}
-        <input
-          id="confirm"
-          type={this.state.confirmVisible ? 'text' : 'password'}
-          placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
-          className="form-control"
-          onFocus={this.confirmFocus(true)}
-          onBlur={this.confirmFocus(false)}
-          value={this.state.confirm}
-          onChange={this.changeConfirm} />
-      </Input>
+        <InputGroup className={confirmWrapperClassName}>
+          {stackedPassword &&
+            <InputGroup.Addon>
+              <IconPassword/>
+            </InputGroup.Addon>}
+          <FormControl
+            id="confirm"
+            type={this.state.confirmVisible ? 'text' : 'password'}
+            placeholder={!stackedPassword && intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
+            className="form-control"
+            onFocus={this.confirmFocus(true)}
+            onBlur={this.confirmFocus(false)}
+            value={this.state.confirm}
+            onChange={this.changeConfirm}/>
+          <InputGroup.Addon>
+            <a
+              className={classNames('input-addon-link', { active: this.state.confirmVisible })}
+              onClick={this.toggleConfirmVisibility}>
+              <IconEye/>
+            </a>
+          </InputGroup.Addon>
+        </InputGroup>
+      </FormGroup>
     )
 
     return (
