@@ -2,7 +2,10 @@ import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { reduxForm } from 'redux-form'
 import {
-  Input,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -150,23 +153,29 @@ class SupportTicketForm extends React.Component {
       onCancel
     } = this.props
 
+    const getValidationState = field => {
+      return (field.touched && field.error) ? "error" : null
+    }
+
     return (
       <form className="ticket-form">
-        <Input
-          {...subject}
-          type="text"
-          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.title.text'})}/>
-        {subject.touched && subject.error &&
-        <div className="error-msg">{subject.error}</div>}
+        <FormGroup validationState={getValidationState(subject)}>
+          <ControlLabel><FormattedMessage id="portal.support.tickets.label.title.text" /></ControlLabel>
+          {getValidationState(subject) &&
+            <HelpBlock>{subject.error}</HelpBlock>
+          }
+          <FormControl {...subject} />
+        </FormGroup>
 
         <hr/>
 
-        <Input
-          {...description}
-          type="textarea"
-          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.description.text'})}/>
-        {description.touched && description.error &&
-        <div className="error-msg">{description.error}</div>}
+        <FormGroup validationState={getValidationState(description)}>
+          <ControlLabel><FormattedMessage id="portal.support.tickets.label.description.text" /></ControlLabel>
+          {getValidationState(description) &&
+            <HelpBlock>{description.error}</HelpBlock>
+          }
+          <FormControl componentClass="textarea" {...description} />
+        </FormGroup>
 
         <hr/>
 
