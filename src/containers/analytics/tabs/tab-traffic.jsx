@@ -22,6 +22,7 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.fetchData = this.fetchData.bind(this)
     this.formatTotals = this.formatTotals.bind(this)
+    this.getBaseOpts = this.getBaseOpts.bind(this)
   }
 
   componentDidMount() {
@@ -119,6 +120,19 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
+  getBaseOpts() {
+    const { params, filters, location } = this.props
+
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
+    const startDate  = filters.getIn(['dateRange', 'startDate'])
+    const endDate    = filters.getIn(['dateRange', 'endDate'])
+    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
+    const byTimeOpts = Object.assign({
+      granularity: rangeDiff >= 2 ? 'day' : 'hour'
+    }, fetchOpts)
+    return byTimeOpts
+  }
+
   render() {
     const {filters, totals} = this.props
     const recordType = filters.get('recordType')
@@ -133,6 +147,7 @@ class AnalyticsTabTraffic extends React.Component {
       <AnalysisTraffic
         avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
+        byCity={this.props.trafficByCity}
         byTime={this.props.trafficByTime}
         byTimeComparison={filters.getIn(['includeComparison']) ? this.props.trafficByTimeComparison : Immutable.List()}
         fetching={false}
@@ -141,6 +156,7 @@ class AnalyticsTabTraffic extends React.Component {
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
+        baseOpts={this.getBaseOpts()}
       />
     )
   }
@@ -154,6 +170,7 @@ AnalyticsTabTraffic.propTypes = {
   totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
+  trafficByCity: React.PropTypes.instanceOf(Immutable.List),
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficByTimeComparison: React.PropTypes.instanceOf(Immutable.List)
@@ -162,6 +179,7 @@ AnalyticsTabTraffic.propTypes = {
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
   totals: Immutable.Map(),
+  trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List(),
   trafficByTimeComparison: Immutable.List()
@@ -173,6 +191,7 @@ function mapStateToProps(state) {
     totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
     trafficByTimeComparison: state.traffic.get('byTimeComparison'),
+    trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress')
   }

@@ -225,12 +225,10 @@ class AnalysisTraffic extends React.Component {
             {this.props.fetching ?
               <div><FormattedMessage id="portal.loading.text"/></div> :
               <AnalysisByLocation
-                dataKey={byCountryDataKey}
-                tooltipCustomFormat={byCountryDataFormat}
-                timelineKey="detail"
-                width={this.state.byLocationWidth}
-                height={this.state.byLocationWidth / 1.6}
-                countryData={this.props.byCountry}/>
+                baseOpts={this.props.baseOpts}
+                countryData={this.props.byCountry}
+                cityData={this.props.byCity}
+                />
             }
           </div>
         </SectionContainer>
@@ -302,6 +300,8 @@ class AnalysisTraffic extends React.Component {
 AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes   = {
   avgTraffic: React.PropTypes.string,
+  baseOpts: React.PropTypes.object,
+  byCity: React.PropTypes.instanceOf(Immutable.List),
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   byTimeComparison: React.PropTypes.instanceOf(Immutable.List),

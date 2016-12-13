@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl'
+import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 import Typeahead from 'react-bootstrap-typeahead'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
@@ -58,7 +58,8 @@ class Mapbox extends React.Component {
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
-      hoveredLayer: null
+      hoveredLayer: null,
+      map: null
     }
 
     this.countryGeoJson = {
@@ -67,9 +68,16 @@ class Mapbox extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.cityData !== this.props.cityData) {
+      const newLayers = this.state.layers.filter(layer => !layer.includes('city-'))
+      this.addCityLayers(this.refs.mapbox.state.map, newLayers, nextProps.cityData)
+    }
+  }
+
   onStyleLoaded(map) {
     this.addCountryLayers(map, this.state.layers)
-    this.addCityLayers(map, this.state.layers)
+    this.addCityLayers(map, this.state.layers, this.props.cityData)
   }
 
   onZoom(e) {
@@ -77,16 +85,14 @@ class Mapbox extends React.Component {
   }
 
   onZoomEnd(e) {
-    if (this.state.zoom > 5) {
-      this.state.layers.forEach((layer) => {
-        if (!layer.includes('country')) {
-          e.setPaintProperty(layer, 'circle-radius',
-            e.getLayer(layer).metadata.radius * (this.state.scale / 10)
-          )
-        }
-      })
-    }
+    if (this.state.zoom > 6.9) {
+      const south = e.getBounds().getSouth()
+      const west = e.getBounds().getWest()
+      const north = e.getBounds().getNorth()
+      const east = e.getBounds().getEast()
 
+      this.props.getCitiesWithinBounds(south, west, north, east)
+    }
   }
 
   openPopup(content, coords) {
@@ -177,10 +183,14 @@ class Mapbox extends React.Component {
 
   }
 
-  addCityLayers(map, layers) {
-    this.props.cityData.forEach((city) => {
-      const cityName = city.city.split(' ').join('-').toLowerCase()
+  addCityLayers(map, layers, cityData) {
+    cityData.forEach((city) => {
+      const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
       const layerExists = layers.some(layer => layer === cityName)
+
+      if (map.getLayer(cityName)) {
+        map.removeLayer(cityName)
+      }
 
       if (!map.getSource('geo-' + cityName)) {
         map.addSource('geo-' + cityName, {
@@ -190,7 +200,7 @@ class Mapbox extends React.Component {
             features: [{
               type: 'Feature',
               properties: {
-                name: city.city,
+                name: city.name,
                 total: city.bits_per_second
               },
               geometry: {
@@ -204,11 +214,12 @@ class Mapbox extends React.Component {
 
       if (!layerExists) {
         layers.push(cityName)
-        this.setState({ layers })
       }
+
+      this.renderCityCircle(map, city, cityData)
     })
 
-    this.renderCityCircles(map)
+    this.setState({ layers })
   }
 
   renderCountryHighlight(map) {
@@ -223,7 +234,7 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: `country-fill-${country.properties.iso_a3}`,
         source: `geo-${country.properties.iso_a3}`,
-        maxzoom: 5,
+        maxzoom: 7,
         paint: {
           'fill-color': countryColor,
           'fill-opacity': 0.5
@@ -234,7 +245,7 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: `country-stroke-${country.properties.iso_a3}`,
         source: `geo-${country.properties.iso_a3}`,
-        maxzoom: 5,
+        maxzoom: 7,
         paint: {
           'line-color': countryColor,
           'line-width': 2
@@ -242,35 +253,33 @@ class Mapbox extends React.Component {
         type: 'line'
       })
     })
-
-    this.setState({ map })
-
   }
 
-  renderCityCircles(map) {
-    const cities = this.props.cityData
+  renderCityCircle(map, city, cityData) {
+    const cities = cityData
     const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
 
-    cities.forEach((city) => {
-      const cityHeat = getScore(cityMedian, city.bits_per_second)
-      const cityColor = cityHeat && cityHeat < heatMapColors.length ? heatMapColors[ cityHeat - 1 ] : '#000000'
-      const cityId = city.city.split(' ').join('-').toLowerCase()
+    const cityHeat = getScore(cityMedian, city.bits_per_second)
+    const cityColor = cityHeat && cityHeat < heatMapColors.length ? heatMapColors[ cityHeat - 1 ] : '#f9ba01'
+    const cityId = 'city-' + city.name.split(' ').join('-').toLowerCase()
+    const cityRadius = cityHeat > 40 ? 40 : cityHeat < 10 ? 10 : cityHeat
 
-      map.addLayer({
-        id: cityId,
-        source: 'geo-' + cityId,
-        type: 'circle',
-        minzoom: 5,
-        paint: {
-          'circle-radius': cityHeat,
-          'circle-color': cityColor,
-          'circle-opacity': 0.5
-        },
-        metadata: {
-          radius: cityHeat
-        }
-      })
+    map.addLayer({
+      id: cityId,
+      source: 'geo-' + cityId,
+      type: 'circle',
+      minzoom: 6.9,
+      paint: {
+        'circle-radius': cityRadius * (this.state.scale / (this.state.scale > 1000 ? 10000 : 1000)),
+        'circle-color': cityColor,
+        'circle-opacity': 0.5
+      },
+      metadata: {
+        radius: cityRadius * (this.state.scale / (this.state.scale > 1000 ? 10000 : 1000))
+      }
     })
+
+    this.setState({ map })
   }
 
   onZoomClick(map, value) {
@@ -287,6 +296,7 @@ class Mapbox extends React.Component {
         containerStyle={{
           height: '600px'
         }}
+        ref="mapbox"
         zoom={[this.state.zoom]}
         minZoom={1}
         maxZoom={13}
@@ -368,6 +378,7 @@ Mapbox.propTypes = {
   cityData: React.PropTypes.array,
   countryData: React.PropTypes.array,
   geoData: React.PropTypes.object,
+  getCitiesWithinBounds: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 
