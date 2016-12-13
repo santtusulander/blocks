@@ -76,6 +76,12 @@ const TRANSLATED_MESSAGES = {
   'portal.role.list.search.noResults.text': 'No roles found',
   'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
 
+  'portal.analytics.dropdownMenu.all': 'All {options}',
+  'portal.analytics.dropdownMenu.clear' : 'Clear',
+  'portal.analytics.dropdownMenu.clearSelection': 'Clear selection',
+  'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',
+  'portal.analytics.dropdownMenu.pleaseSelect' : 'Please select',
+
   'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
   'portal.analytics.fileErrors.serverErrors.label': 'Server errors',
