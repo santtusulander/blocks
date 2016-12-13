@@ -251,7 +251,7 @@ class UserEditForm extends React.Component {
                 {this.state.showPasswordField || savingPassword ?
                   <div>
                     <Col xs={3}>
-                      <Input
+                      <FormControl
                         type="password"
                         placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
                         {...current_password} />
