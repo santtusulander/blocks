@@ -87,12 +87,11 @@ class CacheKeyQueryStringForm extends React.Component {
         ['include_some_parameters', <FormattedMessage
           id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>)
     const qNameInputs = this.state.queryArgs.map((queryArg, i) =>
-      <FormGroup>
+      <FormGroup key={`query-arg-${i}`}>
         <ControlLabel>
           {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
         </ControlLabel>
         <FormControl
-          key={`query-arg-${queryArg}`}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}
           value={queryArg}
           onChange={this.handleChangeArg(i)}/>

@@ -16,7 +16,7 @@ class Header extends React.Component {
       activeActivity: props.set.get('action') || 'set',
       from_header: '',
       from_value: '',
-      to_header: props.set.get('header'),
+      to_header: props.set.get('header') || '',
       to_value: value && value.size ? value.get(0).get('field_detail') : ''
     }
 
