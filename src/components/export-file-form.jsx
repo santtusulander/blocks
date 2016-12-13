@@ -50,20 +50,19 @@ export class ExportFileForm extends React.Component {
     return (
       <div className='ExportFileForm'>
 
-        <h4>Select file type</h4>
-
         <div className="file-types">
-          {fileTypes.map((fileType) => (
-            <FormGroup key={`radio-${fileType.value}`}>
-              <ControlLabel>{fileType.label}</ControlLabel>
+          <FormGroup>
+          <ControlLabel>Select file type</ControlLabel>
+            {fileTypes.map((fileType, index) => (
               <Radio
+                key={`radio-${index}`}
                 name="exportFile"
                 checked={fileType.value == this.state.fileType}
                 className="export-input-list-item"
                 onChange={this.onChange(fileType.value)}
-              />
-            </FormGroup>
-          ))}
+              ><span>{fileType.label}</span></Radio>
+            ))}
+          </FormGroup>
         </div>
 
         <ButtonToolbar className="text-right extra-margin-top">
