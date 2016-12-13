@@ -163,10 +163,11 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
     )))
     .then(resp => resp.map(certificate => {
       return {
+        account,
         group,
         cn: certificate.data.cn,
-        title: certificate.data.title,
-        account
+        expirationDate: certificate.data.date_not_valid_after,
+        title: certificate.data.title
       }
     }))
 })
