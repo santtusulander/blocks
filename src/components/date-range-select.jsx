@@ -20,7 +20,7 @@ const endOfThisWeek = () => moment().utc().endOf('week')
 
 const DATE_FORMAT = 'MM/DD/YYYY'
 
-export class DateRangeSelect extends React.Component {
+class DateRangeSelect extends React.Component {
   constructor(props) {
     super(props)
 
