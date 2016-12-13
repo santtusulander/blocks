@@ -1,6 +1,5 @@
 import React from 'react'
-import { Input, Modal, Panel } from 'react-bootstrap'
-// import Immutable from 'immutable'
+import { ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
@@ -35,30 +34,40 @@ class OriginHostname extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1>Origin Hostname</h1>
+          <h1><FormattedMessage id="portal.policy.edit.originHostname.text" /></h1>
         </Modal.Header>
         <Modal.Body>
 
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.originHostname.header"/></label>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.originHostname.header"/>
+            </ControlLabel>
             <p>origin.foo.com</p>
-          </div>
+          </FormGroup>
 
           <hr />
 
-          <Input type="number" label="Origin Port"
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originPort.placeholder'})}
-            id="actions_origin-port"
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_port']
-            )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.originHostname.originPort.text" />
+            </ControlLabel>
+            <FormControl
+              type="number"
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originPort.placeholder'})}
+              id="actions_origin-port"
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_port']
+              )}/>
+          </FormGroup>
 
           <hr />
 
           <div className="form-groups">
             <InputConnector show={isOtherHostHeader} />
-            <div className="form-group">
-              <label className="control-label"><FormattedMessage id="portal.policy.edit.originHostname.originHostname.text"/></label>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.originHostname.originHostname.text"/>
+              </ControlLabel>
               <Select className="input-select"
                 onSelect={this.handleSelectChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname']
@@ -68,11 +77,12 @@ class OriginHostname extends React.Component {
                   ['other_origin_hostname', <FormattedMessage id="portal.policy.edit.originHostname.useOtherHostname.text"/>],
                   ['origin_hostname', <FormattedMessage id="portal.policy.edit.originHostname.useOriginHostname.text"/>],
                   ['published_name', <FormattedMessage id="portal.policy.edit.originHostname.usePublishedHostname.text"/>]]}/>
-            </div>
+            </FormGroup>
 
             <Panel className="form-panel" collapsible={true}
               expanded={isOtherHostHeader}>
-              <Input type="text"
+              <FormControl
+                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.enterHostname.text'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_value']
@@ -80,14 +90,20 @@ class OriginHostname extends React.Component {
             </Panel>
           </div>
 
-        <hr />
+          <hr />
 
-        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.text'})}
-          placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.placeholder'})}
-          id="actions_origin-forward-path"
-          onChange={this.handleChange(
-            ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_forward_path']
-          )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.originHostname.originForwardPath.text"/>
+            </ControlLabel>
+            <FormControl
+              type="text"
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.placeholder'})}
+              id="actions_origin-forward-path"
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_forward_path']
+              )}/>
+          </FormGroup>
 
         </Modal.Body>
       </div>

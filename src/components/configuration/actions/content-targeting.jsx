@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Button, ButtonToolbar, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Typeahead from 'react-bootstrap-typeahead'
@@ -136,8 +136,10 @@ class ContentTargeting extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text"/></label>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text"/>
+            </ControlLabel>
             <Select
               className="input-select"
               onSelect={this.handleTypeChange()}
@@ -147,9 +149,9 @@ class ContentTargeting extends React.Component {
                 {value: 'redirect', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.action.redirect'})},
                 {value: 'deny', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.action.deny'})}
               ]}/>
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
             <Select
               className="input-select"
               onSelect={this.handleInclusionChange()}
@@ -158,27 +160,28 @@ class ContentTargeting extends React.Component {
                 {value: 'in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom'})},
                 {value: 'not_in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom'})}
               ]}/>
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
             <Typeahead
               className={this.state.type === 'deny' ? 'exclude' : null}
               multiple={true}
               selected={this.state.countries}
               onChange={this.handleCountryChange()}
               options={this.state.countryOptions}/>
-          </div>
+          </FormGroup>
 
           {this.state.type === 'redirect' && // REDIRECT FORM
             <div>
               <p><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.redirect.to.text"/></p>
 
-              <div className="form-group">
-                <Input type="text"
+              <FormGroup>
+                <FormControl
+                  type="text"
                   placeholder="Enter URL"
                   onChange={this.handleRedirectURLChange()}
                   value={this.state.redirectURL} />
-              </div>
+              </FormGroup>
             </div>
           }
 
@@ -186,14 +189,14 @@ class ContentTargeting extends React.Component {
             <div>
               <p><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.redirect.andPresent.text"/></p>
 
-              <div className="form-group">
+              <FormGroup>
                 <Select
                   className="input-select"
                   onSelect={this.handleStatusCodeChange()}
                   numericValues={true}
                   value={this.state.status_code}
                   options={statusCodeOptions}/>
-              </div>
+              </FormGroup>
             </div>
           }
 

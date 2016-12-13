@@ -1,6 +1,5 @@
 import React from 'react'
-import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
-// import Immutable from 'immutable'
+import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Toggle from '../../toggle'
@@ -45,7 +44,7 @@ class Cors extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.cors.corsForCss.text"/></label>
@@ -57,11 +56,11 @@ class Cors extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
           <hr />
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.cors.corsForJs.text"/></label>
@@ -73,11 +72,11 @@ class Cors extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
           <hr />
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.cors.corsForXml.text"/></label>
@@ -89,103 +88,121 @@ class Cors extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
           <hr />
 
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.supportdMethods.text"/></label>
-          </div>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.cors.supportdMethods.text"/>
+            </ControlLabel>
+          </FormGroup>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_support_head"
-            label="HEAD"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_support_head']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.head.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_support_post"
-            label="POST"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_support_post']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.post.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_support_get"
-            label="GET"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_support_get']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.get.text" />
+          </Checkbox>
 
           <hr />
 
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.httpHeaderMatches.text"/></label>
-          </div>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.cors.httpHeaderMatches.text"/>
+            </ControlLabel>
+          </FormGroup>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_header_matches_accept"
-            label="Accept"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_match_accept']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.accept.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_header_matches_accept-language"
-            label="Accept-Language"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_match_accept_language']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.acceptLanguage.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_header_matches_content-language"
-            label="Content-Language"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_match_content_language']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.contentLanguage.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_header_matches_last-event-id"
-            label="Last-Event-ID"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_match_last_event_id']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.lastEventID.text" />
+          </Checkbox>
 
           <hr />
 
-          <div className="form-group">
-            <label className="control-label">Content-Type</label>
-          </div>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.cors.contentType.text" />
+            </ControlLabel>
+          </FormGroup>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_content_type_www-form"
-            label="application/x-www-form-urlencoded"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_content_type_www_form']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.applicationXWwwFormUrlEncoded.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_content_type_multipart"
-            label="multipart/form-data"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_content_type_multipart']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.multipartFormData.text" />
+          </Checkbox>
 
-          <Input type="checkbox"
+          <Checkbox
             id="actions_content_type_plain"
-            label="text/plain"
             onChange={this.handleChange(
               ['edge_configuration', 'cache_rule', 'actions', 'cors_content_type_plain']
-            )}/>
+            )}>
+            <FormattedMessage id="portal.policy.edit.cors.textPlain.text" />
+          </Checkbox>
 
           <hr />
 
           <div className="form-groups">
             <InputConnector
               show={this.state.activeFilter === 'restrict_domain'} />
-            <div className="form-group">
-              <label className="control-label"><FormattedMessage id="portal.policy.edit.cors.authorizedDomains.text"/></label>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.cors.authorizedDomains.text"/>
+              </ControlLabel>
               <Select className="input-select"
                 onSelect={this.handleSelectChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cors_authorized_domains']
@@ -194,11 +211,12 @@ class Cors extends React.Component {
                 options={[
                   ['any_domain', <FormattedMessage id="portal.policy.edit.cors.anyDomain.text"/>],
                   ['restrict_domain', <FormattedMessage id="portal.policy.edit.cors.restrictDomain.text"/>]]}/>
-            </div>
+            </FormGroup>
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeFilter === 'restrict_domain'}>
-              <Input type="text"
+              <FormControl
+                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cors.enterDomain.text'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'cors_restrict_domain']
@@ -208,7 +226,7 @@ class Cors extends React.Component {
 
           <hr />
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.cors.overwriteOriginCorsHeaders.text"/> </label>
@@ -220,7 +238,7 @@ class Cors extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
         </Modal.Body>
       </div>
@@ -232,8 +250,6 @@ Cors.displayName = 'Cors'
 Cors.propTypes = {
   changeValue: React.PropTypes.func,
   intl: intlShape.isRequired
-  // path: React.PropTypes.instanceOf(Immutable.List),
-  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = injectIntl(Cors)

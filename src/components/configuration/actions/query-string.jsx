@@ -1,6 +1,5 @@
 import React from 'react'
-import { Col, Input, Modal, Panel, Row } from 'react-bootstrap'
-// import Immutable from 'immutable'
+import { Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
@@ -50,8 +49,10 @@ class QueryString extends React.Component {
             <InputConnector show={true}
               hasTwoEnds={this.state.activeActivity !== 'remove'} />
 
-            <div className="form-group">
-              <label className="control-label">Activity</label>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.path.activity.text" />
+              </ControlLabel>
               <Select className="input-select"
                 onSelect={this.handleSelectChange('activeActivity',
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string']
@@ -61,11 +62,15 @@ class QueryString extends React.Component {
                   ['add', <FormattedMessage id="portal.policy.edit.queryString.add.text"/>],
                   ['modify', <FormattedMessage id="portal.policy.edit.queryString.modify.text"/>],
                   ['remove', <FormattedMessage id="portal.policy.edit.queryString.remove.text"/>]]}/>
-            </div>
+            </FormGroup>
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity !== 'modify'}>
-              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.name.text'})}
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.queryString.name.text" />
+              </ControlLabel>
+              <FormControl
+                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.name.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
@@ -74,7 +79,11 @@ class QueryString extends React.Component {
 
             <Panel className="form-panel" collapsible={true}
               expanded={this.state.activeActivity === 'add'}>
-              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.value.text'})}
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.queryString.value.text" />
+              </ControlLabel>
+              <FormControl
+                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.value.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_value']
@@ -85,28 +94,44 @@ class QueryString extends React.Component {
               expanded={this.state.activeActivity === 'modify'}>
               <Row>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromName.text'})}
+                  <ControlLabel>
+                    <FormattedMessage id="portal.policy.edit.queryString.fromName.text" />
+                  </ControlLabel>
+                  <FormControl
+                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toName.text'})}
+                  <ControlLabel>
+                    <FormattedMessage id="portal.policy.edit.queryString.toName.text" />
+                  </ControlLabel>
+                  <FormControl
+                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_to']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromValue.text'})}
+                  <ControlLabel>
+                    <FormattedMessage id="portal.policy.edit.queryString.fromValue.text" />
+                  </ControlLabel>
+                  <FormControl
+                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_from']
                     )}/>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toValue.text'})}
+                  <ControlLabel>
+                    <FormattedMessage id="portal.policy.edit.queryString.toValue.text" />
+                  </ControlLabel>
+                  <FormControl
+                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_to']
@@ -120,7 +145,9 @@ class QueryString extends React.Component {
         <hr />
 
         <div className="form-group">
-          <label className="control-label"><FormattedMessage id="portal.policy.edit.queryString.direction.text"/></label>
+          <ControlLabel>
+            <FormattedMessage id="portal.policy.edit.queryString.direction.text"/>
+          </ControlLabel>
           <Select className="input-select"
             onSelect={this.handleSelectChange('activeDirection',
               ['edge_configuration', 'cache_rule', 'actions', 'query_string_direction']
@@ -142,8 +169,6 @@ QueryString.displayName = 'QueryString'
 QueryString.propTypes = {
   changeValue: React.PropTypes.func,
   intl: intlShape.isRequired
-  // path: React.PropTypes.instanceOf(Immutable.List),
-  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = injectIntl(QueryString)
