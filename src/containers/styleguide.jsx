@@ -14,9 +14,13 @@ import {
   Button,
   ButtonToolbar,
   Col,
+  ControlLabel,
   Dropdown,
+  FormControl,
+  FormGroup,
+  HelpBlock,
   Image,
-  Input,
+  InputGroup,
   Label,
   MenuItem,
   NavItem,
@@ -39,6 +43,9 @@ import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
+
+import Checkbox from '../components/checkbox'
+import Radio from '../components/radio'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -476,16 +483,47 @@ class Styleguide extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <Input type="text" label="Default Input" placeholder="Enter text" />
-              <Input type="email" label="Email Input" placeholder="Enter email" />
-              <Input type="password" label="Password Input" />
-              <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
-              <Input type="textarea" label="Text Area" placeholder="Enter text" />
+              <FormGroup>
+                <ControlLabel>Default Input</ControlLabel>
+                <FormControl type="text" placeholder="Enter text" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Email Input</ControlLabel>
+                <FormControl type="email" placeholder="Enter email" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Password Input</ControlLabel>
+                <FormControl type="password" placeholder="Enter password" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Input with Addons</ControlLabel>
+                <InputGroup>
+                  <InputGroup.Addon>{"$"}</InputGroup.Addon>
+                  <FormControl type="text" placeholder="Enter text" />
+                </InputGroup>
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Text Area</ControlLabel>
+                <FormControl componentClass="textArea" placeholder="Enter text" />
+              </FormGroup>
             </div>
 
             <div className="col-xs-6">
-              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={false} />
-              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={false} />
+              <FormGroup validationState="success">
+                <ControlLabel>Has Success</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
+
+              <FormGroup validationState="error">
+                <ControlLabel>Has Error</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
             </div>
           </div>
 
@@ -497,24 +535,38 @@ class Styleguide extends React.Component {
 
               <form className="form-horizontal">
 
-                <Input label="Inline Input" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9">
-                  <Row>
-                    <Col xs={10}>
-                      <input type="text" className="form-control" />
-                    </Col>
-                      <OverlayTrigger trigger="click" rootClose={true} overlay={
-                        <Popover id="popover1" title="Info">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Popover>
-                      }>
-                        <Button bsStyle="link" className="col-xs-2">?</Button>
-                      </OverlayTrigger>
-                  </Row>
-                </Input>
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Input
+                  </Col>
+                  <Col xs={9}>
+                    <InputGroup>
+                      <FormControl />
+                      <InputGroup.Addon>
+                        <OverlayTrigger trigger="click" rootClose={true} overlay={
+                          <Popover id="popover1" title="Info">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Popover>
+                        }>
+                        <Button bsStyle="link" className="col-xs-2">{"?"}</Button>
+                        </OverlayTrigger>
+                      </InputGroup.Addon>
+                    </InputGroup>
+                  </Col>
+                </FormGroup>
 
-                <Input type="textarea" label="Inline Text Area" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9" />
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Text Area
+                  </Col>
+                  <Col xs={9}>
+                    <FormControl componentClass="textarea" />
+                  </Col>
+                </FormGroup>
 
-                <Input type="checkbox" label="Inline Checkbox" wrapperClassName="col-xs-offset-3 col-xs-9" />
+                <FormGroup>
+                  <Checkbox inline={true}>Inline Checkbox</Checkbox>
+                </FormGroup>
 
               </form>
 
@@ -529,29 +581,25 @@ class Styleguide extends React.Component {
 
             <div className="col-xs-6">
 
-              <label>Checkboxes</label>
-
-              <Input type="checkbox" label="Checkbox 1" />
-
-              <Input type="checkbox" label="Checkbox 2" />
-
-              <Input type="checkbox" label="Checkbox 3" />
-
-              <Input type="checkbox" disabled={true} label="Checkbox disabled" />
+              <FormGroup>
+                <ControlLabel>Checkboxes</ControlLabel>
+                <Checkbox value={1}>Checkbox 1</Checkbox>
+                <Checkbox value={2}>Checkbox 2</Checkbox>
+                <Checkbox value={3}>Checkbox 3</Checkbox>
+                <Checkbox value={4} disabled={true}>Checkbox Disabled</Checkbox>
+              </FormGroup>
 
             </div>
 
             <div className="col-xs-6">
 
-              <label>Radios</label>
-
-              <Input type="radio" label="Radio 1" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 2" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 3" name="radioGroup1" />
-
-              <Input type="radio" disabled={true} label="Radio disabled" name="radioGroup1" />
+              <FormGroup controlId="Radio">
+                <ControlLabel>Radios</ControlLabel>
+                <Radio value={1}>Radio 1</Radio>
+                <Radio value={2}>Radio 2</Radio>
+                <Radio value={3}>Radio 3</Radio>
+                <Radio value={4} disabled={true}>Radio Disabled</Radio>
+              </FormGroup>
 
             </div>
 
