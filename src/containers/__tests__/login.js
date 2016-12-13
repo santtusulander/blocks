@@ -54,9 +54,9 @@ describe('Login', () => {
     const login = shallow(
       <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
     )
-    const inputs = login.find('Input')
+    const checkbox = login.find('Checkbox')
     expect(login.state('rememberUsername')).toBe(false)
-    inputs.at(2).simulate('change')
+    checkbox.simulate('change')
     expect(login.state('rememberUsername')).toBe(true)
   })
 
@@ -64,7 +64,7 @@ describe('Login', () => {
     const login = shallow(
       <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
     )
-    const inputs = login.find('Input')
+    const inputs = login.find('FormControl')
     inputs.at(0).simulate('change',{target: {value: 'aaa'}})
     inputs.at(1).simulate('change', {target: {value: 'bbb'}})
     expect(login.state('username')).toBe('aaa')
@@ -75,7 +75,7 @@ describe('Login', () => {
     const login = shallow(
       <Login userActions={userActionsMaker({})} intl={intlMaker()}/>
     )
-    const inputs = login.find('Input')
+    const inputs = login.find('FormControl')
 
     const usernameHolder = inputs.at(0)
     expect(login.state('usernameActive')).toBe(false)

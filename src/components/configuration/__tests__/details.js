@@ -1,22 +1,30 @@
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.unmock('../details.jsx')
 import ConfigurationDetails from '../details.jsx'
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('ConfigurationDetails', () => {
   it('should exist', () => {
-    let details = TestUtils.renderIntoDocument(
+    let details = shallow(
       <ConfigurationDetails />
     );
-    expect(TestUtils.isCompositeComponent(details)).toBeTruthy();
+    expect(details).toBeDefined()
   });
 
   it('should change values', () => {
     const changeValue = jest.genMockFunction()
-    let details = TestUtils.renderIntoDocument(
-      <ConfigurationDetails changeValue={changeValue}
+    let details = shallow(
+      <ConfigurationDetails
+        intl={intlMaker()}
+        changeValue={changeValue}
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",
@@ -25,9 +33,8 @@ describe('ConfigurationDetails', () => {
           origin_path_append: "ddd"
         })}/>
     );
-    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(details, 'input');
-    inputs[0].value = "new"
-    TestUtils.Simulate.change(inputs[0])
+    let inputs = details.find('FormControl')
+    inputs.at(0).simulate('change', { target: { value: "new" } })
     expect(changeValue.mock.calls[0][0]).toEqual(
       ['edge_configuration', 'origin_host_name']
     )
@@ -36,8 +43,10 @@ describe('ConfigurationDetails', () => {
 
   it('should save changes', () => {
     const saveChanges = jest.genMockFunction()
-    let details = TestUtils.renderIntoDocument(
-      <ConfigurationDetails saveChanges={saveChanges}
+    let details = shallow(
+      <ConfigurationDetails
+        intl={intlMaker()}
+        saveChanges={saveChanges}
         edgeConfiguration={Immutable.fromJS({
           published_name: "aaa",
           origin_host_name: "bbb",
@@ -46,8 +55,8 @@ describe('ConfigurationDetails', () => {
           origin_path_append: "ddd"
         })}/>
     );
-    let form = TestUtils.findRenderedDOMComponentWithTag(details, 'form');
-    TestUtils.Simulate.submit(form)
+    let form = details.find('form');
+    form.simulate('submit', { preventDefault: jest.fn() })
     expect(saveChanges.mock.calls.length).toBe(1)
   });
 })

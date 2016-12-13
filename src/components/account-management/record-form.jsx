@@ -49,8 +49,9 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
       {prio.touched && prio.error && <div className='error-msg' id='prio-err'>{prio.error}</div>}
     </Input>
     {shouldShowField('ttl') && [
-      <hr/>,
+      <hr key={0} />,
       <Input
+        key={1}
         {...ttl}
         id="ttl-field"
         labelID="portal.account.recordForm.ttl.label"
