@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import {reduxForm} from 'redux-form'
 
-import { Modal, Input, ButtonToolbar, Button, Table } from 'react-bootstrap'
+import { Modal, FormControl, ControlLabel, ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import Toggle from '../toggle'
 
@@ -66,11 +66,12 @@ const RolesEditForm = (props) => {
       <Modal.Body>
 
         {/*TODO: Enable in the future when roles are editable*/}
-        <Input
+        <ControlLabel>
+          <FormattedMessage id='portal.role.edit.enterRoleName.text'/>
+        </ControlLabel>
+        <FormControl
           {...roleName}
-          type='text'
           placeholder={props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
-          label={props.intl.formatMessage({id: 'portal.role.edit.name.text'})}
           value={props.editRole.get('name')}
           readOnly={true}
         />
