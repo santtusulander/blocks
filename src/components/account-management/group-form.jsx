@@ -5,7 +5,9 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map, List } from 'immutable'
 import {
   Modal,
-  Input,
+  FormGroup,
+  FormControl,
+  ControlLabel,
   ButtonToolbar,
   Button,
   Table
@@ -226,26 +228,25 @@ class GroupForm extends React.Component {
 
         <Modal.Body>
           <form>
-
-              <Input
+            <FormGroup>
+              <ControlLabel><FormattedMessage id='portal.account.groupForm.name.label' /></ControlLabel>
+              <FormControl
                 {...name}
-                type="text"
-                label={intl.formatMessage({id: 'portal.account.groupForm.name.label'})}
                 placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}/>
               {name.touched && name.error &&
               <div className='error-msg'>{name.error}</div>}
+            </FormGroup>
 
               {charge_id &&
-                <div>
-                  <Input
+                <FormGroup>
+                  <ControlLabel><FormattedMessage id='portal.account.groupForm.charge_number.label' /></ControlLabel>
+                  <FormControl
                     {...charge_id}
                     disabled={!canEditBilling}
-                    type="text"
-                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
                     placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
                   {charge_id.touched && charge_id.error &&
                   <div className='error-msg'>{charge_id.error}</div>}
-                </div>
+                </FormGroup>
               }
 
               {charge_model &&
