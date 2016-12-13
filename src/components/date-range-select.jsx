@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import moment from 'moment'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { injectIntl, intlShape } from 'react-intl'
 import { MultiMonthView } from 'react-date-picker'
-import { Button, Dropdown } from 'react-bootstrap'
+import { Dropdown } from 'react-bootstrap'
 import DateRanges from '../constants/date-ranges'
 
 import IconCalendar from './icons/icon-calendar'
@@ -120,9 +120,7 @@ export class DateRangeSelect extends React.Component {
         endDate: endMoment,
         startDate: startMoment
       }, () => {
-        if (dateValues[0] === dateValues[1]) {
-          this.applyChanges()
-        }
+        this.applyChanges()
       })
     }
   }
@@ -252,11 +250,6 @@ export class DateRangeSelect extends React.Component {
             theme={null}
             weekNumbers={false}
             weekStartDay={0} />
-          <div className="date-range-select-footer">
-            <Button bsStyle="primary" onClick={this.applyChanges}>
-              <FormattedMessage id="portal.common.button.apply" />
-            </Button>
-          </div>
         </Dropdown.Menu>
       </Dropdown>
     )
