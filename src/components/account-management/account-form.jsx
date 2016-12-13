@@ -3,7 +3,8 @@ import { reduxForm } from 'redux-form'
 import { Map }from 'immutable'
 import {
   Modal,
-  Input,
+  FormControl,
+  ControlLabel,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -117,11 +118,11 @@ class AccountForm extends React.Component {
         <Modal.Body>
           <form>
 
-            <Input
+            <ControlLabel>Account name</ControlLabel>
+            <FormControl
               {...accountName}
               id="account-name"
               type="text"
-              label="Account name"
               placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
             {accountName.touched && accountName.error &&
               <div className='error-msg'>{accountName.error}</div>
