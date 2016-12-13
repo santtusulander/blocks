@@ -478,6 +478,7 @@ const TRANSLATED_MESSAGES = {
   'portal.exportEmail.weekly.text': 'Weekly',
   'portal.exportEmail.recipients.text': 'Recipients',
   'portal.exportEmail.recipients.placeholder': 'Enter recipients',
+  'portal.exportEmail.to.text': 'To',
   'portal.exportEmail.cc.text': 'Cc',
   'portal.exportEmail.cc.placeholder': 'Enter text',
   'portal.exportEmail.subject.text': 'Subject',
