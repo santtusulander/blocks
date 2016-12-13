@@ -92,8 +92,7 @@ class CacheKeyQueryStringForm extends React.Component {
           {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
         </ControlLabel>
         <FormControl
-          type="text"
-          key={i}
+          key={`query-arg-${queryArg}`}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}
           value={queryArg}
           onChange={this.handleChangeArg(i)}/>

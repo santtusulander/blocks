@@ -1,9 +1,9 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, HelpBlock, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getReduxFormValidationState } from '../../../util/helpers'
 import { isBase64 } from '../../../util/validators'
 import Select from '../../select'
 
@@ -95,16 +95,16 @@ export class TokenAuthentication extends React.Component {
               value={placeholderSchemaValue} />
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup validationState={getReduxFormValidationState(sharedKey)}>
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />
             </ControlLabel>
             <FormControl
-              type="text"
               {...sharedKey}
-              placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})} />
+              placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
+            />
               {sharedKey.touched && sharedKey.error &&
-                <div className='error-msg'>{sharedKey.error}</div>
+                <HelpBlock className='error-msg'>{sharedKey.error}</HelpBlock>
               }
           </FormGroup>
 

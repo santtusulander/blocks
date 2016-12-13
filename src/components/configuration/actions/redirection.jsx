@@ -54,7 +54,7 @@ class Redirection extends React.Component {
           <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label><FormattedMessage id="portal.policy.edit.redirection.changeProtocol.text"/></label>
+                <ControlLabel><FormattedMessage id="portal.policy.edit.redirection.changeProtocol.text"/></ControlLabel>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -90,13 +90,13 @@ class Redirection extends React.Component {
             </Row>
           </FormGroup>
 
-          <FormControl
-            type="text"
-            id="actions_domain"
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterDomain.text'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
-            )}/>
+          <FormGroup controlId="actions_domain">
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterDomain.text'})}
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
+              )}/>
+          </FormGroup>
 
           <hr />
 
@@ -114,13 +114,13 @@ class Redirection extends React.Component {
             </Row>
           </FormGroup>
 
-          <FormControl
-            type="text"
-            id="actions_path"
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterPath.text'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
-            )}/>
+          <FormGroup controlId="actions_path">
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterPath.text'})}
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
+              )}/>
+          </FormGroup>
 
           <hr />
 

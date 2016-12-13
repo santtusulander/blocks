@@ -10,7 +10,7 @@ const HelpTooltip = (props) => {
         <div className="text-sm">{children}</div>
       </Tooltip>
     }>
-      <Button bsStyle="link" className="btn-icon">?</Button>
+      <Button bsStyle="link" className="btn-icon">{"?"}</Button>
     </OverlayTrigger>
   )
 }

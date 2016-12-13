@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
+import {Button, ControlLabel, FormControl, FormGroup, Modal, Row, Col, ButtonToolbar} from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import ActionButtons from '../action-buttons'
@@ -261,18 +261,16 @@ class ConfigurationPolicyRuleEdit extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <FormGroup>
-            <h3><FormattedMessage id="portal.policy.edit.editRule.ruleName.text"/></h3>
+          <FormGroup controlId="configure__edge__add-cache-rule__rule-name">
+            <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
             <FormControl
-              type="text"
-              id="configure__edge__add-cache-rule__rule-name"
-              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']))}
+              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name'], ''))}
               onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
           </FormGroup>
 
           {ruleType !== POLICY_TYPES.DEFAULT &&
             <FormGroup>
-              <h3><FormattedMessage id="portal.policy.edit.editRule.type.text"/></h3>
+              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
               <Select
                 className="input-select"
                 value={ruleType}

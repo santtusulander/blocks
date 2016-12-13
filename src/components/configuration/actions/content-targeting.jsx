@@ -177,7 +177,6 @@ class ContentTargeting extends React.Component {
 
               <FormGroup>
                 <FormControl
-                  type="text"
                   placeholder="Enter URL"
                   onChange={this.handleRedirectURLChange()}
                   value={this.state.redirectURL} />

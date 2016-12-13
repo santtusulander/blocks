@@ -284,7 +284,6 @@ class ConfigurationDefaults extends React.Component {
             </Col>
             <Col lg={2} xs={3}>
               <FormControl
-                type="text"
                 disabled={readOnly}
                 className="ttl-value"
                 placeholder={intl.formatMessage({

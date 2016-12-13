@@ -67,7 +67,6 @@ class Path extends React.Component {
                 <FormattedMessage id="portal.policy.edit.path.path.text"/>
               </ControlLabel>
               <FormControl
-                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'path_value']

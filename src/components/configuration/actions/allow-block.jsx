@@ -87,7 +87,6 @@ class AllowBlock extends React.Component {
                   <FormattedMessage id="portal.policy.edit.allowBlock.redirectUrl.text" />
                 </ControlLabel>
                 <FormControl
-                  type="text"
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.allowBlock.redirectUrl.placeholder'})}
                   onChange={this.handleChange(
                     ['edge_configuration', 'cache_rule', 'actions', 'allow_block_redirect_url']

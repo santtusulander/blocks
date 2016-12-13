@@ -152,12 +152,11 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-          <FormGroup>
+          <FormGroup controlId="matches_val">
             <ControlLabel>{this.props.label}</ControlLabel>
             <FormControl
               type="text"
               placeholder={this.props.placeholder}
-              id="matches_val"
               value={this.state.val}
               onChange={this.handleValChange}/>
           </FormGroup>
@@ -181,7 +180,6 @@ class Matcher extends React.Component {
                     <FormattedMessage id="portal.policy.edit.matcher.value.text" />
                   </ControlLabel>
                   <FormControl
-                    type="text"
                     value={this.state.containsVal}
                     onChange={this.handleContainsValChange}/>
                 </FormGroup>

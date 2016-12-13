@@ -47,14 +47,13 @@ class OriginHostname extends React.Component {
 
           <hr />
 
-          <FormGroup>
+          <FormGroup controlId="actions_origin-port">
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.originHostname.originPort.text" />
             </ControlLabel>
             <FormControl
               type="number"
               placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originPort.placeholder'})}
-              id="actions_origin-port"
               onChange={this.handleChange(
                 ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_port']
               )}/>
@@ -82,7 +81,6 @@ class OriginHostname extends React.Component {
             <Panel className="form-panel" collapsible={true}
               expanded={isOtherHostHeader}>
               <FormControl
-                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.enterHostname.text'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_value']
@@ -92,14 +90,12 @@ class OriginHostname extends React.Component {
 
           <hr />
 
-          <FormGroup>
+          <FormGroup controlId="actions_origin-forward-path">
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.originHostname.originForwardPath.text"/>
             </ControlLabel>
             <FormControl
-              type="text"
               placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.originHostname.originForwardPath.placeholder'})}
-              id="actions_origin-forward-path"
               onChange={this.handleChange(
                 ['edge_configuration', 'cache_rule', 'actions', 'origin_hostname_forward_path']
               )}/>

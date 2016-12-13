@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Radio } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
-import {FormattedMessage, injectIntl} from 'react-intl'
+import Radio from '../radio'
 
 class ConfigurationPublishVersion extends React.Component {
   constructor(props) {
@@ -41,22 +42,21 @@ class ConfigurationPublishVersion extends React.Component {
         <hr/>
 
         {/* Publish To */}
-        <label><FormattedMessage id="portal.policy.edit.publishVersion.publishTo.text"/></label>
-        {/* Sandbox publishing is disabled for 1.0 */}
         <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.policy.edit.publishVersion.publishTo.text"/></ControlLabel>
+          {/* Sandbox publishing is disabled for 1.0 */}
           <Radio
             disabled={true}
             onChange={this.setPublishTarget(2)}
-            checked={this.state.publishTarget === 2}>
+            checked={this.state.publishTarget === 2}
+          >
             <FormattedMessage id="portal.policy.edit.publishVersion.sandboxPlatform.text" />
           </Radio>
-        </FormGroup>
 
-        <FormGroup>
           <Radio
-            label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.productionPlatform.text'})}
             onChange={this.setPublishTarget(3)}
-            checked={this.state.publishTarget === 3}>
+            checked={this.state.publishTarget === 3}
+          >
             <FormattedMessage id="portal.policy.edit.publishVersion.productionPlatform.text" />
           </Radio>
         </FormGroup>
@@ -81,7 +81,6 @@ class ConfigurationPublishVersion extends React.Component {
 ConfigurationPublishVersion.displayName = 'ConfigurationPublishVersion'
 ConfigurationPublishVersion.propTypes = {
   hideAction: React.PropTypes.func,
-  intl: React.PropTypes.object,
   publishing: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   versionName: React.PropTypes.oneOfType([
@@ -90,4 +89,4 @@ ConfigurationPublishVersion.propTypes = {
   ])
 }
 
-module.exports = injectIntl(ConfigurationPublishVersion)
+module.exports = ConfigurationPublishVersion

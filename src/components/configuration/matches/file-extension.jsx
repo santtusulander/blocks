@@ -39,14 +39,13 @@ class FileExtension extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <FormGroup>
+          <FormGroup controlId="matches_file-extension">
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.fileExtension.fileExtension.text" />
             </ControlLabel>
             <FormControl
               componentClass="textarea"
               placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.placeholder'})}
-              id="matches_file-extension"
               value={this.props.match.get('cases').get(0).get(0)}
               onChange={this.handleChange(
                 this.props.path.concat(['cases', 0, 0])

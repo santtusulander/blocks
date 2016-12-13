@@ -39,14 +39,13 @@ class Filename extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <FormGroup>
+          <FormGroup controlId="matches_file-name">
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.fileName.fileName.text" />
             </ControlLabel>
             <FormControl
               componentClass="textarea"
               placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.placeholder'})}
-              id="matches_file-name"
               value={this.props.match.get('cases').get(0).get(0)}
               onChange={this.handleChange(
                 this.props.path.concat(['cases', 0, 0])

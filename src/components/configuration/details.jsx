@@ -37,7 +37,7 @@ class ConfigurationDetails extends React.Component {
     if(!this.props.edgeConfiguration) {
       return (
         <div className="container">
-          <FormattedMessage id="portal.common.loading.text"/>
+          <FormattedMessage id="portal.loading.text"/>
         </div>
       )
     }

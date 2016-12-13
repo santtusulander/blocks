@@ -70,7 +70,6 @@ class QueryString extends React.Component {
                 <FormattedMessage id="portal.policy.edit.queryString.name.text" />
               </ControlLabel>
               <FormControl
-                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.name.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_name']
@@ -83,7 +82,6 @@ class QueryString extends React.Component {
                 <FormattedMessage id="portal.policy.edit.queryString.value.text" />
               </ControlLabel>
               <FormControl
-                type="text"
                 placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.value.placeholder'})}
                 onChange={this.handleChange(
                   ['edge_configuration', 'cache_rule', 'actions', 'query_string_value']
@@ -98,7 +96,6 @@ class QueryString extends React.Component {
                     <FormattedMessage id="portal.policy.edit.queryString.fromName.text" />
                   </ControlLabel>
                   <FormControl
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_from']
@@ -109,7 +106,6 @@ class QueryString extends React.Component {
                     <FormattedMessage id="portal.policy.edit.queryString.toName.text" />
                   </ControlLabel>
                   <FormControl
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toName.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_name_to']
@@ -120,7 +116,6 @@ class QueryString extends React.Component {
                     <FormattedMessage id="portal.policy.edit.queryString.fromValue.text" />
                   </ControlLabel>
                   <FormControl
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.fromValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_from']
@@ -131,7 +126,6 @@ class QueryString extends React.Component {
                     <FormattedMessage id="portal.policy.edit.queryString.toValue.text" />
                   </ControlLabel>
                   <FormControl
-                    type="text"
                     placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.queryString.toValue.placeholder'})}
                     onChange={this.handleChange(
                       ['edge_configuration', 'cache_rule', 'actions', 'query_string_value_to']

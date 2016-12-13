@@ -139,7 +139,6 @@ class Header extends React.Component {
                   <FormattedMessage id="portal.policy.edit.header.name.label"/>
                 </ControlLabel>
                 <FormControl
-                  type="text"
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
                   value={to_header}
                   onChange={(e) => {this.setState({
@@ -155,7 +154,6 @@ class Header extends React.Component {
                   <FormattedMessage id="portal.policy.edit.header.value.label"/>
                 </ControlLabel>
                 <FormControl
-                  type="text"
                   placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
                   value={to_value}
                   onChange={(e) => {this.setState({
@@ -173,7 +171,6 @@ class Header extends React.Component {
                       <FormattedMessage id="portal.policy.edit.header.from.label"/>
                     </ControlLabel>
                     <FormControl
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
                       value={from_header}
                       onChange={(e) => {this.setState({
@@ -187,7 +184,6 @@ class Header extends React.Component {
                       <FormattedMessage id="portal.policy.edit.header.to.label"/>
                     </ControlLabel>
                     <FormControl
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
                       value={to_header}
                       onChange={(e) => {this.setState({
@@ -201,7 +197,6 @@ class Header extends React.Component {
                       <FormattedMessage id="portal.policy.edit.header.fromValue.label"/>
                     </ControlLabel>
                     <FormControl
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
                       value={from_value}
                       onChange={(e) => {this.setState({
@@ -215,7 +210,6 @@ class Header extends React.Component {
                       <FormattedMessage id="portal.policy.edit.header.toValue.label"/>
                     </ControlLabel>
                     <FormControl
-                      type="text"
                       placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
                       value={to_value}
                       onChange={(e) => {this.setState({
