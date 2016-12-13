@@ -70,8 +70,13 @@ class Mapbox extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cityData !== this.props.cityData) {
+      this.state.layers.forEach((layer) => {
+        if (layer.includes('city-') && this.state.map.getLayer(layer)) {
+          this.state.map.removeLayer(layer)
+        }
+      })
       const newLayers = this.state.layers.filter(layer => !layer.includes('city-'))
-      this.addCityLayers(this.refs.mapbox.state.map, newLayers, nextProps.cityData)
+      this.addCityLayers(this.state.map, newLayers, nextProps.cityData)
     }
   }
 
@@ -92,6 +97,7 @@ class Mapbox extends React.Component {
       const east = e.getBounds().getEast()
 
       this.props.getCitiesWithinBounds(south, west, north, east)
+      this.setState({ map: e })
     }
   }
 
@@ -187,10 +193,6 @@ class Mapbox extends React.Component {
     cityData.forEach((city) => {
       const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
       const layerExists = layers.some(layer => layer === cityName)
-
-      if (map.getLayer(cityName)) {
-        map.removeLayer(cityName)
-      }
 
       if (!map.getSource('geo-' + cityName)) {
         map.addSource('geo-' + cityName, {
@@ -296,7 +298,6 @@ class Mapbox extends React.Component {
         containerStyle={{
           height: '600px'
         }}
-        ref="mapbox"
         zoom={[this.state.zoom]}
         minZoom={1}
         maxZoom={13}
