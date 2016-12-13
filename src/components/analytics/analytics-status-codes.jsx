@@ -16,7 +16,9 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
     fiveHundredsChecked = isChecked(fiveHundreds),
     handleCheck = (optionValue, checked) => () => {
       if(checked) {
-        values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
+        values = values.size === options.size ?
+          values.filterNot(value => optionValue.findIndex(selected => selected === value) < 0) :
+          values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
       } else {
         optionValue.forEach(item => {
           if(!values.includes(item)) {

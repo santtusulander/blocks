@@ -2,6 +2,7 @@ import React from 'react'
 import { List } from 'immutable'
 import { Dropdown, Button, Input } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
+import { FormattedMessage } from 'react-intl'
 
 import autoClose from '../../decorators/select-auto-close'
 
@@ -24,12 +25,15 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(optionVal) {
+    let initialVals = this.props.value.size === this.props.options.size ? List() : this.props.value
     let newVals = List()
+
     if(optionVal !== 'all') {
-      const valIndex = this.props.value.indexOf(optionVal)
+      const valIndex = initialVals.indexOf(optionVal)
+
       newVals = valIndex === -1 ?
-        this.props.value.push(optionVal) :
-        this.props.value.delete(valIndex)
+        initialVals.push(optionVal) :
+        initialVals.delete(valIndex)
     }
     else {
       newVals = this.props.value.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
@@ -78,16 +82,16 @@ export class FilterChecklistDropdown extends React.Component {
       .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
     if(!numVals || !labels.size) {
-      return 'Please Select'
+      return <FormattedMessage id="portal.analytics.dropdownMenu.pleaseSelect"/>
     }
     else if(numVals === 1) {
       return labels.first()
     }
     else if(numVals === this.props.options.size){
-      return `ALL (${this.props.options.size})`
+      return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
     }
     else{
-      return `${labels.first()} and ${numVals - 1} more`
+      return <FormattedMessage id="portal.analytics.dropdownMenu.labelsSelected" values={{firstLabel: labels.first(), rest: numVals - 1}}/>
     }
   }
 
@@ -96,7 +100,7 @@ export class FilterChecklistDropdown extends React.Component {
     const { state: { filterValue }, props: { open, toggle } } = this
     const filteredResults = this.getFilteredResults()
 
-    let itemList;
+    let itemList = List();
     let className = 'dropdown-select dropdown-filter dropdown-checklist btn-block'
 
     if(this.props.className) {
@@ -104,23 +108,13 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     if(filteredResults.size) {
-      itemList = filteredResults.size === this.props.options.size ? List([
-        <li
-            key="all"
-            role="presentation"
-            className="children"
-            tabIndex="-1">
-          <Input type="checkbox"
-                 label={`SELECT ALL (${this.props.options.size})`}
-                 value="all"
-                 checked={this.props.value.size === this.props.options.size}
-                 onChange={() => this.handleCheck("all")}/>
-        </li>,
+      itemList =
+      itemList.concat([
         this.props.children && this.props.children.map(child => child)
-      ]) : List()
+      ])
 
-      itemList = itemList.concat(filteredResults.map((option, i) => {
-        return (
+      itemList = itemList.concat(filteredResults.map((option, i) =>
+        (
           <li key={i}
               role="presentation"
               className="children"
@@ -132,7 +126,7 @@ export class FilterChecklistDropdown extends React.Component {
                    onChange={() => this.handleCheck(option.get('value'))}/>
           </li>
         )
-      }))
+      ))
     } else {
       itemList = (
         <li role="presentation" className="children" tabIndex="-1">
@@ -170,10 +164,20 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
+            <li key="all"
+                role="presentation"
+                className="children"
+                tabIndex="-1">
+              <Button onClick={() => this.handleCheck("all")}
+                className="dropdown-toggle clear-selection"
+                style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
+                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
+              </Button>
+            </li>
             {!this.props.noClear &&
               <li role="presentation" className="action-container">
                 <Button bsClass="btn btn-block btn-primary"
-                      onClick={this.handleClear}>Clear</Button>
+                      onClick={this.handleClear}><FormattedMessage id="portal.analytics.dropdownMenu.clear"/></Button>
               </li>
             }
           </Dropdown.Menu>
