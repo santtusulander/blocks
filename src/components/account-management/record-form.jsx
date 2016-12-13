@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { FormControl, FormGroup, InputGroup, ButtonToolbar, ControlLabel, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SelectWrapper from '../select-wrapper'
@@ -7,6 +7,22 @@ import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
+
+const Input = ({ required = true, addonAfter, labelID, children, isVisible = true, ...inputProps }) =>
+  isVisible &&
+    <FormGroup>
+      <ControlLabel>
+        <FormattedMessage id={labelID}/>{required && ' *'}
+      </ControlLabel>
+      <InputGroup>
+        <FormControl {...inputProps}/>
+        {addonAfter &&
+          <InputGroup.Addon>
+            {addonAfter}
+          </InputGroup.Addon>}
+      </InputGroup>
+      {children}
+    </FormGroup>
 
 const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField, intl }) =>
   <form>
@@ -16,47 +32,49 @@ const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { 
       options={recordTypes.map(type => [type, type])}
       label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}
     />
-    {shouldShowField('name') &&
-      <Input
-        {...name}
-        disabled={edit}
-        type="text"
-        id='name-field'
-        label={intl.formatMessage({id: 'portal.account.recordForm.hostName.label'}) + ' *'}
-        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
-        addonAfter={`.${domain}`}
-        className='input-narrow host-name-input'/>}
-    {name.touched && name.error && <div className='error-msg' id='name-err'>{name.error}</div>}
-    {shouldShowField('value') &&
-      <Input
-        {...value}
-        id='value-field'
-        disabled={edit}
-        type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.address.label'}) + ' *'}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.address.placeholder'})}/>}
-    {value.touched && value.error && <div className='error-msg' id='value-err'>{value.error}</div>}
-    {shouldShowField('prio') &&
-      <Input
-        {...prio}
-        id='prio-field'
-        disabled={edit}
-        type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.prio.label'})}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.prio.placeholder'})}
-        className='input-narrow priority-input'/>}
+    <Input
+      {...name}
+      id="name-field"
+      isVisible={shouldShowField('name')}
+      labelID="portal.account.recordForm.hostName.label"
+      disabled={edit}
+      placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
+      className="input-narrow host-name-input"
+      addonAfter={`.${domain}`}>
+      {name.touched && name.error && <div className='error-msg' id='name-err'>{name.error}</div>}
+    </Input>
+    <Input
+      {...value}
+      id="value-field"
+      isVisible={shouldShowField('value')}
+      labelID="portal.account.recordForm.address.label"
+      disabled={edit}
+      placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}>
+      {value.touched && value.error && <div className='error-msg' id='value-err'>{value.error}</div>}
+    </Input>
+    <Input
+      {...prio}
+      id="prio-field"
+      isVisible={shouldShowField('prio')}
+      labelID="portal.account.recordForm.prio.label"
+      disabled={edit}
+      required={false}
+      className='input-narrow priority-input'
+      placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}>
       {prio.touched && prio.error && <div className='error-msg' id='prio-err'>{prio.error}</div>}
-    {shouldShowField('ttl') && <hr/>}
-    {shouldShowField('ttl') &&
+    </Input>
+    {shouldShowField('ttl') && [
+      <hr/>,
       <Input
         {...ttl}
-        id='ttl-field'
-        type="text"
-        label={intl.formatMessage({id: 'portal.account.recordForm.ttl.label'}) + ' *'}
-        placeholder={intl.formatMessage({id: 'portal.account.recordForm.ttl.placeholder'})}
+        id="ttl-field"
+        labelID="portal.account.recordForm.ttl.label"
         className='input-narrow ttl-value-input'
-        addonAfter='seconds'/>}
-    {ttl.touched && ttl.error && <div className='error-msg' id='ttl-err'>{ttl.error}</div>}
+        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
+        addonAfter="seconds">
+        {ttl.touched && ttl.error && <div className='error-msg' id='ttl-err'>{ttl.error}</div>}
+      </Input>
+    ]}
     <ButtonToolbar className="text-right extra-margin-top">
       <Button
         id='cancel-button'
