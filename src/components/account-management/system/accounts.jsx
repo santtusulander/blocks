@@ -185,7 +185,7 @@ class AccountList extends Component {
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values =>
-      values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
+      values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
     const accountsSize = sortedAccounts.size
     const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
@@ -258,7 +258,6 @@ class AccountList extends Component {
 AccountList.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
-  addAccount: PropTypes.func,
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   intl: PropTypes.object,

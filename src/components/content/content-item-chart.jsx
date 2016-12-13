@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl'
 import d3 from 'd3'
 import classnames from 'classnames'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
-import { Link } from 'react-router'
 import IconChart from '../icons/icon-chart'
 import IconConfiguration from '../icons/icon-configuration'
 import IconQuestionMark from '../icons/icon-question-mark'
@@ -16,7 +16,8 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import DifferenceTooltip from './difference-tooltip'
 import ContentItemTag from './content-item-tag'
 import TrafficTooltip from './traffic-tooltip'
-import {formatBitsPerSecond} from '../../util/helpers'
+import { formatBitsPerSecond } from '../../util/helpers'
+import LinkWrapper from './link-wrapper'
 
 const dayHours = 24
 const rayHours = 3
@@ -184,7 +185,11 @@ class ContentItemChart extends React.Component {
           className={classnames({ 'content-item-chart': true, bright: this.props.brightMode, 'grid-item': true })}
           style={{width: chartWidth, height: chartWidth}}
           id={'content-item-chart-' + (this.props.id)}>
-          <LinkWrapper disableLinkTo={this.props.disableLinkTo} linkTo={link}>
+          <LinkWrapper
+            className="content-item-chart-link"
+            disableLinkTo={this.props.disableLinkTo}
+            linkTo={link}
+          >
             <ReactCSSTransitionGroup
               component="div"
               className="content-transition"
@@ -333,37 +338,16 @@ class ContentItemChart extends React.Component {
   }
 }
 
-// NOTE: this is temporary for the 1.0 release to disable
-// drilling down into the property level for SP accounts
-const LinkWrapper = props => {
-  if(props.disableLinkTo) {
-    return <div>{props.children}</div>
-  }
-  return (
-    <Link className="content-item-chart-link" to={props.linkTo}>
-      {props.children}
-    </Link>
-  )
-}
-LinkWrapper.propTypes = {
-  children: React.PropTypes.node,
-  disableLinkTo: React.PropTypes.bool,
-  linkTo: React.PropTypes.string
-}
-
 ContentItemChart.displayName = 'ContentItemChart'
 ContentItemChart.propTypes = {
   analyticsLink: React.PropTypes.string,
   avgTransfer: React.PropTypes.string,
   barMaxHeight: React.PropTypes.string,
-  barWidth: React.PropTypes.string,
   brightMode: React.PropTypes.bool,
   cacheHitRate: React.PropTypes.number,
   chartWidth: React.PropTypes.string,
   configurationLink: React.PropTypes.string,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  delete: React.PropTypes.func,
-  description: React.PropTypes.string,
   differenceData: React.PropTypes.instanceOf(Immutable.List),
   disableLinkTo: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,

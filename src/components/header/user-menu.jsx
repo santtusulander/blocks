@@ -67,7 +67,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, param
             </li>
 
             <li className="bottom-item no-helper-header">
-              <a id="log-out" href="#" onClick={logout}>
+              <a id="log-out" onClick={logout}>
                 <FormattedMessage id="portal.header.menu.logout.text"/>
                 <IconArrowRight />
               </a>

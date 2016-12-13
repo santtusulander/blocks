@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal-analytics-api",
-  "version": "0.1.66",
+  "version": "0.1.68",
   "description": "A Node Express API server used by the Ericsson UDN Portal. The API responds to various GET requests with data from a remote MySQL database.",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "e2e": "node e2e/run.js",
     "units": "node --harmony_destructuring ./node_modules/istanbul/lib/cli.js cover jasmine-runner.js",
     "start": "node --harmony_destructuring index.js",
+    "debug": "node-debug --nodejs --harmony_destructuring index.js",
     "staging": "NODE_ENV=staging node index.js",
     "production": "NODE_ENV=production node index.js",
     "lint": "eslint ."

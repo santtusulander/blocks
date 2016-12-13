@@ -78,6 +78,7 @@
   "portal.common.statusCode.511": "Network Authentication Required",
 
   "portal.common.total.text": "Total",
+  "portal.common.no-data.text": "No data available.",
 
   "portal.common.time.day": "Day",
   "portal.common.time.month": "Month",

@@ -99,7 +99,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, params, user } = this.props
+    const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, user } = this.props
     const showFilters = List(['dateRange'])
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
@@ -182,7 +182,6 @@ export class Dashboard extends React.Component {
           activeAccountProviderType={activeAccount && activeAccount.get('provider_type')}
           currentUser={user}
           dateRanges={dateRanges}
-          params={params}
           onFilterChange={this.onFilterChange}
           filters={filters}
           filterOptions={filterOptions}
@@ -293,6 +292,10 @@ export class Dashboard extends React.Component {
                   })}
                 </tbody>
               </Table>
+              {!topCPs.size &&
+                <div className="no-data">
+                  <FormattedMessage id="portal.common.no-data.text"/>
+                </div>}
             </DashboardPanel>
           </DashboardPanels>
         </PageContainer>}

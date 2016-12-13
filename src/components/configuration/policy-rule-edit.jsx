@@ -15,7 +15,8 @@ import {
 import Select from '../select'
 import {
   POLICY_TYPES,
-  DEFAULT_MATCH_JS
+  DEFAULT_MATCH_JS,
+  DEFAULT_ACTION_PATH
 } from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -60,7 +61,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
       let newMatch = Immutable.fromJS([DEFAULT_MATCH_JS])
       if(currentSet) {
-        const newSetPath = [0, 'match'].concat(childPath)
+        const newSetPath = DEFAULT_ACTION_PATH
         newMatch = newMatch.setIn(newSetPath, currentSet)
       }
       this.props.changeValue([],
@@ -122,11 +123,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
         this.props.changeValue(
           matches[0].path.slice(0, -2),
-          this.props.config.getIn(matches[0].path.concat(['cases', 0, 1]))
+          this.props.config.getIn(matches[0].path.concat(childPath))
         )
         this.props.changeValue([],
          this.props.config.setIn(
-           matches[1].path.concat(childPath),
+           matches[1].path.concat(matchFilterChildPaths[matches[1].filterType]),
            currentSets
          )
         )
@@ -385,10 +386,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={4} className="text-right">
                     <ActionButtons
                       className="secondary"
-                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : ''}
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
                       arrowUpDisabled={i <= 0}
                       onArrowDown={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(set.path, i+1) : ''}
+                        this.moveSet(set.path, i+1) : () => false}
                       arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
                       onDelete={this.deleteSet(set.path)} />
                   </Col>
@@ -426,8 +427,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   hideAction: React.PropTypes.func,
   isEditingRule: React.PropTypes.bool,
   rule: React.PropTypes.instanceOf(Immutable.Map),
-  rulePath: React.PropTypes.instanceOf(Immutable.List),
-  saveChanges: React.PropTypes.func
+  rulePath: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = ConfigurationPolicyRuleEdit

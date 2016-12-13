@@ -1,7 +1,7 @@
 import React from 'react'
 import d3 from 'd3'
 import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
-import { Link, withRouter } from 'react-router'
+import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
@@ -17,7 +17,9 @@ import {
 import { userIsCloudProvider } from '../../util/helpers'
 
 import AddHost from './add-host'
+import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
+import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import Content from '../layout/content'
@@ -26,7 +28,6 @@ import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IconCaretDown from '../icons/icon-caret-down.jsx'
-import IconChart from '../icons/icon-chart.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
@@ -35,6 +36,7 @@ import GroupForm from '../../components/account-management/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 const rangeMin = 400
 const rangeMax = 500
@@ -316,10 +318,11 @@ class ContentItems extends React.Component {
                 <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
               </IsAllowed>
             : null}
-            <Select
+            {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
+             <Select
               onSelect={this.handleSortChange}
               value={currentValue}
-              options={sortOptions.map(opt => [opt.value, opt.label])}/>
+              options={sortOptions.map(opt => [opt.value, opt.label])}/> : null}
             <ButtonGroup>
               <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={viewingChart}
@@ -446,35 +449,12 @@ class ContentItems extends React.Component {
   }
 }
 
-const AnalyticsLink = props => {
-  return (
-    <Link
-      className="btn btn-primary btn-icon"
-      to={props.url()}>
-      <IconChart />
-   </Link>
-  )
-}
-AnalyticsLink.propTypes = { url: React.PropTypes.func }
-
-const NoContentItems = props => {
-  return (
-    <p className="fetching-info text-center">
-      {props.content}
-      <br/>
-      You can create new properties by clicking the Add New (+) button
-    </p>
-  )
-}
-NoContentItems.propTypes = { content: React.PropTypes.string }
-
 ContentItems.displayName = 'ContentItems'
 ContentItems.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   analyticsURLBuilder: React.PropTypes.func,
   changeNotification: React.PropTypes.func,
-  className: React.PropTypes.string,
   configURLBuilder: React.PropTypes.func,
   contentItems: React.PropTypes.instanceOf(Immutable.List),
   createNewItem: React.PropTypes.func,
@@ -487,15 +467,16 @@ ContentItems.propTypes = {
   group: React.PropTypes.string,
   headerText: React.PropTypes.object,
   hideInfoDialog: React.PropTypes.func,
-  history: React.PropTypes.object,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
   router: React.PropTypes.object,
-  selectionDisabled: React.PropTypes.bool,
-  selectionStartTier: React.PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
+  // eslint-disable-next-line react/no-unused-prop-types
+  selectionStartTier: React.PropTypes.string, // this is used in a helper render method
   showAnalyticsLink: React.PropTypes.bool,
   showInfoDialog: React.PropTypes.func,
   showSlices: React.PropTypes.bool,

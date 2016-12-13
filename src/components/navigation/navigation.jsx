@@ -60,7 +60,6 @@ const Navigation = (props) => {
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
-
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
@@ -144,7 +143,6 @@ const Navigation = (props) => {
 
 Navigation.displayName = 'Navigation'
 Navigation.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),

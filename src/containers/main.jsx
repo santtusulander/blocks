@@ -10,7 +10,6 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
-import * as hostActionCreators from '../redux/modules/host'
 import * as rolesActionCreators from '../redux/modules/roles'
 
 import Header from '../components/header/header'
@@ -33,24 +32,25 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    // Validate token
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
-          if(!this.pageAllowsAnon()) {
-            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
-            this.props.router.push('/login')
-          }
+          /* eslint-disable no-console */
+          console.log('Main -- checkToken failed')
+          /* eslint-enable no-console */
+
           return false
         }
-        else {
-          this.props.userActions.fetchUser(action.payload.username)
-          this.props.rolesActions.fetchRoles()
-          const accountId = this.props.activeAccount.size ?
-            this.props.activeAccount.get('id') :
-            this.props.params.account
 
-          return this.fetchAccountData(accountId, this.props.accounts)
-        }
+        this.props.userActions.fetchUser(action.payload.username)
+        this.props.rolesActions.fetchRoles()
+
+        const accountId = this.props.activeAccount && this.props.activeAccount.size
+          ? this.props.activeAccount.get('id')
+          : this.props.params.account
+
+        this.fetchAccountData(accountId, this.props.accounts)
       })
   }
 
@@ -75,8 +75,17 @@ export class Main extends React.Component {
     }
   }
   logOut() {
+    this.props.userActions.setLogin(false)
+
     this.props.userActions.logOut()
-    this.props.router.push('/login')
+      .then(() => {
+        this.props.router.push('/login')
+        this.props.userActions.destroyStore();
+        /* eslint-disable no-console */
+        console.log('logging out -- redirect to login page')
+        /* eslint-enable no-console */
+
+      })
   }
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
@@ -87,17 +96,12 @@ export class Main extends React.Component {
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
-  pageAllowsAnon() {
-    return this.props.location.pathname === '/login' ||
-    this.props.location.pathname === '/forgot-password' ||
-    this.props.location.pathname === '/set-password' ||
-    this.props.location.pathname === '/starburst-help' ||
-    this.props.location.pathname === '/styleguide'
-  }
+
   render() {
-    if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
+    if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
     }
+
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
@@ -115,7 +119,6 @@ export class Main extends React.Component {
 
     return (
       <div className={classNames}>
-      {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
         <Navigation
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
@@ -125,9 +128,7 @@ export class Main extends React.Component {
           pathname={this.props.location.pathname}
           roles={this.props.roles}
           />
-        : ''
-      }
-        {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
+
           <Header
             accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
@@ -146,14 +147,12 @@ export class Main extends React.Component {
             roles={this.props.roles}
             toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
             user={this.props.currentUser}/>
-          : ''
-        }
+
         <div className="content-container">
           {this.props.children}
-          {this.props.user.get('loggedIn') && !this.pageAllowsAnon() && !this.props.fetching ?
-            <Footer />
-            : null}
         </div>
+
+            <Footer />
 
         {this.props.showErrorDialog &&
         <ModalWindow
@@ -168,7 +167,6 @@ export class Main extends React.Component {
         <ModalWindow
           {...infoDialogOptions}/>
         }
-
 
         <ReactCSSTransitionGroup
           component="div"
@@ -202,12 +200,10 @@ Main.propTypes = {
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
-  hostActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   notification: React.PropTypes.string,
   params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
   router: React.PropTypes.object,
@@ -227,7 +223,6 @@ Main.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   currentUser: Immutable.Map(),
-  properties: Immutable.List(),
   roles: Immutable.List(),
   user: Immutable.Map()
 }
@@ -247,7 +242,6 @@ function mapStateToProps(state) {
       state.traffic.get('fetching') ||
       state.visitors.get('fetching'),
     notification: state.ui.get('notification'),
-    properties: state.host.get('allHosts'),
     roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),
     showInfoDialog: state.ui.get('showInfoDialog'),
@@ -263,7 +257,6 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
-    hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch)

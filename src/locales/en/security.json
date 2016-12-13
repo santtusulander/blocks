@@ -9,6 +9,12 @@
   "portal.security.tokenAuth.created.text": "Created",
   "portal.security.tokenAuth.noRules.text": "No Token Auth rules found",
 
+  "portal.security.ssl.selectGroup.text": "Please select a group from top left to see SSL Ceritificates",
   "portal.security.ssl.noCertificates.text": "No certificates",
-  "portal.security.ssl.selectGroup.text": "Please select a group from top left to see SSL Ceritificates"
+  "portal.security.ssl.expirationDate.text": "Expiration Date",
+  "portal.security.ssl.certificateForm.groupsSelector.label": "Assign to Group",
+  "portal.security.ssl.certificateForm.sslCertTitle.label": "SSL Cert Title",
+  "portal.security.ssl.certificateForm.privateKey.label": "Private Key",
+  "portal.security.ssl.certificateForm.certificate.label": "Certificate",
+  "portal.security.ssl.certificateForm.intermediateCertificates.label": "Intermediate Certificates"
 }

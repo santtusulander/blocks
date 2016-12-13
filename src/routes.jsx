@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
 
@@ -130,172 +131,202 @@ function getSupportTabRoutes() {
   )
 }
 
+import { UserAuthWrapper } from 'redux-auth-wrapper'
+
+const UserIsLoggedIn = UserAuthWrapper({
+  authSelector: state => state.user,
+  authenticatingSelector: state => state.user.get('fetching') && ( state.user.get('loggedIn') === false ),
+  failureRedirectPath: '/login',
+  wrapperDisplayName: 'UserIsLoggedIn',
+  predicate: (user) => {
+    return ( user && user.get('loggedIn') === true )
+  },
+  allowRedirectBack: true
+})
+
+const UserIsNotLoggedIn = UserAuthWrapper({
+  authSelector: state => state.user,
+  wrapperDisplayName: 'UserIsNotLoggedIn',
+  predicate: (user) => user.get('loggedIn') === false,
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.query.redirect || '/content'
+
+    return redirectPath
+
+  },
+  allowRedirectBack: false
+})
+
 export const getRoutes = store => {
-
   return (
-    <Route path="/" component={Main}>
-      <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
-      <Route path="starburst-help" component={StarburstHelp}/>
-      <Route path="styleguide" component={Styleguide}/>
-      <Route path="configure/purge" component={Purge}/>
-      <Route path="/login" component={Login}/>
-      <Route path="/set-password" component={SetPassword}/>
-      <Route path="/forgot-password" component={ForgotPassword}/>
+    <Route path="/">
+      <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
+      <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
+      <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
+      <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
 
-      {/* Analytics - routes */}
-      <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
-        {/* default - set 'udn' as brand */}
-        <IndexRedirect to="udn" />
-        <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)}>
-          {getAnalyticsTabRoutes(store)}
-        </Route>
-        <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
+      { /* Routes below are protected by login*/}
+      <Route component={UserIsLoggedIn(Main)}>
+        <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
+        <Route path="starburst-help" component={StarburstHelp}/>
+        <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
+        <Route path="configure/purge" component={Purge}/>
+
+        {/* Analytics - routes */}
+        <Route path={routes.analytics} component={UserHasPermission(PERMISSIONS.VIEW_ANALYTICS_SECTION, store)} >
+          {/* default - set 'udn' as brand */}
+          <IndexRedirect to="udn" />
+          <Route path={routes.analyticsBrand} component={UserCanListAccounts(store)(AnalyticsContainer)}>
             {getAnalyticsTabRoutes(store)}
-        </Route>
-        <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes(store)}
-        </Route>
-        <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
-            {getAnalyticsTabRoutes(store)}
-        </Route>
-      </Route>
-
-      {/* Content / CP Accounts - routes */}
-      <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
-        <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
-        <Route component={ContentTransition}>
-          <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-          <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-          <Route path={routes.contentGroups} component={Groups}/>
-          <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
-        </Route>
-
-        {/* Properties - routes */}
-        <Route path={routes.contentProperty} component={Property}>
-          <IndexRedirect to={routes.contentPropertyTabSummary}/>
-          <Route path={routes.contentPropertyTabSummary} component={PropertySummary}/>
-          <Route path={routes.contentPropertyTabPurgeStatus} component={PurgeStatus}/>
-        </Route>
-
-        {/* Property Configuration - routes */}
-        <Route path={routes.contentPropertyConfiguration} component={Configuration}>
-          <IndexRedirect to={routes.configurationTabDetails} />
-          <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
-          <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
-          <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
-          <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
-            <Route path={routes.configurationTabPoliciesEditPolicy}/>
+          </Route>
+          <Route path={routes.analyticsAccount} component={AnalyticsContainer}>
+              {getAnalyticsTabRoutes(store)}
+          </Route>
+          <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
+              {getAnalyticsTabRoutes(store)}
+          </Route>
+          <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
+              {getAnalyticsTabRoutes(store)}
           </Route>
         </Route>
-      </Route>
 
-      {/* Network / SP Accounts - routes */}
-      <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
-        <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-        <Route component={ContentTransition}>
-          <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
-          <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-          <Route path={routes.networkGroups} component={Groups}/>
+        {/* Content / CP Accounts - routes */}
+        <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
+          <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
+          <Route component={ContentTransition}>
+            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
+            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+            <Route path={routes.contentGroups} component={Groups}/>
+            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+          </Route>
+
+          {/* Properties - routes */}
+          <Route path={routes.contentProperty} component={Property}>
+            <IndexRedirect to={routes.contentPropertyTabSummary}/>
+            <Route path={routes.contentPropertyTabSummary} component={PropertySummary}/>
+            <Route path={routes.contentPropertyTabPurgeStatus} component={PurgeStatus}/>
+          </Route>
+
+          {/* Property Configuration - routes */}
+          <Route path={routes.contentPropertyConfiguration} component={Configuration}>
+            <IndexRedirect to={routes.configurationTabDetails} />
+            <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
+            <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
+            <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
+            <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
+              <Route path={routes.configurationTabPoliciesEditPolicy}/>
+            </Route>
+          </Route>
         </Route>
-      </Route>
 
-      {/* Security - routes */}
-      <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION, store)}>
-        <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
-        <Route path={routes.securityBrand} component={UserCanListAccounts(store)(Security)} />
-        <Route path={routes.securityAccount} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
+        {/* Network / SP Accounts - routes */}
+        <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
+          <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
+          <Route component={ContentTransition}>
+            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+            <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+            <Route path={routes.networkGroups} component={Groups}/>
+          </Route>
+        </Route>
+
+        {/* Security - routes */}
+        <Route path={routes.security} component={UserHasPermission(PERMISSIONS.VIEW_SECURITY_SECTION, store)}>
+          <IndexRedirect to={getRoute('securityBrand', {brand: 'udn'})} />
+          <Route path={routes.securityBrand} component={UserCanListAccounts(store)(Security)} />
+          <Route path={routes.securityAccount} component={Security}>
+            <IndexRedirect to={routes.securityTabSslCertificate} />
+              <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+              <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+              <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+          </Route>
+          <Route path={routes.securityGroup} component={Security}>
+            <IndexRedirect to={routes.securityTabSslCertificate} />
             <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
             <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
             <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+          </Route>
+
+          <Route path={routes.securityProperty} component={Security}>
+            <IndexRedirect to={routes.securityTabSslCertificate} />
+              <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+              <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+              <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+          </Route>
         </Route>
-        <Route path={routes.securityGroup} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-          <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
-          <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
-          <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+
+        {/* Services - routes */}
+        <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION, store)}>
+          <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
+          <Route path={routes.servicesBrand} component={UserCanListAccounts(store)(Services)}/>
+          <Route path={routes.servicesAccount} component={Services}/>
+          <Route path={routes.servicesGroup} component={Services}/>
+          <Route path={routes.servicesProperty} component={Services}/>
         </Route>
-        <Route path={routes.securityProperty} component={Security}>
-          <IndexRedirect to={routes.securityTabSslCertificate} />
-            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
-            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
-            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+
+        {/* Support - routes */}
+        <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
+          <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
+          <Route path={routes.supportBrand} component={UserCanTicketAccounts(store)(Support)}>
+              {getSupportTabRoutes()}
+          </Route>
+          <Route path={routes.supportAccount} component={Support}>
+              {getSupportTabRoutes()}
+          </Route>
+          <Route path={routes.supportGroup} component={Support}>
+              {getSupportTabRoutes()}
+          </Route>
+          <Route path={routes.supportProperty} component={Support}>
+              {getSupportTabRoutes()}
+          </Route>
+        </Route>
+
+        {/* Account management - routes */}
+        <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION, store)}>
+          <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
+          <Route path={routes.accountManagementBrand} component={UserCanManageAccounts(store)(AccountManagement)}>
+            <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
+            <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
+            <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
+            <Route path={routes.accountManagementTabSystemBrands} component={AccountManagementBrands}/>
+            <Route path={routes.accountManagementTabSystemDNS} component={UserCanViewDns(store)(AccountManagementDNS)}/>
+            <Route path={routes.accountManagementTabSystemRoles} component={AccountManagementRoles}/>
+            <Route path={routes.accountManagementTabSystemServices} component={AccountManagementServices}/>
+          </Route>
+          <Route path={routes.accountManagementAccount} component={AccountManagement}>
+            <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+          </Route>
+          <Route path={routes.accountManagementGroup} component={AccountManagement}>
+            <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+          </Route>
+          <Route path={routes.accountManagementProperty} component={AccountManagement}>
+            <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
+            <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+          </Route>
+        </Route>
+
+        {/* User preferences - routes */}
+        <Route path={routes.user}>
+          <IndexRedirect to={getRoute('userBrand', {brand: 'udn'})} />
+          <Route path={routes.userBrand} component={User}/>
+          <Route path={routes.userAccount} component={User}/>
+        </Route>
+
+        {/* Dashboard - routes */}
+        <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION, store)}>
+          <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
+          <Route path={routes.dashboardBrand} component={Dashboard}/>
+          <Route path={routes.dashboardAccount} component={Dashboard}/>
+          <Route path={routes.dashboardGroup} component={Dashboard}/>
         </Route>
       </Route>
-
-      {/* Services - routes */}
-      <Route path={routes.services} component={UserHasPermission(PERMISSIONS.VIEW_SERVICES_SECTION, store)}>
-        <IndexRedirect to={getRoute('servicesBrand', {brand: 'udn'})} />
-        <Route path={routes.servicesBrand} component={UserCanListAccounts(store)(Services)}/>
-        <Route path={routes.servicesAccount} component={Services}/>
-        <Route path={routes.servicesGroup} component={Services}/>
-        <Route path={routes.servicesProperty} component={Services}/>
-      </Route>
-
-      {/* Support - routes */}
-      <Route path={routes.support} component={UserHasPermission(PERMISSIONS.VIEW_SUPPORT_SECTION, store)}>
-        <IndexRedirect to={getRoute('supportBrand', {brand: 'udn'})} />
-        <Route path={routes.supportBrand} component={UserCanTicketAccounts(store)(Support)}>
-            {getSupportTabRoutes()}
-        </Route>
-        <Route path={routes.supportAccount} component={Support}>
-            {getSupportTabRoutes()}
-        </Route>
-        <Route path={routes.supportGroup} component={Support}>
-            {getSupportTabRoutes()}
-        </Route>
-        <Route path={routes.supportProperty} component={Support}>
-            {getSupportTabRoutes()}
-        </Route>
-      </Route>
-
-      {/* Account management - routes */}
-      <Route path={routes.accountManagement} component={UserHasPermission(PERMISSIONS.VIEW_ACCOUNT_SECTION, store)}>
-        <IndexRedirect to={getRoute('accountManagementBrand', {brand: 'udn'})} />
-        <Route path={routes.accountManagementBrand} component={UserCanManageAccounts(store)(AccountManagement)}>
-          <IndexRedirect to={routes.accountManagementTabSystemAccounts}/>
-          <Route path={routes.accountManagementTabSystemAccounts} component={AccountManagementAccounts}/>
-          <Route path={routes.accountManagementTabSystemUsers} component={AccountManagementSystemUsers}/>
-          <Route path={routes.accountManagementTabSystemBrands} component={AccountManagementBrands}/>
-          <Route path={routes.accountManagementTabSystemDNS} component={UserCanViewDns(store)(AccountManagementDNS)}/>
-          <Route path={routes.accountManagementTabSystemRoles} component={AccountManagementRoles}/>
-          <Route path={routes.accountManagementTabSystemServices} component={AccountManagementServices}/>
-        </Route>
-        <Route path={routes.accountManagementAccount} component={AccountManagement}>
-          <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-          <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
-          <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-          <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-        </Route>
-        <Route path={routes.accountManagementGroup} component={AccountManagement}>
-          <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-          <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
-          <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-          <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-        </Route>
-        <Route path={routes.accountManagementProperty} component={AccountManagement}>
-          <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-          <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
-          <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
-          <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-        </Route>
-      </Route>
-
-      {/* User preferences - routes */}
-      <Route path={routes.user}>
-        <IndexRedirect to={getRoute('userBrand', {brand: 'udn'})} />
-        <Route path={routes.userBrand} component={User}/>
-        <Route path={routes.userAccount} component={User}/>
-      </Route>
-
-      {/* Dashboard - routes */}
-      <Route path={routes.dashboard} component={UserHasPermission(PERMISSIONS.VIEW_DASHBOARD_SECTION, store)}>
-        <IndexRedirect to={getRoute('dashboardBrand', {brand: 'udn'})} />
-        <Route path={routes.dashboardBrand} component={Dashboard}/>
-        <Route path={routes.dashboardAccount} component={Dashboard}/>
-        <Route path={routes.dashboardGroup} component={Dashboard}/>
-      </Route>
-
       <Route path="*" component={NotFoundPage} />
     </Route>
   )

@@ -13,7 +13,6 @@ import * as groupActionCreators from '../../../redux/modules/group'
 import * as hostActionCreators from '../../../redux/modules/host'
 import * as metricsActionCreators from '../../../redux/modules/metrics'
 import * as purgeActionCreators from '../../../redux/modules/purge'
-import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 
@@ -290,7 +289,7 @@ class PropertySummary extends React.Component {
       this.props.hourlyTraffic.getIn(['history', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').add(dateRange.asDays(), 'days').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates', 'average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
     const metrics_traffic = !totals ?
@@ -298,7 +297,7 @@ class PropertySummary extends React.Component {
       this.props.hourlyTraffic.getIn(['now', 0, 'detail']).map(hour => {
         return {
           timestamp: moment(hour.get('timestamp'), 'X').toDate(),
-          bits_per_second: hour.getIn(['transfer_rates', 'average'])
+          bits_per_second: hour.getIn(['transfer_rates', 'total'])
         }
       })
     const avg_transfer_rate = totals && totals.get('transfer_rates').get('average')
@@ -375,7 +374,7 @@ class PropertySummary extends React.Component {
             <FormattedMessage id="portal.content.property.summary.uniqueVisitors.title"/>
             <h3>
               {this.props.fetching || this.props.visitorsFetching ?
-                <span>Loading...</span> :
+                <span><FormattedMessage id="portal.loading.text"/></span> :
                 numeral(this.props.visitorsByTimeAverage).format('0,0')
               }
             </h3>
@@ -473,25 +472,18 @@ PropertySummary.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   activePurge: React.PropTypes.instanceOf(Immutable.Map),
   brand: React.PropTypes.string,
-  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  description: React.PropTypes.string,
   fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
   group: React.PropTypes.string,
   groupActions: React.PropTypes.object,
   hostActions: React.PropTypes.object,
   hourlyTraffic: React.PropTypes.instanceOf(Immutable.Map),
-  id: React.PropTypes.string,
   location: React.PropTypes.object,
   metricsActions: React.PropTypes.object,
-  name: React.PropTypes.string,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   purgeActions: React.PropTypes.object,
   router: React.PropTypes.object,
-  trafficActions: React.PropTypes.object,
-  trafficFetching: React.PropTypes.bool,
   uiActions: React.PropTypes.object,
   visitorsActions: React.PropTypes.object,
   visitorsByTimeAverage: React.PropTypes.number,
@@ -502,7 +494,6 @@ PropertySummary.defaultProps = {
   activeGroup: Immutable.Map(),
   activeHost: Immutable.Map(),
   activePurge: Immutable.Map(),
-  currentUser: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   hourlyTraffic: Immutable.fromJS({
     now: [],
@@ -522,10 +513,8 @@ function mapStateToProps(state) {
     currentUser: state.user.get('currentUser'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetching: state.host.get('fetching'),
-    fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hourlyTraffic: state.metrics.get('hostHourlyTraffic'),
     properties: state.host.get('allHosts'),
-    trafficFetching: state.traffic.get('fetching'),
     visitorsByTimeAverage: state.visitors.get('byTimeAverage'),
     visitorsFetching: state.traffic.get('fetching')
   };
@@ -538,7 +527,6 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     metricsActions: bindActionCreators(metricsActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     visitorsActions: bindActionCreators(visitorsActionCreators, dispatch)
   };

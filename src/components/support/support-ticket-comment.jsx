@@ -27,14 +27,11 @@ class SupportTicketComment extends React.Component {
 
 SupportTicketComment.propTypes = {
   className: PropTypes.string,
-  comment: PropTypes.instanceOf(Map),
-  onDelete: PropTypes.func
+  comment: PropTypes.instanceOf(Map)
 }
 
 SupportTicketComment.defaultProps = {
-  comment: Map(),
-  onDelete: () => {}
+  comment: Map()
 }
 
 export default SupportTicketComment
-
