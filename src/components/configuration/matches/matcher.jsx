@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonToolbar, Input, Modal, Panel } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, Panel } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -152,29 +152,39 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-          <Input type="text" label={this.props.label}
-            placeholder={this.props.placeholder}
-            id="matches_val"
-            value={this.state.val}
-            onChange={this.handleValChange}/>
+          <FormGroup>
+            <ControlLabel>{this.props.label}</ControlLabel>
+            <FormControl
+              type="text"
+              placeholder={this.props.placeholder}
+              id="matches_val"
+              value={this.state.val}
+              onChange={this.handleValChange}/>
+          </FormGroup>
 
           <hr />
 
           {!this.props.disableRuleSelector &&
             <div className="form-groups">
               <InputConnector show={hasContainingRule} noLabel={true} />
-              <div className="form-group">
+              <FormGroup>
                 <Select className="input-select"
                   onSelect={this.handleMatchesChange}
                   value={this.state.activeFilter}
                   options={matchOpts}/>
-              </div>
+              </FormGroup>
 
               <Panel className="form-panel" collapsible={true}
                 expanded={hasContainingRule}>
-                <Input type="text" label="Value"
-                  value={this.state.containsVal}
-                  onChange={this.handleContainsValChange}/>
+                <FormGroup>
+                  <ControlLabel>
+                    <FormattedMessage id="portal.policy.edit.matcher.value.text" />
+                  </ControlLabel>
+                  <FormControl
+                    type="text"
+                    value={this.state.containsVal}
+                    onChange={this.handleContainsValChange}/>
+                </FormGroup>
               </Panel>
             </div>
           }

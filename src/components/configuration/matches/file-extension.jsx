@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
+import { Checkbox, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -39,18 +39,29 @@ class FileExtension extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.placeholder'})}
-            id="matches_file-extension"
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.fileExtension.fileExtension.text" />
+            </ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.placeholder'})}
+              id="matches_file-extension"
+              value={this.props.match.get('cases').get(0).get(0)}
+              onChange={this.handleChange(
+                this.props.path.concat(['cases', 0, 0])
+              )}/>
+          </FormGroup>
 
-          <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.ignoreCase.text'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'file_extension_ignore_case']
-            )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.fileExtension.ignoreCase.text" />
+            </ControlLabel>
+            <Checkbox
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'matches', 'file_extension_ignore_case']
+              )}/>
+          </FormGroup>
 
           <Select className="input-select"
             onSelect={this.handleSelectChange(
