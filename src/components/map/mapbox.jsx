@@ -89,18 +89,6 @@ class Mapbox extends React.Component {
     this.setState({ scale: e.transform.scale, zoom: e.transform._zoom })
   }
 
-  onZoomEnd(e) {
-    if (this.state.zoom > 6.9) {
-      const south = e.getBounds().getSouth()
-      const west = e.getBounds().getWest()
-      const north = e.getBounds().getNorth()
-      const east = e.getBounds().getEast()
-
-      this.props.getCitiesWithinBounds(south, west, north, east)
-      this.setState({ map: e })
-    }
-  }
-
   openPopup(content, coords) {
     this.setState({ popupContent: content, popupCoords: coords })
   }
@@ -262,9 +250,8 @@ class Mapbox extends React.Component {
     const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
 
     const cityHeat = getScore(cityMedian, city.bits_per_second)
-    const cityColor = cityHeat && cityHeat < heatMapColors.length ? heatMapColors[ cityHeat - 1 ] : '#f9ba01'
     const cityId = 'city-' + city.name.split(' ').join('-').toLowerCase()
-    const cityRadius = cityHeat > 40 ? 40 : cityHeat < 10 ? 10 : cityHeat
+    const cityRadius = cityHeat > 40 ? 30 : cityHeat < 5 ? 8 : cityHeat
 
     map.addLayer({
       id: cityId,
@@ -272,12 +259,9 @@ class Mapbox extends React.Component {
       type: 'circle',
       minzoom: 6.9,
       paint: {
-        'circle-radius': cityRadius * (this.state.scale / (this.state.scale > 1000 ? 10000 : 1000)),
-        'circle-color': cityColor,
+        'circle-radius': (cityRadius / 10) * this.state.zoom,
+        'circle-color': '#f9ba01',
         'circle-opacity': 0.5
-      },
-      metadata: {
-        radius: cityRadius * (this.state.scale / (this.state.scale > 1000 ? 10000 : 1000))
       }
     })
 
@@ -286,6 +270,18 @@ class Mapbox extends React.Component {
 
   onZoomClick(map, value) {
     return value < 0 ? map.zoomOut() : map.zoomIn()
+  }
+
+  getCitiesOnZoomDrag(map) {
+    if (this.state.zoom > 6.9) {
+      const south = map.getBounds().getSouth()
+      const west = map.getBounds().getWest()
+      const north = map.getBounds().getNorth()
+      const east = map.getBounds().getEast()
+
+      this.props.getCitiesWithinBounds(south, west, north, east)
+      this.setState({ map })
+    }
   }
 
   render() {
@@ -302,9 +298,10 @@ class Mapbox extends React.Component {
         minZoom={1}
         maxZoom={13}
         onZoom={this.onZoom.bind(this)}
-        onZoomEnd={this.onZoomEnd.bind(this)}
+        onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}>
+        onMouseMove={this.onMouseMove.bind(this)}
+        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}>
 
         <div className="map-search">
           <Typeahead
