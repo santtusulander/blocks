@@ -16,7 +16,7 @@ class ModalWindow extends React.Component {
   handleOnEntered(){
     const { verifyDelete } = this.props
     if (verifyDelete) {
-      this.refs.deleteInput.refs.input.focus()
+      this.deleteInput.focus()
     }
   }
 
@@ -38,6 +38,7 @@ class ModalWindow extends React.Component {
             <FormGroup>
               <ControlLabel><FormattedMessage id="portal.deleteModal.validation.label" /></ControlLabel>
               <FormControl
+                inputRef={ref => this.deleteInput = ref}
                 placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
                 {...modalField}
               />
