@@ -1,28 +1,13 @@
 import React, { PropTypes } from 'react'
-import { FormControl, FormGroup, InputGroup, ButtonToolbar, ControlLabel, Button } from 'react-bootstrap'
+import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
+import Input from './dns-form-input'
 import SelectWrapper from '../select-wrapper'
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
-
-const Input = ({ required = true, addonAfter, labelID, children, isVisible = true, ...inputProps }) =>
-  isVisible &&
-    <FormGroup>
-      <ControlLabel>
-        <FormattedMessage id={labelID}/>{required && ' *'}
-      </ControlLabel>
-      <InputGroup>
-        <FormControl {...inputProps}/>
-        {addonAfter &&
-          <InputGroup.Addon>
-            {addonAfter}
-          </InputGroup.Addon>}
-      </InputGroup>
-      {children}
-    </FormGroup>
 
 const RecordForm = ({ domain, loading, edit, submit, cancel, invalid, fields: { type, name, value, ttl, prio }, shouldShowField, intl }) =>
   <form>
