@@ -19,6 +19,8 @@ const startOfThisWeek = () => moment().utc().startOf('week')
 const endOfThisWeek = () => moment().utc().endOf('week')
 
 const DATE_FORMAT = 'MM/DD/YYYY'
+const LIMIT_VALUE = 4
+const LIMIT_TYPE = 'months'
 
 class DateRangeSelect extends React.Component {
   constructor(props) {
@@ -104,8 +106,8 @@ class DateRangeSelect extends React.Component {
       // date has been chosen
       if (newSelectingRangeVal && this.props.limitRange) {
         this.setState({
-          maxDate: date.dateMoment.clone().add(4, 'months').subtract(1, 'day'),
-          minDate: date.dateMoment.clone().subtract(4, 'months').add(1, 'day')
+          maxDate: date.dateMoment.clone().add(LIMIT_VALUE, LIMIT_TYPE).subtract(1, 'day'),
+          minDate: date.dateMoment.clone().subtract(LIMIT_VALUE, LIMIT_TYPE).add(1, 'day')
         })
       }
     })
@@ -259,11 +261,14 @@ class DateRangeSelect extends React.Component {
 DateRangeSelect.displayName = 'DateRangeSelect'
 DateRangeSelect.propTypes = {
   availableRanges: PropTypes.array,
-  changeDateRange: PropTypes.func,
+  changeDateRange: PropTypes.func.isRequired,
   endDate: PropTypes.instanceOf(moment),
   intl: intlShape.isRequired,
   limitRange: PropTypes.bool,
   startDate: PropTypes.instanceOf(moment)
+}
+DateRangeSelect.defaultProps = {
+  availableRanges: []
 }
 
 export default injectIntl(DateRangeSelect)
