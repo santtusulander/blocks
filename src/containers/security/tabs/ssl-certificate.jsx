@@ -12,7 +12,9 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import ModalWindow from '../../../components/modal'
 import CertificateForm from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
-import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+//TODO: restore
+// https://vidscale.atlassian.net/browse/UDNP-2043
+//import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
   UPLOAD_CERTIFICATE,
