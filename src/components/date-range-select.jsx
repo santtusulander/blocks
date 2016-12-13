@@ -51,8 +51,8 @@ class DateRangeSelect extends React.Component {
 
     this.setState({
       activeDateRange: this.matchActiveDateRange(startDate, endDate),
-      endDate: endDate || endOfThisDay(),
-      startDate: startDate || startOfThisMonth()
+      endDate: endDate,
+      startDate: startDate
     })
   }
 
@@ -268,7 +268,9 @@ DateRangeSelect.propTypes = {
   startDate: PropTypes.instanceOf(moment)
 }
 DateRangeSelect.defaultProps = {
-  availableRanges: []
+  availableRanges: [],
+  endDate: endOfThisDay(),
+  startDate: startOfThisMonth()
 }
 
 export default injectIntl(DateRangeSelect)
