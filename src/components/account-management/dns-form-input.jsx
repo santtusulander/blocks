@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import { FormControl, FormGroup, InputGroup, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-const Input = ({ required = true, addonAfter, labelID, children, isVisible = true, ...inputProps }) =>
+const Input = ({ id, required = true, addonAfter, labelID, children, isVisible = true, ...inputProps }) =>
   isVisible &&
-    <FormGroup>
+    <FormGroup controlId={id}>
       <ControlLabel>
         <FormattedMessage id={labelID}/>{required && ' *'}
       </ControlLabel>

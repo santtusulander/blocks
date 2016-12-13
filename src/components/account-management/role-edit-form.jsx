@@ -2,9 +2,10 @@ import React from 'react'
 import Immutable from 'immutable'
 import {reduxForm} from 'redux-form'
 
-import { Modal, FormControl, ControlLabel, ButtonToolbar, Button, Table } from 'react-bootstrap'
+import { Modal, HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import Toggle from '../toggle'
+import { getReduxFormValidationState } from '../../util/helpers'
 
 import './role-edit-form.scss'
 
@@ -66,17 +67,20 @@ const RolesEditForm = (props) => {
       <Modal.Body>
 
         {/*TODO: Enable in the future when roles are editable*/}
-        <ControlLabel>
-          <FormattedMessage id='portal.role.edit.enterRoleName.text'/>
-        </ControlLabel>
-        <FormControl
-          {...roleName}
-          placeholder={props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
-          value={props.editRole.get('name')}
-          readOnly={true}
-        />
-
-        {roleName.touched && roleName.error && <div className='error-msg'>{roleName.error}</div>}
+        <FormGroup validationState={getReduxFormValidationState(roleName)}>
+          <ControlLabel>
+            <FormattedMessage id='portal.role.edit.enterRoleName.text'/>
+          </ControlLabel>
+          <FormControl
+            {...roleName}
+            placeholder={props.intl.formatMessage({id: 'portal.role.edit.enterRoleName.text'})}
+            value={props.editRole.get('name')}
+            readOnly={true}
+          />
+          {roleName.touched && roleName.error &&
+            <HelpBlock className='error-msg'>{roleName.error}</HelpBlock>
+          }
+        </FormGroup>
 
         <hr/>
 

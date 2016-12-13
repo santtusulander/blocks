@@ -20,6 +20,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountManagement.title': 'Account Management',
   'portal.account.manage.sidebar.title': 'MANAGE ACCOUNT',
   'portal.account.manage.account.title': 'Account',
+  'portal.account.manage.accountName.title': 'Account Name',
   'portal.account.manage.brand.title': 'Brand',
   'portal.account.manage.accountType.title': 'Account Type',
   'portal.account.manage.services.title': 'Services',
@@ -50,7 +51,8 @@ const TRANSLATED_MESSAGES = {
   'portal.brand.edit.favicon.addonAfter': 'Best in SVG format (logo may be scaled)',
   'portal.brand.edit.chooseColorTheme.text': 'Choose Color Theme',
   'portal.brand.edit.availability.text': 'Availability',
-  'portal.brand.edit.availability.label': 'Keep private (only I can assign this brand to accounts)',
+  'portal.brand.edit.availability.private.label': 'Keep private (only I can assign this brand to accounts)',
+  'portal.brand.edit.availability.public.label': 'Public',
 
   'portal.brand.list.brand.text': 'Brand',
   'portal.brand.list.availability.text': 'Availability',

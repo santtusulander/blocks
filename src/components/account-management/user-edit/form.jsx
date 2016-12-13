@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { FormControl, ControlLabel, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
+import { HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
+import { FormattedMessage } from 'react-intl'
+
 import SelectWrapper from '../../select-wrapper'
 import PasswordFields from '../../password-fields'
-
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 let errors = {}
 const validate = (values) => {
@@ -102,14 +103,18 @@ class UserEditForm extends React.Component {
 
     return (
       <form className="user-form">
-        <ControlLabel>
-          <FormattedMessage id="portal.user.edit.email.text"/>
-        </ControlLabel>
-        <FormControl
-          {...email}
-          disabled={true}/>
-        {email.touched && email.error &&
-        <div className="error-msg">{email.error}</div>}
+
+        <FormGroup validationState={getReduxFormValidationState(email)}>
+          <ControlLabel>
+            <FormattedMessage id="portal.user.edit.email.text"/>
+          </ControlLabel>
+          <FormControl
+            {...email}
+            disabled={true}/>
+          {email.touched && email.error &&
+            <HelpBlock className="error-msg">{email.error}</HelpBlock>
+          }
+        </FormGroup>
 
         <div className="user-form__name">
           <Row>
@@ -237,7 +242,6 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   // groupOptions: PropTypes.array,
-  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -257,4 +261,4 @@ export default reduxForm({
     'groups'
   ],
   validate: validate
-})(injectIntl(UserEditForm))
+})(UserEditForm)

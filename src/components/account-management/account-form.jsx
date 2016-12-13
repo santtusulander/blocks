@@ -3,8 +3,10 @@ import { reduxForm } from 'redux-form'
 import { Map }from 'immutable'
 import {
   Modal,
+  FormGroup,
   FormControl,
   ControlLabel,
+  HelpBlock,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -19,7 +21,7 @@ import {
   ACCOUNT_TYPE_OPTIONS
 } from '../../constants/account-management-options'
 
-import { checkForErrors } from '../../util/helpers'
+import { checkForErrors, getReduxFormValidationState } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 
@@ -118,34 +120,36 @@ class AccountForm extends React.Component {
         <Modal.Body>
           <form>
 
-            <ControlLabel>Account name</ControlLabel>
-            <FormControl
-              {...accountName}
-              id="account-name"
-              type="text"
-              placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})} />
-            {accountName.touched && accountName.error &&
-              <div className='error-msg'>{accountName.error}</div>
-            }
+            <FormGroup controlId="account-name" validationState={getReduxFormValidationState(accountName)}>
+              <ControlLabel><FormattedMessage id="portal.account.manage.accountName.title" /></ControlLabel>
+              <FormControl
+                {...accountName}
+                placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+              />
+              {accountName.touched && accountName.error &&
+                <HelpBlock className='error-msg'>{accountName.error}</HelpBlock>
+              }
+            </FormGroup>
 
             <hr/>
 
-            <div className='form-group'>
-              <label className='control-label'><FormattedMessage id="portal.account.manage.brand.title" /></label>
+            <FormGroup validationState={getReduxFormValidationState(accountBrand)}>
+              <ControlLabel><FormattedMessage id="portal.account.manage.brand.title" /></ControlLabel>
               <SelectWrapper
                 {... accountBrand}
                 className="input-select"
                 value={accountBrand.value}
                 options={BRAND_OPTIONS}
               />
-            </div>
-            {accountBrand.touched && accountBrand.error &&
-            <div className='error-msg'>{accountBrand.error}</div>}
+              {accountBrand.touched && accountBrand.error &&
+                <HelpBlock className='error-msg'>{accountBrand.error}</HelpBlock>
+              }
+            </FormGroup>
 
             <hr/>
 
-            <div className='form-group'>
-              <label className='control-label'><FormattedMessage id="portal.account.manage.accountType.title" /></label>
+            <FormGroup>
+              <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
               {this.props.account ?
                 <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
               :
@@ -157,12 +161,15 @@ class AccountForm extends React.Component {
                   options={ACCOUNT_TYPE_OPTIONS}
                 />
               }
-            </div>
+            </FormGroup>
 
             <hr/>
 
-            <label><FormattedMessage id="portal.account.manage.services.title" /></label>
-            <CheckboxArray iterable={serviceTypes} field={services}/>
+            <FormGroup>
+              <ControlLabel><FormattedMessage id="portal.account.manage.services.title" /></ControlLabel>
+              <CheckboxArray iterable={serviceTypes} field={services}/>
+            </FormGroup>
+
             <ButtonToolbar className="text-right extra-margin-top">
               <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
               <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
