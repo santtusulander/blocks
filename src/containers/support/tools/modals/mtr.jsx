@@ -1,5 +1,17 @@
 import React from 'react'
-import { Button, Col, Image, Input, Label, Row, Table, Well } from 'react-bootstrap'
+import {
+  Button,
+  Col,
+  Image,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Label,
+  Radio,
+  Row,
+  Table,
+  Well
+} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
@@ -37,33 +49,42 @@ class ModalMtr extends React.Component {
     const { handleCloseModal, showDetails, toggleShowDetails } = this.props
     const form = (
       <div>
-        <Input
-          type="text"
-          placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.mtr.modal.domainNamePlaceholder.text' })}
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.mtr.modal.domainNameLabel.text' })}
-          value="www.modernfamily.com"
-          onChange={() => null}/>
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.support.tools.mtr.modal.domainNameLabel.text" /></ControlLabel>
+          <FormControl
+            placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.mtr.modal.domainNamePlaceholder.text' })}
+            value="www.modernfamily.com"
+            onChange={() => null}/>
+        </FormGroup>
+
         <hr/>
-        <h4><FormattedMessage id="portal.support.tools.mtr.modal.testFromSectionTitle.text"/></h4>
-        <Input
-          type="radio"
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.mtr.modal.nameserverPredefined.text' })}
-          name="radioGroup1"
-          checked={true}
-          onChange={() => null}/>
-        <div className="form-group">
-          <SelectWrapper
-            id='d'
-            value="ny"
+
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.support.tools.mtr.modal.testFromSectionTitle.text" /></ControlLabel>
+
+          <Radio
+            name="radioGroup1"
+            checked={true}
             onChange={() => null}
-            options={[{ value: 'ny', label: 'US (New York)' }]}/>
-        </div>
-        <Input
-          type="radio"
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.mtr.modal.nameserverOwn.text' })}
-          name="radioGroup1"
-          onChange={() => null}/>
+          ><FormattedMessage id="portal.support.tools.mtr.modal.nameserverPredefined.text" /></Radio>
+
+          <div className="form-group">
+            <SelectWrapper
+              id='d'
+              value="ny"
+              onChange={() => null}
+              options={[{ value: 'ny', label: 'US (New York)' }]}/>
+          </div>
+
+          <Radio
+            name="radioGroup1"
+            checked={true}
+            onChange={() => null}
+          ><FormattedMessage id="portal.support.tools.mtr.modal.nameserverOwn.text" /></Radio>
+        </FormGroup>
+
         <hr/>
+
         <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>
           <FormattedMessage id="portal.button.TEST"/>
         </Button>
