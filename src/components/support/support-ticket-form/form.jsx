@@ -19,6 +19,7 @@ import {
   getTicketPriorityOptions,
   getTicketTypeOptions
 } from '../../../util/support-helper'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 let errors = {}
 const maxSubjectLength = 150
@@ -153,15 +154,11 @@ class SupportTicketForm extends React.Component {
       onCancel
     } = this.props
 
-    const getValidationState = field => {
-      return (field.touched && field.error) ? "error" : null
-    }
-
     return (
       <form className="ticket-form">
-        <FormGroup validationState={getValidationState(subject)}>
+        <FormGroup validationState={getReduxFormValidationState(subject)}>
           <ControlLabel><FormattedMessage id="portal.support.tickets.label.title.text" /></ControlLabel>
-          {getValidationState(subject) &&
+          {getReduxFormValidationState(subject) &&
             <HelpBlock>{subject.error}</HelpBlock>
           }
           <FormControl {...subject} />
@@ -169,9 +166,9 @@ class SupportTicketForm extends React.Component {
 
         <hr/>
 
-        <FormGroup validationState={getValidationState(description)}>
+        <FormGroup validationState={getReduxFormValidationState(description)}>
           <ControlLabel><FormattedMessage id="portal.support.tickets.label.description.text" /></ControlLabel>
-          {getValidationState(description) &&
+          {getReduxFormValidationState(description) &&
             <HelpBlock>{description.error}</HelpBlock>
           }
           <FormControl componentClass="textarea" {...description} />

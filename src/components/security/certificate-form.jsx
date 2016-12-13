@@ -3,10 +3,9 @@ import { FormGroup, FormControl, ControlLabel, ButtonToolbar } from 'react-boots
 import { List } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
+import { getReduxFormValidationState } from '../../util/helpers'
 import SelectWrapper from '../select-wrapper'
 import UDNButton from '../button'
-
-const getValidationState = field => field.touched && field.error ? "error" : null
 
 export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
   const { group, title, privateKey, certificate } = fields
@@ -27,7 +26,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 
       <hr/>
 
-      <FormGroup controlId="title" validationState={getValidationState(title)}>
+      <FormGroup controlId="title" validationState={getReduxFormValidationState(title)}>
         <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certTitle.text" /></ControlLabel>
         <FormControl componentClass="input" {...title} />
         {title.touched && title.error && <div className="error-msg">{title.error}</div>}
@@ -35,7 +34,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 
       <hr/>
 
-      <FormGroup controlId="privateKey" validationState={getValidationState(privateKey)}>
+      <FormGroup controlId="privateKey" validationState={getReduxFormValidationState(privateKey)}>
         <ControlLabel><FormattedMessage id="portal.security.ssl.edit.privateKey.text" /></ControlLabel>
         <FormControl componentClass="textarea" className="fixed-size-textarea" {...privateKey} />
         {privateKey.touched && privateKey.error && <div className="error-msg">{privateKey.error}</div>}
@@ -43,7 +42,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 
       <hr/>
 
-      <FormGroup controlId="certificate" validationState={getValidationState(certificate)}>
+      <FormGroup controlId="certificate" validationState={getReduxFormValidationState(certificate)}>
         <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certificate.text" /></ControlLabel>
         <FormControl componentClass="textarea" className="fixed-size-textarea" {...certificate} />
         {certificate.touched && certificate.error && <div className="error-msg">{certificate.error}</div>}
