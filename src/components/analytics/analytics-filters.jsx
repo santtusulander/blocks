@@ -79,7 +79,6 @@ const AnalyticsFilters = (props) => {
       {props.showFilters.includes('customDateRange') &&
         <FilterCustomDateRange
           startDate={props.filters.getIn(['customDateRange','startDate'])}
-          endDate={props.filters.getIn(['customDateRange','endDate'])}
           onFilterChange={props.onFilterChange} />}
 
       {(props.showFilters.includes('serviceProviders') && spFilterOptions.length > 0) &&

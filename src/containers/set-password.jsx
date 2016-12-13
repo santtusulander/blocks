@@ -76,7 +76,7 @@ export class SetPassword extends React.Component {
           <div className="login-header-gradient" />
           <h1>
             <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
-            <FormattedMessage id="portal.login.title"/>
+            {this.state.reset ? <FormattedMessage id="portal.login.resetPassword.title"/> : <FormattedMessage id="portal.login.setPassword.title"/>}
           </h1>
           <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
