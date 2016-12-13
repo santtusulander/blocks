@@ -29,7 +29,6 @@ class FilterIncludeComparison extends React.Component {
 FilterIncludeComparison.displayName = 'FilterIncludeComparison'
 FilterIncludeComparison.propTypes = {
   includeComparison: React.PropTypes.bool,
-  intl: React.PropTypes.object,
   toggleComparison: React.PropTypes.func
 }
 

@@ -1,6 +1,8 @@
 import React from 'react'
-import { Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { ButtonToolbar, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+
+import Input from './dns-form-input'
 
 import './dns-domain-edit-form.scss'
 
@@ -9,6 +11,7 @@ const DnsDomainEditForm = (props) => {
   const {
     edit,
     fetching,
+    intl,
     fields: {
       name,
       email_addr,
@@ -26,71 +29,62 @@ const DnsDomainEditForm = (props) => {
     <form autoComplete="off">
       <Input
         {...name}
-      type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainName.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}
-      disabled={props.edit}
-      />
-
-      {name.touched && name.error && <div className='error-msg'>{name.error}</div>}
+        labelID="portal.accountManagement.dns.form.domainName.text"
+        disabled={edit}
+        placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}>
+        {name.touched && name.error && <div className='error-msg'>{name.error}</div>}
+      </Input>
 
       <hr/>
 
       <Input
         {...name_server}
-      type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServer.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}
-      />
-
-      {name_server.touched && name_server.error && <div className='error-msg'>{name_server.error}</div>}
+        labelID='portal.accountManagement.dns.form.nameServer.text'
+        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}>
+        {name_server.touched && name_server.error && <div className='error-msg'>{name_server.error}</div>}
+      </Input>
 
       <hr/>
 
       <Input
         {...email_addr}
-      type="text"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.email.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
-      />
-
-      {email_addr.touched && email_addr.error && <div className='error-msg'>{email_addr.error}</div>}
+        labelID='portal.accountManagement.dns.form.email.text'
+        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}>
+        {email_addr.touched && email_addr.error && <div className='error-msg'>{email_addr.error}</div>}
+      </Input>
 
       <hr/>
 
       <Input
         {...refresh}
-      type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refreshPlaceholder.text'})}
-      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-      />
-
-      {refresh.touched && refresh.error && <div className='error-msg'>{refresh.error}</div>}
+        type="number"
+        labelID='portal.accountManagement.dns.form.refresh.text'
+        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refreshPlaceholder.text'})}
+        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
+        {refresh.touched && refresh.error && <div className='error-msg'>{refresh.error}</div>}
+      </Input>
 
       <hr/>
 
       <Input
         {...ttl}
-      type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttl.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
-      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-      />
-
-      {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
+        type="number"
+        labelID='portal.accountManagement.dns.form.ttl.text'
+        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
+        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
+        {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
+      </Input>
 
       <hr/>
 
       <Input
         {...negative_ttl}
-      type="number"
-      label={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtl.text'}) + ' *'}
-      placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
-      addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-      />
-
-      {negative_ttl.touched && negative_ttl.error && <div className='error-msg'>{negative_ttl.error}</div>}
+        type="number"
+        labelID='portal.accountManagement.dns.form.negativeTtl.text'
+        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
+        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
+        {negative_ttl.touched && negative_ttl.error && <div className='error-msg'>{negative_ttl.error}</div>}
+      </Input>
 
       <ButtonToolbar className="text-right extra-margin-top">
         {props.edit &&
