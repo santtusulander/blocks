@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Input, ButtonToolbar, FormControls} from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Radio } from 'react-bootstrap'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -31,23 +31,35 @@ class ConfigurationPublishVersion extends React.Component {
       <form className="configuration-publish-version">
 
         {/* Version Name */}
-        <FormControls.Static label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.versionName.text'})}
-          value={this.props.versionName}/>
+        <FormGroup>
+          <ControlLabel>
+            <FormattedMessage id="portal.policy.edit.publishVersion.versionName.text" />
+          </ControlLabel>
+          <FormControl.Static>{this.props.versionName}</FormControl.Static>
+        </FormGroup>
 
         <hr/>
 
         {/* Publish To */}
         <label><FormattedMessage id="portal.policy.edit.publishVersion.publishTo.text"/></label>
         {/* Sandbox publishing is disabled for 1.0 */}
-        <Input type="radio"
-          disabled={true}
-          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.sandboxPlatform.text'})}
-          onChange={this.setPublishTarget(2)}
-          checked={this.state.publishTarget === 2}/>
-        <Input type="radio"
-          label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.productionPlatform.text'})}
-          onChange={this.setPublishTarget(3)}
-          checked={this.state.publishTarget === 3}/>
+        <FormGroup>
+          <Radio
+            disabled={true}
+            onChange={this.setPublishTarget(2)}
+            checked={this.state.publishTarget === 2}>
+            <FormattedMessage id="portal.policy.edit.publishVersion.sandboxPlatform.text" />
+          </Radio>
+        </FormGroup>
+
+        <FormGroup>
+          <Radio
+            label={this.props.intl.formatMessage({id: 'portal.policy.edit.publishVersion.productionPlatform.text'})}
+            onChange={this.setPublishTarget(3)}
+            checked={this.state.publishTarget === 3}>
+            <FormattedMessage id="portal.policy.edit.publishVersion.productionPlatform.text" />
+          </Radio>
+        </FormGroup>
 
         {/* Action buttons */}
         <ButtonToolbar className="text-right extra-margin-top">
@@ -72,7 +84,10 @@ ConfigurationPublishVersion.propTypes = {
   intl: React.PropTypes.object,
   publishing: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
-  versionName: React.PropTypes.string
+  versionName: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.number
+  ])
 }
 
 module.exports = injectIntl(ConfigurationPublishVersion)
