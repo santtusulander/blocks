@@ -235,9 +235,9 @@ export const getRoutes = store => {
           <Route path={routes.securityBrand} component={UserCanListAccounts(store)(Security)} />
           <Route path={routes.securityAccount} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
-              <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
-              <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
-              <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
           </Route>
           <Route path={routes.securityGroup} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
@@ -248,9 +248,9 @@ export const getRoutes = store => {
 
           <Route path={routes.securityProperty} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
-              <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
-              <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
-              <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
+            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
           </Route>
         </Route>
 

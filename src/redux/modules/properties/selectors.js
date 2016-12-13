@@ -1,20 +1,21 @@
+import {List} from 'immutable'
 import {getFetching} from '../fetching/selectors'
 
 /**
  * Get all host IDs (keys from state)
  * @param  {} state root
- * @return [] Array of Ids
+ * @return {Immutable.List} list of Ids
  */
 export const getAllHosts = (state) => {
-  const ids = []
+  const ids = List()
   state.properties.properties.forEach( (val, key) => ids.push(key) )
   return ids
 }
 
 /**
- * Get properties fro state
+ * Get properties from state
  * @param  {} state
- * @return [] Array of property objects
+ * @return {Immutable.Map} (of property objects)
  */
 export const getProperties = (state, brandId, accountId, groupId) => {
   let props
@@ -39,7 +40,7 @@ export const getByGroup = (state, groupId) => {
  * Get property by ID
  * @param  {} state from redux
  * @param  String id of the item
- * @return {} property
+ * @return {Immutable.Map} property
  */
 export const getById = (state, id) => {
   const property = state.properties.properties.get(id)
@@ -52,7 +53,7 @@ export const getById = (state, id) => {
       .delete('brandId')
       .delete('accountId')
       .delete('groupId')
-      
+
   }
 
   return null

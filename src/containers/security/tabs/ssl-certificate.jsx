@@ -77,9 +77,13 @@ class TabSslCertificate extends Component {
       </p>
     )
 
-    if (this.props.isFetching) {
+     /*
+     TODO: Add when React 15.4. updated
+     https://vidscale.atlassian.net/browse/UDNP-2043
+
+      if (this.props.isFetching) {
       return <LoadingSpinner />
-    }
+    }*/
 
     return (
       <div className='ssl-certificate-tab'>
