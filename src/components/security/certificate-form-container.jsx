@@ -118,9 +118,15 @@ export default reduxForm({
       dispatch(reset('certificateForm'))
     },
     upload: data =>
-      securityActions.uploadSSLCertificate(...data).then(() => dispatch(reset('certificateForm'))),
+      securityActions.uploadSSLCertificate(...data).then(() => {
+        securityActions.resetCertificateToEdit()
+        dispatch(reset('certificateForm'))
+      }),
     edit: data =>
-      securityActions.editSSLCertificate(...data).then(() => dispatch(reset('certificateForm')))
+      securityActions.editSSLCertificate(...data).then(() => {
+        securityActions.resetCertificateToEdit()
+        dispatch(reset('certificateForm'))
+      })
   }
 }
 )(CertificateFormContainer)
