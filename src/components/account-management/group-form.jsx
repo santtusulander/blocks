@@ -270,7 +270,7 @@ class GroupForm extends React.Component {
               <div className="form-group add-members">
                 <label className="control-label">Add Members</label>
                 <FilterChecklistDropdown
-                  noClear={true}
+                  noClear={false}
                   options={addMembersOptions}
                   value={this.state.usersToAdd || List()}
                   handleCheck={val => {

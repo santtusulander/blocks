@@ -106,7 +106,7 @@ class AccountList extends Component {
       [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
       [ { input: <FilterChecklistDropdown
             id="services"
-            noClear={true}
+            noClear={false}
             className="inline-add-dropdown"
             options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
         positionClass: 'row col-xs-6'
