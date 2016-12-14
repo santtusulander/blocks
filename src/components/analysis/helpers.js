@@ -8,7 +8,13 @@ import moment from 'moment'
  * @return {string}       label
  */
 export const getTrafficByDateRangeLabel = (dateRange, dateRangeLabel, formatMessage) => {
-  return ( dateRangeLabel === 'portal.constants.date-ranges.custom_timerange' ||  !dateRangeLabel )
-  ? `${moment(dateRange.get('startDate')).format('MM/DD/YYYY')} - ${moment(dateRange.get('endDate')).format('MM/DD/YYYY')}`
-  : `${formatMessage({id: dateRangeLabel})}`
+  let label = ''
+  if (dateRangeLabel === 'portal.constants.date-ranges.custom_timerange' || !dateRangeLabel) {
+    const startDate = moment(dateRange.get('startDate')).format('MM/DD/YYYY')
+    const endDate = moment(dateRange.get('endDate')).format('MM/DD/YYYY')
+    label = startDate + (startDate !== endDate ? ` - ${endDate}` : '')
+  } else {
+    label = `${formatMessage({ id: dateRangeLabel })}`
+  }
+  return label
 }

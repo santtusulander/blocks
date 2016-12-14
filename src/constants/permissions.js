@@ -61,6 +61,7 @@ export const CREATE_RECORD = 'CREATE_RECORD'
 export const VIEW_DNS = 'VIEW_DNS'
 export const CREATE_ZONE = 'CREATE_ZONE'
 export const MODIFY_ZONE = 'MODIFY_ZONE'
+export const DELETE_ZONE = 'DELETE_ZONE'
 
 //Security Permissions
 export const CREATE_CERTIFICATE = 'CREATE_CERTIFICATE'

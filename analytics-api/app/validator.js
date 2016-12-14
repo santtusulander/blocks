@@ -77,6 +77,18 @@ class Validator {
       cp_entity: {
         validator : /^(?:accounts|groups|properties)$/i,
         message   : (key, value) => `Error with ${key} parameter: You must provide a valid Content Provider entity type ('accounts', 'groups', 'properties'). Value received: ${value}`
+      },
+      country_code: {
+        validator : /^[A-Z]{2}$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid 2-letter country code (e.g., 'US', 'DE'). Value received: ${value}`
+      },
+      latitude: {
+        validator : /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid latitudinal value (between -90.0 and 90.0). Value received: ${value}`
+      },
+      longitude: {
+        validator : /^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i,
+        message   : (key, value) => `Error with ${key} parameter: You must provide a valid longitudinal value (between -180.0 and 180.0). Value received: ${value}`
       }
     };
   }

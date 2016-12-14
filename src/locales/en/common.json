@@ -8,6 +8,8 @@
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
   "portal.common.search.text": "Search",
+  "portal.common.button.apply": "Apply",
+  "portal.common.button.none": "None",
   "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
@@ -78,6 +80,7 @@
   "portal.common.statusCode.511": "Network Authentication Required",
 
   "portal.common.total.text": "Total",
+  "portal.common.no-data.text": "No data available.",
 
   "portal.common.time.day": "Day",
   "portal.common.time.month": "Month",

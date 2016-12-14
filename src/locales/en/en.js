@@ -37,7 +37,7 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
-  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain will also delete all the records related to it.',
+  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain {itemToDelete} will also delete all the records related to it.',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
   'portal.brand.edit.newBrand.title': 'New Brand',
@@ -579,15 +579,6 @@ const TRANSLATED_MESSAGES = {
   'portal.groups.accountContentSummary.text': 'Account Content Summary',
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
-
-  'portal.login.title': 'Login',
-  'portal.login.subtitle': 'Ericsson UDN Service',
-  'portal.login.logo.text': 'Ericsson',
-  'portal.login.rememberMe.text': 'Remember me',
-  'portal.login.forgotPassword.text': 'Forgot password?',
-  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
-  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
-  'portal.login.sessionExpired.text': 'Due to inactivity you have been logged out. To continue your session please resubmit your username and password.',
 
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
