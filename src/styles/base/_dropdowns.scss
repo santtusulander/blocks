@@ -4,6 +4,7 @@ $dd-font-size: 14px;
 $dd-line-height: 1.45;
 $dd-menu-max-height: rem(480px);
 $dd-menu-min-width: rem(150px);
+$dd-menu-rdp-width: rem(300px);
 $dd-vertical-padding: em(14px, $dd-font-size);
 $dd-horizontal-padding: em(18px, $dd-font-size);
 
@@ -49,10 +50,13 @@ $search-input-left-padding: em(36px, $search-font-size);
   }
 
   &.date-picker-dropdown-menu {
+    width: $dd-menu-rdp-width;
 
-    .dark-theme &,
-    .light-theme {
-      width: 300px;
+    &.multi-month-view {
+      width: $dd-menu-rdp-width * 2;
+    }
+
+    .dark-theme & {
       background-color: $black;
       background-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
       background-size: 100%;
