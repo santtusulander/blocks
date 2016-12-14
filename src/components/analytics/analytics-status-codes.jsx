@@ -30,7 +30,6 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
     }
   return (
     <FilterChecklistDropdown
-      noClear={false}
       options={options}
       value={values}
       handleCheck={onChange}>

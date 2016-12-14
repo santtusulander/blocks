@@ -419,8 +419,7 @@ class Styleguide extends React.Component {
               <FilterChecklistDropdown
                 options={filterCheckboxOptions}
                 value={this.state.filterCheckboxValue}
-                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})}
-                noClear={false} />
+                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})} />
             </div>
           </div>
 

@@ -162,18 +162,16 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
-            {!this.props.noClear &&
-              <li key="all"
-                  role="presentation"
-                  className="children"
-                  tabIndex="-1">
-                <Button onClick={() => this.handleCheck("all")}
-                  className="dropdown-toggle clear-selection"
-                  style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
-                  <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
-                </Button>
-              </li>
-            }
+            <li key="all"
+                role="presentation"
+                className="children"
+                tabIndex="-1">
+              <Button onClick={() => this.handleCheck("all")}
+                className="dropdown-toggle clear-selection"
+                style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
+                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
+              </Button>
+            </li>
           </Dropdown.Menu>
         </Dropdown>
       </div>
@@ -187,7 +185,6 @@ FilterChecklistDropdown.propTypes   = {
   className: React.PropTypes.string,
   disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
-  noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,
   open: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),
