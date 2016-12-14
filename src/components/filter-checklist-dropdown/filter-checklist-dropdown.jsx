@@ -96,7 +96,6 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   render() {
-
     const { state: { filterValue }, props: { open, toggle } } = this
     const filteredResults = this.getFilteredResults()
 
@@ -108,8 +107,7 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     if(filteredResults.size) {
-      itemList =
-      itemList.concat([
+      itemList = itemList.concat([
         this.props.children && this.props.children.map(child => child)
       ])
 
@@ -164,20 +162,16 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
-            <li key="all"
-                role="presentation"
-                className="children"
-                tabIndex="-1">
-              <Button onClick={() => this.handleCheck("all")}
-                className="dropdown-toggle clear-selection"
-                style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
-                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
-              </Button>
-            </li>
             {!this.props.noClear &&
-              <li role="presentation" className="action-container">
-                <Button bsClass="btn btn-block btn-primary"
-                      onClick={this.handleClear}><FormattedMessage id="portal.analytics.dropdownMenu.clear"/></Button>
+              <li key="all"
+                  role="presentation"
+                  className="children"
+                  tabIndex="-1">
+                <Button onClick={() => this.handleCheck("all")}
+                  className="dropdown-toggle clear-selection"
+                  style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
+                  <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
+                </Button>
               </li>
             }
           </Dropdown.Menu>
