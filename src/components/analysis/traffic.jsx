@@ -228,6 +228,7 @@ class AnalysisTraffic extends React.Component {
                 countryData={this.props.byCountry}
                 cityData={this.props.byCity}
                 getCityData={this.props.getCityData}
+                theme={this.props.theme}
                 />
             }
           </div>
@@ -310,11 +311,13 @@ AnalysisTraffic.propTypes   = {
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  theme: React.PropTypes.string
   // totalEgress: React.PropTypes.number
 }
 
 AnalysisTraffic.defaultProps = {
+  byCity: Immutable.List(),
   byCountry: Immutable.List(),
   byTime: Immutable.List(),
   byTimeComparison: Immutable.List(),

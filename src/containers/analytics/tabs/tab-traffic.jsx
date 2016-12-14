@@ -175,6 +175,7 @@ class AnalyticsTabTraffic extends React.Component {
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
         getCityData={this.getCitiesWithinBounds}
+        theme={this.props.theme}
       />
     )
   }
@@ -185,6 +186,7 @@ AnalyticsTabTraffic.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
+  theme: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
@@ -200,7 +202,8 @@ AnalyticsTabTraffic.defaultProps = {
   trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List(),
-  trafficByTimeComparison: Immutable.List()
+  trafficByTimeComparison: Immutable.List(),
+  theme: 'dark'
 }
 
 function mapStateToProps(state) {
@@ -211,7 +214,8 @@ function mapStateToProps(state) {
     trafficByTimeComparison: state.traffic.get('byTimeComparison'),
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress')
+    totalEgress: state.traffic.get('totalEgress'),
+    theme: state.ui.get('theme')
   }
 }
 
