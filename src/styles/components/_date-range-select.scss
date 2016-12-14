@@ -1,0 +1,42 @@
+// Date Range Select
+// =================
+
+$drs-font-size: 14px;
+$drs-vertical-padding: em(15px, $drs-font-size);
+$drs-horizontal-padding: em(25px, $drs-font-size);
+
+.date-range-select {
+  font-weight: normal;
+
+  .date-range-select-header {
+    padding: $drs-vertical-padding $drs-horizontal-padding 0;
+  }
+
+  .date-range-select-footer {
+    padding: 0 $drs-horizontal-padding $drs-horizontal-padding;
+    text-align: right;
+  }
+
+  .date-range-select-link {
+    display: inline-block;
+    margin: 5px $drs-horizontal-padding 5px 0;
+    text-decoration: none;
+    cursor: pointer;
+
+    .dark-theme & {
+      color: $dt-text-color;
+
+      &:hover {
+        color: $white;
+      }
+    }
+
+    .light-theme & {
+      color: $lt-text-color;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
+}

@@ -1,38 +1,37 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
-import numeral from 'numeral'
+// import Immutable from 'immutable'
+// import Typeahead from 'react-bootstrap-typeahead'
+// import numeral from 'numeral'
 import moment from 'moment'
 
 // React-Bootstrap
 // ===============
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
-  ButtonToolbar,
-  Col,
-  Dropdown,
-  Image,
-  Input,
-  Label,
-  MenuItem,
-  NavItem,
-  OverlayTrigger,
-  Pagination,
-  Popover,
-  Row,
-  Table
-} from 'react-bootstrap';
-
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   Button,
+//   ButtonToolbar,
+//   Col,
+//   Dropdown,
+//   Image,
+//   Input,
+//   Label,
+//   MenuItem,
+//   NavItem,
+//   OverlayTrigger,
+//   Pagination,
+//   Popover,
+//   Row,
+//   Table
+// } from 'react-bootstrap';
 //
 // import SectionContainer from '../components/layout/section-container'
 // import SelectWrapper from '../components/select-wrapper'
 // import BarChart from '../components/charts/bar-chart'
 // import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-// import AccountSelector from '../components/global-account-selector/selector-component'
+// import SelectorComponent from '../components/global-account-selector/selector-component'
 // import Tabs from '../components/tabs'
 // import MonthPicker from '../components/month-picker'
 // import StackedByTimeSummary from '../components/stacked-by-time-summary'
@@ -40,6 +39,7 @@ import {
 // import DashboardPanel from '../components/dashboard/dashboard-panel'
 // import DashboardPanels from '../components/dashboard/dashboard-panels'
 // import CustomDatePicker from '../components/custom-date-picker'
+// import DateRangeSelect from '../components/date-range-select'
 //
 // import IconAccount       from '../components/icons/icon-account'
 // import IconAdd           from '../components/icons/icon-add'
@@ -83,19 +83,20 @@ import {
 // import IconTrash         from '../components/icons/icon-trash'
 import MapBox            from '../components/map/mapbox'
 
-import { formatBytes, separateUnit } from '../util/helpers'
+// import { formatBytes, separateUnit } from '../util/helpers'
+// import DateRanges from '../constants/date-ranges'
 
-const filterCheckboxOptions = Immutable.fromJS([
-  { value: 'link1', label: 'Property 1', checked: true },
-  { value: 'link2', label: 'Property 2', checked: true },
-  { value: 'link3', label: 'Property 3', checked: false },
-  { value: 'link4', label: 'Property 4', checked: false },
-  { value: 'link5', label: 'Property 5', checked: true },
-  { value: 'link6', label: 'Property 6', checked: false },
-  { value: 'link7', label: 'Property 7', checked: false },
-  { value: 'link8', label: 'Property 8', checked: false },
-  { value: 'link9', label: 'Property 9', checked: false }
-]);
+// const filterCheckboxOptions = Immutable.fromJS([
+//   { value: 'link1', label: 'Property 1', checked: true },
+//   { value: 'link2', label: 'Property 2', checked: true },
+//   { value: 'link3', label: 'Property 3', checked: false },
+//   { value: 'link4', label: 'Property 4', checked: false },
+//   { value: 'link5', label: 'Property 5', checked: true },
+//   { value: 'link6', label: 'Property 6', checked: false },
+//   { value: 'link7', label: 'Property 7', checked: false },
+//   { value: 'link8', label: 'Property 8', checked: false },
+//   { value: 'link9', label: 'Property 9', checked: false }
+// ]);
 
 class Styleguide extends React.Component {
 
@@ -105,162 +106,165 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day')
+      customDatePickerStartDate: moment().startOf('day'),
+      datePickerEndDate: moment().utc().endOf('day'),
+      datePickerLimit: false,
+      datePickerStartDate: moment().utc().startOf('month')
     }
   }
 
   render() {
-    const spDashboardData = {
-      "traffic": {
-        "bytes": 446265804980374,
-        "bytes_net_on": 352569123057670,
-        "bytes_net_off": 93696681922704,
-        "detail": [
-          {
-            "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
-            "bytes": 92020173697866,
-            "bytes_net_on": 71856580682504,
-            "bytes_net_off": 20163593015362
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
-            "bytes": 99672709053865,
-            "bytes_net_on": 76848354018252,
-            "bytes_net_off": 22824355035613
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
-            "bytes": 94821186769899,
-            "bytes_net_on": 72941835769369,
-            "bytes_net_off": 21879351000530
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
-            "bytes": 117441291619312,
-            "bytes_net_on": 90477417340581,
-            "bytes_net_off": 26963874278731
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
-            "bytes": 81546375702611,
-            "bytes_net_on": 62160286504951,
-            "bytes_net_off": 19386089197660
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
-            "bytes": 117341539984300,
-            "bytes_net_on": 90364165873239,
-            "bytes_net_off": 26977374111061
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
-            "bytes": 94064934029131,
-            "bytes_net_on": 72989086766237,
-            "bytes_net_off": 21075847262894
-          },
-          {
-            "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
-            "bytes": 93196929110225,
-            "bytes_net_on": 72133332220394,
-            "bytes_net_off": 21063596889831
-          }
-        ]
-      }
-    }
-
-    const stackedBarChartData = [
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905,
-        "onNetHttps": 27260875504858,
-        "offNetHttp": 16598076780724,
-        "offNetHttps": 6941781887919
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      }
-    ]
-
-    const singleBarChartData = [
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      }
-    ]
-
-    const datasetA = spDashboardData.traffic.detail.map(datapoint => {
-      return {
-        bytes: datapoint.bytes_net_on || 0,
-        timestamp: datapoint.timestamp
-      }
-    })
-
-    const datasetB = spDashboardData.traffic.detail.map(datapoint => {
-      return {
-        bytes: datapoint.bytes_net_off || 0,
-        timestamp: datapoint.timestamp
-      }
-    })
-
-    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
-    let totalDatasetValue = totalDatasetValueOutput.value
-    let totalDatasetUnit = totalDatasetValueOutput.unit
-
-    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
-    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
+    // const spDashboardData = {
+    //   "traffic": {
+    //     "bytes": 446265804980374,
+    //     "bytes_net_on": 352569123057670,
+    //     "bytes_net_off": 93696681922704,
+    //     "detail": [
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 92020173697866,
+    //         "bytes_net_on": 71856580682504,
+    //         "bytes_net_off": 20163593015362
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 99672709053865,
+    //         "bytes_net_on": 76848354018252,
+    //         "bytes_net_off": 22824355035613
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 94821186769899,
+    //         "bytes_net_on": 72941835769369,
+    //         "bytes_net_off": 21879351000530
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 117441291619312,
+    //         "bytes_net_on": 90477417340581,
+    //         "bytes_net_off": 26963874278731
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 81546375702611,
+    //         "bytes_net_on": 62160286504951,
+    //         "bytes_net_off": 19386089197660
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 117341539984300,
+    //         "bytes_net_on": 90364165873239,
+    //         "bytes_net_off": 26977374111061
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 94064934029131,
+    //         "bytes_net_on": 72989086766237,
+    //         "bytes_net_off": 21075847262894
+    //       },
+    //       {
+    //         "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
+    //         "bytes": 93196929110225,
+    //         "bytes_net_on": 72133332220394,
+    //         "bytes_net_off": 21063596889831
+    //       }
+    //     ]
+    //   }
+    // }
+    //
+    // const stackedBarChartData = [
+    //   {
+    //     "name": "Datafone Inc.",
+    //     "onNetHttp": 9149792187422,
+    //     "onNetHttps": 4324269843760,
+    //     "offNetHttp": 2297510618946,
+    //     "offNetHttps": 1090755001954
+    //   },
+    //   {
+    //     "name": "AsiaNet",
+    //     "onNetHttp": 58034767339905,
+    //     "onNetHttps": 27260875504858,
+    //     "offNetHttp": 16598076780724,
+    //     "offNetHttps": 6941781887919
+    //   },
+    //   {
+    //     "name": "QXT",
+    //     "onNetHttp": 17640581263893,
+    //     "onNetHttps": 8905041306312,
+    //     "offNetHttp": 4413020296483,
+    //     "offNetHttps": 2063509423994
+    //   },
+    //   {
+    //     "name": "Datafone Inc.",
+    //     "onNetHttp": 9149792187422,
+    //     "onNetHttps": 4324269843760,
+    //     "offNetHttp": 2297510618946,
+    //     "offNetHttps": 1090755001954
+    //   },
+    //   {
+    //     "name": "QXT",
+    //     "onNetHttp": 17640581263893,
+    //     "onNetHttps": 8905041306312,
+    //     "offNetHttp": 4413020296483,
+    //     "offNetHttps": 2063509423994
+    //   }
+    // ]
+    //
+    // const singleBarChartData = [
+    //   {
+    //     "name": "AsiaNet",
+    //     "onNetHttp": 58034767339905
+    //   },
+    //   {
+    //     "name": "QXT",
+    //     "onNetHttp": 17640581263893
+    //   },
+    //   {
+    //     "name": "Datafone Inc.",
+    //     "onNetHttp": 9149792187422
+    //   },
+    //   {
+    //     "name": "Datafone Inc.",
+    //     "onNetHttp": 9149792187422
+    //   },
+    //   {
+    //     "name": "QXT",
+    //     "onNetHttp": 17640581263893
+    //   },
+    //   {
+    //     "name": "AsiaNet",
+    //     "onNetHttp": 58034767339905
+    //   },
+    //   {
+    //     "name": "QXT",
+    //     "onNetHttp": 17640581263893
+    //   },
+    //   {
+    //     "name": "AsiaNet",
+    //     "onNetHttp": 58034767339905
+    //   }
+    // ]
+    //
+    // const datasetA = spDashboardData.traffic.detail.map(datapoint => {
+    //   return {
+    //     bytes: datapoint.bytes_net_on || 0,
+    //     timestamp: datapoint.timestamp
+    //   }
+    // })
+    //
+    // const datasetB = spDashboardData.traffic.detail.map(datapoint => {
+    //   return {
+    //     bytes: datapoint.bytes_net_off || 0,
+    //     timestamp: datapoint.timestamp
+    //   }
+    // })
+    //
+    // let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
+    // let totalDatasetValue = totalDatasetValueOutput.value
+    // let totalDatasetUnit = totalDatasetValueOutput.unit
+    //
+    // let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    // let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
 
     return (
       <div className="styleguide-page">
@@ -707,12 +711,50 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <DateRangeSelect
+                endDate={this.state.datePickerEndDate}
+                startDate={this.state.datePickerStartDate}
+                limitRange={this.state.datePickerLimit}
+                changeDateRange={(start, end) => this.setState({ datePickerEndDate: end, datePickerStartDate: start })}
+                availableRanges={[
+                  DateRanges.MONTH_TO_DATE,
+                  DateRanges.LAST_MONTH,
+                  DateRanges.THIS_WEEK,
+                  DateRanges.LAST_WEEK
+                ]} />
+            </Col>
+            <Col xs={4}>
+              <Input
+                type="checkbox"
+                label="Limit range to 4 months"
+                checked={this.state.datePickerLimit}
+                onClick={
+                  () => {
+                    const { datePickerEndDate, datePickerStartDate, datePickerLimit } = this.state
+                    if (!datePickerLimit && datePickerEndDate.diff(datePickerStartDate, 'months') >= 4) {
+                      this.setState({
+                        datePickerEndDate: this.state.datePickerStartDate.clone().add(4, 'months').subtract(1, 'day')
+                      })
+                    }
+                    this.setState({ datePickerLimit: !datePickerLimit })
+                  }
+                } />
+            <Col xs={4}>
+            </Col>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Custom Date Picker</h1>
 
           <Row>
             <Col xs={4}>
               <CustomDatePicker
-                endDate={this.state.customDatePickerEndDate}
                 startDate={this.state.customDatePickerStartDate}
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>
