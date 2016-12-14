@@ -20,7 +20,7 @@ import './styles/style.scss'
 
 import TRANSLATED_MESSAGES from './locales/en/'
 
-const useRaven = true //process.env.NODE_ENV === 'production'
+const useRaven = process.env.NODE_ENV === 'production'
 
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
