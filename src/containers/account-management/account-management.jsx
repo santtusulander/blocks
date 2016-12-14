@@ -407,21 +407,21 @@ export class AccountManagement extends Component {
           </IsAllowed>
         </PageHeader>
         {account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li>
+          <li data-eventKey="details">
             <Link to={baseUrl + '/details'} activeClassName="active"><FormattedMessage id="portal.accountManagement.account.text"/></Link>
           </li>
-          <li>
+          <li data-eventKey="groups">
             <Link to={baseUrl + '/groups'} activeClassName="active"><FormattedMessage id="portal.accountManagement.groups.text"/></Link>
           </li>
-          <li>
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
-          <li>
+          <li data-eventKey="accounts">
             <Link to={baseUrl + '/accounts'} activeClassName="active"><FormattedMessage id="portal.accountManagement.accounts.text"/></Link>
           </li>
-          <li>
+          <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
           {/*<li>
@@ -432,11 +432,11 @@ export class AccountManagement extends Component {
              <Link to={baseUrl + '/dns'} activeClassName="active"><FormattedMessage id="portal.accountManagement.dns.text"/></Link>
            </li>
           </IsAllowed>
-          <li>
+          <li data-eventKey="roles">
             <Link to={baseUrl + '/roles'} activeClassName="active"><FormattedMessage id="portal.accountManagement.roles.text"/></Link>
           </li>
           {/*
-           <li>
+           <li data-eventKey="details">
            <Link to={baseUrl + '/services'} activeClassName="active">SERVICES</Link>
            </li>
            */}
