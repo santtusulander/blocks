@@ -225,9 +225,9 @@ class AnalysisTraffic extends React.Component {
             {this.props.fetching ?
               <div><FormattedMessage id="portal.loading.text"/></div> :
               <AnalysisByLocation
-                baseOpts={this.props.baseOpts}
                 countryData={this.props.byCountry}
                 cityData={this.props.byCity}
+                getCityData={this.props.getCityData}
                 />
             }
           </div>
@@ -306,6 +306,7 @@ AnalysisTraffic.propTypes   = {
   byTime: React.PropTypes.instanceOf(Immutable.List),
   byTimeComparison: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  getCityData: React.PropTypes.func,
   intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,

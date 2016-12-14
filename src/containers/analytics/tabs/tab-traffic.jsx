@@ -23,6 +23,7 @@ class AnalyticsTabTraffic extends React.Component {
     this.fetchData = this.fetchData.bind(this)
     this.formatTotals = this.formatTotals.bind(this)
     this.getBaseOpts = this.getBaseOpts.bind(this)
+    this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
   }
 
   componentDidMount() {
@@ -133,6 +134,23 @@ class AnalyticsTabTraffic extends React.Component {
     return byTimeOpts
   }
 
+  getCitiesWithinBounds(south, west, north, east) {
+    if (this.props.trafficActions) {
+      const byCityOpts = Object.assign({
+        max_cities: 999,
+        latitude_south: south,
+        longitude_west: west,
+        latitude_north: north,
+        longitude_east: east
+      }, this.getBaseOpts())
+
+      this.props.trafficActions.startFetching()
+      this.props.trafficActions.fetchByCity(byCityOpts).then(
+        this.props.trafficActions.finishFetching()
+      )
+    }
+  }
+
   render() {
     const {filters, totals} = this.props
     const recordType = filters.get('recordType')
@@ -156,7 +174,7 @@ class AnalyticsTabTraffic extends React.Component {
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
-        baseOpts={this.getBaseOpts()}
+        getCityData={this.getCitiesWithinBounds}
       />
     )
   }
