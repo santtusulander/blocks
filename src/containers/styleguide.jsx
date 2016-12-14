@@ -87,15 +87,15 @@ import { formatBytes, separateUnit } from '../util/helpers'
 import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
-  { value: 'link1', label: 'Property 1', checked: true },
-  { value: 'link2', label: 'Property 2', checked: true },
-  { value: 'link3', label: 'Property 3', checked: false },
-  { value: 'link4', label: 'Property 4', checked: false },
-  { value: 'link5', label: 'Property 5', checked: true },
-  { value: 'link6', label: 'Property 6', checked: false },
-  { value: 'link7', label: 'Property 7', checked: false },
-  { value: 'link8', label: 'Property 8', checked: false },
-  { value: 'link9', label: 'Property 9', checked: false }
+  { value: 'link1', label: 'Property 1' },
+  { value: 'link2', label: 'Property 2' },
+  { value: 'link3', label: 'Property 3' },
+  { value: 'link4', label: 'Property 4' },
+  { value: 'link5', label: 'Property 5' },
+  { value: 'link6', label: 'Property 6' },
+  { value: 'link7', label: 'Property 7' },
+  { value: 'link8', label: 'Property 8' },
+  { value: 'link9', label: 'Property 9' }
 ]);
 
 class Styleguide extends React.Component {
@@ -109,7 +109,18 @@ class Styleguide extends React.Component {
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
-      datePickerStartDate: moment().utc().startOf('month')
+      datePickerStartDate: moment().utc().startOf('month'),
+      filterCheckboxValue: Immutable.fromJS([
+        'link1',
+        'link2',
+        'link3',
+        'link4',
+        'link5',
+        'link6',
+        'link7',
+        'link8',
+        'link9'
+      ])
     }
   }
 
@@ -405,7 +416,10 @@ class Styleguide extends React.Component {
           <br/>
           <div className="row">
             <div className="col-xs-6">
-              <FilterChecklistDropdown options={filterCheckboxOptions}/>
+              <FilterChecklistDropdown
+                options={filterCheckboxOptions}
+                value={this.state.filterCheckboxValue}
+                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})} />
             </div>
           </div>
 
