@@ -586,15 +586,6 @@ const TRANSLATED_MESSAGES = {
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.login.title': 'Login',
-  'portal.login.subtitle': 'Ericsson UDN Service',
-  'portal.login.logo.text': 'Ericsson',
-  'portal.login.rememberMe.text': 'Remember me',
-  'portal.login.forgotPassword.text': 'Forgot password?',
-  'portal.login.copyright.text': 'Copyright \u00A9 Ericsson. All Right Reserved.',
-  'portal.login.termsOfUse.text': 'By logging in, you accept our ',
-  'portal.login.sessionExpired.text': 'Due to inactivity you have been logged out. To continue your session please resubmit your username and password.',
-
   'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
 
   'portal.notFound.pageNotFound.text': 'We couldn\'t find the page you were looking for',
