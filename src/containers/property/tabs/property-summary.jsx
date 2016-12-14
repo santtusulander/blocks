@@ -405,8 +405,7 @@ class PropertySummary extends React.Component {
               endDate={endDate}
               changeDateRange={this.changeDateRange}
               availableRanges={[
-                DateRanges.LAST_28,
-                DateRanges.CUSTOM_TIMERANGE
+                DateRanges.LAST_28
               ]}/>
           </h3>
         </div>
