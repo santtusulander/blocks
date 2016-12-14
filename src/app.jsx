@@ -13,7 +13,6 @@ import { FormattedMessage } from 'react-intl';
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { logOut, destroyStore } from './redux/modules/user'
-import { LogPageView } from './util/google-analytics'
 import {SENTRY_DSN} from './constants/sentry'
 import './styles/style.scss'
 

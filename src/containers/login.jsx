@@ -57,9 +57,8 @@ export class Login extends React.Component {
       /* eslint-disable no-console */
       console.log('No token. Login required.')
       /* eslint-enable no-console */
-
-        }
-      }
+    }
+  }
 
   onSubmit(e) {
     e.preventDefault()

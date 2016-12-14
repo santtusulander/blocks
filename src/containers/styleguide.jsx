@@ -776,9 +776,7 @@ class Styleguide extends React.Component {
                 ]} />
             </Col>
             <Col xs={4}>
-              <Input
-                type="checkbox"
-                label="Limit range to 4 months"
+              <Checkbox
                 checked={this.state.datePickerLimit}
                 onClick={
                   () => {
@@ -790,7 +788,7 @@ class Styleguide extends React.Component {
                     }
                     this.setState({ datePickerLimit: !datePickerLimit })
                   }
-                } />
+                }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
               <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>

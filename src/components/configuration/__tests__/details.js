@@ -1,7 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
-import { shallow } from 'enzyme'
 
 jest.unmock('../details.jsx')
 import ConfigurationDetails from '../details.jsx'
