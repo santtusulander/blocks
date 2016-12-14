@@ -9,6 +9,7 @@
   "portal.common.button.stay": "Stay",
   "portal.common.search.text": "Search",
   "portal.common.button.apply": "Apply",
+  "portal.common.button.none": "None",
   "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
