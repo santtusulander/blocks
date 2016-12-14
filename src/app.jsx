@@ -20,7 +20,7 @@ import './styles/style.scss'
 
 import TRANSLATED_MESSAGES from './locales/en/'
 
-const useRaven = process.env.NODE_ENV === 'production'
+const useRaven = true //process.env.NODE_ENV === 'production'
 
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
@@ -36,15 +36,16 @@ const createStoreWithMiddleware =
       promiseMiddleware
     )(createStore)
 
+const appReducer = combineReducers(reducers)
+
 const rootReducer = (state, action) => {
   if (action.type === 'DESTROY_STORE') {
-    return undefined
+    state = undefined
   }
 
-  return stateReducer(state, action)
+  return appReducer(state, action)
 }
 
-const stateReducer = combineReducers(reducers)
 const store =
   process.env.NODE_ENV === 'development' ?
     // enable redux-devtools-extension in development environment
