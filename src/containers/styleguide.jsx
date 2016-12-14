@@ -43,6 +43,7 @@ import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
+import DateRangeSelect from '../components/date-range-select'
 
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
@@ -90,6 +91,7 @@ import IconTrash         from '../components/icons/icon-trash'
 import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
+import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1', checked: true },
@@ -111,7 +113,10 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day')
+      customDatePickerStartDate: moment().startOf('day'),
+      datePickerEndDate: moment().utc().endOf('day'),
+      datePickerLimit: false,
+      datePickerStartDate: moment().utc().startOf('month')
     }
   }
 
@@ -754,12 +759,50 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <DateRangeSelect
+                endDate={this.state.datePickerEndDate}
+                startDate={this.state.datePickerStartDate}
+                limitRange={this.state.datePickerLimit}
+                changeDateRange={(start, end) => this.setState({ datePickerEndDate: end, datePickerStartDate: start })}
+                availableRanges={[
+                  DateRanges.MONTH_TO_DATE,
+                  DateRanges.LAST_MONTH,
+                  DateRanges.THIS_WEEK,
+                  DateRanges.LAST_WEEK
+                ]} />
+            </Col>
+            <Col xs={4}>
+              <Input
+                type="checkbox"
+                label="Limit range to 4 months"
+                checked={this.state.datePickerLimit}
+                onClick={
+                  () => {
+                    const { datePickerEndDate, datePickerStartDate, datePickerLimit } = this.state
+                    if (!datePickerLimit && datePickerEndDate.diff(datePickerStartDate, 'months') >= 4) {
+                      this.setState({
+                        datePickerEndDate: this.state.datePickerStartDate.clone().add(4, 'months').subtract(1, 'day')
+                      })
+                    }
+                    this.setState({ datePickerLimit: !datePickerLimit })
+                  }
+                } />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Custom Date Picker</h1>
 
           <Row>
             <Col xs={4}>
               <CustomDatePicker
-                endDate={this.state.customDatePickerEndDate}
                 startDate={this.state.customDatePickerStartDate}
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>

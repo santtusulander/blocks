@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import HelpTooltip from '../../components/help-tooltip'
 import InputConnector from '../../components/input-connector'
 import Select from '../../components/select'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
@@ -36,9 +37,7 @@ class ConfigurationDetails extends React.Component {
   render() {
     if(!this.props.edgeConfiguration) {
       return (
-        <div className="container">
-          <FormattedMessage id="portal.loading.text"/>
-        </div>
+        <LoadingSpinner/>
       )
     }
     const { readOnly } = this.props

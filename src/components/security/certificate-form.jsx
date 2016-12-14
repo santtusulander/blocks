@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
 import { FormGroup, FormControl, ControlLabel, ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import { getReduxFormValidationState } from '../../util/helpers'
 import SelectWrapper from '../select-wrapper'
 import UDNButton from '../button'
 
-export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode }) => {
-  const { group, title, privateKey, certificate } = fields
+export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode, intl }) => {
+  const { group, title, privateKey, certificate, intermediateCertificates } = fields
   const groupsOptions = groups.map(group => [group.get('id'), group.get('name')])
 
   return (
@@ -16,7 +16,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
       <div id="groups">
         <SelectWrapper
           {...group}
-          label="Assign to Group"
+          label={intl.formatMessage({id: 'portal.security.ssl.edit.assign.text'})}
           disabled={editMode}
           numericValues={true}
           value={group.value}
@@ -42,6 +42,12 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 
       <hr/>
 
+      <FormGroup controlId="intermediateCertificates" validationState={getReduxFormValidationState(intermediateCertificates)}>
+        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" /></ControlLabel>
+        <FormControl componentClass="textarea" className="fixed-size-textarea" {...intermediateCertificates} />
+        {intermediateCertificates.touched && intermediateCertificates.error && <div className="error-msg">{intermediateCertificates.error}</div>}
+      </FormGroup>
+
       <FormGroup controlId="certificate" validationState={getReduxFormValidationState(certificate)}>
         <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certificate.text" /></ControlLabel>
         <FormControl componentClass="textarea" className="fixed-size-textarea" {...certificate} />
@@ -53,14 +59,14 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
           id="cancel_button"
           outLine={true}
           onClick={onCancel}>
-          Cancel
+          {intl.formatMessage({id: 'portal.common.button.cancel'})}
         </UDNButton>
         <UDNButton
           id="save_button"
           bsStyle="primary"
           disabled={Object.keys(errors).length !== 0}
           onClick={onSave}>
-          Save
+          {intl.formatMessage({id: 'portal.common.button.save'})}
         </UDNButton>
       </ButtonToolbar>
     </form>
@@ -72,8 +78,9 @@ CertificateForm.propTypes = {
   errors: PropTypes.object,
   fields: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  intl: intlShape.isRequired,
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
 
-export default CertificateForm
+export default injectIntl(CertificateForm)

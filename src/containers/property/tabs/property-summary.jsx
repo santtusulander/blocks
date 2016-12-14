@@ -374,7 +374,7 @@ class PropertySummary extends React.Component {
             <FormattedMessage id="portal.content.property.summary.uniqueVisitors.title"/>
             <h3>
               {this.props.fetching || this.props.visitorsFetching ?
-                <span>Loading...</span> :
+                <span><FormattedMessage id="portal.loading.text"/></span> :
                 numeral(this.props.visitorsByTimeAverage).format('0,0')
               }
             </h3>
@@ -405,8 +405,7 @@ class PropertySummary extends React.Component {
               endDate={endDate}
               changeDateRange={this.changeDateRange}
               availableRanges={[
-                DateRanges.LAST_28,
-                DateRanges.CUSTOM_TIMERANGE
+                DateRanges.LAST_28
               ]}/>
           </h3>
         </div>

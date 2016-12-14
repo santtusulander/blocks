@@ -32,24 +32,25 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
+    // Validate token
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
-          if(!this.pageAllowsAnon()) {
-            this.props.uiActions.setLoginUrl(`${location.pathname}${location.search}`)
-            this.props.router.push('/login')
-          }
+          /* eslint-disable no-console */
+          console.log('Main -- checkToken failed')
+          /* eslint-enable no-console */
+
           return false
         }
-        else {
-          this.props.userActions.fetchUser(action.payload.username)
-          this.props.rolesActions.fetchRoles()
-          const accountId = this.props.activeAccount.size ?
-            this.props.activeAccount.get('id') :
-            this.props.params.account
 
-          return this.fetchAccountData(accountId, this.props.accounts)
-        }
+        this.props.userActions.fetchUser(action.payload.username)
+        this.props.rolesActions.fetchRoles()
+
+        const accountId = this.props.activeAccount && this.props.activeAccount.size
+          ? this.props.activeAccount.get('id')
+          : this.props.params.account
+
+        this.fetchAccountData(accountId, this.props.accounts)
       })
   }
 
@@ -74,8 +75,17 @@ export class Main extends React.Component {
     }
   }
   logOut() {
+    this.props.userActions.setLogin(false)
+
     this.props.userActions.logOut()
-    this.props.router.push('/login')
+      .then(() => {
+        this.props.router.push('/login')
+        this.props.userActions.destroyStore();
+        /* eslint-disable no-console */
+        console.log('logging out -- redirect to login page')
+        /* eslint-enable no-console */
+
+      })
   }
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
@@ -86,17 +96,12 @@ export class Main extends React.Component {
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
-  pageAllowsAnon() {
-    return this.props.location.pathname === '/login' ||
-    this.props.location.pathname === '/forgot-password' ||
-    this.props.location.pathname === '/set-password' ||
-    this.props.location.pathname === '/starburst-help' ||
-    this.props.location.pathname === '/styleguide'
-  }
+
   render() {
-    if((!this.props.currentUser.size || !this.props.roles.size) && !this.pageAllowsAnon()) {
+    if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
     }
+
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
@@ -114,7 +119,6 @@ export class Main extends React.Component {
 
     return (
       <div className={classNames}>
-      {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
         <Navigation
           activeAccount={activeAccount}
           activeGroup={this.props.activeGroup}
@@ -124,9 +128,7 @@ export class Main extends React.Component {
           pathname={this.props.location.pathname}
           roles={this.props.roles}
           />
-        : ''
-      }
-        {this.props.user.get('loggedIn') && !this.pageAllowsAnon() ?
+
           <Header
             accounts={this.props.accounts}
             activeAccount={this.props.activeAccount}
@@ -145,14 +147,12 @@ export class Main extends React.Component {
             roles={this.props.roles}
             toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
             user={this.props.currentUser}/>
-          : ''
-        }
+
         <div className="content-container">
           {this.props.children}
-          {this.props.user.get('loggedIn') && !this.pageAllowsAnon() && !this.props.fetching ?
-            <Footer />
-            : null}
         </div>
+
+            <Footer />
 
         {this.props.showErrorDialog &&
         <ModalWindow
@@ -167,7 +167,6 @@ export class Main extends React.Component {
         <ModalWindow
           {...infoDialogOptions}/>
         }
-
 
         <ReactCSSTransitionGroup
           component="div"

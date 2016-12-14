@@ -5,8 +5,6 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import { getUrl } from '../util/routes'
-
 import * as userActionCreators from '../redux/modules/user'
 
 import PasswordFields from '../components/password-fields'
@@ -17,38 +15,57 @@ export class SetPassword extends React.Component {
     super(props);
 
     this.state = {
+      reset: props.route.path.indexOf('reset') !== -1,
+      password: null,
       validPassword: false
     }
 
     this.goToLoginPage = this.goToLoginPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.changePassword = this.changePassword.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
   }
+
+  componentDidMount() {
+    if (!this.props.params.token || !this.props.location.query.email) {
+      this.goToLoginPage()
+    }
+  }
+
   goToLoginPage() {
-    this.props.router.push(getUrl('/login', {}))
+    this.props.router.push('/login')
   }
+
   onSubmit(e) {
     e.preventDefault()
     this.setState({loginError: null})
-    // TODO: API connections
-    // this.props.userActions.startFetching()
-    // this.props.userActions.logIn(
-    //   this.state.username,
-    //   this.state.password
-    // ).then(action => {
-    //   if(!action.error) {
-    //     this.goToLoginPage()
-    //   }
-    //   else {
-    //     this.setState({
-    //       passwordError: action.payload.message
-    //     })
-    //   }
-    // })
+
+    this.props.userActions.startFetching()
+    this.props.userActions
+      .resetPassword(
+        this.props.location.query.email,
+        this.state.password,
+        this.props.params.token
+      ).then(action => {
+        if(!action.error) {
+          this.goToLoginPage()
+        }
+        else {
+          this.setState({
+            formError: action.payload.data.message || action.payload.message
+          })
+        }
+      })
   }
 
   changePassword(isPasswordValid) {
-    this.setState({'validPassword': isPasswordValid});
+    this.setState({
+      validPassword: isPasswordValid
+    });
+  }
+
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value })
   }
 
   render() {
@@ -59,19 +76,31 @@ export class SetPassword extends React.Component {
           <div className="login-header-gradient" />
           <h1>
             <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
-            <FormattedMessage id="portal.login.title"/>
+            {this.state.reset ? <FormattedMessage id="portal.login.resetPassword.title"/> : <FormattedMessage id="portal.login.setPassword.title"/>}
           </h1>
           <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
 
         <Modal.Body>
           <form onSubmit={this.onSubmit}>
-            <PasswordFields stackedPassword={true} changePassword={this.changePassword} />
+            {this.state.formError ?
+              <div className="login-info">
+                <p>{this.state.formError}</p>
+              </div>
+              : ''
+            }
+
+            <PasswordFields
+              ref="passwordFields"
+              stackedPassword={true}
+              changePassword={this.changePassword}
+              onChange={this.handlePasswordChange}
+            />
             <Row>
               <Col xs={12}>
                 <Button type="submit" bsStyle="primary" className="pull-right"
                   disabled={this.props.fetching || !this.state.validPassword}>
-                  {this.props.reset ?
+                  {this.state.reset ?
                     this.props.fetching ? <FormattedMessage id="portal.button.resetting"/> : <FormattedMessage id="portal.button.reset"/>
                   : this.props.fetching ? <FormattedMessage id="portal.button.setting"/> : <FormattedMessage id="portal.button.set"/>}
                 </Button>
@@ -89,9 +118,17 @@ export class SetPassword extends React.Component {
 SetPassword.displayName = 'SetPassword'
 SetPassword.propTypes = {
   fetching: React.PropTypes.bool,
-  reset: React.PropTypes.bool,
-  router: React.PropTypes.object
-  // userActions: React.PropTypes.object
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({
+      email: React.PropTypes.string
+    })
+  }),
+  params: React.PropTypes.shape({
+    token: React.PropTypes.string
+  }),
+  route: React.PropTypes.object.isRequired,
+  router: React.PropTypes.object.isRequired,
+  userActions: React.PropTypes.object
 }
 
 

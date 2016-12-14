@@ -6,6 +6,12 @@ import CertificateForm from '../certificate-form.jsx'
 
 const REQUIRED = 'Required'
 
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('Certificate Form', () => {
   const onSave = jest.genMockFunction()
   const onCancel = jest.genMockFunction()
@@ -14,6 +20,7 @@ describe('Certificate Form', () => {
   beforeEach(() => {
     subject = () => {
       props = {
+        intl: intlMaker(),
         errors: {},
         accounts: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
         groups: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
@@ -24,7 +31,7 @@ describe('Certificate Form', () => {
           group: { touched, error, value: '' },
           title: { touched, error, value: '' },
           privateKey: { touched, error, value: '' },
-          interMediateCert: { touched, error, value: '' },
+          intermediateCertificates: { touched, error, value: '' },
           certificate: { touched, error, value: '' }
         }
       }

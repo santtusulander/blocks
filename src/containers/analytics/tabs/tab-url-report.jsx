@@ -42,7 +42,7 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.filterActions.resetFilters()
+    this.props.filterActions.resetStatusFilters()
   }
 
   fetchData(params, filters, hostConfiguredName){

@@ -35,7 +35,7 @@ class AnalyticsTabFileError extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.filterActions.resetFilters()
+    this.props.filterActions.resetErrorFilters()
   }
 
   fetchData(params, filters, location, hostConfiguredName){

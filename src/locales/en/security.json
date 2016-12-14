@@ -3,5 +3,7 @@
   "portal.security.ssl.edit.assign.text": "Assign to Group",
   "portal.security.ssl.edit.certTitle.text": "SSL Cert Title",
   "portal.security.ssl.edit.privateKey.text": "Private Key",
-  "portal.security.ssl.edit.certificate.text": "Certificate"
+  "portal.security.ssl.edit.certificate.text": "Certificate",
+  "portal.security.ssl.edit.intermediateCertificates.text": "Intermediate Certificates",
+  "portal.security.ssl.expirationDate.text": "Expiration Date"
 }

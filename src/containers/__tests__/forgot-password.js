@@ -47,4 +47,21 @@ describe('ForgotPassword', () => {
     usernameHolder.simulate('blur')
     expect(forgotPassword.state('emailActive')).toBe(false)
   })
+
+  it('requires email AND recaptcha token to submit', () => {
+    const forgotPassword = shallow(
+      <ForgotPassword userActions={userActionsMaker({})}/>
+    )
+
+    expect(forgotPassword.find('Button').props().disabled).toBe(true)
+
+    forgotPassword.setState({ email: 'a@b.c', recaptcha: null })
+    expect(forgotPassword.find('Button').props().disabled).toBe(true)
+
+    forgotPassword.setState({ email: null, recaptcha: '1234567890' })
+    expect(forgotPassword.find('Button').props().disabled).toBe(true)
+
+    forgotPassword.setState({ email: 'a@b.c', recaptcha: '1234567890' })
+    expect(forgotPassword.find('Button').props().disabled).toBe(false)
+  })
 })

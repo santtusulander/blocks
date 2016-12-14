@@ -4,12 +4,11 @@ import { FormattedMessage } from 'react-intl';
 
 import CustomDatePicker from '../../../components/custom-date-picker'
 
-const FilterCustomDateRange = ({ onFilterChange, startDate, endDate }) =>
+const FilterCustomDateRange = ({ onFilterChange, startDate }) =>
   <div className='action'>
     <h5><FormattedMessage id="portal.analysis.filters.customDateRange.title"/></h5>
     <CustomDatePicker
       startDate={startDate}
-      endDate={endDate}
       changeDateRange={(startDate, endDate) => {
         onFilterChange('customDateRange', { startDate, endDate })
       }} />
@@ -17,7 +16,6 @@ const FilterCustomDateRange = ({ onFilterChange, startDate, endDate }) =>
 
 FilterCustomDateRange.displayName = 'FilterCustomDateRange'
 FilterCustomDateRange.propTypes = {
-  endDate: PropTypes.instanceOf(moment),
   onFilterChange: PropTypes.func,
   startDate: PropTypes.instanceOf(moment)
 }

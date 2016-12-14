@@ -5,4 +5,5 @@ global.localStorage = {
   setItem: jest.genMockFunction()
 }
 
+global.GOOGLE_SITE_KEY = '1234567890'
 global.VERSION = '11.22.33'
