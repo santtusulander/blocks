@@ -4,11 +4,9 @@ require('express-jsend');
 let log               = require('../../logger');
 let validator         = require('../../validator');
 let computeGeoTraffic = require('../../utils/compute-geo-traffic');
-let dataUtils         = require('../../data-utils');
-// let testData          = require('./country-data');
 
-function routeTrafficCountry(req, res) {
-  log.info('Getting traffic/country');
+function routeTrafficCity(req, res) {
+  log.info('Getting traffic/city');
   log.debug('query params:', req.query);
 
   let params = req.query;
@@ -25,25 +23,19 @@ function routeTrafficCountry(req, res) {
     longitude_west : {required: false, type: 'Longitude'},
     latitude_north : {required: false, type: 'Latitude'},
     longitude_east : {required: false, type: 'Longitude'},
-    max_countries  : {required: false, type: 'Number'}
+    include_geo    : {required: false, type: 'Boolean'},
+    max_cities     : {required: false, type: 'Number'}
   });
 
   if (errors) {
     return res.status(400).jerror('Bad Request Parameters', errors);
   }
 
-  // we don't support geo for country yet, so be sure we don't try to process
-  params.include_geo = false;
-
   computeGeoTraffic({
     params         : params,
-    geo_resolution : ['country'],
-    areasName      : 'countries',
-    maxAreas       : params.max_countries || 5,
-    decorateRecord : (countryRecord, countryCode) => {
-      countryRecord.code = dataUtils.get3CharCountryCodeFromCode(countryCode);
-      countryRecord.name = dataUtils.getCountryNameFromCode(countryCode);
-    },
+    geo_resolution : ['country', 'region', 'city'],
+    areasName      : 'cities',
+    maxAreas       : params.max_cities || 5,
     success        : (responseData) => {
       res.jsend(responseData);
     },
@@ -53,4 +45,4 @@ function routeTrafficCountry(req, res) {
   });
 }
 
-module.exports = routeTrafficCountry;
+module.exports = routeTrafficCity;

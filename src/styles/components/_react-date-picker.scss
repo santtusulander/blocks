@@ -6,9 +6,10 @@ $rdp-width: rem(300px);
 $rdp-vertical-padding: em(15px, $rdp-font-size);
 $rdp-horizontal-padding: em(25px, $rdp-font-size);
 $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+$rdp-month-btn-width: 36px;
 
-.react-date-picker__calendar {
-  width: $rdp-width;
+.react-date-picker__calendar,
+.react-date-picker__multi-month-view {
   padding: $rdp-vertical-padding $rdp-horizontal-padding $rdp-horizontal-padding;
   font-family: inherit;
   font-size: inherit;
@@ -28,8 +29,24 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   }
 }
 
-.react-date-picker__month-view {
-  width: 100%;
+.react-date-picker__calendar {
+  width: $rdp-width;
+
+  .react-date-picker__month-view {
+    width: 100%;
+  }
+}
+
+.react-date-picker__multi-month-view {
+  width: $rdp-width * 2;
+
+  > .react-flex {
+    justify-content: space-between;
+  }
+
+  .react-date-picker__month-view {
+    width: calc(50% - (#{$rdp-horizontal-padding}) / 2);
+  }
 }
 
 .react-date-picker__nav-bar {
@@ -38,23 +55,16 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   border-bottom: 1px solid;
   border-radius: 0;
 
+  .react-date-picker__month-view & {
+    border-top: 1px solid;
+  }
+
   .dark-theme & {
     border-color: rgba($white, 0.1);
   }
 
   .light-theme & {
     border-color: rgba($black, 0.2);
-  }
-
-  // Make months unclickable
-  &::after {
-    position: absolute;
-    top: 0;
-    right: 35px;
-    left: 35px;
-    display: block;
-    height: 100%;
-    content: '';
   }
 
   .react-date-picker__nav-bar-date {
@@ -68,8 +78,8 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   .react-date-picker__nav-bar-arrow {
     position: absolute;
     top: 0;
-    width: 36px;
-    height: 36px;
+    width: $rdp-month-btn-width;
+    height: $rdp-month-btn-width;
     border: 0;
 
     &.react-date-picker__nav-bar-secondary-arrow,
@@ -166,13 +176,14 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   margin: 2px 0;
   line-height: $md-bar-height / 2;
   color: inherit;
-  cursor: pointer;
 
   &.react-date-picker__month-view-day--today {
     color: $pale-blue;
   }
 
-  &:hover {
+  &:hover:not(.react-date-picker__month-view-day--disabled) {
+    cursor: pointer;
+
     .dark-theme & {
       color: $white;
     }
@@ -182,8 +193,8 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
     }
   }
 
-  &.react-date-picker__month-view-day--prev-month,
-  &.react-date-picker__month-view-day--next-month {
+  &.react-date-picker__month-view-day--prev-month:not(.react-date-picker__month-view-day--disabled),
+  &.react-date-picker__month-view-day--next-month:not(.react-date-picker__month-view-day--disabled) {
 
     .dark-theme & {
       color: rgba($dt-text-color, 0.5);
@@ -203,9 +214,15 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
   }
 }
 
+.react-date-picker__month-view-day--range-end,
+.react-date-picker__month-view-day--range-start,
+.react-date-picker__month-view-day--hover-range-end,
+.react-date-picker__month-view-day--hover-range-start,
 .react-date-picker__month-view-day--active {
 
   .react-date-picker__month-view-day-text {
+    position: relative;
+    z-index: 1;
     width: $md-bar-height / 2;
     height: $md-bar-height / 2;
     text-align: center;
@@ -215,6 +232,81 @@ $rdp-dark-bg-image: linear-gradient(rgba($purple, 0.05), rgba($purple, 0.05)), l
     .light-theme & {
       color: $white;
       background-color: $pale-blue;
+    }
+  }
+}
+
+.react-date-picker__month-view-day--range-end:not(.react-date-picker__month-view-day--range-start),
+.react-date-picker__month-view-day--hover-range-end {
+
+  .react-date-picker__month-view-day-text {
+
+    .dark-theme &,
+    .light-theme & {
+      background-color: $purple;
+    }
+  }
+}
+
+.react-date-picker__month-view-day--in-range,
+.react-date-picker__month-view-day--in-hover-range {
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    content: '';
+
+    .dark-theme &,
+    .light-theme & {
+      background: rgba($pale-blue, 0.1);
+    }
+  }
+
+  &::after {
+    left: 50%;
+  }
+
+  &.react-date-picker__month-view-day--hover-range-start,
+  &.react-date-picker__month-view-day--range-start:not(.react-date-picker__month-view-day--in-hover-range) {
+
+    &::before {
+      display: none;
+    }
+  }
+
+  &.react-date-picker__month-view-day--hover-range-end,
+  &.react-date-picker__month-view-day--range-end:not(.react-date-picker__month-view-day--in-hover-range) {
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.react-date-picker__month-view-day--disabled {
+  opacity: 0.5;
+
+  .dark-theme & {
+    background: $black;
+
+    &,
+    &.react-date-picker__month-view-day--prev-month,
+    &.react-date-picker__month-view-day--next-month {
+      color: $dt-text-color;
+    }
+  }
+
+  .light-theme & {
+    background: rgba($black, 0.1);
+
+    &,
+    &.react-date-picker__month-view-day--prev-month,
+    &.react-date-picker__month-view-day--next-month {
+      color: $lt-text-color;
     }
   }
 }

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
+import { FormattedMessage } from 'react-intl'
 import { paleblue } from '../constants/colors'
 
 import AnalysisByTime from './analysis/by-time'
@@ -45,6 +46,16 @@ class MiniChart extends React.Component {
       stackedAgainst: false,
       xAxisFormatter: false
     }]
+    if(Number(kpiValue) === 0) {
+      return (
+        <div className={classNames({ 'mini-chart': true, className })}>
+          {label && <div className="mini-chart-label">{label}</div>}
+            <div className="mini-chart-container no-data">
+              <FormattedMessage id='portal.common.no-data.text'/>
+            </div>
+        </div>
+      )
+    }
     return (
       <div className={classNames({
         'mini-chart': true,
