@@ -2,7 +2,11 @@ import React, { PropTypes } from 'react'
 import { ButtonToolbar, Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl';
 
-import { CREATE_ZONE, MODIFY_ZONE } from '../../constants/permissions'
+import {
+  CREATE_ZONE,
+  MODIFY_ZONE,
+  DELETE_ZONE
+} from '../../constants/permissions'
 
 import PageHeader from '../layout/page-header'
 import TruncatedTitle from '../truncated-title'
@@ -54,7 +58,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
           </Button>
         </IsAllowed>}
         {activeDomain &&
-        <IsAllowed to={MODIFY_ZONE}>
+        <IsAllowed to={DELETE_ZONE}>
           <Button
             id="delete-domain"
             bsStyle="danger"
