@@ -319,6 +319,7 @@ class Mapbox extends React.Component {
         onMouseMove={this.onMouseMove.bind(this)}
         onDragEnd={this.getCitiesOnZoomDrag.bind(this)}>
 
+        {/*
         <div className="map-search">
           <Typeahead
             minLength={1}
@@ -333,6 +334,7 @@ class Mapbox extends React.Component {
               {id: 'US', label: 'United States'}
             ]}/>
         </div>
+        */}
 
         {!!this.state.popupContent &&
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
@@ -351,9 +353,11 @@ class Mapbox extends React.Component {
         }
 
         <div className="map-controls">
+          {/*
           <div className="control map-fullscreen">
             <IconExpand width={32} height={32} />
           </div>
+          */}
           <div className="control map-zoom">
             <ZoomControl
               style={{
@@ -368,13 +372,17 @@ class Mapbox extends React.Component {
                 zIndex: 1
               }}
               onControlClick={this.onZoomClick.bind(this)} />
+            {/*
             <div className="map-zoom-reset">
               <IconGlobe width={32} height={32} />
             </div>
+            */}
           </div>
+          {/*
           <div className="control map-minimap">
             <IconMinimap width={32} height={32} />
           </div>
+           */}
         </div>
 
         {this.state.zoom < 7 &&
