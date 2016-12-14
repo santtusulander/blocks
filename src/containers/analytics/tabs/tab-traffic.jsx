@@ -135,20 +135,18 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   getCitiesWithinBounds(south, west, north, east) {
-    if (this.props.trafficActions) {
-      const byCityOpts = Object.assign({
-        max_cities: 999,
-        latitude_south: south,
-        longitude_west: west,
-        latitude_north: north,
-        longitude_east: east
-      }, this.getBaseOpts())
+    const byCityOpts = Object.assign({
+      max_cities: 999,
+      latitude_south: south,
+      longitude_west: west,
+      latitude_north: north,
+      longitude_east: east
+    }, this.getBaseOpts())
 
-      this.props.trafficActions.startFetching()
-      this.props.trafficActions.fetchByCity(byCityOpts).then(
-        this.props.trafficActions.finishFetching()
-      )
-    }
+    this.props.trafficActions.startFetching()
+    this.props.trafficActions.fetchByCity(byCityOpts).then(
+      this.props.trafficActions.finishFetching()
+    )
   }
 
   render() {
