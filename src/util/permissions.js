@@ -108,6 +108,9 @@ permissionMapping[PERMISSIONS.CREATE_ZONE] =
 permissionMapping[PERMISSIONS.MODIFY_ZONE] =
   (role) => role.getIn(['permissions', 'north', 'zones', 'modify', 'allowed'])
 
+permissionMapping[PERMISSIONS.DELETE_ZONE] =
+  (role) => role.getIn(['permissions', 'north', 'zones', 'delete', 'allowed'])
+
 permissionMapping[PERMISSIONS.CREATE_RECORD] =
   (role) => role.getIn(['permissions', 'north', 'rr', 'create', 'allowed'])
 

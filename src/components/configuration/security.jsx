@@ -65,6 +65,11 @@ class ConfigurationSecurity extends React.Component {
     const sslCertificateOptionsMapping = option => Immutable.fromJS({ value: option.get('cn'), label: option.get('title') })
     const sslCertificateOptions = sslCertificates.map(sslCertificateOptionsMapping).toJS()
 
+    // If has assigned certificate => append none-option to dropdown to allow un-assigning
+    if (sslCertificateId) {
+      sslCertificateOptions.push({ value: '', label: <FormattedMessage id="portal.common.button.none"/> })
+    }
+
     return (
       <div className="configuration-security">
         <h3><FormattedMessage id="portal.policy.edit.security.text"/></h3>

@@ -185,7 +185,7 @@ class AccountList extends Component {
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values =>
-      values.map(value => SERVICE_TYPES.find(type => type.value === value).label).toJS()
+      values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
     const accountsSize = sortedAccounts.size
     const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''

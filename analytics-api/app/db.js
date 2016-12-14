@@ -480,7 +480,7 @@ class AnalyticsDB {
       optionsFinal.longitude_west
         && conditions.push('AND lon >= ?')
         && queryOptions.push(optionsFinal.longitude_west);
-  
+
       optionsFinal.longitude_east
         && conditions.push('AND lon <= ?')
         && queryOptions.push(optionsFinal.longitude_east);
@@ -970,7 +970,7 @@ class AnalyticsDB {
       optionsFinal.longitude_west
         && conditions.push('AND lon >= ?')
         && queryOptions.push(optionsFinal.longitude_west);
-  
+
       optionsFinal.longitude_east
         && conditions.push('AND lon <= ?')
         && queryOptions.push(optionsFinal.longitude_east);
@@ -1061,7 +1061,7 @@ class AnalyticsDB {
     // Include the dimension option as a column to be selected unless it's
     // undefined or the default value of 'global', or use geo_resolution if provided
     if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
-      selectedDimension = `${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', ') : optionsFinal.dimension},\n        `;
+      selectedDimension = `${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', ') : optionsFinal.dimension}`;
     } else {
       selectedDimension = '';
     }
