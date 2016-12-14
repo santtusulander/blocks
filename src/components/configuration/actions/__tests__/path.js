@@ -23,7 +23,7 @@ describe('Path', () => {
     let path = shallow(
       <Path changeValue={changeValue} intl={intlMaker()}/>
     )
-    let inputs = path.find('Input')
+    let inputs = path.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'path_value'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')

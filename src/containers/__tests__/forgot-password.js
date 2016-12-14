@@ -29,7 +29,7 @@ describe('ForgotPassword', () => {
     const forgotPassword = shallow(
       <ForgotPassword userActions={userActionsMaker({})}/>
     )
-    let inputs = forgotPassword.find('Input')
+    let inputs = forgotPassword.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'aaa'}})
     expect(forgotPassword.state('email')).toBe('aaa')
   })
@@ -38,7 +38,7 @@ describe('ForgotPassword', () => {
     const forgotPassword = shallow(
       <ForgotPassword userActions={userActionsMaker({})}/>
     )
-    let inputs = forgotPassword.find('Input')
+    let inputs = forgotPassword.find('FormControl')
 
     const usernameHolder = inputs.at(0)
     expect(forgotPassword.state('emailActive')).toBe(false)
