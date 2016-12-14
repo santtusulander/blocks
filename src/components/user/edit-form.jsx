@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Button, ButtonToolbar, Col, FormControl, Row } from 'react-bootstrap'
+import { HelpBlock, FormGroup, Button, ButtonToolbar, Col, FormControl, ControlLabel, Row } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
+import {FormattedMessage, injectIntl} from 'react-intl';
 // import moment from 'moment'
+
 import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
 // import IconUser from '../icons/icon-user.jsx'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { getReduxFormValidationState } from '../../util/helpers'
 
 let errors = {}
 let passwordErrors = {}
@@ -159,35 +161,38 @@ class UserEditForm extends React.Component {
 
             <div className="form-group">
               <Row>
-                <label className="col-xs-2 control-label">
+                <ControlLabel className="col-xs-2">
                   <FormattedMessage id="portal.user.edit.name.text"/>
-                </label>
+                </ControlLabel>
                 <Col xs={3}>
-                  <FormControl
-                    {...first_name}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
-                  {first_name.touched && first_name.error &&
-                  <div className="error-msg">{first_name.error}</div>}
+                  <FormGroup validationState={getReduxFormValidationState(first_name)}>
+                    <FormControl
+                      {...first_name}
+                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
+                    {first_name.touched && first_name.error &&
+                      <HelpBlock className="error-msg">{first_name.error}</HelpBlock>}
+                  </FormGroup>
                 </Col>
 
-                {this.state.showMiddleNameField ?
+                {this.state.showMiddleNameField &&
                   <Col xs={3}>
-                    <FormControl
-                      {...middle_name}
-                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}/>
-                    {last_name.touched && last_name.error &&
-                      <div className="error-msg">{middle_name.error}</div>
-                    }
-                  </Col>
-                : null}
+                    <FormGroup validationState={getReduxFormValidationState(middle_name)}>
+                      <FormControl
+                        {...middle_name}
+                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}/>
+                      {last_name.touched && last_name.error &&
+                        <HelpBlock className="error-msg">{middle_name.error}</HelpBlock>}
+                    </FormGroup>
+                  </Col>}
 
                 <Col xs={3}>
-                  <FormControl
-                    {...last_name}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
-                  {last_name.touched && last_name.error &&
-                    <div className="error-msg">{last_name.error}</div>
-                  }
+                  <FormGroup validationState={getReduxFormValidationState(last_name)}>
+                    <FormControl
+                      {...last_name}
+                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
+                    {last_name.touched && last_name.error &&
+                      <HelpBlock className="error-msg">{last_name.error}</HelpBlock>}
+                  </FormGroup>
                 </Col>
 
                 {!this.state.showMiddleNameField ?
@@ -200,9 +205,9 @@ class UserEditForm extends React.Component {
 
             <div className="form-group">
               <Row>
-                <label className="col-xs-2 control-label">
+                <ControlLabel className="col-xs-2">
                   <FormattedMessage id="portal.user.edit.contact.text"/>
-                </label>
+                </ControlLabel>
                 <Col xs={3}>
                   <p className="form-control-static">{email.value}</p>
                 </Col>
@@ -244,9 +249,9 @@ class UserEditForm extends React.Component {
 
             <div className="form-group">
               <Row>
-                <label className="col-xs-2 control-label">
+                <ControlLabel className="col-xs-2">
                   <FormattedMessage id="portal.user.edit.password.text"/>
-                </label>
+                </ControlLabel>
 
                 {this.state.showPasswordField || savingPassword ?
                   <div>

@@ -55,6 +55,6 @@ describe('Certificate Form', () => {
   it('should render an error message', () => {
     touched = true
     error = REQUIRED
-    expect(subject().find('FormGroup').at(1).find('.error-msg').text()).toBe(REQUIRED)
+    expect(subject().find('FormGroup').at(1).find('.error-msg').children().text()).toBe(REQUIRED)
   })
 })

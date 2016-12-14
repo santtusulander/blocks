@@ -126,18 +126,6 @@ label {
   }
 }
 
-.help-block {
-  &,
-  .has-warning &,
-  .has-error & {
-    .dark-theme &,
-    .light-theme & {
-      margin: 0;
-      color: inherit;
-    }
-  }
-}
-
 .control-label {
   .has-success & {
     color: $form-success-color;
@@ -423,7 +411,8 @@ textarea {
   }
 }
 
-.error-msg {
+.error-msg,
+.error-msg.help-block {
   margin-bottom: 10px;
   color: $form-error-color;
 }

@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import { Dropdown } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import classnames from 'classnames'
 
 import IconSelectCaret from '../components/icons/icon-select-caret'
 
@@ -69,9 +70,9 @@ class Tabs extends React.Component {
   render() {
     const { children, className, onSelect } = this.props
     return (
-      <ul role="tablist" className={'nav nav-tabs ' + className}>
+      <ul role="tablist" className={classnames('nav nav-tabs', className)}>
         {children && children.length > 1 ?
-          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).concat().map((tab, i) => {
+          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
               tab, {
                 ref: `tab${i}`,
