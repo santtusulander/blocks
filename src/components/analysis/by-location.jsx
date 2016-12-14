@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import {FormattedMessage} from 'react-intl'
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 import Mapbox from '../map/mapbox';
 
@@ -11,7 +11,7 @@ import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
 class AnalysisByLocation extends React.Component {
   render() {
     if(!this.props.countryData.size) {
-      return <div><FormattedMessage id="portal.loading.text"/></div>
+      return <LoadingSpinner />
     }
 
     return (
