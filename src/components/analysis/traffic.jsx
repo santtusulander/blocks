@@ -300,7 +300,6 @@ class AnalysisTraffic extends React.Component {
 AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes   = {
   avgTraffic: React.PropTypes.string,
-  baseOpts: React.PropTypes.object,
   byCity: React.PropTypes.instanceOf(Immutable.List),
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),

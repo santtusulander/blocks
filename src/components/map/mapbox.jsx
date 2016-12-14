@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
-import Typeahead from 'react-bootstrap-typeahead'
+// import Typeahead from 'react-bootstrap-typeahead'
 
 import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
-import IconExpand from '../icons/icon-expand';
-import IconMinimap from '../icons/icon-minimap';
-import IconGlobe from '../icons/icon-globe';
+// import IconExpand from '../icons/icon-expand';
+// import IconMinimap from '../icons/icon-minimap';
+// import IconGlobe from '../icons/icon-globe';
 
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
