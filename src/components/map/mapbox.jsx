@@ -249,9 +249,25 @@ class Mapbox extends React.Component {
     const cities = cityData
     const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
 
+    const highestValue = cities.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
     const cityHeat = getScore(cityMedian, city.bits_per_second)
+    const percentage = cityHeat / highestValue * 100
+
     const cityId = 'city-' + city.name.split(' ').join('-').toLowerCase()
-    const cityRadius = cityHeat > 40 ? 30 : cityHeat < 5 ? 8 : cityHeat
+    const cityRadius = percentage >= 95 ?
+                       32 + percentage / 10 :
+                       percentage >= 80 && percentage < 95 ?
+                       30 + percentage / 10 :
+                       percentage >= 60 && percentage < 80 ?
+                       24 + percentage / 10 :
+                       percentage >= 40 && percentage < 60 ?
+                       16 + percentage / 10 :
+                       percentage >= 20 && percentage < 40 ?
+                       14 + percentage / 10 :
+                       percentage >= 10 && percentage < 20 ?
+                       10 + percentage / 10 :
+                       percentage > 0 && percentage < 10 ?
+                       7 + percentage : 7
 
     map.addLayer({
       id: cityId,
@@ -289,7 +305,7 @@ class Mapbox extends React.Component {
 
     return (
       <ReactMapboxGl
-        accessToken="pk.eyJ1IjoiZXJpY3Nzb251ZG4iLCJhIjoiY2lyNWJsZGVmMDAxYmcxbm5oNjRxY2VnZCJ9.r1KILF4ik_gkwZ4BCyy1CA"
+        accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
           height: '600px'
@@ -361,11 +377,13 @@ class Mapbox extends React.Component {
           </div>
         </div>
 
-        <div className="map-heat-legend">
-          <span>Low</span>
-          <div className="heat-gradient" />
-          <span>High</span>
-        </div>
+        {this.state.zoom < 7 &&
+          <div className="map-heat-legend">
+            <span>Low</span>
+            <div className="heat-gradient" />
+            <span>High</span>
+          </div>
+        }
 
       </ReactMapboxGl>
     )
