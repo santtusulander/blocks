@@ -70,19 +70,27 @@ class Mapbox extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.cityData !== this.props.cityData) {
-      this.state.layers.forEach((layer) => {
-        if (layer.includes('city-') && this.state.map.getLayer(layer)) {
-          this.state.map.removeLayer(layer)
+      const newLayers = nextProps.cityData.map((city) => {
+        const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
+
+        if (this.state.map.getLayer(cityName)) {
+          this.state.map.removeLayer(cityName)
         }
-      })
-      const newLayers = this.state.layers.filter(layer => !layer.includes('city-'))
-      this.addCityLayers(this.state.map, newLayers, nextProps.cityData)
+
+        return cityName
+      }).concat(this.state.layers.filter(layer => layer.includes('country-')))
+
+      this.updateLayers(newLayers)
+      this.addCityLayers(this.state.map, nextProps.cityData)
     }
   }
 
   onStyleLoaded(map) {
-    this.addCountryLayers(map, this.state.layers)
-    this.addCityLayers(map, this.state.layers, this.props.cityData)
+    this.addCountryLayers(map)
+
+    if (this.state.zoom > 6.9) {
+      this.addCityLayers(map, this.props.cityData)
+    }
   }
 
   onZoom(e) {
@@ -140,7 +148,8 @@ class Mapbox extends React.Component {
     }
   }
 
-  addCountryLayers(map, layers) {
+  addCountryLayers(map) {
+    const layers = this.state.layers
     this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
       const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
       const trafficCountry = this.props.countryData.find(c => c.code === data.properties.iso_a3)
@@ -165,7 +174,6 @@ class Mapbox extends React.Component {
 
           if (!layerExists) {
             layers.push('country-fill-' + data.properties.iso_a3)
-            this.setState({ layers });
           }
 
         }
@@ -174,13 +182,13 @@ class Mapbox extends React.Component {
     })
 
     this.renderCountryHighlight(map)
+    this.updateLayers(layers)
 
   }
 
-  addCityLayers(map, layers, cityData) {
+  addCityLayers(map, cityData) {
     cityData.forEach((city) => {
       const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
-      const layerExists = layers.some(layer => layer === cityName)
 
       if (!map.getSource('geo-' + cityName)) {
         map.addSource('geo-' + cityName, {
@@ -202,14 +210,10 @@ class Mapbox extends React.Component {
         })
       }
 
-      if (!layerExists) {
-        layers.push(cityName)
-      }
-
       this.renderCityCircle(map, city, cityData)
     })
 
-    this.setState({ layers })
+    this.setState({ map })
   }
 
   renderCountryHighlight(map) {
@@ -280,8 +284,6 @@ class Mapbox extends React.Component {
         'circle-opacity': 0.5
       }
     })
-
-    this.setState({ map })
   }
 
   onZoomClick(map, value) {
@@ -298,6 +300,10 @@ class Mapbox extends React.Component {
       this.props.getCitiesWithinBounds(south, west, north, east)
       this.setState({ map })
     }
+  }
+
+  updateLayers(layers) {
+    this.setState({ layers })
   }
 
   render() {
