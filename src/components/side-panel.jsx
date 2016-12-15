@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
 export const SidePanel = ({ cancel, cancelButton, children, className, invalid, show, submit, submitButton, submitText, subTitle, title }) => {
-  let dialogClassName = 'side-panel';
-  if(className) {
-    dialogClassName = dialogClassName + ' ' + className
-  }
+  let dialogClassName = classNames(
+    'side-panel',
+    className
+  );
 
   return (
     <Modal show={show} dialogClassName={dialogClassName}>
