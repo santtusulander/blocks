@@ -162,13 +162,13 @@ export const getRoutes = store => {
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
-      <Route path="/password-reset-token-expired" component={ExpiredPasswordResetToken}/>
+      <Route path="/password-reset-token-expired" component={UserIsNotLoggedIn(ExpiredPasswordResetToken)}/>
+      <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
       { /* Routes below are protected by login*/}
       <Route component={UserIsLoggedIn(Main)}>
         <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
         <Route path="starburst-help" component={StarburstHelp}/>
-        <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
         <Route path="configure/purge" component={Purge}/>
 
         {/* Analytics - routes */}

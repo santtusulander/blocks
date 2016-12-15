@@ -39,6 +39,8 @@ import MiniChart from '../components/mini-chart'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
+import DateRangeSelect from '../components/date-range-select'
+import MultiOptionSelector from '../components/multi-option-selector'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -83,6 +85,7 @@ import IconTrash         from '../components/icons/icon-trash'
 import MapBox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
+import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1', checked: true },
@@ -104,7 +107,11 @@ class Styleguide extends React.Component {
     this.state = {
       activeTab: 1,
       customDatePickerEndDate: moment().endOf('day'),
-      customDatePickerStartDate: moment().startOf('day')
+      customDatePickerStartDate: moment().startOf('day'),
+      datePickerEndDate: moment().utc().endOf('day'),
+      datePickerLimit: false,
+      datePickerStartDate: moment().utc().startOf('month'),
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
     }
   }
 
@@ -575,6 +582,35 @@ class Styleguide extends React.Component {
             </Dropdown>
           </div>
 
+          <h1 className="page-header">Multi Option Selector</h1>
+
+          <MultiOptionSelector
+            options={[
+              {
+                label: 'Service 1',
+                options: [
+                  {label: 'Option 1-1', value: 1},
+                  {label: 'Option 1-2', value: 2},
+                  {label: 'Option 1-3', value: 3}
+                ],
+                value: 1
+              },
+              {
+                label: 'Service 2',
+                options: [
+                  {label: 'Option 2-1', value: 1},
+                  {label: 'Option 2-2', value: 2},
+                  {label: 'Option 2-3', value: 3}
+                ],
+                value: 2
+              }
+            ]}
+            field={{
+              onChange: val => this.setState({ multiOptionValues: Immutable.List(val) }),
+              value: this.state.multiOptionValues
+            }}
+            />
+
           <h1 className="page-header">Token input</h1>
 
           <Row>
@@ -706,12 +742,50 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Date Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <DateRangeSelect
+                endDate={this.state.datePickerEndDate}
+                startDate={this.state.datePickerStartDate}
+                limitRange={this.state.datePickerLimit}
+                changeDateRange={(start, end) => this.setState({ datePickerEndDate: end, datePickerStartDate: start })}
+                availableRanges={[
+                  DateRanges.MONTH_TO_DATE,
+                  DateRanges.LAST_MONTH,
+                  DateRanges.THIS_WEEK,
+                  DateRanges.LAST_WEEK
+                ]} />
+            </Col>
+            <Col xs={4}>
+              <Input
+                type="checkbox"
+                label="Limit range to 4 months"
+                checked={this.state.datePickerLimit}
+                onClick={
+                  () => {
+                    const { datePickerEndDate, datePickerStartDate, datePickerLimit } = this.state
+                    if (!datePickerLimit && datePickerEndDate.diff(datePickerStartDate, 'months') >= 4) {
+                      this.setState({
+                        datePickerEndDate: this.state.datePickerStartDate.clone().add(4, 'months').subtract(1, 'day')
+                      })
+                    }
+                    this.setState({ datePickerLimit: !datePickerLimit })
+                  }
+                } />
+            </Col>
+            <Col xs={4}>
+              <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
+              <p>{`endDate: ${this.state.datePickerEndDate} (${this.state.datePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
           <h1 className="page-header">Custom Date Picker</h1>
 
           <Row>
             <Col xs={4}>
               <CustomDatePicker
-                endDate={this.state.customDatePickerEndDate}
                 startDate={this.state.customDatePickerStartDate}
                 changeDateRange={(startDate, endDate) => this.setState({ customDatePickerEndDate: endDate, customDatePickerStartDate: startDate })} />
             </Col>

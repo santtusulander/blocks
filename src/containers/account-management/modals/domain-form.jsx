@@ -10,7 +10,6 @@ import * as dnsActionCreators from '../../../redux/modules/dns'
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
 import DnsDomainEditForm from '../../../components/account-management/dns-domain-edit-form'
-import ModalWindow from '../../../components/modal'
 
 import { checkForErrors } from '../../../util/helpers'
 import {
@@ -88,36 +87,11 @@ const validate = fields => {
 class DnsDomainEditFormContainer  extends Component {
   constructor() {
     super()
-
-    this.state = {
-      domainToDelete: null
-    }
-
-    this.deleteDomain = this.deleteDomain.bind(this)
-    this.showDeleteModal = this.showDeleteModal.bind(this)
-    this.hideDeleteModal = this.hideDeleteModal.bind(this)
   }
 
   componentDidMount(){
     //show errors on edit even without touching fields
     if (this.props.edit) this.props.touchAll()
-  }
-
-  deleteDomain() {
-    this.props.deleteDomain(this.state.domainToDelete)
-    this.hideDeleteModal()
-  }
-
-  showDeleteModal(domainId) {
-    this.setState({
-      domainToDelete: domainId
-    })
-  }
-
-  hideDeleteModal() {
-    this.setState({
-      domainToDelete: null
-    })
   }
 
   render() {
@@ -129,9 +103,6 @@ class DnsDomainEditFormContainer  extends Component {
       },
       onCancel: () => {
         closeModal()
-      },
-      onDelete: (domainId) => {
-        this.showDeleteModal(domainId)
       },
       ...formProps
     }
@@ -146,20 +117,6 @@ class DnsDomainEditFormContainer  extends Component {
             <DnsDomainEditForm {...domainFormProps}/>
           </Modal.Body>
         </Modal>
-        {this.state.domainToDelete &&
-        <ModalWindow
-          title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
-          cancelButton={true}
-          deleteButton={true}
-          cancel={this.hideDeleteModal}
-          submit={() => {this.deleteDomain()}}
-          invalid={true}
-          verifyDelete={true}>
-          <p>
-            <FormattedMessage id="portal.dnsDomain.delete.disclaimer.text"/>
-          </p>
-        </ModalWindow>
-        }
       </div>
     )
   }
@@ -167,7 +124,6 @@ class DnsDomainEditFormContainer  extends Component {
 
 DnsDomainEditFormContainer.propTypes = {
   closeModal: PropTypes.func,
-  deleteDomain: PropTypes.func,
   edit: PropTypes.bool,
   fields: PropTypes.object,
   saveDomain: PropTypes.func,
@@ -211,22 +167,6 @@ function mapDispatchToProps(dispatch, { closeModal }) {
 
   return {
     dnsActions: dnsActions,
-    deleteDomain: (domainId) => {
-      dnsActions.startFetchingDomains()
-      dnsActions.deleteDomain('udn', domainId)
-        .then(res => {
-          if (res.error) {
-            dispatch( showInfoDialog({
-              title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
-              content: res.payload.data.message,
-              okButton: true,
-              cancel: () => dispatch(hideInfoDialog())
-            }))
-          }
-          dnsActions.stopFetchingDomains()
-          closeModal();
-        })
-    },
     saveDomain: (edit, fields) => {
       const method = edit ? 'editDomain' : 'createDomain'
 

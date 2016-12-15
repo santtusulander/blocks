@@ -108,7 +108,7 @@ $details-item-margin: rem(6px);
       }
 
       > div:not(:last-child) {
-        padding-bottom: $page-header-padding-bottom;
+        margin-bottom: $page-header-padding-bottom;
       }
     }
 

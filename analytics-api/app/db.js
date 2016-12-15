@@ -421,9 +421,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `t.${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -431,8 +431,6 @@ class AnalyticsDB {
     // Build the table name
     let table = `spc_${optionsFinal.dimension}_${optionsFinal.granularity}`;
     queryOptions.push(table);
-    queryOptions.push(optionsFinal.start);
-    queryOptions.push(optionsFinal.end);
 
     // Build the WHERE clause
     if (optionsFinal.granularity === 'day') {
@@ -440,6 +438,8 @@ class AnalyticsDB {
     }
 
     conditions.push('epoch_start BETWEEN ? AND ?');
+    queryOptions.push(optionsFinal.start);
+    queryOptions.push(optionsFinal.end);
 
     optionsFinal.account
       && conditions.push(this.accountLevelFieldMap.sp_account.where)
@@ -457,6 +457,43 @@ class AnalyticsDB {
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    optionsFinal.country_code
+      && conditions.push('AND t.country = ?')
+      && queryOptions.push(optionsFinal.country_code);
+
+    optionsFinal.latitude_south
+      && conditions.push('AND lat >= ?')
+      && queryOptions.push(optionsFinal.latitude_south);
+
+    optionsFinal.latitude_north
+      && conditions.push('AND lat <= ?')
+      && queryOptions.push(optionsFinal.latitude_north);
+
+    // if we've crossed the antimeridian, we need to do some magic
+    // e.g.,           179  |  -179
+    if (optionsFinal.longitude_west && optionsFinal.longitude_east && parseFloat(optionsFinal.longitude_west) > parseFloat(optionsFinal.longitude_east)) {
+      conditions.push('AND (lon >= ? OR lon <= ?)')
+      queryOptions.push(optionsFinal.longitude_west);
+      queryOptions.push(optionsFinal.longitude_east);
+    }
+    else {
+      optionsFinal.longitude_west
+        && conditions.push('AND lon >= ?')
+        && queryOptions.push(optionsFinal.longitude_west);
+
+      optionsFinal.longitude_east
+        && conditions.push('AND lon <= ?')
+        && queryOptions.push(optionsFinal.longitude_east);
+    }
+    // we're ignoring the poles for now. who uses internet at the poles?
+
+    let joinLatLon = '';
+    if (optionsFinal.include_geo) {
+      // we'll just add to selectedDimension, as this will get us in the group by clause as well, which is needed for proper SQL compliance
+      selectedDimension += 'lat, lon, ';
+      joinLatLon = 'left outer join city_location cl on cl.country=t.country and cl.region=t.region and cl.city=t.city'
+    }
+
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
     (selectedDimension || isListingChildren) && grouping.push('epoch_start');
@@ -468,7 +505,8 @@ class AnalyticsDB {
         ${accountLevelData.select},
         ${selectedDimension}service_type,
         ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'}
-      FROM ??
+      FROM ?? t
+      ${joinLatLon}
       WHERE ${conditions.join('\n        ')}
       ${grouping.length ? 'GROUP BY' : ''}
         ${grouping.join('')}
@@ -682,7 +720,7 @@ class AnalyticsDB {
    * @param  {object}  options           Options that get piped into an SQL query
    * @return {Promise}                   A promise that is fulfilled with the query results
    */
-  getDataForCountry(options) {
+  getDataForGeo(options) {
     let queries = [
       this.getEgressWithHistorical(options),
       this.getSpEgressWithHistorical(options)
@@ -868,9 +906,9 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension},\n        `;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `t.${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', t.') : optionsFinal.dimension},\n        `;
     } else {
       selectedDimension = '';
     }
@@ -909,6 +947,44 @@ class AnalyticsDB {
       && conditions.push('AND service_type = ?')
       && queryOptions.push(optionsFinal.service_type);
 
+    optionsFinal.country_code
+      && conditions.push('AND t.country = ?')
+      && queryOptions.push(optionsFinal.country_code);
+
+    optionsFinal.latitude_south
+      && conditions.push('AND lat >= ?')
+      && queryOptions.push(optionsFinal.latitude_south);
+
+    optionsFinal.latitude_north
+      && conditions.push('AND lat <= ?')
+      && queryOptions.push(optionsFinal.latitude_north);
+
+    // if we've crossed the antimeridian, we need to do some magic
+    // e.g.,           179  |  -179
+    if (optionsFinal.longitude_west && optionsFinal.longitude_east && parseFloat(optionsFinal.longitude_west) > parseFloat(optionsFinal.longitude_east)) {
+      conditions.push('AND (lon >= ? OR lon <= ?)')
+      queryOptions.push(optionsFinal.longitude_west);
+      queryOptions.push(optionsFinal.longitude_east);
+    }
+    else {
+      optionsFinal.longitude_west
+        && conditions.push('AND lon >= ?')
+        && queryOptions.push(optionsFinal.longitude_west);
+
+      optionsFinal.longitude_east
+        && conditions.push('AND lon <= ?')
+        && queryOptions.push(optionsFinal.longitude_east);
+    }
+    // we're ignoring the poles for now. who uses internet at the poles?
+
+    let joinLatLon = '';
+    if (optionsFinal.include_geo) {
+      // we'll just add to selectedDimension, as this will get us in the group by clause as well,
+      // which is needed for proper SQL compliance
+      selectedDimension += 'lat, lon, ';
+      joinLatLon = 'left outer join city_location cl on cl.country=t.country and cl.region=t.region and cl.city=t.city'
+    }
+
     // Build the GROUP BY clause
     selectedDimension && grouping.push(selectedDimension);
     (selectedDimension || isListingChildren) && grouping.push('epoch_start');
@@ -921,7 +997,8 @@ class AnalyticsDB {
         ${selectedDimension}service_type,
         ${(selectedDimension || isListingChildren) ? 'sum(bytes) AS bytes' : 'bytes'},
         ${(selectedDimension || isListingChildren) ? 'sum(requests) AS requests' : 'requests'}
-      FROM ??
+      FROM ?? t
+      ${joinLatLon}
       WHERE ${conditions.join('\n        ')}
         AND flow_dir = 'out'
       ${grouping.length ? 'GROUP BY' : ''}
@@ -982,14 +1059,14 @@ class AnalyticsDB {
 
     // Build the SELECT clause
     // Include the dimension option as a column to be selected unless it's
-    // undefined or the default value of 'global'
-    if (optionsFinal.dimension && optionsFinal.dimension !== 'global') {
-      selectedDimension = `${optionsFinal.dimension}`;
+    // undefined or the default value of 'global', or use geo_resolution if provided
+    if (optionsFinal.geo_resolution || (optionsFinal.dimension && optionsFinal.dimension !== 'global')) {
+      selectedDimension = `${optionsFinal.geo_resolution ? optionsFinal.geo_resolution.join(', ') : optionsFinal.dimension}`;
     } else {
       selectedDimension = '';
     }
 
-    let isTrafficTable = !!(optionsFinal.dimension === 'country' || optionsFinal.dimension === 'global');
+    let isTrafficTable = (['global', 'country', 'region', 'city'].indexOf(optionsFinal.dimension) > -1);
 
     // Build the table name
     let table = `${accountLevel}_${optionsFinal.dimension}_${optionsFinal.granularity}`;
@@ -1047,7 +1124,7 @@ class AnalyticsDB {
    * @return {Promise}         A promise that is fulfilled with the query results
    */
   getVisitorWithTotals(options) {
-    let shouldQueryGlobalTotals = options.dimension === 'country';
+    let shouldQueryGlobalTotals = (['country', 'region', 'city'].indexOf(options.dimension) > -1);
     let aggregateGranularity    = options.aggregate_granularity || 'month';
     let dimensionTotalOptions   = {granularity: aggregateGranularity, isAggregate: true};
     let globalTotalOptions      = {dimension: 'global', granularity: aggregateGranularity, isAggregate: true};
