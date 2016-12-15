@@ -62,7 +62,7 @@
     "intl": "^1.2.5",
     "leaflet": "^0.7.0",
     "moment": "^2.11.2",
-    "multireducer": "^3.0.0",
+    "multireducer": "^3.0.3",
     "node-zendesk": "^1.1.10",
     "numeral": "^1.5.3",
     "raven-js": "^3.9.1",
