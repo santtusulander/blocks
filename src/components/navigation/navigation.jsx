@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 
-import { getRoute } from '../../routes.jsx'
+import { getRoute } from '../../util/routes'
 import {
   getAccountManagementUrlFromParams,
   getAnalyticsUrlFromParams,
