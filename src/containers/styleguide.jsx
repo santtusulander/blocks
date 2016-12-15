@@ -44,6 +44,7 @@ import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
+import MultiOptionSelector from '../components/multi-option-selector'
 
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
@@ -116,7 +117,8 @@ class Styleguide extends React.Component {
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
-      datePickerStartDate: moment().utc().startOf('month')
+      datePickerStartDate: moment().utc().startOf('month'),
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
     }
   }
 
@@ -627,6 +629,35 @@ class Styleguide extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
+          <h1 className="page-header">Multi Option Selector</h1>
+
+          <MultiOptionSelector
+            options={[
+              {
+                label: 'Service 1',
+                options: [
+                  {label: 'Option 1-1', value: 1},
+                  {label: 'Option 1-2', value: 2},
+                  {label: 'Option 1-3', value: 3}
+                ],
+                value: 1
+              },
+              {
+                label: 'Service 2',
+                options: [
+                  {label: 'Option 2-1', value: 1},
+                  {label: 'Option 2-2', value: 2},
+                  {label: 'Option 2-3', value: 3}
+                ],
+                value: 2
+              }
+            ]}
+            field={{
+              onChange: val => this.setState({ multiOptionValues: Immutable.List(val) }),
+              value: this.state.multiOptionValues
+            }}
+            />
 
           <h1 className="page-header">Token input</h1>
 
