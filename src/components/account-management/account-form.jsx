@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Map }from 'immutable'
+import { Map, List }from 'immutable'
 import {
   Modal,
   Input,
@@ -9,7 +9,10 @@ import {
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper.jsx'
-import CheckboxArray from '../checkboxes.jsx'
+//import CheckboxArray from '../checkboxes.jsx'
+import MultiOptionSelector from '../multi-option-selector'
+
+import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
 
 import {
   ACCOUNT_TYPES,
@@ -101,13 +104,15 @@ class AccountForm extends React.Component {
   }
 
   render() {
-    const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
-    const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
+    const { providerTypes, serviceOptions, fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
+
+    //const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
 
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
     return (
+
       <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
@@ -153,7 +158,7 @@ class AccountForm extends React.Component {
                   numericValues={true}
                   value={accountType.value}
                   className="input-select"
-                  options={ACCOUNT_TYPE_OPTIONS}
+                  options={providerTypes}
                 />
               }
             </div>
@@ -161,7 +166,16 @@ class AccountForm extends React.Component {
             <hr/>
 
             <label><FormattedMessage id="portal.account.manage.services.title" /></label>
-            <CheckboxArray iterable={serviceTypes} field={services}/>
+
+              <MultiOptionSelector
+                options={serviceOptions}
+                field={{
+                  onChange: val => { console.log(val); services.onChange(val)},
+                  value: List(services.value)
+                }}
+              />
+
+
             <ButtonToolbar className="text-right extra-margin-top">
               <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
               <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
@@ -181,7 +195,28 @@ AccountForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  providerTypes: PropTypes.array,
+  serviceOptions: PropTypes.array,
   show: PropTypes.bool
+}
+
+AccountForm.defaultProps = {
+  serviceOptions: []
+}
+
+const mapStateToProps = (state) => {
+  const accountType = state.form && state.form.account && state.form.account.accountType && state.form.account.accountType.value !== "" ?  state.form.account.accountType.value : undefined
+
+  return {
+    providerTypes: getProviderTypeOptions(state),
+    serviceOptions: accountType && getServiceOptions(state, accountType)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
 }
 
 export default reduxForm({
@@ -193,4 +228,4 @@ export default reduxForm({
     accountType: '',
     services: []
   }
-})(injectIntl(AccountForm))
+}, mapStateToProps, mapDispatchToProps)(injectIntl(AccountForm))
