@@ -5,8 +5,7 @@ import { bindActionCreators } from 'redux'
 
 import * as domainActionCreators from '../../../redux/modules/dns'
 import * as dnsRecordActionCreators from '../../../redux/modules/dns-records/actions'
-import { toggleAccountManagementModal } from '../../../redux/modules/ui'
-
+import { hideInfoDialog, showInfoDialog, toggleAccountManagementModal } from '../../../redux/modules/ui'
 import { getRecordValueString } from '../../../util/dns-records-helpers'
 
 import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-management-modals'
@@ -27,12 +26,16 @@ class AccountManagementSystemDNS extends Component {
     this.editingDomain = true
     this.state = {
       domainSearch: '',
+      domainToDelete: null,
       recordSearch: '',
       recordToDelete: null
     }
 
-    this.deleteDnsRecord = this.deleteDnsRecord.bind(this)
     this.closeDeleteDnsRecordModal = this.closeDeleteDnsRecordModal.bind(this)
+    this.deleteDnsRecord = this.deleteDnsRecord.bind(this)
+    this.deleteDomain = this.deleteDomain.bind(this)
+    this.hideDeleteModal = this.hideDeleteModal.bind(this)
+    this.showDeleteModal = this.showDeleteModal.bind(this)
   }
 
   componentWillMount() {
@@ -45,6 +48,23 @@ class AccountManagementSystemDNS extends Component {
     this.props.activeDomain &&
     this.props.activeDomain !== nextProps.activeDomain &&
     this.props.fetchRecords(nextProps.activeDomain)
+  }
+
+  deleteDomain() {
+    this.props.deleteDomain(this.state.domainToDelete)
+    this.hideDeleteModal()
+  }
+
+  showDeleteModal(domainId) {
+    this.setState({
+      domainToDelete: domainId
+    })
+  }
+
+  hideDeleteModal() {
+    this.setState({
+      domainToDelete: null
+    })
   }
 
   deleteDnsRecord() {
@@ -87,6 +107,9 @@ class AccountManagementSystemDNS extends Component {
       onAddDomain: () => {
         this.editingDomain = false
         toggleModal(DNS_DOMAIN_EDIT)
+      },
+      onDeleteDomain: (activeDomain) => {
+        this.showDeleteModal(activeDomain)
       },
       domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       emptyDomainsTxt: loadingDomains ? 'portal.loading.text' : 'portal.account.manage.system.empty.domain',
@@ -155,6 +178,20 @@ class AccountManagementSystemDNS extends Component {
           </p>
         </ModalWindow>
         }
+        {this.state.domainToDelete &&
+        <ModalWindow
+          title={<FormattedMessage id="portal.dnsDomain.delete.title"/>}
+          cancelButton={true}
+          deleteButton={true}
+          cancel={this.hideDeleteModal}
+          submit={() => {this.deleteDomain()}}
+          invalid={true}
+          verifyDelete={true}>
+          <p>
+            <FormattedMessage id="portal.dnsDomain.delete.disclaimer.text" values={{itemToDelete: this.state.domainToDelete}}/>
+          </p>
+        </ModalWindow>
+        }
       </div>
     )
   }
@@ -164,6 +201,7 @@ AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
   activeModal:PropTypes.string,
   changeActiveDomain: PropTypes.func,
+  deleteDomain: PropTypes.func,
   deleteRecord: PropTypes.func,
   domains: PropTypes.array,
   fetchDomain: PropTypes.func,
@@ -189,7 +227,7 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
 }
 
 function mapDispatchToProps(dispatch, { params: { brand } }) {
-  const { changeActiveDomain, fetchDomains, fetchDomain, startFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
+  const { changeActiveDomain, deleteDomain, fetchDomains, fetchDomain, startFetchingDomains, stopFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
   const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)
   return {
     fetchDomain,
@@ -208,7 +246,22 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
     toggleModal: modal => dispatch(toggleAccountManagementModal(modal)),
-    setActiveRecord
+    setActiveRecord,
+    deleteDomain: (domainId) => {
+      startFetchingDomains()
+      deleteDomain('udn', domainId)
+        .then(res => {
+          if (res.error) {
+            dispatch( showInfoDialog({
+              title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
+              content: res.payload.data.message,
+              okButton: true,
+              cancel: () => dispatch(hideInfoDialog())
+            }))
+          }
+          stopFetchingDomains()
+        })
+    }
   }
 }
 
