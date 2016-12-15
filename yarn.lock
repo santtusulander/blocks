@@ -3396,9 +3396,9 @@ immutable@^3.2.1, immutable@^3.7.6:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
-immutablediff@^0.4.2:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/immutablediff/-/immutablediff-0.4.3.tgz#543d6e439352625a82b8279e4af5d03cf52dc148"
+immutablediff@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/immutablediff/-/immutablediff-0.4.4.tgz#a010e6948f700fe12436433f36c6e2ad86972ab1"
   dependencies:
     immutable "^3.2.1"
 

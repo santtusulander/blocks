@@ -58,7 +58,7 @@
     "filesize": "^3.3.0",
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
-    "immutablediff": "^0.4.2",
+    "immutablediff": "^0.4.4",
     "intl": "^1.2.5",
     "leaflet": "^0.7.0",
     "moment": "^2.11.2",
