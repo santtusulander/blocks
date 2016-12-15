@@ -162,12 +162,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
       cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
     )))
     .then(resp => resp.map(certificate => {
-      return {
-        group,
-        cn: certificate.data.cn,
-        title: certificate.data.title,
-        account
-      }
+      return Object.assign({}, { account, group }, certificate.data)
     }))
 })
 

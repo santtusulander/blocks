@@ -8,6 +8,8 @@
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
   "portal.common.search.text": "Search",
+  "portal.common.button.apply": "Apply",
+  "portal.common.button.none": "None",
   "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
@@ -15,6 +17,8 @@
   "portal.common.error.tokenExpire.button": "Return to Login",
   "portal.common.error.unauthorized.title": "Unauthorized",
   "portal.common.error.unauthorized.content": "You do not have permission to access information on this page.",
+  "portal.common.ON.text": "ON",
+  "portal.common.OFF.text": "OFF",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
