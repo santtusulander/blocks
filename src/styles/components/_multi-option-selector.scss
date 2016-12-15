@@ -1,0 +1,32 @@
+// Multi Option Selector
+// =====================
+
+$panel-vertical-padding: em(8px, $form-font-size);
+$panel-horizontal-padding: em(18px, $form-font-size);
+
+.multi-option-selector {
+
+  .multi-option-panel {
+    margin-bottom: $panel-vertical-padding;
+    font-weight: bold;
+    line-height: em(36px, $form-font-size);
+
+    .multi-option-header {
+      padding: $panel-vertical-padding $panel-horizontal-padding;
+      cursor: pointer;
+
+      .dark-theme & {
+        background-color: rgba($pale-blue, 0.2);
+      }
+
+      .light-theme & {
+        color: $white;
+        background-color: $pale-blue;
+      }
+    }
+
+    .form-group {
+      padding: 0;
+    }
+  }
+}
