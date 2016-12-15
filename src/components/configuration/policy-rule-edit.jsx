@@ -265,7 +265,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <FormGroup controlId="configure__edge__add-cache-rule__rule-name">
             <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.ruleName.text" /></ControlLabel>
             <FormControl
-              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name'], ''))}
+              value={this.props.config.getIn(this.props.rulePath.concat(['rule_name']), '')}
               onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
           </FormGroup>
 

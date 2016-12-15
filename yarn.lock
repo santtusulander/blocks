@@ -6025,7 +6025,7 @@ react-telephone-input@^3.5.0:
     lodash "^3.10.1"
     react-onclickoutside "5.3.1"
 
-react@^15.4.0:
+react@^15.4.1:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/react/-/react-15.4.1.tgz#498e918602677a3983cd0fd206dfe700389a0dd6"
   dependencies:

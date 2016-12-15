@@ -114,15 +114,22 @@ class AccountManagementAccountGroups extends React.Component {
         },
         {
           condition: !isValidAccountName(name),
-          errorText: <div>{[<FormattedMessage id="portal.account.groups.name.error.invalid"/>, <div key={name}>
-                                                        <div style={{marginTop: '0.5em'}}>
-                                                          <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                                                          <ul>
-                                                            <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                                                            <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                                                          </ul>
-                                                        </div>
-                                                      </div>]}</div>
+          errorText: (
+            <div>
+              {[
+                <FormattedMessage key={`${name}-0`} id="portal.account.groups.name.error.invalid"/>,
+                <div key={`${name}-1`}>
+                  <div style={{marginTop: '0.5em'}}>
+                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                    <ul>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                    </ul>
+                  </div>
+                </div>
+              ]}
+            </div>
+          )
         }
       ]
     }

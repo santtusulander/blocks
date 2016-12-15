@@ -43,10 +43,8 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.getValue()
-
     this.setState({
-      filterValue: inputVal
+      filterValue: this.filterInput.value
     })
   }
 
@@ -162,7 +160,7 @@ export class FilterChecklistDropdown extends React.Component {
             {open &&
               <li role="presentation" className="action-container">
                 <FormControl
-                  ref="filterInput"
+                  inputRef={ref => { this.filterInput = ref }}
                   className="header-search-input"
                   type="text"
                   onChange={this.handleFilter}
