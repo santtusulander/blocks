@@ -80,7 +80,7 @@ class MultiOptionSelector extends React.Component {
                     value={optionValue}/>
                 </div>
               </div>
-              <Panel key={`option-${i}`} collapsible={true} expanded={expanded}>
+              <Panel collapsible={true} expanded={expanded}>
                 <Table striped={true}>
                   <tbody>
                     {option.options.map((subOption, j) => {
