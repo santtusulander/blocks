@@ -4449,6 +4449,10 @@ lodash@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
+lodash@^4.17.2:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+
 longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
@@ -4927,6 +4931,12 @@ normalize-url@^1.4.0:
     prepend-http "^1.0.0"
     query-string "^4.1.0"
     sort-keys "^1.0.0"
+
+normalizr@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-2.3.0.tgz#e2d76b1c729bbf600190353bbb7061e6388a0b69"
+  dependencies:
+    lodash "^4.17.2"
 
 "npmlog@0 || 1 || 2 || 3":
   version "3.1.2"
