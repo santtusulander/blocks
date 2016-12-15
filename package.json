@@ -51,7 +51,7 @@
     "webpack-notifier": "^1.4.1"
   },
   "dependencies": {
-    "axios": "^0.9.1",
+    "axios": "^0.15.3",
     "classnames": "^2.2.5",
     "d3": "^3.5.14",
     "dotenv": "^2.0.0",
@@ -70,8 +70,8 @@
     "react": "^15.4.0",
     "react-addons-css-transition-group": "^15.4.0",
     "react-addons-transition-group": "^15.4.0",
-    "react-bootstrap": "^0.30.6",
     "react-async-script": "^0.6.0",
+    "react-bootstrap": "^0.30.6",
     "react-bootstrap-typeahead": "^0.9.4",
     "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.0",
