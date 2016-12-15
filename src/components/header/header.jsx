@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
 import { Link, withRouter } from 'react-router'
-import { getRoute } from '../../routes.jsx'
+import { getRoute } from '../../util/routes'
 import { Navbar } from 'react-bootstrap' // Button, Input
 import { FormattedMessage } from 'react-intl'
 
