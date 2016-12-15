@@ -147,7 +147,7 @@ class AnalysisVisitors extends React.Component {
         label: this.props.intl.formatMessage({id: 'portal.analytics.visitors.chart.visitors.label'}),
         line: true,
         stackedAgainst: false,
-        xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+        xAxisFormatter: false
       })
     }
     return (
@@ -230,7 +230,7 @@ class AnalysisVisitors extends React.Component {
                       label: '',
                       line: true,
                       stackedAgainst: false,
-                      xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                      xAxisFormatter: false
                     })
                   }
                   return (
@@ -303,7 +303,7 @@ class AnalysisVisitors extends React.Component {
                       label: '',
                       line: true,
                       stackedAgainst: false,
-                      xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                      xAxisFormatter: false
                     })
                   }
                   return (
@@ -376,7 +376,7 @@ class AnalysisVisitors extends React.Component {
                       label: '',
                       line: true,
                       stackedAgainst: false,
-                      xAxisFormatter: (date) => moment.utc(date.get('timestamp')).format('MMM D H:mm')
+                      xAxisFormatter: false
                     })
                   }
                   return (
