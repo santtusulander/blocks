@@ -6,7 +6,7 @@ import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 
-import { getRoute } from '../../routes'
+import { getRoute } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'

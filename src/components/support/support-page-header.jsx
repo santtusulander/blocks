@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import { getRoute } from '../../routes'
+import { getRoute } from '../../util/routes'
 import { getUrl, getSupportUrlFromParams } from '../../util/routes'
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
