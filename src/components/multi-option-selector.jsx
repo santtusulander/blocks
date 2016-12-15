@@ -113,9 +113,12 @@ class MultiOptionSelector extends React.Component {
 
 MultiOptionSelector.displayName = 'MultiOptionSelector'
 MultiOptionSelector.propTypes = {
-  field: PropTypes.object,
+  field: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   options: PropTypes.array
+}
+MultiOptionSelector.defaultProps = {
+  options: []
 }
 
 export default injectIntl(MultiOptionSelector)
