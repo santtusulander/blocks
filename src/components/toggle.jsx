@@ -6,7 +6,8 @@ class Toggle extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange() {
+  handleChange(e) {
+    e.stopPropagation()
     if (this.props.readonly) return
     this.props.changeValue(!this.props.value)
   }
