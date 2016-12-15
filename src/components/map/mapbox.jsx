@@ -6,7 +6,7 @@ import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
 // import IconMinimap from '../icons/icon-minimap';
-// import IconGlobe from '../icons/icon-globe';
+import IconGlobe from '../icons/icon-globe';
 
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
@@ -306,6 +306,10 @@ class Mapbox extends React.Component {
     this.setState({ layers })
   }
 
+  resetZoom() {
+    this.setState({ zoom: 1 })
+  }
+
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -378,11 +382,11 @@ class Mapbox extends React.Component {
                 zIndex: 1
               }}
               onControlClick={this.onZoomClick.bind(this)} />
-            {/*
-            <div className="map-zoom-reset">
+            <div
+              className="map-zoom-reset"
+              onClick={this.resetZoom.bind(this)}>
               <IconGlobe width={32} height={32} />
             </div>
-            */}
           </div>
           {/*
           <div className="control map-minimap">
