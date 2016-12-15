@@ -1,5 +1,20 @@
 .mapboxgl-popup {
+  min-width: 150px;
   margin-top: 3px;
+
+  .popup-title {
+    font-weight: 700;
+  }
+
+  table {
+    width: 100%;
+
+    td {
+      &:nth-child(2n) {
+        text-align: right;
+      }
+    }
+  }
 }
 
 .mapboxgl-popup-anchor-bottom-left {
@@ -184,7 +199,7 @@
   .heat-gradient {
     height: 15px;
     margin: 0 10px;
-    background: linear-gradient(to right, $dark-green-60, $yellow-80);
+    background: linear-gradient(to right, $purple, $yellow);
     flex: 1;
   }
 }

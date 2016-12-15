@@ -7,7 +7,8 @@
     "TOPO_BASE_URI_DEVELOPMENT": false,
     "TOPO_BASE_URI_PRODUCTION": false,
     "GA_TRACKING_ID": false,
-    "GOOGLE_SITE_KEY": false
+    "GOOGLE_SITE_KEY": false,
+    "MAPBOX_ACCESS_TOKEN": false
   },
   "ecmaFeatures": {
     "jsx": true,
