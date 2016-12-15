@@ -22,7 +22,6 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.fetchData = this.fetchData.bind(this)
     this.formatTotals = this.formatTotals.bind(this)
-    this.getBaseOpts = this.getBaseOpts.bind(this)
     this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
   }
 
@@ -54,13 +53,8 @@ class AnalyticsTabTraffic extends React.Component {
         property: hostConfiguredName
       })
     }
-    const fetchOpts  = buildAnalyticsOpts(params, filters, location)
-    const startDate  = filters.getIn(['dateRange', 'startDate'])
-    const endDate    = filters.getIn(['dateRange', 'endDate'])
-    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-    const byTimeOpts = Object.assign({
-      granularity: rangeDiff >= 2 ? 'day' : 'hour'
-    }, fetchOpts)
+
+    const { fetchOpts, byTimeOpts } = this.buildOpts()
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -121,7 +115,7 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  getBaseOpts() {
+  buildOpts(coordinates = {}) {
     const { params, filters, location } = this.props
 
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
@@ -131,17 +125,25 @@ class AnalyticsTabTraffic extends React.Component {
     const byTimeOpts = Object.assign({
       granularity: rangeDiff >= 2 ? 'day' : 'hour'
     }, fetchOpts)
-    return byTimeOpts
+
+    const byCityOpts = Object.assign({
+      max_cities: 999,
+      latitude_south: coordinates.south || null,
+      longitude_west: coordinates.west || null,
+      latitude_north: coordinates.north || null,
+      longitude_east: coordinates.east || null
+    }, byTimeOpts)
+
+    return { byTimeOpts, fetchOpts, byCityOpts }
   }
 
   getCitiesWithinBounds(south, west, north, east) {
-    const byCityOpts = Object.assign({
-      max_cities: 999,
-      latitude_south: south,
-      longitude_west: west,
-      latitude_north: north,
-      longitude_east: east
-    }, this.getBaseOpts())
+    const { byCityOpts } = this.buildOpts({
+      south: south,
+      west: west,
+      north: north,
+      east: east
+    })
 
     this.props.trafficActions.startFetching()
     this.props.trafficActions.fetchByCity(byCityOpts).then(
@@ -150,6 +152,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   render() {
+
     const {filters, totals} = this.props
     const recordType = filters.get('recordType')
     const peakTraffic = totals.size ?
