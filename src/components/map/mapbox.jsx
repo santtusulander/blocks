@@ -314,7 +314,7 @@ class Mapbox extends React.Component {
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
-          height: '600px'
+          height: this.props.height
         }}
         zoom={[this.state.zoom]}
         minZoom={1}
@@ -409,6 +409,7 @@ Mapbox.propTypes = {
   countryData: React.PropTypes.array,
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
+  height: React.PropTypes.number,
   theme: React.PropTypes.string
 }
 
