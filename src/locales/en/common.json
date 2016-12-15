@@ -17,6 +17,8 @@
   "portal.common.error.tokenExpire.button": "Return to Login",
   "portal.common.error.unauthorized.title": "Unauthorized",
   "portal.common.error.unauthorized.content": "You do not have permission to access information on this page.",
+  "portal.common.ON.text": "ON",
+  "portal.common.OFF.text": "OFF",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
