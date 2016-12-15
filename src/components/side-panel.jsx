@@ -46,7 +46,7 @@ export const SidePanel = ({ cancel, cancelButton, children, className, invalid, 
 
 SidePanel.displayName = 'SidePanel'
 SidePanel.propTypes = {
-  cancel: PropTypes.func,
+  cancel: PropTypes.func.isRequired,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
   className: PropTypes.string,
