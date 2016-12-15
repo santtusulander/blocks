@@ -88,11 +88,7 @@ axios.interceptors.response.use(function (response) {
           const returnPath = location.pathname
           return store.dispatch( logOut(false) )
             .then( () => {
-              /* eslint-disable no-console */
-              console.log('Token Expired at location: ', returnPath)
-              /* eslint-enable no-console */
-
-              //redirect to login
+              // Token expired, redirect to login
               browserHistory.push({
                 pathname: '/login',
                 query: {
@@ -105,10 +101,6 @@ axios.interceptors.response.use(function (response) {
               return Promise.reject(error)
             })
         }
-
-        /* eslint-disable no-console */
-        console.log("Error: 401", error)
-        /* eslint-enable no-console */
       }
     }
     else if (status === 403) {

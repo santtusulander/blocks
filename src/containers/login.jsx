@@ -37,26 +37,18 @@ export class Login extends React.Component {
     const expiry = this.props.location.query.sessionExpired
 
     if (expiry) {
-      /* eslint-disable no-console */
-      console.log("Session expired!")
-      /* eslint-enable no-console */
+      // Session expired!
       return
-
     } else if ( redirect && token ) {
-      /* eslint-disable no-console */
-      console.log('Token and redirect found --- trying to redirect to:', redirect)
-      /* eslint-enable no-console */
+      // Token and redirect found --- trying to redirect
       //  If we have a token and a redirect is set, could be reload => set login to true
       //  and  try to go to original location where token will be checked
       this.props.userActions.setLogin(true)
       this.props.router.push(redirect)
       return
-
     } else if ( redirect ) {
-      //we had redirect but no token
-      /* eslint-disable no-console */
-      console.log('No token. Login required.')
-      /* eslint-enable no-console */
+      // No token. Login required
+      // we had redirect but no token
     }
   }
 

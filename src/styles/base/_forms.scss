@@ -411,10 +411,22 @@ textarea {
   }
 }
 
-.error-msg,
-.error-msg.help-block {
-  margin-bottom: 10px;
-  color: $form-error-color;
+.help-block {
+  .dark-theme & {
+    color: $dt-text-color;
+  }
+
+  .light-theme & {
+    color: $lt-text-color;
+  }
+
+  .has-success & {
+    color: $form-success-color;
+  }
+
+  .has-error & {
+    color: $form-error-color;
+  }
 }
 
 .search-input {
