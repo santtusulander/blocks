@@ -18,6 +18,9 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import {getProviderTypeOptions, getServiceOptions, getServices} from '../../../redux/modules/service-info/selectors'
+import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
+
 import {
   SERVICE_TYPES,
   ACCOUNT_TYPES,
@@ -51,11 +54,14 @@ class AccountList extends Component {
   }
 
   componentWillMount() {
-    const { accountActions, router, route } = this.props
+    const { accountActions, router, route, fetchServiceInfo } = this.props
     router.setRouteLeaveHook(route, this.shouldLeave)
 
     //TODO: get brand from redux
     accountActions.fetchAccounts( this.props.params.brand )
+
+    //fetch serviceInfo from API
+    fetchServiceInfo()
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {
@@ -184,8 +190,14 @@ class AccountList extends Component {
       this.state.sortDir
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
-    const services = values =>
-      values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
+    const services = values => values.map( service => {
+      const serviceDetails = this.props.services.find( obj => obj.get('id') === service.get('id') )
+      return serviceDetails.get('name')
+    }).toJS()
+
+    // const services = values =>
+    //   values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
+
     const accountsSize = sortedAccounts.size
     const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
@@ -260,6 +272,7 @@ AccountList.propTypes = {
   accounts: PropTypes.instanceOf(List),
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
+  fetchServiceInfo: PropTypes.func,
   intl: PropTypes.object,
   params: PropTypes.object,
   route: React.PropTypes.object,
@@ -275,12 +288,17 @@ AccountList.defaultProps = {
 function mapStateToProps(state) {
   const addAccountForm = state.form.inlineAdd
   const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
-  return { accounts: state.account.get('allAccounts'), typeField }
+  return {
+    accounts: state.account.get('allAccounts'),
+    services: getServices(state),
+    typeField
+  }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
