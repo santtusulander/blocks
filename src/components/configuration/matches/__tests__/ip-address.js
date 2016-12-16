@@ -26,15 +26,15 @@ describe('IpAddress', () => {
   })
 
   it('should update the parameters as changes happen', () => {
-    let changeValue = jest.genMockFunction()
+    let changeValue = jest.fn()
     let ipAddress = shallow(
       <IpAddress changeValue={changeValue} match={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    let inputs = ipAddress.find('Input')
-    inputs.at(1).simulate('change', {target: {value: 'new'}})
+    let inputs = ipAddress.find('Checkbox')
+    inputs.at(0).simulate('change', {target: {value: true}})
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'matches', 'ip_address_include_x_forwarded_for'])
-    expect(changeValue.mock.calls[0][1]).toEqual('new')
+    expect(changeValue.mock.calls[0][1]).toEqual(true)
   })
 
   it('should update the parameters as select change happens', () => {

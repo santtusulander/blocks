@@ -41,7 +41,7 @@ describe("BrandEditForm", () => {
 
   it("should have 3 inputs", () => {
 
-    const inputs = subject.find('input')
+    const inputs = subject.find('FormControl')
     expect( inputs.length ).toBe(3)
   })
 

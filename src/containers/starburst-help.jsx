@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter, routerShape } from 'react-router'
 import { Button } from 'react-bootstrap'
 import IconArrowLeft from '../components/icons/icon-arrow-left'
 
@@ -10,7 +11,7 @@ class StarburstHelp extends React.Component {
       <div>
         <div className="starburst-help-container">
           <Button bsStyle="primary" className="has-icon"
-            onClick={this.props.history.goBack}>
+            onClick={this.props.router.goBack}>
             <IconArrowLeft/>
             <FormattedMessage id="portal.button.back"/>
           </Button>
@@ -254,7 +255,7 @@ class StarburstHelp extends React.Component {
 
 StarburstHelp.displayName = 'StarburstHelp'
 StarburstHelp.propTypes = {
-  history: React.PropTypes.object
+  router: routerShape
 }
 
-module.exports = StarburstHelp
+module.exports = withRouter(StarburstHelp)

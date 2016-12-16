@@ -1,6 +1,5 @@
 import React from 'react'
-import { Col, Input, Modal, Row } from 'react-bootstrap'
-// import Immutable from 'immutable'
+import { Col, ControlLabel, FormControl, FormGroup, Modal, Row } from 'react-bootstrap'
 
 import Toggle from '../../toggle'
 import Select from '../../select'
@@ -52,10 +51,10 @@ class Redirection extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
-                <label><FormattedMessage id="portal.policy.edit.redirection.changeProtocol.text"/></label>
+                <ControlLabel><FormattedMessage id="portal.policy.edit.redirection.changeProtocol.text"/></ControlLabel>
               </Col>
               <Col xs={4}>
                 <Toggle className="pull-right" value={true}
@@ -64,7 +63,7 @@ class Redirection extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
           <Select className="input-select"
             onSelect={this.handleSelectChange('activeProtocol',
@@ -77,7 +76,7 @@ class Redirection extends React.Component {
 
           <hr />
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.redirection.changeDomain.text"/></label>
@@ -89,18 +88,19 @@ class Redirection extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
-          <Input type="text"
-            id="actions_domain"
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterDomain.text'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
-            )}/>
+          <FormGroup controlId="actions_domain">
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterDomain.text'})}
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'redirection_domain']
+              )}/>
+          </FormGroup>
 
           <hr />
 
-          <div className="form-group">
+          <FormGroup>
             <Row className="no-gutters">
               <Col xs={8} className="toggle-label">
                 <label><FormattedMessage id="portal.policy.edit.redirection.changePath.text"/></label>
@@ -112,19 +112,22 @@ class Redirection extends React.Component {
                   )}/>
               </Col>
             </Row>
-          </div>
+          </FormGroup>
 
-          <Input type="text"
-            id="actions_path"
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterPath.text'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
-            )}/>
+          <FormGroup controlId="actions_path">
+            <FormControl
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.redirection.enterPath.text'})}
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'actions', 'redirection_path']
+              )}/>
+          </FormGroup>
 
           <hr />
 
-          <div className="form-group">
-            <label className="control-label"><FormattedMessage id="portal.policy.edit.redirection.redirectionType.text"/></label>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.redirection.redirectionType.text"/>
+            </ControlLabel>
             <Select className="input-select"
               onSelect={this.handleSelectChange('activeRedirectionType',
                 ['edge_configuration', 'cache_rule', 'actions', 'redirection_type']
@@ -136,7 +139,7 @@ class Redirection extends React.Component {
                 ['307', <FormattedMessage id="portal.policy.edit.redirection.307.text"/>],
                 ['410', <FormattedMessage id="portal.policy.edit.redirection.410.text"/>],
                 ['418', <FormattedMessage id="portal.policy.edit.redirection.418.text"/>]]}/>
-          </div>
+          </FormGroup>
 
         </Modal.Body>
       </div>
@@ -148,8 +151,6 @@ Redirection.displayName = 'Redirection'
 Redirection.propTypes = {
   changeValue: React.PropTypes.func,
   intl: intlShape.isRequired
-  // path: React.PropTypes.instanceOf(Immutable.List),
-  // set: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 module.exports = injectIntl(Redirection)

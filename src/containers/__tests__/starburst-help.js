@@ -4,12 +4,12 @@ import { shallow } from 'enzyme'
 jest.unmock('../starburst-help.jsx')
 import StarburstHelp from '../starburst-help.jsx'
 
-const fakeHistory = {
+const fakeRouter = {
   goBack: jest.fn()
 }
 
 describe('StarburstHelp', () => {
   it('should exist', () => {
-    expect(shallow(<StarburstHelp history={fakeHistory} />).length).toBe(1)
+    expect(shallow(<StarburstHelp router={fakeRouter} />).length).toBe(1)
   })
 })
