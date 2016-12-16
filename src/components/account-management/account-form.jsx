@@ -9,16 +9,12 @@ import {
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper.jsx'
-//import CheckboxArray from '../checkboxes.jsx'
 import MultiOptionSelector from '../multi-option-selector'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
-
+import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
 import {
-  ACCOUNT_TYPES,
-  SERVICE_TYPES,
-  BRAND_OPTIONS,
-  ACCOUNT_TYPE_OPTIONS
+  BRAND_OPTIONS
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
@@ -70,18 +66,10 @@ class AccountForm extends React.Component {
 
       accountName.onChange(account.get('name'))
       accountType.onChange(account.get('provider_type'))
-      services.onChange(account.get('services'))
+      services.onChange(account.get('services').toJS())
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
-      const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
-      const activeServiceValues = activeServiceTypes.map(item => item.value)
-      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
-      services.onChange(checkedServiceTypes)
-    }
+    this.props.fetchServiceInfo()
   }
 
   save() {
@@ -105,9 +93,6 @@ class AccountForm extends React.Component {
 
   render() {
     const { providerTypes, serviceOptions, fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
-
-    //const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
-
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
@@ -151,7 +136,7 @@ class AccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'><FormattedMessage id="portal.account.manage.accountType.title" /></label>
               {this.props.account ?
-                <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
+                <p>{accountType.value && providerTypes.find(type => type.value === accountType.value).label}</p>
               :
                 <SelectWrapper
                   {...accountType}
@@ -170,7 +155,7 @@ class AccountForm extends React.Component {
               <MultiOptionSelector
                 options={serviceOptions}
                 field={{
-                  onChange: val => { console.log(val); services.onChange(val)},
+                  onChange: val => {services.onChange(val)},
                   value: List(services.value)
                 }}
               />
@@ -190,6 +175,7 @@ class AccountForm extends React.Component {
 
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  fetchServiceInfo: React.PropTypes.func,
   fields: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
@@ -215,7 +201,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
   }
 }
 
@@ -228,4 +214,4 @@ export default reduxForm({
     accountType: '',
     services: []
   }
-}, mapStateToProps, mapDispatchToProps)(injectIntl(AccountForm))
+}, mapStateToProps,mapDispatchToProps)(injectIntl(AccountForm))
