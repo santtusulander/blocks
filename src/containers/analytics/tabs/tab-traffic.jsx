@@ -115,7 +115,7 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts(coordinates = {}) {
+  buildOpts({ coordinates = {} } = {}) {
     const { params, filters, location } = this.props
 
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
@@ -139,10 +139,12 @@ class AnalyticsTabTraffic extends React.Component {
 
   getCitiesWithinBounds(south, west, north, east) {
     const { byCityOpts } = this.buildOpts({
-      south: south,
-      west: west,
-      north: north,
-      east: east
+      coordinates: {
+        south: south,
+        west: west,
+        north: north,
+        east: east
+      }
     })
 
     this.props.trafficActions.startFetching()
