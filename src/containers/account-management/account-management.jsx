@@ -207,11 +207,19 @@ export class AccountManagement extends Component {
   }
 
   editAccount(brandId, accountId, data) {
-    return this.props.accountActions.updateAccount(brandId, accountId, data)
-      .then(() => {
-        this.props.toggleModal(null)
-        this.showNotification(<FormattedMessage id="portal.accountManagement.accoutnUpdated.text"/>)
-      })
+    if (accountId) {
+      return this.props.accountActions.updateAccount(brandId, accountId, data)
+        .then(() => {
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.accountUpdated.text"/>)
+        })
+    } else {
+      return this.props.accountActions.createAccount(brandId, data)
+        .then(() => {
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.accountCreated.text"/>)
+        })
+    }
   }
 
   showAccountForm(account) {

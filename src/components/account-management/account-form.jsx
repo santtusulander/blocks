@@ -64,9 +64,14 @@ class AccountForm extends React.Component {
         }
       } = this.props
 
-      accountName.onChange(account.get('name'))
-      accountType.onChange(account.get('provider_type'))
-      services.onChange(account.get('services').toJS())
+      const accountNameVal = account.get('name')
+      accountNameVal && accountName.onChange(accountNameVal)
+
+      const accountTypeVal = account.get('provider_type')
+      accountTypeVal && accountType.onChange(accountTypeVal)
+
+      const servicesVal = account.get('services')
+      servicesVal && services.onChange(servicesVal.toJS())
     }
 
     this.props.fetchServiceInfo()
@@ -83,11 +88,8 @@ class AccountForm extends React.Component {
         services: services.value
       }
 
-      if (this.props.account) {
-        this.props.onSave(accountBrand.value, this.props.account.get('id'), data)
-      } else {
-        this.props.onSave(accountBrand.value, data)
-      }
+      const accountId = this.props.account && this.props.account.get('id')
+      this.props.onSave(accountBrand.value, accountId, data)
     }
   }
 
