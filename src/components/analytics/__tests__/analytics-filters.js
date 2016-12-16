@@ -63,7 +63,7 @@ describe('AnalyticsFilters', () => {
   })
 
   it('should render service type filters', () => {
-    expect(subject().find('FilterServiceType').length).toBe(2)
+    expect(subject().find('FilterServiceType').length).toBe(1)
   })
 
   it('should render record type filters', () => {

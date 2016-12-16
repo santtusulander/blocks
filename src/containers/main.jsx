@@ -36,10 +36,7 @@ export class Main extends React.Component {
     this.props.userActions.checkToken()
       .then(action => {
         if(action.error) {
-          /* eslint-disable no-console */
-          console.log('Main -- checkToken failed')
-          /* eslint-enable no-console */
-
+          // Check token failed
           return false
         }
 
@@ -79,12 +76,9 @@ export class Main extends React.Component {
 
     this.props.userActions.logOut()
       .then(() => {
+        // Log out, destroy store, and redirect to login page
         this.props.router.push('/login')
-        this.props.userActions.destroyStore();
-        /* eslint-disable no-console */
-        console.log('logging out -- redirect to login page')
-        /* eslint-enable no-console */
-
+        this.props.userActions.destroyStore()
       })
   }
   showNotification(message) {

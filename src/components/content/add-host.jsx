@@ -1,7 +1,15 @@
 import React from 'react'
-import { Button, ButtonToolbar, Input } from 'react-bootstrap'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {
+  Button,
+  ButtonToolbar,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Radio
+} from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import { reduxForm } from 'redux-form'
+
 import { isValidHostName } from '../../util/validators'
 
 let errors = {}
@@ -56,18 +64,29 @@ class AddHost extends React.Component {
 
     return (
       <form>
-        <Input type="text" label={this.props.intl.formatMessage({id: 'portal.content.addHost.newHostanme.text'})} {...hostName} id="host_name"/>
-        <label><FormattedMessage id="portal.content.addHost.deploymentMode.text"/></label>
-        <Input type="radio"
-               {...deploymentMode}
-               value="trial"
-               checked={deploymentMode.value === 'trial'}
-               label={this.props.intl.formatMessage({ id: 'portal.content.addHost.trial.text' })}/>
-        <Input type="radio"
-               {...deploymentMode}
-               value="production"
-               checked={deploymentMode.value === 'production'}
-               label={this.props.intl.formatMessage({ id: 'portal.content.addHost.production.text' })}/>
+        <FormGroup controlId="host_name">
+          <ControlLabel><FormattedMessage id="portal.content.addHost.newHostanme.text" /></ControlLabel>
+          <FormControl
+            {...hostName}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /></ControlLabel>
+
+          <Radio
+            {...deploymentMode}
+            value="trial"
+            checked={deploymentMode.value === 'trial'}
+          ><FormattedMessage id="portal.content.addHost.trial.text" /></Radio>
+
+          <Radio
+            {...deploymentMode}
+            value="production"
+            checked={deploymentMode.value === 'production'}
+          ><FormattedMessage id="portal.content.addHost.production.text" /></Radio>
+        </FormGroup>
+
         <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" onClick={this.cancelChanges}><FormattedMessage id="portal.button.cancel"/></Button>
           <Button
@@ -91,7 +110,6 @@ AddHost.propTypes = {
   cancelChanges: React.PropTypes.func,
   createHost: React.PropTypes.func,
   fields: React.PropTypes.object,
-  intl: React.PropTypes.object,
   saving: React.PropTypes.bool
 }
 
@@ -105,4 +123,4 @@ export default reduxForm({
     deploymentMode: 'trial'
   },
   validate: validate
-})(injectIntl(AddHost))
+})(AddHost)
