@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { List, fromJS } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
@@ -18,7 +18,7 @@ import FilterChecklistDropdown from '../../../components/filter-checklist-dropdo
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import {getProviderTypeOptions, getServiceOptions, getServices} from '../../../redux/modules/service-info/selectors'
+import {getServices} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
 import {
@@ -277,6 +277,7 @@ AccountList.propTypes = {
   params: PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  services: React.PropTypes.instanceOf(Map),
   typeField: PropTypes.number,
   uiActions: React.PropTypes.object
 }

@@ -18,7 +18,7 @@ export const getServiceById = (state, id) => {
 }
 
 /***
- * Get Provider Types
+ * Get Provider Types for dropdown
  * @param  {} state from redux
  * @return []
  */
@@ -33,6 +33,12 @@ export const getProviderTypeOptions = (state) => {
   }, [])
 }
 
+/***
+ * Get Serviceoptions for MultiOptionSelector
+ * @param  {} state from redux
+ * @param  (Number||"") providerType
+ * @return []
+ */
 export const getServiceOptions = (state, providerType) => {
   if (!providerType || providerType === "") return
 
