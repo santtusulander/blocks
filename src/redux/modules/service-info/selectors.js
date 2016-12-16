@@ -1,10 +1,19 @@
 /**
- * get all servives
+ * Get list of servives
  * @param  {} redux state state
  * @return {Map}       services
  */
 export const getServices = (state) => {
   return state.serviceInfo.services
+}
+
+/**
+ * Get list of providerTypes
+ * @param  {} redux state state
+ * @return {Map}       services
+ */
+export const getProviderTypes = (state) => {
+  return state.serviceInfo.providerTypes
 }
 
 /***

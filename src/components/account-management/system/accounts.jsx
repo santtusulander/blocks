@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Input } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { Map, List, fromJS } from 'immutable'
+import { Map, List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
@@ -9,30 +9,19 @@ import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
-import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
-import SelectWrapper from '../../../components/select-wrapper'
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import {getServices} from '../../../redux/modules/service-info/selectors'
+import {getServices, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
-
-import {
-  SERVICE_TYPES,
-  ACCOUNT_TYPES,
-  ACCOUNT_TYPE_CLOUD_PROVIDER
-} from '../../../constants/account-management-options'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidAccountName } from '../../../util/validators'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
-
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
+import {FormattedMessage} from 'react-intl';
 
 class AccountList extends Component {
   constructor(props) {
@@ -141,8 +130,8 @@ class AccountList extends Component {
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
       .map(account => {
-        const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
-        return account.set('provider_type_label', accountType ? accountType.label : '')
+        const providerType = this.props.providerTypes.find(type => account.get('provider_type') === type.get('id'))
+        return account.set('provider_type_label', providerType ? providerType.get('name') : '')
       })
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -229,6 +218,7 @@ AccountList.propTypes = {
   editAccount: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
+  providerTypes: React.PropTypes.instanceOf(Map),
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   services: React.PropTypes.instanceOf(Map),
@@ -242,6 +232,7 @@ AccountList.defaultProps = {
 function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
+    providerTypes: getProviderTypes(state),
     services: getServices(state)
   }
 }
