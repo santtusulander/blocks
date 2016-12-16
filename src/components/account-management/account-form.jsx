@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Map, List }from 'immutable'
+import { Map } from 'immutable'
 import {
   Modal,
   Input,
@@ -155,10 +155,7 @@ class AccountForm extends React.Component {
 
               <MultiOptionSelector
                 options={serviceOptions}
-                field={{
-                  onChange: val => {services.onChange(val)},
-                  value: List(services.value)
-                }}
+                field={services}
               />
 
 
