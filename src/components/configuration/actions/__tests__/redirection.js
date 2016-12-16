@@ -23,7 +23,7 @@ describe('Redirection', () => {
     let redirection = shallow(
       <Redirection changeValue={changeValue} intl={intlMaker()}/>
     )
-    let inputs = redirection.find('Input')
+    let inputs = redirection.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'redirection_domain'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')

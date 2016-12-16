@@ -31,8 +31,8 @@ describe('Cache', () => {
       <Cache changeValue={changeValue} set={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    const inputs = cache.find('Input')
-    inputs.at(1).simulate('change', {target: {value: 'new'}})
+    const inputs = cache.find('FormControl')
+    inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(cache.state('maxAge')).toEqual('new')
   })
 

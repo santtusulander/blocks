@@ -31,7 +31,7 @@ describe('Matcher', () => {
         match={fakeConfig}
         path={fakePath}/>
     )
-    let inputs = matcher.find('Input')
+    let inputs = matcher.find('FormControl')
     inputs.at(0).simulate('change', { target: { value: 'new' } })
     expect(matcher.state('val')).toEqual('new')
   })

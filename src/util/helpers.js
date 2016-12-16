@@ -472,3 +472,14 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
   }
   return sortFunc
 }
+
+/**
+ * Checks to see if a redux-form field has an error and returns "error". This
+ * method is for use in determining the validationState of a FormGroup component
+ * of the react-bootstrap library.
+ * @param  {Field} field a redux-form Field object
+ * @return {string} validationState for FormGroup component ("error", "warning", or "success")
+ */
+export function getReduxFormValidationState(field) {
+  return (field.touched && field.error) ? "error" : null
+}

@@ -2,6 +2,7 @@ import React from 'react'
 import { shallow, mount } from 'enzyme'
 
 jest.unmock('../record-form')
+jest.unmock('../dns-form-input')
 jest.unmock('../../../util/dns-records-helpers')
 jest.unmock('../../../constants/dns-record-types')
 jest.unmock('../../../decorators/key-stroke-decorator')

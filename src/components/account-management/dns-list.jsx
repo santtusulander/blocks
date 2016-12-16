@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Input } from 'react-bootstrap'
+import { FormGroup, FormControl } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import PageContainer from '../layout/page-container'
@@ -84,13 +84,16 @@ class DNSList extends Component {
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={<span id="record-amount-label">{visibleRecordCount}{hiddenRecordCount}</span>}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
-            value={searchValue}
-            onChange={searchFunc}/>
+
+          <FormGroup className="search-input-group">
+            <FormControl
+              type="text"
+              className="search-input"
+              placeholder={intl.formatMessage({id: 'portal.account.dnsList.searchRecords.placeholder'})}
+              value={searchValue}
+              onChange={searchFunc}/>
+          </FormGroup>
+
           <IsAllowed to={CREATE_RECORD}>
             <UDNButton
               id="add-dns-record"

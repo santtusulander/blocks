@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
+import { ControlLabel, FormControl, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -39,7 +39,11 @@ class MimeType extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.mimetype.mimetype.text'})}
+          <ControlLabel>
+            <FormattedMessage id="portal.policy.edit.mimetype.mimetype.text"/>
+          </ControlLabel>
+          <FormControl
+            componentClass="textarea"
             placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.mimetype.mimetype.placeholder'})}
             id="matches_mime-type"
             value={this.props.match.get('cases').get(0).get(0)}

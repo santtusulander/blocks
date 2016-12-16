@@ -1,15 +1,15 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row } from 'react-bootstrap'
+import { Button, Col, FormControl, FormGroup, InputGroup, Checkbox, Modal, Row } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
+import classnames from 'classnames'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 
 import IconEmail from '../components/icons/icon-email.jsx'
 import IconPassword from '../components/icons/icon-password.jsx'
-import CopyrightNotice from '../components/copyright-notice'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ export class Login extends React.Component {
       password: '',
       passwordActive: false,
       rememberUsername: !!props.username,
-      username: props.username,
+      username: props.username || '',
       usernameActive: false
     }
 
@@ -37,27 +37,18 @@ export class Login extends React.Component {
     const expiry = this.props.location.query.sessionExpired
 
     if (expiry) {
-      /* eslint-disable no-console */
-      console.log("Session expired!")
-      /* eslint-enable no-console */
+      // Session expired!
       return
-
     } else if ( redirect && token ) {
-      /* eslint-disable no-console */
-      console.log('Token and redirect found --- trying to redirect to:', redirect)
-      /* eslint-enable no-console */
+      // Token and redirect found --- trying to redirect
       //  If we have a token and a redirect is set, could be reload => set login to true
       //  and  try to go to original location where token will be checked
       this.props.userActions.setLogin(true)
       this.props.router.push(redirect)
       return
-
     } else if ( redirect ) {
-      //we had redirect but no token
-      /* eslint-disable no-console */
-      console.log('No token. Login required.')
-      /* eslint-enable no-console */
-
+      // No token. Login required
+      // we had redirect but no token
     }
   }
 
@@ -108,13 +99,22 @@ export class Login extends React.Component {
     }
   }
   toggleRemember() {
-    if (this.state.rememberUsername) {
-      this.props.userActions.saveName()
-    }
-
     this.setState({rememberUsername: !this.state.rememberUsername})
   }
   render() {
+    const usernameClass = classnames(
+      'input-addon-before',
+      'has-login-label',
+      'login-label-username',
+      { active: this.state.usernameActive || this.state.username }
+    )
+    const passwordClass = classnames(
+      'input-addon-before',
+      'has-login-label',
+      'login-label-password',
+      'input-addon-after-outside',
+      { active: this.state.passwordActive || this.state.password }
+    )
     return (
       <Modal.Dialog className="login-modal">
         <Modal.Header className="login-header">
@@ -135,37 +135,47 @@ export class Login extends React.Component {
               </div>
             }
 
-            {this.state.loginError ?
+            {this.state.loginError &&
               <div className="login-info">
                 <p>{this.state.loginError}</p>
               </div>
-              : ''
             }
-            <Input type="text" id="username"
-              wrapperClassName={'input-addon-before has-login-label '
-                + 'login-label-username'
-                + (this.state.usernameActive || this.state.username ? ' active' : '')}
-              addonBefore={<IconEmail/>}
+            <FormGroup className={usernameClass}>
+              <InputGroup>
+                <InputGroup.Addon>
+                  <IconEmail/>
+                </InputGroup.Addon>
+                  <FormControl
+                    type="text"
+                    id="username"
               onFocus={this.checkUsernameActive(true)}
               onBlur={this.checkUsernameActive(false)}
               value={this.state.username}
               onChange={this.changeField('username')}/>
-            <Input id="password"
+              </InputGroup>
+            </FormGroup>
+            <FormGroup className={passwordClass}>
+            <InputGroup>
+                <InputGroup.Addon>
+                  <IconPassword/>
+                </InputGroup.Addon>
+                <FormControl
+                  id="password"
               type="password"
-              wrapperClassName={'input-addon-before input-addon-after-outside '
-                + 'has-login-label login-label-password'
-                + (this.state.passwordActive || this.state.password ? ' active' : '')}
-              addonBefore={<IconPassword/>}
               onFocus={this.checkPasswordActive(true)}
               onBlur={this.checkPasswordActive(false)}
               value={this.state.password}
               onChange={this.changeField('password')}/>
+              </InputGroup>
+            </FormGroup>
             <Row>
               <Col xs={4}>
                 <div className="remember-checkbox">
-                  <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.login.rememberMe.text'})}
+                  <Checkbox
                     onChange={this.toggleRemember}
-                    checked={this.state.rememberUsername} />
+                    checked={this.state.rememberUsername}>
+                    <FormattedMessage id="portal.login.rememberMe.text" />
+                  </Checkbox>
                 </div>
               </Col>
               <Col xs={8}>
@@ -174,13 +184,16 @@ export class Login extends React.Component {
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
 
-                <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                  <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </Link>
+                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                    <FormattedMessage id="portal.login.forgotPassword.text"/>
+                  </Link>
               </Col>
             </Row>
           </form>
-          <CopyrightNotice />
+          <p className="text-sm login-copyright">
+            <FormattedMessage id="portal.login.copyright.text" /><br/>
+            <FormattedMessage id="portal.login.termsOfUse.text"/><a href="https://www.ericsson.com/legal"><FormattedMessage id="portal.footer.termsOfUse.text"/></a>
+          </p>
         </Modal.Body>
       </Modal.Dialog>
 
@@ -191,7 +204,6 @@ export class Login extends React.Component {
 Login.displayName = 'Login'
 Login.propTypes = {
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object,
   location: React.PropTypes.object,
   router: React.PropTypes.object,
   userActions: React.PropTypes.object,
