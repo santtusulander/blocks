@@ -12,8 +12,6 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 
-import * as serviceInfoActionCreators from '../redux/modules/service-info/actions'
-
 import Header from '../components/header/header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
@@ -261,8 +259,7 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-    serviceInfoActions: bindActionCreators(serviceInfoActionCreators, dispatch)
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
   }
 }
 
