@@ -2,29 +2,10 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-
-// This component connects to redux, so mock that
-const reactRedux = require('react-redux')
-reactRedux.connect = jest.genMockFunction()
-reactRedux.connect.mockImplementation(() => wrappedClass => wrappedClass)
+import '../../../../__mocks__/mapbox.js'
 
 jest.unmock('../by-location.jsx')
 import AnalysisByLocation from '../by-location.jsx'
-
-let topojson = require('topojson')
-topojson.feature = topojson.feature.mockImplementation(function(topo) {
-  let features = []
-  if(topo.objects.countries) {
-    features = topo.objects.countries
-  }
-  else if(topo.objects.states) {
-    features = topo.objects.states
-  }
-  else if(topo.objects.cities) {
-    features = topo.objects.cities
-  }
-  return {features: features}
-});
 
 function topoActionsMaker() {
   return {
@@ -131,43 +112,24 @@ const fakeCountryData = Immutable.fromJS([
 
 describe('AnalysisByLocation', () => {
   it('should exist', () => {
-    let byLocation = TestUtils.renderIntoDocument(
-      <AnalysisByLocation topoActions={topoActionsMaker()} />
-    );
-    expect(TestUtils.isCompositeComponent(byLocation)).toBeTruthy();
-  });
-
-  it('should request countries on mount', () => {
-    const topoActions = topoActionsMaker()
-    TestUtils.renderIntoDocument(
-      <AnalysisByLocation topoActions={topoActions}/>
-    )
-    expect(topoActions.startFetching.mock.calls.length).toBe(1)
-    expect(topoActions.fetchCountries.mock.calls.length).toBe(1)
-  });
-
-  it('should show loading message if there is no width or data', () => {
     let byLocation = shallow(
-      <AnalysisByLocation topoActions={topoActionsMaker()}/>
+      <AnalysisByLocation
+        countryData={fakeCountryData}
+        cityData={Immutable.List()}
+        />
     );
-    expect(byLocation.find({id: 'portal.loading.text'}).length).toBe(1)
+    expect(byLocation).toBeDefined();
   });
 
-  it('should show countries', () => {
-    let byLocation = TestUtils.renderIntoDocument(
-      <AnalysisByLocation topoActions={topoActionsMaker()}
-        fetching={false} width={400} height={200}
-        countries={fakeCountries}
-        countryData={fakeCountryData}
-        dataKey="bytes"
-        timelineKey="detail"/>
+  it('should show loading message if there is no data', () => {
+    let byLocation = shallow(
+      <AnalysisByLocation
+        countryData={Immutable.List()
+        }/>
     );
-    let paths = TestUtils.scryRenderedDOMComponentsWithTag(byLocation, 'path')
-    expect(paths.length).toBe(3)
-    expect(paths[0].getAttribute('class')).toContain('country-0')
-    expect(paths[1].getAttribute('class')).toContain('country-1')
-    expect(paths[2].getAttribute('class')).toContain('country-2')
+    expect(byLocation.find('LoadingSpinner').length).toBe(1)
   });
+
   // Not supporting zoom in 0.5
   // it('should show states', () => {
   //   let byLocation = TestUtils.renderIntoDocument(
