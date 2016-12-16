@@ -87,8 +87,7 @@ class AccountForm extends React.Component {
         provider_type: accountType.value,
         services: services.value
       }
-
-      const accountId = this.props.account && this.props.account.get('id')
+      const accountId = this.props.account && this.props.account.get('id') || null
       this.props.onSave(accountBrand.value, accountId, data)
     }
   }
