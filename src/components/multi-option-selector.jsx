@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape } from 'react-intl'
-import { FormControl, Panel, Table } from 'react-bootstrap'
+import { Input, Panel, Table } from 'react-bootstrap'
 
 import Toggle from './toggle'
 
@@ -90,7 +90,7 @@ class MultiOptionSelector extends React.Component {
                       return (
                         <tr key={`option-${i}-${j}`}>
                           <td>
-                            <FormControl
+                            <Input
                               type="checkbox"
                               disabled={!optionValue}
                               checked={subOptionValue}
