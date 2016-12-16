@@ -38,15 +38,11 @@ class AccountList extends Component {
   constructor(props) {
     super(props);
 
-    this.newAccount = this.newAccount.bind(this)
     this.changeSort = this.changeSort.bind(this)
-    this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
-    this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.isLeaving = false;
 
     this.state = {
-      addingNew: false,
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -97,37 +93,6 @@ class AccountList extends Component {
       sortBy: column,
       sortDir: direction
     })
-  }
-
-  getInlineAddFields() {
-    return [
-      [ { input: <Input id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.accountName.placeholder.text'})} type="text"/> } ],
-      [ { input: <SelectWrapper
-            numericValues={true}
-            id='provider_type'
-            className="inline-add-dropdown"
-            options={FILTERED_ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
-      } ],
-      [],
-      [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
-      [ { input: <FilterChecklistDropdown
-            id="services"
-            noClear={true}
-            className="inline-add-dropdown"
-            options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-        positionClass: 'row col-xs-6'
-      } ]
-    ]
-  }
-
-  newAccount({ name, provider_type, brand, services }) {
-    const { createAccount } = this.props.accountActions
-    const requestBody = { name, provider_type, services: services.toJS() }
-    createAccount(brand, requestBody).then(this.toggleInlineAdd)
-  }
-
-  toggleInlineAdd() {
-    this.setState({ addingNew: !this.state.addingNew })
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -195,9 +160,6 @@ class AccountList extends Component {
       return serviceDetails.get('name')
     }).toJS()
 
-    // const services = values =>
-    //   values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
-
     const accountsSize = sortedAccounts.size
     const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
@@ -213,7 +175,7 @@ class AccountList extends Component {
             placeholder="Search"
             value={this.state.search}
             onChange={({ target: { value } }) => this.setState({ search: value })} />
-          <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -229,13 +191,6 @@ class AccountList extends Component {
           </tr>
           </thead>
           <tbody>
-          {this.state.addingNew && <InlineAdd
-            validate={this.validateInlineAdd}
-            fields={['name', 'provider_type', 'brand', 'services']}
-            inputs={this.getInlineAddFields()}
-            initialValues={{ services: List() }}
-            unmount={this.toggleInlineAdd}
-            save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
             return (
@@ -273,12 +228,10 @@ AccountList.propTypes = {
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
-  intl: PropTypes.object,
   params: PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   services: React.PropTypes.instanceOf(Map),
-  typeField: PropTypes.number,
   uiActions: React.PropTypes.object
 }
 
@@ -287,12 +240,9 @@ AccountList.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const addAccountForm = state.form.inlineAdd
-  const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
   return {
     accounts: state.account.get('allAccounts'),
-    services: getServices(state),
-    typeField
+    services: getServices(state)
   }
 }
 
@@ -304,4 +254,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountList)))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountList))
