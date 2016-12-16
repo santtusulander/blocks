@@ -5,7 +5,7 @@
  * @returns {*}
  */
 export const getEntityById = ( id, state) => {
-  return state.get('id').toJS()
+  return state.get(String(id)).toJS()
 }
 
 /**
