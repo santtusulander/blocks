@@ -140,6 +140,7 @@
       "<rootDir>/node_modules/d3",
       "<rootDir>/node_modules/hls.js",
       "<rootDir>/node_modules/immutable",
+      "<rootDir>/node_modules/normalizr",
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/react-redux",
