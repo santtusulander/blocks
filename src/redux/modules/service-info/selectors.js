@@ -34,7 +34,7 @@ export const getServiceById = (state, id) => {
 export const getProviderTypeOptions = (state) => {
   return state.serviceInfo.providerTypes.reduce( (acc, type) => {
     acc.push({
-      label: `${type.get('name')} Provider`,
+      label: type.get('name'),
       value: type.get('id')
     })
 
