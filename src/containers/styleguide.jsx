@@ -111,7 +111,7 @@ class Styleguide extends React.Component {
       datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
       datePickerStartDate: moment().utc().startOf('month'),
-      multiOptionValues: [ {id: 1, options: [1, 2]} ]
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
     }
   }
 

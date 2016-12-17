@@ -63,7 +63,7 @@ class MultiOptionSelector extends React.Component {
       <div className="multi-option-selector">
         {options.map((option, i) => {
           const expanded = this.state.openPanels.indexOf(i) >= 0
-          const optionIndex = field.value.findIndex(fieldOpt => fieldOpt.id === option.value)
+          const optionIndex = field.value.findKey(fieldOpt => fieldOpt.id === option.value)
           const optionValue = optionIndex >= 0
           return (
             <div className="multi-option-panel" key={`option-${i}`}>
