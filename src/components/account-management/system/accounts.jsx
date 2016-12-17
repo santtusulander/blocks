@@ -146,7 +146,7 @@ class AccountList extends Component {
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values => values.map( service => {
       const serviceDetails = this.props.services.find( obj => obj.get('id') === service.get('id') )
-      return serviceDetails.get('name')
+      return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
     const accountsSize = sortedAccounts.size
