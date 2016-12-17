@@ -17,11 +17,22 @@ $panel-horizontal-padding: em(18px, $form-font-size);
 
       .dark-theme & {
         background-color: rgba($pale-blue, 0.2);
+
+        &.active {
+          background-color: rgba($pale-blue, 0.5);
+        }
       }
 
       .light-theme & {
-        color: $white;
-        background-color: $pale-blue;
+        color: $lt-text-color;
+        background-color: $white;
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        &.active {
+          color: $white;
+          background-color: $pale-blue;
+          box-shadow: none;
+        }
       }
     }
 
