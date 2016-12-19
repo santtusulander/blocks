@@ -227,6 +227,49 @@ const setContentTargetingActionName = action => {
 }
 
 /**
+ * Get Active configuration from a property
+ * @param  {Object} property
+ * @return {Object} Active Configuration object
+ */
+export const getActiveConfiguration = (property) => {
+  try {
+    const activeConfigId = property.services[0].active_configurations[0].config_id
+    return property.services[0].configurations.find( config => activeConfigId === config.config_id)
+  } catch (e){
+    return null
+  }
+}
+
+/**
+ * Extract token Authentication rules from list of properties
+ * @param  {} properties object from redux (list)
+ * @return [Array] of token auth rules
+ */
+export const getTokenAuthRules = (properties) => {
+  let tokenAuthRules = []
+  for( let key in properties) {
+    const property = properties[key]
+    const config = getActiveConfiguration(property)
+
+    config && config.request_policy.policy_rules.forEach( (rule, key) => {
+      const {sets} = parsePolicy(fromJS(rule), [])
+      if ( actionIsTokenAuth( sets ) ) {
+        const returnObj = {
+          ruleId: key,
+          propertyName: property.published_host_id,
+          encryption: 'HMAC-SHA1',  //Hardcoded for now
+          schema: 'URL',            //
+          created: config.config_created
+        }
+        tokenAuthRules.push(returnObj)
+      }
+    })
+  }
+
+  return tokenAuthRules
+}
+
+/**
  * Checks whether or not the rule at the given path is empty
  * @param config a property configuration object
  * @param rulePath the path to the rule in the configuration object (ex ['request_policy', 'policy_rule', 0])

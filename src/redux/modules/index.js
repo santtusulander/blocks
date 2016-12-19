@@ -29,6 +29,9 @@ export const filters = require('./filters').default;
 //Security
 export const security = require('./security').default;
 
+//Properties
+export const properties = require('./properties').default 
+
 // Account Selectors
 export const accountSelectors = multireducer({
   header: accountSelector,
