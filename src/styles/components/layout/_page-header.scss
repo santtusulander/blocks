@@ -115,6 +115,14 @@ $details-item-margin: rem(6px);
     .action:not(:last-child) {
       padding-right: $action-padding-right;
     }
+
+    .date-range-select:not(:last-child) {
+      padding-right: $action-padding-right;
+    }
+
+    .comparison-filter {
+      vertical-align: baseline;
+    }
   }
 
   &.distributed-columns {
