@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, Input, Modal, Panel, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, ControlLabel, FormControl, FormGroup, Modal, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -16,7 +16,7 @@ class Header extends React.Component {
       activeActivity: props.set.get('action') || 'set',
       from_header: '',
       from_value: '',
-      to_header: props.set.get('header'),
+      to_header: props.set.get('header') || '',
       to_value: value && value.size ? value.get(0).get('field_detail') : ''
     }
 
@@ -119,8 +119,10 @@ class Header extends React.Component {
             <InputConnector show={true}
               hasTwoEnds={activeActivity !== 'unset'}/>
 
-            <div className="form-group">
-              <label className="control-label">Activity</label>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.path.activity.text"/>
+              </ControlLabel>
               <Select className="input-select"
                 onSelect={this.handleSelectChange('activeActivity')}
                 value={activeActivity}
@@ -128,62 +130,92 @@ class Header extends React.Component {
                   ['set', <FormattedMessage id="portal.policy.edit.header.add.text"/>],
                   /*['modify', 'Modify'],*/
                   ['unset', <FormattedMessage id="portal.policy.edit.header.remove.text"/>]]}/>
-            </div>
+            </FormGroup>
 
             <Panel className="form-panel" collapsible={true}
               expanded={activeActivity !== 'modify'}>
-              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.label'})}
-                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
-                value={to_header}
-                onChange={(e) => {this.setState({
-                  to_header: e.target.value
-                })}}/>
+              <FormGroup>
+                <ControlLabel>
+                  <FormattedMessage id="portal.policy.edit.header.name.label"/>
+                </ControlLabel>
+                <FormControl
+                  placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.name.placeholder'})}
+                  value={to_header}
+                  onChange={(e) => {this.setState({
+                    to_header: e.target.value
+                  })}}/>
+              </FormGroup>
             </Panel>
 
             <Panel className="form-panel" collapsible={true}
               expanded={activeActivity === 'set'}>
-              <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.label'})}
-                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
-                value={to_value}
-                onChange={(e) => {this.setState({
-                  to_value: e.target.value
-                })}}/>
+              <FormGroup>
+                <ControlLabel>
+                  <FormattedMessage id="portal.policy.edit.header.value.label"/>
+                </ControlLabel>
+                <FormControl
+                  placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.value.placeholder'})}
+                  value={to_value}
+                  onChange={(e) => {this.setState({
+                    to_value: e.target.value
+                  })}}/>
+              </FormGroup>
             </Panel>
 
             <Panel className="form-panel" collapsible={true}
               expanded={activeActivity === 'modify'}>
               <Row>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.label'})}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
-                    value={from_header}
-                    onChange={(e) => {this.setState({
-                      from_header: e.target.value
-                    })}}/>
+                  <FormGroup>
+                    <ControlLabel>
+                      <FormattedMessage id="portal.policy.edit.header.from.label"/>
+                    </ControlLabel>
+                    <FormControl
+                      placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.from.placeholder'})}
+                      value={from_header}
+                      onChange={(e) => {this.setState({
+                        from_header: e.target.value
+                      })}}/>
+                  </FormGroup>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.label'})}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
-                    value={to_header}
-                    onChange={(e) => {this.setState({
-                      to_header: e.target.value
-                    })}}/>
+                  <FormGroup>
+                    <ControlLabel>
+                      <FormattedMessage id="portal.policy.edit.header.to.label"/>
+                    </ControlLabel>
+                    <FormControl
+                      placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.to.placeholder'})}
+                      value={to_header}
+                      onChange={(e) => {this.setState({
+                        to_header: e.target.value
+                      })}}/>
+                  </FormGroup>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.label'})}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
-                    value={from_value}
-                    onChange={(e) => {this.setState({
-                      from_value: e.target.value
-                    })}}/>
+                  <FormGroup>
+                    <ControlLabel>
+                      <FormattedMessage id="portal.policy.edit.header.fromValue.label"/>
+                    </ControlLabel>
+                    <FormControl
+                      placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.fromValue.placeholder'})}
+                      value={from_value}
+                      onChange={(e) => {this.setState({
+                        from_value: e.target.value
+                      })}}/>
+                  </FormGroup>
                 </Col>
                 <Col xs={6}>
-                  <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.label'})}
-                    placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
-                    value={to_value}
-                    onChange={(e) => {this.setState({
-                      to_value: e.target.value
-                    })}}/>
+                  <FormGroup>
+                    <ControlLabel>
+                      <FormattedMessage id="portal.policy.edit.header.toValue.label"/>
+                    </ControlLabel>
+                    <FormControl
+                      placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.header.toValue.placeholder'})}
+                      value={to_value}
+                      onChange={(e) => {this.setState({
+                        to_value: e.target.value
+                      })}}/>
+                  </FormGroup>
                 </Col>
               </Row>
             </Panel>

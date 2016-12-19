@@ -31,7 +31,7 @@ describe('FileName', () => {
       <FileName changeValue={changeValue} match={fakeConfig} path={fakePath}
         intl={intlMaker()}/>
     )
-    let inputs = fileName.find('Input')
+    let inputs = fileName.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['foo', 'bar', 'cases', 0, 0])
     expect(changeValue.mock.calls[0][1]).toEqual('new')

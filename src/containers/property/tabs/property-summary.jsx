@@ -339,7 +339,7 @@ class PropertySummary extends React.Component {
         label: <FormattedMessage id="portal.content.property.summary.comparisonPeriod.label"/>,
         line: false,
         stackedAgainst: false,
-        xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp')).format('MMM D H:mm')
+        xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
       })
     }
 

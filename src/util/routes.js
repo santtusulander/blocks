@@ -1,10 +1,32 @@
-import { getRoute } from '../routes.jsx'
 import analyticsTabConfig from '../constants/analytics-tab-config.js'
 import checkPermissions from './permissions'
+import routes from '../constants/routes'
 import {
   VIEW_CONTENT_PROPERTIES,
   VIEW_ACCOUNT_DETAIL
 } from '../constants/permissions'
+
+/**
+ *
+ * @param {string} name
+ * @param {Object} params
+ * @returns {string}
+ */
+export function getRoute(name, params) {
+  if (!routes[name]) {
+    throw new Error('Unknown route "%s"', name)
+  }
+
+  let route = routes[name]
+
+  if (params) {
+    Object.keys(params).forEach(key => {
+      route = route.replace(`:${key}`, params[key])
+    })
+  }
+
+  return route
+}
 
 export function getUrl(baseUrl, linkType, val, params) {
   // eslint-disable-next-line no-console

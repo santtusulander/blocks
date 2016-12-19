@@ -5,8 +5,9 @@
 
 import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import { Dropdown, Nav } from 'react-bootstrap'
+import { Dropdown } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import classnames from 'classnames'
 
 import IconSelectCaret from '../components/icons/icon-select-caret'
 
@@ -54,7 +55,7 @@ class Tabs extends React.Component {
         reverseTabs.forEach((tab, i) => {
           if (this.getDOMNodeTop('hiddenTabs') > this.getDOMNodeTop('tab0')) {
             // Don't hide active tab
-            if(tab.props.eventKey !== this.props.activeKey) {
+            if(tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
               this.setState({ hiddenTabs: hiddenTabs })
             }
@@ -67,9 +68,9 @@ class Tabs extends React.Component {
     return findDOMNode(this.refs[ref]).getBoundingClientRect().top
   }
   render() {
-    const { activeKey, children, className, onSelect } = this.props
+    const { children, className, onSelect } = this.props
     return (
-      <Nav bsStyle="tabs" className={className} activeKey={activeKey} onSelect={onSelect}>
+      <ul role="tablist" className={classnames('nav nav-tabs', className)}>
         {children && children.length > 1 ?
           children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
@@ -89,12 +90,12 @@ class Tabs extends React.Component {
                 <IconSelectCaret/>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-wide-menu">
-                {children.map((tab, i) => {
+                {children.concat().map((tab, i) => {
                   if (this.state.hiddenTabs.includes(i)) {
                     return React.cloneElement(
                       tab, {
                         key: i,
-                        onClick: () => onSelect && onSelect(tab.props.eventKey)
+                        onClick: () => onSelect && onSelect(tab.props['data-eventKey'])
                       }
                     )
                   }
@@ -103,7 +104,7 @@ class Tabs extends React.Component {
             </Dropdown>
           : null}
         </li>
-      </Nav>
+      </ul>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { List } from 'immutable'
-import { Dropdown, Button, Input } from 'react-bootstrap'
+import { Dropdown, Button, Checkbox, FormControl, FormGroup } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 
 import autoClose from '../../decorators/select-auto-close'
@@ -43,10 +43,8 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.getValue()
-
     this.setState({
-      filterValue: inputVal
+      filterValue: this.filterInput.value
     })
   }
 
@@ -110,11 +108,14 @@ export class FilterChecklistDropdown extends React.Component {
             role="presentation"
             className="children"
             tabIndex="-1">
-          <Input type="checkbox"
-                 label={`SELECT ALL (${this.props.options.size})`}
-                 value="all"
-                 checked={this.props.value.size === this.props.options.size}
-                 onChange={() => this.handleCheck("all")}/>
+            <FormGroup>
+              <Checkbox
+                value="all"
+                checked={this.props.value.size === this.props.options.size}
+                onChange={() => this.handleCheck("all")}>
+                <span>{`SELECT ALL (${this.props.options.size})`}</span>
+              </Checkbox>
+            </FormGroup>
         </li>,
         this.props.children && this.props.children.map(child => child)
       ]) : List()
@@ -122,14 +123,17 @@ export class FilterChecklistDropdown extends React.Component {
       itemList = itemList.concat(filteredResults.map((option, i) => {
         return (
           <li key={i}
-              role="presentation"
-              className="children"
-              tabIndex="-1">
-            <Input type="checkbox"
-                   label={option.get('label')}
-                   value={option.get('value')}
-                   checked={this.props.value.indexOf(option.get('value')) !== -1}
-                   onChange={() => this.handleCheck(option.get('value'))}/>
+            role="presentation"
+            className="children"
+            tabIndex="-1">
+            <FormGroup>
+              <Checkbox
+                value={option.get('value')}
+                checked={this.props.value.indexOf(option.get('value')) !== -1}
+                onChange={() => this.handleCheck(option.get('value'))}>
+                <span>{option.get('label')}</span>
+              </Checkbox>
+            </FormGroup>
           </li>
         )
       }))
@@ -144,7 +148,7 @@ export class FilterChecklistDropdown extends React.Component {
     return (
       <div className="form-group">
         <Dropdown
-          id=""
+          id="filter-checklist-dropdown"
           open={open}
           onToggle={() => {/*because we pass an open-prop, this needs a handler or react-bs throws a failed proptype-warning.*/}}
           className={className}>
@@ -155,8 +159,8 @@ export class FilterChecklistDropdown extends React.Component {
           <Dropdown.Menu>
             {open &&
               <li role="presentation" className="action-container">
-                <Input
-                  ref="filterInput"
+                <FormControl
+                  inputRef={ref => { this.filterInput = ref }}
                   className="header-search-input"
                   type="text"
                   onChange={this.handleFilter}

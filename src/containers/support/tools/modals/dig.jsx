@@ -1,5 +1,15 @@
 import React from 'react'
-import { Button, Col, Input, Row, Table, Well } from 'react-bootstrap'
+import {
+  Button,
+  Col,
+  Row,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Radio,
+  Table,
+  Well
+} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
@@ -37,32 +47,40 @@ class ModalDig extends React.Component {
     const { handleCloseModal, showDetails, toggleShowDetails } = this.props
     const form = (
       <div>
-        <Input
-          type="text"
-          placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.dig.modal.domainNamePlaceholder.text' })}
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.dig.modal.domainNameLabel.text' })}
-          value="www.modernfamily.com"
-          onChange={() => null}/>
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.support.tools.dig.modal.domainNameLabel.text" /></ControlLabel>
+          <FormControl
+            placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.dig.modal.domainNamePlaceholder.text' })}
+            value="www.modernfamily.com"
+            onChange={() => null}/>
+        </FormGroup>
+
         <hr/>
-        <h4><FormattedMessage id="portal.support.tools.dig.modal.testFromTitle.text"/></h4>
-        <Input
-          type="radio"
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.dig.modal.nameServerPredefined.text' })}
-          name="radioGroup1"
-          checked={true}
-          onChange={() => null}/>
-        <div className="form-group">
-          <SelectWrapper
-            id='d'
-            value="ny"
+
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.support.tools.dig.modal.testFromTitle.text"/></ControlLabel>
+
+          <Radio
+            name="radioGroup1"
+            checked={true}
             onChange={() => null}
-            options={[{ value: 'ny', label: 'US (New York)' }]}/>
-        </div>
-        <Input
-          type="radio"
-          label={this.props.intl.formatMessage({ id: 'portal.support.tools.dig.modal.nameServerOwn.text' })}
-          name="radioGroup1"
-          onChange={() => null}/>
+          ><FormattedMessage id="portal.support.tools.dig.modal.nameServerPredefined.text" /></Radio>
+
+          <div className="form-group">
+            <SelectWrapper
+              id='d'
+              value="ny"
+              onChange={() => null}
+              options={[{ value: 'ny', label: 'US (New York)' }]}/>
+          </div>
+
+          <Radio
+            name="radioGroup1"
+            checked={true}
+            onChange={() => null}
+          ><FormattedMessage id="portal.support.tools.dig.modal.nameServerOwn.text" /></Radio>
+        </FormGroup>
+
         <hr/>
         <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>
           <FormattedMessage id="portal.button.SUBMIT"/>
