@@ -97,7 +97,7 @@ class AccountForm extends React.Component {
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
-    const providerType =  providerTypes.find(type => type.value === accountType.value)
+    const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
     const providerTypeLabel = providerType && providerType.label ? providerType.label : 'Unknown'
 
     return (
