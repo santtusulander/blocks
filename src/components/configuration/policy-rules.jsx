@@ -194,9 +194,11 @@ class ConfigurationPolicyRules extends React.Component {
 ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
+  cancelDeletePolicyRoute: React.PropTypes.func,
   defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
   intl: React.PropTypes.object,
+  params: React.PropTypes.object,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }

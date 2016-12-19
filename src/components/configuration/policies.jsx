@@ -34,6 +34,10 @@ class ConfigurationPolicies extends React.Component {
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
 
+
+  /**
+   * If URL has parameters for editing a policy, open the edit-modal for that policy
+   */
   componentWillMount() {
     const { activateRule, params: { editOrDelete, policyId, policyType } } = this.props
     if (editOrDelete === 'edit') {
