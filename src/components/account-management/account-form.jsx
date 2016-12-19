@@ -97,6 +97,9 @@ class AccountForm extends React.Component {
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
+    const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
+    const providerTypeLabel = providerType && providerType.label ? providerType.label : <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+
     return (
 
       <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
@@ -137,7 +140,7 @@ class AccountForm extends React.Component {
             <div className='form-group'>
               <label className='control-label'><FormattedMessage id="portal.account.manage.accountType.title" /></label>
               {this.props.account ?
-                <p>{accountType.value && providerTypes.find(type => type.value === accountType.value).label}</p>
+                <p>{providerTypeLabel}</p>
               :
                 <SelectWrapper
                   {...accountType}
