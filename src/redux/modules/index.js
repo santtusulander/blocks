@@ -18,6 +18,7 @@ export const roles = require('./roles').default;
 export const permissions = require('./permissions').default;
 export const support = require('./support').default;
 export const dashboard = require('./dashboard').default;
+export const mapbox = require('./mapbox').default;
 
 //Account Management
 export const dnsRecords = require('./dns-records/actions').default;

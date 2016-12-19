@@ -28,6 +28,10 @@ module.exports = {
         loader: 'source-map'
       }
     ],*/
+
+    // Added to avoid webpack warning: This seems to be a pre-built javascript file. Though this is possible, it's not recommended. Try to require the original source to get better results. @ ./~/mapbox-gl/dist/mapbox-gl.js 1:481-488
+    // https://github.com/mapbox/mapbox-gl-js/issues/2742#issuecomment-267001402
+    noParse: /node_modules\/mapbox-gl\/dist\/mapbox-gl.js/,
     loaders: [
       {
         test: /\.jsx?$/,

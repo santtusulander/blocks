@@ -12,6 +12,7 @@ const TOTALS_FETCHED = 'TOTALS_FETCHED'
 const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_TIME_COMPARISON_FETCHED = 'TRAFFIC_BY_TIME_COMPARISON_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
+const TRAFFIC_BY_CITY_FETCHED = 'TRAFFIC_BY_CITY_FETCHED'
 const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
@@ -24,6 +25,7 @@ const emptyTraffic = Immutable.Map({
   totals: Immutable.Map(),
   byTime: Immutable.List(),
   byCountry: Immutable.List(),
+  byCity: Immutable.List(),
   fetching: false,
   onOffNet: Immutable.fromJS({
     detail: [{
@@ -125,6 +127,17 @@ export function trafficByCountryFailure(state){
   })
 }
 
+export function trafficByCitySuccess(state, action){
+  return state.merge({
+    byCity: Immutable.fromJS(action.payload.data.cities)
+  })
+}
+export function trafficByCityFailure(state){
+  return state.merge({
+    byCity: Immutable.List()
+  })
+}
+
 export function trafficTotalEgressSuccess(state, action){
   return state.merge({
     totalEgress: Immutable.fromJS(action.payload.data.bytes)
@@ -216,6 +229,7 @@ export default handleActions({
   TRAFFIC_BY_TIME_FETCHED: mapReducers(trafficByTimeSuccess, trafficByTimeFailure),
   TRAFFIC_BY_TIME_COMPARISON_FETCHED: mapReducers(trafficByTimeComparisonSuccess, trafficByTimeComparisonFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
+  TRAFFIC_BY_CITY_FETCHED: mapReducers(trafficByCitySuccess, trafficByCityFailure),
   TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
   TRAFFIC_ON_OFF_NET_FETCHED: mapReducers(trafficOnOffNetSuccess, trafficOnOffNetFailure),
   TRAFFIC_ON_OFF_NET_TODAY_FETCHED: mapReducers(trafficOnOffNetTodaySuccess, trafficOnOffNetTodayFailure),
@@ -249,6 +263,11 @@ export const fetchByTimeComparison = createAction(TRAFFIC_BY_TIME_COMPARISON_FET
 
 export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`)
+  .then(parseResponseData);
+})
+
+export const fetchByCity = createAction(TRAFFIC_BY_CITY_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/traffic/city${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 

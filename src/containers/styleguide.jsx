@@ -89,7 +89,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
-import MapBox            from '../components/map/mapbox'
+import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 import DateRanges from '../constants/date-ranges'
@@ -105,6 +105,8 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link8', label: 'Property 8', checked: false },
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
+
+import * as countriesGeoJSON from '../assets/topo/custom.geo.json';
 
 class Styleguide extends React.Component {
 
@@ -267,6 +269,33 @@ class Styleguide extends React.Component {
         timestamp: datapoint.timestamp
       }
     })
+
+    const countryData = [
+      {
+        "name": "Hong Kong",
+        "bits_per_second": 2801215741,
+        "code": "HKG",
+        "total": 484049729862220
+      },
+      {
+        "name": "Japan",
+        "bits_per_second": 1011356667,
+        "code": "JPN",
+        "total": 174762305623425
+      },
+      {
+        "name": "Korea, Republic Of",
+        "bits_per_second": 500033048,
+        "code": "KOR",
+        "total": 86405648211184
+      },
+      {
+        "name": "Malaysia",
+        "bits_per_second": 472250782,
+        "code": "MYS",
+        "total": 81604876012993
+      }
+    ]
 
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
@@ -859,7 +888,11 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">MapBox</h1>
 
-          <MapBox />
+          <Mapbox
+            geoData={countriesGeoJSON}
+            countryData={countryData}
+            theme={this.props.theme}
+            />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
