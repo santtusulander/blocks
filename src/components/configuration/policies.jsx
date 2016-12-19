@@ -33,6 +33,14 @@ class ConfigurationPolicies extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
+
+  componentWillMount() {
+    const { activateRule, params: { editOrDelete, policyId, policyType } } = this.props
+    if (editOrDelete === 'edit') {
+      activateRule([policyType, 'policy_rules', Number(policyId)])
+    }
+  }
+
   componentWillUnmount() {
     if (this.props.activeRule) {
       this.handleCancel()
@@ -77,6 +85,7 @@ class ConfigurationPolicies extends React.Component {
     this.props.saveChanges()
   }
   handleHide(){
+    this.props.cancelEditPolicyRoute()
     this.setState({ isEditingRule: true })
     this.props.activateRule(null)
   }
@@ -121,6 +130,8 @@ class ConfigurationPolicies extends React.Component {
         </SectionHeader>
         <SectionContainer>
           <ConfigurationPolicyRules
+            cancelDeletePolicyRoute={this.props.cancelEditPolicyRoute}
+            params={this.props.params}
             requestPolicies={config.getIn([POLICY_TYPES.REQUEST, 'policy_rules'])}
             responsePolicies={config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])}
             activateRule={this.props.activateRule}
