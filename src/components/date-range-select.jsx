@@ -210,13 +210,13 @@ class DateRangeSelect extends React.Component {
     })
   }
 
-  defaultViewDate(startDate) {
+  defaultViewDate(endDate) {
     // UDNP-2106 - In date picker, move current month to the right
     // We should make the current month appear on the right side of the date picker,
     // so the user has more immediate access to the previous month.
-    let localStartDate = this.makeLocal(startDate)
+    let localEndDate = this.makeLocal(endDate)
 
-    return localStartDate.subtract(1, 'month')
+    return localEndDate.subtract(1, 'month')
   }
 
   render() {
@@ -250,7 +250,7 @@ class DateRangeSelect extends React.Component {
           <MultiMonthView
             dateFormat={DATE_FORMAT}
             defaultRange={[this.makeLocal(startDate), this.makeLocal(endDate)]}
-            defaultViewDate={this.defaultViewDate(startDate)}
+            defaultViewDate={this.defaultViewDate(endDate)}
             enableHistoryView={false}
             highlightRangeOnMouseMove={true}
             highlightToday={true}
