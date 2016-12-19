@@ -247,21 +247,23 @@ class DateRangeSelect extends React.Component {
               </a>
             )}
           </div>
-          <MultiMonthView
-            dateFormat={DATE_FORMAT}
-            defaultRange={[this.makeLocal(startDate), this.makeLocal(endDate)]}
-            defaultViewDate={this.defaultViewDate(endDate)}
-            enableHistoryView={false}
-            highlightRangeOnMouseMove={true}
-            highlightToday={true}
-            highlightWeekends={false}
-            minDate={minDate}
-            maxDate={maxDate}
-            onActiveDateChange={this.handleActiveDateChange}
-            onRangeChange={this.handleDateChange}
-            theme={null}
-            weekNumbers={false}
-            weekStartDay={0} />
+          {open &&
+            <MultiMonthView
+              dateFormat={DATE_FORMAT}
+              defaultRange={[this.makeLocal(startDate), this.makeLocal(endDate)]}
+              defaultViewDate={this.defaultViewDate(endDate)}
+              enableHistoryView={false}
+              highlightRangeOnMouseMove={true}
+              highlightToday={true}
+              highlightWeekends={false}
+              minDate={minDate}
+              maxDate={maxDate}
+              onActiveDateChange={this.handleActiveDateChange}
+              onRangeChange={this.handleDateChange}
+              theme={null}
+              weekNumbers={false}
+              weekStartDay={0} />
+          }
         </Dropdown.Menu>
       </Dropdown>
     )
