@@ -26,7 +26,7 @@ const initialState = {
 describe('Properties Module', () => {
   it('should getAllHosts', () => {
       const p = selectors.getAllHosts( initialState )
-      expect(p).toEqual(['aa','bb'])
+      expect(p.toJS()).toEqual(['aa','bb'])
   });
 
   it('should getProperties', () => {
