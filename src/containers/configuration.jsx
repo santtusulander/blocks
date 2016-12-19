@@ -114,7 +114,6 @@ export class Configuration extends React.Component {
         activeConfig
       )
     )
-    this.cancelEditPolicyRoute()
   }
 
   /**
