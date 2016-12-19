@@ -169,6 +169,8 @@ class ConfigurationPolicies extends React.Component {
 }
 
 ConfigurationPolicies.displayName = 'ConfigurationPolicies'
+
+ConfigurationPolicies.defaultProps = { params: {} }
 ConfigurationPolicies.propTypes = {
   activateMatch: React.PropTypes.func,
   activateRule: React.PropTypes.func,
