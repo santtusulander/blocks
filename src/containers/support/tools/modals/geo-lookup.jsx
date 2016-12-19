@@ -1,5 +1,12 @@
 import React from 'react'
-import { Button, Image, Input, Table } from 'react-bootstrap'
+import {
+  Button,
+  Image,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Table
+} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
@@ -136,12 +143,14 @@ class ModalGeoLookup extends React.Component {
           </div>
         }>
         <div>
-          <Input
-            type="text"
-            placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.geoLookup.modal.ipAddressPlaceholder.text' })}
-            label={this.props.intl.formatMessage({ id: 'portal.support.tools.geoLookup.modal.ipAddressLabel.text' })}
-            value="123.123.123.12"
-            onChange={() => null}/>
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.support.tools.geoLookup.modal.ipAddressLabel.text" /></ControlLabel>
+            <FormControl
+              placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.geoLookup.modal.ipAddressPlaceholder.text' })}
+              value="123.123.123.12"
+              onChange={() => null}
+            />
+          </FormGroup>
           <hr />
           <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>LOOKUP</Button>
           {showDetails && content}

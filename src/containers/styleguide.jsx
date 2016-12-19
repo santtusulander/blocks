@@ -1,102 +1,112 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
-// import Typeahead from 'react-bootstrap-typeahead'
-// import numeral from 'numeral'
+import Typeahead from 'react-bootstrap-typeahead'
+import numeral from 'numeral'
 import moment from 'moment'
 
 // React-Bootstrap
 // ===============
 
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   Button,
-//   ButtonToolbar,
-//   Col,
-//   Dropdown,
-//   Image,
-//   Input,
-//   Label,
-//   MenuItem,
-//   NavItem,
-//   OverlayTrigger,
-//   Pagination,
-//   Popover,
-//   Row,
-//   Table
-// } from 'react-bootstrap';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  ButtonToolbar,
+  Col,
+  ControlLabel,
+  Dropdown,
+  FormControl,
+  FormGroup,
+  HelpBlock,
+  Image,
+  InputGroup,
+  Label,
+  MenuItem,
+  NavItem,
+  OverlayTrigger,
+  Pagination,
+  Popover,
+  Row,
+  Table
+} from 'react-bootstrap';
 
-//
-// import SectionContainer from '../components/layout/section-container'
-// import SelectWrapper from '../components/select-wrapper'
-// import BarChart from '../components/charts/bar-chart'
-// import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
-// import AccountSelector from '../components/global-account-selector/selector-component'
-// import Tabs from '../components/tabs'
-// import MonthPicker from '../components/month-picker'
-// import StackedByTimeSummary from '../components/stacked-by-time-summary'
-// import MiniChart from '../components/mini-chart'
-// import DashboardPanel from '../components/dashboard/dashboard-panel'
-// import DashboardPanels from '../components/dashboard/dashboard-panels'
-// import CustomDatePicker from '../components/custom-date-picker'
-//
-// import IconAccount       from '../components/icons/icon-account'
-// import IconAdd           from '../components/icons/icon-add'
-// import IconAlerts        from '../components/icons/icon-alerts'
-// import IconAnalytics     from '../components/icons/icon-analytics'
-// import IconArrowDown     from '../components/icons/icon-arrow-down'
-// import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
-// import IconArrowRight     from '../components/icons/icon-arrow-right'
-// import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
-// import IconArrowLeft     from '../components/icons/icon-arrow-left'
-// import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
-// import IconArrowUp       from '../components/icons/icon-arrow-up'
-// import IconCaretRight    from '../components/icons/icon-caret-right'
-// import IconCaretDown     from '../components/icons/icon-caret-down'
-// import IconChart         from '../components/icons/icon-chart'
-// import IconClose         from '../components/icons/icon-close'
-// import IconComments      from '../components/icons/icon-comments'
-// import IconConfiguration from '../components/icons/icon-configuration'
-// import IconContent       from '../components/icons/icon-content'
-// import IconDelete        from '../components/icons/icon-delete'
-// import IconEdit          from '../components/icons/icon-edit'
-// import IconEmail         from '../components/icons/icon-email'
-// import IconEricsson      from '../components/icons/icon-ericsson'
-// import IconExport        from '../components/icons/icon-export'
-// import IconEye           from '../components/icons/icon-eye'
-// import IconHeaderCaret   from '../components/icons/icon-header-caret'
-// import IconIncident      from '../components/icons/icon-incident'
-// import IconInfo          from '../components/icons/icon-info'
-// import IconIntegration   from '../components/icons/icon-integration'
-// import IconItemChart     from '../components/icons/icon-item-chart'
-// import IconItemList      from '../components/icons/icon-item-list'
-// import IconPassword      from '../components/icons/icon-password'
-// import IconProblem       from '../components/icons/icon-problem'
-// import IconQuestion      from '../components/icons/icon-question'
-// import IconQuestionMark  from '../components/icons/icon-question-mark'
-// import IconSecurity      from '../components/icons/icon-security'
-// import IconSelectCaret   from '../components/icons/icon-select-caret'
-// import IconServices      from '../components/icons/icon-services'
-// import IconSupport       from '../components/icons/icon-support'
-// import IconTask          from '../components/icons/icon-task'
-// import IconTrash         from '../components/icons/icon-trash'
-import MapBox            from '../components/map/mapbox'
+import SectionContainer from '../components/layout/section-container'
+import SelectWrapper from '../components/select-wrapper'
+import BarChart from '../components/charts/bar-chart'
+import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
+import SelectorComponent from '../components/global-account-selector/selector-component'
+import Tabs from '../components/tabs'
+import MonthPicker from '../components/month-picker'
+import StackedByTimeSummary from '../components/stacked-by-time-summary'
+import MiniChart from '../components/mini-chart'
+import DashboardPanel from '../components/dashboard/dashboard-panel'
+import DashboardPanels from '../components/dashboard/dashboard-panels'
+import CustomDatePicker from '../components/custom-date-picker'
+import DateRangeSelect from '../components/date-range-select'
+import MultiOptionSelector from '../components/multi-option-selector'
 
-// import { formatBytes, separateUnit } from '../util/helpers'
-// import DateRanges from '../constants/date-ranges'
+import Checkbox from '../components/checkbox'
+import Radio from '../components/radio'
 
-// const filterCheckboxOptions = Immutable.fromJS([
-//   { value: 'link1', label: 'Property 1', checked: true },
-//   { value: 'link2', label: 'Property 2', checked: true },
-//   { value: 'link3', label: 'Property 3', checked: false },
-//   { value: 'link4', label: 'Property 4', checked: false },
-//   { value: 'link5', label: 'Property 5', checked: true },
-//   { value: 'link6', label: 'Property 6', checked: false },
-//   { value: 'link7', label: 'Property 7', checked: false },
-//   { value: 'link8', label: 'Property 8', checked: false },
-//   { value: 'link9', label: 'Property 9', checked: false }
-// ]);
+import IconAccount       from '../components/icons/icon-account'
+import IconAdd           from '../components/icons/icon-add'
+import IconAlerts        from '../components/icons/icon-alerts'
+import IconAnalytics     from '../components/icons/icon-analytics'
+import IconArrowDown     from '../components/icons/icon-arrow-down'
+import IconArrowLgDown   from '../components/icons/icon-arrow-lg-down'
+import IconArrowRight     from '../components/icons/icon-arrow-right'
+import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
+import IconArrowLeft     from '../components/icons/icon-arrow-left'
+import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
+import IconArrowUp       from '../components/icons/icon-arrow-up'
+import IconCaretRight    from '../components/icons/icon-caret-right'
+import IconCaretDown     from '../components/icons/icon-caret-down'
+import IconChart         from '../components/icons/icon-chart'
+import IconClose         from '../components/icons/icon-close'
+import IconComments      from '../components/icons/icon-comments'
+import IconConfiguration from '../components/icons/icon-configuration'
+import IconContent       from '../components/icons/icon-content'
+import IconDelete        from '../components/icons/icon-delete'
+import IconEdit          from '../components/icons/icon-edit'
+import IconEmail         from '../components/icons/icon-email'
+import IconEricsson      from '../components/icons/icon-ericsson'
+import IconExport        from '../components/icons/icon-export'
+import IconEye           from '../components/icons/icon-eye'
+import IconHeaderCaret   from '../components/icons/icon-header-caret'
+import IconIncident      from '../components/icons/icon-incident'
+import IconInfo          from '../components/icons/icon-info'
+import IconIntegration   from '../components/icons/icon-integration'
+import IconItemChart     from '../components/icons/icon-item-chart'
+import IconItemList      from '../components/icons/icon-item-list'
+import IconPassword      from '../components/icons/icon-password'
+import IconProblem       from '../components/icons/icon-problem'
+import IconQuestion      from '../components/icons/icon-question'
+import IconQuestionMark  from '../components/icons/icon-question-mark'
+import IconSecurity      from '../components/icons/icon-security'
+import IconSelectCaret   from '../components/icons/icon-select-caret'
+import IconServices      from '../components/icons/icon-services'
+import IconSupport       from '../components/icons/icon-support'
+import IconTask          from '../components/icons/icon-task'
+import IconTrash         from '../components/icons/icon-trash'
+import Mapbox            from '../components/map/mapbox'
+
+import { formatBytes, separateUnit } from '../util/helpers'
+import DateRanges from '../constants/date-ranges'
+
+const filterCheckboxOptions = Immutable.fromJS([
+  { value: 'link1', label: 'Property 1', checked: true },
+  { value: 'link2', label: 'Property 2', checked: true },
+  { value: 'link3', label: 'Property 3', checked: false },
+  { value: 'link4', label: 'Property 4', checked: false },
+  { value: 'link5', label: 'Property 5', checked: true },
+  { value: 'link6', label: 'Property 6', checked: false },
+  { value: 'link7', label: 'Property 7', checked: false },
+  { value: 'link8', label: 'Property 8', checked: false },
+  { value: 'link9', label: 'Property 9', checked: false }
+]);
+
+import * as countriesGeoJSON from '../assets/topo/custom.geo.json';
 
 class Styleguide extends React.Component {
 
@@ -115,163 +125,190 @@ class Styleguide extends React.Component {
   }
 
   render() {
-    // const spDashboardData = {
-    //   "traffic": {
-    //     "bytes": 446265804980374,
-    //     "bytes_net_on": 352569123057670,
-    //     "bytes_net_off": 93696681922704,
-    //     "detail": [
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 92020173697866,
-    //         "bytes_net_on": 71856580682504,
-    //         "bytes_net_off": 20163593015362
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 99672709053865,
-    //         "bytes_net_on": 76848354018252,
-    //         "bytes_net_off": 22824355035613
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 94821186769899,
-    //         "bytes_net_on": 72941835769369,
-    //         "bytes_net_off": 21879351000530
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 117441291619312,
-    //         "bytes_net_on": 90477417340581,
-    //         "bytes_net_off": 26963874278731
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 81546375702611,
-    //         "bytes_net_on": 62160286504951,
-    //         "bytes_net_off": 19386089197660
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 117341539984300,
-    //         "bytes_net_on": 90364165873239,
-    //         "bytes_net_off": 26977374111061
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 94064934029131,
-    //         "bytes_net_on": 72989086766237,
-    //         "bytes_net_off": 21075847262894
-    //       },
-    //       {
-    //         "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
-    //         "bytes": 93196929110225,
-    //         "bytes_net_on": 72133332220394,
-    //         "bytes_net_off": 21063596889831
-    //       }
-    //     ]
-    //   }
-    // }
+    const spDashboardData = {
+      "traffic": {
+        "bytes": 446265804980374,
+        "bytes_net_on": 352569123057670,
+        "bytes_net_off": 93696681922704,
+        "detail": [
+          {
+            "timestamp": new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)'),
+            "bytes": 92020173697866,
+            "bytes_net_on": 71856580682504,
+            "bytes_net_off": 20163593015362
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)'),
+            "bytes": 99672709053865,
+            "bytes_net_on": 76848354018252,
+            "bytes_net_off": 22824355035613
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)'),
+            "bytes": 94821186769899,
+            "bytes_net_on": 72941835769369,
+            "bytes_net_off": 21879351000530
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)'),
+            "bytes": 117441291619312,
+            "bytes_net_on": 90477417340581,
+            "bytes_net_off": 26963874278731
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)'),
+            "bytes": 81546375702611,
+            "bytes_net_on": 62160286504951,
+            "bytes_net_off": 19386089197660
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)'),
+            "bytes": 117341539984300,
+            "bytes_net_on": 90364165873239,
+            "bytes_net_off": 26977374111061
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)'),
+            "bytes": 94064934029131,
+            "bytes_net_on": 72989086766237,
+            "bytes_net_off": 21075847262894
+          },
+          {
+            "timestamp": new Date('Thu May 26 2016 19:17:01 GMT-0700 (PDT)'),
+            "bytes": 93196929110225,
+            "bytes_net_on": 72133332220394,
+            "bytes_net_off": 21063596889831
+          }
+        ]
+      }
+    }
 
-    // const stackedBarChartData = [
-    //   {
-    //     "name": "Datafone Inc.",
-    //     "onNetHttp": 9149792187422,
-    //     "onNetHttps": 4324269843760,
-    //     "offNetHttp": 2297510618946,
-    //     "offNetHttps": 1090755001954
-    //   },
-    //   {
-    //     "name": "AsiaNet",
-    //     "onNetHttp": 58034767339905,
-    //     "onNetHttps": 27260875504858,
-    //     "offNetHttp": 16598076780724,
-    //     "offNetHttps": 6941781887919
-    //   },
-    //   {
-    //     "name": "QXT",
-    //     "onNetHttp": 17640581263893,
-    //     "onNetHttps": 8905041306312,
-    //     "offNetHttp": 4413020296483,
-    //     "offNetHttps": 2063509423994
-    //   },
-    //   {
-    //     "name": "Datafone Inc.",
-    //     "onNetHttp": 9149792187422,
-    //     "onNetHttps": 4324269843760,
-    //     "offNetHttp": 2297510618946,
-    //     "offNetHttps": 1090755001954
-    //   },
-    //   {
-    //     "name": "QXT",
-    //     "onNetHttp": 17640581263893,
-    //     "onNetHttps": 8905041306312,
-    //     "offNetHttp": 4413020296483,
-    //     "offNetHttps": 2063509423994
-    //   }
-    // ]
+    const stackedBarChartData = [
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905,
+        "onNetHttps": 27260875504858,
+        "offNetHttp": 16598076780724,
+        "offNetHttps": 6941781887919
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422,
+        "onNetHttps": 4324269843760,
+        "offNetHttp": 2297510618946,
+        "offNetHttps": 1090755001954
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893,
+        "onNetHttps": 8905041306312,
+        "offNetHttp": 4413020296483,
+        "offNetHttps": 2063509423994
+      }
+    ]
 
-    // const singleBarChartData = [
-    //   {
-    //     "name": "AsiaNet",
-    //     "onNetHttp": 58034767339905
-    //   },
-    //   {
-    //     "name": "QXT",
-    //     "onNetHttp": 17640581263893
-    //   },
-    //   {
-    //     "name": "Datafone Inc.",
-    //     "onNetHttp": 9149792187422
-    //   },
-    //   {
-    //     "name": "Datafone Inc.",
-    //     "onNetHttp": 9149792187422
-    //   },
-    //   {
-    //     "name": "QXT",
-    //     "onNetHttp": 17640581263893
-    //   },
-    //   {
-    //     "name": "AsiaNet",
-    //     "onNetHttp": 58034767339905
-    //   },
-    //   {
-    //     "name": "QXT",
-    //     "onNetHttp": 17640581263893
-    //   },
-    //   {
-    //     "name": "AsiaNet",
-    //     "onNetHttp": 58034767339905
-    //   }
-    // ]
+    const singleBarChartData = [
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "Datafone Inc.",
+        "onNetHttp": 9149792187422
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      },
+      {
+        "name": "QXT",
+        "onNetHttp": 17640581263893
+      },
+      {
+        "name": "AsiaNet",
+        "onNetHttp": 58034767339905
+      }
+    ]
 
-    // const datasetA = spDashboardData.traffic.detail.map(datapoint => {
-    //   return {
-    //     bytes: datapoint.bytes_net_on || 0,
-    //     timestamp: datapoint.timestamp
-    //   }
-    // })
-    //
-    // const datasetB = spDashboardData.traffic.detail.map(datapoint => {
-    //   return {
-    //     bytes: datapoint.bytes_net_off || 0,
-    //     timestamp: datapoint.timestamp
-    //   }
-    // })
-    //
-    // let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
-    // let totalDatasetValue = totalDatasetValueOutput.value
-    // let totalDatasetUnit = totalDatasetValueOutput.unit
-    //
-    // let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
-    // let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
+    const datasetA = spDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_on || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+
+    const datasetB = spDashboardData.traffic.detail.map(datapoint => {
+      return {
+        bytes: datapoint.bytes_net_off || 0,
+        timestamp: datapoint.timestamp
+      }
+    })
+
+    const countryData = [
+      {
+        "name": "Hong Kong",
+        "bits_per_second": 2801215741,
+        "code": "HKG",
+        "total": 484049729862220
+      },
+      {
+        "name": "Japan",
+        "bits_per_second": 1011356667,
+        "code": "JPN",
+        "total": 174762305623425
+      },
+      {
+        "name": "Korea, Republic Of",
+        "bits_per_second": 500033048,
+        "code": "KOR",
+        "total": 86405648211184
+      },
+      {
+        "name": "Malaysia",
+        "bits_per_second": 472250782,
+        "code": "MYS",
+        "total": 81604876012993
+      }
+    ]
+
+    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
+    let totalDatasetValue = totalDatasetValueOutput.value
+    let totalDatasetUnit = totalDatasetValueOutput.unit
+
+    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
 
     return (
       <div className="styleguide-page">
 
         <div className="container">
-          {/*
+
           <h1 className="page-header">Ericsson UDN Styleguide</h1>
 
           <h1 className="page-header">Typography</h1>
@@ -482,16 +519,47 @@ class Styleguide extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <Input type="text" label="Default Input" placeholder="Enter text" />
-              <Input type="email" label="Email Input" placeholder="Enter email" />
-              <Input type="password" label="Password Input" />
-              <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
-              <Input type="textarea" label="Text Area" placeholder="Enter text" />
+              <FormGroup>
+                <ControlLabel>Default Input</ControlLabel>
+                <FormControl type="text" placeholder="Enter text" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Email Input</ControlLabel>
+                <FormControl type="email" placeholder="Enter email" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Password Input</ControlLabel>
+                <FormControl type="password" placeholder="Enter password" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Input with Addons</ControlLabel>
+                <InputGroup>
+                  <InputGroup.Addon>{"$"}</InputGroup.Addon>
+                  <FormControl type="text" placeholder="Enter text" />
+                </InputGroup>
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Text Area</ControlLabel>
+                <FormControl componentClass="textArea" placeholder="Enter text" />
+              </FormGroup>
             </div>
 
             <div className="col-xs-6">
-              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={false} />
-              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={false} />
+              <FormGroup validationState="success">
+                <ControlLabel>Has Success</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
+
+              <FormGroup validationState="error">
+                <ControlLabel>Has Error</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
             </div>
           </div>
 
@@ -503,24 +571,38 @@ class Styleguide extends React.Component {
 
               <form className="form-horizontal">
 
-                <Input label="Inline Input" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9">
-                  <Row>
-                    <Col xs={10}>
-                      <input type="text" className="form-control" />
-                    </Col>
-                      <OverlayTrigger trigger="click" rootClose={true} overlay={
-                        <Popover id="popover1" title="Info">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Popover>
-                      }>
-                        <Button bsStyle="link" className="col-xs-2">?</Button>
-                      </OverlayTrigger>
-                  </Row>
-                </Input>
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Input
+                  </Col>
+                  <Col xs={9}>
+                    <InputGroup>
+                      <FormControl />
+                      <InputGroup.Addon>
+                        <OverlayTrigger trigger="click" rootClose={true} overlay={
+                          <Popover id="popover1" title="Info">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Popover>
+                        }>
+                        <Button bsStyle="link" className="col-xs-2">{"?"}</Button>
+                        </OverlayTrigger>
+                      </InputGroup.Addon>
+                    </InputGroup>
+                  </Col>
+                </FormGroup>
 
-                <Input type="textarea" label="Inline Text Area" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9" />
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Text Area
+                  </Col>
+                  <Col xs={9}>
+                    <FormControl componentClass="textarea" />
+                  </Col>
+                </FormGroup>
 
-                <Input type="checkbox" label="Inline Checkbox" wrapperClassName="col-xs-offset-3 col-xs-9" />
+                <FormGroup>
+                  <Checkbox inline={true}>Inline Checkbox</Checkbox>
+                </FormGroup>
 
               </form>
 
@@ -535,29 +617,25 @@ class Styleguide extends React.Component {
 
             <div className="col-xs-6">
 
-              <label>Checkboxes</label>
-
-              <Input type="checkbox" label="Checkbox 1" />
-
-              <Input type="checkbox" label="Checkbox 2" />
-
-              <Input type="checkbox" label="Checkbox 3" />
-
-              <Input type="checkbox" disabled={true} label="Checkbox disabled" />
+              <FormGroup>
+                <ControlLabel>Checkboxes</ControlLabel>
+                <Checkbox value={1}>Checkbox 1</Checkbox>
+                <Checkbox value={2}>Checkbox 2</Checkbox>
+                <Checkbox value={3}>Checkbox 3</Checkbox>
+                <Checkbox value={4} disabled={true}>Checkbox Disabled</Checkbox>
+              </FormGroup>
 
             </div>
 
             <div className="col-xs-6">
 
-              <label>Radios</label>
-
-              <Input type="radio" label="Radio 1" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 2" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 3" name="radioGroup1" />
-
-              <Input type="radio" disabled={true} label="Radio disabled" name="radioGroup1" />
+              <FormGroup controlId="Radio">
+                <ControlLabel>Radios</ControlLabel>
+                <Radio value={1}>Radio 1</Radio>
+                <Radio value={2}>Radio 2</Radio>
+                <Radio value={3}>Radio 3</Radio>
+                <Radio value={4} disabled={true}>Radio Disabled</Radio>
+              </FormGroup>
 
             </div>
 
@@ -758,9 +836,7 @@ class Styleguide extends React.Component {
                 ]} />
             </Col>
             <Col xs={4}>
-              <Input
-                type="checkbox"
-                label="Limit range to 4 months"
+              <Checkbox
                 checked={this.state.datePickerLimit}
                 onClick={
                   () => {
@@ -772,7 +848,7 @@ class Styleguide extends React.Component {
                     }
                     this.setState({ datePickerLimit: !datePickerLimit })
                   }
-                } />
+                }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
               <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
@@ -812,7 +888,11 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">MapBox</h1>
 
-          <MapBox />
+          <Mapbox
+            geoData={countriesGeoJSON}
+            countryData={countryData}
+            theme={this.props.theme}
+            />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -1015,12 +1095,7 @@ class Styleguide extends React.Component {
             <br />
             IconTrash
           </span>
-          */}
 
-
-          <h1 className="page-header">MapBox</h1>
-
-          <MapBox />
         </div>
 
       </div>

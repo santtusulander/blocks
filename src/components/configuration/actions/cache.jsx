@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonToolbar, Col, Input, Modal, Row } from 'react-bootstrap'
+import { Button, ButtonToolbar, Col, ControlLabel, FormControl, Modal, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -146,27 +146,30 @@ class Cache extends React.Component {
 
           <hr />
 
-          <Input label={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.text'})}>
-            <Row>
-              <Col xs={6}>
-                <Input type="number"
-                  id="actions_ttl-value-number"
-                  placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.placeholder'})}
-                  value={this.state.maxAge || 0}
-                  onChange={this.handleChange('maxAge')}/>
-              </Col>
-              <Col xs={6}>
-                <Select className="input-select"
-                  onSelect={this.handleTTLTypeChange}
-                  value={this.state.ttlType}
-                  options={[
-                    ['seconds', <FormattedMessage id="portal.policy.edit.cache.ttlValue.seconds"/>],
-                    ['minutes', <FormattedMessage id="portal.policy.edit.cache.ttlValue.minutes"/>],
-                    ['hours', <FormattedMessage id="portal.policy.edit.cache.ttlValue.hours"/>],
-                    ['days', <FormattedMessage id="portal.policy.edit.cache.ttlValue.days"/>]]}/>
-              </Col>
-            </Row>
-          </Input>
+          <ControlLabel>
+            <FormattedMessage id="portal.policy.edit.cache.ttlValue.text" />
+          </ControlLabel>
+
+          <Row>
+            <Col xs={6}>
+              <FormControl
+                type="number"
+                id="actions_ttl-value-number"
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.cache.ttlValue.placeholder'})}
+                value={this.state.maxAge || 0}
+                onChange={this.handleChange('maxAge')}/>
+            </Col>
+            <Col xs={6}>
+              <Select className="input-select"
+                onSelect={this.handleTTLTypeChange}
+                value={this.state.ttlType}
+                options={[
+                  ['seconds', <FormattedMessage id="portal.policy.edit.cache.ttlValue.seconds"/>],
+                  ['minutes', <FormattedMessage id="portal.policy.edit.cache.ttlValue.minutes"/>],
+                  ['hours', <FormattedMessage id="portal.policy.edit.cache.ttlValue.hours"/>],
+                  ['days', <FormattedMessage id="portal.policy.edit.cache.ttlValue.days"/>]]}/>
+            </Col>
+          </Row>
 
           <ButtonToolbar className="text-right">
             <Button className="btn-secondary" onClick={this.props.close}>

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
-// import Immutable from 'immutable'
+import { ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import Select from '../../select'
@@ -48,8 +47,10 @@ class Path extends React.Component {
 
           <div className="form-groups">
             <InputConnector show={true} />
-            <div className="form-group">
-              <label className="control-label"><FormattedMessage id="portal.policy.edit.path.activity.text"/></label>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.path.activity.text"/>
+              </ControlLabel>
               <Select className="input-select"
                 onSelect={this.handleSelectChange('activeActivity',
                   ['edge_configuration', 'cache_rule', 'actions', 'path_activity']
@@ -59,29 +60,36 @@ class Path extends React.Component {
                   ['add', <FormattedMessage id="portal.policy.edit.path.add.text"/>],
                   ['modify', <FormattedMessage id="portal.policy.edit.path.modify.text"/>],
                   ['remove', <FormattedMessage id="portal.policy.edit.path.remove.text"/>]]}/>
-            </div>
+            </FormGroup>
 
-            <Input type="text" label={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.text'})}
-              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.placeholder'})}
-              onChange={this.handleChange(
-                ['edge_configuration', 'cache_rule', 'actions', 'path_value']
-              )}/>
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="portal.policy.edit.path.path.text"/>
+              </ControlLabel>
+              <FormControl
+                placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.path.path.placeholder'})}
+                onChange={this.handleChange(
+                  ['edge_configuration', 'cache_rule', 'actions', 'path_value']
+                )}/>
+            </FormGroup>
           </div>
 
-        <hr />
+          <hr />
 
-        <div className="form-group">
-          <label className="control-label">Direction</label>
-          <Select className="input-select"
-            onSelect={this.handleSelectChange('activeDirection',
-              ['edge_configuration', 'cache_rule', 'actions', 'path_direction']
-            )}
-            value={this.state.activeDirection}
-            options={[
-              ['to_origin', <FormattedMessage id="portal.policy.edit.path.toOrigin.text"/>],
-              ['to_client', <FormattedMessage id="portal.policy.edit.path.toClient.text"/>],
-              ['to_both', <FormattedMessage id="portal.policy.edit.path.toBoth.text"/>]]}/>
-        </div>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.queryString.direction.text" />
+            </ControlLabel>
+            <Select className="input-select"
+              onSelect={this.handleSelectChange('activeDirection',
+                ['edge_configuration', 'cache_rule', 'actions', 'path_direction']
+              )}
+              value={this.state.activeDirection}
+              options={[
+                ['to_origin', <FormattedMessage id="portal.policy.edit.path.toOrigin.text"/>],
+                ['to_client', <FormattedMessage id="portal.policy.edit.path.toClient.text"/>],
+                ['to_both', <FormattedMessage id="portal.policy.edit.path.toBoth.text"/>]]}/>
+          </FormGroup>
 
         </Modal.Body>
       </div>

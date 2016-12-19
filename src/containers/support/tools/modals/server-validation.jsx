@@ -1,5 +1,11 @@
 import React from 'react'
-import { Button, Input, Table } from 'react-bootstrap'
+import {
+  Button,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Table
+} from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SupportToolModal from './support-tool-modal'
@@ -97,13 +103,16 @@ class ModalServerValidation extends React.Component {
           </div>
         }>
         <div>
-          <Input
-            type="text"
-            placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.serverValidation.modal.ipAddressPlaceholder.text' })}
-            label={this.props.intl.formatMessage({ id: 'portal.support.tools.serverValidation.modal.ipAddressLabel.text' })}
-            value="123.123.123.12"
-            onChange={() => null}/>
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.support.tools.serverValidation.modal.ipAddressLabel.text" /></ControlLabel>
+            <FormControl
+              placeholder={this.props.intl.formatMessage({ id: 'portal.support.tools.serverValidation.modal.ipAddressPlaceholder.text' })}
+              value="123.123.123.12"
+              onChange={() => null} />
+          </FormGroup>
+
           <hr />
+
           <Button bsStyle="primary" onClick={() => toggleShowDetails(true)}>
             <FormattedMessage id="portal.button.VALIDATE"/>
           </Button>

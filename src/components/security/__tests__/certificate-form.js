@@ -12,7 +12,7 @@ const intlMaker = () => {
   }
 }
 
-describe('SoaEditForm', () => {
+describe('Certificate Form', () => {
   const onSave = jest.genMockFunction()
   const onCancel = jest.genMockFunction()
   let subject, error, props = null
@@ -55,6 +55,6 @@ describe('SoaEditForm', () => {
   it('should render an error message', () => {
     touched = true
     error = REQUIRED
-    expect(subject().find('#privateKey .error-msg').text()).toBe(REQUIRED)
+    expect(subject().find('FormGroup').at(1).find('.error-msg').children().text()).toBe(REQUIRED)
   })
 })

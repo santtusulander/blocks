@@ -1,7 +1,7 @@
 import React from 'react'
-import {Row, Col, Input, Button} from 'react-bootstrap'
+import { Row, Col, FormControl, Button } from 'react-bootstrap'
 import Immutable from 'immutable'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
@@ -232,6 +232,7 @@ class ConfigurationDefaults extends React.Component {
                 changeValue={() => this.toggleVaryHeaderRule(varyHeaderRuleId)}/>
             </Col>
           </Row>
+
           {/* Ignore case from origin */}
           <Row className="form-group">
             <Col lg={4} xs={6} className="toggle-label">
@@ -282,7 +283,7 @@ class ConfigurationDefaults extends React.Component {
                 'CDN TTL'}
             </Col>
             <Col lg={2} xs={3}>
-              <Input type="text"
+              <FormControl
                 disabled={readOnly}
                 className="ttl-value"
                 placeholder={intl.formatMessage({

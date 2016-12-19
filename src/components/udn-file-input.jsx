@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input } from 'react-bootstrap'
+import { FormGroup, ControlLabel, FormControl, InputGroup } from 'react-bootstrap'
 
 import './udn-file-input.scss'
 
@@ -11,15 +11,18 @@ const UDNFileInput = (props) => {
 
   return (
     <div className='udn-file-input'>
-      <Input
-        type='file'
-        {...otherProps}
-        value=''
-        onChange={() => {}}
-      />
-
-      <label htmlFor={props.id} className='file-input-label'><FormattedMessage id="portal.fileInput.chooseFile.text"/></label>
-      <span>{addonAfter}</span>
+      <FormGroup>
+        <ControlLabel className='file-input-label'><FormattedMessage id="portal.fileInput.chooseFile.text"/></ControlLabel>
+        <InputGroup>
+          <FormControl
+            type='file'
+            {...otherProps}
+            value=''
+            onChange={() => {}}
+          />
+          <InputGroup.Addon>{addonAfter}</InputGroup.Addon>
+        </InputGroup>
+      </FormGroup>
     </div>
   )
 }

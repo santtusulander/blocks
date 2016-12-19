@@ -5,7 +5,10 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map, List } from 'immutable'
 import {
   Modal,
-  Input,
+  FormGroup,
+  FormControl,
+  HelpBlock,
+  ControlLabel,
   ButtonToolbar,
   Button,
   Table
@@ -22,7 +25,13 @@ import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
 import ModalWindow from '../../components/modal'
 
-import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
+import {
+  checkForErrors,
+  userIsContentProvider,
+  userIsCloudProvider,
+  accountIsServiceProviderType,
+  getReduxFormValidationState
+} from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
@@ -226,43 +235,50 @@ class GroupForm extends React.Component {
 
         <Modal.Body>
           <form>
-
-              <Input
+            <FormGroup validationState={getReduxFormValidationState(name)}>
+              <ControlLabel><FormattedMessage id='portal.account.groupForm.name.label' /></ControlLabel>
+              <FormControl
                 {...name}
-                type="text"
-                label={intl.formatMessage({id: 'portal.account.groupForm.name.label'})}
-                placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}/>
+                placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
+              />
               {name.touched && name.error &&
-              <div className='error-msg'>{name.error}</div>}
+                <HelpBlock className='error-msg'>{name.error}</HelpBlock>
+              }
+            </FormGroup>
 
               {charge_id &&
-                <div>
-                  <Input
+                <FormGroup validationState={getReduxFormValidationState(charge_id)}>
+                  <ControlLabel><FormattedMessage id='portal.account.groupForm.charge_number.label' /></ControlLabel>
+                  <FormControl
                     {...charge_id}
                     disabled={!canEditBilling}
-                    type="text"
-                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
-                    placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
+                    placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
+                  />
                   {charge_id.touched && charge_id.error &&
-                  <div className='error-msg'>{charge_id.error}</div>}
-                </div>
+                    <HelpBlock className='error-msg'>{charge_id.error}</HelpBlock>
+                  }
+                </FormGroup>
               }
 
               {charge_model &&
-                <div>
-                  <SelectWrapper
-                    {...charge_model}
-                    disabled={!canEditBilling}
-                    numericValues={true}
-                    options={[
-                      [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
-                      [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
-                    ]}
-                    value={charge_model.value}
-                    label={intl.formatMessage({id: 'portal.account.groupForm.charge_model.label'})}/>
+                <FormGroup>
+                  <ControlLabel><FormattedMessage id="portal.account.groupForm.charge_model.label" /></ControlLabel>
+                  <div>
+                    <SelectWrapper
+                      {...charge_model}
+                      disabled={!canEditBilling}
+                      numericValues={true}
+                      options={[
+                        [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
+                        [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
+                      ]}
+                      value={charge_model.value}
+                    />
+                  </div>
                   {charge_model.touched && charge_model.error &&
-                  <div className='error-msg'>{charge_model.error}</div>}
-                </div>
+                    <HelpBlock className='error-msg'>{charge_model.error}</HelpBlock>
+                  }
+                </FormGroup>
               }
               {/*
                 Disable until API support allows listing groups for user with some assigned

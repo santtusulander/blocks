@@ -41,8 +41,4 @@ AnalysisByLocation.propTypes = {
   theme: React.PropTypes.string
 }
 
-AnalysisByLocation.defaultProps = {
-  getCityData: () => {}
-}
-
 export default AnalysisByLocation

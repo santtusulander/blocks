@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Input } from 'react-bootstrap'
+
+import Checkbox from './checkbox'
 
 const PermissionSelection = ({ className, disabled, onChange, permissions }) => {
   const handleChange = (value) => {
@@ -29,24 +30,19 @@ const PermissionSelection = ({ className, disabled, onChange, permissions }) => 
   }
   return (
     <div className={classNames}>
-      <Input
-        type='checkbox'
+      <Checkbox
         checked={permission === 0}
         disabled={disabled}
         label="x"
-        onChange={e => handleChange(e.target.value)}/>
-      <Input
-        type='checkbox'
+        onChange={e => handleChange(e.target.value)}>x</Checkbox>
+      <Checkbox
         checked={permission === 1}
         disabled={disabled}
-        label="R"
-        onChange={e => handleChange(e.target.value)}/>
-      <Input
-        type='checkbox'
+        onChange={e => handleChange(e.target.value)}>R</Checkbox>
+      <Checkbox
         checked={permission === 2}
         disabled={disabled}
-        label="R/W"
-        onChange={e => handleChange(e.target.value)}/>
+        onChange={e => handleChange(e.target.value)}>R/W</Checkbox>
     </div>
   )
 }
