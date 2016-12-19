@@ -172,10 +172,12 @@ ConfigurationPolicies.propTypes = {
   activeMatch: React.PropTypes.instanceOf(Immutable.List),
   activeRule: React.PropTypes.instanceOf(Immutable.List),
   activeSet: React.PropTypes.instanceOf(Immutable.List),
+  cancelEditPolicyRoute: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  params: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }
 
