@@ -7,8 +7,10 @@ import {getFetching} from '../fetching/selectors'
  * @return {Immutable.List} list of Ids
  */
 export const getAllHosts = (state) => {
-  const ids = List()
-  state.properties.properties.forEach( (val, key) => ids.push(key) )
+  let ids = List()
+  state.properties.properties.forEach( (val, key) => {
+    ids = ids.push(key)
+  })
   return ids
 }
 
