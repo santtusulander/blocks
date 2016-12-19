@@ -416,4 +416,8 @@ Mapbox.propTypes = {
   theme: React.PropTypes.string
 }
 
+Mapbox.defaultProps = {
+  getCitiesWithinBounds: () => {}
+}
+
 export default Mapbox;

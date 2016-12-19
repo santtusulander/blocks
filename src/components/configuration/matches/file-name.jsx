@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
+import { ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -39,13 +39,18 @@ class Filename extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.placeholder'})}
-            id="matches_file-name"
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
+          <FormGroup controlId="matches_file-name">
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.fileName.fileName.text" />
+            </ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileName.fileName.placeholder'})}
+              value={this.props.match.get('cases').get(0).get(0)}
+              onChange={this.handleChange(
+                this.props.path.concat(['cases', 0, 0])
+              )}/>
+          </FormGroup>
 
           <Select className="input-select"
             onSelect={this.handleSelectChange(

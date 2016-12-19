@@ -23,7 +23,7 @@ describe('Header', () => {
     let header = shallow(
       <Header set={Map()} intl={intlMaker()} />
     )
-    let inputs = header.find('Input')
+    let inputs = header.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(header.state('to_header')).toEqual('new')
   })

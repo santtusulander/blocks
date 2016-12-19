@@ -1,6 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
+import '../../../../__mocks__/mapbox.js'
 
 jest.unmock('../visitors.jsx')
 jest.unmock('../../table-sorter.jsx')

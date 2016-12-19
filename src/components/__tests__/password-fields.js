@@ -12,7 +12,7 @@ function intlMaker() {
 }
 
 const passwordFields = shallow(<PasswordFields intl={intlMaker()}/>)
-const inputs = passwordFields.find('input')
+const inputs = passwordFields.find('FormControl')
 
 describe('PasswordFields', () => {
   it('should exist', () => {
@@ -120,7 +120,7 @@ describe('PasswordFields', () => {
   it('calls redux-form onChange prop on password change', () => {
     const onChange = jest.fn()
     const passwordFields = shallow(<PasswordFields intl={intlMaker()} onChange={onChange}/>)
-    const inputs = passwordFields.find('input')
+    const inputs = passwordFields.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
     expect(onChange).toHaveBeenCalled()
   })
@@ -128,7 +128,7 @@ describe('PasswordFields', () => {
   it('calls changePassword prop with false paramter when passwords do not match', () => {
     const changePassword = jest.fn()
     const passwordFields = shallow(<PasswordFields intl={intlMaker()} changePassword={changePassword}/>)
-    const inputs = passwordFields.find('input')
+    const inputs = passwordFields.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
     inputs.at(1).simulate('change', {target: {value: 'different_password'}})
     expect(changePassword).toHaveBeenCalledWith(false)
@@ -137,7 +137,7 @@ describe('PasswordFields', () => {
   it('calls changePassword prop with true paramter when passwords do match', () => {
     const changePassword = jest.fn()
     const passwordFields = shallow(<PasswordFields intl={intlMaker()} changePassword={changePassword}/>)
-    const inputs = passwordFields.find('input')
+    const inputs = passwordFields.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'V@lid_P@55word'}})
     inputs.at(1).simulate('change', {target: {value: 'V@lid_P@55word'}})
     expect(changePassword).toHaveBeenCalledWith(true)

@@ -20,6 +20,7 @@ import SecurityPageHeader from '../components/security/security-page-header'
 import CertificateForm from '../components/security/certificate-form-container'
 import Content from '../components/layout/content'
 import SSLList from '../components/security/ssl-list'
+import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
 import { getUrl } from '../util/routes.js'
 
@@ -48,6 +49,7 @@ export class Security extends React.Component {
     const { location: { pathname }, params: { brand, account, group } } = props
     switch(getTabName(pathname)) {
       case 'ssl-certificate':
+        props.securityActions.startFetching()
         props.securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
         break
       // case 'token-authentication':  securityActions.fetchTokenAuthentication(account)
@@ -57,6 +59,10 @@ export class Security extends React.Component {
   }
 
   renderContent(certificateFormProps, sslListProps) {
+    if (this.props.fetching) {
+      return <LoadingSpinner />
+    }
+
     const params = this.props.params
     const subPage = getTabName(this.props.location.pathname)
     // for token auth & content targeting post-1.0
@@ -181,6 +187,7 @@ Security.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
+  fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
   location: PropTypes.object,
   onDelete: PropTypes.func,
@@ -194,6 +201,7 @@ Security.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
+    fetching: state.security.get('fetching'),
     toDelete: state.security.get('certificateToEdit'),
     activeModal: state.ui.get('accountManagementModal'),
     accounts: state.account.get('allAccounts'),

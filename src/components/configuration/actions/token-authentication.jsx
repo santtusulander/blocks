@@ -1,9 +1,9 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, HelpBlock, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getReduxFormValidationState } from '../../../util/helpers'
 import { isBase64 } from '../../../util/validators'
 import Select from '../../select'
 
@@ -70,40 +70,43 @@ export class TokenAuthentication extends React.Component {
           {/* This component is mostly for display purposes only until this functionality
             * is flushed out on the backend. The backend doesn't currently support
             * user-configuration of this value. */}
-          <div className="form-group">
-            <label className="control-label">
+          <FormGroup>
+            <ControlLabel>
               <FormattedMessage id="portal.policy.edit.tokenauth.encryption.text" />
-            </label>
+            </ControlLabel>
             <Select className="input-select"
               disabled={true}
               onSelect={() => {/* no-op */}}
               options={placeholderEncryptionOptions}
               value={placeholderEncryptionValue} />
-          </div>
+          </FormGroup>
 
           {/* This component is mostly for display purposes only until this functionality
             * is flushed out on the backend. The backend doesn't currently support
             * user-configuration of this value. */}
-          <div className="form-group">
-            <label className="control-label">
+          <FormGroup>
+            <ControlLabel>
               <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />
-            </label>
+            </ControlLabel>
             <Select className="input-select"
               disabled={true}
               onSelect={() => {/* no-op */}}
               options={placeholderSchemaOptions}
               value={placeholderSchemaValue} />
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
-              <Input type="text"
-                {...sharedKey}
-                label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
-                placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})} />
-                {sharedKey.touched && sharedKey.error &&
-                  <div className='error-msg'>{sharedKey.error}</div>
-                }
-          </div>
+          <FormGroup validationState={getReduxFormValidationState(sharedKey)}>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />
+            </ControlLabel>
+            <FormControl
+              {...sharedKey}
+              placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
+            />
+              {sharedKey.touched && sharedKey.error &&
+                <HelpBlock className='error-msg'>{sharedKey.error}</HelpBlock>
+              }
+          </FormGroup>
 
           <ButtonToolbar className="text-right">
             <Button className="btn-secondary" onClick={close}>

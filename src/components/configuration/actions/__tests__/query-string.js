@@ -23,7 +23,7 @@ describe('QueryString', () => {
     let queryString = shallow(
       <QueryString changeValue={changeValue} intl={intlMaker()}/>
     )
-    let inputs = queryString.find('Input')
+    let inputs = queryString.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'new'}})
     expect(changeValue.mock.calls[0][0]).toEqual(['edge_configuration', 'cache_rule', 'actions', 'query_string_name'])
     expect(changeValue.mock.calls[0][1]).toEqual('new')

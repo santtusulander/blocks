@@ -205,14 +205,18 @@
 }
 
 .mapboxgl-ctrl-bottom-right {
-  right: auto;
+  right: auto !important;
   left: 0;
 }
 
 .mapboxgl-ctrl-attrib {
   font-size: 0.8rem;
 
+  a {
+    color: $pale-blue !important;
+  }
+
   .dark-theme & {
-    background: rgba($black, 0.5);
+    background: rgba($black, 0.5) !important;
   }
 }
