@@ -12,6 +12,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.nameValidationRequirements.line1.text': 'Requirements:',
   'portal.account.manage.nameValidationRequirements.line2.text': 'minimum of 3 and maximum of 40 characters',
   'portal.account.manage.nameValidationRequirements.line3.text': 'allowed special characters: _ . , - & ( ) [ ]',
+  'portal.account.manage.providerTypeUnknown.text': 'Unknown',
   'portal.account.manage.editAccount.title': 'Edit Account',
   'portal.account.manage.newAccount.title': 'Add New Account',
   'portal.account.manage.noAccounts.text': 'No accounts.',
