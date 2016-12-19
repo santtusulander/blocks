@@ -892,6 +892,7 @@ class Styleguide extends React.Component {
             geoData={countriesGeoJSON}
             countryData={countryData}
             theme={this.props.theme}
+            height={600}
             />
 
           <h1 className="page-header">Icons</h1>
