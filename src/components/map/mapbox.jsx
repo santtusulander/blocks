@@ -2,7 +2,12 @@ import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 // import Typeahead from 'react-bootstrap-typeahead'
 
-import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
+import {
+  MAPBOX_LIGHT_THEME,
+  MAPBOX_DARK_THEME,
+  MAPBOX_ZOOM_MIN,
+  MAPBOX_ZOOM_MAX
+} from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
 // import IconMinimap from '../icons/icon-minimap';
@@ -54,7 +59,7 @@ class Mapbox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      zoom: 1,
+      zoom: MAPBOX_ZOOM_MIN,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
@@ -307,7 +312,7 @@ class Mapbox extends React.Component {
   }
 
   resetZoom() {
-    this.setState({ zoom: 1 })
+    this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
 
   render() {
@@ -321,8 +326,8 @@ class Mapbox extends React.Component {
           height: this.props.height
         }}
         zoom={[this.state.zoom]}
-        minZoom={1}
-        maxZoom={13}
+        minZoom={MAPBOX_ZOOM_MIN}
+        maxZoom={MAPBOX_ZOOM_MAX}
         onZoom={this.onZoom.bind(this)}
         onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
