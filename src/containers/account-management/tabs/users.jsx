@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Panel, PanelGroup, Table, Button, Input } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, FormGroup, FormControl } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -173,7 +173,7 @@ export class AccountManagementAccountUsers extends React.Component {
      */
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
-      [{ input: <Input ref="emails" id='email' placeholder=" Email" type="text"/> }],
+      [{ input: <FormControl ref="emails" id='email' placeholder=" Email" /> }],
       [
         {
           input: <SelectWrapper
@@ -353,14 +353,14 @@ export class AccountManagementAccountUsers extends React.Component {
     return (
       <PageContainer>
         <SectionHeader sectionHeaderTitle={finalUserText}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group inline"
-            placeholder="Search"
-            value={this.state.search}
-            onChange={this.changeSearch} />
-          <div className="form-group inline">
+          <FormGroup className="search-input-group inline">
+            <FormControl
+              className="search-input"
+              placeholder="Search"
+              value={this.state.search}
+              onChange={this.changeSearch} />
+          </FormGroup>
+          <FormGroup className="inline">
             <SelectWrapper
               id='filtered-roles'
               value={this.state.filteredRoles}
@@ -368,7 +368,7 @@ export class AccountManagementAccountUsers extends React.Component {
                 this.setState({ filteredRoles: value })
               }}
               options={roleOptions}/>
-          </div>
+          </FormGroup>
           <div className="form-group inline">
             <SelectWrapper
               id='filtered-groups'

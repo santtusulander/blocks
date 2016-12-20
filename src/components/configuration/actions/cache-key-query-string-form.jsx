@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Panel, Row, Col } from 'react-bootstrap'
+import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -86,15 +86,17 @@ class CacheKeyQueryStringForm extends React.Component {
           id="portal.policy.edit.cacheKeyQueryString.ignoreAllQueryTerms.text"/>],
         ['include_some_parameters', <FormattedMessage
           id="portal.policy.edit.cacheKeyQueryString.includeSomeQueryTerms.text"/>]]}/>)
-    const qNameInputs = this.state.queryArgs.map((queryArg, i) => <Input type="text"
-      label={!horizontal && formatMessage({
-        id: 'portal.policy.edit.cacheKeyQueryString.queryName.text'
-      })} key={i}
-      placeholder={formatMessage({
-        id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text'
-      })}
-      value={queryArg}
-      onChange={this.handleChangeArg(i)}/>)
+    const qNameInputs = this.state.queryArgs.map((queryArg, i) =>
+      <FormGroup key={`query-arg-${i}`}>
+        <ControlLabel>
+          {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
+        </ControlLabel>
+        <FormControl
+          placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}
+          value={queryArg}
+          onChange={this.handleChangeArg(i)}/>
+      </FormGroup>
+    )
     if(horizontal) {
       return (<div>
         <Row className="form-group">
@@ -121,13 +123,13 @@ class CacheKeyQueryStringForm extends React.Component {
     return (
       <div className="form-groups">
         <InputConnector show={hasContainingRule} />
-        <div className="form-group">
-          <label className="control-label">
+        <FormGroup>
+          <ControlLabel>
             <FormattedMessage
               id='portal.policy.edit.cacheKeyQueryString.cacheKey.text'/>
-          </label>
+          </ControlLabel>
           {keySelect}
-        </div>
+        </FormGroup>
 
         <Panel className="form-panel" collapsible={true}
           expanded={hasContainingRule}>

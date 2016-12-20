@@ -31,7 +31,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
             const commonName = cert.get('cn')
             const groupID = cert.get('group')
             const groupName = groups.size ? groups.filter(group => group.get('id') === groupID).first().get('name') : groupID
-            const expirationDate = moment.utc(cert.get('expirationDate'), 'YYYYMMDDhhmmssZ').format('L')
+            const expirationDate = moment.utc(cert.get('date_not_valid_after'), 'YYYYMMDDhhmmssZ').format('L')
             const account = cert.get('account')
             return (
               <tr key={index}>

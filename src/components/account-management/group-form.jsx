@@ -1,12 +1,21 @@
 import React, { PropTypes } from 'react'
-import { Input, Button, Table } from 'react-bootstrap'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { Map, List } from 'immutable'
 import { reduxForm, getValues } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { Map, List } from 'immutable'
+import {
+  FormGroup,
+  FormControl,
+  HelpBlock,
+  ControlLabel,
+  Button,
+  Table
+} from 'react-bootstrap'
+
 import * as hostActionCreators from '../../redux/modules/host'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import SidePanel from '../side-panel'
 import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
@@ -14,9 +23,14 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
 import ModalWindow from '../../components/modal'
-import SidePanel from '../side-panel'
 
-import { checkForErrors, userIsContentProvider, userIsCloudProvider, accountIsServiceProviderType } from '../../util/helpers'
+import {
+  checkForErrors,
+  userIsContentProvider,
+  userIsCloudProvider,
+  accountIsServiceProviderType,
+  getReduxFormValidationState
+} from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 import './group-form.scss'
@@ -223,128 +237,136 @@ class GroupForm extends React.Component {
           submit={this.save}
           invalid={invalid}>
           <form>
-            <Input
-              {...name}
-              type="text"
-              label={intl.formatMessage({id: 'portal.account.groupForm.name.label'})}
-              placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}/>
-            {name.touched && name.error &&
-            <div className='error-msg'>{name.error}</div>}
-
-            {charge_id &&
-            <div>
-              <Input
-                {...charge_id}
-                disabled={!canEditBilling}
-                type="text"
-                label={intl.formatMessage({id: 'portal.account.groupForm.charge_number.label'})}
-                placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}/>
-              {charge_id.touched && charge_id.error &&
-              <div className='error-msg'>{charge_id.error}</div>}
-            </div>
-            }
-
-            {charge_model &&
-            <div>
-              <SelectWrapper
-                {...charge_model}
-                disabled={!canEditBilling}
-                numericValues={true}
-                options={[
-                  [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
-                  [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
-                ]}
-                value={charge_model.value}
-                label={intl.formatMessage({id: 'portal.account.groupForm.charge_model.label'})}/>
-              {charge_model.touched && charge_model.error &&
-              <div className='error-msg'>{charge_model.error}</div>}
-            </div>
-            }
-            {/*
-              Disable until API support allows listing groups for user with some assigned
-            <hr/>
-            <div className="form-group add-members">
-              <label className="control-label">Add Members</label>
-              <FilterChecklistDropdown
-                noClear={true}
-                options={addMembersOptions}
-                value={this.state.usersToAdd || List()}
-                handleCheck={val => {
-                  this.setState({usersToAdd: val})
-                }}
+            <FormGroup validationState={getReduxFormValidationState(name)}>
+              <ControlLabel><FormattedMessage id='portal.account.groupForm.name.label' /></ControlLabel>
+              <FormControl
+                {...name}
+                placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
               />
-            </div>
+              {name.touched && name.error &&
+                <HelpBlock className='error-msg'>{name.error}</HelpBlock>
+              }
+            </FormGroup>
 
-            <div className="form-group">
-              <label className="control-label">
-                {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
-              </label>
-              <ul className="members-list">
-                {currentMembers.map((val) => {
-                  let className = 'members-list__member '
-                  className += val.get('toAdd') ? 'members-list__member--new ' : ''
-                  className += val.get('toDelete') ? 'members-list__member--delete ' : ''
-                  return(
-                    <li key={val.get('email')} className={className}>
-                      <span className="members-list__member__label">{val.get('email')}</span>
-                      <span className="members-list__member__actions">
-                        {val.get('toAdd') && <span className="members-list__member__actions__new">
-                          NEW
-                        </span>}
-                        {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
-                          onClick={() => this.undoDelete(val.get('email'))}>
-                          UNDO
-                        </Button> :
-                        <Button bsStyle="link" className="delete-button"
-                          onClick={() => this.deleteMember(val.get('email'))}>
-                          <IconClose width="20" height="20"/>
-                        </Button>}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-            */}
+              {charge_id &&
+                <FormGroup validationState={getReduxFormValidationState(charge_id)}>
+                  <ControlLabel><FormattedMessage id='portal.account.groupForm.charge_number.label' /></ControlLabel>
+                  <FormControl
+                    {...charge_id}
+                    disabled={!canEditBilling}
+                    placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
+                  />
+                  {charge_id.touched && charge_id.error &&
+                    <HelpBlock className='error-msg'>{charge_id.error}</HelpBlock>
+                  }
+                </FormGroup>
+              }
 
-            <hr/>
+              {charge_model &&
+                <FormGroup>
+                  <ControlLabel><FormattedMessage id="portal.account.groupForm.charge_model.label" /></ControlLabel>
+                  <div>
+                    <SelectWrapper
+                      {...charge_model}
+                      disabled={!canEditBilling}
+                      numericValues={true}
+                      options={[
+                        [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
+                        [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
+                      ]}
+                      value={charge_model.value}
+                    />
+                  </div>
+                  {charge_model.touched && charge_model.error &&
+                    <HelpBlock className='error-msg'>{charge_model.error}</HelpBlock>
+                  }
+                </FormGroup>
+              }
+              {/*
+                Disable until API support allows listing groups for user with some assigned
+              <hr/>
+              <div className="form-group add-members">
+                <label className="control-label">Add Members</label>
+                <FilterChecklistDropdown
+                  noClear={true}
+                  options={addMembersOptions}
+                  value={this.state.usersToAdd || List()}
+                  handleCheck={val => {
+                    this.setState({usersToAdd: val})
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label className="control-label">
+                  {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
+                </label>
+                <ul className="members-list">
+                  {currentMembers.map((val) => {
+                    let className = 'members-list__member '
+                    className += val.get('toAdd') ? 'members-list__member--new ' : ''
+                    className += val.get('toDelete') ? 'members-list__member--delete ' : ''
+                    return(
+                      <li key={val.get('email')} className={className}>
+                        <span className="members-list__member__label">{val.get('email')}</span>
+                        <span className="members-list__member__actions">
+                          {val.get('toAdd') && <span className="members-list__member__actions__new">
+                            NEW
+                          </span>}
+                          {val.get('toDelete') ? <Button bsStyle="link" className="undo-label"
+                            onClick={() => this.undoDelete(val.get('email'))}>
+                            UNDO
+                          </Button> :
+                          <Button bsStyle="link" className="delete-button"
+                            onClick={() => this.deleteMember(val.get('email'))}>
+                            <IconClose width="20" height="20"/>
+                          </Button>}
+                        </span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+              */}
 
-            {(!accountIsServiceProviderType(account) && groupId) &&
-            <div>
+              <hr/>
+
+              {(!accountIsServiceProviderType(account) && groupId) &&
+                <div>
               <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
               {this.props.isFetchingHosts ? <LoadingSpinner/> :
                 !hosts.isEmpty() ?
-                  <Table striped={true} className="fixed-layout">
+                      <Table striped={true} className="fixed-layout">
                     <thead>
                     <tr>
                       <th>
                         <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
                       </th>
-                      <th className="one-button-cell" />
+                          <th className="one-button-cell" />
                     </tr>
                     </thead>
                     <tbody>
                     {hosts.map((host, i) => {
                       return (
                         <tr key={i}>
-                          <td><TruncatedTitle content={host} /></td>
+                              <td><TruncatedTitle content={host} /></td>
                           <td>
                             <ActionButtons
-                              onDelete={() => this.setState({ hostToDelete: host })}/>
+                                  onDelete={() => this.setState({ hostToDelete: host })}/>
                           </td>
                         </tr>
                       )
                     })}
                     </tbody>
                   </Table>
-                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+                  : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
               }
-            </div>
-            }
+                </div>
+              }
+
           </form>
         </SidePanel>
 
-        {this.state.hostToDelete &&
+      {this.state.hostToDelete &&
         <ModalWindow
           title={
             <div>
@@ -361,7 +383,7 @@ class GroupForm extends React.Component {
           deleteButton={true}
           cancel={() => this.setState({ hostToDelete: null })}
           submit={() => this.deleteHost(this.state.hostToDelete)}/>
-        }
+      }
       </div>
     )
   }

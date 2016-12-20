@@ -2,7 +2,10 @@ import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { reduxForm } from 'redux-form'
 import {
-  Input,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
   ButtonToolbar,
   Button
 } from 'react-bootstrap'
@@ -16,6 +19,7 @@ import {
   getTicketPriorityOptions,
   getTicketTypeOptions
 } from '../../../util/support-helper'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 let errors = {}
 const maxSubjectLength = 150
@@ -152,21 +156,23 @@ class SupportTicketForm extends React.Component {
 
     return (
       <form className="ticket-form">
-        <Input
-          {...subject}
-          type="text"
-          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.title.text'})}/>
-        {subject.touched && subject.error &&
-        <div className="error-msg">{subject.error}</div>}
+        <FormGroup validationState={getReduxFormValidationState(subject)}>
+          <ControlLabel><FormattedMessage id="portal.support.tickets.label.title.text" /></ControlLabel>
+          {getReduxFormValidationState(subject) &&
+            <HelpBlock>{subject.error}</HelpBlock>
+          }
+          <FormControl {...subject} />
+        </FormGroup>
 
         <hr/>
 
-        <Input
-          {...description}
-          type="textarea"
-          label={this.props.intl.formatMessage({id: 'portal.support.tickets.label.description.text'})}/>
-        {description.touched && description.error &&
-        <div className="error-msg">{description.error}</div>}
+        <FormGroup validationState={getReduxFormValidationState(description)}>
+          <ControlLabel><FormattedMessage id="portal.support.tickets.label.description.text" /></ControlLabel>
+          {getReduxFormValidationState(description) &&
+            <HelpBlock>{description.error}</HelpBlock>
+          }
+          <FormControl componentClass="textarea" {...description} />
+        </FormGroup>
 
         <hr/>
 

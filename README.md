@@ -58,7 +58,7 @@ The following plugins can be helpful as well:
       <td>Included with node</td>
     </tr>
     <tr>
-      <td>yarn v0.17.4</td>
+      <td>yarn v0.17.10</td>
       <td><code>yarn --version</code></td>
       <td>https://yarnpkg.com/en/docs/install</td>
     </tr>

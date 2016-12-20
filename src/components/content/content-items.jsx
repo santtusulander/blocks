@@ -174,7 +174,7 @@ class ContentItems extends React.Component {
       .then((response) => {
         this.setState({
           showModal: true,
-          itemToEdit: Immutable.Map(response.payload)
+          itemToEdit: Immutable.fromJS(response.payload)
         })
       })
   }
@@ -306,6 +306,7 @@ class ContentItems extends React.Component {
     })
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
+    const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -327,13 +328,13 @@ class ContentItems extends React.Component {
               <UDNButton className={viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={viewingChart}
                          icon={true}
-                         onClick={!viewingChart && this.props.toggleChartView}>
+                         onClick={toggleView(!viewingChart)}>
                 <IconItemChart/>
               </UDNButton>
               <UDNButton className={!viewingChart ? 'btn-tertiary' : 'btn-primary'}
                          active={!viewingChart}
                          icon={true}
-                         onClick={viewingChart && this.props.toggleChartView}>
+                         onClick={toggleView(viewingChart)}>
                 <IconItemList/>
               </UDNButton>
             </ButtonGroup>
@@ -395,7 +396,7 @@ class ContentItems extends React.Component {
                   }
 
                   return (
-                    <ContentItem key={id}
+                    <ContentItem key={`content-item-${id}`}
                       isChart={viewingChart}
                       itemProps={itemProps}
                       scaledWidth={scaledWidth}

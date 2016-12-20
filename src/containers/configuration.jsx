@@ -125,9 +125,9 @@ export class Configuration extends React.Component {
       this.props.activeHost.toJS()
     ).then((action) => {
       if(action.error) {
-        this.showNotification('Saving configurations failed: ' +
-          action.payload.status + ' ' +
-          action.payload.statusText)
+        this.showNotification(this.props.intl.formatMessage(
+                              {id: 'portal.configuration.updateFailed.text'},
+                              {reason: action.payload.data.message}))
       } else {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
@@ -194,9 +194,9 @@ export class Configuration extends React.Component {
       // env === 1 is retiring
       if(env === 1) {
         if(action.error) {
-          this.showNotification('Retiring configurations failed: ' +
-            action.payload.status + ' ' +
-            action.payload.statusText)
+          this.showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.configuration.retireFailed.text'},
+                                {reason: action.payload.data.message}))
         } else {
           this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
@@ -204,9 +204,9 @@ export class Configuration extends React.Component {
       } else {
         if(action.error) {
           this.togglePublishModal()
-          this.showNotification('Publishing configurations failed: ' +
-            action.payload.status + ' ' +
-            action.payload.statusText)
+          this.showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.configuration.publishFailed.text'},
+                                {reason: action.payload.data.message}))
         } else {
           this.togglePublishModal()
           this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)
@@ -313,40 +313,40 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
-          <li eventKey='details'>
+          <li data-eventKey='details'>
             <Link to={baseUrl + '/details'} activeClassName="active">
             <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li eventKey='defaults'>
+          <li data-eventKey='defaults'>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
             <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li eventKey='policies'>
+          <li data-eventKey='policies'>
             <Link to={baseUrl + '/policies'} activeClassName="active">
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li eventKey='security'>
+          <li data-eventKey='security'>
             <Link to={baseUrl + '/security'} activeClassName="active">
             <FormattedMessage id="portal.configuration.security.text"/>
             </Link>
           </li>
 
           {/* Hide in 1.0 – UDNP-1406
-          <NavItem eventKey={'performance'}>
+          <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
-          </NavItem>
-          <NavItem eventKey={'security'}>
+          </li>
+          <li data-eventKey={'security'}>
             <FormattedMessage id="portal.configuration.security.text"/>
-          </NavItem>
-          <NavItem eventKey={'certificates'}>
+          </li>
+          <li data-eventKey={'certificates'}>
             <FormattedMessage id="portal.configuration.certificates.text"/>
-          </NavItem>
-          <NavItem eventKey={'change-log'}>
+          </li>
+          <li data-eventKey={'change-log'}>
             <FormattedMessage id="portal.configuration.changeLog.text"/>
-          </NavItem>
+          </li>
           */}
         </Tabs>
 
