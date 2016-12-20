@@ -11,6 +11,7 @@ $page-header-dropdown-width: rem(250px);
 $page-header-secondary-dropdown-min-width: rem(180px);
 $action-padding-right: rem(30px);
 $details-item-margin: rem(6px);
+$sticky-filter-breakpoint: 850px;
 
 .page-header-container {
   padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
@@ -139,7 +140,7 @@ $details-item-margin: rem(6px);
 // Sticky analytics-filters
 // ==================
 body.sticky-filters {
-  @media (min-width: 850px) {
+  @media (min-width: $sticky-filter-breakpoint) {
     .analytics-container {
       padding-top: 175px;
     }
