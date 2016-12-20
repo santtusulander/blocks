@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Modal } from 'react-bootstrap'
+import { Checkbox, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import Select from '../../select'
@@ -39,17 +39,28 @@ class IpAddress extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          <Input type="textarea" label={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.mediaType.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.mediaType.disclaimer'})}
-            value={this.props.match.get('cases').get(0).get(0)}
-            onChange={this.handleChange(
-              this.props.path.concat(['cases', 0, 0])
-            )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.idAddress.mediaType.text"/>
+            </ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.mediaType.disclaimer'})}
+              value={this.props.match.get('cases').get(0).get(0)}
+              onChange={this.handleChange(
+                this.props.path.concat(['cases', 0, 0])
+              )}/>
+          </FormGroup>
 
-          <Input type="checkbox" label={this.props.intl.formatMessage({id: 'portal.policy.edit.idAddress.includeXforwardedFor.tex'})}
-            onChange={this.handleChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'ip_address_include_x_forwarded_for']
-            )}/>
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.idAddress.includeXforwardedFor.text"/>
+            </ControlLabel>
+            <Checkbox
+              onChange={this.handleChange(
+                ['edge_configuration', 'cache_rule', 'matches', 'ip_address_include_x_forwarded_for']
+              )}/>
+          </FormGroup>
 
           <Select className="input-select"
             onSelect={this.handleSelectChange(

@@ -65,27 +65,7 @@ import User from './containers/user'
 
 import ContentTransition from './transitions/content'
 
-/**
- *
- * @param {string} name
- * @param {Object} params
- * @returns {string}
- */
-export function getRoute(name, params) {
-  if (!routes[name]) {
-    throw new Error('Unknown route "%s"', name)
-  }
-
-  let route = routes[name]
-
-  if (params) {
-    Object.keys(params).forEach(key => {
-      route = route.replace(`:${key}`, params[key])
-    })
-  }
-
-  return route
-}
+import { getRoute } from './util/routes'
 
 const analyticsTabs = [
   [PERMISSIONS.VIEW_ANALYTICS_TRAFFIC_OVERVIEW, routes.analyticsTabTraffic, AnalyticsTabTraffic],

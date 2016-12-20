@@ -14,9 +14,13 @@ import {
   Button,
   ButtonToolbar,
   Col,
+  ControlLabel,
   Dropdown,
+  FormControl,
+  FormGroup,
+  HelpBlock,
   Image,
-  Input,
+  InputGroup,
   Label,
   MenuItem,
   NavItem,
@@ -41,6 +45,9 @@ import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
 import MultiOptionSelector from '../components/multi-option-selector'
+
+import Checkbox from '../components/checkbox'
+import Radio from '../components/radio'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -82,7 +89,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
-import MapBox            from '../components/map/mapbox'
+import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 import DateRanges from '../constants/date-ranges'
@@ -98,6 +105,8 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link8', label: 'Property 8', checked: false },
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
+
+import * as countriesGeoJSON from '../assets/topo/custom.geo.json';
 
 class Styleguide extends React.Component {
 
@@ -260,6 +269,33 @@ class Styleguide extends React.Component {
         timestamp: datapoint.timestamp
       }
     })
+
+    const countryData = [
+      {
+        "name": "Hong Kong",
+        "bits_per_second": 2801215741,
+        "code": "HKG",
+        "total": 484049729862220
+      },
+      {
+        "name": "Japan",
+        "bits_per_second": 1011356667,
+        "code": "JPN",
+        "total": 174762305623425
+      },
+      {
+        "name": "Korea, Republic Of",
+        "bits_per_second": 500033048,
+        "code": "KOR",
+        "total": 86405648211184
+      },
+      {
+        "name": "Malaysia",
+        "bits_per_second": 472250782,
+        "code": "MYS",
+        "total": 81604876012993
+      }
+    ]
 
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
@@ -483,16 +519,47 @@ class Styleguide extends React.Component {
 
           <div className="row">
             <div className="col-xs-6">
-              <Input type="text" label="Default Input" placeholder="Enter text" />
-              <Input type="email" label="Email Input" placeholder="Enter email" />
-              <Input type="password" label="Password Input" />
-              <Input type="text" label="Input with Addons" placeholder="Enter text" addonBefore="$" />
-              <Input type="textarea" label="Text Area" placeholder="Enter text" />
+              <FormGroup>
+                <ControlLabel>Default Input</ControlLabel>
+                <FormControl type="text" placeholder="Enter text" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Email Input</ControlLabel>
+                <FormControl type="email" placeholder="Enter email" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Password Input</ControlLabel>
+                <FormControl type="password" placeholder="Enter password" />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Input with Addons</ControlLabel>
+                <InputGroup>
+                  <InputGroup.Addon>{"$"}</InputGroup.Addon>
+                  <FormControl type="text" placeholder="Enter text" />
+                </InputGroup>
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>Text Area</ControlLabel>
+                <FormControl componentClass="textArea" placeholder="Enter text" />
+              </FormGroup>
             </div>
 
             <div className="col-xs-6">
-              <Input type="text" label="Has Success" bsStyle="success" help="Helper text" hasFeedback={false} />
-              <Input type="text" label="Has Error" bsStyle="error" help="Helper text" hasFeedback={false} />
+              <FormGroup validationState="success">
+                <ControlLabel>Has Success</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
+
+              <FormGroup validationState="error">
+                <ControlLabel>Has Error</ControlLabel>
+                <FormControl type="text" />
+                <HelpBlock>Helper text</HelpBlock>
+              </FormGroup>
             </div>
           </div>
 
@@ -504,24 +571,38 @@ class Styleguide extends React.Component {
 
               <form className="form-horizontal">
 
-                <Input label="Inline Input" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9">
-                  <Row>
-                    <Col xs={10}>
-                      <input type="text" className="form-control" />
-                    </Col>
-                      <OverlayTrigger trigger="click" rootClose={true} overlay={
-                        <Popover id="popover1" title="Info">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Popover>
-                      }>
-                        <Button bsStyle="link" className="col-xs-2">?</Button>
-                      </OverlayTrigger>
-                  </Row>
-                </Input>
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Input
+                  </Col>
+                  <Col xs={9}>
+                    <InputGroup>
+                      <FormControl />
+                      <InputGroup.Addon>
+                        <OverlayTrigger trigger="click" rootClose={true} overlay={
+                          <Popover id="popover1" title="Info">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Popover>
+                        }>
+                        <Button bsStyle="link" className="col-xs-2">{"?"}</Button>
+                        </OverlayTrigger>
+                      </InputGroup.Addon>
+                    </InputGroup>
+                  </Col>
+                </FormGroup>
 
-                <Input type="textarea" label="Inline Text Area" labelClassName="col-xs-3 text-right" wrapperClassName="col-xs-9" />
+                <FormGroup>
+                  <Col componentClass={ControlLabel} xs={3}>
+                    Inline Text Area
+                  </Col>
+                  <Col xs={9}>
+                    <FormControl componentClass="textarea" />
+                  </Col>
+                </FormGroup>
 
-                <Input type="checkbox" label="Inline Checkbox" wrapperClassName="col-xs-offset-3 col-xs-9" />
+                <FormGroup>
+                  <Checkbox inline={true}>Inline Checkbox</Checkbox>
+                </FormGroup>
 
               </form>
 
@@ -536,29 +617,25 @@ class Styleguide extends React.Component {
 
             <div className="col-xs-6">
 
-              <label>Checkboxes</label>
-
-              <Input type="checkbox" label="Checkbox 1" />
-
-              <Input type="checkbox" label="Checkbox 2" />
-
-              <Input type="checkbox" label="Checkbox 3" />
-
-              <Input type="checkbox" disabled={true} label="Checkbox disabled" />
+              <FormGroup>
+                <ControlLabel>Checkboxes</ControlLabel>
+                <Checkbox value={1}>Checkbox 1</Checkbox>
+                <Checkbox value={2}>Checkbox 2</Checkbox>
+                <Checkbox value={3}>Checkbox 3</Checkbox>
+                <Checkbox value={4} disabled={true}>Checkbox Disabled</Checkbox>
+              </FormGroup>
 
             </div>
 
             <div className="col-xs-6">
 
-              <label>Radios</label>
-
-              <Input type="radio" label="Radio 1" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 2" name="radioGroup1" />
-
-              <Input type="radio" label="Radio 3" name="radioGroup1" />
-
-              <Input type="radio" disabled={true} label="Radio disabled" name="radioGroup1" />
+              <FormGroup controlId="Radio">
+                <ControlLabel>Radios</ControlLabel>
+                <Radio value={1}>Radio 1</Radio>
+                <Radio value={2}>Radio 2</Radio>
+                <Radio value={3}>Radio 3</Radio>
+                <Radio value={4} disabled={true}>Radio Disabled</Radio>
+              </FormGroup>
 
             </div>
 
@@ -759,9 +836,7 @@ class Styleguide extends React.Component {
                 ]} />
             </Col>
             <Col xs={4}>
-              <Input
-                type="checkbox"
-                label="Limit range to 4 months"
+              <Checkbox
                 checked={this.state.datePickerLimit}
                 onClick={
                   () => {
@@ -773,7 +848,7 @@ class Styleguide extends React.Component {
                     }
                     this.setState({ datePickerLimit: !datePickerLimit })
                   }
-                } />
+                }>Limit range to 4 months</Checkbox>
             </Col>
             <Col xs={4}>
               <p>{`startDate: ${this.state.datePickerStartDate} (${this.state.datePickerStartDate.format('MM/DD/YYYY HH:mm')})`}</p>
@@ -813,7 +888,12 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">MapBox</h1>
 
-          <MapBox />
+          <Mapbox
+            geoData={countriesGeoJSON}
+            countryData={countryData}
+            theme={this.props.theme}
+            height={600}
+            />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

@@ -313,40 +313,40 @@ export class Configuration extends React.Component {
           </ButtonToolbar>
         </PageHeader>
         <Tabs activeKey={children.props.route.path}>
-          <li eventKey='details'>
+          <li data-eventKey='details'>
             <Link to={baseUrl + '/details'} activeClassName="active">
             <FormattedMessage id="portal.configuration.hostname.text"/>
             </Link>
           </li>
-          <li eventKey='defaults'>
+          <li data-eventKey='defaults'>
             <Link to={baseUrl + '/defaults'} activeClassName="active">
             <FormattedMessage id="portal.configuration.defaults.text"/>
             </Link>
           </li>
-          <li eventKey='policies'>
+          <li data-eventKey='policies'>
             <Link to={baseUrl + '/policies'} activeClassName="active">
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li eventKey='security'>
+          <li data-eventKey='security'>
             <Link to={baseUrl + '/security'} activeClassName="active">
             <FormattedMessage id="portal.configuration.security.text"/>
             </Link>
           </li>
 
           {/* Hide in 1.0 – UDNP-1406
-          <NavItem eventKey={'performance'}>
+          <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
-          </NavItem>
-          <NavItem eventKey={'security'}>
+          </li>
+          <li data-eventKey={'security'}>
             <FormattedMessage id="portal.configuration.security.text"/>
-          </NavItem>
-          <NavItem eventKey={'certificates'}>
+          </li>
+          <li data-eventKey={'certificates'}>
             <FormattedMessage id="portal.configuration.certificates.text"/>
-          </NavItem>
-          <NavItem eventKey={'change-log'}>
+          </li>
+          <li data-eventKey={'change-log'}>
             <FormattedMessage id="portal.configuration.changeLog.text"/>
-          </NavItem>
+          </li>
           */}
         </Tabs>
 

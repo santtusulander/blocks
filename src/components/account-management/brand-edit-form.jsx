@@ -1,9 +1,11 @@
 import React from 'react'
-import { Modal, Input, ButtonToolbar, Button } from 'react-bootstrap'
+import { Modal, FormGroup, ControlLabel, FormControl, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
+import Radio from '../../components/radio'
 import SelectWrapper from '../select-wrapper.jsx'
 import UDNFileInput from '../udn-file-input.jsx'
+import { getReduxFormValidationState } from '../../util/helpers'
 
 import './brand-edit-form.scss'
 
@@ -48,14 +50,16 @@ const BrandEditForm = (props) => {
       <Modal.Body>
         <form>
 
-          <Input
-            {...brandName}
-            type="text"
-            label={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
-          />
-
-          {brandName.touched && brandName.error && <div className='error-msg errorBrandName'>{brandName.error}</div>}
+          <FormGroup validationState={getReduxFormValidationState(brandName)}>
+            <ControlLabel><FormattedMessage id="portal.brand.edit.brandName.text" /></ControlLabel>
+            <FormControl
+              {...brandName}
+              placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
+            />
+            {brandName.touched && brandName.error &&
+              <HelpBlock className='error-msg errorBrandName'>{brandName.error}</HelpBlock>
+            }
+          </FormGroup>
 
           <hr/>
 
@@ -92,16 +96,23 @@ const BrandEditForm = (props) => {
 
           <hr/>
 
-          <div className="form-group">
-            <label className='control-label'><FormattedMessage id="portal.brand.edit.availability.text"/></label>
-            <Input {...availability} value='private' type="radio" label={this.props.intl.formatMessage({id: 'portal.brand.edit.availability.label'})}/>
-          </div>
+          <FormGroup validationState={getReduxFormValidationState(availability)}>
+            <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
 
-          <div className="form-group">
-            <Input {...availability} value='public' type="radio" label='Public' />
-          </div>
+            <Radio
+              {...availability}
+              value='private'
+            ><FormattedMessage id="portal.brand.edit.availability.private.label" /></Radio>
 
-          {availability.touched && availability.error && <div className='error-msg errorAvailability'>{availability.error}</div>}
+            <Radio
+              {...availability}
+              value='public'
+            ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio>
+
+            {availability.touched && availability.error &&
+              <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>
+            }
+          </FormGroup>
 
           <ButtonToolbar className="text-right extra-margin-top">
             <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>

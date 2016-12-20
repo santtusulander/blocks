@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Input, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
+import { HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
-import SelectWrapper from '../../select-wrapper'
+import { FormattedMessage } from 'react-intl'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
+import SelectWrapper from '../../select-wrapper'
+import { getReduxFormValidationState } from '../../../util/helpers'
 
 let errors = {}
 const validate = (values) => {
@@ -77,30 +78,35 @@ class UserEditForm extends React.Component {
 
     return (
       <form className="user-form">
-        <Input
-          {...email}
-          type="text"
-          disabled={true}
-          label={this.props.intl.formatMessage({id: 'portal.user.edit.email.text'})}/>
-        {email.touched && email.error &&
-        <div className="error-msg">{email.error}</div>}
+
+        <FormGroup validationState={getReduxFormValidationState(email)}>
+          <ControlLabel>
+            <FormattedMessage id="portal.user.edit.email.text"/>
+          </ControlLabel>
+          <FormControl
+            {...email}
+            disabled={true}/>
+          {email.touched && email.error &&
+            <HelpBlock className="error-msg">{email.error}</HelpBlock>
+          }
+        </FormGroup>
 
         <div className="user-form__name">
           <Row>
             <Col sm={6}>
-              <Input
-                {...first_name}
-                type="text"
-                label={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
+              <ControlLabel>
+                <FormattedMessage id="portal.user.edit.firstName.text"/>
+              </ControlLabel>
+                <FormControl {...first_name}/>
               {first_name.touched && first_name.error &&
               <div className="error-msg">{first_name.error}</div>}
             </Col>
 
             <Col sm={6}>
-              <Input
-                {...last_name}
-                type="text"
-                label={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
+              <ControlLabel>
+                <FormattedMessage id="portal.user.edit.lastName.text"/>
+              </ControlLabel>
+              <FormControl {...last_name}/>
               {last_name.touched && last_name.error &&
               <div className="error-msg">{last_name.error}</div>}
             </Col>
@@ -179,7 +185,6 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   // groupOptions: PropTypes.array,
-  intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -197,4 +202,4 @@ export default reduxForm({
     'groups'
   ],
   validate: validate
-})(injectIntl(UserEditForm))
+})(UserEditForm)
