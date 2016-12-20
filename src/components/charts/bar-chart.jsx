@@ -43,7 +43,7 @@ export default class BarChart extends Component {
 
   render() {
     const {
-      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter },
+      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter, hasLegend },
       state: { showTooltip } } = this
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
@@ -65,6 +65,7 @@ export default class BarChart extends Component {
                 tickFormatter={valueFormatter}/>
               {showTooltip &&
                 <Tooltip
+                  cursor={{ fill: 'rgba(0,0,0,0.1)' }}
                   animationEasing="linear"
                   offset={toolTipOffset}
                   content={
@@ -72,12 +73,13 @@ export default class BarChart extends Component {
                       valueFormatter={valueFormatter}
                       iconClass={tooltipIconClass}/>}
                     />}
-              <Legend
-                verticalAlign="top"
-                wrapperStyle={{ top: 25 }}
-                align="right"
-                content={<CustomLegend data={barModels}/>}
-                layout="vertical"/>
+              {hasLegend &&
+                <Legend
+                  verticalAlign="top"
+                  wrapperStyle={{ top: 25 }}
+                  align="right"
+                  content={<CustomLegend data={barModels}/>}
+                  layout="vertical"/>}
               {this.renderBars()}
             </RechartsBarChart>
           </ResponsiveContainer>
@@ -89,7 +91,7 @@ export default class BarChart extends Component {
 BarChart.defaultProps = {
   valueFormatter: formatBytes,
   tooltipAlwaysActive: true,
-  toolTipOffset: 40,
+  toolTipOffset: 0,
   maxBarSize: 80
 }
 
@@ -103,6 +105,7 @@ BarChart.propTypes = {
     })).isRequired,
   chartData: PropTypes.arrayOf(PropTypes.object),
   chartLabel: PropTypes.string,
+  hasLegend: PropTypes.bool,
   maxBarSize: PropTypes.number,
   toolTipOffset: PropTypes.number,
   tooltipAlwaysActive: PropTypes.bool,

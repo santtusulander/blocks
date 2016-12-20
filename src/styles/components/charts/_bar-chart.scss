@@ -59,12 +59,4 @@
       @extend %legend-item;
     }
   }
-
-  .recharts-bar-rectangle:hover {
-    opacity: 0.8;
-  }
-
-  .recharts-bar-cursor {
-    display: none;
-  }
 }
