@@ -6,7 +6,7 @@ import Checkboxes from '../checkboxes'
 
 const subject = shallow(<Checkboxes iterable={[]} field={{ value: [] }}/>)
 
-describe('Confirmation', () => {
+describe('Checkboxes', () => {
   it('should exist', () => {
     expect(subject.length).toBe(1)
   })

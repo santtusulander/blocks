@@ -6,9 +6,8 @@ import ExportEmailForm from '../export-email-form'
 
 const subject = shallow(<ExportEmailForm intl={{ formatMessage() {} }} subject="test"/>)
 
-describe('Confirmation', () => {
+describe('ExportEmailForm', () => {
   it('should exist', () => {
     expect(subject.length).toBe(1)
   })
-
 })
