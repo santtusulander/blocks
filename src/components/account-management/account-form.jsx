@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
-import { Map }from 'immutable'
+import { Map, List }from 'immutable'
 import {
   Modal,
   FormGroup,
@@ -12,13 +12,12 @@ import {
 } from 'react-bootstrap'
 
 import SelectWrapper from '../select-wrapper.jsx'
-import CheckboxArray from '../checkboxes.jsx'
+import MultiOptionSelector from '../multi-option-selector'
 
+import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
+import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
 import {
-  ACCOUNT_TYPES,
-  SERVICE_TYPES,
-  BRAND_OPTIONS,
-  ACCOUNT_TYPE_OPTIONS
+  BRAND_OPTIONS
 } from '../../constants/account-management-options'
 
 import { checkForErrors, getReduxFormValidationState } from '../../util/helpers'
@@ -68,20 +67,17 @@ class AccountForm extends React.Component {
         }
       } = this.props
 
-      accountName.onChange(account.get('name'))
-      accountType.onChange(account.get('provider_type'))
-      services.onChange(account.get('services'))
-    }
-  }
+      const accountNameVal = account.get('name')
+      accountNameVal && accountName.onChange(accountNameVal)
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.fields.accountType.value !== this.props.fields.accountType.value) {
-      const { fields: { services, accountType } } = nextProps
-      const activeServiceTypes  = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
-      const activeServiceValues = activeServiceTypes.map(item => item.value)
-      const checkedServiceTypes = services.value.filter(item => activeServiceValues.includes(item))
-      services.onChange(checkedServiceTypes)
+      const accountTypeVal = account.get('provider_type')
+      accountTypeVal && accountType.onChange(accountTypeVal)
+
+      const servicesVal = account.get('services')
+      servicesVal && services.onChange(servicesVal.toJS())
     }
+
+    this.props.fetchServiceInfo()
   }
 
   save() {
@@ -94,23 +90,21 @@ class AccountForm extends React.Component {
         provider_type: accountType.value,
         services: services.value
       }
-
-      if (this.props.account) {
-        this.props.onSave(accountBrand.value, this.props.account.get('id'), data)
-      } else {
-        this.props.onSave(accountBrand.value, data)
-      }
+      const accountId = this.props.account && this.props.account.get('id') || null
+      this.props.onSave(accountBrand.value, accountId, data)
     }
   }
 
   render() {
-    const { fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
-    const serviceTypes = SERVICE_TYPES.filter(item => item.accountTypes.includes(accountType.value))
-
+    const { providerTypes, serviceOptions, fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
+    const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
+    const providerTypeLabel = providerType && providerType.label ? providerType.label : <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+
     return (
+
       <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
         <Modal.Header>
           <h1>{title}</h1>
@@ -151,14 +145,14 @@ class AccountForm extends React.Component {
             <FormGroup>
               <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
               {this.props.account ?
-                <p>{accountType.value && ACCOUNT_TYPES.find(type => type.value === accountType.value).label}</p>
+                <p>{providerTypeLabel}</p>
               :
                 <SelectWrapper
                   {...accountType}
                   numericValues={true}
                   value={accountType.value}
                   className="input-select"
-                  options={ACCOUNT_TYPE_OPTIONS}
+                  options={providerTypes}
                 />
               }
             </FormGroup>
@@ -167,7 +161,13 @@ class AccountForm extends React.Component {
 
             <FormGroup>
               <ControlLabel><FormattedMessage id="portal.account.manage.services.title" /></ControlLabel>
-              <CheckboxArray iterable={serviceTypes} field={services}/>
+              <MultiOptionSelector
+                options={serviceOptions}
+                field={{
+                  onChange: val => {services.onChange(val)},
+                  value: List(services.value)
+                }}
+              />
             </FormGroup>
 
             <ButtonToolbar className="text-right extra-margin-top">
@@ -184,12 +184,34 @@ class AccountForm extends React.Component {
 
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
+  fetchServiceInfo: React.PropTypes.func,
   fields: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  providerTypes: PropTypes.array,
+  serviceOptions: PropTypes.array,
   show: PropTypes.bool
+}
+
+AccountForm.defaultProps = {
+  serviceOptions: []
+}
+
+const mapStateToProps = (state) => {
+  const accountType = state.form && state.form.account && state.form.account.accountType && state.form.account.accountType.value !== "" ?  state.form.account.accountType.value : undefined
+
+  return {
+    providerTypes: getProviderTypeOptions(state),
+    serviceOptions: accountType && getServiceOptions(state, accountType)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+  }
 }
 
 export default reduxForm({
@@ -201,4 +223,4 @@ export default reduxForm({
     accountType: '',
     services: []
   }
-})(injectIntl(AccountForm))
+}, mapStateToProps,mapDispatchToProps)(injectIntl(AccountForm))

@@ -26,8 +26,8 @@ class Toggle extends React.Component {
     return (
       <div className={className} onClick={this.handleChange}>
         <div className="indicator"/>
-        <div className="off-text">{this.props.offText}</div>
         <div className="on-text">{this.props.onText}</div>
+        <div className="off-text">{this.props.offText}</div>
       </div>
     )
   }
