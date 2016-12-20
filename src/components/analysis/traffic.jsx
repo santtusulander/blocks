@@ -229,6 +229,7 @@ class AnalysisTraffic extends React.Component {
                 cityData={this.props.byCity}
                 getCityData={this.props.getCityData}
                 theme={this.props.theme}
+                height={this.state.byTimeWidth / 2}
                 />
             }
           </div>

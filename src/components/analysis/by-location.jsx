@@ -11,7 +11,8 @@ const AnalysisByLocation = (props) => {
     countryData,
     cityData,
     theme,
-    getCityData
+    getCityData,
+    height
   } = props
 
   if (!countryData.size) {
@@ -25,7 +26,8 @@ const AnalysisByLocation = (props) => {
         geoData={countriesGeoJSON}
         countryData={countryData.toJS()}
         cityData={cityData.toJS()}
-        theme={theme} />
+        theme={theme}
+        height={height} />
     </div>
   )
 
@@ -35,6 +37,7 @@ AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
   getCityData: React.PropTypes.func,
+  height: React.PropTypes.number,
   theme: React.PropTypes.string
 }
 

@@ -2,11 +2,16 @@ import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 // import Typeahead from 'react-bootstrap-typeahead'
 
-import {MAPBOX_LIGHT_THEME, MAPBOX_DARK_THEME} from '../../constants/mapbox'
+import {
+  MAPBOX_LIGHT_THEME,
+  MAPBOX_DARK_THEME,
+  MAPBOX_ZOOM_MIN,
+  MAPBOX_ZOOM_MAX
+} from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
 // import IconMinimap from '../icons/icon-minimap';
-// import IconGlobe from '../icons/icon-globe';
+import IconGlobe from '../icons/icon-globe';
 
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
@@ -54,7 +59,7 @@ class Mapbox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      zoom: 1,
+      zoom: MAPBOX_ZOOM_MIN,
       popupCoords: [0, 0],
       popupContent: null,
       layers: [],
@@ -306,6 +311,10 @@ class Mapbox extends React.Component {
     this.setState({ layers })
   }
 
+  resetZoom() {
+    this.setState({ zoom: MAPBOX_ZOOM_MIN })
+  }
+
   render() {
     const mapboxUrl = (this.props.theme === 'light') ? MAPBOX_LIGHT_THEME : MAPBOX_DARK_THEME
 
@@ -314,11 +323,11 @@ class Mapbox extends React.Component {
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
-          height: '600px'
+          height: this.props.height
         }}
         zoom={[this.state.zoom]}
-        minZoom={1}
-        maxZoom={13}
+        minZoom={MAPBOX_ZOOM_MIN}
+        maxZoom={MAPBOX_ZOOM_MAX}
         onZoom={this.onZoom.bind(this)}
         onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
@@ -378,11 +387,11 @@ class Mapbox extends React.Component {
                 zIndex: 1
               }}
               onControlClick={this.onZoomClick.bind(this)} />
-            {/*
-            <div className="map-zoom-reset">
+            <div
+              className="map-zoom-reset"
+              onClick={this.resetZoom.bind(this)}>
               <IconGlobe width={32} height={32} />
             </div>
-            */}
           </div>
           {/*
           <div className="control map-minimap">
@@ -409,6 +418,7 @@ Mapbox.propTypes = {
   countryData: React.PropTypes.array,
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
+  height: React.PropTypes.number,
   theme: React.PropTypes.string
 }
 
