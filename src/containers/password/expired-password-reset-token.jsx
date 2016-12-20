@@ -1,5 +1,14 @@
 import React from 'react'
-import { Button, Col, Input, Modal, Row, Tooltip } from 'react-bootstrap'
+import {
+  Button,
+  Col,
+  FormControl,
+  FormGroup,
+  InputGroup,
+  Modal,
+  Row,
+  Tooltip
+} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -108,16 +117,21 @@ export class ExpiredPasswordResetToken extends React.Component {
                 </Tooltip>
               : null}
 
-              <Input type="text" id="username"
-                wrapperClassName={'input-addon-before has-login-label '
-                  + 'login-label-email'
-                  + (this.state.emailError ? ' invalid' : '')
-                  + (this.state.emailActive || this.state.email ? ' active' : '')}
-                addonBefore={<IconEmail/>}
-                onFocus={this.checkEmailActive(true)}
-                onBlur={this.checkEmailActive(false)}
-                value={this.state.username}
-                onChange={this.changeField('email')}/>
+              <FormGroup className={'input-addon-before has-login-label '
+              + 'login-label-email'
+              + (this.state.emailError ? ' invalid' : '')
+              + (this.state.emailActive || this.state.email ? ' active' : '')}>
+                <InputGroup>
+                  <InputGroup.Addon><IconEmail/></InputGroup.Addon>
+                  <FormControl
+                    type="text"
+                    id="username"
+                    onFocus={this.checkEmailActive(true)}
+                    onBlur={this.checkEmailActive(false)}
+                    value={this.state.username}
+                    onChange={this.changeField('email')}/>
+                </InputGroup>
+              </FormGroup>
 
               <Row>
                 <Col xs={12}>
