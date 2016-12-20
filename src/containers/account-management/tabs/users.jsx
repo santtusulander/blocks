@@ -359,7 +359,7 @@ export class AccountManagementAccountUsers extends React.Component {
               value={this.state.search}
               onChange={this.changeSearch} />
           </FormGroup>
-          <div className="form-group inline">
+          <FormGroup className="inline">
             <SelectWrapper
               id='filtered-roles'
               value={this.state.filteredRoles}
@@ -367,7 +367,7 @@ export class AccountManagementAccountUsers extends React.Component {
                 this.setState({ filteredRoles: value })
               }}
               options={roleOptions}/>
-          </div>
+          </FormGroup>
           <div className="form-group inline">
             <SelectWrapper
               id='filtered-groups'
