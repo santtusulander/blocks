@@ -1,29 +1,29 @@
 // Toggle
 // ======
 
+$toggle-font-size: 14px;
+$toggle-height: em(36px, $toggle-font-size);
+$toggle-horizontal-padding: em(16px, $toggle-font-size);
+$indicator-height: em(24px, $toggle-font-size);
+$indicator-margin: ($toggle-height - $indicator-height) / 2;
+
 .toggle {
   position: relative;
   display: inline-block;
-  height: $btn-height;
-  padding: 0 ($btn-sm-height / 2);
-  line-height: $btn-height;
+  height: $toggle-height;
+  padding: 0 $toggle-horizontal-padding;
+  line-height: $toggle-height;
   cursor: pointer;
-  border-radius: $btn-height / 2;
-
-  @include md {
-    height: $md-btn-height;
-    padding: 0 ($md-btn-sm-height / 2);
-    line-height: $md-btn-height;
-    border-radius: $md-btn-height / 2;
-  }
+  border-radius: $toggle-height / 2;
 
   .dark-theme & {
+    color: $white;
     background-color: rgba($black, 0.2);
   }
 
   .light-theme & {
-    color: $lt-text-color;
-    background-color: $white;
+    color: $white;
+    background-color: rgba($black, 0.2);
   }
 
 
@@ -34,38 +34,31 @@
     transition: opacity 200ms;
   }
 
+  .off-text {
+    margin-left: 6px;
+  }
+
   .on-text {
-    margin-left: 10px;
     opacity: 0;
   }
 
   .indicator {
     position: absolute;
     top: 50%;
-    right: 10px;
-    width: ($bar-height / 2);
-    height: ($bar-height / 2);
-    background-color: rgba($black, 0.2);
+    right: calc(100% - #{$toggle-height - $indicator-margin});
+    width: $indicator-height;
+    height: $indicator-height;
+    background-color: $black;
     border-radius: 50%;
     transform: translateY(-50%);
     transition: background-color 200ms, right 200ms;
-
-    @include md {
-      right: 5px;
-      width: ($md-bar-height / 2);
-      height: ($md-bar-height / 2);
-    }
   }
 
   &.on {
 
     .indicator {
-      right: calc(100% - 50px);
+      right: $indicator-margin;
       background-color: $green;
-
-      @include md {
-        right: calc(100% - 35px);
-      }
     }
 
     .off-text {
@@ -83,11 +76,7 @@
 }
 
 .toggle-label {
-  padding-top: $btn-height / 4;
-
-  @include md {
-    padding-top: $md-btn-height / 4;
-  }
+  padding-top: $toggle-height / 4;
 }
 
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
+import '../../../__mocks__/mapbox.js'
 
 jest.unmock('../styleguide.jsx')
 jest.unmock('../../decorators/select-auto-close')
