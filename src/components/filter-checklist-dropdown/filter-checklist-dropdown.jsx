@@ -3,8 +3,7 @@ import { List } from 'immutable'
 import { Dropdown, Button, Checkbox, FormControl, FormGroup } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 import { FormattedMessage } from 'react-intl'
-
-import './filter-checklist-dropdown.scss'
+import autoClose from '../../decorators/select-auto-close'
 
 export class FilterChecklistDropdown extends React.Component {
   constructor(props) {
@@ -196,4 +195,4 @@ FilterChecklistDropdown.defaultProps = {
   value: List()
 }
 
-export default FilterChecklistDropdown
+export default autoClose(FilterChecklistDropdown)
