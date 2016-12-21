@@ -2,15 +2,13 @@ import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { Map, List }from 'immutable'
 import {
-  Modal,
   FormGroup,
   FormControl,
   ControlLabel,
-  HelpBlock,
-  ButtonToolbar,
-  Button
+  HelpBlock
 } from 'react-bootstrap'
 
+import SidePanel from '../side-panel'
 import SelectWrapper from '../select-wrapper.jsx'
 import MultiOptionSelector from '../multi-option-selector'
 
@@ -104,80 +102,75 @@ class AccountForm extends React.Component {
     const providerTypeLabel = providerType && providerType.label ? providerType.label : <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
 
     return (
+      <SidePanel
+        show={show}
+        title={title}
+        subTitle={subTitle}
+        invalid={this.props.invalid}
+        cancelButton={true}
+        submitButton={true}
+        submitText={this.props.account ? this.props.intl.formatMessage({id: 'portal.button.save'}) : null}
+        cancel={onCancel}
+        submit={this.save}>
+        <form>
+          <FormGroup controlId="account-name" validationState={getReduxFormValidationState(accountName)}>
+            <ControlLabel><FormattedMessage id="portal.account.manage.accountName.title" /></ControlLabel>
+            <FormControl
+              {...accountName}
+              placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            />
+            {accountName.touched && accountName.error &&
+              <HelpBlock className='error-msg'>{accountName.error}</HelpBlock>
+            }
+          </FormGroup>
 
-      <Modal dialogClassName="account-form-sidebar configuration-sidebar" show={show}>
-        <Modal.Header>
-          <h1>{title}</h1>
-          <p>{subTitle}</p>
-        </Modal.Header>
+          <hr/>
 
-        <Modal.Body>
-          <form>
+          <FormGroup validationState={getReduxFormValidationState(accountBrand)}>
+            <ControlLabel><FormattedMessage id="portal.account.manage.brand.title" /></ControlLabel>
+            <SelectWrapper
+              {... accountBrand}
+              className="input-select"
+              value={accountBrand.value}
+              options={BRAND_OPTIONS}
+            />
+            {accountBrand.touched && accountBrand.error &&
+              <HelpBlock className='error-msg'>{accountBrand.error}</HelpBlock>
+            }
+          </FormGroup>
 
-            <FormGroup controlId="account-name" validationState={getReduxFormValidationState(accountName)}>
-              <ControlLabel><FormattedMessage id="portal.account.manage.accountName.title" /></ControlLabel>
-              <FormControl
-                {...accountName}
-                placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
-              />
-              {accountName.touched && accountName.error &&
-                <HelpBlock className='error-msg'>{accountName.error}</HelpBlock>
-              }
-            </FormGroup>
+          <hr/>
 
-            <hr/>
-
-            <FormGroup validationState={getReduxFormValidationState(accountBrand)}>
-              <ControlLabel><FormattedMessage id="portal.account.manage.brand.title" /></ControlLabel>
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
+            {this.props.account ?
+              <p>{providerTypeLabel}</p>
+            :
               <SelectWrapper
-                {... accountBrand}
+                {...accountType}
+                numericValues={true}
+                value={accountType.value}
                 className="input-select"
-                value={accountBrand.value}
-                options={BRAND_OPTIONS}
+                options={providerTypes}
               />
-              {accountBrand.touched && accountBrand.error &&
-                <HelpBlock className='error-msg'>{accountBrand.error}</HelpBlock>
-              }
-            </FormGroup>
+            }
+          </FormGroup>
 
-            <hr/>
+          <hr/>
 
-            <FormGroup>
-              <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
-              {this.props.account ?
-                <p>{providerTypeLabel}</p>
-              :
-                <SelectWrapper
-                  {...accountType}
-                  numericValues={true}
-                  value={accountType.value}
-                  className="input-select"
-                  options={providerTypes}
-                />
-              }
-            </FormGroup>
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.account.manage.services.title" /></ControlLabel>
+            <MultiOptionSelector
+              options={serviceOptions}
+              field={{
+                onChange: val => {services.onChange(val)},
+                value: List(services.value)
+              }}
+            />
+          </FormGroup>
 
-            <hr/>
-
-            <FormGroup>
-              <ControlLabel><FormattedMessage id="portal.account.manage.services.title" /></ControlLabel>
-              <MultiOptionSelector
-                options={serviceOptions}
-                field={{
-                  onChange: val => {services.onChange(val)},
-                  value: List(services.value)
-                }}
-              />
-            </FormGroup>
-
-            <ButtonToolbar className="text-right extra-margin-top">
-              <Button id="cancel-btn" className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel" /></Button>
-              <Button id="save-btn" disabled={this.props.invalid} bsStyle="primary"
-                      onClick={this.save}>{this.props.account ? <FormattedMessage id="portal.button.save" /> : <FormattedMessage id="portal.button.add" />}</Button>
-            </ButtonToolbar>
-          </form>
-        </Modal.Body>
-      </Modal>
+        </form>
+      </SidePanel>
     )
   }
 }
