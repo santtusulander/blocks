@@ -51,6 +51,26 @@ class AnalyticsContainer extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll() {
+    const docBody = document.body
+    const headerContainer = document.querySelector('.page-header-container')
+    const navTabsContainer = document.querySelector('.nav-tabs')
+
+    if (docBody.scrollTop > (headerContainer.offsetHeight + navTabsContainer.offsetHeight)) {
+      return docBody.classList.add('sticky-filters')
+    }
+
+    return docBody.classList.remove('sticky-filters')
+  }
+
   fetchActiveItems(props) {
     const {
       params: { brand, account, group, property },
