@@ -54,7 +54,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
     }
 
-    const { fetchOpts, byTimeOpts } = this.buildOpts()
+    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -115,9 +115,7 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {} } = {}) {
-    const { params, filters, location } = this.props
-
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
