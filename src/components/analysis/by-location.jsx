@@ -33,6 +33,11 @@ const AnalysisByLocation = (props) => {
 
 }
 
+AnalysisByLocation.defaultProps = {
+  cityData: Immutable.List(),
+  countryData: Immutable.List()
+}
+
 AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
