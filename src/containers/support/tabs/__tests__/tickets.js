@@ -8,7 +8,7 @@ describe('SupportTabTickets', () => {
   let subject, error, props = null
 
   beforeEach(() => {
-    subject = (currentUserRole) => {
+    subject = () => {
       props = {}
       return shallow(<SupportTabTickets {...props}/>)
     }
