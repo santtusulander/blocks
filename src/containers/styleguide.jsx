@@ -886,16 +886,18 @@ class Styleguide extends React.Component {
             submitText="Close"
             cancel={() => this.setState({showSidePanel: false})}
             submit={() => this.setState({showSidePanel: false})}>
-            <form>
-              <div className="form-group">
-                <label>Name</label>
-                <Input type="text" />
-              </div>
+            <form onSubmit={() => this.setState({showSidePanel: false})}>
+              <FormGroup>
+                <ControlLabel>Name</ControlLabel>
+                <FormControl/>
+              </FormGroup>
+
               <hr/>
-              <div className="form-group">
-                <label>Type</label>
-                <Input type="text" />
-              </div>
+
+              <FormGroup>
+                <ControlLabel>Type</ControlLabel>
+                <FormControl/>
+              </FormGroup>
             </form>
           </SidePanel>}
 
