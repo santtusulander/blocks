@@ -7,27 +7,19 @@ jest.unmock('../side-panel.jsx')
 describe('SidePanel', () => {
   let sidePanel = null
   beforeEach(() => {
-    sidePanel = (account, cancel, cancelButton, children, className, group, invalid, show, submit, submitButton, subTitle, title) => {
-      let props = {
-        account,
-        cancel,
-        cancelButton,
-        children,
+    sidePanel = (props) => {
+      let defaultProps = {
+        cancel: jest.fn(),
         className:'testing',
-        group,
-        invalid,
-        show,
-        submit,
-        submitButton,
         subTitle:'Testing Side Panel Component',
         title:'Side Panel'
       }
-      return shallow(<SidePanel {...props}/>)
+      let finalProps = Object.assign({}, defaultProps, props)
+      return shallow(<SidePanel {...finalProps}/>)
     }
   })
 
   it('should exist', () => {
-    console.log(sidePanel().debug())
     expect(sidePanel().length).toBe(1)
   });
 })
