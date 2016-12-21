@@ -41,6 +41,10 @@ class AnalyticsContainer extends React.Component {
     this.fetchActiveItems(this.props)
   }
 
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
   componentWillReceiveProps( nextProps ) {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
@@ -49,10 +53,6 @@ class AnalyticsContainer extends React.Component {
       this.fetchActiveItems(nextProps)
       this.fetchData(nextProps.params)
     }
-  }
-
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {

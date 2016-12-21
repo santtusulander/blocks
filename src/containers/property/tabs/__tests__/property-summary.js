@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../../util/helpers', () => {
   return {
     formatBitsPerSecond: jest.fn(),
     getAnalyticsUrl: jest.fn(),
@@ -10,12 +10,12 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.mock('../../util/routes', () => ({ getContentUrl: jest.fn() }))
+jest.mock('../../../../util/routes', () => ({ getContentUrl: jest.fn() }))
 
 jest.autoMockOff()
 
-jest.unmock('../property/property.jsx')
-import Property from '../property/property.jsx'
+jest.unmock('../property-summary.jsx')
+import PropertySummary from '../property-summary.jsx'
 
 function accountActionsMaker() {
   return {
@@ -47,8 +47,7 @@ function metricsActionsMaker() {
 
 function purgeActionsMaker() {
   return {
-    resetActivePurge: jest.fn(),
-    updateActivePurge: jest.fn()
+    resetActivePurge: jest.fn()
   }
 }
 
@@ -69,9 +68,12 @@ function uiActionsMaker() {
 function visitorsActionsMaker() {
   return {
     startFetching: jest.fn(),
-    fetchByTime: jest.fn(() => Promise.resolve()),
+    fetchByCountry: jest.fn(),
     finishFetching: jest.fn(),
-    visitorsReset: jest.fn()
+    visitorsReset: jest.fn(),
+    fetchByTime: jest.fn().mockImplementation(() => {
+      return {then: cb => cb({payload: {}})}
+    })
   }
 }
 
@@ -79,7 +81,7 @@ const urlParams = {brand: 'udn', account: '1', group: '2', property: 'www.abc.co
 
 const fakeLocation = {query: {name: 'www.abc.com'}}
 
-describe('Property', () => {
+describe('PropertySummary', () => {
 
   let subject, props = null
 
@@ -93,43 +95,23 @@ describe('Property', () => {
         groupActions: groupActionsMaker(),
         hostActions: hostActionsMaker(),
         metricsActions: metricsActionsMaker(),
-        purgeActions: purgeActionsMaker(),
         trafficActions: trafficActionsMaker(),
         visitorsActions: visitorsActionsMaker(),
-        uiActions: uiActionsMaker(),
-        routes: [
-          'foo',
-          'bar'
-        ]
       }
-      return shallow(<Property {...props}/>)
+      return shallow(<PropertySummary {...props}/>)
     }
   })
 
   it('should exist', () => {
-    expect(subject().length).toBe(1);
+    expect(subject().length).toBe(1)
   });
 
-  it('should toggle property menu', () => {
-    const instance = subject().instance()
-    expect(instance.state.propertyMenuOpen).toBe(false)
-    instance.togglePropertyMenu()
-    expect(instance.state.propertyMenuOpen).toBe(true)
-  });
+  it('should request data on mount', () => {
+    const hostActions = subject().instance().props.hostActions
 
-  it('should show a notification', () => {
-    const instance = subject().instance()
-    const uiActions = instance.props.uiActions
-    instance.showNotification('aaa')
-    expect(uiActions.changeNotification.mock.calls[0][0]).toBe('aaa')
-  })
-
-  it('should toggle purge form', () => {
-    const instance = subject().instance()
-    const purgeActions = instance.props.purgeActions
-    expect(instance.state.purgeActive).toBe(false)
-    instance.togglePurge()
-    expect(instance.state.purgeActive).toBe(true)
-    expect(purgeActions.resetActivePurge.mock.calls.length).toBe(1)
+    expect(hostActions.startFetching.mock.calls.length).toBe(1)
+    expect(hostActions.fetchHost.mock.calls[0][0]).toBe('udn')
+    expect(hostActions.fetchHost.mock.calls[0][1]).toBe('1')
+    expect(hostActions.fetchHost.mock.calls[0][2]).toBe('2')
   });
 })
