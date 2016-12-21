@@ -22,6 +22,7 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.fetchData = this.fetchData.bind(this)
     this.formatTotals = this.formatTotals.bind(this)
+    this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
   }
 
   componentDidMount() {
@@ -52,13 +53,8 @@ class AnalyticsTabTraffic extends React.Component {
         property: hostConfiguredName
       })
     }
-    const fetchOpts  = buildAnalyticsOpts(params, filters, location)
-    const startDate  = filters.getIn(['dateRange', 'startDate'])
-    const endDate    = filters.getIn(['dateRange', 'endDate'])
-    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-    const byTimeOpts = Object.assign({
-      granularity: rangeDiff >= 2 ? 'day' : 'hour'
-    }, fetchOpts)
+
+    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -119,7 +115,44 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
+    const fetchOpts = buildAnalyticsOpts(params, filters, location)
+    const startDate  = filters.getIn(['dateRange', 'startDate'])
+    const endDate    = filters.getIn(['dateRange', 'endDate'])
+    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
+    const byTimeOpts = Object.assign({
+      granularity: rangeDiff >= 2 ? 'day' : 'hour'
+    }, fetchOpts)
+
+    const byCityOpts = Object.assign({
+      max_cities: 999,
+      latitude_south: coordinates.south || null,
+      longitude_west: coordinates.west || null,
+      latitude_north: coordinates.north || null,
+      longitude_east: coordinates.east || null
+    }, byTimeOpts)
+
+    return { byTimeOpts, fetchOpts, byCityOpts }
+  }
+
+  getCitiesWithinBounds(south, west, north, east) {
+    const { byCityOpts } = this.buildOpts({
+      coordinates: {
+        south: south,
+        west: west,
+        north: north,
+        east: east
+      }
+    })
+
+    this.props.trafficActions.startFetching()
+    this.props.trafficActions.fetchByCity(byCityOpts).then(
+      this.props.trafficActions.finishFetching()
+    )
+  }
+
   render() {
+
     const {filters, totals} = this.props
     const recordType = filters.get('recordType')
     const peakTraffic = totals.size ?
@@ -133,6 +166,7 @@ class AnalyticsTabTraffic extends React.Component {
       <AnalysisTraffic
         avgTraffic={this.formatTotals(avgTraffic)}
         byCountry={this.props.trafficByCountry}
+        byCity={this.props.trafficByCity}
         byTime={this.props.trafficByTime}
         byTimeComparison={filters.getIn(['includeComparison']) ? this.props.trafficByTimeComparison : Immutable.List()}
         fetching={false}
@@ -141,6 +175,8 @@ class AnalyticsTabTraffic extends React.Component {
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
+        getCityData={this.getCitiesWithinBounds}
+        theme={this.props.theme}
       />
     )
   }
@@ -151,9 +187,11 @@ AnalyticsTabTraffic.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   params: React.PropTypes.object,
+  theme: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
+  trafficByCity: React.PropTypes.instanceOf(Immutable.List),
   trafficByCountry: React.PropTypes.instanceOf(Immutable.List),
   trafficByTime: React.PropTypes.instanceOf(Immutable.List),
   trafficByTimeComparison: React.PropTypes.instanceOf(Immutable.List)
@@ -162,9 +200,11 @@ AnalyticsTabTraffic.propTypes = {
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
   totals: Immutable.Map(),
+  trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
   trafficByTime: Immutable.List(),
-  trafficByTimeComparison: Immutable.List()
+  trafficByTimeComparison: Immutable.List(),
+  theme: 'dark'
 }
 
 function mapStateToProps(state) {
@@ -173,8 +213,10 @@ function mapStateToProps(state) {
     totals: state.traffic.get('totals'),
     trafficByTime: state.traffic.get('byTime'),
     trafficByTimeComparison: state.traffic.get('byTimeComparison'),
+    trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress')
+    totalEgress: state.traffic.get('totalEgress'),
+    theme: state.ui.get('theme')
   }
 }
 

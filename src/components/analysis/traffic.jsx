@@ -225,12 +225,12 @@ class AnalysisTraffic extends React.Component {
             {this.props.fetching ?
               <div><FormattedMessage id="portal.loading.text"/></div> :
               <AnalysisByLocation
-                dataKey={byCountryDataKey}
-                tooltipCustomFormat={byCountryDataFormat}
-                timelineKey="detail"
-                width={this.state.byLocationWidth}
-                height={this.state.byLocationWidth / 1.6}
-                countryData={this.props.byCountry}/>
+                countryData={this.props.byCountry}
+                cityData={this.props.byCity}
+                getCityData={this.props.getCityData}
+                theme={this.props.theme}
+                height={this.state.byTimeWidth / 2}
+                />
             }
           </div>
         </SectionContainer>
@@ -302,19 +302,23 @@ class AnalysisTraffic extends React.Component {
 AnalysisTraffic.displayName = 'AnalysisTraffic'
 AnalysisTraffic.propTypes   = {
   avgTraffic: React.PropTypes.string,
+  byCity: React.PropTypes.instanceOf(Immutable.List),
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   byTimeComparison: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
+  getCityData: React.PropTypes.func,
   intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
-  serviceTypes: React.PropTypes.instanceOf(Immutable.List)
+  serviceTypes: React.PropTypes.instanceOf(Immutable.List),
+  theme: React.PropTypes.string
   // totalEgress: React.PropTypes.number
 }
 
 AnalysisTraffic.defaultProps = {
+  byCity: Immutable.List(),
   byCountry: Immutable.List(),
   byTime: Immutable.List(),
   byTimeComparison: Immutable.List(),

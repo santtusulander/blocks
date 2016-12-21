@@ -9,15 +9,15 @@ import {
 
 import { FormattedMessage } from 'react-intl'
 
-const EXPORT_TYPE_PDF = 'export_pdf'
-const EXPORT_TYPE_CSV = 'export_csv'
+export const EXPORT_TYPE_PDF = 'export_pdf'
+export const EXPORT_TYPE_CSV = 'export_csv'
 
 const fileTypes = [
   { label: 'PDF', value: EXPORT_TYPE_PDF },
   { label: 'CSV', value: EXPORT_TYPE_CSV }
 ]
 
-export class ExportFileForm extends React.Component {
+class ExportFileForm extends React.Component {
   constructor(props){
     super(props);
 
@@ -75,11 +75,7 @@ export class ExportFileForm extends React.Component {
   }
 }
 
-module.exports = {
-  ExportFileForm,
-  EXPORT_TYPE_PDF,
-  EXPORT_TYPE_CSV
-}
+export default ExportFileForm
 
 ExportFileForm.propTypes = {
   fileType: React.PropTypes.string,

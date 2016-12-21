@@ -4,12 +4,10 @@ import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map, List } from 'immutable'
 import {
-  Modal,
   FormGroup,
   FormControl,
   HelpBlock,
   ControlLabel,
-  ButtonToolbar,
   Button,
   Table
 } from 'react-bootstrap'
@@ -17,6 +15,7 @@ import {
 import * as hostActionCreators from '../../redux/modules/host'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+import SidePanel from '../side-panel'
 import SelectWrapper from '../select-wrapper'
 // import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 // import IconClose from '../icons/icon-close.jsx'
@@ -227,13 +226,16 @@ class GroupForm extends React.Component {
 
     return (
       <div>
-      <Modal dialogClassName="group-form-sidebar configuration-sidebar" show={show}>
-        <Modal.Header>
-          <h1>{title}</h1>
-          <p>{subTitle}</p>
-        </Modal.Header>
-
-        <Modal.Body>
+        <SidePanel
+          show={show}
+          title={title}
+          subTitle={subTitle}
+          cancelButton={true}
+          submitButton={true}
+          submitText={groupId ? this.props.intl.formatMessage({id: 'portal.button.save'}) : null}
+          cancel={onCancel}
+          submit={this.save}
+          invalid={invalid}>
           <form>
             <FormGroup validationState={getReduxFormValidationState(name)}>
               <ControlLabel><FormattedMessage id='portal.account.groupForm.name.label' /></ControlLabel>
@@ -294,7 +296,6 @@ class GroupForm extends React.Component {
                   }}
                 />
               </div>
-
               <div className="form-group">
                 <label className="control-label">
                   {`Current Members (${currentMembers.length - this.state.usersToDelete.size})`}
@@ -362,14 +363,8 @@ class GroupForm extends React.Component {
                 </div>
               }
 
-              <ButtonToolbar className="text-right extra-margin-top">
-                <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-                <Button disabled={invalid} bsStyle="primary"
-                        onClick={this.save}>{groupId ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
-              </ButtonToolbar>
           </form>
-        </Modal.Body>
-      </Modal>
+        </SidePanel>
 
       {this.state.hostToDelete &&
         <ModalWindow

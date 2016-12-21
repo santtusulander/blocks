@@ -41,6 +41,10 @@ class AnalyticsContainer extends React.Component {
     this.fetchActiveItems(this.props)
   }
 
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
   componentWillReceiveProps( nextProps ) {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
@@ -49,6 +53,22 @@ class AnalyticsContainer extends React.Component {
       this.fetchActiveItems(nextProps)
       this.fetchData(nextProps.params)
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll() {
+    const docBody = document.body
+    const headerContainer = document.querySelector('.page-header-container')
+    const navTabsContainer = document.querySelector('.nav-tabs')
+
+    if (docBody.scrollTop > (headerContainer.offsetHeight + navTabsContainer.offsetHeight)) {
+      return docBody.classList.add('sticky-filters')
+    }
+
+    return docBody.classList.remove('sticky-filters')
   }
 
   fetchActiveItems(props) {
