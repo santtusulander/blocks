@@ -1,9 +1,11 @@
 import React from 'react'
 import { List } from 'immutable'
-import { Dropdown, Button, Checkbox, FormControl, FormGroup } from 'react-bootstrap'
+import { Dropdown, Button, FormControl, FormGroup } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 import { FormattedMessage } from 'react-intl'
+
 import autoClose from '../../decorators/select-auto-close'
+import Checkbox from '../checkbox'
 
 export class FilterChecklistDropdown extends React.Component {
   constructor(props) {
@@ -117,7 +119,7 @@ export class FilterChecklistDropdown extends React.Component {
                 value={option.get('value')}
                 checked={this.props.value.indexOf(option.get('value')) !== -1}
                 onChange={() => this.handleCheck(option.get('value'))}>
-                <span>{option.get('label')}</span>
+                {option.get('label')}
               </Checkbox>
             </FormGroup>
           </li>
