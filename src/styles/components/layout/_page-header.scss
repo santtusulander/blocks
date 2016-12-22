@@ -151,6 +151,18 @@ body.sticky-filters {
   @media (min-width: $sticky-filter-breakpoint) {
     .analytics-container {
       padding-top: 175px;
+
+      @include md {
+        padding-top: 142px;
+      }
+
+      @include lg {
+        padding-top: 160px;
+      }
+
+      @include xl {
+        padding-top: 160px;
+      }
     }
 
     .secondary-page-header {
