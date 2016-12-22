@@ -166,3 +166,19 @@ export const resetChangedAccount = createAction(ACCOUNT_RESET_CHANGED)
 export const clearActiveAccount = createAction(ACCOUNT_CLEAR_ACTIVE)
 export const startFetching = createAction(ACCOUNT_START_FETCH)
 export const changeActiveAccount = createAction(ACCOUNT_CHANGE_ACTIVE)
+
+
+//selectors
+
+/**
+ * getById get account by Id
+ * @param  {[type]} state [description]
+ * @param  {Number} id id to be found
+ * @return {Map}       Map of found account
+ */
+export const getById = (state, id) => {
+  /*
+  NOTE: this doesn't make much sense at the moment as activeAccount always contains single item but this is for future compatibility
+  */
+  return state.activeAccount && state.activeAccount.find( item => item.get('id') === id)
+}
