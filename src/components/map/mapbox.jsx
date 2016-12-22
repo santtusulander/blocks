@@ -74,6 +74,9 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Current city layers need to be removed to avoid duplicates
+    // and errors that Mapbox throws if it tries to look for a layer
+    // that isn't there.
     if (nextProps.cityData !== this.props.cityData) {
       const newLayers = nextProps.cityData.map((city) => {
         const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
@@ -83,6 +86,10 @@ class Mapbox extends React.Component {
         }
 
         return cityName
+
+        // Mapbox goes through this.state.layers when applying hover styles
+        // so we need to have it only include the countries because we will be
+        // adding the cities later on.
       }).concat(this.state.layers.filter(layer => layer.includes('country-')))
 
       this.updateLayers(newLayers)
@@ -90,6 +97,14 @@ class Mapbox extends React.Component {
     }
   }
 
+  /**
+   * A method that is called whenever a style has loaded in Mapbox,
+   * e.g. when the user switches themes. All the layers need to be
+   * reset and redrawn whenever we change styles –– otherwise they won't
+   * appear on the map since style change will change the map instance.
+   * @method onStyleLoaded
+   * @param  {object}      map Instance of Mapbox map
+   */
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
@@ -100,18 +115,43 @@ class Mapbox extends React.Component {
     }
   }
 
-  onZoom(e) {
-    this.setState({ scale: e.transform.scale, zoom: e.transform._zoom })
+  /**
+   * Sets the zoom level and scale (needed for city circle radius) in Mapbox.
+   * @method onZoom
+   * @param  {object} map Instance of Mapbox map
+   */
+  onZoom(map) {
+    this.setState({ scale: map.transform.scale, zoom: map.transform._zoom })
   }
 
+  /**
+   * Sets content to the Popup and allows it to be displayed.
+   * Displaying the Popup is based on if the Popup has content –– popupContent
+   * –– or not.
+   * @method openPopup
+   * @param  {object}  content Content displayed, should have "title" and "total" properties
+   * @param  {array}   coords  Should have one longitude and one latitude value, in this order
+   */
   openPopup(content, coords) {
     this.setState({ popupContent: content, popupCoords: coords })
   }
 
+  /**
+   * Closes the popup by nulling the content.
+   * @method closePopup
+   */
   closePopup() {
     this.setState({ popupContent: null })
   }
 
+  /**
+   * A method that is called whenever mouse is moved on the map.
+   * The main purpose of this method is to set and show hover styles and
+   * elements for city and country layers.
+   * @method onMouseMove
+   * @param  {object}    map     Instance of Mapbox map
+   * @param  {object}    feature Object containing mouse position information
+   */
   onMouseMove(map, feature) {
     if (map.style._loaded) {
       if (this.state.hoveredLayer) {
@@ -143,9 +183,12 @@ class Mapbox extends React.Component {
    * https://www.mapbox.com/mapbox-gl-style-spec/#layer-paint
    * The type prefix (e.g. 'fill') is not needed as it's already being gotten
    * from this.state.hoveredLayer.
-   * @param map
-   * @param style, value
-   * @param cursor
+   * @method setHoverStyle
+   * @param  {object}     map     Instance of Mapbox map
+   * @param  {string}     style   Name of the paint property to be modified
+   * @param  {multiple}   value   Value of the paint property –– can be string,
+   *                              number, boolean, array
+   * @param  {string}     cursor  Cursor style value, e.g. 'pointer'
    * @returns {function}
    */
   setHoverStyle(map) {
@@ -155,6 +198,12 @@ class Mapbox extends React.Component {
     }
   }
 
+  /**
+   * Adds geojson sources for country layers that we have data for. Also calls
+   * for rendering the actual styled country layers after creating sources.
+   * @method addCountryLayers
+   * @param  {object}         map Instance of Mapbox map
+   */
   addCountryLayers(map) {
     const layers = this.state.layers
     this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
@@ -193,6 +242,15 @@ class Mapbox extends React.Component {
 
   }
 
+  /**
+   * Adds geojson sources for city layers that we have data for. Also calls
+   * for rendering the actual styled city layer after creating a source for it.
+   * After cities are rendered, it saves the map instance to state in order
+   * to access it later on in the componentWillReceiveProps method.
+   * @method addCityLayers
+   * @param  {[type]}      map      [description]
+   * @param  {[type]}      cityData [description]
+   */
   addCityLayers(map, cityData) {
     cityData.forEach((city) => {
       const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
@@ -223,6 +281,13 @@ class Mapbox extends React.Component {
     this.setState({ map })
   }
 
+  /**
+   * Renderes styled –– highlighted –– country layers on the map.
+   * NOTE: This should be refactored to be same fashion as what addCityLayers and
+   * renderCityCircle have.
+   * @method renderCountryHighlight
+   * @param  {object}               map Instance of Mapbox map
+   */
   renderCountryHighlight(map) {
     const countries = this.props.countryData
     const countryMedian = calculateMedian(countries.map((country => country.total)))
@@ -256,6 +321,13 @@ class Mapbox extends React.Component {
     })
   }
 
+  /**
+   * Renderes styled city layer –– circle –– on the map.
+   * @method renderCityCircle
+   * @param  {object}         map      Instance of Mapbox map
+   * @param  {object}         city     Object of single city data
+   * @param  {array}          cityData Array of all the cities we have data for
+   */
   renderCityCircle(map, city, cityData) {
     const cities = cityData
     const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
@@ -293,10 +365,26 @@ class Mapbox extends React.Component {
     })
   }
 
+  /**
+   * Method to zoom in and out with animation. This is used by the ZoomControl.
+   * NOTE: This can be removed when we update 'react-mapbox-gl', since the default
+   * zooming methods are fixed in the library. With the current default zooming
+   * methods it doesn't have the animation built-in and just jumps to the
+   * next/previous zoom level.
+   * @method onZoomClick
+   * @param  {object}    map   Instance of Mapbox map
+   * @param  {number}    value Value to check if we're zooming in or out
+   * @return {method}          Call a correct zoom method
+   */
   onZoomClick(map, value) {
     return value < 0 ? map.zoomOut() : map.zoomIn()
   }
 
+  /**
+   * Gets current map bounds and the requests to get city data within those bounds.
+   * @method getCitiesOnZoomDrag
+   * @param  {object}            map Instance of Mapbox map
+   */
   getCitiesOnZoomDrag(map) {
     if (this.state.zoom > 6.9) {
       const south = map.getBounds().getSouth()
@@ -309,10 +397,19 @@ class Mapbox extends React.Component {
     }
   }
 
+  /**
+   * Updates layers in state.
+   * @method updateLayers
+   * @param  {array}     layers Array of strings
+   */
   updateLayers(layers) {
     this.setState({ layers })
   }
 
+  /**
+   * Resets the zoom level to the initial one.
+   * @method resetZoom
+   */
   resetZoom() {
     this.setState({ zoom: MAPBOX_ZOOM_MIN })
   }
