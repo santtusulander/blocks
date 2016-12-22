@@ -168,9 +168,9 @@ body.sticky-filters {
     .secondary-page-header {
       position: fixed;
       top: $header-total-height;
-      left: $navigation-sidebar-width;
       right: 0;
-      z-index: 11;
+      left: $navigation-sidebar-width;
+      z-index: 2;
       background: #0d3a53 !important; // Need to use solid color instead of rgba
     }
 
