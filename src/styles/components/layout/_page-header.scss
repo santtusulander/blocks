@@ -173,5 +173,11 @@ body.sticky-filters {
       z-index: 11;
       background: #0d3a53 !important; // Need to use solid color instead of rgba
     }
+
+    &.light-theme {
+      .secondary-page-header {
+        background: #fff !important;
+      }
+    }
   }
 }
