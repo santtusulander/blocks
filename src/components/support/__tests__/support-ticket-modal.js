@@ -6,7 +6,7 @@ jest.unmock('../support-ticket-modal')
 import SupportTicketModal from '../support-ticket-modal'
 
 const onEditMock = jest.fn()
-const mockTicket = Immutable.Map({ type: 'foo', priority: 'bar' })
+const ticketMock = Immutable.Map({ type: 'foo', priority: 'bar' })
 
 describe('SupportTicketModal', () => {
   let subject, error, props = null
@@ -15,7 +15,7 @@ describe('SupportTicketModal', () => {
     subject = () => {
       props = {
         onEdit: onEditMock,
-        ticket: mockTicket
+        ticket: ticketMock
       }
       return shallow(<SupportTicketModal {...props}/>)
     }
@@ -28,6 +28,6 @@ describe('SupportTicketModal', () => {
 
   it('should edit the ticket', () => {
     subject().find('.ticket-modal__edit-ticket-button').simulate('click')
-    expect(onEditMock.mock.calls[0][0]).toEqual(mockTicket)
+    expect(onEditMock.mock.calls[0][0]).toEqual(ticketMock)
   })
 })
