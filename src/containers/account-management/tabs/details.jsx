@@ -5,10 +5,11 @@ import {FormattedMessage} from 'react-intl'
 import { Map } from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {getProviderTypes, getServices, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
-import {fetchAccount, getById as getAccountById} from '../../../redux/modules/account'
+import {fetchAccount, startFetching as accountStartFetching, getById as getAccountById, isFetching as accountsFetching} from '../../../redux/modules/account'
 
 class AccountDetails extends React.Component {
   constructor(props) {
@@ -17,69 +18,75 @@ class AccountDetails extends React.Component {
 
   componentWillMount() {
     this.props.fetchServiceInfo()
+    this.props.accountStartFetching();
+    this.props.fetchAccountDetails(this.props.params.brand, this.props.params.account)
   }
 
   componentWillReceiveProps(nextProps){
     if (this.props.params.account !== nextProps.params.account) {
       if (this.props !== nextProps) {
+        this.props.accountStartFetching();
         this.props.fetchAccountDetails(nextProps.params.brand, nextProps.params.account)
       }
     }
   }
 
   render() {
-    const { providerTypes, services, account } = this.props
+    const { providerTypes, services, account, accountsIsFetching } = this.props
 
     return (
       <PageContainer className="account-management-account-details">
-      <div className='account-details'>
+        { accountsIsFetching
+            ? <LoadingSpinner />
+            : <div className='account-details'>
+                <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
+                <span className='value'>UDN</span>
 
-            <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
-            <span className='value'>UDN</span>
+                <label>Account Name</label>
+                <span className='value'>{account.get('name')}</span>
 
-            <label>Account Name</label>
-            <span className='value'>{account.get('name')}</span>
+                <label><FormattedMessage id="portal.account.manage.accountType.text"/></label>
+                <span className='value'>{ getProviderTypeName( providerTypes, account.get('provider_type') ) }</span>
 
-            <label><FormattedMessage id="portal.account.manage.accountType.text"/></label>
-            <span className='value'>{ getProviderTypeName( providerTypes, account.get('provider_type') ) }</span>
+                <label><FormattedMessage id="portal.account.manage.services.text"/></label>
 
-            <label><FormattedMessage id="portal.account.manage.services.text"/></label>
+                { /* List of Services (and options) */}
+                <ul className='services-list'>
+                  {
+                    account && account.get('services') && account.get('services').map( (service,i) => {
+                      const options = service.get('options')
+                      let optionList;
 
-            { /* List of Services (and options) */}
-            <ul className='services-list'>
-              {
-                account && account.get('services') && account.get('services').map( (service,i) => {
-                  const options = service.get('options')
-                  let optionList;
+                      if (options.size > 0) {
+                        optionList = (
+                          <ul>
+                            {options.map( (optionId, i) => {
+                              return <li key={i}>{getOptionName(services, service.get('id'), optionId)}</li>
+                            })}
+                          </ul>
+                        );
+                      }
 
-                  if (options.size > 0) {
-                    optionList = (
-                      <ul>
-                        {options.map( (optionId, i) => {
-                          return <li key={i}>{getOptionName(services, service.get('id'), optionId)}</li>
-                        })}
-                      </ul>
-                    );
+                      return (
+                        <li key={i}>
+                          {getServiceName(services, service.get('id'))}
+                          {optionList}
+                        </li>
+                      )
+                    })
                   }
-
-                  return (
-                    <li key={i}>
-                      {getServiceName(services, service.get('id'))}
-                      {optionList}
-                    </li>
-                  )
-                })
-              }
-            </ul>
-        </div>
+                </ul>
+            </div>
+        }
       </PageContainer>
     )
   }
 }
 
-AccountDetails.displayName = 'AccountManagementAccountDetails'
+AccountDetails.displayName = 'AccountDetails'
 AccountDetails.propTypes = {
   account: PropTypes.instanceOf(Map),
+  accountsIsFetching: PropTypes.bool,
   fetchAccountDetails: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
@@ -94,9 +101,10 @@ AccountDetails.defaultProps = {
   services: Map()
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    accountDetails: getAccountById(state),
+    account: getAccountById(state, ownProps.params.account),
+    accountsIsFetching: accountsFetching(state),
     providerTypes: getProviderTypes(state),
     services: getServices(state)
   }
@@ -104,6 +112,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    accountStartFetching: () => dispatch( accountStartFetching() ),
     fetchAccountDetails: (brand, id) => dispatch( fetchAccount(brand, id) ),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
   }
