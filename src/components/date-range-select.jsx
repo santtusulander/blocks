@@ -44,6 +44,7 @@ class DateRangeSelect extends React.Component {
     this.makeLocal = this.makeLocal.bind(this)
     this.matchActiveDateRange = this.matchActiveDateRange.bind(this)
     this.toggleDropdown = this.toggleDropdown.bind(this)
+    this.defaultViewDate = this.defaultViewDate.bind(this)
   }
 
   componentWillMount() {
@@ -209,6 +210,15 @@ class DateRangeSelect extends React.Component {
     })
   }
 
+  defaultViewDate(endDate) {
+    // UDNP-2106 - In date picker, move current month to the right
+    // We should make the current month appear on the right side of the date picker,
+    // so the user has more immediate access to the previous month.
+    let localEndDate = this.makeLocal(endDate)
+
+    return localEndDate.subtract(1, 'month')
+  }
+
   render() {
     const { activeDateRange, endDate, maxDate, minDate, open, startDate } = this.state
     const ranges = this.props.availableRanges.map(range => [range, this.props.intl.formatMessage({id: range})])
@@ -237,21 +247,23 @@ class DateRangeSelect extends React.Component {
               </a>
             )}
           </div>
-          <MultiMonthView
-            dateFormat={DATE_FORMAT}
-            defaultRange={[this.makeLocal(startDate), this.makeLocal(endDate)]}
-            defaultViewDate={this.makeLocal(startDate)}
-            enableHistoryView={false}
-            highlightRangeOnMouseMove={true}
-            highlightToday={true}
-            highlightWeekends={false}
-            minDate={minDate}
-            maxDate={maxDate}
-            onActiveDateChange={this.handleActiveDateChange}
-            onRangeChange={this.handleDateChange}
-            theme={null}
-            weekNumbers={false}
-            weekStartDay={0} />
+          {open &&
+            <MultiMonthView
+              dateFormat={DATE_FORMAT}
+              defaultRange={[this.makeLocal(startDate), this.makeLocal(endDate)]}
+              defaultViewDate={this.defaultViewDate(endDate)}
+              enableHistoryView={false}
+              highlightRangeOnMouseMove={true}
+              highlightToday={true}
+              highlightWeekends={false}
+              minDate={minDate}
+              maxDate={maxDate}
+              onActiveDateChange={this.handleActiveDateChange}
+              onRangeChange={this.handleDateChange}
+              theme={null}
+              weekNumbers={false}
+              weekStartDay={0} />
+          }
         </Dropdown.Menu>
       </Dropdown>
     )

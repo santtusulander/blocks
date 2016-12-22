@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, FormControl, FormGroup } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { List, fromJS } from 'immutable'
+import { Map, List } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
@@ -9,41 +9,29 @@ import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import IconAdd from '../../icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
-import InlineAdd from '../../inline-add'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
-import SelectWrapper from '../../../components/select-wrapper'
-import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import {
-  SERVICE_TYPES,
-  ACCOUNT_TYPES,
-  ACCOUNT_TYPE_CLOUD_PROVIDER
-} from '../../../constants/account-management-options'
+import {getServices, getProviderTypes} from '../../../redux/modules/service-info/selectors'
+import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidAccountName } from '../../../util/validators'
 
-import {FormattedMessage, injectIntl} from 'react-intl';
-
-const FILTERED_ACCOUNT_TYPES = ACCOUNT_TYPES.filter(type => type.value !== ACCOUNT_TYPE_CLOUD_PROVIDER)
+import {FormattedMessage} from 'react-intl';
 
 class AccountList extends Component {
   constructor(props) {
     super(props);
 
-    this.newAccount = this.newAccount.bind(this)
     this.changeSort = this.changeSort.bind(this)
-    this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
-    this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.shouldLeave = this.shouldLeave.bind(this)
     this.isLeaving = false;
 
     this.state = {
-      addingNew: false,
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -51,11 +39,14 @@ class AccountList extends Component {
   }
 
   componentWillMount() {
-    const { accountActions, router, route } = this.props
+    const { accountActions, router, route, fetchServiceInfo } = this.props
     router.setRouteLeaveHook(route, this.shouldLeave)
 
     //TODO: get brand from redux
     accountActions.fetchAccounts( this.props.params.brand )
+
+    //fetch serviceInfo from API
+    fetchServiceInfo()
   }
 
   validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {
@@ -91,36 +82,6 @@ class AccountList extends Component {
       sortBy: column,
       sortDir: direction
     })
-  }
-
-  getInlineAddFields() {
-    return [
-      [ { input: <FormControl id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.accountName.placeholder.text'})}/> } ],
-      [ { input: <SelectWrapper
-            numericValues={true}
-            id='provider_type'
-            className="inline-add-dropdown"
-            options={FILTERED_ACCOUNT_TYPES.map(type => [type.value, type.label])}/>
-      } ],
-      [],
-      [ { input: <SelectWrapper id='brand' className="inline-add-dropdown" options={[['udn', 'udn']]}/> } ],
-      [ { input: <FilterChecklistDropdown
-            id="services"
-            className="inline-add-dropdown"
-            options={fromJS(SERVICE_TYPES.filter(service => service.accountTypes.includes(this.props.typeField)))}/>,
-        positionClass: 'row col-xs-6'
-      } ]
-    ]
-  }
-
-  newAccount({ name, provider_type, brand, services }) {
-    const { createAccount } = this.props.accountActions
-    const requestBody = { name, provider_type, services: services.toJS() }
-    createAccount(brand, requestBody).then(this.toggleInlineAdd)
-  }
-
-  toggleInlineAdd() {
-    this.setState({ addingNew: !this.state.addingNew })
   }
 
   sortedData(data, sortBy, sortDir) {
@@ -169,8 +130,8 @@ class AccountList extends Component {
     const filteredAccounts = accounts
       .filter(account => account.get('name').toLowerCase().includes(this.state.search.toLowerCase()))
       .map(account => {
-        const accountType = ACCOUNT_TYPES.find(type => account.get('provider_type') === type.value)
-        return account.set('provider_type_label', accountType ? accountType.label : '')
+        const providerType = this.props.providerTypes.find(type => account.get('provider_type') === type.get('id'))
+        return account.set('provider_type_label', providerType ? providerType.get('name') : '')
       })
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -183,8 +144,11 @@ class AccountList extends Component {
       this.state.sortDir
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
-    const services = values =>
-      values.map(value => SERVICE_TYPES.find(type => type.value === value.get('id')).label).toJS()
+    const services = values => values.map( service => {
+      const serviceDetails = this.props.services.find( obj => obj.get('id') === service.get('id') )
+      return serviceDetails && serviceDetails.get('name')
+    }).toJS()
+
     const accountsSize = sortedAccounts.size
     const accountsText = ` Account${sortedAccounts.size === 1 ? '' : 's'}`
     const hiddenAccountsText = hiddenAccs ? ` (${hiddenAccs} hidden)` : ''
@@ -200,7 +164,7 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={this.toggleInlineAdd}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -216,13 +180,6 @@ class AccountList extends Component {
           </tr>
           </thead>
           <tbody>
-          {this.state.addingNew && <InlineAdd
-            validate={this.validateInlineAdd}
-            fields={['name', 'provider_type', 'brand', 'services']}
-            inputs={this.getInlineAddFields()}
-            initialValues={{ services: List() }}
-            unmount={this.toggleInlineAdd}
-            save={this.newAccount}/>}
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
             return (
@@ -259,11 +216,12 @@ AccountList.propTypes = {
   accounts: PropTypes.instanceOf(List),
   deleteAccount: PropTypes.func,
   editAccount: PropTypes.func,
-  intl: PropTypes.object,
+  fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
+  providerTypes: React.PropTypes.instanceOf(Map),
   route: React.PropTypes.object,
   router: React.PropTypes.object,
-  typeField: PropTypes.number,
+  services: React.PropTypes.instanceOf(Map),
   uiActions: React.PropTypes.object
 }
 
@@ -272,16 +230,19 @@ AccountList.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const addAccountForm = state.form.inlineAdd
-  const typeField = addAccountForm && addAccountForm.provider_type && addAccountForm.provider_type.value
-  return { accounts: state.account.get('allAccounts'), typeField }
+  return {
+    accounts: state.account.get('allAccounts'),
+    providerTypes: getProviderTypes(state),
+    services: getServices(state)
+  }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(AccountList)))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AccountList))
