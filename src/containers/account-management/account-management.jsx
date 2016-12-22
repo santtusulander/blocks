@@ -81,29 +81,34 @@ export class AccountManagement extends Component {
     this.props.rolesActions.fetchRoles()
 
     /*
+      TODO: UDNP-2172
       Why Users are needed here?
       Shouldn't they be loaded on 'Users' -tab?
     */
-    // if (account) {
-    //   this.props.userActions.fetchUsers(brand, account)
-    // }
-    //
-    // else if(this.props.accounts.size) {
-    //   this.props.userActions.startFetching()
-    //   this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
-    // }
+    if (account) {
+      this.props.userActions.fetchUsers(brand, account)
+    }
+
+    else if(this.props.accounts.size) {
+      this.props.userActions.startFetching()
+      this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    // const { brand, account } = nextProps.params
-    // if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
-    //   this.props.userActions.fetchUsers(brand, account)
-    // }
-    //
-    // else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
-    //   this.props.userActions.startFetching()
-    //   this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
-    // }
+    /*TODO: UDNP-2172
+      Why Users are needed here?
+      Shouldn't they be loaded on 'Users' -tab?
+    */
+    const { brand, account } = nextProps.params
+    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
+      this.props.userActions.fetchUsers(brand, account)
+    }
+
+    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+      this.props.userActions.startFetching()
+      this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
+    }
   }
 
   editSOARecord() {
