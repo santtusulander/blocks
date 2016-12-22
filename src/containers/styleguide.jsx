@@ -40,6 +40,7 @@ import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
+import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
@@ -89,7 +90,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
-import MapBox            from '../components/map/mapbox'
+import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
 import DateRanges from '../constants/date-ranges'
@@ -106,6 +107,8 @@ const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link9', label: 'Property 9', checked: false }
 ]);
 
+import * as countriesGeoJSON from '../assets/topo/custom.geo.json';
+
 class Styleguide extends React.Component {
 
   constructor(props) {
@@ -113,6 +116,7 @@ class Styleguide extends React.Component {
 
     this.state = {
       activeTab: 1,
+      showSidePanel: false,
       customDatePickerEndDate: moment().endOf('day'),
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
@@ -267,6 +271,33 @@ class Styleguide extends React.Component {
         timestamp: datapoint.timestamp
       }
     })
+
+    const countryData = [
+      {
+        "name": "Hong Kong",
+        "bits_per_second": 2801215741,
+        "code": "HKG",
+        "total": 484049729862220
+      },
+      {
+        "name": "Japan",
+        "bits_per_second": 1011356667,
+        "code": "JPN",
+        "total": 174762305623425
+      },
+      {
+        "name": "Korea, Republic Of",
+        "bits_per_second": 500033048,
+        "code": "KOR",
+        "total": 86405648211184
+      },
+      {
+        "name": "Malaysia",
+        "bits_per_second": 472250782,
+        "code": "MYS",
+        "total": 81604876012993
+      }
+    ]
 
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
@@ -555,7 +586,7 @@ class Styleguide extends React.Component {
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                           </Popover>
                         }>
-                        <Button bsStyle="link" className="col-xs-2">{"?"}</Button>
+                        <Button bsStyle="link" className="col-xs-2"><IconQuestionMark /></Button>
                         </OverlayTrigger>
                       </InputGroup.Addon>
                     </InputGroup>
@@ -843,6 +874,33 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Side Panel</h1>
+          <Button bsStyle="primary" onClick={() => this.setState({showSidePanel: true})}>Trigger Side Panel</Button>
+          {this.state.showSidePanel &&
+            <SidePanel
+            show={this.state.showSidePanel}
+            title="Side Panel"
+            subTitle="Styleguide Example"
+            cancelButton={true}
+            submitButton={true}
+            submitText="Close"
+            cancel={() => this.setState({showSidePanel: false})}
+            submit={() => this.setState({showSidePanel: false})}>
+            <form onSubmit={() => this.setState({showSidePanel: false})}>
+              <FormGroup>
+                <ControlLabel>Name</ControlLabel>
+                <FormControl/>
+              </FormGroup>
+
+              <hr/>
+
+              <FormGroup>
+                <ControlLabel>Type</ControlLabel>
+                <FormControl/>
+              </FormGroup>
+            </form>
+          </SidePanel>}
+
           <h1 className="page-header">Dashboard Panel</h1>
 
           <DashboardPanels>
@@ -859,7 +917,12 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">MapBox</h1>
 
-          <MapBox />
+          <Mapbox
+            geoData={countriesGeoJSON}
+            countryData={countryData}
+            theme={this.props.theme}
+            height={600}
+            />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

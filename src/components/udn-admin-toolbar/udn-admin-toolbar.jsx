@@ -47,8 +47,8 @@ UdnAdminToolbar.defaultProps = {
 }
 
 UdnAdminToolbar.propTypes = {
-  accounts: React.PropTypes.instanceOf.Immutable.List(),
-  activeAccount: React.PropTypes.instanceOf.Immutable.Map(),
+  accounts: React.PropTypes.instanceOf(Immutable.List),
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   history: React.PropTypes.object,
   routes: React.PropTypes.object,
   toggleAccountManagementModal: React.PropTypes.func
