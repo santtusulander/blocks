@@ -91,6 +91,8 @@ class Mapbox extends React.Component {
   }
 
   onStyleLoaded(map) {
+    // Fix to draw map correctly on reload
+    map.resize()
     this.addCountryLayers(map)
 
     if (this.state.zoom > 6.9) {
