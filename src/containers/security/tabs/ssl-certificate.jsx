@@ -119,7 +119,6 @@ TabSslCertificate.propTypes = {
   activeModal: PropTypes.string,
   fetchAccount: PropTypes.func,
   groups: PropTypes.instanceOf(List),
-  isFetching: PropTypes.bool,
   onDelete: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
