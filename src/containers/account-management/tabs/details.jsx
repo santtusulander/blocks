@@ -18,25 +18,26 @@ class AccountDetails extends React.Component {
 
   componentWillMount() {
     this.props.fetchServiceInfo()
-    this.props.accountStartFetching();
-    this.props.fetchAccountDetails(this.props.params.brand, this.props.params.account)
+    this.fetchData(this.props.params.brand, this.props.params.account)
   }
 
   componentWillReceiveProps(nextProps){
     if (this.props.params.account !== nextProps.params.account) {
-      if (this.props !== nextProps) {
-        this.props.accountStartFetching();
-        this.props.fetchAccountDetails(nextProps.params.brand, nextProps.params.account)
-      }
+      this.fetchData(nextProps.params.brand, nextProps.params.account)
     }
   }
 
+  fetchData(brand, account){
+    this.props.accountStartFetching();
+    this.props.fetchAccountDetails(brand, account)
+  }
+
   render() {
-    const { providerTypes, services, account, accountsIsFetching } = this.props
+    const { providerTypes, services, account, accountIsFetching } = this.props
 
     return (
       <PageContainer className="account-management-account-details">
-        { accountsIsFetching
+        { accountIsFetching
             ? <LoadingSpinner />
             : <div className='account-details'>
                 <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
@@ -86,7 +87,8 @@ class AccountDetails extends React.Component {
 AccountDetails.displayName = 'AccountDetails'
 AccountDetails.propTypes = {
   account: PropTypes.instanceOf(Map),
-  accountsIsFetching: PropTypes.bool,
+  accountIsFetching: PropTypes.bool,
+  accountStartFetching: PropTypes.func,
   fetchAccountDetails: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
@@ -104,7 +106,7 @@ AccountDetails.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     account: getAccountById(state, ownProps.params.account),
-    accountsIsFetching: accountsFetching(state),
+    accountIsFetching: accountsFetching(state),
     providerTypes: getProviderTypes(state),
     services: getServices(state)
   }
