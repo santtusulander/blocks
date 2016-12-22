@@ -13,15 +13,12 @@ class FilterIncludeComparison extends React.Component {
   }
   render() {
     return (
-      <div>
-        <div className="sidebar-content">
-          <Checkbox
-            checked={this.props.includeComparison}
-            onChange={() => this.props.toggleComparison(!this.props.includeComparison)}>
-            <FormattedMessage id="portal.analysis.filters.includeComparison.label" />
-          </Checkbox>
-        </div>
-      </div>
+      <Checkbox
+        className="comparison-filter"
+        checked={this.props.includeComparison}
+        onChange={() => this.props.toggleComparison(!this.props.includeComparison)}>
+        <FormattedMessage id="portal.analysis.filters.includeComparison.label" />
+      </Checkbox>
     );
   }
 }

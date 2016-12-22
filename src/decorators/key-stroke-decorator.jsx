@@ -50,7 +50,7 @@ export default function(WrappedModal) {
   }
 
   KeyStrokeSupport.propTypes = {
-    cancel: PropTypes.func,
+    cancel: PropTypes.func.isRequired,
     invalid: PropTypes.bool,
     submit: PropTypes.func,
     verifyDelete: PropTypes.bool

@@ -18,6 +18,7 @@ export const roles = require('./roles').default;
 export const permissions = require('./permissions').default;
 export const support = require('./support').default;
 export const dashboard = require('./dashboard').default;
+export const mapbox = require('./mapbox').default;
 
 //Account Management
 export const dnsRecords = require('./dns-records/actions').default;
@@ -30,7 +31,10 @@ export const filters = require('./filters').default;
 export const security = require('./security').default;
 
 //Properties
-export const properties = require('./properties').default 
+export const properties = require('./properties').default
+
+//serviceInfo
+export const serviceInfo = require('./service-info/index.js').default;
 
 // Account Selectors
 export const accountSelectors = multireducer({
@@ -41,5 +45,7 @@ export const accountSelectors = multireducer({
   propertySummary: accountSelector,
   content: accountSelector,
   security: accountSelector,
-  analytics: accountSelector
+  analytics: accountSelector,
+  serviceInfo: serviceInfo
+
 })
