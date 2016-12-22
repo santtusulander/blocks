@@ -22,8 +22,15 @@ $indicator-margin: ($toggle-height - $indicator-height) / 2;
   }
 
   .light-theme & {
-    color: $white;
-    background-color: rgba($black, 0.2);
+    color: $lt-text-color;
+    background-color: $white;
+    box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+    &.inverted-style {
+      color: $white;
+      background-color: rgba($black, 0.2);
+      box-shadow: none;
+    }
   }
 
 
