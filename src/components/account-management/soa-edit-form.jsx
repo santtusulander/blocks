@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
-import { Modal, Input, ButtonToolbar } from 'react-bootstrap'
+import { Modal, FormGroup, FormControl, ControlLabel, HelpBlock, ButtonToolbar } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 import { Map } from 'immutable'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import { isValidEmail, isInLength } from '../../util/validators'
 
 import UDNButton from '../button'
+import { getReduxFormValidationState } from '../../util/helpers'
 
 import './soa-edit.form.scss'
 
@@ -69,53 +70,55 @@ export const SoaEditForm = props => {
       <Modal.Body>
         <form>
 
-          <Input
-            {...domainName}
-            type="text"
-            label={props.intl.formatMessage({id: 'portal.account.soaForm.domainName.label'})}/>
-
-          {domainName.touched && domainName.error && <div className="error-msg">{domainName.error}</div>}
-
-          <hr/>
-
-          <Input
-            {...nameServer}
-            type="text"
-            label={props.intl.formatMessage({id: 'portal.account.soaForm.nameServer.label'})}/>
-
-          {nameServer.touched && nameServer.error && <div className="error-msg">{nameServer.error}</div>}
+          <FormGroup
+            id="domain_name"
+            validationState={getReduxFormValidationState(domainName)}>
+            <ControlLabel><FormattedMessage id="portal.account.soaForm.domainName.label" /></ControlLabel>
+            <FormControl {...domainName} />
+            {domainName.touched && domainName.error &&
+              <HelpBlock className="error-msg">{domainName.error}</HelpBlock>
+            }
+          </FormGroup>
 
           <hr/>
 
-          <Input
-            {...personResponsible}
-            type="text"
-            className="soa-form-input"
-            label={props.intl.formatMessage({id: 'portal.account.soaForm.personResponsible.label'})}/>
-
-          {personResponsible.touched && personResponsible.error &&
-          <div className="error-msg">{personResponsible.error}</div>}
-
-          <hr/>
-
-          <Input
-            {...zoneSerialNumber}
-            type="text"
-            className="soa-form-input"
-            label={props.intl.formatMessage({id: 'portal.account.soaForm.zoneSerialNumber.label'})}/>
-
-          {zoneSerialNumber.touched && zoneSerialNumber.error &&
-          <div className="error-msg">{zoneSerialNumber.error}</div>}
+          <FormGroup validationState={getReduxFormValidationState(nameServer)}>
+            <ControlLabel><FormattedMessage id="portal.account.soaForm.nameServer.label" /></ControlLabel>
+            <FormControl {...nameServer} />
+            {nameServer.touched && nameServer.error &&
+              <HelpBlock className="error-msg">{nameServer.error}</HelpBlock>
+            }
+          </FormGroup>
 
           <hr/>
 
-          <Input
-            {...refresh}
-            type="text"
-            className="soa-form-input refresh-input"
-            label={props.intl.formatMessage({id: 'portal.account.soaForm.refresh.label'})}/>
+          <FormGroup validationState={getReduxFormValidationState(personResponsible)}>
+            <ControlLabel><FormattedMessage id="portal.account.soaForm.personResponsible.label" /></ControlLabel>
+            <FormControl className="soa-form-input" {...personResponsible} />
+            {personResponsible.touched && personResponsible.error &&
+              <HelpBlock className="error-msg">{personResponsible.error}</HelpBlock>
+            }
+          </FormGroup>
 
-          {refresh.touched && refresh.error && <div className="error-msg">{refresh.error}</div>}
+          <hr/>
+
+          <FormGroup validationState={getReduxFormValidationState(zoneSerialNumber)}>
+            <ControlLabel><FormattedMessage id="portal.account.soaForm.zoneSerialNumber.label" /></ControlLabel>
+            <FormControl className="soa-form-input" {...zoneSerialNumber} />
+            {zoneSerialNumber.touched && zoneSerialNumber.error &&
+              <HelpBlock className="error-msg">{zoneSerialNumber.error}</HelpBlock>
+            }
+          </FormGroup>
+
+          <hr/>
+
+          <FormGroup validationState={getReduxFormValidationState(refresh)}>
+            <ControlLabel><FormattedMessage id="portal.account.soaForm.refresh.label" /></ControlLabel>
+            <FormControl className="soa-form-input refresh-input" {...refresh} />
+            {refresh.touched && refresh.error &&
+              <HelpBlock className="error-msg">{refresh.error}</HelpBlock>
+            }
+          </FormGroup>
 
           <hr/>
 
@@ -143,7 +146,6 @@ export const SoaEditForm = props => {
 SoaEditForm.propTypes = {
   activeDomain: PropTypes.instanceOf(Map),
   fields: PropTypes.object,
-  intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func
 }
@@ -152,4 +154,4 @@ export default reduxForm({
   fields: ['domainName', 'nameServer', 'personResponsible', 'zoneSerialNumber', 'refresh'],
   form: 'soaEditForm',
   validate
-})(injectIntl(SoaEditForm))
+})(SoaEditForm)

@@ -1,6 +1,6 @@
-import React, {PropTypes} from 'react'
-import {Col, Row, Input} from 'react-bootstrap'
-import {List, Map} from 'immutable'
+import React, { PropTypes } from 'react'
+import { Col, Row, FormControl, FormGroup } from 'react-bootstrap'
+import { List, Map } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import SectionHeader from '../../layout/section-header'
@@ -106,13 +106,13 @@ class AnalysisFileError extends React.Component {
         </SectionContainer>
 
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.fileErrors.label"/>}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder={intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
-            value={this.state.search}
-            onChange={this.changeSearch}/>
+          <FormGroup className="search-input-group">
+            <FormControl
+              className="search-input"
+              placeholder={intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
+              value={this.state.search}
+              onChange={this.changeSearch}/>
+        </FormGroup>
         </SectionHeader>
         <SectionContainer>
           <AnalysisURLList

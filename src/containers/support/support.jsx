@@ -55,7 +55,7 @@ class Support extends React.Component {
       <div>
         <SupportPageHeader {...this.props} />
         <Tabs activeKey={activeKey}>
-          <li eventKey="tickets">
+          <li data-eventKey="tickets">
             <Link to={baseUrl + '/tickets'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.TICKETS.text"/>
             </Link>
@@ -66,7 +66,7 @@ class Support extends React.Component {
               <FormattedMessage id="portal.support.tabs.TOOLS.text"/>
             </Link>
           </li>*/}
-          <li eventKey="documentation">
+          <li data-eventKey="documentation">
             <Link to={baseUrl + '/documentation'} activeClassName="active">
               <FormattedMessage id="portal.support.tabs.DOCUMENTATION.text"/>
             </Link>

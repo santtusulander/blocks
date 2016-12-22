@@ -35,7 +35,7 @@ describe('TokenAuthentication', () => {
   })
 
   it('should update internal state as changes happen', () => {
-    let inputs = component.find('Input')
+    let inputs = component.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'c2hhcmVkLXNlY3JldA=='}})
     expect(onChange).toHaveBeenCalled()
     expect(changeValue).not.toHaveBeenCalled()

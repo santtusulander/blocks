@@ -1,0 +1,66 @@
+// Side Panels
+// ===========
+$side-panel-width: rem(636px);
+$side-panel-horizontal-padding: rem(42px);
+$side-panel-header-height: rem(108px);
+$side-panel-header-top-padding: rem(30px);
+$side-panel-footer-height: rem(84px);
+$side-panel-footer-vertical-padding: rem(24px);
+$side-panel-body-margin: rem(36px);
+$dt-side-panel-bg-color: $medium-blue;
+$lt-side-panel-bg-color: $white;
+
+.side-panel.modal-dialog {
+  float: right;
+  width: $side-panel-width;
+  margin: 0;
+
+  @include sm {
+    width: 100%;
+    max-width: $side-panel-width;
+  }
+
+  .fade & {
+    transform: translate(100%, 0);
+    transition: transform 0.3s ease-out, margin 0.3s ease-out;
+  }
+
+  .in & {
+    transform: translate(0, 0);
+  }
+
+  .modal-content {
+    @include sm {
+      margin-left: 12px;
+    }
+  }
+
+  .modal-header {
+    height: $side-panel-header-height;
+    padding: $side-panel-header-top-padding $side-panel-horizontal-padding 0;
+    border-bottom: 2px solid rgba($black, 0.2);
+
+    .dark-theme & {
+      color: $white;
+    }
+  }
+
+  .modal-body {
+    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin * 2) + $side-panel-footer-height});
+    padding: 0 $side-panel-horizontal-padding;
+    margin: $side-panel-body-margin 0;
+    overflow: auto;
+  }
+
+  .modal-footer {
+    padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
+
+    .dark-theme & {
+      background: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background: rgba($black, 0.04);
+    }
+  }
+}

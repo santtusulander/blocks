@@ -1,6 +1,6 @@
 import React from 'react'
 import Immutable from 'immutable'
-import {Input} from 'react-bootstrap'
+import { FormControl, FormGroup, Radio } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
@@ -53,7 +53,7 @@ class AnalysisURLReport extends React.Component {
     })
   }
   render() {
-    const {urlMetrics} = this.props;
+    const { urlMetrics, intl } = this.props;
     const {dataKey, xAxisCustomFormat} = this.state;
     const top15URLs = urlMetrics.filter((metric, i) => i < 15)
     const chartHeight = top15URLs.size * 36 + 72
@@ -61,8 +61,12 @@ class AnalysisURLReport extends React.Component {
     return (
       <div>
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text"/>}>
-          <Input type="radio" label="Bytes" value="bytes" groupClassName="inline" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}/>
-          <Input type="radio" label="Requests" value="requests" groupClassName="inline" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}/>
+          <Radio inline={true} value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}>
+            <span>Bytes</span>
+          </Radio>
+          <Radio inline={true} value="requests" checked={this.state.dataKey === 'requests'} onChange={this.selectDataType}>
+            <span>Requests</span>
+          </Radio>
         </SectionHeader>
         <SectionContainer>
           <div ref="chartHolder">
@@ -77,13 +81,13 @@ class AnalysisURLReport extends React.Component {
           </div>
         </SectionContainer>
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.allUrls.text"/>}>
-          <Input
-            type="text"
-            className="search-input"
-            groupClassName="search-input-group"
-            placeholder={this.props.intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
-            value={this.state.search}
-            onChange={this.changeSearch}/>
+          <FormGroup className="search-input-group">
+            <FormControl
+              className="search-input"
+              placeholder={intl.formatMessage({id: 'portal.analytics.urlList.searchForUrl.text'})}
+              value={this.state.search}
+              onChange={this.changeSearch}/>
+          </FormGroup>
         </SectionHeader>
         <SectionContainer>
           <AnalysisURLList

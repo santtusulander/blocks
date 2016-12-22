@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {Input} from 'react-bootstrap'
+import { Checkbox, FormGroup } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -33,12 +33,20 @@ class FilterServiceType extends React.Component {
     return (
       <div>
         <div className="sidebar-content form-inline">
-          <Input type="checkbox" label="HTTP"
-            checked={this.props.serviceTypes.includes('http')}
-            onChange={this.toggleServiceType('http')}/>
-          <Input type="checkbox" label="HTTPS"
-            checked={this.props.serviceTypes.includes('https')}
-            onChange={this.toggleServiceType('https')}/>
+          <FormGroup>
+            <Checkbox
+              checked={this.props.serviceTypes.includes('http')}
+              onChange={this.toggleServiceType('http')}>
+              <span>HTTP</span>
+            </Checkbox>
+          </FormGroup>
+          <FormGroup>
+            <Checkbox
+              checked={this.props.serviceTypes.includes('https')}
+              onChange={this.toggleServiceType('https')}>
+              <span>HTTPS</span>
+            </Checkbox>
+          </FormGroup>
         </div>
       </div>
     );

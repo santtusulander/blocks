@@ -12,6 +12,7 @@ const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
 const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
+const SECURITY_START_FETCH = 'SECURITY_START_FETCH'
 
 export const initialState = fromJS({
   groups: [],
@@ -38,7 +39,10 @@ export function fetchGroupsFailure(state) {
 }
 
 export function fetchSSLCertificatesSuccess(state, action) {
-  return state.set('sslCertificates', fromJS(action.payload))
+  return state.merge({
+    sslCertificates: fromJS(action.payload),
+    fetching: false
+  })
 }
 
 export function fetchSSLCertificatesFailure(state) {
@@ -114,6 +118,10 @@ export function activeCertificatesToggled(state, action) {
   return state.set('activeCertificates', newActiveCertificates)
 }
 
+export function startFetch(state) {
+  return state.set('fetching', true)
+}
+
 export default handleActions({
   SECURITY_MODAL_GROUPS_FETCH: mapReducers(fetchGroupsSuccess, fetchGroupsFailure),
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
@@ -122,7 +130,8 @@ export default handleActions({
   SECURITY_SSL_CERTIFICATES_UPLOAD: mapReducers(uploadSSLCertificateSuccess, uploadSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_DELETE: mapReducers(deleteSSLCertificateSuccess, deleteSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_EDIT: mapReducers(editSSLCertificateSuccess, editSSLCertificateFailure),
-  SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset
+  SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset,
+  SECURITY_START_FETCH: startFetch
 }, initialState)
 
 // ACTIONS
@@ -162,13 +171,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
       cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
     )))
     .then(resp => resp.map(certificate => {
-      return {
-        account,
-        group,
-        cn: certificate.data.cn,
-        expirationDate: certificate.data.date_not_valid_after,
-        title: certificate.data.title
-      }
+      return Object.assign({}, { account, group }, certificate.data)
     }))
 })
 
@@ -186,3 +189,5 @@ export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATE
 })
 
 export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)
+
+export const startFetching = createAction(SECURITY_START_FETCH)
