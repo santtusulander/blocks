@@ -99,7 +99,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, user } = this.props
+    const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, user, theme } = this.props
     const showFilters = List(['dateRange'])
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
@@ -243,13 +243,9 @@ export class Dashboard extends React.Component {
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
               <div ref="byLocationHolder">
                 <AnalysisByLocation
-                  dataKey="bytes"
-                  tooltipCustomFormat={val => formatBytes(val)}
-                  timelineKey="detail"
-                  noBg={true}
-                  width={this.state.byLocationWidth}
                   height={this.state.byLocationWidth / 1.6}
-                  countryData={countries}/>
+                  countryData={countries}
+                  theme={theme}/>
               </div>
             </DashboardPanel>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.top5CP.title'})}>
@@ -314,6 +310,7 @@ Dashboard.propTypes = {
   filtersActions: PropTypes.object,
   intl: PropTypes.object,
   params: PropTypes.object,
+  theme: PropTypes.string,
   user: PropTypes.instanceOf(Map)
 }
 
@@ -332,7 +329,8 @@ function mapStateToProps(state) {
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
-    user: state.user.get('currentUser')
+    user: state.user.get('currentUser'),
+    theme: state.ui.get('theme')
   }
 }
 
