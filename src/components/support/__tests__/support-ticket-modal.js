@@ -5,11 +5,11 @@ import { shallow } from 'enzyme'
 jest.unmock('../support-ticket-modal')
 import SupportTicketModal from '../support-ticket-modal'
 
-const onEditMock = jest.fn()
-const ticketMock = Immutable.Map({ type: 'foo', priority: 'bar' })
-
 describe('SupportTicketModal', () => {
   let subject, error, props = null
+
+  const onEditMock = jest.fn()
+  const ticketMock = Immutable.Map({ type: 'foo', priority: 'bar' })
 
   beforeEach(() => {
     subject = () => {
