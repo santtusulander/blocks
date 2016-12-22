@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape } from 'react-intl'
-import { Input, Panel, Table } from 'react-bootstrap'
+import { Panel, Table } from 'react-bootstrap'
+import classNames from 'classnames'
 
+import Checkbox from './checkbox'
 import Toggle from './toggle'
 
 class MultiOptionSelector extends React.Component {
@@ -68,12 +70,19 @@ class MultiOptionSelector extends React.Component {
           return (
             <div className="multi-option-panel" key={`option-${i}`}>
               <div
-                className="multi-option-header clearfix"
+                className={classNames(
+                  'multi-option-header',
+                  'clearfix',
+                  {'active': optionValue}
+                )}
                 onClick={() => this.togglePanel(i)}>
                 <div>
                   {option.label}
                   <Toggle
-                    className="right"
+                    className={classNames(
+                      'right',
+                      {'inverted-style': optionValue}
+                    )}
                     changeValue={() => this.handleToggleChange(option, optionValue, optionIndex, i, expanded)}
                     onText={intl.formatMessage({id: 'portal.common.ON.text'})}
                     offText={intl.formatMessage({id: 'portal.common.OFF.text'})}
@@ -90,12 +99,12 @@ class MultiOptionSelector extends React.Component {
                       return (
                         <tr key={`option-${i}-${j}`}>
                           <td>
-                            <Input
-                              type="checkbox"
+                            <Checkbox
                               disabled={!optionValue}
                               checked={subOptionValue}
-                              label={subOption.label}
-                              onChange={() => this.handleCheckboxChange(subOption, option, subOptionValue, subOptionIndex)}/>
+                              onChange={() => this.handleCheckboxChange(subOption, option, subOptionValue, subOptionIndex)}>
+                              {subOption.label}
+                            </Checkbox>
                           </td>
                         </tr>
                       )

@@ -1,3 +1,6 @@
+@import '../../base/variables';
+@import '../../base/colors';
+
 // Page Header Layout
 // ==================
 $page-header-padding-top: rem(18px);
@@ -8,6 +11,7 @@ $page-header-dropdown-width: rem(250px);
 $page-header-secondary-dropdown-min-width: rem(180px);
 $action-padding-right: rem(30px);
 $details-item-margin: rem(6px);
+$sticky-filter-breakpoint: 850px;
 
 .page-header-container {
   padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
@@ -115,6 +119,14 @@ $details-item-margin: rem(6px);
     .action:not(:last-child) {
       padding-right: $action-padding-right;
     }
+
+    .date-range-select:not(:last-child) {
+      padding-right: $action-padding-right;
+    }
+
+    .comparison-filter {
+      vertical-align: baseline;
+    }
   }
 
   &.distributed-columns {
@@ -130,5 +142,24 @@ $details-item-margin: rem(6px);
 
   h1 {
     color: $pale-blue;
+  }
+}
+
+// Sticky analytics-filters
+// ==================
+body.sticky-filters {
+  @media (min-width: $sticky-filter-breakpoint) {
+    .analytics-container {
+      padding-top: 175px;
+    }
+
+    .secondary-page-header {
+      position: fixed;
+      top: $header-total-height;
+      left: $navigation-sidebar-width;
+      right: 0;
+      z-index: 1;
+      background: #0d3a53 !important; // Need to use solid color instead of rgba
+    }
   }
 }

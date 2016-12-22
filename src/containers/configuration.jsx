@@ -138,9 +138,9 @@ export class Configuration extends React.Component {
       this.props.activeHost.toJS()
     ).then((action) => {
       if(action.error) {
-        this.showNotification('Saving configurations failed: ' +
-          action.payload.status + ' ' +
-          action.payload.statusText)
+        this.showNotification(this.props.intl.formatMessage(
+                              {id: 'portal.configuration.updateFailed.text'},
+                              {reason: action.payload.data.message}))
       } else {
         this.setState({
           activeConfigOriginal: Immutable.fromJS(action.payload).getIn(['services',0,'configurations',this.state.activeConfig])
@@ -207,9 +207,9 @@ export class Configuration extends React.Component {
       // env === 1 is retiring
       if(env === 1) {
         if(action.error) {
-          this.showNotification('Retiring configurations failed: ' +
-            action.payload.status + ' ' +
-            action.payload.statusText)
+          this.showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.configuration.retireFailed.text'},
+                                {reason: action.payload.data.message}))
         } else {
           this.showNotification(<FormattedMessage id="portal.configuration.retireSuccessfull.text"/>)
         }
@@ -217,9 +217,9 @@ export class Configuration extends React.Component {
       } else {
         if(action.error) {
           this.togglePublishModal()
-          this.showNotification('Publishing configurations failed: ' +
-            action.payload.status + ' ' +
-            action.payload.statusText)
+          this.showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.configuration.publishFailed.text'},
+                                {reason: action.payload.data.message}))
         } else {
           this.togglePublishModal()
           this.showNotification(<FormattedMessage id="portal.configuration.publishSuccessfull.text"/>)

@@ -70,7 +70,9 @@ export const SoaEditForm = props => {
       <Modal.Body>
         <form>
 
-          <FormGroup validationState={getReduxFormValidationState(domainName)}>
+          <FormGroup
+            id="domain_name"
+            validationState={getReduxFormValidationState(domainName)}>
             <ControlLabel><FormattedMessage id="portal.account.soaForm.domainName.label" /></ControlLabel>
             <FormControl {...domainName} />
             {domainName.touched && domainName.error &&
