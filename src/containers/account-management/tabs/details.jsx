@@ -47,22 +47,22 @@ class AccountDetails extends React.Component {
 
             <ul className='services-list'>
               {
-                account && account.get('services').map( service => {
+                account && account.get('services').map( (service,i) => {
                   const options = service.get('options')
                   let optionList;
 
                   if (options.size > 0) {
                     optionList = (
                       <ul>
-                        {options.map( optionId => {
-                          return <li>{getOptionName(services, service.get('id'), optionId)}</li>
+                        {options.map( (optionId, i) => {
+                          return <li key={i}>{getOptionName(services, service.get('id'), optionId)}</li>
                         })}
                       </ul>
                     );
                   }
 
                   return (
-                    <li>
+                    <li key={i}>
                       {getServiceName(services, service.get('id'))}
                       {optionList}
                     </li>

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
+import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
 
@@ -26,6 +27,8 @@ import AccountSelector from '../../components/global-account-selector/global-acc
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
+import IconEdit from '../../components/icons/icon-edit'
+
 import Tabs from '../../components/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
@@ -76,26 +79,31 @@ export class AccountManagement extends Component {
     const { brand, account } = this.props.params
     this.props.permissionsActions.fetchPermissions()
     this.props.rolesActions.fetchRoles()
-    if (account) {
-      this.props.userActions.fetchUsers(brand, account)
-    }
 
-    else if(this.props.accounts.size) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
-    }
+    /*
+      Why Users are needed here?
+      Shouldn't they be loaded on 'Users' -tab?
+    */
+    // if (account) {
+    //   this.props.userActions.fetchUsers(brand, account)
+    // }
+    //
+    // else if(this.props.accounts.size) {
+    //   this.props.userActions.startFetching()
+    //   this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { brand, account } = nextProps.params
-    if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
-      this.props.userActions.fetchUsers(brand, account)
-    }
-
-    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
-      this.props.userActions.startFetching()
-      this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
-    }
+    // const { brand, account } = nextProps.params
+    // if (nextProps.params.account && nextProps.params.account !== this.props.params.account) {
+    //   this.props.userActions.fetchUsers(brand, account)
+    // }
+    //
+    // else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+    //   this.props.userActions.startFetching()
+    //   this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
+    // }
   }
 
   editSOARecord() {
@@ -335,36 +343,6 @@ export class AccountManagement extends Component {
         break
     }
 
-    /* TODO: remove - TEST ONLY */
-    /*const dnsInitialValues = {
-     initialValues: {
-     recordType: 'MX',
-     hostName: 'mikkotest',
-     targetValue: '11.22.33.44',
-     ttl: '3600'
-     }
-     }
-     const soaFormInitialValues = dnsData && {
-     initialValues:
-     dnsData
-     .get('domains')
-     .find(domain => is(activeDomain.get('id'), domain.get('id')))
-     .get('SOARecord').toJS()
-     }
-     const dnsListProps = {
-     soaEditOnSave: this.editSOARecord,
-     modalActive: this.state.modalVisible,
-     //changeActiveDomain: dnsActions.changeActiveDomain,
-     activeDomain: activeDomain,
-     domains: dnsData && dnsData.get('domains'),
-     changeRecordType: dnsActions.changeActiveRecordType,
-     activeRecordType: activeRecordType,
-     dnsEditOnSave: this.dnsEditOnSave,
-     accountManagementModal: accountManagementModal,
-     toggleModal: toggleModal,
-     dnsFormInitialValues: dnsInitialValues,
-     soaFormInitialValues: soaFormInitialValues
-     }*/
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
       deleteGroup: this.showDeleteGroupModal,
@@ -413,6 +391,21 @@ export class AccountManagement extends Component {
           <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
           </IsAllowed>
+
+          { /*
+            Edit activeAccount -button
+            */
+            account &&
+            <IsAllowed to={PERMISSIONS.MODIFY_ACCOUNTS}>
+              <Button
+                bsStyle="primary"
+                className="btn-icon"
+                onClick={() => this.showAccountForm(this.props.activeAccount)}
+                >
+                <IconEdit/>
+              </Button>
+            </IsAllowed>
+          }
         </PageHeader>
         {account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="details">
@@ -449,9 +442,13 @@ export class AccountManagement extends Component {
            </li>
            */}
         </Tabs>}
+
         {/* RENDER TAB CONTENT */}
         {this.props.children && React.cloneElement(this.props.children, childProps)}
 
+        {/* MODALS
+          Add Account
+        */}
         {accountManagementModal === ADD_ACCOUNT &&
         <AccountForm
           id="account-form"
@@ -460,7 +457,11 @@ export class AccountManagement extends Component {
           currentUser={this.props.currentUser}
           onCancel={() => toggleModal(null)}
           show={true}/>}
+
+        { /* Delete Modal */}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
+
+        { /* Delete User */}
         {accountManagementModal === DELETE_USER &&
         <ModalWindow
           title="Delete User?"
@@ -475,6 +476,8 @@ export class AccountManagement extends Component {
            <FormattedMessage id="portal.user.delete.disclaimer.text"/>
           </p>
         </ModalWindow>}
+
+        { /* Edit Group */}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
         <GroupForm
           id="group-form"
