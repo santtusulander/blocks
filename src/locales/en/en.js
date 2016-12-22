@@ -82,6 +82,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.dropdownMenu.all': 'All {options}',
   'portal.analytics.dropdownMenu.clearSelection': 'Clear selection',
   'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',
+  'portal.analytics.dropdownMenu.noResults' : 'No results...',
   'portal.analytics.dropdownMenu.pleaseSelect' : 'Please select',
 
   'portal.analytics.fileErrors.label': 'File Errors',

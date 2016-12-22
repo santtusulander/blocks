@@ -126,7 +126,11 @@ export class FilterChecklistDropdown extends React.Component {
     } else {
       itemList = (
         <li role="presentation" className="children" tabIndex="-1">
-          <div className="form-group">No results...</div>
+          <div className="form-group checkbox">
+            <label>
+              <FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>
+            </label>
+          </div>
         </li>
       )
     }
