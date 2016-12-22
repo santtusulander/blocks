@@ -79,7 +79,10 @@ class MultiOptionSelector extends React.Component {
                 <div>
                   {option.label}
                   <Toggle
-                    className="right"
+                    className={classNames(
+                      'right',
+                      {'inverted-style': optionValue}
+                    )}
                     changeValue={() => this.handleToggleChange(option, optionValue, optionIndex, i, expanded)}
                     onText={intl.formatMessage({id: 'portal.common.ON.text'})}
                     offText={intl.formatMessage({id: 'portal.common.OFF.text'})}

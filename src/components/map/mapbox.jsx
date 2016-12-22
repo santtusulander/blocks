@@ -91,6 +91,8 @@ class Mapbox extends React.Component {
   }
 
   onStyleLoaded(map) {
+    // Fix to draw map correctly on reload
+    map.resize()
     this.addCountryLayers(map)
 
     if (this.state.zoom > 6.9) {
@@ -376,7 +378,6 @@ class Mapbox extends React.Component {
           <div className="control map-zoom">
             <ZoomControl
               style={{
-                height: 'calc(100% - 32px)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 boxShadow: 'none',
