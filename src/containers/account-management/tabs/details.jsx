@@ -34,7 +34,7 @@ class AccountDetails extends React.Component {
       <PageContainer className="account-management-account-details">
       <div className='account-details'>
 
-            <label>Brand</label>
+            <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
             <span className='value'>UDN</span>
 
             <label>Account Name</label>
@@ -45,6 +45,7 @@ class AccountDetails extends React.Component {
 
             <label><FormattedMessage id="portal.account.manage.services.text"/></label>
 
+            { /* List of Services (and options) */}
             <ul className='services-list'>
               {
                 account && account.get('services').map( (service,i) => {
