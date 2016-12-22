@@ -2,7 +2,7 @@ import React from 'react'
 import { Map, List } from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.dontMock('../global-account-selector.jsx')
+jest.unmock('../global-account-selector.jsx')
 import AccountSelector from '../global-account-selector.jsx'
 
 describe('AccountSelector', () => {
