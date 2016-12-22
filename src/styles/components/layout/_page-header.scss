@@ -119,6 +119,14 @@ $sticky-filter-breakpoint: 850px;
     .action:not(:last-child) {
       padding-right: $action-padding-right;
     }
+
+    .date-range-select:not(:last-child) {
+      padding-right: $action-padding-right;
+    }
+
+    .comparison-filter {
+      vertical-align: baseline;
+    }
   }
 
   &.distributed-columns {
