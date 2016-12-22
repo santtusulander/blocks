@@ -71,6 +71,12 @@ class Mapbox extends React.Component {
       type: 'FeatureCollection',
       features: []
     }
+
+    this.timeout = null
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.onPageScroll.bind(this), false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,6 +94,24 @@ class Mapbox extends React.Component {
       this.updateLayers(newLayers)
       this.addCityLayers(this.state.map, nextProps.cityData)
     }
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.timeout)
+    window.removeEventListener('scroll', this.onPageScroll.bind(this), false)
+  }
+
+  onPageScroll() {
+    if (this.refs && this.refs.mapbox && this.refs.mapbox.state && this.refs.mapbox.state.map) {
+      this.disableAndEnableZoom(this.refs.mapbox.state.map)
+    }
+  }
+
+  disableAndEnableZoom(map) {
+    map.scrollZoom.disable()
+
+    window.clearTimeout(this.timeout)
+    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), 500)
   }
 
   onStyleLoaded(map) {
@@ -322,6 +346,7 @@ class Mapbox extends React.Component {
 
     return (
       <ReactMapboxGl
+        ref="mapbox"
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
