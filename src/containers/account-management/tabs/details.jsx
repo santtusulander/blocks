@@ -10,8 +10,6 @@ import {getProviderTypes, getServices, getProviderTypeName, getOptionName, getSe
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 import {fetchAccount, getById as getAccountById} from '../../../redux/modules/account'
 
-//import { MODIFY_ACCOUNTS } from '../../../constants/permissions'
-
 class AccountDetails extends React.Component {
   constructor(props) {
     super(props)
@@ -30,15 +28,6 @@ class AccountDetails extends React.Component {
   }
 
   render() {
-    //const { fields: { accountName, accountType, services } } = this.props
-
-    // <ButtonToolbar className="text-right extra-margin-top">
-    //             <IsAllowed to={MODIFY_ACCOUNTS}>
-    //               <UDNButton disabled={this.props.invalid} bsStyle="primary" onClick={this.save}>Save</UDNButton>
-    //             </IsAllowed>
-    // </ButtonToolbar>
-
-
     const { providerTypes, services, account } = this.props
 
     return (
