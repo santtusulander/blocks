@@ -48,7 +48,7 @@ class AccountDetails extends React.Component {
             { /* List of Services (and options) */}
             <ul className='services-list'>
               {
-                account && account.get('services').map( (service,i) => {
+                account && account.get('services') && account.get('services').map( (service,i) => {
                   const options = service.get('options')
                   let optionList;
 
