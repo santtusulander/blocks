@@ -55,12 +55,35 @@ class AnalysisURLReport extends React.Component {
   render() {
     const { urlMetrics, intl } = this.props;
     const {dataKey, xAxisCustomFormat} = this.state;
-    const top15URLs = urlMetrics.filter((metric, i) => i < 15)
-    const chartHeight = top15URLs.size * 36 + 72
+
+    const uniqueURLMetrics = urlMetrics.groupBy(urlMatrix => urlMatrix.get('url'))
+    const byBytes = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('bytes')), 0))
+    const byRequests = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('requests')), 0))
+
+    let aggregatedByBytes = Immutable.List()
+    byBytes.map(url => {
+      aggregatedByBytes = aggregatedByBytes.push({
+        url: byBytes.keyOf(url),
+        bytes: url
+      })
+    })
+
+    let aggregatedByRequests = Immutable.List([])
+    byRequests.map(url => {
+      aggregatedByRequests = aggregatedByRequests.push({
+        url: byRequests.keyOf(url),
+        requests: url
+      })
+    })
+
+    const aggregatedData = this.state.dataKey === 'bytes' ? aggregatedByBytes : aggregatedByRequests
+    const topURLsCount = aggregatedData.size < 15 ? aggregatedData.size : 15
+    const topURLs = aggregatedData.filter((metric, i) => i < topURLsCount)
+    const chartHeight = topURLs.size * 36 + 72
 
     return (
       <div>
-        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text"/>}>
+        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text" values={{urlCout: topURLsCount}}/>}>
           <Radio inline={true} value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}>
             <span>Bytes</span>
           </Radio>
@@ -71,7 +94,7 @@ class AnalysisURLReport extends React.Component {
         <SectionContainer>
           <div ref="chartHolder">
             <AnalysisHorizontalBar
-              data={top15URLs.toJS()}
+              data={aggregatedData.toJS()}
               dataKey={dataKey}
               height={chartHeight}
               labelKey="url"
