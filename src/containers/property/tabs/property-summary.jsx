@@ -198,9 +198,13 @@ class PropertySummary extends React.Component {
   }
 
   measureContainers() {
-    this.setState({
-      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth
-    })
+    const byTimeHolder = this.refs.byTimeHolder
+
+    if (byTimeHolder && byTimeHolder.clientWidth !== this.state.byTimeWidth) {
+      this.setState({
+        byTimeWidth: byTimeHolder.clientWidth
+      })
+    }
   }
 
   togglePurge() {
