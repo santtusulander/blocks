@@ -79,7 +79,7 @@ class AnalysisURLReport extends React.Component {
     const aggregatedData = this.state.dataKey === 'bytes' ? aggregatedByBytes : aggregatedByRequests
     const topURLsCount = aggregatedData.size < 15 ? aggregatedData.size : 15
     const topURLs = aggregatedData.filter((metric, i) => i < topURLsCount)
-    const chartHeight = topURLs.size * 36 + 72
+    const chartHeight = topURLsCount * 36 + 72
 
     return (
       <div>
@@ -94,7 +94,7 @@ class AnalysisURLReport extends React.Component {
         <SectionContainer>
           <div ref="chartHolder">
             <AnalysisHorizontalBar
-              data={aggregatedData.toJS()}
+              data={topURLs.toJS()}
               dataKey={dataKey}
               height={chartHeight}
               labelKey="url"

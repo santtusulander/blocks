@@ -13,7 +13,7 @@ function intlMaker() {
   }
 }
 
-const urls = fromJS([
+const urlMetrics = fromJS([
   {
     url: 'www.abc.com',
     bytes: 1000,
@@ -28,18 +28,12 @@ const urls = fromJS([
   }
 ])
 
-const urlMetrics = fromJS([
-    {1: 'dummy'},
-    {2: 'dummy 2'}
-  ])
-
 describe('AnalysisURLReport', () => {
   let subject = null
   let props = {}
   beforeEach(() => {
     subject = () => {
       props = {
-        urls,
         urlMetrics,
         serviceTypes: fromJS(['http']),
         statusCodes: fromJS(['All']),
