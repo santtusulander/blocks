@@ -22,22 +22,24 @@ class FilterDateRange extends React.Component {
     return (
       <div className='action'>
         <h5><FormattedMessage id="portal.analysis.filters.dateRange.title"/></h5>
-        <DateRangeSelect
-          startDate={startDate}
-          endDate={endDate}
-          availableRanges={dateRanges}
-          limitRange={includeComparison}
-          changeDateRange={(startDate, endDate, activeDateRange) => {
-            onFilterChange('dateRange', { startDate, endDate })
-            onFilterChange('dateRangeLabel', activeDateRange)
-          }}/>
-        {showComparison &&
-          <FilterIncludeComparison
-            includeComparison={includeComparison}
-            toggleComparison={val => {
-              onFilterChange('includeComparison', val)
+        <div className="sidebar-content form-inline">
+          <DateRangeSelect
+            startDate={startDate}
+            endDate={endDate}
+            availableRanges={dateRanges}
+            limitRange={includeComparison}
+            changeDateRange={(startDate, endDate, activeDateRange) => {
+              onFilterChange('dateRange', { startDate, endDate })
+              onFilterChange('dateRangeLabel', activeDateRange)
             }}/>
-        }
+          {showComparison &&
+            <FilterIncludeComparison
+              includeComparison={includeComparison}
+              toggleComparison={val => {
+                onFilterChange('includeComparison', val)
+              }}/>
+          }
+        </div>
       </div>
     )
   }

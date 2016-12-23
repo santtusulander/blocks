@@ -21,6 +21,10 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
+    '/v2/service_info': {
+      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
+      secure: false
+    },
     '/v2': {
       target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
       secure: false
@@ -30,7 +34,7 @@ var server = new WebpackDevServer(compiler, {
       secure: false
     },
     '/analytics': {
-      target: 'http://localhost:3030'
+      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030'
     }
   },
   stats: {colors: true}
