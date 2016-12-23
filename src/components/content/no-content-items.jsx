@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-const NoContentItems = props => {
+function NoContentItems({ content }) {
   return (
     <p className="fetching-info text-center">
-      {props.content}
+      {content}
       <br/>
       <FormattedMessage id="portal.content.createNewProperties"/>
     </p>
