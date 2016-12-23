@@ -76,6 +76,8 @@ class Mapbox extends React.Component {
   }
 
   componentDidMount() {
+    // We need to add an event listener in order to prevent unwanted interaction
+    // with the map when the user is scrolling on the page.
     window.addEventListener('scroll', this.onPageScroll.bind(this), false)
   }
 
@@ -108,12 +110,27 @@ class Mapbox extends React.Component {
     window.removeEventListener('scroll', this.onPageScroll.bind(this), false)
   }
 
+  /**
+   * A method that is called on page scroll. Does a deep check for Mapbox map
+   * instance and then calls for disabling and enabling zoom handlers in the map
+   * accordingly.
+   *
+   * @method onPageScroll
+   */
   onPageScroll() {
+    // We might not have the map instance saved in this.state yet, so we need to
+    // get it from the the ReactMapboxGl components state instead.
     if (this.refs && this.refs.mapbox && this.refs.mapbox.state && this.refs.mapbox.state.map) {
       this.disableAndEnableZoom(this.refs.mapbox.state.map)
     }
   }
 
+  /**
+   * Disables and enables zoom handlers on the map with a slight delay.
+   *
+   * @method disableAndEnableZoom
+   * @param  {object}             map Instance of Mapbox map
+   */
   disableAndEnableZoom(map) {
     map.scrollZoom.disable()
 
