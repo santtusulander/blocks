@@ -19,25 +19,6 @@ const useHMR = () => (process.argv.indexOf('--no-hmr') === -1)
 const HotModuleReplacementPlugin = useHMR()
   ? [new webpack.HotModuleReplacementPlugin()]
   : []
-console.log([
-    ...HotModuleReplacementPlugin,
-    new webpack.DefinePlugin(Object.assign({}, {
-      'process.env.NODE_ENV': '"development"',
-      'process.env.PUBLIC_URL': `"${publicUrl}"`,
-      'ANALYTICS_BASE_URI_DEVELOPMENT': `"${publicUrl}analytics"`,
-      'TOPO_BASE_URI_DEVELOPMENT': `"${publicUrl}assets/topo"`,
-      'GOOGLE_SITE_KEY': `"${googleSiteKey}"`,
-      'VERSION': JSON.stringify(require('../package.json').version),
-      'MAPBOX_ACCESS_TOKEN': `"${mapboxAccessToken}"`
-    }, environment)),
-    new webpack.ProvidePlugin({
-      // Polyfill here
-    }),
-    new webpack.NoErrorsPlugin(),
-    new WebpackNotifierPlugin({
-      title: `UDN portal v.${require('../package.json').version}`
-    })
-  ]);
 var development = Object.assign({}, {
   // debug: true,
   devtool: useSourceMap() ? 'eval-source-map' : 'eval',
