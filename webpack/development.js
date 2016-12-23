@@ -46,10 +46,10 @@ var development = Object.assign({}, {
   )
 }, require('./config'));
 
-development.entry.app.unshift('react-hot-loader/patch');
 if (useHMR()) {
+  development.entry.app.unshift('react-hot-loader/patch');
   development.entry.app.unshift('webpack/hot/only-dev-server');
 }
 development.entry.app.unshift('webpack-dev-server/client?' + publicUrl);
-console.log(development.entry.app);
+
 module.exports = development;
