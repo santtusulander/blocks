@@ -6,7 +6,8 @@ import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME,
   MAPBOX_ZOOM_MIN,
-  MAPBOX_ZOOM_MAX
+  MAPBOX_ZOOM_MAX,
+  MAPBOX_SCROLL_TIMEOUT
 } from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
@@ -73,12 +74,14 @@ class Mapbox extends React.Component {
     }
 
     this.timeout = null
+
+    this.onPageScroll = this.onPageScroll.bind(this)
   }
 
   componentDidMount() {
     // We need to add an event listener in order to prevent unwanted interaction
     // with the map when the user is scrolling on the page.
-    window.addEventListener('scroll', this.onPageScroll.bind(this), false)
+    window.addEventListener('scroll', this.onPageScroll, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,7 +110,7 @@ class Mapbox extends React.Component {
 
   componentWillUnmount() {
     window.clearTimeout(this.timeout)
-    window.removeEventListener('scroll', this.onPageScroll.bind(this), false)
+    window.removeEventListener('scroll', this.onPageScroll, false)
   }
 
   /**
@@ -135,7 +138,7 @@ class Mapbox extends React.Component {
     map.scrollZoom.disable()
 
     window.clearTimeout(this.timeout)
-    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), 500)
+    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
   /**
