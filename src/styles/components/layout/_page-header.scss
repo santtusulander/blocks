@@ -151,15 +151,33 @@ body.sticky-filters {
   @media (min-width: $sticky-filter-breakpoint) {
     .analytics-container {
       padding-top: 175px;
+
+      @include md {
+        padding-top: 142px;
+      }
+
+      @include lg {
+        padding-top: 160px;
+      }
+
+      @include xl {
+        padding-top: 160px;
+      }
     }
 
     .secondary-page-header {
       position: fixed;
       top: $header-total-height;
-      left: $navigation-sidebar-width;
       right: 0;
-      z-index: 1;
+      left: $navigation-sidebar-width;
+      z-index: 2;
       background: #0d3a53 !important; // Need to use solid color instead of rgba
+    }
+
+    &.light-theme {
+      .secondary-page-header {
+        background: #fff !important;
+      }
     }
   }
 }

@@ -34,7 +34,7 @@ var server = new WebpackDevServer(compiler, {
       secure: false
     },
     '/analytics': {
-      target: 'http://localhost:3030'
+      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030'
     }
   },
   stats: {colors: true}
