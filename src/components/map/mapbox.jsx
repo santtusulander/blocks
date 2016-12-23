@@ -6,7 +6,8 @@ import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME,
   MAPBOX_ZOOM_MIN,
-  MAPBOX_ZOOM_MAX
+  MAPBOX_ZOOM_MAX,
+  MAPBOX_SCROLL_TIMEOUT
 } from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
@@ -71,6 +72,16 @@ class Mapbox extends React.Component {
       type: 'FeatureCollection',
       features: []
     }
+
+    this.timeout = null
+
+    this.onPageScroll = this.onPageScroll.bind(this)
+  }
+
+  componentDidMount() {
+    // We need to add an event listener in order to prevent unwanted interaction
+    // with the map when the user is scrolling on the page.
+    window.addEventListener('scroll', this.onPageScroll, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -95,6 +106,39 @@ class Mapbox extends React.Component {
       this.updateLayers(newLayers)
       this.addCityLayers(this.state.map, nextProps.cityData)
     }
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.timeout)
+    window.removeEventListener('scroll', this.onPageScroll, false)
+  }
+
+  /**
+   * A method that is called on page scroll. Does a deep check for Mapbox map
+   * instance and then calls for disabling and enabling zoom handlers in the map
+   * accordingly.
+   *
+   * @method onPageScroll
+   */
+  onPageScroll() {
+    // We might not have the map instance saved in this.state yet, so we need to
+    // get it from the the ReactMapboxGl components state instead.
+    if (this.refs && this.refs.mapbox && this.refs.mapbox.state && this.refs.mapbox.state.map) {
+      this.disableAndEnableZoom(this.refs.mapbox.state.map)
+    }
+  }
+
+  /**
+   * Disables and enables zoom handlers on the map with a slight delay.
+   *
+   * @method disableAndEnableZoom
+   * @param  {object}             map Instance of Mapbox map
+   */
+  disableAndEnableZoom(map) {
+    map.scrollZoom.disable()
+
+    window.clearTimeout(this.timeout)
+    this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
   /**
@@ -483,6 +527,7 @@ class Mapbox extends React.Component {
 
     return (
       <ReactMapboxGl
+        ref="mapbox"
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
