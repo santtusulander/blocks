@@ -17,7 +17,7 @@ const HelpTooltip = (props) => {
 
 HelpTooltip.propTypes = {
   children: PropTypes.node,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   title: PropTypes.object
 }
 
