@@ -18,6 +18,10 @@
     rgba($pale-blue, 0.25)
   );
   background-size: 100%;
+
+  .light-theme & {
+    background: $white;
+  }
 }
 
 .starburst-help-container {
