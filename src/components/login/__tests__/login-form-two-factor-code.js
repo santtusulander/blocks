@@ -66,7 +66,7 @@ describe('LoginFormTwoFactorCode', () => {
 
       for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
       {
-        inputs.at(0).simulate('keyPress', {keyCode: 31 - i, which: 31 - i, preventDefault: function() {
+        inputs.at(i).simulate('keyPress', {keyCode: 31 - i, which: 31 - i, preventDefault: function() {
           numOfBlockedSymbols++
         }})
       }
@@ -84,7 +84,7 @@ describe('LoginFormTwoFactorCode', () => {
 
       for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
       {
-        inputs.at(0).simulate('keyPress', {keyCode: 32 + i, which: 32 + i, preventDefault: function() {
+        inputs.at(i).simulate('keyPress', {keyCode: 32 + i, which: 32 + i, preventDefault: function() {
           numOfBlockedSymbols++
         }})
       }
