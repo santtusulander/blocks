@@ -169,7 +169,7 @@ LoginForm.propTypes = {
   fetching: React.PropTypes.bool,
   loginError: React.PropTypes.string,
   onSubmit: React.PropTypes.func,
-  sessionExpired: React.PropTypes.bool,
+  sessionExpired: React.PropTypes.string,
   userName: React.PropTypes.string
 }
 
