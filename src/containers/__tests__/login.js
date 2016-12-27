@@ -39,4 +39,27 @@ describe('Login', () => {
     const login = shallow( subject() )
     expect(login.length).toBe(1)
   })
+
+  it('should show only LoginForm component by default', () => {
+    const login = shallow( subject() )
+    expect(login.find('LoginForm').length).toBe(1)
+    expect(login.find('LoginFormTwoFactorApp').length).toBe(0)
+    expect(login.find('LoginFormTwoFactorCode').length).toBe(0)
+  })
+
+  it('should have LoginFormTwoFactorApp component', () => {
+    const login = shallow( subject() )
+    login.setState({twoFACodeValidation: true})
+    expect(login.find('LoginForm').length).toBe(0)
+    expect(login.find('LoginFormTwoFactorApp').length).toBe(0)
+    expect(login.find('LoginFormTwoFactorCode').length).toBe(1)
+  })
+
+  it('should have LoginFormTwoFactorCode component', () => {
+    const login = shallow( subject() )
+    login.setState({twoFAAuthyAppValidation: true})
+    expect(login.find('LoginForm').length).toBe(0)
+    expect(login.find('LoginFormTwoFactorApp').length).toBe(1)
+    expect(login.find('LoginFormTwoFactorCode').length).toBe(0)
+  })
 })
