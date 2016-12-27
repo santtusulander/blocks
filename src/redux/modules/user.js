@@ -252,9 +252,19 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
   })
   .then((res) => {
     if (res) {
-      return {
-        data: res.data,
-        status: res.status
+      switch (res.status) {
+        case 200:
+          return {
+            token: res.data,
+            status: res.status
+          }
+
+        case 202:
+        default:
+          return {
+            data: res.data,
+            status: res.status
+          }
       }
     }
   }, (res) => {
