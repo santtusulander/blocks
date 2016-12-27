@@ -8,5 +8,20 @@
   "portal.login.termsOfUse.text": "By logging in, you accept our ",
   "portal.login.sessionExpired.text": "Due to inactivity you have been logged out. To continue your session please resubmit your username and password.",
   "portal.login.setPassword.title": "Set Password",
-  "portal.login.resetPassword.title": "Reset Password"
+  "portal.login.resetPassword.title": "Reset Password",
+  "portal.login.2fa.verificationByCode.title": "Enter Verification Code",
+  "portal.login.2fa.verificationByApp.title": "Verify Login",
+  "portal.login.2fa.verificationByCodeHint.text": "Please enter the Verification Code.",
+  "portal.login.2fa.verificationByAppHint.text": "Waiting for verification. Use {app} to verify login for {username}.",
+  "portal.login.2fa.verificationHintReEnter.text": "Please re-enter the code.",
+  "portal.login.2fa.verificationHintTryAgain.text": "Please try again.",
+  "portal.login.2fa.goBack.text": "Having trouble? Let's try again.",
+  "portal.login.2fa.havingTrouble.text": "Having trouble?",
+  "portal.login.2fa.havingTrouble.title": "Trouble With Login?",
+  "portal.login.2fa.havingTrouble.tryThese.text": "Try these:",
+  "portal.login.2fa.havingTrouble.smsItem.text": "Resend Verification Code SMS",
+  "portal.login.2fa.havingTrouble.voiceItem.text": "Receive Verification Code from a Voice Call",
+  "portal.login.2fa.havingTrouble.authySoftToken.text": "Use Authy SoftToken to login",
+  "portal.login.2fa.havingTrouble.authyOneTouchItem.text": "Use Authy OneTouch to login",
+  "portal.login.2fa.havingTrouble.supportHelp.text": "You can also get help at support.ericssonudn.com or contact your System Administator."
 }
