@@ -71,18 +71,24 @@ export class Login extends React.Component {
 
       // In case of code 202 statring two factor auth process.
       // In case of code 200 continue auth process
-      //console.log(action.payload.token)
       switch (action.payload.status) {
         case 200:
           this.saveUserName(rememberUser, username)
           break
 
         case 202:
-          this.setState({
-            twoFACodeValidation: true,
-            twoFAAuthyAppValidation: true,
-            twoFAAuthyAppCode: action.payload.data.code
-          })
+          if (action.payload.data.code) {
+            // oneTouch
+            this.setState({
+              twoFAAuthyAppValidation: true,
+              twoFAAuthyAppCode: action.payload.data.code
+            })
+          } else {
+            // app, sms, call
+            this.setState({
+              twoFACodeValidation: true
+            })
+          }
           break
 
         default:
@@ -174,11 +180,19 @@ export class Login extends React.Component {
       />
     )
 
+    const renderForm = () => {
+      if (this.state.twoFACodeValidation) {
+        return twoFAByCodeLoginForm
+      } else if (this.state.twoFAAuthyAppValidation) {
+        return twoFAByAppLoginForm
+      } else {
+        return loginForm
+      }
+    }
+
     return (
-        this.state.twoFACodeValidation ?
-          (this.state.twoFAAuthyAppValidation ?
-            twoFAByAppLoginForm : twoFAByCodeLoginForm) : loginForm
-    );
+      renderForm()
+    )
   }
 }
 
