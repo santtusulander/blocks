@@ -14,13 +14,13 @@ function intlMaker() {
   }
 }
 
-const subject = () => {
+const subject = (loginErrorStr = '', fetching = false) => {
   const props = {
     onSubmit: jest.fn(),
     onFocus: jest.fn(),
-    loginError: '',
+    loginError: loginErrorStr,
     intl: intlMaker(),
-    fetching: false
+    fetching: fetching
   }
 
   return (
@@ -89,5 +89,47 @@ describe('LoginFormTwoFactorCode', () => {
     }
 
     expect(numOfBlockedSymbols).toBe(NUM_OF_CODE_INPUTS)
+  })
+
+  it('should not show error message without login error', () => {
+    const loginFormCode = shallow(
+      subject()
+    )
+    expect(loginFormCode.find('.token-input-info').text()).not.toContain('Test error')
+  })
+
+  it('should show error message on login error', () => {
+    const loginFormCode = shallow(
+      subject('Test error')
+    )
+    expect(loginFormCode.find('.token-input-info').text()).toContain('Test error')
+  })
+
+  it('should show a small loading spinner when fetching data', () => {
+    const loginFormCode = shallow(
+      subject('', true)
+    )
+    expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(1)
+  })
+
+  it('should hide HaveTrouble button when fetching data', () => {
+    const loginFormCode = shallow(
+      subject('', true)
+    )
+    expect(loginFormCode.find('.token-trouble-btn').length).toBe(0)
+  })
+
+  it('should not show a small loading spinner when fetching data op. has been completed', () => {
+    const loginFormCode = shallow(
+      subject()
+    )
+    expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(0)
+  })
+
+  it('should show HaveTrouble button when fetching data op. has been completed', () => {
+    const loginFormCode = shallow(
+      subject()
+    )
+    expect(loginFormCode.find('.token-trouble-btn').length).toBe(1)
   })
 })
