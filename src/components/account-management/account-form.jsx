@@ -1,21 +1,19 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { Map, List }from 'immutable'
-import {
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock
-} from 'react-bootstrap'
+// import {
+//   FormGroup,
+//   FormControl,
+//   ControlLabel,
+//   HelpBlock
+// } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
-
+import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
 
 import SidePanel from '../side-panel'
-import SelectWrapper from '../select-wrapper.jsx'
-import MultiOptionSelector from '../multi-option-selector'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
@@ -154,23 +152,6 @@ class AccountForm extends React.Component {
             <FormattedMessage id="portal.account.manage.brand.title" />
           </Field>
 
-
-{/*
-
-          <FormGroup validationState={getReduxFormValidationState(accountBrand)}>
-            <ControlLabel><FormattedMessage id="portal.account.manage.brand.title" /></ControlLabel>
-            <SelectWrapper
-              {... accountBrand}
-              className="input-select"
-              value={accountBrand.value}
-              options={BRAND_OPTIONS}
-            />
-            {accountBrand.touched && accountBrand.error &&
-              <HelpBlock className='error-msg'>{accountBrand.error}</HelpBlock>
-            }
-          </FormGroup>
-*/}
-
           <hr/>
 
           <Field
@@ -182,43 +163,17 @@ class AccountForm extends React.Component {
             <FormattedMessage id="portal.account.manage.accountType.title" />
           </Field>
 
-          <Field
-            name="accountType"
-            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
-            component={FieldFormGroupMultiOptionSelector}
-            options={providerTypes}
-            >
-            <FormattedMessage id="portal.account.manage.accountType.title" />
-          </Field>
-{/*
-          <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
-            {this.props.account ?
-              <p>{providerTypeLabel}</p>
-            :
-              <SelectWrapper
-                {...accountType}
-                numericValues={true}
-                value={accountType.value}
-                className="input-select"
-                options={providerTypes}
-              />
-            }
-          </FormGroup>
-
           <hr/>
 
-          <FormGroup>
-            <ControlLabel><FormattedMessage id="portal.account.manage.services.title" /></ControlLabel>
-            <MultiOptionSelector
-              options={serviceOptions}
-              field={{
-                onChange: val => {services.onChange(val)},
-                value: List(services.value)
-              }}
-            />
-          </FormGroup>
-*/}
+          <Field
+            name="services"
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            component={FieldFormGroupMultiOptionSelector}
+            options={serviceOptions}
+            >
+            <FormattedMessage id="portal.account.manage.services.title" />
+          </Field>
+
         </form>
       </SidePanel>
     )
@@ -242,9 +197,10 @@ AccountForm.defaultProps = {
   serviceOptions: []
 }
 
+const formSelector = formValueSelector('accountForm')
 const mapStateToProps = (state) => {
-  const accountType = state.form && state.form.account && state.form.account.accountType && state.form.account.accountType.value !== "" ?  state.form.account.accountType.value : undefined
 
+  const accountType = formSelector(state, 'accountType')
   return {
     providerTypes: getProviderTypeOptions(state),
     serviceOptions: accountType && getServiceOptions(state, accountType)
@@ -258,9 +214,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const form = reduxForm({
-  form: 'account',
+  form: 'accountForm',
   validate
 })(AccountForm)
-
 
 export default connect(mapStateToProps,mapDispatchToProps)(injectIntl(form))
