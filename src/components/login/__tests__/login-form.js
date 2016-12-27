@@ -55,62 +55,66 @@ describe('LoginForm', () => {
     expect(loginForm.find('FormControl').length).toBe(2)
   })
 
-  it('maintains form state', () => {
-    const loginForm = shallow(
-      subject()
-    )
-    const inputs = loginForm.find('FormControl')
-    inputs.at(0).simulate('change', {target: {value: 'aaa'}})
-    inputs.at(1).simulate('change', {target: {value: 'bbb'}})
-    expect(loginForm.state('username')).toBe('aaa')
-    expect(loginForm.state('password')).toBe('bbb')
+  describe('inputs validation', () => {
+    it('maintains form state', () => {
+      const loginForm = shallow(
+        subject()
+      )
+      const inputs = loginForm.find('FormControl')
+      inputs.at(0).simulate('change', {target: {value: 'aaa'}})
+      inputs.at(1).simulate('change', {target: {value: 'bbb'}})
+      expect(loginForm.state('username')).toBe('aaa')
+      expect(loginForm.state('password')).toBe('bbb')
+    })
+
+    it('toggles active class when focused and blurred', () => {
+      const loginForm = shallow(
+        subject()
+      )
+      const inputs = loginForm.find('FormControl')
+
+      const usernameHolder = inputs.at(0)
+      expect(loginForm.state('usernameActive')).toBe(false)
+      usernameHolder.simulate('focus')
+      expect(loginForm.state('usernameActive')).toBe(true)
+      usernameHolder.simulate('blur')
+      expect(loginForm.state('usernameActive')).toBe(false)
+
+      expect(loginForm.state('passwordActive')).toBe(false)
+      inputs.at(1).simulate('focus')
+      expect(loginForm.state('passwordActive')).toBe(true)
+      inputs.at(1).simulate('blur')
+      expect(loginForm.state('passwordActive')).toBe(false)
+    })
   })
 
-  it('toggles active class when focused and blurred', () => {
-    const loginForm = shallow(
-      subject()
-    )
-    const inputs = loginForm.find('FormControl')
+  describe('submit handling', () => {
+    it('handles a failed log in attempt', () => {
+      const loginForm = shallow(
+        subject('Test fail')
+      )
 
-    const usernameHolder = inputs.at(0)
-    expect(loginForm.state('usernameActive')).toBe(false)
-    usernameHolder.simulate('focus')
-    expect(loginForm.state('usernameActive')).toBe(true)
-    usernameHolder.simulate('blur')
-    expect(loginForm.state('usernameActive')).toBe(false)
+      loginForm.setState({username: 'aaa', password: 'bbb'})
+      const form = loginForm.find('form')
 
-    expect(loginForm.state('passwordActive')).toBe(false)
-    inputs.at(1).simulate('focus')
-    expect(loginForm.state('passwordActive')).toBe(true)
-    inputs.at(1).simulate('blur')
-    expect(loginForm.state('passwordActive')).toBe(false)
-  })
+      form.simulate('submit', { preventDefault: () => {/* noop */} })
+      expect(onSubmit.mock.calls[0][0]).toBe('aaa')
+      expect(onSubmit.mock.calls[0][1]).toBe('bbb')
 
-  it('handles a failed log in attempt', () => {
-    const loginForm = shallow(
-      subject('Test fail')
-    )
+      const errorMsg = loginForm.find('.login-info')
+      expect(errorMsg.text()).toContain('Test fail')
+    })
 
-    loginForm.setState({username: 'aaa', password: 'bbb'})
-    const form = loginForm.find('form')
+    it('handles a successful log in attempt', () => {
+      const loginForm = shallow(
+        subject()
+      )
 
-    form.simulate('submit', { preventDefault: () => {/* noop */} })
-    expect(onSubmit.mock.calls[0][0]).toBe('aaa')
-    expect(onSubmit.mock.calls[0][1]).toBe('bbb')
-
-    const errorMsg = loginForm.find('.login-info')
-    expect(errorMsg.text()).toContain('Test fail')
-  })
-
-  it('handles a successful log in attempt', () => {
-    const loginForm = shallow(
-      subject()
-    )
-
-    loginForm.setState({username: 'aaa', password: 'bbb', rememberUsername: true})
-    const form = loginForm.find('form')
-    form.simulate('submit', { preventDefault: () => {/* noop */} })
-    expect(onSubmit.mock.calls[0][0]).toBe('aaa')
-    expect(onSubmit.mock.calls[0][1]).toBe('bbb')
+      loginForm.setState({username: 'aaa', password: 'bbb', rememberUsername: true})
+      const form = loginForm.find('form')
+      form.simulate('submit', { preventDefault: () => {/* noop */} })
+      expect(onSubmit.mock.calls[0][0]).toBe('aaa')
+      expect(onSubmit.mock.calls[0][1]).toBe('bbb')
+    })
   })
 })

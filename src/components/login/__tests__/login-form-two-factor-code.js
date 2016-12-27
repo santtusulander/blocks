@@ -43,93 +43,99 @@ describe('LoginFormTwoFactorCode', () => {
     expect(loginFormCode.find('FormControl').length).toBe(NUM_OF_CODE_INPUTS)
   })
 
-  it('inputs should have maxLength equals 1', () => {
-    const loginFormCode = shallow(
-      subject()
-    )
-    const inputs = loginFormCode.find('FormControl')
+  describe('inputs validation', () => {
+    it('inputs should have maxLength equals 1', () => {
+      const loginFormCode = shallow(
+        subject()
+      )
+      const inputs = loginFormCode.find('FormControl')
 
-    for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
-    {
-      expect(inputs.at(i).node.props.maxLength).toBe(1)
-    }
+      for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
+      {
+        expect(inputs.at(i).node.props.maxLength).toBe(1)
+      }
+    })
+
+    it('inputs should accept char codes < 31', () => {
+      let numOfBlockedSymbols = 0;
+      const loginFormCode = shallow(
+        subject()
+      )
+      const inputs = loginFormCode.find('FormControl')
+
+
+      for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
+      {
+        inputs.at(0).simulate('keyPress', {keyCode: 31 - i, which: 31 - i, preventDefault: function() {
+          numOfBlockedSymbols++
+        }})
+      }
+
+      expect(numOfBlockedSymbols).toBe(0)
+    })
+
+    it('inputs should not accept char codes > 31', () => {
+      let numOfBlockedSymbols = 0;
+      const loginFormCode = shallow(
+        subject()
+      )
+      const inputs = loginFormCode.find('FormControl')
+
+
+      for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
+      {
+        inputs.at(0).simulate('keyPress', {keyCode: 32 + i, which: 32 + i, preventDefault: function() {
+          numOfBlockedSymbols++
+        }})
+      }
+
+      expect(numOfBlockedSymbols).toBe(NUM_OF_CODE_INPUTS)
+    })
   })
 
-  it('inputs should accept char codes < 31', () => {
-    let numOfBlockedSymbols = 0;
-    const loginFormCode = shallow(
-      subject()
-    )
-    const inputs = loginFormCode.find('FormControl')
+  describe('error handling', () => {
+    it('should not show error message without login error', () => {
+      const loginFormCode = shallow(
+        subject()
+      )
+      expect(loginFormCode.find('.token-input-info').text()).not.toContain('Test error')
+    })
 
-
-    for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
-    {
-      inputs.at(0).simulate('keyPress', {keyCode: 31 - i, which: 31 - i, preventDefault: function() {
-        numOfBlockedSymbols++
-      }})
-    }
-
-    expect(numOfBlockedSymbols).toBe(0)
+    it('should show error message on login error', () => {
+      const loginFormCode = shallow(
+        subject('Test error')
+      )
+      expect(loginFormCode.find('.token-input-info').text()).toContain('Test error')
+    })
   })
 
-  it('inputs should not accept char codes > 31', () => {
-    let numOfBlockedSymbols = 0;
-    const loginFormCode = shallow(
-      subject()
-    )
-    const inputs = loginFormCode.find('FormControl')
+  describe('fetching data handling', () => {
+    it('should show a small loading spinner when fetching data', () => {
+      const loginFormCode = shallow(
+        subject('', true)
+      )
+      expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(1)
+    })
 
+    it('should hide HaveTrouble button when fetching data', () => {
+      const loginFormCode = shallow(
+        subject('', true)
+      )
+      expect(loginFormCode.find('.token-trouble-btn').length).toBe(0)
+    })
 
-    for (let i = 0; i < NUM_OF_CODE_INPUTS; i++)
-    {
-      inputs.at(0).simulate('keyPress', {keyCode: 32 + i, which: 32 + i, preventDefault: function() {
-        numOfBlockedSymbols++
-      }})
-    }
+    it('should not show a small loading spinner when fetching data op. has been completed', () => {
+      const loginFormCode = shallow(
+        subject()
+      )
+      expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(0)
+    })
 
-    expect(numOfBlockedSymbols).toBe(NUM_OF_CODE_INPUTS)
-  })
-
-  it('should not show error message without login error', () => {
-    const loginFormCode = shallow(
-      subject()
-    )
-    expect(loginFormCode.find('.token-input-info').text()).not.toContain('Test error')
-  })
-
-  it('should show error message on login error', () => {
-    const loginFormCode = shallow(
-      subject('Test error')
-    )
-    expect(loginFormCode.find('.token-input-info').text()).toContain('Test error')
-  })
-
-  it('should show a small loading spinner when fetching data', () => {
-    const loginFormCode = shallow(
-      subject('', true)
-    )
-    expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(1)
-  })
-
-  it('should hide HaveTrouble button when fetching data', () => {
-    const loginFormCode = shallow(
-      subject('', true)
-    )
-    expect(loginFormCode.find('.token-trouble-btn').length).toBe(0)
-  })
-
-  it('should not show a small loading spinner when fetching data op. has been completed', () => {
-    const loginFormCode = shallow(
-      subject()
-    )
-    expect(loginFormCode.find('LoadingSpinnerSmall').length).toBe(0)
-  })
-
-  it('should show HaveTrouble button when fetching data op. has been completed', () => {
-    const loginFormCode = shallow(
-      subject()
-    )
-    expect(loginFormCode.find('.token-trouble-btn').length).toBe(1)
+    it('should show HaveTrouble button when fetching data op. has been completed', () => {
+      const loginFormCode = shallow(
+        subject()
+      )
+      expect(loginFormCode.find('.token-trouble-btn').length).toBe(1)
+    })
   })
 })

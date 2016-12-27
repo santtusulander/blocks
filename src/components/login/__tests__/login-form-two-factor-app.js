@@ -37,25 +37,26 @@ describe('LoginFormTwoFactorApp', () => {
     expect(loginFormApp.find('LoadingSpinnerSmall').length).toBe(1)
   })
 
-  it('should not show error message without login error', () => {
-    const loginFormApp = shallow(
-      subject()
-    )
-    expect(loginFormApp.find('.token-input-info').text()).not.toContain('Test error')
-  })
+  describe('error handling', () => {
+    it('should not show error message without login error', () => {
+      const loginFormApp = shallow(
+        subject()
+      )
+      expect(loginFormApp.find('.token-input-info').text()).not.toContain('Test error')
+    })
 
-  it('should not show small loading spinner on login error', () => {
-    const loginFormApp = shallow(
-      subject('Test error')
-    )
-    expect(loginFormApp.find('LoadingSpinnerSmall').length).toBe(0)
-  })
+    it('should not show small loading spinner on login error', () => {
+      const loginFormApp = shallow(
+        subject('Test error')
+      )
+      expect(loginFormApp.find('LoadingSpinnerSmall').length).toBe(0)
+    })
 
-  it('should show error message on login error', () => {
-    const loginFormApp = shallow(
-      subject('Test error')
-    )
-    expect(loginFormApp.find('.token-input-info').text()).toContain('Test error')
+    it('should show error message on login error', () => {
+      const loginFormApp = shallow(
+        subject('Test error')
+      )
+      expect(loginFormApp.find('.token-input-info').text()).toContain('Test error')
+    })
   })
-
 })
