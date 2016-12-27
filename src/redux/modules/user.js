@@ -67,12 +67,24 @@ export function updatePasswordSuccess(state) {
 }
 
 export function userLoggedInSuccess(state, action){
-  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-  axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
+  switch (action.payload.status) {
+    case 200:
+      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+      axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
-  return state.merge({
-    loggedIn: true
-  })
+      return state.merge({
+        loggedIn: true
+      })
+
+    case 202:
+      return state.merge({
+        loggedIn: false,
+        fetching: false
+      })
+
+    default:
+      return emptyUser
+  }
 }
 
 export function userLoggedInFailure(){
@@ -217,7 +229,11 @@ export default handleActions({
   USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure)
 }, emptyUser)
 
-// ACTIONS
+/*
+ * =============================
+ * Actions creator starts here
+ * =============================
+ */
 export const destroyStore = createAction(DESTROY_STORE);
 
 export const setLogin = createAction(SET_LOGIN, (value) => {
@@ -235,8 +251,54 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
     }
   })
   .then((res) => {
-    if(res) {
-      return {token: res.data}
+    if (res) {
+      return {
+        data: res.data,
+        status: res.status
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
+export const twoFALogInWithCode = createAction(USER_LOGGED_IN, (username, code) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "code": code
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        token: res.data
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
+export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "code": code
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        code: res.code,
+        token: res.data
+      }
     }
   }, (res) => {
     throw new Error(res.data.message)
