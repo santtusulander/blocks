@@ -1,13 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector } from 'redux-form'
-import { Map, List }from 'immutable'
-// import {
-//   FormGroup,
-//   FormControl,
-//   ControlLabel,
-//   HelpBlock
-// } from 'react-bootstrap'
+import { Field, reduxForm, formValueSelector, isInvalid } from 'redux-form'
+import { Map }from 'immutable'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
@@ -129,18 +123,6 @@ class AccountForm extends React.Component {
             <FormattedMessage id="portal.account.manage.accountName.title" />
           </Field>
 
-{/*
-          <FormGroup controlId="account-name" validationState={getReduxFormValidationState(accountName)}>
-            <ControlLabel><FormattedMessage id="portal.account.manage.accountName.title" /></ControlLabel>
-            <FormControl
-              {...accountName}
-              placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
-            />
-            {accountName.touched && accountName.error &&
-              <HelpBlock className='error-msg'>{accountName.error}</HelpBlock>
-            }
-          </FormGroup>
-*/}
           <hr/>
 
           <Field
@@ -165,15 +147,17 @@ class AccountForm extends React.Component {
 
           <hr/>
 
-          <Field
-            name="services"
-            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
-            component={FieldFormGroupMultiOptionSelector}
-            options={serviceOptions}
-            >
-            <FormattedMessage id="portal.account.manage.services.title" />
-          </Field>
-
+          {this.props.accountType
+              ? <Field
+                  name="services"
+                  placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+                  component={FieldFormGroupMultiOptionSelector}
+                  options={serviceOptions}
+                  >
+                  <FormattedMessage id="portal.account.manage.services.title" />
+                </Field>
+              : <p>Please, select account type</p>
+          }
         </form>
       </SidePanel>
     )
@@ -202,6 +186,8 @@ const mapStateToProps = (state) => {
 
   const accountType = formSelector(state, 'accountType')
   return {
+    accountType,
+    invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),
     serviceOptions: accountType && getServiceOptions(state, accountType)
   }
