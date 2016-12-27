@@ -23,7 +23,6 @@ import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
-
 import './analytics-container.scss'
 
 class AnalyticsContainer extends React.Component {
@@ -64,7 +63,8 @@ class AnalyticsContainer extends React.Component {
     const headerContainer = document.querySelector('.page-header-container')
     const navTabsContainer = document.querySelector('.nav-tabs')
 
-    if (docBody.scrollTop > (headerContainer.offsetHeight + navTabsContainer.offsetHeight)) {
+    if (window.pageYOffset > (headerContainer.offsetHeight + navTabsContainer.offsetHeight)) {
+
       return docBody.classList.add('sticky-filters')
     }
 
