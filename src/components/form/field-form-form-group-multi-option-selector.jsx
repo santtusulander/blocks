@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, FormControl, ControlLabel, HelpBlock} from 'react-bootstrap';
 
-const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, error }, children }) => {
+const FieldFormGroupMultiOptionSelector  = ({ input, placeholder, type, meta: { dirty, touched, error }, children }) => {
   return (
     <FormGroup controlId={input.name} validationState={touched && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
@@ -16,7 +16,7 @@ const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, err
   );
 }
 
-FieldFormGroup.propTypes = {
+FieldFormGroupMultiOptionSelector.propTypes = {
   children: PropTypes.object,
   input: PropTypes.object,
   label: PropTypes.object,
@@ -26,4 +26,4 @@ FieldFormGroup.propTypes = {
 
 }
 
-export default FieldFormGroup
+export default FieldFormGroupMultiOptionSelector

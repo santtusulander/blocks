@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { Field, reduxForm } from 'redux-form'
 import { Map, List }from 'immutable'
 import {
   FormGroup,
@@ -7,6 +8,10 @@ import {
   ControlLabel,
   HelpBlock
 } from 'react-bootstrap'
+
+import FieldFormGroup from '../form/field-form-group'
+import FieldFormGroupSelect from '../form/field-form-group-select'
+
 
 import SidePanel from '../side-panel'
 import SelectWrapper from '../select-wrapper.jsx'
@@ -18,7 +23,7 @@ import {
   BRAND_OPTIONS
 } from '../../constants/account-management-options'
 
-import { checkForErrors, getReduxFormValidationState } from '../../util/helpers'
+import { checkForErrors } from '../../util/helpers'
 import { isValidAccountName } from '../../util/validators'
 
 
@@ -26,7 +31,7 @@ import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName = '', accountBrand, accountType, services }) => {
+const validate = ({ accountName, accountBrand, accountType, services }) => {
   const conditions = {
     accountName: [
       {
@@ -44,7 +49,10 @@ const validate = ({ accountName = '', accountBrand, accountType, services }) => 
     ]
   }
 
-  return checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
+  const errors = checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
+
+  return errors;
+
 }
 
 class AccountForm extends React.Component {
@@ -55,26 +63,26 @@ class AccountForm extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.account) {
-      const {
-        account,
-        fields: {
-          accountName,
-          accountType,
-          services
-        }
-      } = this.props
-
-      const accountNameVal = account.get('name')
-      accountNameVal && accountName.onChange(accountNameVal)
-
-      const accountTypeVal = account.get('provider_type')
-      accountTypeVal && accountType.onChange(accountTypeVal)
-
-      const servicesVal = account.get('services')
-      servicesVal && services.onChange(servicesVal.toJS())
-    }
-
+    // if (this.props.account) {
+    //   const {
+    //     account,
+    //     fields: {
+    //       accountName,
+    //       accountType,
+    //       services
+    //     }
+    //   } = this.props
+    //
+    //   const accountNameVal = account.get('name')
+    //   accountNameVal && accountName.onChange(accountNameVal)
+    //
+    //   const accountTypeVal = account.get('provider_type')
+    //   accountTypeVal && accountType.onChange(accountTypeVal)
+    //
+    //   const servicesVal = account.get('services')
+    //   servicesVal && services.onChange(servicesVal.toJS())
+    // }
+    //
     this.props.fetchServiceInfo()
   }
 
@@ -94,12 +102,12 @@ class AccountForm extends React.Component {
   }
 
   render() {
-    const { providerTypes, serviceOptions, fields: { accountBrand, accountName, accountType, services }, show, onCancel } = this.props
+    const { providerTypes, serviceOptions, /*fields: { accountBrand, accountName, accountType, services }, */ show, onCancel } = this.props
     const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
 
-    const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
-    const providerTypeLabel = providerType && providerType.label ? providerType.label : <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+    //const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
+    const providerTypeLabel = /*providerType && providerType.label ? providerType.label : */ <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
 
     return (
       <SidePanel
@@ -113,6 +121,17 @@ class AccountForm extends React.Component {
         cancel={onCancel}
         submit={this.save}>
         <form>
+
+          <Field
+            type="text"
+            name="accountName"
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            component={FieldFormGroup}
+            >
+            <FormattedMessage id="portal.account.manage.accountName.title" />
+          </Field>
+
+{/*
           <FormGroup controlId="account-name" validationState={getReduxFormValidationState(accountName)}>
             <ControlLabel><FormattedMessage id="portal.account.manage.accountName.title" /></ControlLabel>
             <FormControl
@@ -123,8 +142,20 @@ class AccountForm extends React.Component {
               <HelpBlock className='error-msg'>{accountName.error}</HelpBlock>
             }
           </FormGroup>
-
+*/}
           <hr/>
+
+          <Field
+            name="accountBrand"
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            component={FieldFormGroupSelect}
+            options={BRAND_OPTIONS}
+            >
+            <FormattedMessage id="portal.account.manage.brand.title" />
+          </Field>
+
+
+{/*
 
           <FormGroup validationState={getReduxFormValidationState(accountBrand)}>
             <ControlLabel><FormattedMessage id="portal.account.manage.brand.title" /></ControlLabel>
@@ -138,9 +169,28 @@ class AccountForm extends React.Component {
               <HelpBlock className='error-msg'>{accountBrand.error}</HelpBlock>
             }
           </FormGroup>
+*/}
 
           <hr/>
 
+          <Field
+            name="accountType"
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            component={FieldFormGroupSelect}
+            options={providerTypes}
+            >
+            <FormattedMessage id="portal.account.manage.accountType.title" />
+          </Field>
+
+          <Field
+            name="accountType"
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+            component={FieldFormGroupMultiOptionSelector}
+            options={providerTypes}
+            >
+            <FormattedMessage id="portal.account.manage.accountType.title" />
+          </Field>
+{/*
           <FormGroup>
             <ControlLabel><FormattedMessage id="portal.account.manage.accountType.title" /></ControlLabel>
             {this.props.account ?
@@ -168,7 +218,7 @@ class AccountForm extends React.Component {
               }}
             />
           </FormGroup>
-
+*/}
         </form>
       </SidePanel>
     )
@@ -207,13 +257,10 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default reduxForm({
-  fields: ['accountName', 'accountBrand', 'accountType', 'services'],
+const form = reduxForm({
   form: 'account',
-  validate,
-  initialValues: {
-    accountBrand: BRAND_OPTIONS.length ? BRAND_OPTIONS[0][0] : '',
-    accountType: '',
-    services: []
-  }
-}, mapStateToProps,mapDispatchToProps)(injectIntl(AccountForm))
+  validate
+})(AccountForm)
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(injectIntl(form))
