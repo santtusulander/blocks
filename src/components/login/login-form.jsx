@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Col, FormControl, FormGroup, InputGroup, Checkbox, Modal, Row } from 'react-bootstrap'
-import { withRouter, Link } from 'react-router'
+import { Link } from 'react-router'
 import classnames from 'classnames'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -57,7 +57,7 @@ export class LoginForm extends Component {
   onSubmit(e) {
     e.preventDefault()
     this.props.onSubmit(this.state.username,
-                        this.state.password, 
+                        this.state.password,
                         this.state.rememberUsername)
   }
 
@@ -173,4 +173,4 @@ LoginForm.propTypes = {
   userName: React.PropTypes.string
 }
 
-export default withRouter(injectIntl(LoginForm));
+export default injectIntl(LoginForm);

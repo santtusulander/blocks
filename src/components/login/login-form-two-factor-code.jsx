@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { FormControl, FormGroup, InputGroup, Modal, Row } from 'react-bootstrap'
-import { withRouter, Link } from 'react-router'
+import { Link } from 'react-router'
 import classnames from 'classnames'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
@@ -138,4 +138,4 @@ LoginFormTwoFactorCode.propTypes = {
   onSubmit: React.PropTypes.func
 }
 
-export default withRouter(injectIntl(LoginFormTwoFactorCode));
+export default injectIntl(LoginFormTwoFactorCode);

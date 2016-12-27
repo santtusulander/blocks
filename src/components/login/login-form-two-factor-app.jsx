@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Row } from 'react-bootstrap'
-import { withRouter, Link } from 'react-router'
+import { Link } from 'react-router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
 import { AUTHY_APP_POLLING_INTERVAL } from '../../constants/login.js'
@@ -89,4 +89,4 @@ LoginFormTwoFactorApp.propTypes = {
   userName: React.PropTypes.string
 }
 
-export default withRouter(injectIntl(LoginFormTwoFactorApp));
+export default injectIntl(LoginFormTwoFactorApp);
