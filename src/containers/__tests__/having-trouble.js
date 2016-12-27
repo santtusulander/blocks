@@ -42,13 +42,6 @@ describe('HavingTrouble', () => {
     expect(havingTrouble.length).toBe(1)
   })
 
-  it('should have 4 radio buttons', () => {
-    const havingTrouble = shallow(
-      subject()
-    )
-    expect(havingTrouble.find('Radio').length).toBe(4)
-  })
-
   it('should have 1 button', () => {
     const havingTrouble = shallow(
       subject()
