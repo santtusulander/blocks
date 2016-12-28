@@ -46,13 +46,18 @@ $lt-side-panel-bg-color: $white;
   }
 
   .modal-body {
-    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin * 2) + $side-panel-footer-height});
+    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin )});
     padding: 0 $side-panel-horizontal-padding;
-    margin: $side-panel-body-margin 0;
+    margin: $side-panel-body-margin 0 0 0;
     overflow: auto;
   }
 
   .modal-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 12px;
+
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
     .dark-theme & {

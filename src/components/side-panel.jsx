@@ -22,25 +22,6 @@ export const SidePanel = ({ cancel, cancelButton, children, className, invalid, 
         {children}
       </Modal.Body>
 
-      <Modal.Footer>
-        <ButtonToolbar className="pull-right">
-          {cancelButton &&
-          <Button
-            id="cancel-btn"
-            className="btn-secondary"
-            onClick={cancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>}
-
-          {submitButton &&
-          <Button
-            bsStyle="primary"
-            onClick={submit}
-            disabled={invalid}>
-            {submitText || <FormattedMessage id="portal.button.add" />}
-          </Button>}
-        </ButtonToolbar>
-      </Modal.Footer>
     </Modal>
   )
 }
