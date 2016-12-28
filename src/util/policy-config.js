@@ -202,6 +202,7 @@ export const getVaryHeaderRuleId = ( config ) => {
  * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
  * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
  */
+// eslint-disable-next-line react/display-name
 const setContentTargetingActionName = action => {
   const { response: { headers, code } } = action
   const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
@@ -225,7 +226,6 @@ const setContentTargetingActionName = action => {
     </span>
   )
 }
-setContentTargetingActionName.displayName = "setContentTargetingActionName"
 
 /**
  * Checks whether or not the rule at the given path is empty

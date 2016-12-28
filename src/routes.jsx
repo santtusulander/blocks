@@ -82,6 +82,7 @@ const analyticsTabs = [
 ]
 
 /* helper for creating Analytics Tab-Routes */
+// eslint-disable-next-line react/display-name
 const getAnalyticsTabRoutes = (store) => {
   return (
     <Route>
@@ -99,7 +100,6 @@ const getAnalyticsTabRoutes = (store) => {
     </Route>
   )
 }
-getAnalyticsTabRoutes.displayName = "getAnalyticsTabRoutes"
 
 /* helper for creating Support Tab-Routes */
 const getSupportTabRoutes = () => {
