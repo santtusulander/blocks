@@ -17,6 +17,7 @@ const IconIntegration = (props) => {
   )
 }
 
+IconIntegration.displayName = "IconIntegration"
 IconIntegration.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

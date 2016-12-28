@@ -350,6 +350,7 @@ class UserEditForm extends React.Component {
   }
 }
 
+UserEditForm.displayName = "UserEditForm"
 UserEditForm.propTypes = {
   dispatch: PropTypes.func,
   fields: PropTypes.object,

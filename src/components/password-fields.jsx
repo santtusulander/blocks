@@ -233,7 +233,7 @@ export class PasswordFields extends Component {
           <FormControl
             id="confirm"
             type={this.state.confirmVisible ? 'text' : 'password'}
-            placeholder={!stackedPassword && intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
+            placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
             className="form-control"
             onFocus={this.confirmFocus(true)}
             onBlur={this.confirmFocus(false)}

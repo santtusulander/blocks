@@ -109,6 +109,7 @@ class DNSList extends Component {
   }
 }
 
+DNSList.displayName = "DNSList"
 DNSList.propTypes = {
   hiddenRecordCount: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   intl: PropTypes.object,

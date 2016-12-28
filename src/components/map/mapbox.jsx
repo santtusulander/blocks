@@ -620,6 +620,7 @@ class Mapbox extends React.Component {
   }
 }
 
+Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
   cityData: React.PropTypes.array,
   countryData: React.PropTypes.array,
