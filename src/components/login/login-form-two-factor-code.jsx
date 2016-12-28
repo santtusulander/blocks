@@ -11,16 +11,18 @@ export class LoginFormTwoFactorCode extends Component {
   constructor(props) {
     super(props);
 
-    this.onCodeFocus = this.onCodeFocus.bind(this)
-    this.onTokenKeyPress = this.onTokenKeyPress.bind(this)
-    this.onCodeChange = this.onCodeChange.bind(this)
+    this.onClick = this.onClick.bind(this)
+    this.onFocus = this.onFocus.bind(this)
+    this.onKeyPress = this.onKeyPress.bind(this)
+    this.onKeyDown = this.onKeyDown.bind(this)
+    this.onChange = this.onChange.bind(this)
   }
 
-  onCodeFocus() {
+  onFocus() {
     this.props.onFocus()
   }
 
-  onCodeChange(e) {
+  onChange(e) {
     let code = ""
     const target = e.target
     const currentLength = target.value.length;
@@ -44,14 +46,16 @@ export class LoginFormTwoFactorCode extends Component {
       }
 
       if (next != null) {
-        // Focuse on next input
+        // Focuse on next input, and select text
         next.focus();
+        next.select();
       } else {
         // Handle case when user start typing not from the first input
         // Found inputs that are empty and focus on them
         for (let i = 0; i < codeInputs.length; i++) {
           if (TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH > codeInputs[i].value.length) {
             codeInputs[i].focus()
+            codeInputs[i].select()
             break;
           }
         }
@@ -59,11 +63,29 @@ export class LoginFormTwoFactorCode extends Component {
     }
   }
 
-  onTokenKeyPress(e) {
-    var charCode = (e.which) ? e.which : e.keyCode;
+  onKeyPress(e) {
+    const charCode = (e.which) ? e.which : e.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       e.preventDefault()
     }
+  }
+
+  onKeyDown(e) {
+    const charCode = (e.which) ? e.which : e.keyCode;
+    const prevElem = e.target.previousElementSibling
+
+    // Focus previos element when backspace or delete key is pressed
+    // but only when current is empty
+    if (((charCode == 46) || (charCode == 8)) && (prevElem != null)) {
+      if (!e.target.value) {
+        prevElem.value = ''
+        prevElem.focus()
+      }
+    }
+  }
+
+  onClick(e) {
+    e.target.select()
   }
 
   render() {
@@ -74,9 +96,11 @@ export class LoginFormTwoFactorCode extends Component {
           key={id}
           id={id}
           maxLength={TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH}
-          onChange={this.onCodeChange}
-          onFocus={this.onCodeFocus}
-          onKeyPress={this.onTokenKeyPress}
+          onClick={this.onClick}
+          onChange={this.onChange}
+          onFocus={this.onFocus}
+          onKeyPress={this.onKeyPress}
+          onKeyDown={this.onKeyDown}
           disabled={this.props.fetching} />
       )
     })
