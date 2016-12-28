@@ -7,7 +7,7 @@ import UDNButton from '../button'
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 
-export const CertificateForm = ({ certificate, editMode, group, groups, intermediateCertificates, intl, invalid, onCancel, onSave, privateKey, title }) => {
+export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
   const groupsOptions = groups.map(group => [group.get('id'),
     group.get('name')])
 
@@ -57,8 +57,8 @@ export const CertificateForm = ({ certificate, editMode, group, groups, intermed
         <UDNButton
           id="save_button"
           bsStyle="primary"
-          disabled={invalid}
-          onClick={onSave}>
+          disabled={invalid || submitting}
+          onClick={onSubmit}>
           {intl.formatMessage({id: 'portal.common.button.save'})}
         </UDNButton>
       </ButtonToolbar>
@@ -75,8 +75,9 @@ CertificateForm.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func,
+  onSubmit: PropTypes.func,
   privateKey: PropTypes.object,
+  submitting: PropTypes.bool,
   title: PropTypes.object
 }
 

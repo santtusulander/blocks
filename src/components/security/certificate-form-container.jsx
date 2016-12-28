@@ -7,13 +7,15 @@ import {
   getFormValues,
   propTypes as reduxFormPropTypes,
   reduxForm,
-  reset
+  reset,
+  SubmissionError
 } from 'redux-form'
 import { List, Map } from 'immutable'
 import { injectIntl } from 'react-intl'
 import { Modal } from 'react-bootstrap'
 
 import * as securityActionCreators from '../../redux/modules/security'
+import * as uiActionCreators from '../../redux/modules/ui'
 
 import CertificateForm from './certificate-form'
 
@@ -43,37 +45,56 @@ class CertificateFormContainer extends Component {
 
   constructor(props){
     super(props)
+
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   componentWillMount() {
     this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
 
-  render() {
-    const { title, formValues, upload, certificateToEdit, edit, cancel, toggleModal, ...formProps } = this.props
-
-    const buttonFunctions = {
-      onCancel: () => cancel(toggleModal),
-      onSave: () => {
-        const cert = certificateToEdit && certificateToEdit.get('cn')
-        const data = [
-          'udn',
-          Number(formValues.account),
-          Number(formValues.group),
-          {
-            title: formValues.title,
-            private_key: formValues.privateKey,
-            certificate: formValues.certificate,
-            intermediate_certificates: formValues.intermediateCertificates
-          }
-        ]
-        if(cert) {
-          data.push(cert)
-        }
-        toggleModal(null)
-        cert ? edit(data) : upload(data)
+  handleFormSubmit(values){
+    const { certificateToEdit, upload, edit, securityActions, resetForm } = this.props
+    const cert = certificateToEdit && certificateToEdit.get('cn')
+    const data = [
+      'udn',
+      Number(values.account),
+      Number(values.group),
+      {
+        title: values.title,
+        private_key: values.privateKey,
+        certificate: values.certificate,
+        intermediate_certificates: values.intermediateCertificates
       }
+    ]
+
+    if(cert) {
+      data.push(cert)
     }
+
+    if (cert) {
+      return edit(data).then(res => {
+        if (res.error) {
+          // TODO: The error fields from API
+          throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
+        }
+        securityActions.resetCertificateToEdit()
+        return resetForm()
+      });
+    }
+
+    return upload(data).then(res => {
+      if (res.error) {
+        // TODO: The error fields from API
+        throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
+      }
+      securityActions.resetCertificateToEdit()
+      return resetForm()
+    });
+  }
+
+  render() {
+    const { title, formValues, certificateToEdit, cancel, toggleModal, handleSubmit, ...formProps } = this.props
 
     return (
       <Modal show={true} dialogClassName="modal-form-panel">
@@ -92,8 +113,9 @@ class CertificateFormContainer extends Component {
             ]}
             component={CertificateForm}
             editMode={!certificateToEdit.isEmpty()}
+            onCancel={() => cancel(toggleModal)}
+            onSubmit={handleSubmit(values => this.handleFormSubmit(values))}
             {...formProps}
-            {...buttonFunctions}
           />
         </Modal.Body>
       </Modal>
@@ -139,6 +161,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
+  // const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  // const toggleModal = uiActions.toggleAccountManagementModal
 
   return {
     fetchGroups: (...params) => {
@@ -150,16 +174,10 @@ const mapDispatchToProps = (dispatch) => {
       toggleModal(null)
       dispatch(reset('certificateForm'))
     },
-    upload: data =>
-      securityActions.uploadSSLCertificate(...data).then(() => {
-        securityActions.resetCertificateToEdit()
-        dispatch(reset('certificateForm'))
-      }),
-    edit: data =>
-      securityActions.editSSLCertificate(...data).then(() => {
-        securityActions.resetCertificateToEdit()
-        dispatch(reset('certificateForm'))
-      })
+    securityActions,
+    upload: data => securityActions.uploadSSLCertificate(...data),
+    edit: data => securityActions.editSSLCertificate(...data),
+    resetForm: dispatch => dispatch(reset('certificateForm'))
   }
 }
 
