@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
 import { Map }from 'immutable'
 import { Button } from 'react-bootstrap'
 
@@ -69,6 +69,12 @@ class AccountForm extends React.Component {
     const accountId = props.account && props.account.get('id') || null
 
     return this.props.onSave(values.accountBrand, accountId, data)
+      //TODO: Handle submittion error
+      // .then( (res) => {
+      //   if (res)
+      //   throw new SubmissionError({ _error: 'Jipii' + res })
+      // });
+
   }
 
   render() {
@@ -92,6 +98,9 @@ class AccountForm extends React.Component {
       >
 
         <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+          <span>
+          {this.props.error}
+          </span>
 
           <Field
             type="text"
