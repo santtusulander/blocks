@@ -5,7 +5,7 @@ const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, error }, cla
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
 
   return (
-    <FormGroup controlId={input.name} validationState={ dirty && error ? 'error' : null}>
+    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
       <FormControl componentClass={componentClass}
