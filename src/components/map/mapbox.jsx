@@ -487,6 +487,10 @@ class Mapbox extends React.Component {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom > 6.9) {
 
+      // We need to wrap map center in order to get actual lat/lon coordinates
+      // See: https://github.com/mapbox/mapbox-gl-js/issues/3690
+      map.setCenter(map.getCenter().wrap())
+
       // All of these are longitude/latitude values
       const south = map.getBounds().getSouth()
       const west = map.getBounds().getWest()
