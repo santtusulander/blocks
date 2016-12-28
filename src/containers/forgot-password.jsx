@@ -40,20 +40,6 @@ export class ForgotPassword extends React.Component {
   onSubmit(e) {
     e.preventDefault()
 
-    if (isValidEmail(this.state.email)){
-      this.setState({formError: null})
-    } else {
-      this.setState({
-        formError: this.props.intl.formatMessage({id: 'portal.forgotPassword.emailInvalid.text'}),
-        recaptcha: '',
-        email: '',
-        emailActive: false
-      })
-      this.refs.recaptcha.reset()
-
-      return
-    }
-
     this.props.userActions.startFetching()
     this.props.userActions
       .requestPasswordReset(this.state.email, this.state.recaptcha)
@@ -73,11 +59,17 @@ export class ForgotPassword extends React.Component {
 
   checkEmailActive(hasFocus) {
     return () => {
-      if(hasFocus || !this.state.email) {
+      if (hasFocus || !this.state.email) {
         this.setState({
           emailActive: hasFocus,
           formError: null
         })
+      } else {
+        if (!isValidEmail(this.state.email)) {
+          this.setState({
+            formError: this.props.intl.formatMessage({id: 'portal.forgotPassword.emailInvalid.text'})
+          })
+        }
       }
     }
   }
@@ -91,7 +83,8 @@ export class ForgotPassword extends React.Component {
   }
 
   render() {
-    const disableSubmit = this.props.fetching || !this.state.email || !this.state.recaptcha
+    const disableSubmit = this.props.fetching || !this.state.recaptcha ||
+                          !!this.state.formError || !this.state.email
 
     return (
       <Modal.Dialog className="login-modal">
