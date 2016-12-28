@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.2.1-b4",
+  "version": "1.2.1-b5",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -119,7 +119,7 @@
       "__tests__/coverage"
     ],
     "transform": {
-      ".*": "<rootDir>/jest-preprocessor.js"
+      ".*": "<rootDir>/node_modules/babel-jest"
     },
     "moduleNameMapper": {
       "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"

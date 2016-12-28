@@ -98,7 +98,7 @@ The following plugins can be helpful as well:
     <tr>
       <td>5.</td>
       <td>Follow the instructions to set up the Analytics API</td>
-      <td><a href="https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md">https://github.com/VidScale/udnportal/blob/develop/analytics-api/README.md</a></td>
+      <td><a href="https://github.com/VidScale/udnportal-analytics-api/blob/develop/README.md">https://github.com/VidScale/udnportal-analytics-api/blob/develop/README.md</a></td>
     </tr>
   </tbody>
 </table>

@@ -56,34 +56,30 @@ class User extends React.Component {
     )
   }
 
-  savePassword(password) {
+  savePassword(password, editFormCallback) {
     this.props.userActions.startFetching()
     this.setState({
       savingPassword: this.props.userFetching
     })
 
     // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
-    this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
-      .then((response) => {
-        if (!response.error) {
-          this.props.userActions.logIn(
-            this.props.currentUser.get('email'),
-            password.new_password
-          ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
-        } else {
-          this.props.uiActions.showInfoDialog({
-            title: 'Error',
-            content: response.payload.data.message,
-            okButton: true,
-            cancel: this.props.uiActions.hideInfoDialog
-          })
-        }
-        this.props.userActions.finishFetching()
-        this.setState({
-          savingPassword: this.props.userFetching
-        })
+    const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
+
+    updatePasswordPromise.then((response) => {
+      if (!response.error) {
+        this.props.userActions.logIn(
+          this.props.currentUser.get('email'),
+          password.new_password
+        ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
       }
-    )
+
+      editFormCallback(response)
+
+      this.props.userActions.finishFetching()
+      this.setState({
+        savingPassword: this.props.userFetching
+      })
+    })
   }
 
   showNotification(message) {
