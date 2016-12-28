@@ -1,13 +1,10 @@
 import React from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
-
 import { Button } from 'react-bootstrap'
-import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
+import FormFooterButtons from '../form/form-footer-buttons'
 import FieldFormGroup from '../form/field-form-group'
-
-//import Input from './dns-form-input'
 
 import './dns-domain-edit-form.scss'
 import { checkForErrors } from '../../util/helpers'
@@ -90,21 +87,18 @@ const DnsDomainEditForm = (props) => {
     intl,
     onCancel,
     invalid,
-    submitting
-    /*fields: {
-      name,
-      email_addr,
-      name_server,
-      refresh,
-      ttl,
-      negative_ttl
-    }*/
+    submitting,
+    onSave
   } = props
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> : edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
+  const actionButtonTitle = fetching
+    ? <FormattedMessage id="portal.button.saving"/>
+    : edit
+      ? <FormattedMessage id="portal.button.save"/>
+      : <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form autoComplete="off">
+    <form onSubmit={props.handleSubmit(onSave)}>
 
       <Field
         type="text"
@@ -176,88 +170,21 @@ const DnsDomainEditForm = (props) => {
       <hr/>
 
       <FormFooterButtons>
-          <Button
-            id="cancel-btn"
-            className="btn-secondary"
-            onClick={onCancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
-
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid||submitting}>
-            <FormattedMessage id="portal.button.save"/>
-          </Button>
-        </FormFooterButtons>
-{/*
-      <Input
-        {...name}
-        labelID="portal.accountManagement.dns.form.domainName.text"
-        disabled={edit}
-        placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}>
-        {name.touched && name.error && <div className='error-msg'>{name.error}</div>}
-      </Input>
-
-      <hr/>
-
-      <Input
-        {...name_server}
-        labelID='portal.accountManagement.dns.form.nameServer.text'
-        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}>
-        {name_server.touched && name_server.error && <div className='error-msg'>{name_server.error}</div>}
-      </Input>
-
-      <hr/>
-
-      <Input
-        {...email_addr}
-        labelID='portal.accountManagement.dns.form.email.text'
-        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}>
-        {email_addr.touched && email_addr.error && <div className='error-msg'>{email_addr.error}</div>}
-      </Input>
-
-      <hr/>
-
-      <Input
-        {...refresh}
-        type="number"
-        labelID='portal.accountManagement.dns.form.refresh.text'
-        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.refreshPlaceholder.text'})}
-        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
-        {refresh.touched && refresh.error && <div className='error-msg'>{refresh.error}</div>}
-      </Input>
-
-      <hr/>
-
-      <Input
-        {...ttl}
-        type="number"
-        labelID='portal.accountManagement.dns.form.ttl.text'
-        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
-        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
-        {ttl.touched && ttl.error && <div className='error-msg'>{ttl.error}</div>}
-      </Input>
-
-      <hr/>
-
-      <Input
-        {...negative_ttl}
-        type="number"
-        labelID='portal.accountManagement.dns.form.negativeTtl.text'
-        placeholder={props.intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
-        addonAfter={<FormattedMessage id="portal.units.seconds"/>}>
-        {negative_ttl.touched && negative_ttl.error && <div className='error-msg'>{negative_ttl.error}</div>}
-      </Input>
-
-      <ButtonToolbar className="text-right extra-margin-top">
-        <Button className="btn-outline" onClick={props.onCancel}>
+        <Button
+          id="cancel-btn"
+          className="btn-secondary"
+          onClick={onCancel}>
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button disabled={Object.keys(props.errors).length > 0 || fetching} bsStyle="primary"
-        onClick={() => props.onSave(props.fields)}>{actionButtonTitle}</Button>
-      </ButtonToolbar>
-      */}
+
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid||submitting}>
+          {actionButtonTitle}
+        </Button>
+      </FormFooterButtons>
+      
     </form>
   )
 }
