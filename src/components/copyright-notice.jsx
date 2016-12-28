@@ -10,4 +10,6 @@ const CopyrightNotice = () => {
   )
 }
 
+CopyrightNotice.displayName = "CopyrightNotice"
+
 export default CopyrightNotice

@@ -13,6 +13,7 @@ function AnalyticsLink({ url }){
   )
 }
 
+AnalyticsLink.displayName = "AnalyticsLink"
 AnalyticsLink.propTypes = {
   url: React.PropTypes.func
 }

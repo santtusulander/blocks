@@ -12,6 +12,7 @@ const IconClose = (props) => {
   )
 }
 
+IconClose.displayName = "IconClose"
 IconClose.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

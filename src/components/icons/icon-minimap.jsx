@@ -10,6 +10,7 @@ const IconMinimap = (props) => {
   )
 }
 
+IconMinimap.displayName = "IconMinimap"
 IconMinimap.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

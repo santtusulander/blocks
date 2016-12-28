@@ -63,6 +63,7 @@ class AnalyticsTabFileError extends React.Component {
   }
 }
 
+AnalyticsTabFileError.displayName = "AnalyticsTabFileError"
 AnalyticsTabFileError.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   fileErrorSummary: React.PropTypes.instanceOf(Immutable.Map),
