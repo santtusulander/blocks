@@ -49,7 +49,7 @@ class DnsDomainEditFormContainer  extends Component {
         cancel={domainFormProps.onCancel}
       >
 
-        <DnsDomainEditForm {...domainFormProps/>
+        <DnsDomainEditForm {...domainFormProps} />
 
       </SidePanel>
     )
