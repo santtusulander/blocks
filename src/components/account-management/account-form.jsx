@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
+import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
 import { Button } from 'react-bootstrap'
 

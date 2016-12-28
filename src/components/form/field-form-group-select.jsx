@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 import Select from '../select.jsx'
 
-const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, label, disabled, meta: { dirty, touched, error }, children }) => {
+const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { dirty, error }, children }) => {
   return (
     <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
@@ -30,13 +30,14 @@ const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, clas
 }
 
 FieldFormGroupSelect.propTypes = {
+  addonAfter: PropTypes.node,
   children: PropTypes.object,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
   meta: PropTypes.object,
-  placeholder: PropTypes.string,
-  type: PropTypes.string
-
+  numericValues: PropTypes.bool,
+  options: PropTypes.array
 }
 
 export default FieldFormGroupSelect

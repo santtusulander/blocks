@@ -25,6 +25,7 @@ const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, tou
 
 FieldFormGroupMultiOptionSelector.propTypes = {
   children: PropTypes.object,
+  className: PropTypes.string,
   input: PropTypes.object,
   meta: PropTypes.object,
   options: PropTypes.array
