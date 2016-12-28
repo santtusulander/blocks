@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid } from 'redux-form'
 import { Map }from 'immutable'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
-
+import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
@@ -139,22 +139,21 @@ class AccountForm extends React.Component {
               : <p>Please, select account type</p>
           }
 
-          <ButtonToolbar className="pull-right">
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
+          <FormFooterButtons>
+              <Button
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={onCancel}>
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid||submitting}>
-              {submitButtonLabel}
-            </Button>
-          </ButtonToolbar>
-
+              <Button
+                type="submit"
+                bsStyle="primary"
+                disabled={invalid||submitting}>
+                {submitButtonLabel}
+              </Button>
+            </FormFooterButtons>
         </form>
       </SidePanel>
     )
