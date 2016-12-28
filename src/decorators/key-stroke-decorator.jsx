@@ -33,8 +33,10 @@ export default function(WrappedModal) {
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 13:
-          e.preventDefault()
-          this.submit()
+          if (this.props.submit) {
+            e.preventDefault()
+            this.submit()
+          }
           break
         case 27:
           this.props.cancel()

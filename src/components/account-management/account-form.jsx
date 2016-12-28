@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid } from 'redux-form'
 import { Map }from 'immutable'
+import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
-
+import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
@@ -51,68 +52,46 @@ class AccountForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.save = this.save.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   componentWillMount() {
-    // if (this.props.account) {
-    //   const {
-    //     account,
-    //     fields: {
-    //       accountName,
-    //       accountType,
-    //       services
-    //     }
-    //   } = this.props
-    //
-    //   const accountNameVal = account.get('name')
-    //   accountNameVal && accountName.onChange(accountNameVal)
-    //
-    //   const accountTypeVal = account.get('provider_type')
-    //   accountTypeVal && accountType.onChange(accountTypeVal)
-    //
-    //   const servicesVal = account.get('services')
-    //   servicesVal && services.onChange(servicesVal.toJS())
-    // }
-    //
     this.props.fetchServiceInfo()
   }
 
-  save() {
-    if(!this.props.invalid) {
-      const {
-        fields: { accountBrand, accountName, accountType, services }
-      } = this.props
-      let data = {
-        name: accountName.value,
-        provider_type: accountType.value,
-        services: services.value
-      }
-      const accountId = this.props.account && this.props.account.get('id') || null
-      this.props.onSave(accountBrand.value, accountId, data)
+  onSubmit(values, dispatch, props){
+    const data = {
+      name: values.accountName,
+      provider_type: values.accountType,
+      services: values.accountServices
     }
+
+    const accountId = props.account && props.account.get('id') || null
+
+    return this.props.onSave(values.accountBrand, accountId, data)
   }
 
   render() {
-    const { providerTypes, serviceOptions, /*fields: { accountBrand, accountName, accountType, services }, */ show, onCancel } = this.props
-    const title = this.props.account ? <FormattedMessage id="portal.account.manage.editAccount.title" /> : <FormattedMessage id="portal.account.manage.newAccount.title" />
-    const subTitle = this.props.account ? `${accountBrand.initialValue} / ${this.props.account.get('name')}` : 'udn'
+    const { providerTypes, serviceOptions, invalid, submitting, initialValues: { accountBrand }, show, onCancel } = this.props
+    const title = this.props.account
+      ? <FormattedMessage id="portal.account.manage.editAccount.title" />
+      : <FormattedMessage id="portal.account.manage.newAccount.title" />
+    const subTitle = this.props.account ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
 
-    //const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
-    const providerTypeLabel = /*providerType && providerType.label ? providerType.label : */ <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+    const submitButtonLabel = this.props.account
+      ? <FormattedMessage id="portal.button.save" />
+      : <FormattedMessage id="portal.button.add" />
+
 
     return (
       <SidePanel
         show={show}
         title={title}
         subTitle={subTitle}
-        invalid={this.props.invalid}
-        cancelButton={true}
-        submitButton={true}
-        submitText={this.props.account ? this.props.intl.formatMessage({id: 'portal.button.save'}) : null}
         cancel={onCancel}
-        submit={this.save}>
-        <form>
+      >
+
+        <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
 
           <Field
             type="text"
@@ -138,7 +117,6 @@ class AccountForm extends React.Component {
 
           <Field
             name="accountType"
-            placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
             component={FieldFormGroupSelect}
             options={providerTypes}
             >
@@ -149,15 +127,30 @@ class AccountForm extends React.Component {
 
           {this.props.accountType
               ? <Field
-                  name="services"
-                  placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
+                  name="accountServices"
                   component={FieldFormGroupMultiOptionSelector}
                   options={serviceOptions}
-                  >
+                >
                   <FormattedMessage id="portal.account.manage.services.title" />
                 </Field>
-              : <p>Please, select account type</p>
+              : <p>Please, select account type first</p>
           }
+
+          <FormFooterButtons>
+              <Button
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={onCancel}>
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>
+
+              <Button
+                type="submit"
+                bsStyle="primary"
+                disabled={invalid||submitting}>
+                {submitButtonLabel}
+              </Button>
+            </FormFooterButtons>
         </form>
       </SidePanel>
     )
@@ -165,9 +158,10 @@ class AccountForm extends React.Component {
 }
 
 AccountForm.propTypes = {
-  account: React.PropTypes.instanceOf(Map),
-  fetchServiceInfo: React.PropTypes.func,
-  fields: PropTypes.object,
+  account: PropTypes.instanceOf(Map),
+  accountType: PropTypes.number,
+  fetchServiceInfo: PropTypes.func,
+  initialValues: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -182,11 +176,17 @@ AccountForm.defaultProps = {
 }
 
 const formSelector = formValueSelector('accountForm')
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
 
   const accountType = formSelector(state, 'accountType')
   return {
     accountType,
+    initialValues: {
+      accountBrand: 'udn',
+      accountName: ownProps.account && ownProps.account.get('name'),
+      accountType: ownProps.account && ownProps.account.get('provider_type'),
+      accountServices: ownProps.account && ownProps.account.get('services').toJS()
+    },
     invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),
     serviceOptions: accountType && getServiceOptions(state, accountType)
