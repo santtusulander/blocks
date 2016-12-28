@@ -23,6 +23,7 @@ const IconServerError = (props) => {
   )
 }
 
+IconServerError.displayName = "IconServerError"
 IconServerError.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,
