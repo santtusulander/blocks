@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, isInvalid } from 'redux-form'
+import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
 import { Button } from 'react-bootstrap'
 
@@ -106,6 +106,7 @@ class AccountForm extends React.Component {
 
           <Field
             name="accountBrand"
+            className="input-select"
             placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
             component={FieldFormGroupSelect}
             options={BRAND_OPTIONS}
@@ -117,6 +118,7 @@ class AccountForm extends React.Component {
 
           <Field
             name="accountType"
+            className="input-select"
             component={FieldFormGroupSelect}
             options={providerTypes}
             >
@@ -161,12 +163,11 @@ AccountForm.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountType: PropTypes.number,
   fetchServiceInfo: PropTypes.func,
-  initialValues: PropTypes.object,
   intl: PropTypes.object,
-  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   providerTypes: PropTypes.array,
+  ...reduxFormPropTypes,
   serviceOptions: PropTypes.array,
   show: PropTypes.bool
 }

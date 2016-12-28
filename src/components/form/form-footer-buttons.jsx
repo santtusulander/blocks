@@ -7,12 +7,12 @@ const FormFooterButtons = ({children}) => {
       <ButtonToolbar className="pull-right">
         {children}
       </ButtonToolbar>
-    </div>    
+    </div>
   )
 }
 
 FormFooterButtons.propTypes = {
-  children: PropTypes.objecf
+  children: PropTypes.array
 }
 
 export default FormFooterButtons

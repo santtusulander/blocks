@@ -4,7 +4,7 @@ import Select from '../select.jsx'
 
 const FieldFormGroupSelect  = ({ input, options, numericValues, className, label, disabled, meta: { dirty, touched, error }, children }) => {
   return (
-    <FormGroup className controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup className controlId={input.name} validationState={dirty && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
       <Select
