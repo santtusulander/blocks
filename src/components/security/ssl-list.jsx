@@ -60,6 +60,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
   )
 }
 
+SSLList.displayName = "SSLList"
 SSLList.propTypes = {
   certificates: PropTypes.instanceOf(List),
   deleteCertificate: PropTypes.func,

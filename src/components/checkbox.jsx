@@ -7,6 +7,7 @@ const Checkbox = (props) => (
   </BSCheckbox>
 )
 
+Checkbox.displayName = "Checkbox"
 Checkbox.propTypes = {
   children: PropTypes.node
 }

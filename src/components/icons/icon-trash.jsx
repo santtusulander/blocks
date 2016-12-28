@@ -12,6 +12,7 @@ const IconTrash = (props) => {
   )
 }
 
+IconTrash.displayName = "IconTrash"
 IconTrash.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

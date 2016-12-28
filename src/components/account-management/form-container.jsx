@@ -23,6 +23,7 @@ const AccountManagementFormContainer = (props) => {
 
 module.exports = AccountManagementFormContainer
 
+AccountManagementFormContainer.displayName = "AccountManagementFormContainer"
 AccountManagementFormContainer.propTypes = {
   children: React.PropTypes.object,
   onCancel: React.PropTypes.func,
