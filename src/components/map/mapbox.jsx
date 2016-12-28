@@ -206,9 +206,24 @@ class Mapbox extends React.Component {
           coordinates: features[0].geometry.coordinates
         }
 
-        this.setState({ hoveredLayer })
-
         if (isCluster) {
+          // We need to compare current and previous coordinates in order apply the hover effect
+          // on clusters that are overlapping each other.
+          const previousCoordinates = this.state.hoveredLayer ? this.state.hoveredLayer.coordinates : [0, 0]
+          const currentCoordinates = hoveredLayer.coordinates
+
+          if (currentCoordinates[0] !== previousCoordinates[0] ||
+              currentCoordinates[1] !== previousCoordinates[1]) {
+            // We can assume that if there is a 'cluster-hover-source' available,
+            // we also have the 'cluster-hover' layer created.
+            if (map.getSource('cluster-hover-source')) {
+              map.removeSource('cluster-hover-source')
+              map.removeLayer('cluster-hover')
+            }
+          }
+
+          // Check if there already is a source available before creating it and
+          // the hover layer in order to avoid duplicates.
           if (!map.getSource('cluster-hover-source')) {
             map.addSource('cluster-hover-source', {
               type: 'geojson',
@@ -224,12 +239,15 @@ class Mapbox extends React.Component {
               source: 'cluster-hover-source',
               type: 'circle',
               paint: {
+                'circle-opacity': 0,
                 'circle-color': features[0].layer.paint['circle-color'],
                 'circle-radius': features[0].layer.paint['circle-radius']
               }
             })
           }
         }
+
+        this.setState({ hoveredLayer })
 
         this.setHoverStyle(map)('opacity', 0.9)('pointer')
 
@@ -250,6 +268,9 @@ class Mapbox extends React.Component {
           this.setState({ hoveredLayer: null })
           this.closePopup()
 
+          // Since cluster hovers are separate from the general hover styles,
+          // they necessary layers and sources should be removed once hovered
+          // outside of the cluster.
           if (map.getSource('cluster-hover-source')) {
             map.removeSource('cluster-hover-source')
             map.removeLayer('cluster-hover')
@@ -440,7 +461,8 @@ class Mapbox extends React.Component {
           features: cityFeatures
         },
         cluster: true,
-        clusterMaxZoom: MAPBOX_ZOOM_MAX - 1
+        clusterMaxZoom: MAPBOX_ZOOM_MAX - 1,
+        clusterRadius: 32
       })
 
       // Render all necessary clustered layers
