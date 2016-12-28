@@ -193,32 +193,64 @@ class Mapbox extends React.Component {
   onMouseMove(map, feature) {
     if (map.style._loaded) {
 
-      // Hides tooltip and resets hover style for the specific layer
-      // if we had hovered an interactive layer and the moved mouse
-      // out of the layer boundaries.
-      if (this.state.hoveredLayer) {
-        this.setHoverStyle(map)('opacity', 0.5)('default')
-        this.setState({ hoveredLayer: null })
-        this.closePopup()
-      }
-
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
 
       if (features.length) {
+        const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
         // Sets the hovered layer so we can easily reference it in setHoverStyle method
-        const hoveredLayer = { id: features[0].layer.id, type: features[0].layer.type }
+        const hoveredLayer = {
+          id: isCluster ? 'cluster-hover' : features[0].layer.id,
+          type: features[0].layer.type,
+          coordinates: isCluster ? features[0].geometry.coordinates: []
+        }
         this.setState({ hoveredLayer })
 
-        // Sets hover style for the hovered layer and opens the Popup
+        if (isCluster) {
+          if (!map.getSource('cluster-hover-source')) {
+            map.addSource('cluster-hover-source', {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                geometry: features[0].geometry
+              }
+            })
+
+            map.addLayer({
+              id: 'cluster-hover',
+              source: 'cluster-hover-source',
+              type: 'circle',
+              paint: {
+                'circle-color': features[0].layer.paint['circle-color'],
+                'circle-radius': 32
+              }
+            })
+          }
+        }
+
         this.setHoverStyle(map)('opacity', 0.9)('pointer')
+
+        // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
           {
             title: features[0].properties.name,
             total: features[0].properties.total
           },
           [feature.lngLat.lng, feature.lngLat.lat])
+      } else {
+        // Hides tooltip and resets hover style for the specific layer
+        // if we had hovered an interactive layer and the moved mouse
+        // out of the layer boundaries.
+        if (this.state.hoveredLayer) {
+          this.setHoverStyle(map)('opacity', 0.5)('default')
+          this.setState({ hoveredLayer: null })
+          this.closePopup()
+          if (map.getSource('cluster-hover-source')) {
+            map.removeSource('cluster-hover-source')
+            map.removeLayer('cluster-hover')
+          }
+        }
       }
     }
   }
@@ -400,11 +432,13 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: 'unclustered-cities',
         source: 'geo-cities',
+        minzoom: 7,
         type: 'circle',
         filter: ['!has', 'point_count'],
         paint: {
           'circle-color': '#f9ba01',
-          'circle-radius': 32
+          'circle-radius': 32,
+          'circle-opacity': 0.5
         }
       })
 
@@ -415,14 +449,14 @@ class Mapbox extends React.Component {
       map.addLayer({
         id: 'clustered-cities',
         source: 'geo-cities',
+        minzoom: 7,
         type: 'circle',
         paint: {
           'circle-color': '#7b0663',
-          'circle-radius': 32
+          'circle-radius': 32,
+          'circle-opacity': 0.5
         },
-        filter: ['all',
-                    ['>=', 'point_count', 2],
-                    ['<', 'point_count', 150]]
+        filter: ['all', ['>=', 'point_count', 2]]
       })
 
       const layers = this.state.layers
