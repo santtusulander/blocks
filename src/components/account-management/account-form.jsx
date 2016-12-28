@@ -78,9 +78,6 @@ class AccountForm extends React.Component {
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
     const subTitle = this.props.account ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
 
-    //const providerType =  providerTypes && providerTypes.find(type => type.value === accountType.value)
-    //const providerTypeLabel = /*providerType && providerType.label ? providerType.label : */ <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
-
     const submitButtonLabel = this.props.account
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
@@ -136,7 +133,7 @@ class AccountForm extends React.Component {
                 >
                   <FormattedMessage id="portal.account.manage.services.title" />
                 </Field>
-              : <p>Please, select account type</p>
+              : <p>Please, select account type first</p>
           }
 
           <FormFooterButtons>
