@@ -1,17 +1,19 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
-
+import { List } from 'immutable'
 import MultiOptionSelector from '../multi-option-selector'
 
 const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, touched, error }, className, children }) => {
   return (
-    <FormGroup className controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup className={className} controlId={input.name} validationState={touched && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
       <MultiOptionSelector
         options={options}
-        value={input.value}
-        onChange={val => input.onChange(val)}
+        field={{
+          value: List(input.value||[]),
+          onChange: val => input.onChange(val)
+        }}
       />
 
       {error && dirty &&
