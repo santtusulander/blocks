@@ -214,47 +214,21 @@ class Mapbox extends React.Component {
 
           if (currentCoordinates[0] !== previousCoordinates[0] ||
               currentCoordinates[1] !== previousCoordinates[1]) {
-            // We can assume that if there is a 'cluster-hover-source' available,
-            // we also have the 'cluster-hover' layer created.
-            if (map.getSource('cluster-hover-source')) {
-              map.removeSource('cluster-hover-source')
-              map.removeLayer('cluster-hover')
-            }
+            this.removeClusterHoverStyles(map)
           }
 
-          // Check if there already is a source available before creating it and
-          // the hover layer in order to avoid duplicates.
-          if (!map.getSource('cluster-hover-source')) {
-            map.addSource('cluster-hover-source', {
-              type: 'geojson',
-              data: {
-                type: 'Feature',
-                geometry: features[0].geometry,
-                properties: features[0].properties
-              }
-            })
-
-            map.addLayer({
-              id: 'cluster-hover',
-              source: 'cluster-hover-source',
-              type: 'circle',
-              paint: {
-                'circle-opacity': 0,
-                'circle-color': features[0].layer.paint['circle-color'],
-                'circle-radius': features[0].layer.paint['circle-radius']
-              }
-            })
-          }
+          this.addClusterHoverStyles(map, features[0])
         }
 
         this.setState({ hoveredLayer })
-
-        this.setHoverStyle(map)('opacity', 0.9)('pointer')
+        this.setHoverStyle(map)('opacity', isCluster ? 0.6 : 0.9)('pointer')
 
         // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
           {
-            title: features[0].properties.cluster ? 'Cluster of ' + features[0].properties.point_count + ' cities' : features[0].properties.name,
+            title: features[0].properties.cluster ?
+                    'Cluster of ' + features[0].properties.point_count + ' cities' :
+                    features[0].properties.name,
             total: features[0].properties.total
           },
           [feature.lngLat.lng, feature.lngLat.lat])
@@ -271,12 +245,57 @@ class Mapbox extends React.Component {
           // Since cluster hovers are separate from the general hover styles,
           // they necessary layers and sources should be removed once hovered
           // outside of the cluster.
-          if (map.getSource('cluster-hover-source')) {
-            map.removeSource('cluster-hover-source')
-            map.removeLayer('cluster-hover')
-          }
+          this.removeClusterHoverStyles(map)
         }
       }
+    }
+  }
+
+  /**
+   * [addClusterHoverStyles description]
+   * @method addClusterHoverStyles
+   * @param  {object}              map     Instance of Mapbox map
+   * @param  {object}              feature Object of hovered Mapbox feature,
+   *                                       e.g. a layer
+   */
+  addClusterHoverStyles(map, feature) {
+    // Check if there already is a source available before creating it and
+    // the hover layer in order to avoid duplicates.
+    if (!map.getSource('cluster-hover-source')) {
+      map.addSource('cluster-hover-source', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: feature.geometry,
+          properties: feature.properties
+        }
+      })
+
+      map.addLayer({
+        id: 'cluster-hover',
+        source: 'cluster-hover-source',
+        type: 'circle',
+        paint: {
+          // Clusters and single cities can be different sizes, so we have to get
+          // the correct styles from the hovered feature.
+          'circle-color': feature.layer.paint['circle-color'],
+          'circle-radius': feature.layer.paint['circle-radius']
+        }
+      })
+    }
+  }
+
+  /**
+   * [removeClusterHoverStyles description]
+   * @method removeClusterHoverStyles
+   * @param  {object}              map Instance of Mapbox map
+   */
+  removeClusterHoverStyles(map) {
+    // We can assume that if there is a 'cluster-hover-source' available,
+    // we also have the 'cluster-hover' layer created.
+    if (map.getSource('cluster-hover-source')) {
+      map.removeSource('cluster-hover-source')
+      map.removeLayer('cluster-hover')
     }
   }
 
