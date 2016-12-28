@@ -1,17 +1,25 @@
 import React, { PropTypes, Component } from 'react'
-import { Modal } from 'react-bootstrap'
-import { reduxForm, getValues, reset, change } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import {
+  change,
+  Fields,
+  getFormValues,
+  propTypes as reduxFormPropTypes,
+  reduxForm,
+  reset
+} from 'redux-form'
 import { List, Map } from 'immutable'
+import { injectIntl } from 'react-intl'
+import { Modal } from 'react-bootstrap'
 
 import * as securityActionCreators from '../../redux/modules/security'
 
 import CertificateForm from './certificate-form'
 
-let errors = {}
 const validate = values => {
-  errors = {}
-  const { title, privateKey, certificate, group } = values
+  let errors = {}
+  const { title, privateKey, certificate, intermediateCertificates, group } = values
 
   if (!group || group === '') {
     errors.group = 'Required'
@@ -25,20 +33,29 @@ const validate = values => {
   if (!certificate) {
     errors.certificate = 'Required'
   }
+  if (!intermediateCertificates) {
+    errors.intermediateCertificates = 'Required'
+  }
   return errors
 }
 
 class CertificateFormContainer extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
   componentWillMount() {
     this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
 
   render() {
-    const { title, formValues, upload, toEdit, edit, cancel, toggleModal, ...formProps } = this.props
+    const { title, formValues, upload, certificateToEdit, edit, cancel, toggleModal, ...formProps } = this.props
+
     const buttonFunctions = {
       onCancel: () => cancel(toggleModal),
       onSave: () => {
-        const cert = toEdit && toEdit.get('cn')
+        const cert = certificateToEdit && certificateToEdit.get('cn')
         const data = [
           'udn',
           Number(formValues.account),
@@ -57,14 +74,27 @@ class CertificateFormContainer extends Component {
         cert ? edit(data) : upload(data)
       }
     }
+
     return (
       <Modal show={true} dialogClassName="modal-form-panel">
         <Modal.Header>
           <h1>{title}</h1>
-          {!toEdit.isEmpty() && <p>{formProps.fields.title.value}</p>}
+          {!certificateToEdit.isEmpty() && formValues && <p>{formValues.title}</p>}
         </Modal.Header>
         <Modal.Body>
-          <CertificateForm editMode={!toEdit.isEmpty()}{...buttonFunctions}{...errors}{...formProps}/>
+          <Fields
+            names={[
+              'group',
+              'title',
+              'privateKey',
+              'certificate',
+              'intermediateCertificates'
+            ]}
+            component={CertificateForm}
+            editMode={!certificateToEdit.isEmpty()}
+            {...formProps}
+            {...buttonFunctions}
+          />
         </Modal.Body>
       </Modal>
     )
@@ -72,41 +102,44 @@ class CertificateFormContainer extends Component {
 }
 
 CertificateFormContainer.propTypes = {
+  ...reduxFormPropTypes,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   cancel: PropTypes.func,
+  certificateToEdit: PropTypes.instanceOf(Map),
   edit: PropTypes.func,
   fetchGroups: PropTypes.func,
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
   title: PropTypes.object,
-  toEdit: PropTypes.instanceOf(Map),
   toggleModal: PropTypes.func,
   upload: PropTypes.func
 }
 
-export default reduxForm({
-  fields: ['account', 'group', 'title', 'privateKey', 'certificate', 'intermediateCertificates'],
-  form: 'certificateForm',
-  validate
-}, function mapStateToProps(state) {
-  const toEdit = state.security.get('certificateToEdit')
+const mapStateToProps = (state) => {
+  const certificateToEdit = state.security.get('certificateToEdit')
   const activeAccount = state.account.get('activeAccount') && state.account.get('activeAccount').get('id')
   const activeGroup = state.group.get('activeGroup') && state.group.get('activeGroup').get('id')
 
   return {
-    toEdit,
+    certificateToEdit,
     initialValues: {
-      title: toEdit.get('title'),
-      account: toEdit.get('account') || activeAccount,
-      group: toEdit.get('group') || activeGroup
+      title: certificateToEdit.get('title'),
+      account: certificateToEdit.get('account') || activeAccount,
+      group: certificateToEdit.get('group') || activeGroup,
+      privateKey: certificateToEdit.get('privateKey') || null,
+      certificate: certificateToEdit.get('certificate') || null,
+      intermediateCertificates: certificateToEdit.get('intermediateCertificates') || null
     },
-    formValues: getValues(state.form.certificateForm),
+    formValues: getFormValues('certificateForm')(state),
     groups: state.security.get('groups')
   }
-}, function mapDispatchToProps(dispatch) {
+}
+
+const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
+
   return {
     fetchGroups: (...params) => {
       securityActions.fetchGroupsForModal(...params)
@@ -129,4 +162,12 @@ export default reduxForm({
       })
   }
 }
-)(CertificateFormContainer)
+
+export default injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(
+    reduxForm({
+      form: 'certificateForm',
+      validate
+    })(CertificateFormContainer)
+  )
+)
