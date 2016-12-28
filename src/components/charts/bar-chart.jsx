@@ -86,6 +86,8 @@ export default class BarChart extends Component {
   }
 }
 
+BarChart.displayName = "BarChart"
+
 BarChart.defaultProps = {
   valueFormatter: formatBytes,
   tooltipAlwaysActive: true,

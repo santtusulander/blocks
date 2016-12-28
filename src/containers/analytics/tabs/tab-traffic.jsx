@@ -183,6 +183,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 }
 
+AnalyticsTabTraffic.displayName = "AnalyticsTabTraffic"
 AnalyticsTabTraffic.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),

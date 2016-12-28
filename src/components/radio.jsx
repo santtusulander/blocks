@@ -7,6 +7,7 @@ const Radio = (props) => (
   </BSRadio>
 )
 
+Radio.displayName = "Radio"
 Radio.propTypes = {
   children: PropTypes.node
 }

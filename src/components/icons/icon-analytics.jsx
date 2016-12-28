@@ -12,6 +12,7 @@ const IconAnalytics = (props) => {
   )
 }
 
+IconAnalytics.displayName = "IconAnalytics"
 IconAnalytics.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

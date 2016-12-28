@@ -54,6 +54,8 @@ class UserEditModal extends React.Component {
   }
 }
 
+UserEditModal.displayName = "UserEditModal"
+
 UserEditModal.propTypes = {
   accountType: PropTypes.number,
   groups: PropTypes.instanceOf(List),
