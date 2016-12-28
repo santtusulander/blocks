@@ -12,9 +12,9 @@ import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, loading, edit, onSubmit, cancel, invalid, shouldShowField, intl }) => {
+const RecordForm = ({ domain, submitting, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Field
         name="type"
         component={input =>
@@ -54,6 +54,7 @@ const RecordForm = ({ domain, loading, edit, onSubmit, cancel, invalid, shouldSh
           <Input
             {...input}
             id="prio-field"
+            type="number"
             isVisible={shouldShowField('prio')}
             labelID="portal.account.recordForm.prio.label"
             disabled={edit}
@@ -70,6 +71,7 @@ const RecordForm = ({ domain, loading, edit, onSubmit, cancel, invalid, shouldSh
               {...input}
               key={1}
               id="ttl-field"
+              type="number"
               labelID="portal.account.recordForm.ttl.label"
               className='input-narrow ttl-value-input'
               placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
@@ -85,9 +87,11 @@ const RecordForm = ({ domain, loading, edit, onSubmit, cancel, invalid, shouldSh
         </Button>
         <Button
           id='submit-button'
-          disabled={invalid || loading}
-          bsStyle="primary"
-          onClick={onSubmit}>{loading ? <FormattedMessage id='portal.common.button.saving' />  : edit ? <FormattedMessage id='portal.common.button.save' /> : <FormattedMessage id='portal.common.button.add' />}</Button>
+          type='submit'
+          disabled={invalid || submitting}
+          bsStyle="primary">
+          {submitting ? <FormattedMessage id='portal.common.button.saving' />  : edit ? <FormattedMessage id='portal.common.button.save' /> : <FormattedMessage id='portal.common.button.add' />}
+        </Button>
       </ButtonToolbar>
     </form>
   )

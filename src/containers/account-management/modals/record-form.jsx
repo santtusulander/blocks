@@ -87,7 +87,7 @@ const RecordFormContainer = props => {
       if (prio) {
         filteredValues.prio = Number(prio)
       }
-      edit ?
+      return edit ?
         updateRecord(filteredValues, domain, activeRecord) :
         addRecord(filteredValues, domain)
     },
@@ -148,7 +148,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       // Hardcode class-key as it is not set anywhere
       vals.class = 'IN'
       startFetching()
-      createResource(domain, vals.name, vals)
+      return createResource(domain, vals.name, vals)
         .then(() => closeModal())
     },
     updateRecord: (formValues, zone, activeRecord) => {
@@ -156,7 +156,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       vals.id = activeRecord.get('id')
       vals.class = 'IN'
       startFetching()
-      updateResource(zone, activeRecord.get('name'), vals)
+      return updateResource(zone, activeRecord.get('name'), vals)
         .then(() => closeModal())
     }
   }

@@ -2,14 +2,15 @@ import React, { PropTypes } from 'react'
 import { FormControl, FormGroup, InputGroup, ControlLabel, HelpBlock } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-const Input = ({ id, required = true, addonAfter, labelID, meta: { error, touched }, isVisible = true, input }) =>
+const Input = ({ id, required = true, addonAfter, labelID, type = 'text', meta: { error, touched }, isVisible = true, input }) =>
   isVisible &&
-    <FormGroup controlId={id}>
+    <FormGroup controlId={id} validationState={(touched && error) && 'error'}>
       <ControlLabel>
         <FormattedMessage id={labelID}/>{required && ' *'}
       </ControlLabel>
       <InputGroup>
-        <FormControl {...input}/>
+        <FormControl componentClass="input" type={type} value={input.value} onChange={input.onChange} />
+        <FormControl.Feedback />
         {addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
