@@ -7,7 +7,9 @@ import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
 import AnalysisHorizontalBar from './horizontal-bar'
 import AnalysisURLList from './url-list'
-import {formatBytes} from '../../util/helpers'
+import {getTopURLs, formatBytes} from '../../util/helpers'
+
+import { TOP_URLS_CHART_MINIMUM_HEIGHT, BAR_HEIGHT } from '../../constants/url-report.js'
 
 class AnalysisURLReport extends React.Component {
   constructor(props) {
@@ -26,11 +28,17 @@ class AnalysisURLReport extends React.Component {
 
     this.measureContainersTimeout = null
   }
+  componentWillMount() {
+    this.topURLs = getTopURLs(this.props.urlMetrics, this.state.dataKey)
+  }
   componentDidMount() {
     this.measureContainers()
     // TODO: remove this timeout as part of UDNP-1426
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
+  }
+  componentWillUpdate(nextProps, nextState) {
+    this.topURLs = getTopURLs(nextProps.urlMetrics, nextState.dataKey)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
@@ -56,34 +64,12 @@ class AnalysisURLReport extends React.Component {
     const { urlMetrics, intl } = this.props;
     const {dataKey, xAxisCustomFormat} = this.state;
 
-    const uniqueURLMetrics = urlMetrics.groupBy(urlMatrix => urlMatrix.get('url'))
-    const byBytes = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('bytes')), 0))
-    const byRequests = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('requests')), 0))
-
-    let aggregatedByBytes = Immutable.List()
-    byBytes.map(url => {
-      aggregatedByBytes = aggregatedByBytes.push({
-        url: byBytes.keyOf(url),
-        bytes: url
-      })
-    })
-
-    let aggregatedByRequests = Immutable.List([])
-    byRequests.map(url => {
-      aggregatedByRequests = aggregatedByRequests.push({
-        url: byRequests.keyOf(url),
-        requests: url
-      })
-    })
-
-    const aggregatedData = this.state.dataKey === 'bytes' ? aggregatedByBytes : aggregatedByRequests
-    const topURLsCount = aggregatedData.size < 15 ? aggregatedData.size : 15
-    const topURLs = aggregatedData.filter((metric, i) => i < topURLsCount)
-    const chartHeight = topURLsCount * 36 + 72
+    const topURLsCount = this.topURLs.size
+    const chartHeight = (topURLsCount * BAR_HEIGHT) + TOP_URLS_CHART_MINIMUM_HEIGHT
 
     return (
       <div>
-        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text" values={{urlCout: topURLsCount}}/>}>
+        <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.urlList.top15.text" values={{urlCount: topURLsCount}}/>}>
           <Radio inline={true} value="bytes" checked={this.state.dataKey === 'bytes'} onChange={this.selectDataType}>
             <span>Bytes</span>
           </Radio>
@@ -94,7 +80,7 @@ class AnalysisURLReport extends React.Component {
         <SectionContainer>
           <div ref="chartHolder">
             <AnalysisHorizontalBar
-              data={topURLs.toJS()}
+              data={this.topURLs.toJS()}
               dataKey={dataKey}
               height={chartHeight}
               labelKey="url"
