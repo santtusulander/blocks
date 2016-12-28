@@ -221,7 +221,7 @@ class Mapbox extends React.Component {
         }
 
         this.setState({ hoveredLayer })
-        this.setHoverStyle(map)('opacity', isCluster ? 0.6 : 0.9)('pointer')
+        this.setHoverStyle(map)('opacity', isCluster ? 0.7 : 0.9)('pointer')
 
         // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
@@ -374,6 +374,11 @@ class Mapbox extends React.Component {
     this.renderCountryHighlight(map)
     this.updateLayers(layers)
 
+    // Sets updated instance of the map to state so that we can access
+    // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
+    // errors for not found layers since we might not have the map in state
+    // with all the countries and previous cities.
+    this.setState({ map })
   }
 
   /**
@@ -491,7 +496,7 @@ class Mapbox extends React.Component {
       layers.push('clustered-cities', 'unclustered-cities')
 
       // Update map instance since we have added new layers and sources.
-      this.setState({ map, layers })
+      this.updateLayers(layers)
     }
   }
 
@@ -579,7 +584,6 @@ class Mapbox extends React.Component {
   getCitiesOnZoomDrag(map) {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom > 6.9) {
-
       // We need to wrap map center in order to get actual lat/lon coordinates
       // See: https://github.com/mapbox/mapbox-gl-js/issues/3690
       map.setCenter(map.getCenter().wrap())
@@ -591,12 +595,6 @@ class Mapbox extends React.Component {
       const east = map.getBounds().getEast()
 
       this.props.getCitiesWithinBounds(south, west, north, east)
-
-      // Sets updated instance of the map to state so that we can access
-      // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
-      // errors for not found layers since we might not have the map in state
-      // with all the countries and previous cities.
-      this.setState({ map })
     }
   }
 
