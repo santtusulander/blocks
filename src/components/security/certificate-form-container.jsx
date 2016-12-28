@@ -71,6 +71,7 @@ class CertificateFormContainer extends Component {
   }
 }
 
+CertificateFormContainer.displayName = "CertificateFormContainer"
 CertificateFormContainer.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
