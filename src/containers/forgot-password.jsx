@@ -18,7 +18,7 @@ import * as userActionCreators from '../redux/modules/user'
 import IconEmail from '../components/icons/icon-email.jsx'
 import CopyrightNotice from '../components/copyright-notice'
 import ReCAPTCHA from '../components/recaptcha'
-import { REGEXP_EMAIL } from '../constants/regexp.js'
+import { isValidEmail } from '../util/validators.js'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -34,18 +34,13 @@ export class ForgotPassword extends React.Component {
 
     this.checkEmailActive = this.checkEmailActive.bind(this)
     this.changeField = this.changeField.bind(this)
-    this.validateEmail = this.validateEmail.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-  }
-
-  validateEmail(email) {
-    return REGEXP_EMAIL.test(email)
   }
 
   onSubmit(e) {
     e.preventDefault()
 
-    if (this.validateEmail(this.state.email)){
+    if (isValidEmail(this.state.email)){
       this.setState({formError: null})
     } else {
       this.setState({
