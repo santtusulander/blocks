@@ -192,7 +192,6 @@ class Mapbox extends React.Component {
    */
   onMouseMove(map, feature) {
     if (map.style._loaded) {
-
       // Gets all the features under the mouse pointer thats ID (e.g. 'country-fill-HKG')
       // is found in the layer list –– this.state.layers
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
@@ -286,7 +285,7 @@ class Mapbox extends React.Component {
    * Adds geojson sources for country layers that we have data for. Also calls
    * for rendering the actual styled country layers after creating sources.
    * NOTE: This should be refactored to be same fashion as what addCityLayers and
-   * renderCityCircle are.
+   * renderCityCircles are.
    *
    * @method addCountryLayers
    * @param  {object}         map Instance of Mapbox map
@@ -340,7 +339,7 @@ class Mapbox extends React.Component {
   /**
    * Renderes styled –– highlighted –– country layers on the map.
    * NOTE: This should be refactored to be same fashion as what addCityLayers and
-   * renderCityCircle are.
+   * renderCityCircles are.
    *
    * @method renderCountryHighlight
    * @param  {object}               map Instance of Mapbox map
@@ -394,18 +393,18 @@ class Mapbox extends React.Component {
    * @param  {[type]}      cityData [description]
    */
   addCityLayers(map, cityData) {
-
+    // Calculate median total for all the countries
+    // NOTE: All these city medians and scores should be rethought as currently
+    // for example the score (cityHeat) can be anything between 1-9999, with one
+    // being 9999 and the next one 200. This is too big of a gap between the two
+    // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
     const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
 
     // Get the highest value to base the sizing percentage against
     const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
 
-    // Go through the city data and create a circle layer for each city.
+    // Go through the city data and create a Feature of each city.
     const cityFeatures = cityData.map((city) => {
-      // We don't want spaces in city names in order to avoid errors
-      // when creating layers, sources and what-not for the cities.
-      // const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
-
       // Get score for the city based on bits_per_second
       const cityHeat = getScore(cityMedian, city.bits_per_second)
       // This city's percentage of the highest score of all cities
@@ -426,13 +425,14 @@ class Mapbox extends React.Component {
 
     })
 
-
+    // We might not have map available yet, so check if it exists before doing anything
     if (map) {
+      // If the map already has source for the cities, we should remove it and create it again
+      // since data has changed.
       if (map.getSource('geo-cities')) {
         map.removeSource('geo-cities')
       }
 
-      // If the map doesn't already have source for the city, we should create one
       map.addSource('geo-cities', {
         type: 'geojson',
         data: {
@@ -440,122 +440,76 @@ class Mapbox extends React.Component {
           features: cityFeatures
         },
         cluster: true,
-        clusterMaxZoom: MAPBOX_ZOOM_MAX
+        clusterMaxZoom: MAPBOX_ZOOM_MAX - 1
       })
 
-      if (map.getLayer('unclustered-cities')) {
-        map.removeLayer('unclustered-cities')
-      }
-
-      map.addLayer({
-        id: 'unclustered-cities',
-        source: 'geo-cities',
-        minzoom: 7,
-        type: 'circle',
-        filter: ['!has', 'point_count'],
-        paint: {
-          'circle-color': '#f9ba01',
-          'circle-radius': {
-            property: 'radiusPercentage',
-            stops: [
-              [0, 7],
-              [10, 10],
-              [20, 14],
-              [40, 18],
-              [60, 24],
-              [80, 30],
-              [95, 32]
-            ]
-          },
-          'circle-opacity': 0.5
-        }
-      })
-
-      if (map.getLayer('clustered-cities')) {
-        map.removeLayer('clustered-cities')
-      }
-
-      map.addLayer({
-        id: 'clustered-cities',
-        source: 'geo-cities',
-        minzoom: 7,
-        type: 'circle',
-        paint: {
-          'circle-color': '#f9ba01',
-          'circle-radius': 32,
-          'circle-opacity': 0.5
-        },
-        filter: ['all', ['>=', 'point_count', 2]]
-      })
+      // Render all necessary clustered layers
+      this.renderCityCircles(map)
 
       const layers = this.state.layers
-      layers.push('clustered-cities')
-      layers.push('unclustered-cities')
+      layers.push('clustered-cities', 'unclustered-cities')
 
-
-      // Update map instance since we have added bunch of different new layers
-      // and sources.
+      // Update map instance since we have added new layers and sources.
       this.setState({ map, layers })
     }
-
-
-    // this.renderCityCircle(map, city, cityData)
   }
 
   /**
-   * Renderes styled city layer –– circle –– on the map.
+   * Renderes styled city cluster layers –– circles –– on the map.
    *
-   * @method renderCityCircle
-   * @param  {object}         map      Instance of Mapbox map
-   * @param  {object}         city     Object of single city data
-   * @param  {array}          cityData Array of all the cities we have data for
+   * @method renderCityCircles
    */
-  renderCityCircle(map, city, cityData) {
-    const cities = cityData
-    // Calculate median total for all the countries
-    // NOTE: All these city medians and scores should be rethought as currently
-    // for example the score (cityHeat) can be anything between 1-9999, with one
-    // being 9999 and the next one 200. This is too big of a gap between the two
-    // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
-    const cityMedian = calculateMedian(cities.map((city => city.bits_per_second)))
-
-    // Get the highest value to base the sizing percentage against
-    const highestValue = cities.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
-    // Get score for the city based on bits_per_second
-    const cityHeat = getScore(cityMedian, city.bits_per_second)
-    // This city's percentage of the highest score of all cities
-    const percentage = cityHeat / highestValue * 100
-
-    const cityId = 'city-' + city.name.split(' ').join('-').toLowerCase()
-
+  renderCityCircles(map) {
     // Sets radius for the city circle based on the percentage.
-    // The circle can't have a radius smaller than 7px.
-    // NOTE: This should probably be a switch-case instead.
-    const cityRadius = percentage >= 95 ?
-                       32 + percentage / 10 :
-                       percentage >= 80 && percentage < 95 ?
-                       30 + percentage / 10 :
-                       percentage >= 60 && percentage < 80 ?
-                       24 + percentage / 10 :
-                       percentage >= 40 && percentage < 60 ?
-                       16 + percentage / 10 :
-                       percentage >= 20 && percentage < 40 ?
-                       14 + percentage / 10 :
-                       percentage >= 10 && percentage < 20 ?
-                       10 + percentage / 10 :
-                       percentage > 0 && percentage < 10 ?
-                       7 + percentage : 7
+    const cityRadiuses = [
+      [0, (7 / 10) * this.state.zoom],
+      [10, (10 / 10) * this.state.zoom],
+      [20, (14 / 10) * this.state.zoom],
+      [40, (18 / 10) * this.state.zoom],
+      [60, (24 / 10) * this.state.zoom],
+      [80, (30 / 10) * this.state.zoom],
+      [95, (32 / 10) * this.state.zoom]
+    ]
 
+    // If the layer exists, we should remove it in order to do a full reset for changed data
+    if (map.getLayer('unclustered-cities')) {
+      map.removeLayer('unclustered-cities')
+    }
+
+    // Adds layer for displaying single cities.
     map.addLayer({
-      id: cityId,
-      source: 'geo-' + cityId,
+      id: 'unclustered-cities',
+      source: 'geo-cities',
+      minzoom: 7,
       type: 'circle',
-      minzoom: 6.9,
+      filter: ['!has', 'point_count'],
       paint: {
-        'circle-radius': (cityRadius / 10) * this.state.zoom,
         'circle-color': '#f9ba01',
+        'circle-radius': {
+          property: 'radiusPercentage',
+          stops: cityRadiuses
+        },
         'circle-opacity': 0.5
       }
+    })
+
+    // If the layer exists, we should remove it in order to do a full reset for changed data
+    if (map.getLayer('clustered-cities')) {
+      map.removeLayer('clustered-cities')
+    }
+
+    // Adds layer for displaying clusters.
+    map.addLayer({
+      id: 'clustered-cities',
+      source: 'geo-cities',
+      minzoom: 7,
+      type: 'circle',
+      paint: {
+        'circle-color': '#f9ba01',
+        'circle-radius': 32,
+        'circle-opacity': 0.5
+      },
+      filter: ['all', ['>=', 'point_count', 2]]
     })
   }
 
