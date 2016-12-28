@@ -27,6 +27,7 @@ class AnalysisURLReport extends React.Component {
     this.selectDataType = this.selectDataType.bind(this)
 
     this.measureContainersTimeout = null
+    this.topURLs = Immutable.List()
   }
   componentWillMount() {
     this.topURLs = getTopURLs(this.props.urlMetrics, this.state.dataKey)

@@ -2,6 +2,8 @@ import React from 'react'
 import { shallow,mount } from 'enzyme'
 import { fromJS } from 'immutable'
 
+jest.unmock('../../../util/helpers')
+
 //jest.autoMockOff()
 jest.unmock('../url-report.jsx')
 
@@ -25,6 +27,12 @@ const urlMetrics = fromJS([
     bytes: 3000,
     requests: 343456,
     service_type: 'https'
+  },
+  {
+    url: 'www.cdg.com/123.mp4',
+    bytes: 4000,
+    requests: 565677,
+    service_type: 'http'
   }
 ])
 
