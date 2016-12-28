@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
-import { HelpBlock, FormGroup, Button, ButtonToolbar, Col, FormControl, ControlLabel, Row } from 'react-bootstrap'
+import { reduxForm, change } from 'redux-form'
+import { HelpBlock, FormGroup, InputGroup,
+         Tooltip, Button, ButtonToolbar,
+         Col, FormControl, ControlLabel, Row } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 import {FormattedMessage, injectIntl} from 'react-intl';
+import classNames from 'classnames'
 // import moment from 'moment'
 
 import PasswordFields from '../password-fields'
@@ -43,7 +46,9 @@ class UserEditForm extends React.Component {
       showMiddleNameField: props.fields.middle_name.value,
       showPasswordField: false,
       passwordVisible: false,
-      validPassword: false
+      validPassword: false,
+      currentPasswordValid: true,
+      currentPasswordErrorStr: ''
     }
 
     this.save = this.save.bind(this)
@@ -52,6 +57,7 @@ class UserEditForm extends React.Component {
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
     this.changePassword = this.changePassword.bind(this)
+    this.currentPasswordChangesCallback = this.currentPasswordChangesCallback.bind(this)
   }
 
   save() {
@@ -77,6 +83,18 @@ class UserEditForm extends React.Component {
     onSave(newValues)
   }
 
+  currentPasswordChangesCallback(response) {
+    if (response.error) {
+      this.setState({
+        currentPasswordValid: !response.error,
+        currentPasswordErrorStr: response.payload.data.message
+      })
+      this.props.dispatch(change('user-edit-form', 'current_password', ''))
+    } else {
+      this.togglePasswordEditing()
+    }
+  }
+
   savePassword() {
     const {
       fields: {
@@ -91,8 +109,7 @@ class UserEditForm extends React.Component {
       new_password: new_password.value
     }
 
-    onSavePassword(newValues)
-    this.togglePasswordEditing()
+    onSavePassword(newValues, this.currentPasswordChangesCallback)
   }
 
   showMiddleName() {
@@ -103,8 +120,15 @@ class UserEditForm extends React.Component {
 
   togglePasswordEditing() {
     this.setState({
-      showPasswordField: !this.state.showPasswordField
+      showPasswordField: !this.state.showPasswordField,
+      currentPasswordValid: true,
+      currentPasswordErrorStr: ''
     })
+
+    // Clear password fields on toggle.
+    this.props.dispatch(change('user-edit-form', 'current_password', ''))
+    this.props.dispatch(change('user-edit-form', 'new_password', ''))
+
   }
 
   togglePasswordVisibility() {
@@ -141,7 +165,22 @@ class UserEditForm extends React.Component {
     // digits have been changed before showing the Save bar
     const trimmedPhoneNumber = phone_number.value.replace(/\D/g,'');
     const showSaveBar = first_name.dirty || middle_name.dirty || last_name.dirty ||
-      (phone_number.dirty && phone_number.initialValue !== trimmedPhoneNumber)
+                        (phone_number.dirty && phone_number.initialValue !== trimmedPhoneNumber)
+
+    const currentPasswordInvalid = !this.state.currentPasswordValid && (current_password.value === '')
+    const currentPassowrdErrorTooltip = (
+      currentPasswordInvalid ?
+        (<Tooltip id="confirm-error" placement="top" className="input-tooltip in">
+          {this.state.currentPasswordErrorStr}
+         </Tooltip>)
+      : null
+    )
+    const currentPasswordWrapperClassName = classNames(
+      {
+        'invalid': currentPasswordInvalid
+      },
+      'input-addon-after-outside'
+    )
 
     return (
       <form className="form-horizontal">
@@ -256,10 +295,15 @@ class UserEditForm extends React.Component {
                 {this.state.showPasswordField || savingPassword ?
                   <div>
                     <Col xs={3}>
-                      <FormControl
-                        type="password"
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
-                        {...current_password} />
+                      <FormGroup>
+                        <InputGroup className={currentPasswordWrapperClassName}>
+                          {currentPassowrdErrorTooltip}
+                          <FormControl
+                            type="password"
+                            placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                            {...current_password} />
+                        </InputGroup>
+                      </FormGroup>
                     </Col>
                     <Col xs={6}>
                       <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
@@ -307,6 +351,7 @@ class UserEditForm extends React.Component {
 }
 
 UserEditForm.propTypes = {
+  dispatch: PropTypes.func,
   fields: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
