@@ -89,19 +89,7 @@ class Mapbox extends React.Component {
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
     if (nextProps.cityData !== this.props.cityData) {
-      const newLayers = nextProps.cityData.map((city) => {
-        const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
-
-        if (this.state.map.getLayer(cityName)) {
-          this.state.map.removeLayer(cityName)
-        }
-
-        return cityName
-
-        // Mapbox goes through this.state.layers when applying hover styles
-        // so we need to have it only include the countries because we will be
-        // adding the cities later on.
-      }).concat(this.state.layers.filter(layer => layer.includes('country-')))
+      const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
       this.updateLayers(newLayers)
       this.addCityLayers(this.state.map, nextProps.cityData)
@@ -370,38 +358,85 @@ class Mapbox extends React.Component {
    */
   addCityLayers(map, cityData) {
     // Go through the city data and create a circle layer for each city.
-    cityData.forEach((city) => {
+    const cityFeatures = cityData.map((city) => {
       // We don't want spaces in city names in order to avoid errors
       // when creating layers, sources and what-not for the cities.
-      const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
+      // const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
 
-      // If the map doesn't already have source for the city, we should create one
-      if (!map.getSource('geo-' + cityName)) {
-        map.addSource('geo-' + cityName, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [{
-              type: 'Feature',
-              properties: {
-                name: city.name,
-                total: city.bits_per_second
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [city.lon, city.lat]
-              }
-            }]
-          }
-        })
+      return {
+        type: 'Feature',
+        properties: {
+          name: city.name,
+          total: city.bits_per_second
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [city.lon, city.lat]
+        }
       }
 
-      this.renderCityCircle(map, city, cityData)
     })
 
-    // Update map instance since we have added bunch of different new layers
-    // and sources.
-    this.setState({ map })
+    if (map) {
+      if (map.getSource('geo-cities')) {
+        map.removeSource('geo-cities')
+      }
+
+      // If the map doesn't already have source for the city, we should create one
+      map.addSource('geo-cities', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: cityFeatures
+        },
+        cluster: true,
+        clusterMaxZoom: MAPBOX_ZOOM_MAX
+      })
+
+      if (map.getLayer('unclustered-cities')) {
+        map.removeLayer('unclustered-cities')
+      }
+
+      map.addLayer({
+        id: 'unclustered-cities',
+        source: 'geo-cities',
+        type: 'circle',
+        filter: ['!has', 'point_count'],
+        paint: {
+          'circle-color': '#f9ba01',
+          'circle-radius': 32
+        }
+      })
+
+      if (map.getLayer('clustered-cities')) {
+        map.removeLayer('clustered-cities')
+      }
+
+      map.addLayer({
+        id: 'clustered-cities',
+        source: 'geo-cities',
+        type: 'circle',
+        paint: {
+          'circle-color': '#7b0663',
+          'circle-radius': 32
+        },
+        filter: ['all',
+                    ['>=', 'point_count', 2],
+                    ['<', 'point_count', 150]]
+      })
+
+      const layers = this.state.layers
+      layers.push('clustered-cities')
+      layers.push('unclustered-cities')
+
+
+      // Update map instance since we have added bunch of different new layers
+      // and sources.
+      this.setState({ map, layers })
+    }
+
+
+    // this.renderCityCircle(map, city, cityData)
   }
 
   /**
