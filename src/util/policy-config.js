@@ -225,6 +225,7 @@ const setContentTargetingActionName = action => {
     </span>
   )
 }
+setContentTargetingActionName.displayName = "setContentTargetingActionName"
 
 /**
  * Checks whether or not the rule at the given path is empty

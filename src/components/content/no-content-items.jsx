@@ -10,6 +10,8 @@ function NoContentItems({ content }) {
     </p>
   )
 }
+
+NoContentItems.displayName = "NoContentItems"
 NoContentItems.propTypes = {
   content: React.PropTypes.string
 }

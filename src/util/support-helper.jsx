@@ -121,6 +121,7 @@ export function getTicketTypeIcon(type) {
       return null
   }
 }
+getTicketTypeIcon.displayName = "getTicketTypeIcon"
 
 // eslint-disable-next-line react/no-multi-comp
 export function getTicketPriorityIcon(priority) {
@@ -130,6 +131,7 @@ export function getTicketPriorityIcon(priority) {
 
   return (<div className={className} />)
 }
+getTicketPriorityIcon.displayName = "getTicketPriorityIcon"
 
 export function getTicketPriorityLabel(priority) {
   const options = List(getTicketPriorityOptions())

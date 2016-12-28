@@ -23,6 +23,7 @@ const IconContent = (props) => {
   )
 }
 
+IconContent.displayName = "IconContent"
 IconContent.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,
