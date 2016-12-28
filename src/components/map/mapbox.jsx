@@ -198,13 +198,15 @@ class Mapbox extends React.Component {
       const features = map.queryRenderedFeatures(feature.point, { layers: this.state.layers })
 
       if (features.length) {
+        // Check if hovered feature is a cluster since we need to apply different hover style methods on clusters
         const isCluster = features[0].properties.cluster || ~features[0].layer.id.indexOf('clustered')
         // Sets the hovered layer so we can easily reference it in setHoverStyle method
         const hoveredLayer = {
           id: isCluster ? 'cluster-hover' : features[0].layer.id,
           type: features[0].layer.type,
-          coordinates: isCluster ? features[0].geometry.coordinates: []
+          coordinates: features[0].geometry.coordinates
         }
+
         this.setState({ hoveredLayer })
 
         if (isCluster) {
@@ -213,7 +215,8 @@ class Mapbox extends React.Component {
               type: 'geojson',
               data: {
                 type: 'Feature',
-                geometry: features[0].geometry
+                geometry: features[0].geometry,
+                properties: features[0].properties
               }
             })
 
@@ -223,7 +226,7 @@ class Mapbox extends React.Component {
               type: 'circle',
               paint: {
                 'circle-color': features[0].layer.paint['circle-color'],
-                'circle-radius': 32
+                'circle-radius': features[0].layer.paint['circle-radius']
               }
             })
           }
@@ -234,10 +237,11 @@ class Mapbox extends React.Component {
         // Sets hover style for the hovered layer and opens the Popup
         this.openPopup(
           {
-            title: features[0].properties.name,
+            title: features[0].properties.cluster ? 'Cluster of ' + features[0].properties.point_count + ' cities' : features[0].properties.name,
             total: features[0].properties.total
           },
           [feature.lngLat.lng, feature.lngLat.lat])
+
       } else {
         // Hides tooltip and resets hover style for the specific layer
         // if we had hovered an interactive layer and the moved mouse
@@ -246,6 +250,7 @@ class Mapbox extends React.Component {
           this.setHoverStyle(map)('opacity', 0.5)('default')
           this.setState({ hoveredLayer: null })
           this.closePopup()
+
           if (map.getSource('cluster-hover-source')) {
             map.removeSource('cluster-hover-source')
             map.removeLayer('cluster-hover')
@@ -389,17 +394,29 @@ class Mapbox extends React.Component {
    * @param  {[type]}      cityData [description]
    */
   addCityLayers(map, cityData) {
+
+    const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
+
+    // Get the highest value to base the sizing percentage against
+    const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
+
     // Go through the city data and create a circle layer for each city.
     const cityFeatures = cityData.map((city) => {
       // We don't want spaces in city names in order to avoid errors
       // when creating layers, sources and what-not for the cities.
       // const cityName = 'city-' + city.name.split(' ').join('-').toLowerCase()
 
+      // Get score for the city based on bits_per_second
+      const cityHeat = getScore(cityMedian, city.bits_per_second)
+      // This city's percentage of the highest score of all cities
+      const percentage = cityHeat / highestValue * 100
+
       return {
         type: 'Feature',
         properties: {
           name: city.name,
-          total: city.bits_per_second
+          total: city.bits_per_second,
+          radiusPercentage: percentage
         },
         geometry: {
           type: 'Point',
@@ -408,6 +425,7 @@ class Mapbox extends React.Component {
       }
 
     })
+
 
     if (map) {
       if (map.getSource('geo-cities')) {
@@ -437,7 +455,18 @@ class Mapbox extends React.Component {
         filter: ['!has', 'point_count'],
         paint: {
           'circle-color': '#f9ba01',
-          'circle-radius': 32,
+          'circle-radius': {
+            property: 'radiusPercentage',
+            stops: [
+              [0, 7],
+              [10, 10],
+              [20, 14],
+              [40, 18],
+              [60, 24],
+              [80, 30],
+              [95, 32]
+            ]
+          },
           'circle-opacity': 0.5
         }
       })
@@ -452,7 +481,7 @@ class Mapbox extends React.Component {
         minzoom: 7,
         type: 'circle',
         paint: {
-          'circle-color': '#7b0663',
+          'circle-color': '#f9ba01',
           'circle-radius': 32,
           'circle-opacity': 0.5
         },
@@ -636,14 +665,16 @@ class Mapbox extends React.Component {
           <Popup anchor="bottom-left" coordinates={this.state.popupCoords}>
             <div>
               <span className="popup-title bold">{this.state.popupContent.title}</span>
-              <table>
-                <tbody>
-                  <tr>
-                    <td className="bold">Total</td>
-                    <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
-                  </tr>
-                </tbody>
-              </table>
+              {this.state.popupContent.total &&
+                <table>
+                  <tbody>
+                    <tr>
+                      <td className="bold">Total</td>
+                      <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              }
             </div>
           </Popup>
         }
