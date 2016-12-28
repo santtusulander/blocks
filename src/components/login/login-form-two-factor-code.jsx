@@ -155,6 +155,7 @@ export class LoginFormTwoFactorCode extends Component {
   }
 }
 
+LoginFormTwoFactorCode.displayName = "LoginFormTwoFactorCode"
 LoginFormTwoFactorCode.propTypes = {
   fetching: React.PropTypes.bool,
   loginError: React.PropTypes.string,

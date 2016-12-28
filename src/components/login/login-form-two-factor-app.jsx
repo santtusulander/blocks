@@ -83,6 +83,7 @@ export class LoginFormTwoFactorApp extends Component {
   }
 }
 
+LoginFormTwoFactorApp.displayName = "LoginFormTwoFactorApp"
 LoginFormTwoFactorApp.propTypes = {
   loginError: React.PropTypes.string,
   startAppPulling: React.PropTypes.func,

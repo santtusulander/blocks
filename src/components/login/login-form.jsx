@@ -165,6 +165,7 @@ export class LoginForm extends Component {
   }
 }
 
+LoginForm.displayName = "LoginForm"
 LoginForm.propTypes = {
   fetching: React.PropTypes.bool,
   loginError: React.PropTypes.string,
