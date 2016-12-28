@@ -5,10 +5,15 @@ const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, err
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
 
   return (
-    <FormGroup className controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup controlId={input.name} validationState={touched && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
-      <FormControl componentClass={componentClass} type={type} placeholder={placeholder} value={input.value} onChange={input.onChange} />
+      <FormControl componentClass={componentClass}
+                   className={className}
+                   type={type}
+                   placeholder={placeholder}
+                   value={input.value}
+                   onChange={input.onChange} />
       <FormControl.Feedback />
 
       {error && dirty &&
@@ -20,8 +25,8 @@ const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, err
 
 FieldFormGroup.propTypes = {
   children: PropTypes.object,
+  className: PropTypes.string,
   input: PropTypes.object,
-  label: PropTypes.object,
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   type: PropTypes.string
