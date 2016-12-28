@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, FormControl, ControlLabel, HelpBlock} from 'react-bootstrap';
 
-const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, error }, children }) => {
+const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, touched, error }, className, children }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
 
   return (
-    <FormGroup controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup className controlId={input.name} validationState={touched && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
       <FormControl componentClass={componentClass} type={type} placeholder={placeholder} value={input.value} onChange={input.onChange} />
