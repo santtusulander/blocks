@@ -50,8 +50,6 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
 class AccountForm extends React.Component {
   constructor(props) {
     super(props)
-
-    this.save = this.save.bind(this)
   }
 
   componentWillMount() {
