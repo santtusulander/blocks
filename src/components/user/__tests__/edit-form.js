@@ -92,4 +92,11 @@ describe('UserEditForm', () => {
      expect(subject().find('form').find('div.form-group').length).toBe(4)
    })
 
+   it('should have 1 toggle element inside the form', () => {
+     expect(subject().find('form').find('Toggle').length).toBe(1)
+   })
+
+   it('should have 1 select element inside the form', () => {
+     expect(subject().find('form').find('SelectWrapper').length).toBe(1)
+   })
 })
