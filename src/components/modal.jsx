@@ -21,7 +21,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, submit, submitButton, title, verifyDelete } = this.props
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, onSubmit, submitButton, title, verifyDelete } = this.props
 
     return (
       <Modal show={true} dialogClassName="modal-window" onEntered={this.handleOnEntered}>
@@ -58,7 +58,7 @@ class ModalWindow extends React.Component {
             {submitButton &&
             <Button
               bsStyle="primary"
-              onClick={submit}>
+              onClick={onSubmit}>
               <FormattedMessage id="portal.button.submt"/>
             </Button>}
 
@@ -72,7 +72,7 @@ class ModalWindow extends React.Component {
             {continueButton &&
             <Button
               bsStyle="primary"
-              onClick={submit}>
+              onClick={onSubmit}>
               <FormattedMessage id="portal.button.continue"/>
             </Button>}
 
@@ -86,7 +86,7 @@ class ModalWindow extends React.Component {
             {deleteButton &&
             <Button
               bsStyle="danger"
-              onClick={submit}
+              onClick={onSubmit}
               disabled={loading || (verifyDelete ? invalid : false)}>
               {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
             </Button>}
@@ -115,7 +115,7 @@ class ModalWindow extends React.Component {
             {reloadButton &&
             <Button
               bsStyle="primary"
-              onClick={submit}>
+              onClick={onSubmit}>
               <FormattedMessage id="portal.button.reload"/>
             </Button>}
           </ButtonToolbar>
@@ -152,9 +152,9 @@ ModalWindow.propTypes = {
   loading: PropTypes.bool,
   loginButton: PropTypes.bool,
   okButton: PropTypes.bool,
+  onSubmit: PropTypes.func,
   reloadButton: PropTypes.bool,
   stayButton: PropTypes.bool,
-  submit: PropTypes.func,
   submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
     React.PropTypes.string,
