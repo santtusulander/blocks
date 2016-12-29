@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Col, FormControl, FormGroup, InputGroup, Checkbox, Modal, Row } from 'react-bootstrap'
 import { Link } from 'react-router'
 import classnames from 'classnames'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 import IconEmail from '../icons/icon-email.jsx'
 import IconPassword from '../icons/icon-password.jsx'
@@ -115,25 +115,24 @@ export class LoginForm extends Component {
               </InputGroup>
             </FormGroup>
             <FormGroup className={passwordClass}>
-            <InputGroup>
-              <InputGroup.Addon>
-                <IconPassword/>
-              </InputGroup.Addon>
-              <FormControl
-                id="password"
-                type="password"
-                onFocus={this.checkPasswordActive(true)}
-                onBlur={this.checkPasswordActive(false)}
-                value={this.state.password}
-                onChange={this.changeField('password')}/>
+              <InputGroup>
+                <InputGroup.Addon>
+                  <IconPassword/>
+                </InputGroup.Addon>
+                <FormControl
+                  id="password"
+                  type="password"
+                  onFocus={this.checkPasswordActive(true)}
+                  onBlur={this.checkPasswordActive(false)}
+                  value={this.state.password}
+                  onChange={this.changeField('password')}/>
               </InputGroup>
             </FormGroup>
             <Row>
               <Col xs={4}>
                 <div className="remember-checkbox">
-                  <Checkbox
-                    onChange={this.toggleRemember}
-                    checked={this.state.rememberUsername}>
+                  <Checkbox onChange={this.toggleRemember}
+                            checked={this.state.rememberUsername}>
                     <FormattedMessage id="portal.login.rememberMe.text" />
                   </Checkbox>
                 </div>
@@ -174,4 +173,4 @@ LoginForm.propTypes = {
   userName: React.PropTypes.string
 }
 
-export default injectIntl(LoginForm);
+export default LoginForm;

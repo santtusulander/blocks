@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormControl, FormGroup, InputGroup, Modal, Row } from 'react-bootstrap'
 import { Link } from 'react-router'
 import classnames from 'classnames'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
 import { TWO_FA_CODE_INPUT_FIELD_NAMES,
          TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH } from '../../constants/login.js'
@@ -16,6 +16,16 @@ export class LoginFormTwoFactorCode extends Component {
     this.onKeyPress = this.onKeyPress.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onChange = this.onChange.bind(this)
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.fetching != nextProps.fetching) {
+      return true
+    } else if (this.props.loginError != nextProps.loginError){
+      return true
+    } else {
+      return false
+    }
   }
 
   onFocus() {
@@ -163,4 +173,4 @@ LoginFormTwoFactorCode.propTypes = {
   onSubmit: React.PropTypes.func
 }
 
-export default injectIntl(LoginFormTwoFactorCode);
+export default LoginFormTwoFactorCode;
