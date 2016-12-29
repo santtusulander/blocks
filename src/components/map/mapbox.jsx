@@ -68,11 +68,6 @@ class Mapbox extends React.Component {
       map: null
     }
 
-    this.countryGeoJson = {
-      type: 'FeatureCollection',
-      features: []
-    }
-
     this.timeout = null
 
     this.onPageScroll = this.onPageScroll.bind(this)
@@ -85,6 +80,16 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.countryData !== this.props.countryData && this.state.map) {
+      // Current country layers need to be removed to avoid duplicates
+      // and errors that Mapbox throws if it tries to look for a layer
+      // that isn't there.
+      const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
+
+      this.updateLayers(newLayers)
+      this.addCountryLayers(this.state.map, nextProps.countryData)
+    }
+
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
@@ -141,7 +146,7 @@ class Mapbox extends React.Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
-    this.addCountryLayers(map)
+    this.addCountryLayers(map, this.props.countryData)
 
     // Only add city layers if we're within a specific zoom level.
     if (this.state.zoom > 6.9) {
@@ -328,50 +333,57 @@ class Mapbox extends React.Component {
    * renderCityCircles are.
    *
    * @method addCountryLayers
-   * @param  {object}         map Instance of Mapbox map
+   * @param  {object}         map         Instance of Mapbox map
+   * @param  {array}          countryData List of countries with traffic
    */
-  addCountryLayers(map) {
+  addCountryLayers(map, countryData) {
     const layers = this.state.layers
 
     // Filters through the country GeoJSON and creates sources/layers for countries that have data
-    this.countryGeoJson.features = this.props.geoData.features.filter((data) => {
-      const countryExists = this.props.countryData.some(country => country.code === data.properties.iso_a3)
-      const trafficCountry = this.props.countryData.find(c => c.code === data.properties.iso_a3)
+    this.props.geoData.features.forEach((data) => {
+      const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
+      const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
       const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
 
       // If the country has data and we don't already have a source for it,
       // we create a source layer and add the layer ID to a list.
       if (countryExists) {
-        if (!map.getSource('geo-' + data.properties.iso_a3)) {
+        const geoData = {
+          type: 'FeatureCollection',
+          features: [{
+            type: data.type,
+            properties: {
+              name: data.properties.name,
+              total: trafficCountry.bits_per_second
+            },
+            geometry: data.geometry
+          }]
+        }
+
+        // If the country already has a source, we should just update the data.
+        if (map.getSource('geo-' + data.properties.iso_a3)) {
+          map.getSource('geo-' + data.properties.iso_a3).setData(geoData)
+
+        } else {
           map.addSource('geo-' + data.properties.iso_a3, {
             type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [{
-                type: data.type,
-                properties: {
-                  name: data.properties.name,
-                  total: trafficCountry.bits_per_second
-                },
-                geometry: data.geometry
-              }]
-            }
+            data: geoData
           })
-
-          if (!layerExists) {
-            // Adds a layer ID to a list so we can reference it in onMouseMove
-            // and set a hover style for it.
-            layers.push('country-fill-' + data.properties.iso_a3)
-          }
-
         }
-        return data
+
+        if (!layerExists) {
+          // Adds a layer ID to a list so we can reference it in onMouseMove
+          // and set a hover style for it.
+          layers.push('country-fill-' + data.properties.iso_a3)
+        }
+
+        // Render the actual colored country layers on the map
+        this.renderCountryHighlight(map, countryData, trafficCountry)
       }
     })
 
-    // Render the actual colored country layers on the map
-    // and update this.state.layers
-    this.renderCountryHighlight(map)
+
+    // Update this.state.layers
     this.updateLayers(layers)
 
     // Sets updated instance of the map to state so that we can access
@@ -387,43 +399,44 @@ class Mapbox extends React.Component {
    * renderCityCircles are.
    *
    * @method renderCountryHighlight
-   * @param  {object}               map Instance of Mapbox map
+   * @param  {object}               map            Instance of Mapbox map
+   * @param  {array}                countryData    List of countries with traffic
+   * @param  {object}               trafficCountry Object a single country with traffic
    */
-  renderCountryHighlight(map) {
-    const countries = this.props.countryData
-
+  renderCountryHighlight(map, countryData, trafficCountry) {
     // Calculate median total for all the countries
-    const countryMedian = calculateMedian(countries.map((country => country.total)))
+    const countryMedian = calculateMedian(countryData.map((country => country.total)))
 
-    this.countryGeoJson.features.forEach((country) => {
-      // Find current country from countryData so we can access the bits and what-not for it
-      const trafficCountry = countries.find(c => c.code === country.properties.iso_a3)
-      // Gets a score for the country based on its total
-      const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
-      // Choose a color for the country based on its score
-      const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
+    // Gets a score for the country based on its total
+    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
+    // Choose a color for the country based on its score
+    const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
 
-      map.addLayer({
-        id: `country-fill-${country.properties.iso_a3}`,
-        source: `geo-${country.properties.iso_a3}`,
-        maxzoom: 7,
-        paint: {
-          'fill-color': countryColor,
-          'fill-opacity': 0.5
-        },
-        type: 'fill'
-      })
+    if (map.getLayer('country-fill-' + trafficCountry.code)) {
+      map.removeLayer('country-fill-' + trafficCountry.code)
+      map.removeLayer('country-stroke-' + trafficCountry.code)
+    }
 
-      map.addLayer({
-        id: `country-stroke-${country.properties.iso_a3}`,
-        source: `geo-${country.properties.iso_a3}`,
-        maxzoom: 7,
-        paint: {
-          'line-color': countryColor,
-          'line-width': 2
-        },
-        type: 'line'
-      })
+    map.addLayer({
+      id: `country-fill-${trafficCountry.code}`,
+      source: `geo-${trafficCountry.code}`,
+      maxzoom: 7,
+      paint: {
+        'fill-color': countryColor,
+        'fill-opacity': 0.5
+      },
+      type: 'fill'
+    })
+
+    map.addLayer({
+      id: `country-stroke-${trafficCountry.code}`,
+      source: `geo-${trafficCountry.code}`,
+      maxzoom: 7,
+      paint: {
+        'line-color': countryColor,
+        'line-width': 2
+      },
+      type: 'line'
     })
   }
 
