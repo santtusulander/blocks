@@ -2,23 +2,28 @@ import React, { PropTypes } from 'react'
 import { FormControl, FormGroup, InputGroup, ControlLabel, HelpBlock } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
-const Input = ({ id, required = true, addonAfter, labelID, type = 'text', meta: { error, touched }, isVisible = true, input }) =>
-  isVisible &&
-    <FormGroup controlId={id} validationState={(touched && error) && 'error'}>
+const Input = ({ id, className, disabled, required = true, addonAfter, labelID, type = 'text', meta: { error, dirty }, isVisible = true, input }) => {
+  return isVisible &&
+    <FormGroup controlId={id} validationState={dirty && error ? 'error' : null}>
       <ControlLabel>
         <FormattedMessage id={labelID}/>{required && ' *'}
       </ControlLabel>
       <InputGroup>
-        <FormControl componentClass="input" type={type} value={input.value} onChange={input.onChange} />
+        <FormControl
+          {...input}
+          disabled={disabled}
+          className={className}
+          componentClass="input"
+          type={type}/>
         <FormControl.Feedback />
         {addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>}
       </InputGroup>
-      {touched && error && <HelpBlock className='error-msg' id={id + '-err'}>{error}</HelpBlock>}
+      {dirty && error && <HelpBlock className='error-msg' id={id + '-err'}>{error}</HelpBlock>}
     </FormGroup>
-
+}
 Input.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   isVisible: PropTypes.bool,

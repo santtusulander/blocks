@@ -47,8 +47,8 @@ const validateIpAddress = (fields, intl) => {
   }
 }
 
-const validate = (fields, props) => {
-  let filteredFields = filterFields(fields)
+const validate = ({ ...asd, value, name, ttl, prio }, props) => {
+  let filteredFields = filterFields({ ...asd, value, name, ttl, prio })
   const { type = '', ...rest } = filteredFields
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
@@ -123,21 +123,17 @@ function mapStateToProps(state, { edit }) {
   const { dnsRecords, dns } = state
   const getRecordById = recordActionCreators.getById
   let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
-  let initialValues = undefined
+  let initialValues = {}
   if (activeRecord && edit) {
     initialValues = getRecordFormInitialValues(activeRecord.toJS())
   }
-  let props = {
+  return {
     activeRecord,
+    initialValues,
     vals: getFormValues('record-edit')(state),
     domain: dns.get('activeDomain'),
     loading: dnsRecords.get('fetching')
   }
-  if (initialValues) {
-    props.initialValues = initialValues
-  }
-
-  return props
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
@@ -162,11 +158,9 @@ function mapDispatchToProps(dispatch, { closeModal }) {
   }
 }
 
-export default injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm({
-      form: 'record-edit',
-      validate
-    })(RecordFormContainer)
-  )
-)
+const form = reduxForm({
+  form: 'record-edit',
+  validate
+})(RecordFormContainer)
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
