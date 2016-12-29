@@ -211,7 +211,7 @@ class UserEditForm extends React.Component {
 
     // Fill the inputs that will be send to API
     phone.onChange(number)
-    phone_number.onChange(number)
+    phone_number.onChange(number.replace(/\D/g,''))
     phone_country_code.onChange(dialCode)
 
     // Validate phone number
@@ -243,7 +243,7 @@ class UserEditForm extends React.Component {
     // ReactTelephoneInput decorates the phone number at render and thus triggers
     // the phone_number.dirty flag. Need to add extra check to see if any actual
     // digits have been changed before showing the Save bar
-    const trimmedPhoneNumber = phone.value.replace(/\D/g,'');
+    const trimmedPhoneNumber = phone.value.replace(/\D/g,'')
     const showSaveBar = (first_name.dirty || middle_name.dirty || last_name.dirty || tfa.dirty ||
                          (phone.dirty && phone.initialValue !== trimmedPhoneNumber)) &&
                          this.state.phoneNumberValidationState === null
