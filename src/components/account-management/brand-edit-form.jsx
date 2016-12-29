@@ -1,10 +1,11 @@
 import React from 'react'
-import { Modal, FormGroup, ControlLabel, FormControl, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
+import { FormGroup, ControlLabel, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm } from 'redux-form'
 
+import FieldFormGroup from '../form/field-form-group'
+import FieldFormGroupSelect from '../form/field-form-group-select'
 import Radio from '../../components/radio'
-import SelectWrapper from '../select-wrapper.jsx'
-import UDNFileInput from '../udn-file-input.jsx'
+
 import { getReduxFormValidationState } from '../../util/helpers'
 
 import './brand-edit-form.scss'
@@ -39,89 +40,131 @@ const BrandEditForm = (props) => {
   const { fields: {brandName, brandLogo, favicon, colorTheme, availability} } = props
 
   return (
+      <SidePanel
+        show={true}
+        title={title}
+        className="brand-edit-form-sidebar"
+        subTitle="PLACEHOLDER"
+        cancel={props.closeModal}>
 
-    <Modal show={true} dialogClassName="brand-edit-form-sidebar">
+        <form onSubmit={props.handleSubmit(props.onSubmit)}>
 
-      <Modal.Header>
-        <h1>{title}</h1>
-        <p>Lorem ipsum</p>
-      </Modal.Header>
+          <Field
+            name="name"
+            id="name-field"
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
+            component={FieldFormGroup}>
+            <FormattedMessage id="portal.brand.edit.brandName.text" />
+          </Field>
 
-      <Modal.Body>
-        <form>
+        <hr/>
 
-          <FormGroup validationState={getReduxFormValidationState(brandName)}>
-            <ControlLabel><FormattedMessage id="portal.brand.edit.brandName.text" /></ControlLabel>
-            <FormControl
-              {...brandName}
-              placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
-            />
-            {brandName.touched && brandName.error &&
-              <HelpBlock className='error-msg errorBrandName'>{brandName.error}</HelpBlock>
-            }
-          </FormGroup>
-
-          <hr/>
-
-          <UDNFileInput
-            {...brandLogo}
+        <div className='udn-file-input'>
+          <Field
+            name="brandLogo"
             id='brand-input'
-            label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
+            type='file'
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
             addonAfter=' ICO, GIF or PNG'
             className='input-file'
-          />
+            component={FieldFormGroup}>
+            <FormattedMessage id="portal.brand.edit.logo.text" />
+          </Field>
+        </div>
 
-          <hr/>
+        <hr/>
 
-          <UDNFileInput
-            {...favicon}
+        <div className='udn-file-input'>
+          <Field
+            name="favicon"
             id='favicon-input'
-            label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
-            addonAfter={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
+            type='file'
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
+            addonAfter={props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
             className='input-file'
+            component={FieldFormGroup}>
+            <FormattedMessage id="portal.brand.edit.favicon.text" />
+          </Field>
+        </div>
+
+        {/* <UDNFileInput
+          {...brandLogo}
+          id='brand-input'
+          label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
+          placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
+        />
+
+
+        <UDNFileInput
+          {...favicon}
+          id='favicon-input'
+          label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
+          placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
+          addonAfter={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
+          className='input-file'
+        /> */}
+
+        <hr/>
+
+          <Field
+            name="colorTheme"
+            id='theme-input'
+            className='input-select'
+            options={colorThemeOptions}
+            component={FieldFormGroupSelect}>
+            <FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/>
+          </Field>
+
+        {/* <div className="form-group">
+          <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
+          <SelectWrapper
+            {... colorTheme}
+            className="input-select"
           />
+        </div> */}
 
-          <hr/>
+        <hr/>
 
-          <div className="form-group">
-            <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
-            <SelectWrapper
-              {... colorTheme}
-              className="input-select"
-              options={colorThemeOptions}
-            />
-          </div>
+        <FormGroup validationState={getReduxFormValidationState(availability)}>
+          <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
 
-          <hr/>
+          <Field
+            name="availability"
+            type="radio"
+            value='private'
+            component={Radio}>
+            <FormattedMessage id="portal.brand.edit.availability.private.label" />
+          </Field>
 
-          <FormGroup validationState={getReduxFormValidationState(availability)}>
-            <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
+          {/* <Radio
+            {...availability}
+            value='private'
+            ><FormattedMessage id="portal.brand.edit.availability.private.label" /></Radio> */}
 
-            <Radio
-              {...availability}
-              value='private'
-            ><FormattedMessage id="portal.brand.edit.availability.private.label" /></Radio>
+          <Field
+            name="availability"
+            type="radio"
+            value='public'
+            component={Radio}>
+            <FormattedMessage id="portal.brand.edit.availability.private.label" />
+          </Field>
 
-            <Radio
-              {...availability}
-              value='public'
-            ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio>
+          {/* <Radio
+            {...availability}
+            value='public'
+            ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio> */}
 
-            {availability.touched && availability.error &&
-              <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>
-            }
-          </FormGroup>
+          {availability.touched && availability.error &&
+            <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>}
+        </FormGroup>
 
-          <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-            <Button disabled={Object.keys(errors).length > 0} bsStyle="primary" onClick={props.onSave} >{actionButtonTitle}</Button>
-          </ButtonToolbar>
-        </form>
+        <ButtonToolbar className="text-right extra-margin-top">
+          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+          <Button disabled={Object.keys(errors).length > 0} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
+        </ButtonToolbar>
+      </form>
+  </SidePanel>
 
-      </Modal.Body>
-    </Modal>
   )
 }
 
@@ -134,8 +177,21 @@ BrandEditForm.propTypes = {
   onSave: React.PropTypes.func
 }
 
-export default reduxForm({
-  form: 'brand-edit',
-  fields: ['brandName', 'brandLogo', 'favicon', 'colorTheme', 'availability'],
-  validate
-})(injectIntl(BrandEditForm))
+function mapDispatchToProps() {
+  return {
+    onSubmit: formData => {
+      console.log(formData);
+    }
+  }
+}
+
+function mapStateToProps() {
+  return {  }
+}
+
+export default connect()(
+  reduxForm({
+    form: 'brand-edit',
+    validate
+  })(injectIntl(BrandEditForm))
+)
