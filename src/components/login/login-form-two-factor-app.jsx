@@ -3,7 +3,7 @@ import { Modal, Row } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
-import { AUTHY_APP_POLLING_INTERVAL, AUTHY_APP_NAME_STR } from '../../constants/login.js'
+import { AUTHY_APP_POLLING_INTERVAL } from '../../constants/login.js'
 
 export class LoginFormTwoFactorApp extends Component {
   constructor(props) {
@@ -60,7 +60,7 @@ export class LoginFormTwoFactorApp extends Component {
               <p>
                 <FormattedMessage id="portal.login.2fa.verificationByAppHint.text"
                                   values={{
-                                    app: <strong>{AUTHY_APP_NAME_STR}</strong>,
+                                    app: <strong><FormattedMessage id="portal.login.2fa.verificationByApp.authyApp.text" /></strong>,
                                     username: <strong>{this.props.userName}</strong>
                                   }} />
               </p>

@@ -15,6 +15,7 @@
   "portal.login.2fa.verificationByAppHint.text": "Waiting for verification. Use {app} to verify login for {username}.",
   "portal.login.2fa.verificationHintReEnter.text": "Please re-enter the code.",
   "portal.login.2fa.verificationHintTryAgain.text": "Please try again.",
+  "portal.login.2fa.verificationByApp.authyApp.text": "Authy App",
   "portal.login.2fa.goBack.text": "Having trouble? Let's try again.",
   "portal.login.2fa.havingTrouble.text": "Having trouble?",
   "portal.login.2fa.havingTrouble.title": "Trouble With Login?",
