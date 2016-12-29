@@ -1,12 +1,12 @@
 import React from 'react'
 import { FormGroup, ControlLabel, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
-import { reduxForm } from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
+import { connect } from 'react-redux'
 
+import SidePanel from '../side-panel'
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import Radio from '../../components/radio'
-
-import { getReduxFormValidationState } from '../../util/helpers'
 
 import './brand-edit-form.scss'
 
@@ -36,21 +36,21 @@ const BrandEditForm = (props) => {
 
   const title = props.edit ? <FormattedMessage id="portal.brand.edit.editBrand.title"/> : <FormattedMessage id="portal.brand.edit.newBrand.title"/>
   const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
-
-  const { fields: {brandName, brandLogo, favicon, colorTheme, availability} } = props
-
+  const onSubmit = (formData) => {
+    console.log('brand data: ', formData);
+  }
   return (
       <SidePanel
         show={true}
         title={title}
         className="brand-edit-form-sidebar"
         subTitle="PLACEHOLDER"
-        cancel={props.closeModal}>
+        cancel={() => {}}>
 
-        <form onSubmit={props.handleSubmit(props.onSubmit)}>
+        <form onSubmit={props.handleSubmit(onSubmit)}>
 
           <Field
-            name="name"
+            name="brandName"
             id="name-field"
             placeholder={props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
             component={FieldFormGroup}>
@@ -125,7 +125,7 @@ const BrandEditForm = (props) => {
 
         <hr/>
 
-        <FormGroup validationState={getReduxFormValidationState(availability)}>
+        <FormGroup>
           <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
 
           <Field
@@ -146,7 +146,7 @@ const BrandEditForm = (props) => {
             type="radio"
             value='public'
             component={Radio}>
-            <FormattedMessage id="portal.brand.edit.availability.private.label" />
+            <FormattedMessage id="portal.brand.edit.availability.public.label" />
           </Field>
 
           {/* <Radio
@@ -154,13 +154,14 @@ const BrandEditForm = (props) => {
             value='public'
             ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio> */}
 
-          {availability.touched && availability.error &&
-            <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>}
-        </FormGroup>
+          {/* Why does a radio button pair get validated?
+            {availability.touched && availability.error &&
+            <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>} */}
 
+          </FormGroup>
         <ButtonToolbar className="text-right extra-margin-top">
           <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-          <Button disabled={Object.keys(errors).length > 0} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
+          <Button disabled={props.submitting || props.invalid} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
         </ButtonToolbar>
       </form>
   </SidePanel>
@@ -172,24 +173,15 @@ BrandEditForm.displayName = 'BrandEditForm'
 
 BrandEditForm.propTypes = {
   edit: React.PropTypes.bool,
-  fields: React.PropTypes.object.isRequired,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func
 }
 
-function mapDispatchToProps() {
-  return {
-    onSubmit: formData => {
-      console.log(formData);
-    }
-  }
-}
-
 function mapStateToProps() {
-  return {  }
+  return { }
 }
 
-export default connect()(
+export default connect(mapStateToProps)(
   reduxForm({
     form: 'brand-edit',
     validate
