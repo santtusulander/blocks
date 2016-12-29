@@ -10,7 +10,7 @@ export class LoginFormTwoFactorApp extends Component {
     super(props);
 
     this.state = {
-      pullingIntervalId: null
+      pollingIntervalId: null
     }
 
     this.startPulling = this.startPulling.bind(this)
@@ -32,14 +32,14 @@ export class LoginFormTwoFactorApp extends Component {
   }
 
   startPulling() {
-    var pullingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
-    this.setState({ pullingIntervalId });
+    var pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
+    this.setState({ pollingIntervalId });
   }
 
   stopPulling() {
-    if (this.state.pullingIntervalId !== null) {
-      clearInterval(this.state.pullingIntervalId);
-      this.setState({ pullingIntervalId: null });
+    if (this.state.pollingIntervalId !== null) {
+      clearInterval(this.state.pollingIntervalId);
+      this.setState({ pollingIntervalId: null });
     }
   }
 
