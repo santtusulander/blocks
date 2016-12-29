@@ -46,7 +46,7 @@ const validateIpAddress = (fields, intl) => {
     errorText: ''
   }
 }
-const validate = ({ type = '', value, name, ttl, prio }, props) => {
+const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, props) => {
   let filteredFields = filterFields({ type, value, name, ttl, prio })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
