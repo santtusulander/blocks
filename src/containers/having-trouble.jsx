@@ -1,3 +1,5 @@
+// UDNP-2218: Having Trouble page not yet supported by back-end
+// In future - we will need to re-init login procedure.
 import React from 'react'
 import {
   Button,
@@ -32,7 +34,6 @@ export class HavingTrouble extends React.Component {
     this.setState({formError: null})
 
     this.props.userActions.startFetching()
-    // In future - we will need to re-init login procedure.
   }
 
   selectNewAuthType(event) {
