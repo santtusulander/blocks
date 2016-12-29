@@ -8,6 +8,7 @@
 $screen-md-min: 1200px;
 $screen-lg-min: 2100px;
 $screen-xl-min: 2500px;
+$sticky-filter-min: 850px;
 
 @mixin sm {
   @media (max-width: #{$screen-md-min - 1}) , only print {
