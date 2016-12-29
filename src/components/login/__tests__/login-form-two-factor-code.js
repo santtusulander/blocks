@@ -8,18 +8,11 @@ import { TWO_FA_CODE_INPUT_FIELD_NAMES,
 
 const NUM_OF_CODE_INPUTS = TWO_FA_CODE_INPUT_FIELD_NAMES.length
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 const subject = (loginErrorStr = '', fetching = false) => {
   const props = {
     onSubmit: jest.fn(),
     onFocus: jest.fn(),
     loginError: loginErrorStr,
-    intl: intlMaker(),
     fetching: fetching
   }
 

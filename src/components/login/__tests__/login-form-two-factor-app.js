@@ -4,17 +4,10 @@ import { shallow } from 'enzyme'
 jest.unmock('../login-form-two-factor-app.jsx')
 import { LoginFormTwoFactorApp } from '../login-form-two-factor-app.jsx'
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 const subject = (loginErrorStr = '') => {
   const props = {
     startAppPulling: jest.fn(),
-    loginError: loginErrorStr,
-    intl: intlMaker()
+    loginError: loginErrorStr
   }
 
   return (

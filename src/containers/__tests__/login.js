@@ -4,12 +4,6 @@ import { shallow } from 'enzyme'
 jest.unmock('../login.jsx')
 import { Login } from '../login.jsx'
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 function userActionsMaker(cbResponse) {
   return {
     startFetching: jest.fn(),
@@ -28,7 +22,6 @@ const subject = () => {
   return (
     <Login
       userActions={userActionsMaker({})}
-      intl={intlMaker()}
       location={{query: {}}}
     />
   )

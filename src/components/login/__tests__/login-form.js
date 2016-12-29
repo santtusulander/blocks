@@ -4,12 +4,6 @@ import { shallow } from 'enzyme'
 jest.unmock('../login-form.jsx')
 import { LoginForm } from '../login-form.jsx'
 
-function intlMaker() {
-  return {
-    formatMessage: jest.fn()
-  }
-}
-
 const onSubmit = jest.fn().mockImplementation(() => {
   return {then: cb => cb()}
 })
@@ -18,10 +12,9 @@ const subject = (loginErrorStr = '') => {
   const props = {
     userName: '',
     onSubmit: onSubmit,
-    sessionExpired: false,
+    sessionExpired: '',
     loginError: loginErrorStr,
     fetching: false,
-    intl: intlMaker(),
     location: {query: {}}
   }
 
