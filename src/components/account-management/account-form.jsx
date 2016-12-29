@@ -175,6 +175,7 @@ class AccountForm extends React.Component {
   }
 }
 
+AccountForm.displayName = "AccountForm"
 AccountForm.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   fetchServiceInfo: React.PropTypes.func,

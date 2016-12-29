@@ -26,6 +26,7 @@ function FilterRecordType ({ recordType = '', toggleRecordType }) {
   )
 }
 
+FilterRecordType.displayName = 'FilterRecordType'
 FilterRecordType.propTypes = {
   recordType: React.PropTypes.string,
   toggleRecordType: React.PropTypes.func

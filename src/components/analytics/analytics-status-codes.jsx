@@ -68,6 +68,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   )
 }
 
+StatusCodes.displayName = "StatusCodes"
 StatusCodes.propTypes = {
   errorCodesOnly: PropTypes.bool,
   onChange: PropTypes.func,

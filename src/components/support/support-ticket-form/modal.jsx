@@ -34,6 +34,7 @@ class SupportTicketFormModal extends React.Component {
   }
 }
 
+SupportTicketFormModal.displayName = "SupportTicketFormModal"
 SupportTicketFormModal.propTypes = {
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -46,4 +47,3 @@ SupportTicketFormModal.defaultProps = {
 }
 
 export default SupportTicketFormModal
-

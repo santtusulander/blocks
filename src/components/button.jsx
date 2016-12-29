@@ -9,6 +9,8 @@ function ButtonWrapper(props) {
 }
 
 const bsStyles = ['primary', 'success', 'warning', 'info', 'danger', 'link']
+
+ButtonWrapper.displayName = "ButtonWrapper"
 ButtonWrapper.propTypes = {
   addNew: PropTypes.bool,
   bsStyle: PropTypes.oneOf(bsStyles),
