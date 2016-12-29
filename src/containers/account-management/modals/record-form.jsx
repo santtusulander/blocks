@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { reduxForm, getFormValues } from 'redux-form'
-import { Modal } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
 
 import RecordForm from '../../../components/account-management/record-form'
+import SidePanel from '../../../components/side-panel'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidIPv4Address, isValidIPv6Address, isInt } from '../../../util/validators'
@@ -67,7 +67,7 @@ const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, pro
       errorText: ipAddressConfig.errorText
     }
   }
-  return checkForErrors(filteredFields, conditions)
+  return checkForErrors({ type, ...filteredFields }, conditions)
 }
 
 const RecordFormContainer = props => {
@@ -92,16 +92,17 @@ const RecordFormContainer = props => {
     cancel: closeModal,
     ...formProps
   }
+  const title = edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />
+  const subTitle = edit && vals.name
   return (
-    <Modal show={true} dialogClassName="dns-edit-form-sidebar">
-      <Modal.Header>
-        <h1>{edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />}</h1>
-        {edit && <p>{vals.name}</p>}
-      </Modal.Header>
-      <Modal.Body>
-        <RecordForm {...recordFormProps}/>
-      </Modal.Body>
-    </Modal>
+    <SidePanel
+      show={true}
+      title={title}
+      className="dns-edit-form-sidebar"
+      subTitle={subTitle}
+      cancel={closeModal}>
+      <RecordForm {...recordFormProps}/>
+    </SidePanel>
   )
 }
 
