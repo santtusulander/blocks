@@ -12,71 +12,55 @@ import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
 
-const RecordForm = ({ domain, submitting, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
+const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Field
         name="type"
-        component={input =>
-          <FormGroupSelect
-            {...input}
-            disabled={edit}
-            options={recordTypes.map(type => [type, type])}
-            label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}/>
-      }/>
+        disabled={edit}
+        options={recordTypes.map(type => [type, type])}
+        label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}
+        component={FormGroupSelect}/>
       <Field
         name="name"
-        component={input =>
-          <Input
-            {...input}
-            id="name-field"
-            isVisible={shouldShowField('name')}
-            labelID="portal.account.recordForm.hostName.label"
-            disabled={edit}
-            placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
-            className="input-narrow host-name-input"
-            addonAfter={`.${domain}`}/>
-      }/>
+        id="name-field"
+        isVisible={shouldShowField('name')}
+        labelID="portal.account.recordForm.hostName.label"
+        disabled={edit}
+        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
+        className="input-narrow host-name-input"
+        addonAfter={`.${domain}`}
+        component={Input}/>
       <Field
         name="value"
-        component={input =>
-          <Input
-            {...input}
-            id="value-field"
-            isVisible={shouldShowField('value')}
-            labelID="portal.account.recordForm.address.label"
-            disabled={edit}
-            placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}/>
-        }/>
+        id="value-field"
+        isVisible={shouldShowField('value')}
+        labelID="portal.account.recordForm.address.label"
+        disabled={edit}
+        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}
+        component={Input}/>
       <Field
         name="prio"
-        component={input =>
-          <Input
-            {...input}
-            id="prio-field"
-            type="number"
-            isVisible={shouldShowField('prio')}
-            labelID="portal.account.recordForm.prio.label"
-            disabled={edit}
-            required={false}
-            className='input-narrow priority-input'
-            placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}/>
-      }/>
+        id="prio-field"
+        type="number"
+        isVisible={shouldShowField('prio')}
+        labelID="portal.account.recordForm.prio.label"
+        disabled={edit}
+        required={false}
+        className='input-narrow priority-input'
+        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}
+        component={Input}/>
       {shouldShowField('ttl') && [
         <hr key={0} />,
         <Field
           name="ttl"
-          component={input =>
-            <Input
-              {...input}
-              key={1}
-              id="ttl-field"
-              type="number"
-              labelID="portal.account.recordForm.ttl.label"
-              className='input-narrow ttl-value-input'
-              placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
-              addonAfter="seconds"/>
-        }/>
+          key={1}
+          id="ttl-field"
+          labelID="portal.account.recordForm.ttl.label"
+          className='input-narrow ttl-value-input'
+          placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
+          addonAfter="seconds"
+          component={Input}/>
       ]}
       <ButtonToolbar className="text-right extra-margin-top">
         <Button
