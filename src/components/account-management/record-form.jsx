@@ -3,8 +3,9 @@ import { ButtonToolbar, Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Field } from 'redux-form'
 
-import Input from './dns-form-input'
 import FormGroupSelect from '../form/field-form-group-select'
+import Input from '../form/field-form-group'
+//import Input from './dns-form-input'
 
 import keyStrokeSupport from '../../decorators/key-stroke-decorator'
 
@@ -21,35 +22,37 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
         options={recordTypes.map(type => [type, type])}
         label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}
         component={FormGroupSelect}/>
-      <Field
-        name="name"
-        id="name-field"
-        isVisible={shouldShowField('name')}
-        labelID="portal.account.recordForm.hostName.label"
-        disabled={edit}
-        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
-        className="input-narrow host-name-input"
-        addonAfter={`.${domain}`}
-        component={Input}/>
-      <Field
-        name="value"
-        id="value-field"
-        isVisible={shouldShowField('value')}
-        labelID="portal.account.recordForm.address.label"
-        disabled={edit}
-        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}
-        component={Input}/>
-      <Field
-        name="prio"
-        id="prio-field"
-        type="number"
-        isVisible={shouldShowField('prio')}
-        labelID="portal.account.recordForm.prio.label"
-        disabled={edit}
-        required={false}
-        className='input-narrow priority-input'
-        placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}
-        component={Input}/>
+      {shouldShowField('name') &&
+        <Field
+          name="name"
+          //id="name-field"
+          disabled={edit}
+          placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
+          className="input-narrow host-name-input"
+          addonAfter={`.${domain}`}
+          component={Input}>
+          <FormattedMessage id="portal.account.recordForm.hostName.label" />
+        </Field>}
+      {shouldShowField('value') &&
+        <Field
+          name="value"
+          id="value-field"
+          disabled={edit}
+          placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}
+          component={Input}>
+          <FormattedMessage id="portal.account.recordForm.address.label" />
+        </Field>}
+      {shouldShowField('prio') &&
+        <Field
+          name="prio"
+          id="prio-field"
+          disabled={edit}
+          required={false}
+          className='input-narrow priority-input'
+          placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}
+          component={Input}>
+          <FormattedMessage id="portal.account.recordForm.prio.label" />
+        </Field>}
       {shouldShowField('ttl') && [
         <hr key={0} />,
         <Field
@@ -60,7 +63,9 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
           className='input-narrow ttl-value-input'
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
           addonAfter="seconds"
-          component={Input}/>
+          component={Input}>
+          <FormattedMessage id="portal.account.recordForm.ttl.label" />
+        </Field>
       ]}
       <ButtonToolbar className="text-right extra-margin-top">
         <Button
