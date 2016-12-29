@@ -33,7 +33,7 @@ export default function(WrappedModal) {
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 13:
-          if (this.props.submit) {
+          if (this.props.onSubmit) {
             e.preventDefault()
             this.submit()
           }
@@ -54,7 +54,7 @@ export default function(WrappedModal) {
   KeyStrokeSupport.propTypes = {
     cancel: PropTypes.func.isRequired,
     invalid: PropTypes.bool,
-    submit: PropTypes.func,
+    onSubmit: PropTypes.func,
     verifyDelete: PropTypes.bool
   }
 

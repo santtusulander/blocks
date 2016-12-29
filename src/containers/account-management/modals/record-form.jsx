@@ -46,22 +46,20 @@ const validateIpAddress = (fields, intl) => {
     errorText: ''
   }
 }
-
-const validate = ({ ...asd, value, name, ttl, prio }, props) => {
-  let filteredFields = filterFields({ ...asd, value, name, ttl, prio })
-  const { type = '', ...rest } = filteredFields
+const validate = ({ type = '', value, name, ttl, prio }, props) => {
+  let filteredFields = filterFields({ type, value, name, ttl, prio })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
-      condition: !isInt(filteredFields.prio),
+      condition: !isInt(filteredFields.prio || ''),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !isInt(filteredFields.ttl),
+      condition: !isInt(filteredFields.ttl || ''),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
     },
     name: {
-      condition: !filteredFields.name,
+      condition: !filteredFields.name || '',
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
     },
     value: {
@@ -69,7 +67,7 @@ const validate = ({ ...asd, value, name, ttl, prio }, props) => {
       errorText: ipAddressConfig.errorText
     }
   }
-  return checkForErrors({ type, ...rest }, conditions)
+  return checkForErrors(filteredFields, conditions)
 }
 
 const RecordFormContainer = props => {
