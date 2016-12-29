@@ -124,6 +124,10 @@ The following plugins can be helpful as well:
         <strong>source maps:</strong> <code>$ npm start -- --source-map</code>
         <br>
         <small><em>slower build that generates source maps</em></small>
+        <br>
+        <strong>no hot module replacement:</strong> <code>$ npm start -- --no-hmr</code>
+        <br>
+        <small><em>needed to use the app in IE 11</em></small>
       </td>
     </tr>
     <tr>
