@@ -7,8 +7,6 @@ import FormGroupSelect from '../form/field-form-group-select'
 import Input from '../form/field-form-group'
 //import Input from './dns-form-input'
 
-import keyStrokeSupport from '../../decorators/key-stroke-decorator'
-
 import recordTypes from '../../constants/dns-record-types'
 
 import './record-form.scss'
@@ -97,4 +95,4 @@ RecordForm.propTypes = {
   shouldShowField: PropTypes.func
 }
 
-export default injectIntl(keyStrokeSupport(RecordForm))
+export default injectIntl(RecordForm)

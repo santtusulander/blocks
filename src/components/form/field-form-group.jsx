@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react-bootstrap';
 
-const FieldFormGroup  = ({ addonAfter, input, placeholder, type, meta: { dirty, error }, className, children, required = true }) => {
+const FieldFormGroup  = ({ addonAfter, input, placeholder, type, meta: { dirty, error }, className, children, disabled, required = true }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
 
   return (
@@ -10,6 +10,7 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, meta: { dirty, 
 
       <InputGroup>
         <FormControl
+          disabled={disabled}
           className={className}
           componentClass={componentClass}
           type={type}
@@ -38,6 +39,7 @@ FieldFormGroup.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   children: PropTypes.object,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
   meta: PropTypes.object,
   placeholder: PropTypes.string,
