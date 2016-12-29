@@ -33,10 +33,19 @@ function makeFakeFields() {
     new_password: {
       value: "test"
     },
+    phone: {
+      value: "test"
+    },
+    phone_country_code: {
+      value: "test"
+    },
     phone_number: {
       value: "test"
     },
     timezon: {
+      value: "test"
+    },
+    tfa: {
       value: "test"
     }
   }
@@ -79,8 +88,8 @@ describe('UserEditForm', () => {
      expect(subject().find('form').length).toBe(1)
    })
 
-   it('should have 3 divs inside the form', () => {
-     expect(subject().find('form').find('div.form-group').length).toBe(3)
+   it('should have 4 divs inside the form', () => {
+     expect(subject().find('form').find('div.form-group').length).toBe(4)
    })
 
 })
