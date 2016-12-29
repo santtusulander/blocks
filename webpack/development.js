@@ -16,15 +16,8 @@ const mapboxAccessToken = environment.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoiZXJpY3N
 const useSourceMap = () => (process.argv.indexOf('--source-map') !== -1)
 const useHMR = () => (process.argv.indexOf('--no-hmr') === -1)
 
-const HotModuleReplacementPlugin = useHMR()
-  ? [new webpack.HotModuleReplacementPlugin()]
-  : []
-var development = Object.assign({}, {
-  // debug: true,
-  devtool: useSourceMap() ? 'eval-source-map' : 'eval',
-  plugins: [
-    ...HotModuleReplacementPlugin,
-    new webpack.DefinePlugin(Object.assign({}, {
+var plugins = [
+  new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
       'process.env.PUBLIC_URL': `"${publicUrl}"`,
       'ANALYTICS_BASE_URI_DEVELOPMENT': `"${publicUrl}analytics"`,
@@ -40,10 +33,16 @@ var development = Object.assign({}, {
     new WebpackNotifierPlugin({
       title: `UDN portal v.${require('../package.json').version}`
     })
-  ]
-  .concat(
-    helpers.staticAssets
-  )
+].concat(helpers.staticAssets)
+
+if (useHMR()) {
+  plugins.unshift(new webpack.HotModuleReplacementPlugin())
+}
+
+var development = Object.assign({}, {
+  // debug: true,
+  devtool: useSourceMap() ? 'eval-source-map' : 'eval',
+  plugins
 }, require('./config'));
 
 if (useHMR()) {
