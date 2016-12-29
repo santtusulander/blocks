@@ -60,7 +60,10 @@ export function updateFailure(state) {
   })
 }
 
-export function updatePasswordSuccess(state) {
+export function updatePasswordSuccess(state, action) {
+  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+  axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
+
   return state.merge({
     fetching: false
   })
@@ -401,7 +404,15 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
       'Content-Type': 'application/json'
     }
   })
-    .then(parseResponseData)
+  .then((res) => {
+    if (res) {
+      return {
+        token: res.data.token
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  })
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
