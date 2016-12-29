@@ -1,20 +1,27 @@
 import React, { PropTypes } from 'react';
-import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
+import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 import Select from '../select.jsx'
 
-const FieldFormGroupSelect  = ({ input, options, numericValues, className, label, disabled, meta: { dirty, touched, error }, children }) => {
+const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { dirty, error }, children }) => {
   return (
-    <FormGroup className controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
       <ControlLabel>{children}</ControlLabel>
 
-      <Select
-        numericValues={numericValues}
-        disabled={disabled || false}
-        className={className}
-        onSelect={e => input.onChange(e)}
-        options={options}
-        value={input.value} />
+      <InputGroup>
+        <Select
+          numericValues={numericValues}
+          disabled={disabled || false}
+          className={className}
+          onSelect={e => input.onChange(e)}
+          options={options}
+          value={input.value} />
 
+          { addonAfter &&
+            <InputGroup.Addon>
+              {addonAfter}
+            </InputGroup.Addon>
+          }
+        </InputGroup>
       {error && dirty &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
@@ -23,13 +30,14 @@ const FieldFormGroupSelect  = ({ input, options, numericValues, className, label
 }
 
 FieldFormGroupSelect.propTypes = {
+  addonAfter: PropTypes.node,
   children: PropTypes.object,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
   meta: PropTypes.object,
-  placeholder: PropTypes.string,
-  type: PropTypes.string
-
+  numericValues: PropTypes.bool,
+  options: PropTypes.array
 }
 
 export default FieldFormGroupSelect
