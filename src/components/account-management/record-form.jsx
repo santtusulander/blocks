@@ -18,8 +18,9 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
         name="type"
         disabled={edit}
         options={recordTypes.map(type => [type, type])}
-        label={intl.formatMessage({id: 'portal.account.recordForm.selectRecordType.label'})}
-        component={FormGroupSelect}/>
+        component={FormGroupSelect}>
+        <FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>
+      </Field>
       {shouldShowField('name') &&
         <Field
           name="name"
@@ -88,11 +89,12 @@ RecordForm.propTypes = {
   cancel: PropTypes.func,
   domain: PropTypes.string,
   edit: PropTypes.bool,
+  handleSubmit: PropTypes.func,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
-  loading: PropTypes.bool,
   onSubmit: PropTypes.func,
-  shouldShowField: PropTypes.func
+  shouldShowField: PropTypes.func,
+  submitting: PropTypes.bool
 }
 
 export default injectIntl(RecordForm)

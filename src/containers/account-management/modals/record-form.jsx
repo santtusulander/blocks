@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { reduxForm, getFormValues } from 'redux-form'
+import { reduxForm, formValueSelector } from 'redux-form'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
@@ -51,15 +51,15 @@ const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, pro
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
-      condition: !isInt(filteredFields.prio || ''),
+      condition: !isInt(filteredFields.prio),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
-      condition: !isInt(filteredFields.ttl || ''),
+      condition: !isInt(filteredFields.ttl),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
     },
     name: {
-      condition: !filteredFields.name || '',
+      condition: !filteredFields.name,
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
     },
     value: {
@@ -70,14 +70,13 @@ const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, pro
   return checkForErrors({ type, ...filteredFields }, conditions)
 }
 
-const RecordFormContainer = props => {
-  const { domain, edit, updateRecord, addRecord, closeModal, vals = {}, activeRecord, ...formProps } = props
-  const filteredValues = filterFields(vals)
+const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal, recordType, recordName, activeRecord, ...formProps }) => {
   const recordFormProps = {
     domain,
     edit,
-    shouldShowField: isShown(vals.type),
-    onSubmit: () => {
+    shouldShowField: isShown(recordType),
+    onSubmit: values => {
+      const filteredValues = filterFields(values)
       let { ttl, prio } = filteredValues
       if (ttl) {
         filteredValues.ttl = Number(ttl)
@@ -93,7 +92,7 @@ const RecordFormContainer = props => {
     ...formProps
   }
   const title = edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />
-  const subTitle = edit && vals.name
+  const subTitle = edit && recordName
   return (
     <SidePanel
       show={true}
@@ -113,14 +112,16 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  updateRecord: PropTypes.func,
-  vals: PropTypes.object
+  recordName: PropTypes.string,
+  recordType: PropTypes.string,
+  updateRecord: PropTypes.func
 
 }
 
 function mapStateToProps(state, { edit }) {
   const { dnsRecords, dns } = state
   const getRecordById = recordActionCreators.getById
+  const getField = formValueSelector('record-edit')
   let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = {}
   if (activeRecord && edit) {
@@ -129,7 +130,8 @@ function mapStateToProps(state, { edit }) {
   return {
     activeRecord,
     initialValues,
-    vals: getFormValues('record-edit')(state),
+    recordName: getField(state, 'name'),
+    recordType: getField(state, 'type'),
     domain: dns.get('activeDomain'),
     loading: dnsRecords.get('fetching')
   }
