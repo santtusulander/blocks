@@ -1,3 +1,4 @@
+export const AUTHY_APP_NAME_STR = "Authy App"
 export const AUTHY_APP_POLLING_INTERVAL = 5000;
 export const TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH = 1;
 export const TWO_FA_CODE_INPUT_FIELD_NAMES = [
