@@ -93,7 +93,7 @@ class UserEditForm extends React.Component {
 
         <div className="user-form__name">
           <Row>
-            <Col sm={6}>
+            <Col sm={5}>
               <ControlLabel>
                 <FormattedMessage id="portal.user.edit.firstName.text"/>
               </ControlLabel>
@@ -150,7 +150,9 @@ class UserEditForm extends React.Component {
         <hr/>
 
         <div className='form-group'>
-          <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
+          <div>
+            <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
+          </div>
           <SelectWrapper
             {...role}
             numericValues={true}
