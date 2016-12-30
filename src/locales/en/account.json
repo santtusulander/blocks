@@ -72,5 +72,21 @@
   "portal.account.soaForm.nameServer.label": "Primary Nameserver",
   "portal.account.soaForm.personResponsible.label": "Responsible Person Mailbox",
   "portal.account.soaForm.zoneSerialNumber.label": "Serial # of Zone",
-  "portal.account.soaForm.refresh.label": "Refresh"
+  "portal.account.soaForm.refresh.label": "Refresh",
+
+  "portal.account.roleEdit.roleNameRequired.text": "Role name is required",
+  "portal.account.roleEdit.title": "Edit Role",
+  "portal.account.roleEdit.disclaimer.text": "Edit Role",
+  "portal.account.roleEdit.enterRoleName.text": "Enter Role Name",
+  "portal.account.roleEdit.name.text": "Name",
+  "portal.account.roleEdit.permissions.label": "Permissions",
+  "portal.account.roleEdit.permission.title": "PERMISSION",
+  "portal.account.roleEdit.roleAvailableTo.title": "Role Available To",
+
+  "portal.role.list.search.placeholder": "Search",
+  "portal.role.list.header.role.title": "Role",
+  "portal.role.list.header.permissions.title": "Permissions",
+  "portal.role.list.header.assignedTo.title": "Assigned To",
+  "portal.role.list.search.noResults.text": "No roles found",
+  "portal.role.list.search.noResultsWithTerm.text": "No roles found with the search term {searchTerm}"
 }
