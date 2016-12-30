@@ -46,6 +46,8 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
   )
 }
 
+TrafficByCountryTable.displayName = 'TrafficByCountryTable'
+
 TrafficByCountryTable.propTypes = {
   byCountry: PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,

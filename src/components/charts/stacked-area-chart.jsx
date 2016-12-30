@@ -133,10 +133,11 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
   )
 }
 
+StackedAreaChart.displayName = 'StackedAreaChart'
+
 StackedAreaChart.propTypes = {
   areas: PropTypes.array,
   data: PropTypes.array,
-  dataKeys: PropTypes.array,
   valueFormatter: PropTypes.func
 }
 
