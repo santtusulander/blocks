@@ -143,8 +143,7 @@ class RoleEditForm extends React.Component {
 
 RoleEditForm.propTypes = {
   // roles: PropTypes.object,
-  editPermsUI:PropTypes.instanceOf(Immutable.List),
-  editRole: PropTypes.instanceOf(Immutable.Map),
+  editPermsUI:PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
