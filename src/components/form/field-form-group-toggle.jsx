@@ -21,11 +21,10 @@ FieldFormGroupToggle.propTypes = {
   children: PropTypes.object,
   className: PropTypes.string,
   input: PropTypes.object,
-  meta: PropTypes.object,
   offText: PropTypes.string,
   onText: PropTypes.string,
   onToggle: PropTypes.func,
-  readOnly: PropTypes.bool
+  readonly: PropTypes.bool
 }
 
 export default FieldFormGroupToggle
