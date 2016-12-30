@@ -188,8 +188,15 @@ class UserEditForm extends React.Component {
     if (this.props.fields.tfa_toggle.value) {
       this.props.dispatch(change('user-edit-form', 'tfa', ''))
     } else {
-      this.props.dispatch(change('user-edit-form', 'tfa',
-                                 TWO_FA_DEFAULT_AUTH_METHOD))
+      if (this.props.fields.tfa.initialValue === '') {
+        // When user enabling 2FA first time, set default method
+        this.props.dispatch(change('user-edit-form', 'tfa',
+                                   TWO_FA_DEFAULT_AUTH_METHOD))
+      } else {
+        // When user just playing with toggle, need to keep initial method
+        this.props.dispatch(change('user-edit-form', 'tfa',
+                                   this.props.fields.tfa.initialValue))
+      }
     }
 
     this.props.dispatch(change('user-edit-form', 'tfa_toggle',
