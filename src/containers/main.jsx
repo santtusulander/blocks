@@ -12,7 +12,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 
-import Header from '../components/header/header'
+import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
 
