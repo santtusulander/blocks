@@ -143,6 +143,7 @@ export const SoaEditForm = props => {
   )
 }
 
+SoaEditForm.displayName = "SoaEditForm"
 SoaEditForm.propTypes = {
   activeDomain: PropTypes.instanceOf(Map),
   fields: PropTypes.object,

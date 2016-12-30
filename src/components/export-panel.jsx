@@ -42,6 +42,7 @@ const ExportPanel = (props) => {
 
 export default injectIntl(ExportPanel)
 
+ExportPanel.displayName = "ExportPanel"
 ExportPanel.propTypes = {
   exportType: React.PropTypes.string,
   intl: React.PropTypes.object,

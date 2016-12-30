@@ -12,6 +12,7 @@ const IconArrowLgDown = (props) => {
   )
 }
 
+IconArrowLgDown.displayName = "IconArrowLgDown"
 IconArrowLgDown.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

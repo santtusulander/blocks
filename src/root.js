@@ -19,6 +19,7 @@ const Root = ({ store }) =>
     </Provider>
   </IntlProvider>
 
+Root.displayName = "Root"
 Root.propTypes = {
   store: PropTypes.object.isRequired
 }

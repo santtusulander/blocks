@@ -87,7 +87,7 @@ class UserEditForm extends React.Component {
     if (response.error) {
       this.setState({
         currentPasswordValid: !response.error,
-        currentPasswordErrorStr: response.payload.data.message
+        currentPasswordErrorStr: response.payload.message
       })
       this.props.dispatch(change('user-edit-form', 'current_password', ''))
     } else {
@@ -350,6 +350,7 @@ class UserEditForm extends React.Component {
   }
 }
 
+UserEditForm.displayName = "UserEditForm"
 UserEditForm.propTypes = {
   dispatch: PropTypes.func,
   fields: PropTypes.object,

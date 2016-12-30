@@ -182,6 +182,7 @@ class UserEditForm extends React.Component {
   }
 }
 
+UserEditForm.displayName = "UserEditForm"
 UserEditForm.propTypes = {
   fields: PropTypes.object,
   // groupOptions: PropTypes.array,
