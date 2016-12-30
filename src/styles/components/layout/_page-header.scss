@@ -147,7 +147,7 @@ $details-item-margin: rem(6px);
 // Sticky analytics-filters
 // ==================
 body.sticky-filters {
-  @media (min-width: #{$sticky-filter-min}) {
+  @media (min-height: #{$sticky-filter-min}) {
     .analytics-container {
       padding-top: 175px;
 
