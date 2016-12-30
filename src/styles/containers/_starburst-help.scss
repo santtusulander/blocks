@@ -20,7 +20,8 @@
   background-size: 100%;
 
   .light-theme & {
-    background: $white;
+    background-color: $white;
+    background-image: none;
   }
 }
 
