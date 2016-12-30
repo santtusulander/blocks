@@ -210,9 +210,11 @@ class UserEditForm extends React.Component {
       }
     } = this.props
 
-    // Fill the inputs that will be send to API
+    const trimmedPhoneNumber = number.replace(/\D/g, '').replace(dialCode, '')
+
     phone.onChange(number)
-    phone_number.onChange(number.replace(/\D/g,''))
+    // Fill the inputs that will be send to API
+    phone_number.onChange(trimmedPhoneNumber)
     phone_country_code.onChange(dialCode)
 
     // Validate phone number
