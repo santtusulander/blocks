@@ -23,6 +23,8 @@ class SupportTicketAttachments extends React.Component {
   }
 }
 
+SupportTicketAttachments.displayName = "SupportTicketAttachments"
+
 SupportTicketAttachments.propTypes = {
   attachments: PropTypes.instanceOf(List),
   className: PropTypes.string
@@ -33,4 +35,3 @@ SupportTicketAttachments.defaultProps = {
 }
 
 export default SupportTicketAttachments
-

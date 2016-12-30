@@ -177,6 +177,7 @@ class SupportTicketModal extends React.Component {
   }
 }
 
+SupportTicketModal.displayName = "SupportTicketModal"
 SupportTicketModal.propTypes = {
   onCancel: PropTypes.func,
   onEdit: PropTypes.func,

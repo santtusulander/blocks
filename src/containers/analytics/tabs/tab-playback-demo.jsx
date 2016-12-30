@@ -11,6 +11,7 @@ class AnalyticsTabPlaybackDemo extends React.Component {
   }
 }
 
+AnalyticsTabPlaybackDemo.displayName = "AnalyticsTabPlaybackDemo"
 AnalyticsTabPlaybackDemo.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map)
 }

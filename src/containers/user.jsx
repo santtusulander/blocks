@@ -62,15 +62,11 @@ class User extends React.Component {
       savingPassword: this.props.userFetching
     })
 
-    // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
     const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
 
     updatePasswordPromise.then((response) => {
       if (!response.error) {
-        this.props.userActions.logIn(
-          this.props.currentUser.get('email'),
-          password.new_password
-        ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
+        this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
       }
 
       editFormCallback(response)

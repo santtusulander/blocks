@@ -196,6 +196,8 @@ const AnalyticsViewControl = (props) => {
   )
 }
 
+AnalyticsViewControl.displayName = "AnalyticsViewControl"
+
 AnalyticsViewControl.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),

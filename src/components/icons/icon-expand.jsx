@@ -11,6 +11,7 @@ const IconExpand = (props) => {
   )
 }
 
+IconExpand.displayName = "IconExpand"
 IconExpand.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

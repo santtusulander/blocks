@@ -64,6 +64,7 @@ class AnalyticsExport extends React.Component {
   }
 }
 
+AnalyticsExport.displayName = "AnalyticsExport"
 AnalyticsExport.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeGroup: PropTypes.instanceOf(Map),

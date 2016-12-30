@@ -22,6 +22,7 @@ function Legend({dataSets, values}) {
   )
 }
 
+Legend.displayName = 'Legend'
 Legend.propTypes = {
   dataSets: React.PropTypes.array,
   values: React.PropTypes.array
