@@ -498,7 +498,9 @@ class UserEditForm extends React.Component {
                   />
                 </Col>
                 <Col xs={4}>
+                  <div className="select-box-tooltip">
                     { this.renderTwoFAMethodsTooltips(tfa.value) }
+                  </div>
                 </Col>
               </Row>
             </div>
