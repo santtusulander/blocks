@@ -42,6 +42,8 @@ const TokenAuthList = ({rules}) => {
   )
 }
 
+TokenAuthList.displayName = 'TokenAuthList'
+
 TokenAuthList.propTypes = {
   rules: PropTypes.array
 }
