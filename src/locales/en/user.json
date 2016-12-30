@@ -9,7 +9,7 @@
   "portal.user.edit.passwordDoNotMatch.text": "Passwords do not match",
   "portal.user.edit.roleRequired.text": "Role is required",
   "portal.user.edit.emailRequired.text": "Email is required",
-  "portal.user.edit.phoneInvalid.text": "Two Factor Authentication requires valid phone number",
+  "portal.user.edit.phoneInvalid.text": "Please enter valid phone number",
   "portal.user.edit.currentPasswordRequired.text": "Current password is required",
   "portal.user.edit.email.text": "Email",
   "portal.user.edit.firstName.text": "First Name",
