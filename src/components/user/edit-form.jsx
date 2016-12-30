@@ -478,13 +478,13 @@ class UserEditForm extends React.Component {
                     <FormattedMessage id="portal.user.edit.2FA.method.text" />
                   </p>
                 </Col>
-                <Col xs={5}>
+                <Col xs={1}>
                   <SelectWrapper {...tfa} disabled={!this.state.isTFAEnabled}
                                  options={this.tfaMethodOptions()}
                   />
-                  <span className="select-box-tooltip">
+                </Col>
+                <Col xs={4}>
                     { twoFAMethodsTooltip(tfa.value) }
-                  </span>
                 </Col>
               </Row>
             </div>
