@@ -199,6 +199,9 @@ class UserEditForm extends React.Component {
   }
 
   validatePhoneNumber(number) {
+    // UDNP-2227: Number given to validator should always be with + symbol
+    number = number.substr(0, 1) === "+" ? number : ("+" + number)
+
     const isPhoneValid = phoneValidator(number).length
     if (isPhoneValid === 0) {
       this.setState({
