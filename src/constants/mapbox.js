@@ -3,3 +3,4 @@ export const MAPBOX_LIGHT_THEME = 'mapbox://styles/ericssonudn/cix9n86ve00b32qp3
 export const MAPBOX_ZOOM_MIN = 1
 export const MAPBOX_ZOOM_MAX = 13
 export const MAPBOX_SCROLL_TIMEOUT = 500
+export const MAPBOX_MAX_CITIES_FETCHED = 50
