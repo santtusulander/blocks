@@ -45,6 +45,9 @@ function makeFakeFields() {
     timezon: {
       value: "test"
     },
+    tfa_toggle: {
+      value: "tfa_toggle"
+    },
     tfa: {
       value: "test"
     }
