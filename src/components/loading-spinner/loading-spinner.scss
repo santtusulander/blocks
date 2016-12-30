@@ -7,8 +7,21 @@
   background: url('../../assets/img/loading-spinner-dark.gif');
 }
 
+.spinner-content-sm {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  margin: 42px auto;
+
+  background: url('../../assets/img/loading-spinner-dark-sm.gif');
+}
+
 .light-theme {
   .spinner-content {
     background: url('../../assets/img/loading-spinner-light.gif');
+  }
+
+  .spinner-content-sm {
+    background: url('../../assets/img/loading-spinner-light-sm.gif');
   }
 }

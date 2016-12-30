@@ -5493,6 +5493,10 @@ pbkdf2-compat@2.0.1:
 performance-now@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-0.2.0.tgz#33ef30c5c77d4ea21c5a53869d91b56d8f2555e5"
+  
+phone@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/phone/-/phone-1.0.9.tgz#33c24386c577ddca2e48c1d435eb2f99c44405db"
 
 pify@^2.0.0:
   version "2.3.0"
