@@ -209,6 +209,29 @@ class ConfigurationDetails extends React.Component {
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
+                <FormattedMessage id="portal.configuration.details.originTestPath.text"/>
+              </ControlLabel>
+            </Col>
+            <Col xs={9}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  disabled={readOnly}
+                  value={this.props.edgeConfiguration.get('origin_test_path')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'origin_test_path']
+                  )}
+                />
+                <InputGroup.Addon />
+              </InputGroup>
+            </Col>
+          </FormGroup>
+        </Row>
+
+        <Row>
+          <FormGroup>
+            <Col xs={3}>
+              <ControlLabel>
                 <FormattedMessage id="portal.configuration.details.publishedHostnameValue.text"/>
               </ControlLabel>
             </Col>
