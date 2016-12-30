@@ -17,9 +17,10 @@ class AnalysisURLReport extends React.Component {
 
     this.state = {
       chartWidth: 100,
-      dataKey: "bytes",
+      dataKey: 'bytes',
       search: '',
-      xAxisCustomFormat: formatBytes
+      xAxisCustomFormat: formatBytes,
+      topURLs: getTopURLs(props.urlMetrics, 'bytes')
     }
 
     this.changeSearch = this.changeSearch.bind(this)
@@ -27,10 +28,6 @@ class AnalysisURLReport extends React.Component {
     this.selectDataType = this.selectDataType.bind(this)
 
     this.measureContainersTimeout = null
-    this.topURLs = Immutable.List()
-  }
-  componentWillMount() {
-    this.topURLs = getTopURLs(this.props.urlMetrics, this.state.dataKey)
   }
   componentDidMount() {
     this.measureContainers()
@@ -38,8 +35,8 @@ class AnalysisURLReport extends React.Component {
     this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
     window.addEventListener('resize', this.measureContainers)
   }
-  componentWillUpdate(nextProps, nextState) {
-    this.topURLs = getTopURLs(nextProps.urlMetrics, nextState.dataKey)
+  componentWillReceiveProps(nextProps) {
+    this.setState({topURLs: getTopURLs(nextProps.urlMetrics, this.state.dataKey)})
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.measureContainers)
@@ -58,14 +55,15 @@ class AnalysisURLReport extends React.Component {
   selectDataType(event) {
     this.setState({
       dataKey: event.target.value,
-      xAxisCustomFormat: event.target.value === 'bytes' ? formatBytes : null
+      xAxisCustomFormat: event.target.value === 'bytes' ? formatBytes : null,
+      topURLs: getTopURLs(this.props.urlMetrics, event.target.value)
     })
   }
   render() {
-    const { urlMetrics, intl } = this.props;
-    const {dataKey, xAxisCustomFormat} = this.state;
+    const { urlMetrics, intl } = this.props
+    const {dataKey, xAxisCustomFormat} = this.state
 
-    const topURLsCount = this.topURLs.size
+    const topURLsCount = this.state.topURLs.size
     const chartHeight = (topURLsCount * BAR_HEIGHT) + TOP_URLS_CHART_MINIMUM_HEIGHT
 
     return (
@@ -81,7 +79,7 @@ class AnalysisURLReport extends React.Component {
         <SectionContainer>
           <div ref="chartHolder">
             <AnalysisHorizontalBar
-              data={this.topURLs.toJS()}
+              data={this.state.topURLs.toJS()}
               dataKey={dataKey}
               height={chartHeight}
               labelKey="url"
