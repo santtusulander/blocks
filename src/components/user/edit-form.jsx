@@ -62,6 +62,7 @@ class UserEditForm extends React.Component {
     this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this)
     this.validatePhoneNumber = this.validatePhoneNumber.bind(this)
     this.isTfaEnabled = this.isTfaEnabled.bind(this)
+    this.renderTwoFAMethodsTooltips = this.renderTwoFAMethodsTooltips.bind(this)
 
     this.state = {
       showMiddleNameField: !!middle_name.value,
@@ -222,6 +223,41 @@ class UserEditForm extends React.Component {
     return options.map(({ value }) => value).includes(tfaValue)
   }
 
+  renderTwoFAMethodsTooltips(tfa_method) {
+    switch (tfa_method) {
+      case "call":
+        return (
+          <FormattedMessage id="portal.user.edit.2FA.method.call.title"/>
+        )
+      case "sms":
+        return (
+          <FormattedMessage id="portal.user.edit.2FA.method.sms.title"/>
+        )
+      case "app":
+        return (
+          <FormattedMessage id="portal.user.edit.2FA.method.app.title" values={{
+            link: <Link to={AUTHY_APP_DOWNLOAD_LINK} target="_blank">
+                  {
+                    this.props.intl.formatMessage({id: 'portal.user.edit.2FA.method.down_link.text'})
+                  }
+                  </Link>
+          }}/>
+        )
+      case "one_touch":
+        return (
+          <FormattedMessage id="portal.user.edit.2FA.method.one_touch.title" values={{
+            link: <Link to={AUTHY_APP_DOWNLOAD_LINK} target="_blank">
+                  {
+                    this.props.intl.formatMessage({id: 'portal.user.edit.2FA.method.down_link.text'})
+                  }
+                  </Link>
+          }}/>
+        )
+      default:
+        return
+    }
+  }
+
   render() {
     const {
       fields: {
@@ -256,41 +292,6 @@ class UserEditForm extends React.Component {
          </Tooltip>)
       : null
     )
-
-    const twoFAMethodsTooltip = (tfa_method) => {
-      switch (tfa_method) {
-        case "call":
-          return (
-            <FormattedMessage id="portal.user.edit.2FA.method.call.title"/>
-          )
-        case "sms":
-          return (
-            <FormattedMessage id="portal.user.edit.2FA.method.sms.title"/>
-          )
-        case "app":
-          return (
-            <FormattedMessage id="portal.user.edit.2FA.method.app.title" values={{
-              link: <Link to={AUTHY_APP_DOWNLOAD_LINK} target="_blank">
-                    {
-                      this.props.intl.formatMessage({id: 'portal.user.edit.2FA.method.down_link.text'})
-                    }
-                    </Link>
-            }}/>
-          )
-        case "one_touch":
-          return (
-            <FormattedMessage id="portal.user.edit.2FA.method.one_touch.title" values={{
-              link: <Link to={AUTHY_APP_DOWNLOAD_LINK} target="_blank">
-                    {
-                      this.props.intl.formatMessage({id: 'portal.user.edit.2FA.method.down_link.text'})
-                    }
-                    </Link>
-            }}/>
-          )
-        default:
-          return
-      }
-    }
 
     return (
       <form className="form-horizontal user-profile-edit-form">
@@ -484,7 +485,7 @@ class UserEditForm extends React.Component {
                   />
                 </Col>
                 <Col xs={4}>
-                    { twoFAMethodsTooltip(tfa.value) }
+                    { this.renderTwoFAMethodsTooltips(tfa.value) }
                 </Col>
               </Row>
             </div>
