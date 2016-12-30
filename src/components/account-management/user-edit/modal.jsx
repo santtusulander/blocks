@@ -31,7 +31,9 @@ class UserEditModal extends React.Component {
       groups: user.get('group_id'),
       first_name: user.get('first_name'),
       last_name: user.get('last_name'),
-      phone_number: user.get('phone_number')
+      phone: user.get('phone_country_code') + user.get('phone_number'),
+      phone_number: user.get('phone_number'),
+      phone_country_code: user.get('phone_country_code')
     } : {}
 
     return (

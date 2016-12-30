@@ -3,6 +3,7 @@ import { reduxForm } from 'redux-form'
 import { HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
 import ReactTelephoneInput from 'react-telephone-input'
 import { FormattedMessage } from 'react-intl'
+import phoneValidator from 'phone'
 
 import SelectWrapper from '../../select-wrapper'
 import { getReduxFormValidationState } from '../../../util/helpers'
@@ -31,9 +32,15 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      phoneNumberValidationState: null
+    }
+
     // TODO: uncomment once UDNP-2008 is unblocked
     // this.resetPassword = this.resetPassword.bind(this)
     this.save = this.save.bind(this)
+    this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this)
+    this.validatePhoneNumber = this.validatePhoneNumber.bind(this)
   }
 
   // TODO: uncomment and implement once UDNP-2008 is unblocked
@@ -47,6 +54,7 @@ class UserEditForm extends React.Component {
         first_name,
         last_name,
         phone_number,
+        phone_country_code,
         groups,
         role
       }
@@ -56,11 +64,45 @@ class UserEditForm extends React.Component {
       first_name: first_name.value,
       last_name: last_name.value,
       phone_number: phone_number.value,
+      phone_country_code: phone_country_code.value,
       group_id: groups.value,
       roles: [ role.value ]
     }
 
     this.props.onSave(newValues)
+  }
+
+  validatePhoneNumber(number) {
+    const isPhoneValid = phoneValidator(number).length
+    if (isPhoneValid === 0) {
+      this.setState({
+        phoneNumberValidationState: 'error'
+      })
+    } else {
+      this.setState({
+        phoneNumberValidationState: null
+      })
+    }
+  }
+
+  onPhoneNumberChange(number, { dialCode }) {
+    const {
+      fields: {
+        phone,
+        phone_number,
+        phone_country_code
+      }
+    } = this.props
+
+    const trimmedPhoneNumber = number.replace(/\D/g, '').replace(dialCode, '')
+
+    phone.onChange(number)
+    // Fill the inputs that will be send to API
+    phone_number.onChange(trimmedPhoneNumber)
+    phone_country_code.onChange(dialCode)
+
+    // Validate phone number
+    this.validatePhoneNumber(number)
   }
 
   render() {
@@ -69,12 +111,21 @@ class UserEditForm extends React.Component {
         email,
         first_name,
         last_name,
-        phone_number,
+        phone,
         role
       },
       roleOptions,
       onCancel
     } = this.props
+
+    // ReactTelephoneInput decorates the phone number at render and thus triggers
+    // the phone.dirty flag. Need to add extra check to see if any actual
+    // digits have been changed before enabling Save button
+    const trimmedPhoneNumber = phone.value.replace(/\D/g,'')
+    const allowSave = (first_name.dirty || email.dirty || last_name.dirty || role.dirty ||
+                       (phone.dirty && (phone.initialValue !== trimmedPhoneNumber))) &&
+                       (this.state.phoneNumberValidationState === null) &&
+                       !this.props.invalid
 
     return (
       <form className="user-form">
@@ -115,15 +166,17 @@ class UserEditForm extends React.Component {
 
         <div className="user-form__telephone">
           <label className="control-label"><FormattedMessage id="portal.user.edit.phoneNumber.text"/></label>
-          <ReactTelephoneInput
-            value={phone_number.value !== '+' ? phone_number.value : '1'}
-            defaultCountry="us"
-            onChange={(value) => {
-              phone_number.onChange(value)
-            }}
-          />
-          {phone_number.touched && phone_number.error &&
-          <div className="error-msg">{phone_number.error}</div>}
+          <FormGroup validationState={this.state.phoneNumberValidationState}>
+            <ReactTelephoneInput
+              {...phone}
+              defaultCountry="us"
+              onChange={this.onPhoneNumberChange}
+            />
+          </FormGroup>
+          {
+            this.state.phoneNumberValidationState !== null &&
+            <div className="error-msg"><FormattedMessage id="portal.user.edit.phoneInvalid.text"/></div>
+          }
         </div>
 
         {/* TODO: uncomment once UDNP-2008 is unblocked
@@ -176,7 +229,7 @@ class UserEditForm extends React.Component {
 
         <ButtonToolbar className="text-right extra-margin-top">
           <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={this.props.invalid} bsStyle="primary"
+          <Button disabled={!allowSave} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
       </form>
@@ -200,7 +253,9 @@ export default reduxForm({
     'email',
     'first_name',
     'last_name',
+    'phone',
     'phone_number',
+    'phone_country_code',
     'role',
     'groups'
   ],
