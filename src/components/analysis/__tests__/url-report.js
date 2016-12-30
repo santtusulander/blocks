@@ -59,8 +59,12 @@ describe('AnalysisURLReport', () => {
     expect(subject().find('AnalysisURLList').props().urls).toEqual(urlMetrics/*.pop()*/)
   })
 
+  it('should aggregate urlMetrics data sharing similar urls', () => {
+    expect(subject().state().topURLs.size).toBe(2)
+  })
+
   it('should pass on proper chart height prop', () => {
-    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(144)
+    expect(subject().find('AnalysisHorizontalBar').props().height).toBeDefined()
   })
 
   it('should select data type properly', () => {
