@@ -40,7 +40,7 @@ const PropertyTabControl = (props) => {
   )
 }
 
-
+PropertyTabControl.displayName = "PropertyTabControl"
 PropertyTabControl.propTypes = {
   intl: PropTypes.object,
   location: PropTypes.object

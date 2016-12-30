@@ -33,6 +33,8 @@ const AnalysisByLocation = (props) => {
 
 }
 
+AnalysisByLocation.displayName = 'AnalysisByLocation'
+
 AnalysisByLocation.defaultProps = {
   cityData: Immutable.List(),
   countryData: Immutable.List()

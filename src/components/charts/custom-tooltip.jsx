@@ -26,6 +26,7 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
   )
 }
 
+CustomTooltip.displayName = "CustomTooltip"
 CustomTooltip.propTypes = {
   iconClass: PropTypes.func,
   payload: PropTypes.array,
