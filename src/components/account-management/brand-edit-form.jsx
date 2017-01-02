@@ -36,8 +36,8 @@ const BrandEditForm = (props) => {
 
   const title = props.edit ? <FormattedMessage id="portal.brand.edit.editBrand.title"/> : <FormattedMessage id="portal.brand.edit.newBrand.title"/>
   const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
-  const onSubmit = (formData) => {
-    console.log('brand data: ', formData);
+  const onSubmit = () => {
+    // TODO: Implement form data submission
   }
   return (
       <SidePanel
@@ -53,9 +53,8 @@ const BrandEditForm = (props) => {
             name="brandName"
             id="name-field"
             placeholder={props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
-            component={FieldFormGroup}>
-            <FormattedMessage id="portal.brand.edit.brandName.text" />
-          </Field>
+            component={FieldFormGroup}
+            input={<FormattedMessage id="portal.brand.edit.brandName.text" />}/>
 
         <hr/>
 
@@ -67,9 +66,8 @@ const BrandEditForm = (props) => {
             placeholder={props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
             addonAfter=' ICO, GIF or PNG'
             className='input-file'
-            component={FieldFormGroup}>
-            <FormattedMessage id="portal.brand.edit.logo.text" />
-          </Field>
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.brand.edit.logo.text" />}/>
         </div>
 
         <hr/>
@@ -82,27 +80,9 @@ const BrandEditForm = (props) => {
             placeholder={props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
             addonAfter={props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
             className='input-file'
-            component={FieldFormGroup}>
-            <FormattedMessage id="portal.brand.edit.favicon.text" />
-          </Field>
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.brand.edit.favicon.text" />}/>
         </div>
-
-        {/* <UDNFileInput
-          {...brandLogo}
-          id='brand-input'
-          label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
-          placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
-        />
-
-
-        <UDNFileInput
-          {...favicon}
-          id='favicon-input'
-          label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
-          placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
-          addonAfter={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
-          className='input-file'
-        /> */}
 
         <hr/>
 
@@ -111,17 +91,8 @@ const BrandEditForm = (props) => {
             id='theme-input'
             className='input-select'
             options={colorThemeOptions}
-            component={FieldFormGroupSelect}>
-            <FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/>
-          </Field>
-
-        {/* <div className="form-group">
-          <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
-          <SelectWrapper
-            {... colorTheme}
-            className="input-select"
-          />
-        </div> */}
+            component={FieldFormGroupSelect}
+            label={<FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/>}/>
 
         <hr/>
 
@@ -136,11 +107,6 @@ const BrandEditForm = (props) => {
             <FormattedMessage id="portal.brand.edit.availability.private.label" />
           </Field>
 
-          {/* <Radio
-            {...availability}
-            value='private'
-            ><FormattedMessage id="portal.brand.edit.availability.private.label" /></Radio> */}
-
           <Field
             name="availability"
             type="radio"
@@ -148,15 +114,6 @@ const BrandEditForm = (props) => {
             value='public'>
             <FormattedMessage id="portal.brand.edit.availability.public.label" />
           </Field>
-
-          {/* <Radio
-            {...availability}
-            value='public'
-            ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio> */}
-
-          {/* Why does a radio button pair get validated?
-            {availability.touched && availability.error &&
-            <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>} */}
 
           </FormGroup>
         <ButtonToolbar className="text-right extra-margin-top">
@@ -173,8 +130,11 @@ BrandEditForm.displayName = 'BrandEditForm'
 
 BrandEditForm.propTypes = {
   edit: React.PropTypes.bool,
+  handleSubmit: React.PropTypes.func,
+  intl: React.PropTypes.object,
+  invalid: React.PropTypes.bool,
   onCancel: React.PropTypes.func,
-  onSave: React.PropTypes.func
+  submitting: React.PropTypes.bool
 }
 
 function mapStateToProps() {
