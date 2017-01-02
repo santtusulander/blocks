@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes, SubmissionError } from 'redux-form'
+import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
 import { Button } from 'react-bootstrap'
 
@@ -70,10 +70,10 @@ class AccountForm extends React.Component {
 
     return this.props.onSave(values.accountBrand, accountId, data)
       //TODO: Handle submittion error
-      // .then( (res) => {
-      //   if (res)
+      //  .then( (res) => {
+      //    if (res)
       //   throw new SubmissionError({ _error: 'Jipii' + res })
-      // });
+      // );
 
   }
 
@@ -98,7 +98,7 @@ class AccountForm extends React.Component {
       >
 
         <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-          <span>
+          <span className='submit-error'>
           {this.props.error}
           </span>
 
@@ -107,9 +107,8 @@ class AccountForm extends React.Component {
             name="accountName"
             placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
             component={FieldFormGroup}
-            >
-            <FormattedMessage id="portal.account.manage.accountName.title" />
-          </Field>
+            label={<FormattedMessage id="portal.account.manage.accountName.title" />}
+          />
 
           <hr/>
 
@@ -119,9 +118,8 @@ class AccountForm extends React.Component {
             placeholder={this.props.intl.formatMessage({id: 'portal.account.manage.enterAccount.placeholder.text'})}
             component={FieldFormGroupSelect}
             options={BRAND_OPTIONS}
-            >
-            <FormattedMessage id="portal.account.manage.brand.title" />
-          </Field>
+            label={<FormattedMessage id="portal.account.manage.brand.title" />}
+          />
 
           <hr/>
 
@@ -130,9 +128,8 @@ class AccountForm extends React.Component {
             className="input-select"
             component={FieldFormGroupSelect}
             options={providerTypes}
-            >
-            <FormattedMessage id="portal.account.manage.accountType.title" />
-          </Field>
+            label={<FormattedMessage id="portal.account.manage.accountType.title" />}
+          />
 
           <hr/>
 
@@ -141,10 +138,9 @@ class AccountForm extends React.Component {
                   name="accountServices"
                   component={FieldFormGroupMultiOptionSelector}
                   options={serviceOptions}
-                >
-                  <FormattedMessage id="portal.account.manage.services.title" />
-                </Field>
-              : <p>Please, select account type first</p>
+                  label={<FormattedMessage id="portal.account.manage.services.title" />}
+                />
+              : <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
           }
 
           <FormFooterButtons>
