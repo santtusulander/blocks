@@ -105,9 +105,8 @@ const DnsDomainEditForm = (props) => {
         name="name"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}
         component={FieldFormGroup}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.domainName.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.domainName.text" />}
+      />
 
       <hr/>
 
@@ -116,9 +115,8 @@ const DnsDomainEditForm = (props) => {
         name="name_server"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.nameServerPlaceholder.text'})}
         component={FieldFormGroup}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.nameServer.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.nameServer.text" />}
+      />
 
       <hr/>
 
@@ -127,9 +125,8 @@ const DnsDomainEditForm = (props) => {
         name="email_addr"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.emailPlaceholder.text'})}
         component={FieldFormGroup}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.email.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.email.text" />}
+      />
 
       <hr/>
 
@@ -139,9 +136,8 @@ const DnsDomainEditForm = (props) => {
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'})}
         component={FieldFormGroup}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.refresh.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.refresh.text" />}
+      />
 
       <hr/>
 
@@ -151,9 +147,8 @@ const DnsDomainEditForm = (props) => {
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
         component={FieldFormGroup}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />}
+      />
 
       <hr/>
 
@@ -163,9 +158,8 @@ const DnsDomainEditForm = (props) => {
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
         component={FieldFormGroup}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
-        >
-        <FormattedMessage id="portal.accountManagement.dns.form.negativeTtl.text" />
-      </Field>
+        label={<FormattedMessage id="portal.accountManagement.dns.form.negativeTtl.text" />}
+      />
 
       <hr/>
 
@@ -184,7 +178,7 @@ const DnsDomainEditForm = (props) => {
           {actionButtonTitle}
         </Button>
       </FormFooterButtons>
-      
+
     </form>
   )
 }
