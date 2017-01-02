@@ -70,10 +70,10 @@ class AccountForm extends React.Component {
 
     return this.props.onSave(values.accountBrand, accountId, data)
       //TODO: Handle submittion error
-      // .then( (res) => {
-      //   if (res)
+      //  .then( (res) => {
+      //    if (res)
       //   throw new SubmissionError({ _error: 'Jipii' + res })
-      // });
+      // );
 
   }
 
