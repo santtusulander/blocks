@@ -18,29 +18,28 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
         name="type"
         disabled={edit}
         options={recordTypes.map(type => [type, type])}
-        component={FormGroupSelect}>
-        <FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>
-      </Field>
+        component={FormGroupSelect}
+        label={<FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>}/>
       {shouldShowField('name') &&
         <Field
           name="name"
-          //id="name-field"
+          id="name-field"
           disabled={edit}
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.hostName.placeholder'})}
           className="input-narrow host-name-input"
           addonAfter={`.${domain}`}
-          component={Input}>
-          <FormattedMessage id="portal.account.recordForm.hostName.label" />
-        </Field>}
+          component={Input}
+          label={<FormattedMessage id="portal.account.recordForm.hostName.label" />}/>
+      }
       {shouldShowField('value') &&
         <Field
           name="value"
           id="value-field"
           disabled={edit}
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.address.placeholder'})}
-          component={Input}>
-          <FormattedMessage id="portal.account.recordForm.address.label" />
-        </Field>}
+          component={Input}
+          label={<FormattedMessage id="portal.account.recordForm.address.label" />}/>
+      }
       {shouldShowField('prio') &&
         <Field
           name="prio"
@@ -49,9 +48,9 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
           required={false}
           className='input-narrow priority-input'
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}
-          component={Input}>
-          <FormattedMessage id="portal.account.recordForm.prio.label" />
-        </Field>}
+          component={Input}
+          label={<FormattedMessage id="portal.account.recordForm.prio.label" />}/>
+      }
       {shouldShowField('ttl') && [
         <hr key={0} />,
         <Field
@@ -62,9 +61,8 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
           className='input-narrow ttl-value-input'
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
           addonAfter="seconds"
-          component={Input}>
-          <FormattedMessage id="portal.account.recordForm.ttl.label" />
-        </Field>
+          component={Input}
+          label={<FormattedMessage id="portal.account.recordForm.ttl.label" />}/>
       ]}
       <ButtonToolbar className="text-right extra-margin-top">
         <Button
