@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
 import { List } from 'immutable'
 import MultiOptionSelector from '../multi-option-selector'
+import { getReduxFormValidationState } from '../../util/helpers'
 
 const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, touched, error }, className, label }) => {
   return (
-    <FormGroup className={className} controlId={input.name} validationState={touched && error ? 'error' : null}>
+    <FormGroup className={className} controlId={input.name} validationState={getReduxFormValidationState(input)}>
       <ControlLabel>{label}</ControlLabel>
 
       <MultiOptionSelector

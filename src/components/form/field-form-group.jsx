@@ -3,7 +3,7 @@ import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react
 
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, required = true }) => {
+const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, disabled, required = true }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
@@ -16,8 +16,7 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { 
           componentClass={componentClass}
           type={type}
           placeholder={placeholder}
-          value={input.value}
-          onChange={input.onChange}
+          disabled={disabled}
         />
 
         <FormControl.Feedback />
@@ -38,8 +37,8 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { 
 
 FieldFormGroup.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
-  children: PropTypes.object,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
   label: PropTypes.object,
   meta: PropTypes.object,

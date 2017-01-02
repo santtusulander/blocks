@@ -1,20 +1,23 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
+
 import Select from '../select.jsx'
+import { getReduxFormValidationState } from '../../util/helpers'
 
 const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { dirty, error }, label }) => {
   return (
-    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
       <ControlLabel>{label}</ControlLabel>
 
       <InputGroup>
         <Select
+          {...input}
           numericValues={numericValues}
-          disabled={disabled || false}
+          disabled={disabled}
           className={className}
           onSelect={e => input.onChange(e)}
           options={options}
-          value={input.value} />
+        />
 
           { addonAfter &&
             <InputGroup.Addon>
