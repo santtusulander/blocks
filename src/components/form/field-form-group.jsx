@@ -1,15 +1,17 @@
 import React, { PropTypes } from 'react';
 import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react-bootstrap';
 
-const FieldFormGroup  = ({ addonAfter, input, placeholder, type, meta: { dirty, error }, className, children, required = true }) => {
-  const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
+import { getReduxFormValidationState } from '../../util/helpers'
 
+const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, required = true }) => {
+  const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
-    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
-      <ControlLabel>{children} {required && ' *'}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
+      <ControlLabel>{label} {required && ' *'}</ControlLabel>
 
       <InputGroup>
         <FormControl
+          {...input}
           className={className}
           componentClass={componentClass}
           type={type}
@@ -27,7 +29,7 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, meta: { dirty, 
         }
       </InputGroup>
 
-      {error && dirty &&
+      {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
@@ -39,6 +41,7 @@ FieldFormGroup.propTypes = {
   children: PropTypes.object,
   className: PropTypes.string,
   input: PropTypes.object,
+  label: PropTypes.object,
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   required: PropTypes.bool,

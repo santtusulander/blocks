@@ -26,6 +26,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountType.title': 'Account Type',
   'portal.account.manage.services.title': 'Services',
   'portal.account.manage.system.empty.domain': 'No Domain',
+  'portal.account.manage.selectAccountType.text': 'Please, select account type first.',
 
   'portal.account.list.accountName.title': 'ACCOUNT NAME',
   'portal.account.list.type.title': 'TYPE',
