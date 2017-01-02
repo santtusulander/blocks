@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, ControlLabel, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
+import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
 import { reduxForm, Field } from 'redux-form'
 import { connect } from 'react-redux'
 
@@ -131,8 +131,8 @@ const BrandEditForm = (props) => {
           <Field
             name="availability"
             type="radio"
-            value='private'
-            component={Radio}>
+            component={Radio}
+            value='private'>
             <FormattedMessage id="portal.brand.edit.availability.private.label" />
           </Field>
 
@@ -144,8 +144,8 @@ const BrandEditForm = (props) => {
           <Field
             name="availability"
             type="radio"
-            value='public'
-            component={Radio}>
+            component={Radio}
+            value='public'>
             <FormattedMessage id="portal.brand.edit.availability.public.label" />
           </Field>
 
