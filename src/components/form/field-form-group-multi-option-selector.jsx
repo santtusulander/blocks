@@ -3,10 +3,10 @@ import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
 import { List } from 'immutable'
 import MultiOptionSelector from '../multi-option-selector'
 
-const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, touched, error }, className, children }) => {
+const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, touched, error }, className, label }) => {
   return (
     <FormGroup className={className} controlId={input.name} validationState={touched && error ? 'error' : null}>
-      <ControlLabel>{children}</ControlLabel>
+      <ControlLabel>{label}</ControlLabel>
 
       <MultiOptionSelector
         options={options}
@@ -24,9 +24,9 @@ const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, tou
 }
 
 FieldFormGroupMultiOptionSelector.propTypes = {
-  children: PropTypes.object,
   className: PropTypes.string,
   input: PropTypes.object,
+  label: PropTypes.object,
   meta: PropTypes.object,
   options: PropTypes.array
 }
