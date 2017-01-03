@@ -467,7 +467,7 @@ export class AccountManagement extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={() => toggleModal(null)}
-          submit={() => this.deleteUser()}>
+          onSubmit={() => this.deleteUser()}>
           <h3>
             {this.userToDelete}<br/>
           </h3>
