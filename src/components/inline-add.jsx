@@ -1,6 +1,7 @@
 import React, { PropTypes, cloneElement } from 'react'
 import { Tooltip, ButtonToolbar } from 'react-bootstrap'
-import { reduxForm, getValues } from 'redux-form'
+import { reduxForm, propTypes as reduxFormPropTypes, getFormValues, getFormSyncErrors } from 'redux-form'
+import { connect } from 'react-redux'
 
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
@@ -9,44 +10,44 @@ import { FormattedMessage } from 'react-intl'
 
 /**
  * When to display errorTooltip
- * @param attributes
+ * @param meta
  * @returns {*|boolean}
  */
-const displayTooltipRules = (attributes) => {
-  return attributes &&
-        attributes.error &&
-        attributes.touched  &&
-        attributes.active &&
+const displayTooltipRules = (meta) => {
+  return meta &&
+        meta.error &&
+        meta.touched  &&
+        meta.active &&
         (
-          attributes.error !== 'Required'
+          meta.error !== 'Required'
         )
 }
 
 /**
  * When to add `has-error`-classname to input
- * @param attributes
+ * @param meta
  * @returns {*|boolean}
  */
-const errorClassnameRules = (attributes) => {
-  return attributes &&
-        attributes.error &&
-        attributes.touched &&
+const errorClassnameRules = (meta) => {
+  return meta &&
+        meta.error &&
+        meta.touched &&
         (
-          attributes.error !== 'Required'
+          meta.error !== 'Required'
         )
 }
 
-const ErrorToolTip = attributes =>
-  displayTooltipRules(attributes) &&
+const ErrorToolTip = (meta) =>
+  displayTooltipRules(meta) &&
   <Tooltip placement="bottom" className="in" id="tooltip-bottom">
-    {attributes.error}
+    {meta.error}
   </Tooltip>
 
-const generateBsClasses = (attributes, input) => {
-  if (errorClassnameRules(attributes)) {
+const generateBsClasses = (meta, bsStyle) => {
+  if (errorClassnameRules(meta)) {
     let errorStyle;
-    if (input.props.bsStyle) {
-      errorStyle = `${input.props.bsStyle} error`
+    if (bsStyle) {
+      errorStyle = `${bsStyle} error`
     } else {
       errorStyle = 'error'
     }
