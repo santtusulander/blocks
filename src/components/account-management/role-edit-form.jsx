@@ -142,6 +142,7 @@ const RolesEditForm = (props) => {
   )
 }
 
+RolesEditForm.displayName = "RolesEditForm"
 RolesEditForm.propTypes = {
   editRole: React.PropTypes.object,
   fields: React.PropTypes.object,

@@ -15,9 +15,10 @@ const HelpTooltip = (props) => {
   )
 }
 
+HelpTooltip.displayName = "HelpTooltip"
 HelpTooltip.propTypes = {
   children: PropTypes.node,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   title: PropTypes.object
 }
 

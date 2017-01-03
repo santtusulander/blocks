@@ -193,6 +193,7 @@ class AccountManagementSystemDNS extends Component {
   }
 }
 
+AccountManagementSystemDNS.displayName = "AccountManagementSystemDNS"
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
   activeModal:PropTypes.string,

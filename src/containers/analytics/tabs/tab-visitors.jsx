@@ -60,6 +60,7 @@ class AnalyticsTabVisitors extends React.Component {
   }
 }
 
+AnalyticsTabVisitors.displayName = "AnalyticsTabVisitors"
 AnalyticsTabVisitors.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   byBrowser: React.PropTypes.instanceOf(Immutable.Map),

@@ -56,34 +56,26 @@ class User extends React.Component {
     )
   }
 
-  savePassword(password) {
+  savePassword(password, editFormCallback) {
     this.props.userActions.startFetching()
     this.setState({
       savingPassword: this.props.userFetching
     })
 
-    // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
-    this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
-      .then((response) => {
-        if (!response.error) {
-          this.props.userActions.logIn(
-            this.props.currentUser.get('email'),
-            password.new_password
-          ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
-        } else {
-          this.props.uiActions.showInfoDialog({
-            title: 'Error',
-            content: response.payload.data.message,
-            okButton: true,
-            cancel: this.props.uiActions.hideInfoDialog
-          })
-        }
-        this.props.userActions.finishFetching()
-        this.setState({
-          savingPassword: this.props.userFetching
-        })
+    const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
+
+    updatePasswordPromise.then((response) => {
+      if (!response.error) {
+        this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
       }
-    )
+
+      editFormCallback(response)
+
+      this.props.userActions.finishFetching()
+      this.setState({
+        savingPassword: this.props.userFetching
+      })
+    })
   }
 
   showNotification(message) {
@@ -99,8 +91,12 @@ class User extends React.Component {
       first_name: currentUser.get('first_name'),
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
+      phone: currentUser.get('phone_country_code') + currentUser.get('phone_number'),
       phone_number: currentUser.get('phone_number'),
-      timezone: currentUser.get('timezone')
+      phone_country_code: currentUser.get('phone_country_code'),
+      timezone: currentUser.get('timezone'),
+      tfa_toggle: !!currentUser.get('tfa'),
+      tfa: currentUser.get('tfa')
     } : {}
 
     return (

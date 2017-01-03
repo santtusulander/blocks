@@ -92,6 +92,7 @@ export class SetPassword extends React.Component {
 
             <PasswordFields
               ref="passwordFields"
+              required={true}
               stackedPassword={true}
               changePassword={this.changePassword}
               onChange={this.handlePasswordChange}

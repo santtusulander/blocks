@@ -79,6 +79,7 @@ const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, param
   );
 }
 
+UserMenu.displayName = "UserMenu"
 UserMenu.propTypes = {
   handleThemeChange: React.PropTypes.func,
   logout: React.PropTypes.func,

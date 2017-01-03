@@ -106,6 +106,7 @@ const RecordFormContainer = props => {
   )
 }
 
+RecordFormContainer.displayName = "RecordFormContainer"
 RecordFormContainer.propTypes = {
   activeRecord: PropTypes.object,
   addRecord: PropTypes.func,

@@ -91,6 +91,7 @@ const AnalyticsTabControl = (props) => {
   )
 }
 
+AnalyticsTabControl.displayName = "AnalyticsTabControl"
 
 AnalyticsTabControl.propTypes = {
   activeTab: PropTypes.string,

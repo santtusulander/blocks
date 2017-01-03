@@ -3,8 +3,7 @@ import { List } from 'immutable'
 
 import { SidebarLink } from './sidebar-link.jsx'
 
-export const SidebarLinks = props => {
-  const { items, activate, tag, emptyMsg, activeItem } = props
+export function SidebarLinks({ items, activate, tag, emptyMsg, activeItem }) {
   const name = tag ? `${tag}_name` : 'name'
   const id = tag ? `${tag}_id` : 'id'
   const hasContent = items && (items instanceof Array && items.length > 0 || items instanceof List && !items.isEmpty())
@@ -24,6 +23,7 @@ export const SidebarLinks = props => {
   )
 }
 
+SidebarLinks.displayName = 'SidebarLinks'
 SidebarLinks.propTypes = {
   activate: PropTypes.func,
   activeItem: PropTypes.number,
@@ -31,4 +31,3 @@ SidebarLinks.propTypes = {
   items: PropTypes.oneOfType([PropTypes.instanceOf(List), PropTypes.array]),
   tag: PropTypes.string
 }
-
