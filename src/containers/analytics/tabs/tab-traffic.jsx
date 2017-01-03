@@ -11,6 +11,7 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 import DateRanges from '../../../constants/date-ranges'
+import { MAPBOX_MAX_CITIES_FETCHED } from '../../../constants/mapbox'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -125,7 +126,7 @@ class AnalyticsTabTraffic extends React.Component {
     }, fetchOpts)
 
     const byCityOpts = Object.assign({
-      max_cities: 999,
+      max_cities: MAPBOX_MAX_CITIES_FETCHED,
       latitude_south: coordinates.south || null,
       longitude_west: coordinates.west || null,
       latitude_north: coordinates.north || null,
