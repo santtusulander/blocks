@@ -23,6 +23,7 @@ const IconServerValidation = (props) => {
   )
 }
 
+IconServerValidation.displayName = "IconServerValidation"
 IconServerValidation.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

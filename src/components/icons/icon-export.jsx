@@ -13,6 +13,7 @@ const IconExport = (props) => {
   )
 }
 
+IconExport.displayName = "IconExport"
 IconExport.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

@@ -82,6 +82,7 @@ class AnalyticsTabOnOffNet extends React.Component {
   }
 }
 
+AnalyticsTabOnOffNet.displayName = "AnalyticsTabOnOffNet"
 AnalyticsTabOnOffNet.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,

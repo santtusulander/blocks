@@ -6,6 +6,7 @@ const ContentItemTag = ({ customClass, children }) =>
    {children}
   </span>
 
+ContentItemTag.displayName = "ContentItemTag"
 ContentItemTag.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   customClass: PropTypes.string

@@ -73,6 +73,7 @@ class AnalyticsTabUrlReport extends React.Component {
   }
 }
 
+AnalyticsTabUrlReport.displayName = "AnalyticsTabUrlReport"
 AnalyticsTabUrlReport.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,

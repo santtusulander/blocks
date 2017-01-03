@@ -17,6 +17,7 @@ const IconCaretDown = (props) => {
   )
 }
 
+IconCaretDown.displayName = "IconCaretDown"
 IconCaretDown.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

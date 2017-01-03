@@ -41,6 +41,7 @@ const SaveBar = (props) => {
   )
 }
 
+SaveBar.displayName = "SaveBar"
 SaveBar.propTypes = {
   children: PropTypes.node,
   onCancel: PropTypes.func,
