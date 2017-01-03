@@ -18,8 +18,8 @@ describe('Header', function() {
   const activeGroup = new Map()
   const className = ""
   const fetching = false
-  const handleThemeChange = jest.genMockFunction()
-  const logOut = jest.genMockFunction()
+  const handleThemeChange = jest.fn()
+  const logOut = jest.fn()
   const params = {account: "1", brand: "udn"}
   const pathname = ""
   const roles = new List()
@@ -28,8 +28,8 @@ describe('Header', function() {
   const user = new Map()
 
   beforeEach(() => {
-    subject = () => {
-      let props = {
+    subject = (props = {}) => {
+      let defaultProps = {
         activeAccount,
         activeGroup,
         className,
@@ -44,11 +44,52 @@ describe('Header', function() {
         user
       }
 
-      return shallow(<Header {...props}/>)
+      const finalProps = Object.assign({}, defaultProps, props)
+
+      return shallow(<Header {...finalProps} />)
     }
   })
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
+  })
+
+  it('should accept a className', () => {
+    expect(subject({className: 'test'}).at(0).hasClass('test')).toBe(true)
+  })
+
+  it('should handle theme changes', () => {
+    const handleThemeChange = jest.fn()
+    const component = subject({ handleThemeChange })
+    component.instance().handleThemeChange('light')
+
+    expect(handleThemeChange.mock.calls.length).toBe(1)
+  })
+
+  it('should toggle the user menu', () => {
+    const component = subject()
+    expect(component.state().userMenuOpen).toBe(false)
+    component.instance().toggleUserMenu()
+    expect(component.state().userMenuOpen).toBe(true)
+  })
+
+  it('should have a loading bar', () => {
+    expect(subject().find('GlobalLoadingBar').length).toBe(1)
+  })
+
+  it('should have a logo', () => {
+    expect(subject().find('LogoItem').length).toBe(1)
+  })
+
+  it('should have an account selector', () => {
+    expect(subject().find('AccountSelectorItem').length).toBe(1)
+  })
+
+  it('should have breadcrumbs', () => {
+    expect(subject().find('BreadcrumbsItem').length).toBe(1)
+  })
+
+  it('should have a user menu', () => {
+    expect(subject().find('UserMenu').length).toBe(1)
   })
 })
