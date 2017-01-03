@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
 // import Typeahead from 'react-bootstrap-typeahead'
+import Immutable from 'immutable'
 
 import {
   MAPBOX_LIGHT_THEME,
@@ -80,24 +81,24 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.countryData !== this.props.countryData && this.state.map) {
+    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
       const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCountryLayers(this.state.map, nextProps.countryData)
+      this.addCountryLayers(this.state.map, nextProps.countryData.toJS())
     }
 
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (nextProps.cityData !== this.props.cityData) {
+    if (!nextProps.cityData.equals(this.props.cityData)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCityLayers(this.state.map, nextProps.cityData)
+      this.addCityLayers(this.state.map, nextProps.cityData.toJS())
     }
   }
 
@@ -146,11 +147,11 @@ class Mapbox extends React.Component {
   onStyleLoaded(map) {
     // Fix to draw map correctly on reload
     map.resize()
-    this.addCountryLayers(map, this.props.countryData)
+    this.addCountryLayers(map, this.props.countryData.toJS())
 
     // Only add city layers if we're within a specific zoom level.
     if (this.state.zoom > 6.9) {
-      this.addCityLayers(map, this.props.cityData)
+      this.addCityLayers(map, this.props.cityData.toJS())
     }
   }
 
@@ -527,7 +528,8 @@ class Mapbox extends React.Component {
       [40, (18 / 10) * this.state.zoom],
       [60, (24 / 10) * this.state.zoom],
       [80, (30 / 10) * this.state.zoom],
-      [95, (32 / 10) * this.state.zoom]
+      [95, (32 / 10) * this.state.zoom],
+      [100, (36 / 10) * this.state.zoom]
     ]
 
     // If the layer exists, we should remove it in order to do a full reset for changed data
@@ -614,7 +616,7 @@ class Mapbox extends React.Component {
           (currentBounds.west   + boundsChangedBy < west  || currentBounds.west  - boundsChangedBy > west)  &&
           (currentBounds.north  + boundsChangedBy < north || currentBounds.north - boundsChangedBy > north) &&
           (currentBounds.east   + boundsChangedBy < east  || currentBounds.east  - boundsChangedBy > east)) ||
-          !this.props.cityData.length) {
+          !this.props.cityData.size) {
         this.props.mapboxActions.setMapBounds(map.getBounds())
         this.props.getCitiesWithinBounds(south, west, north, east)
       }
@@ -743,8 +745,8 @@ class Mapbox extends React.Component {
 
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
-  cityData: React.PropTypes.array,
-  countryData: React.PropTypes.array,
+  cityData: React.PropTypes.instanceOf(Immutable.List),
+  countryData: React.PropTypes.instanceOf(Immutable.List),
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,

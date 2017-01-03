@@ -26,8 +26,8 @@ const AnalysisByLocation = (props) => {
       <Mapbox
         getCitiesWithinBounds={getCityData}
         geoData={countriesGeoJSON}
-        countryData={countryData.toJS()}
-        cityData={cityData.toJS()}
+        countryData={countryData}
+        cityData={cityData}
         theme={theme}
         height={height}
         mapBounds={mapBounds}
