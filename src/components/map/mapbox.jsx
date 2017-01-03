@@ -597,6 +597,9 @@ class Mapbox extends React.Component {
   getCitiesOnZoomDrag(map) {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom > 6.9) {
+      const currentBounds = this.props.mapBounds
+      const boundsChangedBy = 0.5
+
       // We need to wrap map center in order to get actual lat/lon coordinates
       // See: https://github.com/mapbox/mapbox-gl-js/issues/3690
       map.setCenter(map.getCenter().wrap())
@@ -607,7 +610,15 @@ class Mapbox extends React.Component {
       const north = map.getBounds().getNorth()
       const east = map.getBounds().getEast()
 
-      this.props.getCitiesWithinBounds(south, west, north, east)
+      if (((currentBounds.south + boundsChangedBy < south || currentBounds.south - boundsChangedBy > south) &&
+          (currentBounds.west   + boundsChangedBy < west  || currentBounds.west  - boundsChangedBy > west)  &&
+          (currentBounds.north  + boundsChangedBy < north || currentBounds.north - boundsChangedBy > north) &&
+          (currentBounds.east   + boundsChangedBy < east  || currentBounds.east  - boundsChangedBy > east)) ||
+          !this.props.cityData.length) {
+        this.props.mapboxActions.setMapBounds(map.getBounds())
+        this.props.getCitiesWithinBounds(south, west, north, east)
+      }
+
     }
   }
 
@@ -737,6 +748,8 @@ Mapbox.propTypes = {
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,
+  mapBounds: React.PropTypes.object,
+  mapboxActions: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 

@@ -12,7 +12,9 @@ const AnalysisByLocation = (props) => {
     cityData,
     theme,
     getCityData,
-    height
+    height,
+    mapBounds,
+    mapboxActions
   } = props
 
   if (!countryData.size) {
@@ -27,7 +29,9 @@ const AnalysisByLocation = (props) => {
         countryData={countryData.toJS()}
         cityData={cityData.toJS()}
         theme={theme}
-        height={height} />
+        height={height}
+        mapBounds={mapBounds}
+        mapboxActions={mapboxActions} />
     </div>
   )
 
@@ -45,6 +49,8 @@ AnalysisByLocation.propTypes = {
   countryData: React.PropTypes.instanceOf(Immutable.List),
   getCityData: React.PropTypes.func,
   height: React.PropTypes.number,
+  mapBounds: React.PropTypes.object,
+  mapboxActions: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 
