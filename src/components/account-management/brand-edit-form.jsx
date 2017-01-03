@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { connect } from 'react-redux'
 
 import SidePanel from '../side-panel'
@@ -130,11 +130,9 @@ BrandEditForm.displayName = 'BrandEditForm'
 
 BrandEditForm.propTypes = {
   edit: React.PropTypes.bool,
-  handleSubmit: React.PropTypes.func,
   intl: React.PropTypes.object,
-  invalid: React.PropTypes.bool,
   onCancel: React.PropTypes.func,
-  submitting: React.PropTypes.bool
+  ...reduxFormPropTypes
 }
 
 function mapStateToProps() {
