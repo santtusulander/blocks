@@ -58,7 +58,7 @@ const generateBsClasses = (meta, bsStyle) => {
   return bsStyle ? { bsStyle } : {}
 }
 
-const InlineAdd = ({ inputs, invalid, unmount, values, save, getMetaData }) =>
+const InlineAdd = ({ inputs, invalid, unmount, formValues, save, getMetaData }) =>
   <tr className="inline-add-row">
 
       {inputs.map((cell, index) =>
@@ -81,7 +81,7 @@ const InlineAdd = ({ inputs, invalid, unmount, values, save, getMetaData }) =>
 
           {index === inputs.length - 1 &&
           <ButtonToolbar className="pull-right">
-            <UDNButton disabled={invalid} onClick={() => save(values)}>
+            <UDNButton disabled={invalid} onClick={() => save(formValues)}>
               <FormattedMessage id="portal.button.SAVE"/>
             </UDNButton>
             <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
@@ -105,10 +105,12 @@ InlineAdd.propTypes = {
 export default connect(
   state => {
     const errors = getFormSyncErrors('inlineAdd')(state) || {}
+    //No selector exists to get a form's metadata
     const form = state.form.inlineAdd || {}
     const metaData = form.fields || {}
+
     return {
-      values: getFormValues('inlineAdd')(state),
+      formValues: getFormValues('inlineAdd')(state),
       getMetaData: fieldName => ({ ...metaData[fieldName], error: errors[fieldName] })
     }
   }
