@@ -58,6 +58,7 @@ function getTabName(router, params) {
   return '';
 }
 
+SupportPageHeader.displayName = "SupportPageHeader"
 SupportPageHeader.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Map),
   params: PropTypes.object,

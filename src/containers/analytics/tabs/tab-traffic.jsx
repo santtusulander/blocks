@@ -8,9 +8,11 @@ import moment from 'moment'
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
+import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 import DateRanges from '../../../constants/date-ranges'
+import { MAPBOX_MAX_CITIES_FETCHED } from '../../../constants/mapbox'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -47,14 +49,8 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName) {
-    if(params.property && hostConfiguredName) {
-      params = Object.assign({}, params, {
-        property: hostConfiguredName
-      })
-    }
-
-    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
+  fetchData(params, filters, location, activeHostConfiguredName) {
+    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location, activeHostConfiguredName })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -115,7 +111,13 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location, activeHostConfiguredName } = {}) {
+    if (params.property && activeHostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: activeHostConfiguredName
+      })
+    }
+
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -125,7 +127,7 @@ class AnalyticsTabTraffic extends React.Component {
     }, fetchOpts)
 
     const byCityOpts = Object.assign({
-      max_cities: 999,
+      max_cities: MAPBOX_MAX_CITIES_FETCHED,
       latitude_south: coordinates.south || null,
       longitude_west: coordinates.west || null,
       latitude_north: coordinates.north || null,
@@ -137,6 +139,7 @@ class AnalyticsTabTraffic extends React.Component {
 
   getCitiesWithinBounds(south, west, north, east) {
     const { byCityOpts } = this.buildOpts({
+      activeHostConfiguredName: this.props.activeHostConfiguredName,
       coordinates: {
         south: south,
         west: west,
@@ -177,15 +180,20 @@ class AnalyticsTabTraffic extends React.Component {
         totalEgress={this.props.totalEgress}
         getCityData={this.getCitiesWithinBounds}
         theme={this.props.theme}
+        mapBounds={this.props.mapBounds.toJS()}
+        mapboxActions={this.props.mapboxActions}
       />
     )
   }
 }
 
+AnalyticsTabTraffic.displayName = "AnalyticsTabTraffic"
 AnalyticsTabTraffic.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
+  mapBounds: React.PropTypes.instanceOf(Immutable.Map),
+  mapboxActions: React.PropTypes.object,
   params: React.PropTypes.object,
   theme: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
@@ -199,6 +207,7 @@ AnalyticsTabTraffic.propTypes = {
 
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
+  mapBounds: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
@@ -216,13 +225,15 @@ function mapStateToProps(state) {
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress'),
-    theme: state.ui.get('theme')
+    theme: state.ui.get('theme'),
+    mapBounds: state.mapbox.get('mapBounds')
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    mapboxActions: bindActionCreators(mapboxActionCreators, dispatch)
   }
 }
 

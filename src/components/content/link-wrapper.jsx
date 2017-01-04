@@ -14,6 +14,7 @@ const LinkWrapper = props => {
   )
 }
 
+LinkWrapper.displayName = "LinkWrapper"
 LinkWrapper.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,

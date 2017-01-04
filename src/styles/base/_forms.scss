@@ -17,7 +17,7 @@ label {
   margin-bottom: 0;
   font-size: rem(18px);
   font-weight: 700;
-  line-height: 1.3333333;
+  line-height: 1;
 }
 
 .form-control {
@@ -65,6 +65,7 @@ label {
   .light-theme & {
     color: $lt-text-color;
     background-color: $white;
+    box-shadow: 0 0 0 1px rgba($black, 0.1);
 
     &:focus,
     &:active {

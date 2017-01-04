@@ -4,7 +4,7 @@ import { FormGroup, Checkbox } from 'react-bootstrap'
 
 import FilterChecklistDropdown from '../filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 
-const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
+function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   const
     isChecked = option =>
     option.filter(option => values.findIndex(value => value === option) >= 0).length === option.length,
@@ -69,6 +69,7 @@ const StatusCodes = ({ errorCodesOnly, options, values, onChange }) => {
   )
 }
 
+StatusCodes.displayName = "StatusCodes"
 StatusCodes.propTypes = {
   errorCodesOnly: PropTypes.bool,
   onChange: PropTypes.func,

@@ -230,6 +230,8 @@ class AnalysisTraffic extends React.Component {
                 getCityData={this.props.getCityData}
                 theme={this.props.theme}
                 height={this.state.byTimeWidth / 2}
+                mapBounds={this.props.mapBounds}
+                mapboxActions={this.props.mapboxActions}
                 />
             }
           </div>
@@ -310,6 +312,8 @@ AnalysisTraffic.propTypes   = {
   getCityData: React.PropTypes.func,
   intl: React.PropTypes.object,
   lowTraffic: React.PropTypes.string,
+  mapBounds: React.PropTypes.object,
+  mapboxActions: React.PropTypes.object,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),

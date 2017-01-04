@@ -388,6 +388,8 @@ class GroupForm extends React.Component {
   }
 }
 
+GroupForm.displayName = "GroupForm"
+
 GroupForm.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),

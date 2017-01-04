@@ -3,16 +3,17 @@ import { Link } from 'react-router'
 
 import IconChart from '../icons/icon-chart.jsx'
 
-const AnalyticsLink = props => {
+function AnalyticsLink({ url }){
   return (
     <Link
       className="btn btn-primary btn-icon"
-      to={props.url()}>
+      to={url()}>
       <IconChart />
     </Link>
   )
 }
 
+AnalyticsLink.displayName = "AnalyticsLink"
 AnalyticsLink.propTypes = {
   url: React.PropTypes.func
 }
