@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Radio as BSRadio } from 'react-bootstrap'
 
-const Radio = ({children, input, ...otherProps}) => (
+/* eslint-disable no-unused-vars */
+const Radio = ({children, input, meta, ...otherProps}) => (
   <BSRadio
     {...input}
     {...otherProps}>
@@ -11,7 +12,8 @@ const Radio = ({children, input, ...otherProps}) => (
 
 Radio.propTypes = {
   children: PropTypes.node,
-  input: PropTypes.object
+  input: PropTypes.object,
+  meta: PropTypes.object
 }
 
 export default Radio
