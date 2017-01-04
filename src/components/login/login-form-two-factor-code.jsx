@@ -148,7 +148,7 @@ export class LoginFormTwoFactorCode extends Component {
                 </div>
               </InputGroup>
             </FormGroup>
-            <Row>
+            <div className="text-center">
               { this.props.fetching &&
                 <LoadingSpinnerSmall />
               }
@@ -157,7 +157,7 @@ export class LoginFormTwoFactorCode extends Component {
                   <FormattedMessage id="portal.login.2fa.goBack.text"/>
                 </Link>
               }
-            </Row>
+            </div>
           </form>
         </Modal.Body>
       </Modal.Dialog>
