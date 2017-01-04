@@ -54,7 +54,7 @@ const BrandEditForm = (props) => {
             id="name-field"
             placeholder={props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
             component={FieldFormGroup}
-            input={<FormattedMessage id="portal.brand.edit.brandName.text" />}/>
+            label={<FormattedMessage id="portal.brand.edit.brandName.text" />}/>
 
         <hr/>
 
