@@ -1,47 +1,78 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, change } from 'redux-form'
+import { connect } from 'react-redux'
+import { reduxForm, Field, change, propTypes as reduxFormPropTypes, formValueSelector, getFormValues} from 'redux-form'
 import { Link } from 'react-router'
+
 import { HelpBlock, FormGroup, InputGroup,
          Tooltip, Button, ButtonToolbar,
          Col, FormControl, ControlLabel, Row } from 'react-bootstrap'
+
 import ReactTelephoneInput from 'react-telephone-input'
 import { FormattedMessage, injectIntl } from 'react-intl';
 import phoneValidator from 'phone'
 
-import Toggle from '../toggle'
-import SelectWrapper from '../select-wrapper'
+// import Toggle from '../toggle'
+// import SelectWrapper from '../select-wrapper'
 import PasswordFields from '../password-fields'
 import SaveBar from '../save-bar'
 // import IconUser from '../icons/icon-user.jsx'
 
-import { getReduxFormValidationState } from '../../util/helpers'
+
+import FieldFormGroup from '../form/field-form-group'
+import FieldFormGroupToggle from '../form/field-form-group-toggle'
+import FieldFormGroupSelect from '../form/field-form-group-select'
+import FormFooterButtons from '../form/form-footer-buttons'
+
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
          TWO_FA_DEFAULT_AUTH_METHOD } from '../../constants/user.js'
+
 import '../../styles/components/user/_edit-form.scss'
 
-let errors = {}
-let passwordErrors = {}
+
+const stripCountryCode = (num, countryCode) => {
+  return num.replace( new RegExp ( `^\\+${countryCode} ` ), '')
+}
+
+const stripNonNumeric = (num) => {
+  return num.replace(/\D/g,'')
+}
 
 const validate = (values) => {
-  errors = {}
-  passwordErrors = {}
+  const errors = {}
+  console.log(values)
 
   const {
+    first_name,
+    last_name,
+    tfa_toggle,
+    tfa,
     email,
     current_password
   } = values
 
+
+  if (!first_name) {
+    errors.first_name = "First name is required"
+  }
+
+  if (!last_name) {
+    errors.last_name = "Last name is required"
+  }
 
   if(!email || email.length === 0) {
     errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
   }
 
   if(!current_password || current_password.length === 0) {
-    passwordErrors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
+    errors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
   }
 
-  return errors, passwordErrors;
+  if (tfa_toggle && !tfa) {
+    errors.tfa = "Select TFA method"
+  }
+
+  return errors;
 }
 
 class UserEditForm extends React.Component {
@@ -49,7 +80,7 @@ class UserEditForm extends React.Component {
     super(props)
 
     this.state = {
-      showMiddleNameField: !!props.fields.middle_name.value,
+      showMiddleNameField: !!props.initialValues.middleName,
       showPasswordField: false,
       passwordVisible: false,
       validPassword: false,
@@ -58,6 +89,8 @@ class UserEditForm extends React.Component {
       phoneNumberValidationState: null
     }
 
+    this.onSubmit = this.onSubmit.bind(this);
+
     // SaveBar helpers
     this.saveBarOnSave = this.saveBarOnSave.bind(this)
 
@@ -65,23 +98,39 @@ class UserEditForm extends React.Component {
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this)
-    this.changePassword = this.changePassword.bind(this)
+    //this.changePassword = this.changePassword.bind(this)
     this.currentPasswordChangesCallback = this.currentPasswordChangesCallback.bind(this)
 
     // 'middle_name' field helper
-    this.showMiddleName = this.showMiddleName.bind(this)
+    //this.showMiddleName = this.showMiddleName.bind(this)
 
     // 2FA fields helpers
-    this.tfaMethodOptions = this.tfaMethodOptions.bind(this)
-    this.toggleTfa = this.toggleTfa.bind(this)
+    // this.tfaMethodOptions = this.tfaMethodOptions.bind(this)
+    // this.toggleTfa = this.toggleTfa.bind(this)
 
     // Phone number fields helpers
-    this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this)
-    this.validatePhoneNumber = this.validatePhoneNumber.bind(this)
+    // this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this)
+    // this.validatePhoneNumber = this.validatePhoneNumber.bind(this)
 
     // Render helpers
-    this.renderTwoFAMethodsTooltips = this.renderTwoFAMethodsTooltips.bind(this)
-    this.renderCurrentPassowrdErrorTooltip = this.renderCurrentPassowrdErrorTooltip.bind(this)
+    // this.renderTwoFAMethodsTooltips = this.renderTwoFAMethodsTooltips.bind(this)
+    // this.renderCurrentPassowrdErrorTooltip = this.renderCurrentPassowrdErrorTooltip.bind(this)
+  }
+
+  onSubmit(values){
+    //strip out unneeded values
+    const {tfa_toggle, tfa, phone, email, ...data} = values;
+
+    //handle 2FA,  add method if ON
+    if (tfa_toggle) {
+      data.tfa = tfa
+    } else {
+      data.tfa = ""
+    }
+
+    console.log('onSubmit', data);
+    return this.props.onSave(data)
+
   }
 
   saveBarOnSave() {
@@ -165,11 +214,11 @@ class UserEditForm extends React.Component {
     })
   }
 
-  changePassword(isPasswordValid) {
-    this.setState({
-      'validPassword': isPasswordValid
-    });
-  }
+  // changePassword(isPasswordValid) {
+  //   this.setState({
+  //     'validPassword': isPasswordValid
+  //   });
+  // }
 
   tfaMethodOptions() {
     let tfaOptions = []
@@ -184,62 +233,62 @@ class UserEditForm extends React.Component {
     return tfaOptions
   }
 
-  toggleTfa() {
-    if (this.props.fields.tfa_toggle.value) {
-      this.props.dispatch(change('user-edit-form', 'tfa', ''))
-    } else {
-      if (this.props.fields.tfa.initialValue === '') {
-        // When user enabling 2FA first time, set default method
-        this.props.dispatch(change('user-edit-form', 'tfa',
-                                   TWO_FA_DEFAULT_AUTH_METHOD))
-      } else {
-        // When user just playing with toggle, need to keep initial method
-        this.props.dispatch(change('user-edit-form', 'tfa',
-                                   this.props.fields.tfa.initialValue))
-      }
-    }
-
-    this.props.dispatch(change('user-edit-form', 'tfa_toggle',
-                               !this.props.fields.tfa_toggle.value))
-
-    this.validatePhoneNumber(this.props.fields.phone.value)
-  }
-
-  validatePhoneNumber(number) {
-    // UDNP-2227: Number given to validator should always be with + symbol
-    number = number.substr(0, 1) === "+" ? number : ("+" + number)
-
-    const isPhoneValid = phoneValidator(number).length
-    if (isPhoneValid === 0) {
-      this.setState({
-        phoneNumberValidationState: 'error'
-      })
-    } else {
-      this.setState({
-        phoneNumberValidationState: null
-      })
-    }
-  }
-
-  onPhoneNumberChange(number, { dialCode }) {
-    const {
-      fields: {
-        phone,
-        phone_number,
-        phone_country_code
-      }
-    } = this.props
-
-    const trimmedPhoneNumber = number.replace(/\D/g, '').replace(dialCode, '')
-
-    phone.onChange(number)
-    // Fill the inputs that will be send to API
-    phone_number.onChange(trimmedPhoneNumber)
-    phone_country_code.onChange(dialCode)
-
-    // Validate phone number
-    this.validatePhoneNumber(number)
-  }
+  // toggleTfa() {
+  //   if (this.props.fields.tfa_toggle.value) {
+  //     this.props.dispatch(change('user-edit-form', 'tfa', ''))
+  //   } else {
+  //     if (this.props.fields.tfa.initialValue === '') {
+  //       // When user enabling 2FA first time, set default method
+  //       this.props.dispatch(change('user-edit-form', 'tfa',
+  //                                  TWO_FA_DEFAULT_AUTH_METHOD))
+  //     } else {
+  //       // When user just playing with toggle, need to keep initial method
+  //       this.props.dispatch(change('user-edit-form', 'tfa',
+  //                                  this.props.fields.tfa.initialValue))
+  //     }
+  //   }
+  //
+  //   this.props.dispatch(change('user-edit-form', 'tfa_toggle',
+  //                              !this.props.fields.tfa_toggle.value))
+  //
+  //   this.validatePhoneNumber(this.props.fields.phone.value)
+  // }
+  //
+  // validatePhoneNumber(number) {
+  //   // UDNP-2227: Number given to validator should always be with + symbol
+  //   number = number.substr(0, 1) === "+" ? number : ("+" + number)
+  //
+  //   const isPhoneValid = phoneValidator(number).length
+  //   if (isPhoneValid === 0) {
+  //     this.setState({
+  //       phoneNumberValidationState: 'error'
+  //     })
+  //   } else {
+  //     this.setState({
+  //       phoneNumberValidationState: null
+  //     })
+  //   }
+  // }
+  //
+  // onPhoneNumberChange(number, { dialCode }) {
+  //   const {
+  //     fields: {
+  //       phone,
+  //       phone_number,
+  //       phone_country_code
+  //     }
+  //   } = this.props
+  //
+  //   const trimmedPhoneNumber = number.replace(/\D/g, '').replace(dialCode, '')
+  //
+  //   phone.onChange(number)
+  //   // Fill the inputs that will be send to API
+  //   phone_number.onChange(trimmedPhoneNumber)
+  //   phone_country_code.onChange(dialCode)
+  //
+  //   // Validate phone number
+  //   this.validatePhoneNumber(number)
+  // }
 
   renderTwoFAMethodsTooltips(tfa_method) {
     switch (tfa_method) {
@@ -276,257 +325,161 @@ class UserEditForm extends React.Component {
     }
   }
 
-  renderCurrentPassowrdErrorTooltip(isCurrentPasswordInvalid) {
-    if (isCurrentPasswordInvalid)
-    {
-      return (
-        <Tooltip id="confirm-error" placement="top" className="input-tooltip in">
-          {this.state.currentPasswordErrorStr}
-        </Tooltip>
-      )
-    }
-  }
+  // renderCurrentPassowrdErrorTooltip(isCurrentPasswordInvalid) {
+  //   if (isCurrentPasswordInvalid)
+  //   {
+  //     return (
+  //       <Tooltip id="confirm-error" placement="top" className="input-tooltip in">
+  //         {this.state.currentPasswordErrorStr}
+  //       </Tooltip>
+  //     )
+  //   }
+  // }
 
   render() {
     const {
-      fields: {
-        current_password,
-        email,
-        first_name,
-        last_name,
-        middle_name,
-        new_password,
-        phone,
-        tfa_toggle,
-        tfa
-        /*, timezone*/
+      handleSubmit,
+      invalid,
+      initialValues: {
+        email
       },
+      submitting,
       resetForm,
-      savingPassword,
-      savingUser
+      tfa_toggle,
+      tfaVerificationMethod
     } = this.props
 
     // ReactTelephoneInput decorates the phone number at render and thus triggers
     // the phone_number.dirty flag. Need to add extra check to see if any actual
     // digits have been changed before showing the Save bar
-    const trimmedPhoneNumber = phone.value.replace(/\D/g,'')
-    const showSaveBar = (first_name.dirty || middle_name.dirty || last_name.dirty || tfa.dirty ||
-                         (phone.dirty && phone.initialValue !== trimmedPhoneNumber)) &&
-                         this.state.phoneNumberValidationState === null
+    //const trimmedPhoneNumber = phone.value.replace(/\D/g,'')
+    const showSaveBar = this.props.dirty
 
-    const currentPasswordInvalid = !this.state.currentPasswordValid && (current_password.value === '')
+    console.log(this.props)
+
+    // (first_name.dirty || middle_name.dirty || last_name.dirty || tfa.dirty ||
+    //                      (phone.dirty && phone.initialValue !== trimmedPhoneNumber)) &&
+    //                      this.state.phoneNumberValidationState === null
+
+    // const currentPasswordInvalid = !this.state.currentPasswordValid && (current_password.value === '')
 
     return (
-      <form className="form-horizontal user-profile-edit-form">
+      <form className="form-horizontal user-profile-edit-form" onSubmit={handleSubmit(this.onSubmit)}>
+
         <Row>
-          <Col lg={10}>
-            {/* Default user icon is waiting for customer approval
-              <div className="form-group">
-              <Row>
-                <label className="col-xs-2 control-label">
-                  <FormattedMessage id="portal.user.edit.photo.text"/>
-                </label>
-                <Col xs={9}>
-                  <IconUser width={180} height={180} />
-                </Col>
-              </Row>
-            </div>
+          <ControlLabel>
+            <FormattedMessage id="portal.user.edit.name.text"/>
+          </ControlLabel>
 
-            <hr />*/}
+          <Field
+            type="text"
+            name="first_name"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}
+            label={<FormattedMessage id="portal.user.edit.firstName.text"/>}
+            component={FieldFormGroup}
+          />
 
-            <div className="form-group">
-              <Row>
-                <ControlLabel className="col-xs-2">
-                  <FormattedMessage id="portal.user.edit.name.text"/>
-                </ControlLabel>
-                <Col xs={3}>
-                  <FormGroup validationState={getReduxFormValidationState(first_name)}>
-                    <FormControl
-                      {...first_name}
-                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.firstName.text'})}/>
-                    {first_name.touched && first_name.error &&
-                      <HelpBlock className="error-msg">{first_name.error}</HelpBlock>}
-                  </FormGroup>
-                </Col>
+          <Field
+            type="text"
+            name="middleName"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}
+            label={<FormattedMessage id="portal.user.edit.middleName.text"/>}
+            component={FieldFormGroup}
+          />
 
-                {this.state.showMiddleNameField &&
-                  <Col xs={3}>
-                    <FormGroup validationState={getReduxFormValidationState(middle_name)}>
-                      <FormControl
-                        {...middle_name}
-                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}/>
-                      {last_name.touched && last_name.error &&
-                        <HelpBlock className="error-msg">{middle_name.error}</HelpBlock>}
-                    </FormGroup>
-                  </Col>}
+          <Field
+            type="text"
+            name="last_name"
+            placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}
+            label={<FormattedMessage id="portal.user.edit.lastName.text"/>}
+            component={FieldFormGroup}
+          />
 
-                <Col xs={3}>
-                  <FormGroup validationState={getReduxFormValidationState(last_name)}>
-                    <FormControl
-                      {...last_name}
-                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.lastName.text'})}/>
-                    {last_name.touched && last_name.error &&
-                      <HelpBlock className="error-msg">{last_name.error}</HelpBlock>}
-                  </FormGroup>
-                </Col>
-
-                {!this.state.showMiddleNameField ?
-                  <Button bsStyle="link" onClick={this.showMiddleName}>
-                    + <FormattedMessage id="portal.user.edit.addMiddleName.text"/>
-                  </Button>
-                : null}
-              </Row>
-            </div>
-
-            <hr />
-
-            <div className="form-group">
-              <Row>
-                <ControlLabel className="col-xs-2">
-                  <FormattedMessage id="portal.user.edit.contact.text"/>
-                </ControlLabel>
-                <Col xs={3}>
-                  <p className="form-control-static">{email.value}</p>
-                </Col>
-
-                <Col xs={3}>
-                  <FormGroup validationState={this.state.phoneNumberValidationState}>
-                      <ReactTelephoneInput
-                        {...phone}
-                        defaultCountry="us"
-                        onChange={this.onPhoneNumberChange}
-                      />
-                  </FormGroup>
-                  {
-                    this.state.phoneNumberValidationState !== null &&
-                    <HelpBlock className="error-msg">
-                      <FormattedMessage id="portal.user.edit.phoneInvalid.text"/>
-                    </HelpBlock>
-                  }
-                </Col>
-              </Row>
-            </div>
-
-            <hr />
-            {/* Not supported yet
-            <div className="form-group">
-              <Row>
-                <label className="col-xs-2 control-label">
-                  <FormattedMessage id="portal.user.edit.timezone.text"/>
-                </label>
-                <Col xs={3}>
-                  <div className="form-group">
-                    <FormControl
-                      {...timezone}
-                      placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.timezone.text'})}/>
-                  </div>
-                </Col>
-                <Col xs={7}>
-                  <FormattedMessage id="portal.user.edit.currentDate.text"/>
-                  : {moment().format('LLLL')}
-                </Col>
-              </Row>
-            </div>
-
-            <hr />*/}
-
-            <div className="form-group">
-              <Row>
-                <ControlLabel className="col-xs-2">
-                  <FormattedMessage id="portal.user.edit.password.text"/>
-                </ControlLabel>
-
-                {this.state.showPasswordField || savingPassword ?
-                  <div>
-                    <Col xs={3}>
-                      <FormGroup>
-                        <InputGroup className={currentPasswordInvalid ?
-                                                "input-addon-after-outside invalid" :
-                                                "input-addon-after-outside"
-                                              }>
-                          {this.renderCurrentPassowrdErrorTooltip(currentPasswordInvalid)}
-                          <FormControl
-                            type="password"
-                            placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
-                            {...current_password} />
-                        </InputGroup>
-                      </FormGroup>
-                    </Col>
-                    <Col xs={6}>
-                      <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...new_password} />
-                    </Col>
-                    <Col xs={4} xsOffset={2}>
-                      <ButtonToolbar className="extra-margin-top">
-                        <Button
-                          className="btn-secondary"
-                          bsSize="small"
-                          onClick={this.togglePasswordEditing}>
-                          <FormattedMessage id="portal.button.CANCEL"/>
-                        </Button>
-                        <Button
-                          disabled={this.props.invalid || !this.state.validPassword || savingPassword}
-                          bsStyle="success"
-                          bsSize="small"
-                          onClick={this.savePasswordOnClick}>
-                          {savingPassword ? <FormattedMessage id="portal.button.CHANGING"/> : <FormattedMessage id="portal.button.CHANGE"/>}
-                        </Button>
-                      </ButtonToolbar>
-                    </Col>
-                  </div>
-                :
-                  <Col xs={9}>
-                    <Button bsStyle="primary" onClick={this.togglePasswordEditing}>
-                      <FormattedMessage id="portal.button.CHANGE"/>
-                    </Button>
-                  </Col>
-                }
-              </Row>
-            </div>
-
-            <hr />
-
-            <div className="form-group">
-              <Row>
-                <Col xs={2}>
-                  <ControlLabel>
-                    <FormattedMessage id="portal.user.edit.2FA.text" />
-                  </ControlLabel>
-                </Col>
-                <Col xs={3}>
-                  <Toggle value={tfa_toggle.value}
-                          changeValue={this.toggleTfa}
-                  />
-                </Col>
-                <Col xs={2}>
-                  <p className="form-control-static">
-                    <FormattedMessage id="portal.user.edit.2FA.method.text" />
-                  </p>
-                </Col>
-                <Col xs={1}>
-                  <SelectWrapper {...tfa} disabled={!tfa_toggle.value}
-                                 options={this.tfaMethodOptions()}
-                  />
-                </Col>
-                <Col xs={4}>
-                  <div className="select-box-tooltip">
-                    { this.renderTwoFAMethodsTooltips(tfa.value) }
-                  </div>
-                </Col>
-              </Row>
-            </div>
-
-            <hr />
-
-          </Col>
         </Row>
+
+        <hr />
+
+        <Row>
+          <ControlLabel className="col-xs-2">
+            <FormattedMessage id="portal.user.edit.contact.text"/>
+          </ControlLabel>
+
+          <p className="form-control-static">{email}</p>
+
+          <Field
+            type="text"
+            name="phone"
+            component={({meta}) => {
+              return (
+                <ReactTelephoneInput
+                  onChange={(val, {dialCode})=> {
+                    const strippedNum = stripNonNumeric( stripCountryCode(val, dialCode) )
+
+                    meta.dispatch( change('user-edit-form', 'phone_country_code', dialCode) )
+                    meta.dispatch( change('user-edit-form', 'phone_number', strippedNum))
+
+                  }}
+                  defaultCountry="us"
+                />
+              )
+            }}
+          />
+        </Row>
+
+        <hr/>
+
+        <Row>
+          <p>Password Form</p>
+        </Row>
+
+        <hr/>
+
+        <Row>
+          <ControlLabel>
+            <FormattedMessage id="portal.user.edit.2FA.text" />
+          </ControlLabel>
+
+          <Field
+            name="tfa_toggle"
+            component={FieldFormGroupToggle}
+          />
+
+          <Field
+            name="tfa"
+            component={FieldFormGroupSelect}
+            disabled={!tfa_toggle}
+            options={this.tfaMethodOptions()}
+            label={<FormattedMessage id="portal.user.edit.2FA.method.text" />}
+          />
+
+          {this.renderTwoFAMethodsTooltips( tfaVerificationMethod )}
+        </Row>
+
+        <FormFooterButtons>
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={resetForm}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
+
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid||submitting}>
+              Submit
+            </Button>
+          </FormFooterButtons>
 
         <SaveBar
           onCancel={resetForm}
           onSave={this.saveBarOnSave}
-          saving={savingUser}
+          invalid={invalid}
+          saving={submitting}
           show={showSaveBar}>
           <FormattedMessage id="portal.user.edit.unsavedChanges.text"/>
         </SaveBar>
+
       </form>
     )
   }
@@ -534,33 +487,24 @@ class UserEditForm extends React.Component {
 
 UserEditForm.displayName = "UserEditForm"
 UserEditForm.propTypes = {
-  dispatch: PropTypes.func,
-  fields: PropTypes.object,
   intl: PropTypes.object,
-  invalid: PropTypes.bool,
   onSave: PropTypes.func,
   onSavePassword: PropTypes.func,
   resetForm: PropTypes.func,
   savingPassword: PropTypes.bool,
-  savingUser: PropTypes.bool
+  savingUser: PropTypes.bool,
+  ...reduxFormPropTypes
 }
 
-export default reduxForm({
+const mapStateToProps = (state) => {
+  return {
+    formValues: getFormValues('user-edit-form')(state),
+    tfa_toggle: formValueSelector('user-edit-form')(state, 'tfa_toggle'),
+    tfa: formValueSelector('user-edit-form')(state, 'tfa')
+  }
+}
+
+export default connect(mapStateToProps)(reduxForm({
   form: 'user-edit-form',
-  fields: [
-    'confirm',
-    'current_password',
-    'email',
-    'first_name',
-    'last_name',
-    'middle_name',
-    'new_password',
-    'phone',
-    'phone_number',
-    'phone_country_code',
-    'tfa_toggle',
-    'tfa',
-    'timezone'
-  ],
   validate: validate
-})(injectIntl(UserEditForm))
+})(injectIntl(UserEditForm)))

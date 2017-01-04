@@ -92,8 +92,8 @@ class User extends React.Component {
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
       phone: currentUser.get('phone_country_code') + currentUser.get('phone_number'),
-      phone_number: currentUser.get('phone_number'),
-      phone_country_code: currentUser.get('phone_country_code'),
+      //phone_number: currentUser.get('phone_number'),
+      //phone_country_code: currentUser.get('phone_country_code'),
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
       tfa: currentUser.get('tfa')
