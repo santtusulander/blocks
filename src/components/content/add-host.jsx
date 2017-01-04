@@ -120,7 +120,7 @@ AddHost.displayName = 'AddHost'
 AddHost.propTypes = {
   cancelChanges: React.PropTypes.func,
   createHost: React.PropTypes.func,
-  intl: React.PropTypes.obj,
+  intl: React.PropTypes.object,
   ...reduxFormPropTypes
 }
 
