@@ -110,7 +110,7 @@ class AccountList extends Component {
         stayButton: true,
         continueButton: true,
         cancel: this.props.uiActions.hideInfoDialog,
-        submit: () => {
+        onSubmit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()

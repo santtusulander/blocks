@@ -330,7 +330,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           deleteButton: true,
           cancel: () => toggleModal(null),
-          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          onSubmit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
         break
     }
