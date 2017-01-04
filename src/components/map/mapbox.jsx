@@ -341,60 +341,62 @@ class Mapbox extends React.Component {
    * @param  {array}          countryData List of countries with traffic
    */
   addCountryLayers(map, countryData) {
-    const layers = this.state.layers
+    if (map && map.style._loaded) {
+      const layers = this.state.layers
 
-    // Filters through the country GeoJSON and creates sources/layers for countries that have data
-    this.props.geoData.features.forEach((data) => {
-      const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
-      const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
-      const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+      // Filters through the country GeoJSON and creates sources/layers for countries that have data
+      this.props.geoData.features.forEach((data) => {
+        const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
+        const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
+        const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
 
-      // If the country has data and we don't already have a source for it,
-      // we create a source layer and add the layer ID to a list.
-      if (countryExists) {
-        const geoData = {
-          type: 'FeatureCollection',
-          features: [{
-            type: data.type,
-            properties: {
-              name: data.properties.name,
-              total: trafficCountry.bits_per_second
-            },
-            geometry: data.geometry
-          }]
+        // If the country has data and we don't already have a source for it,
+        // we create a source layer and add the layer ID to a list.
+        if (countryExists) {
+          const geoData = {
+            type: 'FeatureCollection',
+            features: [{
+              type: data.type,
+              properties: {
+                name: data.properties.name,
+                total: trafficCountry.bits_per_second
+              },
+              geometry: data.geometry
+            }]
+          }
+
+          // If the country already has a source, we should just update the data.
+          if (map.getSource('geo-' + data.properties.iso_a3)) {
+            map.getSource('geo-' + data.properties.iso_a3).setData(geoData)
+
+          } else {
+            map.addSource('geo-' + data.properties.iso_a3, {
+              type: 'geojson',
+              data: geoData
+            })
+          }
+
+          if (!layerExists) {
+            // Adds a layer ID to a list so we can reference it in onMouseMove
+            // and set a hover style for it.
+            layers.push('country-fill-' + data.properties.iso_a3)
+          }
+
+          // Render the actual colored country layers on the map
+          this.renderCountryHighlight(map, countryData, trafficCountry)
         }
-
-        // If the country already has a source, we should just update the data.
-        if (map.getSource('geo-' + data.properties.iso_a3)) {
-          map.getSource('geo-' + data.properties.iso_a3).setData(geoData)
-
-        } else {
-          map.addSource('geo-' + data.properties.iso_a3, {
-            type: 'geojson',
-            data: geoData
-          })
-        }
-
-        if (!layerExists) {
-          // Adds a layer ID to a list so we can reference it in onMouseMove
-          // and set a hover style for it.
-          layers.push('country-fill-' + data.properties.iso_a3)
-        }
-
-        // Render the actual colored country layers on the map
-        this.renderCountryHighlight(map, countryData, trafficCountry)
-      }
-    })
+      })
 
 
-    // Update this.state.layers
-    this.updateLayers(layers)
+      // Update this.state.layers
+      this.updateLayers(layers)
 
-    // Sets updated instance of the map to state so that we can access
-    // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
-    // errors for not found layers since we might not have the map in state
-    // with all the countries and previous cities.
-    this.setState({ map })
+      // Sets updated instance of the map to state so that we can access
+      // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
+      // errors for not found layers since we might not have the map in state
+      // with all the countries and previous cities.
+      this.setState({ map })
+    }
   }
 
   /**
@@ -455,40 +457,40 @@ class Mapbox extends React.Component {
    * @param  {[type]}      cityData [description]
    */
   addCityLayers(map, cityData) {
-    // Calculate median total for all the countries
-    // NOTE: All these city medians and scores should be rethought as currently
-    // for example the score (cityHeat) can be anything between 1-9999, with one
-    // being 9999 and the next one 200. This is too big of a gap between the two
-    // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
-    const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
-
-    // Get the highest value to base the sizing percentage against
-    const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
-
-    // Go through the city data and create a Feature of each city.
-    const cityFeatures = cityData.map((city) => {
-      // Get score for the city based on bits_per_second
-      const cityHeat = getScore(cityMedian, city.bits_per_second)
-      // This city's percentage of the highest score of all cities
-      const percentage = cityHeat / highestValue * 100
-
-      return {
-        type: 'Feature',
-        properties: {
-          name: city.name,
-          total: city.bits_per_second,
-          radiusPercentage: percentage
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [city.lon, city.lat]
-        }
-      }
-
-    })
-
     // We might not have map available yet, so check if it exists before doing anything
-    if (map) {
+    if (map && map.style._loaded) {
+      // Calculate median total for all the countries
+      // NOTE: All these city medians and scores should be rethought as currently
+      // for example the score (cityHeat) can be anything between 1-9999, with one
+      // being 9999 and the next one 200. This is too big of a gap between the two
+      // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
+      const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
+
+      // Get the highest value to base the sizing percentage against
+      const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
+
+      // Go through the city data and create a Feature of each city.
+      const cityFeatures = cityData.map((city) => {
+        // Get score for the city based on bits_per_second
+        const cityHeat = getScore(cityMedian, city.bits_per_second)
+        // This city's percentage of the highest score of all cities
+        const percentage = cityHeat / highestValue * 100
+
+        return {
+          type: 'Feature',
+          properties: {
+            name: city.name,
+            total: city.bits_per_second,
+            radiusPercentage: percentage
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [city.lon, city.lat]
+          }
+        }
+
+      })
+
       // If the map already has source for the cities, we should remove it and create it again
       // since data has changed.
       if (map.getSource('geo-cities')) {
@@ -514,6 +516,7 @@ class Mapbox extends React.Component {
 
       // Update map instance since we have added new layers and sources.
       this.updateLayers(layers)
+
     }
   }
 
