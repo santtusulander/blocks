@@ -602,6 +602,7 @@ class Mapbox extends React.Component {
   getCitiesOnZoomDrag(map) {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
+      // Get current bounds saved in redux store
       const currentBounds = this.props.mapBounds
 
       // We need to wrap map center in order to get actual lat/lon coordinates
@@ -637,6 +638,7 @@ class Mapbox extends React.Component {
    * @return {boolean}                         Return true or false if any change is over x-percentage
    */
   checkChangeInBounds(currentBounds, newBounds) {
+    // Build an object of bounds so we can reference them nicely later on
     const boundsArray = {
       south: newBounds.getSouth(),
       west: newBounds.getWest(),
@@ -644,15 +646,15 @@ class Mapbox extends React.Component {
       east: newBounds.getEast()
     }
 
+    // Calculates percent difference between current and new bounds
     const boundsChangedBy = Object.keys(currentBounds).map((key) => {
       return {
-        current: Math.abs((boundsArray[key] / currentBounds[key] * 100) - 100),
-        previous: Math.abs(100 - (currentBounds[key] / boundsArray[key] * 100))
+        difference: Math.abs(100 - (currentBounds[key] / boundsArray[key] * 100))
       }
     })
 
-    return boundsChangedBy.some((bound) => bound.current >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE ||
-                                           bound.previous >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE)
+    // Checks if at least one of the bound values has changed over x-percent
+    return boundsChangedBy.some((bound) => bound.difference >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE)
   }
 
   /**
