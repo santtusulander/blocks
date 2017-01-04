@@ -318,7 +318,7 @@ export class AccountManagement extends Component {
           cancelButton: true,
           deleteButton: true,
           cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, this.accountToDelete, router)
+          onSubmit: () => onDelete(brand, this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:

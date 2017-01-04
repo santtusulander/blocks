@@ -50,6 +50,7 @@ class ModalWindow extends React.Component {
 
               {submitButton &&
               <Button
+                autoFocus={!verifyDelete}
                 bsStyle="primary"
                 type="submit">
                 <FormattedMessage id="portal.button.submt"/>
@@ -64,6 +65,7 @@ class ModalWindow extends React.Component {
 
               {continueButton &&
               <Button
+                autoFocus={!verifyDelete}
                 bsStyle="primary"
                 type="submit">
                 <FormattedMessage id="portal.button.continue"/>
@@ -78,6 +80,7 @@ class ModalWindow extends React.Component {
 
               {deleteButton &&
               <Button
+                autoFocus={!verifyDelete}
                 bsStyle="danger"
                 type="submit"
                 disabled={loading || (verifyDelete ? invalid : false)}>
@@ -107,6 +110,7 @@ class ModalWindow extends React.Component {
 
               {reloadButton &&
               <Button
+                autoFocus={!verifyDelete}
                 bsStyle="primary"
                 type="submit">
                 <FormattedMessage id="portal.button.reload"/>
