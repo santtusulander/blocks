@@ -4,3 +4,6 @@ export const MAPBOX_ZOOM_MIN = 1
 export const MAPBOX_ZOOM_MAX = 13
 export const MAPBOX_SCROLL_TIMEOUT = 500
 export const MAPBOX_MAX_CITIES_FETCHED = 50
+export const MAPBOX_BOUNDS_CHANGE_PERCENTAGE = 3
+export const MAPBOX_CITY_LEVEL_ZOOM = 7
+export const MAPBOX_CITY_RADIUS_DIVIDER = 10

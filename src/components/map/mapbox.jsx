@@ -8,7 +8,10 @@ import {
   MAPBOX_DARK_THEME,
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
-  MAPBOX_SCROLL_TIMEOUT
+  MAPBOX_SCROLL_TIMEOUT,
+  MAPBOX_BOUNDS_CHANGE_PERCENTAGE,
+  MAPBOX_CITY_LEVEL_ZOOM,
+  MAPBOX_CITY_RADIUS_DIVIDER
 } from '../../constants/mapbox'
 
 // import IconExpand from '../icons/icon-expand';
@@ -150,7 +153,7 @@ class Mapbox extends React.Component {
     this.addCountryLayers(map, this.props.countryData.toJS())
 
     // Only add city layers if we're within a specific zoom level.
-    if (this.state.zoom > 6.9) {
+    if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       this.addCityLayers(map, this.props.cityData.toJS())
     }
   }
@@ -421,7 +424,7 @@ class Mapbox extends React.Component {
     map.addLayer({
       id: `country-fill-${trafficCountry.code}`,
       source: `geo-${trafficCountry.code}`,
-      maxzoom: 7,
+      maxzoom: MAPBOX_CITY_LEVEL_ZOOM,
       paint: {
         'fill-color': countryColor,
         'fill-opacity': 0.5
@@ -432,7 +435,7 @@ class Mapbox extends React.Component {
     map.addLayer({
       id: `country-stroke-${trafficCountry.code}`,
       source: `geo-${trafficCountry.code}`,
-      maxzoom: 7,
+      maxzoom: MAPBOX_CITY_LEVEL_ZOOM,
       paint: {
         'line-color': countryColor,
         'line-width': 2
@@ -522,14 +525,14 @@ class Mapbox extends React.Component {
   renderCityCircles(map) {
     // Sets radius for the city circle based on the percentage.
     const cityRadiuses = [
-      [0, (7 / 10) * this.state.zoom],
-      [10, (10 / 10) * this.state.zoom],
-      [20, (14 / 10) * this.state.zoom],
-      [40, (18 / 10) * this.state.zoom],
-      [60, (24 / 10) * this.state.zoom],
-      [80, (30 / 10) * this.state.zoom],
-      [95, (32 / 10) * this.state.zoom],
-      [100, (36 / 10) * this.state.zoom]
+      [0, (7 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [10, (10 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [20, (14 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [40, (18 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [60, (24 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [80, (30 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [95, (32 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
+      [100, (36 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom]
     ]
 
     // If the layer exists, we should remove it in order to do a full reset for changed data
@@ -541,7 +544,7 @@ class Mapbox extends React.Component {
     map.addLayer({
       id: 'unclustered-cities',
       source: 'geo-cities',
-      minzoom: 7,
+      minzoom: MAPBOX_CITY_LEVEL_ZOOM,
       type: 'circle',
       filter: ['!has', 'point_count'],
       paint: {
@@ -563,7 +566,7 @@ class Mapbox extends React.Component {
     map.addLayer({
       id: 'clustered-cities',
       source: 'geo-cities',
-      minzoom: 7,
+      minzoom: MAPBOX_CITY_LEVEL_ZOOM,
       type: 'circle',
       paint: {
         'circle-color': '#f9ba01',
@@ -598,7 +601,7 @@ class Mapbox extends React.Component {
    */
   getCitiesOnZoomDrag(map) {
     // Only gets the bounds and city data when within a specific zoom level.
-    if (this.state.zoom > 6.9) {
+    if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       const currentBounds = this.props.mapBounds
 
       // We need to wrap map center in order to get actual lat/lon coordinates
@@ -648,7 +651,8 @@ class Mapbox extends React.Component {
       }
     })
 
-    return boundsChangedBy.some((bound) => bound.current >= 3 || bound.previous >= 3)
+    return boundsChangedBy.some((bound) => bound.current >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE ||
+                                           bound.previous >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE)
   }
 
   /**
@@ -757,7 +761,7 @@ class Mapbox extends React.Component {
            */}
         </div>
 
-        {this.state.zoom < 7 &&
+        {this.state.zoom < MAPBOX_CITY_LEVEL_ZOOM &&
           <div className="map-heat-legend">
             <span>Low</span>
             <div className="heat-gradient" />
