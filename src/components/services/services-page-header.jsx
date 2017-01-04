@@ -13,6 +13,7 @@ const ServicesPageHeader = ({ activeAccount, intl }) => {
   )
 }
 
+ServicesPageHeader.displayName = "ServicesPageHeader"
 ServicesPageHeader.propTypes = {
   activeAccount: PropTypes.string,
   intl: PropTypes.object

@@ -16,6 +16,7 @@ const Icon = (props) => {
   )
 }
 
+Icon.displayName = "Icon"
 Icon.propTypes = {
   children: React.PropTypes.node,
   className: React.PropTypes.string,

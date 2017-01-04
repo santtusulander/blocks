@@ -25,6 +25,8 @@ class SupportTicketComment extends React.Component {
   }
 }
 
+SupportTicketComment.displayName = "SupportTicketComment"
+
 SupportTicketComment.propTypes = {
   className: PropTypes.string,
   comment: PropTypes.instanceOf(Map)

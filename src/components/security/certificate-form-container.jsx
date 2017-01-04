@@ -123,6 +123,7 @@ class CertificateFormContainer extends Component {
   }
 }
 
+CertificateFormContainer.displayName = "CertificateFormContainer"
 CertificateFormContainer.propTypes = {
   ...reduxFormPropTypes,
   accounts: PropTypes.instanceOf(List),

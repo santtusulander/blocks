@@ -197,6 +197,8 @@ const AnalyticsFilters = (props) => {
   )
 }
 
+AnalyticsFilters.displayName = "AnalyticsFilters"
+
 AnalyticsFilters.propTypes = {
   activeAccountProviderType: PropTypes.number,
   currentUser: PropTypes.instanceOf(Map),

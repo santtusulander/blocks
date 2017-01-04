@@ -1,22 +1,34 @@
 import React, { PropTypes } from 'react';
-import {FormGroup, FormControl, ControlLabel, HelpBlock} from 'react-bootstrap';
+import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react-bootstrap';
 
-const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, error }, className, children }) => {
+import { getReduxFormValidationState } from '../../util/helpers'
+
+const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, disabled, required = true }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
-
   return (
-    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
-      <ControlLabel>{children}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
+      <ControlLabel>{label}{required && ' *'}</ControlLabel>
 
-      <FormControl componentClass={componentClass}
-                   className={className}
-                   type={type}
-                   placeholder={placeholder}
-                   value={input.value}
-                   onChange={input.onChange} />
-      <FormControl.Feedback />
+      <InputGroup>
+        <FormControl
+          {...input}
+          className={className}
+          componentClass={componentClass}
+          type={type}
+          placeholder={placeholder}
+          disabled={disabled}
+        />
 
-      {error && dirty &&
+        <FormControl.Feedback />
+
+        { addonAfter &&
+          <InputGroup.Addon>
+            {addonAfter}
+          </InputGroup.Addon>
+        }
+      </InputGroup>
+
+      {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
@@ -24,13 +36,14 @@ const FieldFormGroup  = ({ input, placeholder, type, meta: { dirty, error }, cla
 }
 
 FieldFormGroup.propTypes = {
-  children: PropTypes.object,
+  addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
   meta: PropTypes.object,
   placeholder: PropTypes.string,
+  required: PropTypes.bool,
   type: PropTypes.string
-
 }
 
 export default FieldFormGroup

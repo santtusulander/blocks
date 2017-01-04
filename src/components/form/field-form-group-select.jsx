@@ -1,21 +1,31 @@
 import React, { PropTypes } from 'react';
-import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
+import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
+
 import Select from '../select.jsx'
+import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupSelect  = ({ input, options, numericValues, className, label, disabled, meta: { dirty, touched, error }, children }) => {
+const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { touched, error }, label, required = true }) => {
   return (
-    <FormGroup className controlId={input.name} validationState={dirty && error ? 'error' : null}>
-      <ControlLabel>{children}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
+      <ControlLabel>{label}{required && ' *'}</ControlLabel>
 
-      <Select
-        numericValues={numericValues}
-        disabled={disabled || false}
-        className={className}
-        onSelect={e => input.onChange(e)}
-        options={options}
-        value={input.value} />
+      <InputGroup>
+        <Select
+          {...input}
+          numericValues={numericValues}
+          disabled={disabled}
+          className={className}
+          onSelect={e => input.onChange(e)}
+          options={options}
+        />
 
-      {error && dirty &&
+          { addonAfter &&
+            <InputGroup.Addon>
+              {addonAfter}
+            </InputGroup.Addon>
+          }
+        </InputGroup>
+      {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
@@ -23,13 +33,15 @@ const FieldFormGroupSelect  = ({ input, options, numericValues, className, label
 }
 
 FieldFormGroupSelect.propTypes = {
-  children: PropTypes.object,
+  addonAfter: PropTypes.node,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
   label: PropTypes.object,
   meta: PropTypes.object,
-  placeholder: PropTypes.string,
-  type: PropTypes.string
-
+  numericValues: PropTypes.bool,
+  options: PropTypes.array,
+  required: PropTypes.bool
 }
 
 export default FieldFormGroupSelect

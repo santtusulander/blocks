@@ -66,6 +66,7 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
   )
 }
 
+CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
   certificate: PropTypes.object,
   editMode: PropTypes.bool,
