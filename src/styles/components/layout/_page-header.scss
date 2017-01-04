@@ -9,6 +9,7 @@ $page-header-padding-bottom: rem(12px);
 $page-header-secondary-vertical-padding: rem(18px);
 $page-header-dropdown-width: rem(250px);
 $page-header-secondary-dropdown-min-width: rem(180px);
+$page-header-secondary-solid-bg-dt: #0d3a53;
 $action-padding-right: rem(30px);
 $details-item-margin: rem(6px);
 
@@ -148,31 +149,19 @@ $details-item-margin: rem(6px);
 // Sticky analytics-filters
 // ==================
 .sticky-filters {
-  @media (min-height: #{$sticky-filter-min}) {
-    .analytics-container {
-      padding-top: 166px;
+  .page-header-container.secondary-page-header {
+    position: fixed;
+    top: $header-total-height;
+    right: 0;
+    left: $navigation-sidebar-width;
+    z-index: 2;
+  }
 
-      @media (min-width: 1044px) {
-        & {
-          padding-top: 141px;
-        }
-      }
-    }
+  &.dark-theme .page-header-container.secondary-page-header {
+    background-color: $page-header-secondary-solid-bg-dt; // Need to use solid color instead of rgba
+  }
 
-    .page-header-container.secondary-page-header {
-      position: fixed;
-      top: $header-total-height;
-      right: 0;
-      left: $navigation-sidebar-width;
-      z-index: 2;
-    }
-
-    &.dark-theme .page-header-container.secondary-page-header {
-      background-color: #0d3a53; // Need to use solid color instead of rgba
-    }
-
-    &.light-theme .page-header-container.secondary-page-header {
-      background-color: #fff;
-    }
+  &.light-theme .page-header-container.secondary-page-header {
+    background-color: $white;
   }
 }
