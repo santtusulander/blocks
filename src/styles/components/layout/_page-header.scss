@@ -75,6 +75,7 @@ $details-item-margin: rem(6px);
 
   &.secondary-page-header {
     padding: $page-header-secondary-vertical-padding $page-header-horizontal-padding;
+    transition: background-color 0.2s ease-in;
 
     .dark-theme & {
       background-color: rgba($black, 0.1);
@@ -146,37 +147,32 @@ $details-item-margin: rem(6px);
 
 // Sticky analytics-filters
 // ==================
-body.sticky-filters {
+.sticky-filters {
   @media (min-height: #{$sticky-filter-min}) {
     .analytics-container {
-      padding-top: 175px;
+      padding-top: 166px;
 
-      @include md {
-        padding-top: 140px;
-      }
-
-      @include lg {
-        padding-top: 140px;
-      }
-
-      @include xl {
-        padding-top: 160px;
+      @media (min-width: 1044px) {
+        & {
+          padding-top: 141px;
+        }
       }
     }
 
-    .secondary-page-header {
+    .page-header-container.secondary-page-header {
       position: fixed;
       top: $header-total-height;
       right: 0;
       left: $navigation-sidebar-width;
       z-index: 2;
-      background: #0d3a53 !important; // Need to use solid color instead of rgba
     }
 
-    &.light-theme {
-      .secondary-page-header {
-        background: #fff !important;
-      }
+    &.dark-theme .page-header-container.secondary-page-header {
+      background-color: #0d3a53; // Need to use solid color instead of rgba
+    }
+
+    &.light-theme .page-header-container.secondary-page-header {
+      background-color: #fff;
     }
   }
 }
