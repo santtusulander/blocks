@@ -18,6 +18,11 @@
     rgba($pale-blue, 0.25)
   );
   background-size: 100%;
+
+  .light-theme & {
+    background-color: $white;
+    background-image: none;
+  }
 }
 
 .starburst-help-container {
@@ -43,6 +48,16 @@
     height: 198px;
     background-image: url('../assets/img/starburst-help-detail.png');
     background-size: cover;
+  }
+
+  .light-theme & {
+    .help-example {
+      background-image: url('../assets/img/starburst-help-example-light.png');
+    }
+
+    .help-detail {
+      background-image: url('../assets/img/starburst-help-detail-light.png');
+    }
   }
 
   svg {
@@ -86,7 +101,7 @@
       fill: rgba($pale-blue, 0.2);
 
       .light-theme & {
-        fill: rgba($pale-blue, 0.6);
+        fill: darken(rgba($pale-blue, 0.8), 15);
       }
     }
 
@@ -94,7 +109,7 @@
       fill: $dt-text-color;
 
       .light-theme & {
-        fill: $lt-text-color;
+        fill: $white;
       }
     }
 
@@ -104,7 +119,7 @@
       fill: $dt-text-color;
 
       .light-theme & {
-        fill: $lt-text-color;
+        fill: $white;
       }
     }
   }
