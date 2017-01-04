@@ -102,7 +102,8 @@ class ContentItems extends React.Component {
   }
   onItemAdd() {
     this.setState({ saving: true })
-    this.props.createNewItem(...arguments)
+
+    return this.props.createNewItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
@@ -121,7 +122,7 @@ class ContentItems extends React.Component {
       })
   }
   onItemSave() {
-    this.props.editItem(...arguments)
+    return this.props.editItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
@@ -440,7 +441,7 @@ class ContentItems extends React.Component {
                 <AddHost
                   createHost={this.onItemAdd}
                   cancelChanges={this.hideModal}
-                  saving={this.state.saving}/>
+                />
               </Modal.Body>
             </Modal>
           }
