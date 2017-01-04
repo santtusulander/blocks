@@ -5,7 +5,6 @@ import { Field } from 'redux-form'
 
 import FormGroupSelect from '../form/field-form-group-select'
 import Input from '../form/field-form-group'
-//import Input from './dns-form-input'
 
 import recordTypes from '../../constants/dns-record-types'
 
