@@ -124,7 +124,6 @@ class AnalyticsTabContribution extends React.Component {
       <AnalysisContribution
         dateRangeLabel={this.props.filters.get('dateRangeLabel')}
         dateRange={this.props.filters.get('dateRange')}
-        fetching={this.props.fetching}
         sectionHeaderTitle={sectionHeaderTitle}
         stats={this.props.contribution}
         onOffFilter={this.props.filters.get('onOffNet')}
@@ -134,13 +133,13 @@ class AnalyticsTabContribution extends React.Component {
   }
 }
 
+AnalyticsTabContribution.displayName = "AnalyticsTabContribution"
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   contribution: React.PropTypes.instanceOf(Immutable.List),
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  fetching: React.PropTypes.bool,
   filterActions: React.PropTypes.object,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -159,7 +158,6 @@ function mapStateToProps(state) {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
     activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    fetching: state.traffic.get('fetching'),
     contribution: state.traffic.get('contribution'),
     filters: state.filters.get('filters'),
     currentUser: state.user.get('currentUser')

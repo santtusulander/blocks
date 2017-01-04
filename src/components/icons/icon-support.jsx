@@ -18,6 +18,7 @@ const IconSupport = (props) => {
   )
 }
 
+IconSupport.displayName = "IconSupport"
 IconSupport.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

@@ -1,8 +1,0 @@
-instrumentation:
-    root: ./app
-    compact: false
-    include-all-sources: true
-    excludes:
-      - '**/*spec.js'
-reporting:
-  print: detail

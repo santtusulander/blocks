@@ -17,6 +17,7 @@ const IconComments = (props) => {
   )
 }
 
+IconComments.displayName = "IconComments"
 IconComments.propTypes = {
   className: React.PropTypes.string,
   count: React.PropTypes.string,

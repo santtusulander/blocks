@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import classnames from 'classnames'
 
 import Checkbox from './checkbox'
 
@@ -48,22 +49,14 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
     return allChecked
   }
 
-  let classNames = ['checkbox-array']
-  if (headerText) {
-    classNames.push('checkbox-array--table')
-  }
-
-  let checkboxDivClassName = ['checkbox-div']
-  if (inline) {
-    checkboxDivClassName .push('inline')
-  }
-  if(disabled) {
-    checkboxDivClassName .push('disabled')
-  }
-  checkboxDivClassName.join(' ')
+  let classNames = classnames(
+    'checkbox-array',
+    { 'checkbox-array--table': headerText }
+  )
+  const checkboxDivClassName = classnames('checkbox-div', { inline, disabled })
 
   return (
-    <div className={classNames.join(' ')}>
+    <div className={classNames}>
       {headerText &&
       <div className="checkbox-array__header">
         <Checkbox
@@ -93,6 +86,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   )
 }
 
+CheckboxArray.displayName = "CheckboxArray"
 CheckboxArray.propTypes = {
   disabled: PropTypes.bool,
   field: PropTypes.object,

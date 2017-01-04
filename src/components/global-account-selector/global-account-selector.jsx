@@ -213,6 +213,7 @@ class AccountSelector extends Component {
   }
 }
 
+AccountSelector.displayName = "AccountSelector"
 AccountSelector.propTypes = {
   accountSelectorActions: PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Map),

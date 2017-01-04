@@ -49,8 +49,9 @@ export default function(WrappedModal) {
     }
   }
 
+  KeyStrokeSupport.displayName = "KeyStrokeSupport"
   KeyStrokeSupport.propTypes = {
-    cancel: PropTypes.func,
+    cancel: PropTypes.func.isRequired,
     invalid: PropTypes.bool,
     submit: PropTypes.func,
     verifyDelete: PropTypes.bool

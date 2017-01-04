@@ -25,7 +25,10 @@ import {
   VIEW_SUPPORT_SECTION
 } from '../../constants/permissions'
 
-import { userIsServiceProvider } from '../../util/helpers.js'
+import {
+  accountIsServiceProviderType,
+  userIsServiceProvider
+} from '../../util/helpers.js'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -39,10 +42,7 @@ import './navigation.scss'
 
 import { FormattedMessage } from 'react-intl'
 
-const Navigation = (props) => {
-  const params = props.params,
-    router = props.router
-
+const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   const contentActive = router.isActive(getRoute('content')) ? ' active' : '',
     networkActive = router.isActive(getRoute('network')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
@@ -55,7 +55,7 @@ const Navigation = (props) => {
     }
   }
 
-  const isSP = userIsServiceProvider(props.currentUser)
+  const isSP = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
 
   return (
     <nav className='navigation-sidebar text-sm'>
@@ -64,7 +64,7 @@ const Navigation = (props) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
-            <Link to={contentOrNetworkUrlBuilder(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
+            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
               <IconContent />
               <span>
                 <FormattedMessage id="portal.navigation.content.text"/>
@@ -75,7 +75,7 @@ const Navigation = (props) => {
 
         {isSP &&
           <li>
-            <Link to={getNetworkUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={contentActive || networkActive}>
+            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
               <IconContent />
               <span><FormattedMessage id="portal.navigation.network.text"/></span>
             </Link>
@@ -94,7 +94,7 @@ const Navigation = (props) => {
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
           <li>
-            <Link to={getAnalyticsUrlFromParams(params, props.currentUser, props.roles)} activeClassName="active" className={analyticsActive} >
+            <Link to={getAnalyticsUrlFromParams(params, currentUser, roles)} activeClassName="active" className={analyticsActive} >
               <IconAnalytics />
               <span><FormattedMessage id="portal.navigation.analytics.text"/></span>
             </Link>
@@ -143,6 +143,7 @@ const Navigation = (props) => {
 
 Navigation.displayName = 'Navigation'
 Navigation.propTypes = {
+  activeAccount: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),

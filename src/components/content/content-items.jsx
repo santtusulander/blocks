@@ -174,7 +174,7 @@ class ContentItems extends React.Component {
       .then((response) => {
         this.setState({
           showModal: true,
-          itemToEdit: Immutable.Map(response.payload)
+          itemToEdit: Immutable.fromJS(response.payload)
         })
       })
   }

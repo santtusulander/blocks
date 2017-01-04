@@ -50,6 +50,7 @@ export class DNSRecordTable extends Component {
   }
 }
 
+DNSRecordTable.displayName = "DNSRecordTable"
 DNSRecordTable.propTypes = {
   content: PropTypes.func,
   shouldHavePrio: PropTypes.bool

@@ -11,6 +11,7 @@ import * as trafficActionCreators from '../../../redux/modules/traffic'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 import DateRanges from '../../../constants/date-ranges'
+import { MAPBOX_MAX_CITIES_FETCHED } from '../../../constants/mapbox'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
     }
 
-    const { fetchOpts, byTimeOpts } = this.buildOpts()
+    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -115,9 +116,7 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {} } = {}) {
-    const { params, filters, location } = this.props
-
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -127,7 +126,7 @@ class AnalyticsTabTraffic extends React.Component {
     }, fetchOpts)
 
     const byCityOpts = Object.assign({
-      max_cities: 999,
+      max_cities: MAPBOX_MAX_CITIES_FETCHED,
       latitude_south: coordinates.south || null,
       longitude_west: coordinates.west || null,
       latitude_north: coordinates.north || null,
@@ -184,6 +183,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 }
 
+AnalyticsTabTraffic.displayName = "AnalyticsTabTraffic"
 AnalyticsTabTraffic.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),

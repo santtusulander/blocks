@@ -207,7 +207,7 @@
     "wrap-regex": 0,
     "yoda": [0, "never"],
     "jsx-quotes": 0,
-    "react/display-name": 1,
+    "react/display-name": [1, { "ignoreTranspilerName": true }],
     "react/jsx-boolean-value": [1, "always"],
     "react/jsx-curly-spacing": 1,
     "react/jsx-no-duplicate-props": 1,
