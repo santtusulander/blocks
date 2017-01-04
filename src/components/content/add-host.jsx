@@ -58,7 +58,6 @@ class AddHost extends React.Component {
       handleSubmit,
       invalid,
       intl,
-      onCancel,
       submitting
     } = this.props
 
