@@ -348,7 +348,7 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Charts</h1>
           <Row>
-            <label>Stacked barchart, tooltip only on bar hover</label>
+            <label>Stacked barchart</label>
             <SectionContainer className="analysis-contribution">
               {<BarChart
                 chartLabel="Month to Date"
@@ -363,7 +363,7 @@ class Styleguide extends React.Component {
             </Row>
             <hr />
             <Row>
-              <label>Normal barchart, tooltip always active</label>
+              <label>Normal barchart</label>
               <SectionContainer className="analysis-contribution">
                 <BarChart
                   chartLabel="This Week"

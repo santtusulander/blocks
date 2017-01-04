@@ -66,13 +66,13 @@ export default class BarChart extends Component {
               {showTooltip &&
                 <Tooltip
                   cursor={{ fill: 'rgba(0,0,0,0.1)' }}
-                  animationEasing="linear"
                   offset={toolTipOffset}
+                  animationDuration={0}
                   content={
                     <CustomTooltip
                       valueFormatter={valueFormatter}
                       iconClass={tooltipIconClass}/>}
-                    />}
+                  />}
               {hasLegend &&
                 <Legend
                   verticalAlign="top"

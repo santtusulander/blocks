@@ -17,8 +17,8 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
       )}
 
       {payload.length > 1 && [
-        <hr style={{ margin: '7px 0' }}/>,
-        <div className="tooltip-item">
+        <hr key="hr" style={{ margin: '7px 0' }}/>,
+        <div key="totalRow" className="tooltip-item">
           <span className="legend-label">
             Total
           </span>
