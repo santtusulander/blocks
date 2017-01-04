@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Row } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'

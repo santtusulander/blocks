@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormControl, FormGroup, InputGroup, Modal, Row } from 'react-bootstrap'
+import { FormControl, FormGroup, InputGroup, Modal } from 'react-bootstrap'
 import { Link } from 'react-router'
 import classnames from 'classnames'
 import { FormattedMessage } from 'react-intl'
