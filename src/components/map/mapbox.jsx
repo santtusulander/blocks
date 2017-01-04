@@ -152,6 +152,14 @@ class Mapbox extends React.Component {
     map.resize()
     this.addCountryLayers(map, this.props.countryData.toJS())
 
+    // If we don't reset hoveredLayer, Mapbox gives an error: Cannot read property 'getPaintProperty' of undefined
+    // Look at onMouseMove else clause –– if we still have this.state.hoveredLayer, it tries and fails to
+    // change the paint properties of a layer when user has changed themes and moves mouse
+    // over the map area.
+    if (this.state.hoveredLayer) {
+      this.setState({ hoveredLayer: null })
+    }
+
     // Only add city layers if we're within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       this.addCityLayers(map, this.props.cityData.toJS())
