@@ -2,6 +2,10 @@ import React, { PropTypes, Component } from 'react'
 
 export default function(WrappedModal) {
   class KeyStrokeSupport extends Component {
+    constructor(props) {
+      super(props)
+      this.handleKeyDown = this.handleKeyDown.bind(this)
+    }
 
     componentWillMount() {
       document.addEventListener('keydown', this.handleKeyDown)
