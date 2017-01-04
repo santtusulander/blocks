@@ -32,6 +32,7 @@ const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, clas
   );
 }
 
+FieldFormGroupSelect.displayName = 'FieldFormGroupSelect'
 FieldFormGroupSelect.propTypes = {
   addonAfter: PropTypes.node,
   className: PropTypes.string,

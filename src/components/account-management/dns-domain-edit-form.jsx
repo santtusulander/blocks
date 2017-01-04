@@ -2,7 +2,7 @@ import React from 'react'
 import { ButtonToolbar, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import Input from './dns-form-input'
+import Input from '../form/field-form-group'
 
 import './dns-domain-edit-form.scss'
 
