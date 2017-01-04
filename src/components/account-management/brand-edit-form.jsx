@@ -1,11 +1,12 @@
 import React from 'react'
-import { Modal, FormGroup, ControlLabel, FormControl, HelpBlock, ButtonToolbar, Button } from 'react-bootstrap'
-import { reduxForm } from 'redux-form'
+import { FormGroup, ControlLabel, ButtonToolbar, Button } from 'react-bootstrap'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { connect } from 'react-redux'
 
+import SidePanel from '../side-panel'
+import FieldFormGroup from '../form/field-form-group'
+import FieldFormGroupSelect from '../form/field-form-group-select'
 import Radio from '../../components/radio'
-import SelectWrapper from '../select-wrapper.jsx'
-import UDNFileInput from '../udn-file-input.jsx'
-import { getReduxFormValidationState } from '../../util/helpers'
 
 import './brand-edit-form.scss'
 
@@ -35,93 +36,93 @@ const BrandEditForm = (props) => {
 
   const title = props.edit ? <FormattedMessage id="portal.brand.edit.editBrand.title"/> : <FormattedMessage id="portal.brand.edit.newBrand.title"/>
   const actionButtonTitle = props.edit ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>
-
-  const { fields: {brandName, brandLogo, favicon, colorTheme, availability} } = props
-
+  const onSubmit = () => {
+    // TODO: Implement form data submission
+  }
   return (
+      <SidePanel
+        show={true}
+        title={title}
+        className="brand-edit-form-sidebar"
+        subTitle="PLACEHOLDER"
+        cancel={() => {}}>
 
-    <Modal show={true} dialogClassName="brand-edit-form-sidebar">
+        <form onSubmit={props.handleSubmit(onSubmit)}>
 
-      <Modal.Header>
-        <h1>{title}</h1>
-        <p>Lorem ipsum</p>
-      </Modal.Header>
+          <Field
+            name="brandName"
+            id="name-field"
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.brand.edit.brandName.text" />}/>
 
-      <Modal.Body>
-        <form>
+        <hr/>
 
-          <FormGroup validationState={getReduxFormValidationState(brandName)}>
-            <ControlLabel><FormattedMessage id="portal.brand.edit.brandName.text" /></ControlLabel>
-            <FormControl
-              {...brandName}
-              placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.brandName.placeholder'})}
-            />
-            {brandName.touched && brandName.error &&
-              <HelpBlock className='error-msg errorBrandName'>{brandName.error}</HelpBlock>
-            }
-          </FormGroup>
-
-          <hr/>
-
-          <UDNFileInput
-            {...brandLogo}
+        <div className='udn-file-input'>
+          <Field
+            name="brandLogo"
             id='brand-input'
-            label={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
+            type='file'
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.logo.placeholder'})}
             addonAfter=' ICO, GIF or PNG'
             className='input-file'
-          />
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.brand.edit.logo.text" />}/>
+        </div>
 
-          <hr/>
+        <hr/>
 
-          <UDNFileInput
-            {...favicon}
+        <div className='udn-file-input'>
+          <Field
+            name="favicon"
             id='favicon-input'
-            label={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.text'})}
-            placeholder={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
-            addonAfter={this.props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
+            type='file'
+            placeholder={props.intl.formatMessage({id: 'portal.brand.edit.favicon.placeholder'})}
+            addonAfter={props.intl.formatMessage({id: 'portal.brand.edit.favicon.addonAfter'})}
             className='input-file'
-          />
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.brand.edit.favicon.text" />}/>
+        </div>
 
-          <hr/>
+        <hr/>
 
-          <div className="form-group">
-            <label className='control-label'><FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/></label>
-            <SelectWrapper
-              {... colorTheme}
-              className="input-select"
-              options={colorThemeOptions}
-            />
-          </div>
+          <Field
+            name="colorTheme"
+            id='theme-input'
+            className='input-select'
+            options={colorThemeOptions}
+            component={FieldFormGroupSelect}
+            label={<FormattedMessage id="portal.brand.edit.chooseColorTheme.text"/>}/>
 
-          <hr/>
+        <hr/>
 
-          <FormGroup validationState={getReduxFormValidationState(availability)}>
-            <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.brand.edit.availability.text"/></ControlLabel>
 
-            <Radio
-              {...availability}
-              value='private'
-            ><FormattedMessage id="portal.brand.edit.availability.private.label" /></Radio>
+          <Field
+            name="availability"
+            type="radio"
+            component={Radio}
+            value='private'>
+            <FormattedMessage id="portal.brand.edit.availability.private.label" />
+          </Field>
 
-            <Radio
-              {...availability}
-              value='public'
-            ><FormattedMessage id="portal.brand.edit.availability.public.label" /></Radio>
+          <Field
+            name="availability"
+            type="radio"
+            component={Radio}
+            value='public'>
+            <FormattedMessage id="portal.brand.edit.availability.public.label" />
+          </Field>
 
-            {availability.touched && availability.error &&
-              <HelpBlock className='error-msg errorAvailability'>{availability.error}</HelpBlock>
-            }
           </FormGroup>
+        <ButtonToolbar className="text-right extra-margin-top">
+          <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
+          <Button disabled={props.submitting || props.invalid} bsStyle="primary" type="submit" >{actionButtonTitle}</Button>
+        </ButtonToolbar>
+      </form>
+  </SidePanel>
 
-          <ButtonToolbar className="text-right extra-margin-top">
-            <Button bsStyle="primary" className="btn-outline" onClick={props.onCancel}>Cancel</Button>
-            <Button disabled={Object.keys(errors).length > 0} bsStyle="primary" onClick={props.onSave} >{actionButtonTitle}</Button>
-          </ButtonToolbar>
-        </form>
-
-      </Modal.Body>
-    </Modal>
   )
 }
 
@@ -129,13 +130,18 @@ BrandEditForm.displayName = 'BrandEditForm'
 
 BrandEditForm.propTypes = {
   edit: React.PropTypes.bool,
-  fields: React.PropTypes.object.isRequired,
+  intl: React.PropTypes.object,
   onCancel: React.PropTypes.func,
-  onSave: React.PropTypes.func
+  ...reduxFormPropTypes
 }
 
-export default reduxForm({
-  form: 'brand-edit',
-  fields: ['brandName', 'brandLogo', 'favicon', 'colorTheme', 'availability'],
-  validate
-})(injectIntl(BrandEditForm))
+function mapStateToProps() {
+  return { }
+}
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: 'brand-edit',
+    validate
+  })(injectIntl(BrandEditForm))
+)

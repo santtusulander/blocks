@@ -4,12 +4,12 @@ import { List } from 'immutable'
 import MultiOptionSelector from '../multi-option-selector'
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, touched, error }, className, label }) => {
+const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { touched, error }, className, label, required = true}) => {
   return (
     <FormGroup className={className} controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}</ControlLabel>
+      <ControlLabel>{label}{required && ' *'}</ControlLabel>
 
-      <MultiOptionSelector
+    <MultiOptionSelector
         options={options}
         field={{
           value: List(input.value||[]),
@@ -17,7 +17,7 @@ const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { dirty, tou
         }}
       />
 
-      {error && dirty &&
+      {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
@@ -29,7 +29,8 @@ FieldFormGroupMultiOptionSelector.propTypes = {
   input: PropTypes.object,
   label: PropTypes.object,
   meta: PropTypes.object,
-  options: PropTypes.array
+  options: PropTypes.array,
+  required: PropTypes.bool
 }
 
 export default FieldFormGroupMultiOptionSelector

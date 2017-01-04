@@ -105,6 +105,7 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
   )
 }
 
+RecordFormContainer.displayName = "RecordFormContainer"
 RecordFormContainer.propTypes = {
   activeRecord: PropTypes.object,
   addRecord: PropTypes.func,

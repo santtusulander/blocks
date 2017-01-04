@@ -12,6 +12,7 @@ const IconArrowLgUp = (props) => {
   )
 }
 
+IconArrowLgUp.displayName = "IconArrowLgUp"
 IconArrowLgUp.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

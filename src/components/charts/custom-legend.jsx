@@ -12,6 +12,7 @@ const CustomLegend = ({ data = [] }) =>
     )}
   </div>
 
+CustomLegend.displayName = "CustomLegend"
 CustomLegend.propTypes = {
   data: PropTypes.array
 }
