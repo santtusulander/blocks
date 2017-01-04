@@ -600,28 +600,55 @@ class Mapbox extends React.Component {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom > 6.9) {
       const currentBounds = this.props.mapBounds
-      const boundsChangedBy = 0.5
 
       // We need to wrap map center in order to get actual lat/lon coordinates
       // See: https://github.com/mapbox/mapbox-gl-js/issues/3690
       map.setCenter(map.getCenter().wrap())
 
-      // All of these are longitude/latitude values
-      const south = map.getBounds().getSouth()
-      const west = map.getBounds().getWest()
-      const north = map.getBounds().getNorth()
-      const east = map.getBounds().getEast()
+      // Do a check when we should fetch more city data
+      const shouldFetchCities = this.checkChangeInBounds(currentBounds, map.getBounds()) || !this.props.cityData.size
 
-      if (((currentBounds.south + boundsChangedBy < south || currentBounds.south - boundsChangedBy > south) &&
-          (currentBounds.west   + boundsChangedBy < west  || currentBounds.west  - boundsChangedBy > west)  &&
-          (currentBounds.north  + boundsChangedBy < north || currentBounds.north - boundsChangedBy > north) &&
-          (currentBounds.east   + boundsChangedBy < east  || currentBounds.east  - boundsChangedBy > east)) ||
-          !this.props.cityData.size) {
+      if (shouldFetchCities) {
+        // All of these are longitude/latitude values
+        const south = map.getBounds().getSouth()
+        const west = map.getBounds().getWest()
+        const north = map.getBounds().getNorth()
+        const east = map.getBounds().getEast()
+
+        // Saves map bounds to Redux so we can do comparison later on and see
+        // if use has panned the viewport enough in order to request more cities.
         this.props.mapboxActions.setMapBounds(map.getBounds())
         this.props.getCitiesWithinBounds(south, west, north, east)
       }
 
     }
+  }
+
+  /**
+   * Checks if map bounds have changed x-percentage.
+   *
+   * @method checkChangeInBounds
+   * @param  {object}            currentBounds Object of map bounds saved in Redux
+   *                                           –– previous map bounds
+   * @param  {object}            newBounds     LngLatBounds object of new map bounds
+   * @return {boolean}                         Return true or false if any change is over x-percentage
+   */
+  checkChangeInBounds(currentBounds, newBounds) {
+    const boundsArray = {
+      south: newBounds.getSouth(),
+      west: newBounds.getWest(),
+      north: newBounds.getNorth(),
+      east: newBounds.getEast()
+    }
+
+    const boundsChangedBy = Object.keys(currentBounds).map((key) => {
+      return {
+        current: Math.abs((boundsArray[key] / currentBounds[key] * 100) - 100),
+        previous: Math.abs(100 - (currentBounds[key] / boundsArray[key] * 100))
+      }
+    })
+
+    return boundsChangedBy.some((bound) => bound.current >= 3 || bound.previous >= 3)
   }
 
   /**
