@@ -206,6 +206,7 @@ AnalyticsTabTraffic.propTypes = {
 
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
+  mapBounds: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
