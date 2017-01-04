@@ -352,7 +352,6 @@ class Styleguide extends React.Component {
             <SectionContainer className="analysis-contribution">
               {<BarChart
                 chartLabel="Month to Date"
-                tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },

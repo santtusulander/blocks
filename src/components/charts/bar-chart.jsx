@@ -53,7 +53,7 @@ export default class BarChart extends Component {
             <RechartsBarChart
               data={chartData}
               maxBarSize={maxBarSize}
-              margin={{top: 100, right: 30, left: 20, bottom: 20}}>
+              margin={{top: 100, right: 54, left: 70, bottom: 54}}>
               <XAxis
                 padding={{ right: 50 }}
                 tickLine={false}

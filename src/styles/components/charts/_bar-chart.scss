@@ -7,6 +7,14 @@
     background-color: rgba($black, 0.2);
   }
 
+  .recharts-y-axis {
+    transform: translateX(-35px);
+  }
+
+  .recharts-x-axis {
+    transform: translateY(30px);
+  }
+
   .bar-chart-tooltip {
     @extend %chart-legend;
     position: relative;
