@@ -65,7 +65,7 @@ const AnalyticsFilters = (props) => {
   }
 
   return (
-    <PageHeader secondaryPageHeader={true}>
+    <PageHeader secondaryPageHeader={true} className="analytics-filters">
 
       {props.showFilters.includes('dateRange') &&
         <FilterDateRange
