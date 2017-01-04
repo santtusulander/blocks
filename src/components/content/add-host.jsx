@@ -100,7 +100,7 @@ class AddHost extends React.Component {
           <Button
             id="cancel-btn"
             className="btn-secondary"
-            onClick={onCancel}>
+            onClick={this.onCancel}>
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
