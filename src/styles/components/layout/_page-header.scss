@@ -9,9 +9,9 @@ $page-header-padding-bottom: rem(12px);
 $page-header-secondary-vertical-padding: rem(18px);
 $page-header-dropdown-width: rem(250px);
 $page-header-secondary-dropdown-min-width: rem(180px);
+$page-header-secondary-solid-bg-dt: #0d3a53;
 $action-padding-right: rem(30px);
 $details-item-margin: rem(6px);
-$sticky-filter-breakpoint: 850px;
 
 .page-header-container {
   padding: $page-header-padding-top $page-header-horizontal-padding $page-header-padding-bottom;
@@ -76,6 +76,7 @@ $sticky-filter-breakpoint: 850px;
 
   &.secondary-page-header {
     padding: $page-header-secondary-vertical-padding $page-header-horizontal-padding;
+    transition: background-color 0.2s ease-in;
 
     .dark-theme & {
       background-color: rgba($black, 0.1);
@@ -156,37 +157,20 @@ $sticky-filter-breakpoint: 850px;
 
 // Sticky analytics-filters
 // ==================
-body.sticky-filters {
-  @media (min-width: $sticky-filter-breakpoint) {
-    .analytics-container {
-      padding-top: 175px;
+.sticky-filters {
+  .page-header-container.secondary-page-header {
+    position: fixed;
+    top: $header-total-height;
+    right: 0;
+    left: $navigation-sidebar-width;
+    z-index: 2;
+  }
 
-      @include md {
-        padding-top: 142px;
-      }
+  &.dark-theme .page-header-container.secondary-page-header {
+    background-color: $page-header-secondary-solid-bg-dt; // Need to use solid color instead of rgba
+  }
 
-      @include lg {
-        padding-top: 160px;
-      }
-
-      @include xl {
-        padding-top: 160px;
-      }
-    }
-
-    .secondary-page-header {
-      position: fixed;
-      top: $header-total-height;
-      right: 0;
-      left: $navigation-sidebar-width;
-      z-index: 2;
-      background: #0d3a53 !important; // Need to use solid color instead of rgba
-    }
-
-    &.light-theme {
-      .secondary-page-header {
-        background: #fff !important;
-      }
-    }
+  &.light-theme .page-header-container.secondary-page-header {
+    background-color: $white;
   }
 }
