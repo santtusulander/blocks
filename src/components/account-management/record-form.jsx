@@ -83,6 +83,7 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
   )
 }
 
+RecordForm.displayName = 'RecordForm'
 RecordForm.propTypes = {
   cancel: PropTypes.func,
   domain: PropTypes.string,
