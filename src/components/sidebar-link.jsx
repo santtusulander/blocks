@@ -1,19 +1,22 @@
 import React, { PropTypes } from 'react'
 
-export const SidebarLink = props =>
+export function SidebarLink({ active, activate, label }) {
+  return (
     <li>
       <a
-        className={props.active ? 'active version-link' : 'version-link'}
-        onClick={e => { e.stopPropagation(); props.activate() }}>
+        className={active ? 'active version-link' : 'version-link'}
+        onClick={e => { e.stopPropagation(); activate() }}>
         <div className="version-title">
-          {props.label}
+          {label}
         </div>
       </a>
     </li>
+  )
+}
 
+SidebarLink.displayName = 'SidebarLink'
 SidebarLink.propTypes = {
   activate: PropTypes.func,
   active: PropTypes.bool,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
-

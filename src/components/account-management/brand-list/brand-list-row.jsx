@@ -31,6 +31,7 @@ const BrandListRow = (props) => {
   )
 }
 
+BrandListRow.displayName = "BrandListRow"
 BrandListRow.propTypes = {
   availability: React.PropTypes.string,
   brand: React.PropTypes.string,

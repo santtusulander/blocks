@@ -12,6 +12,7 @@ const IconDelete = (props) => {
   )
 }
 
+IconDelete.displayName = "IconDelete"
 IconDelete.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

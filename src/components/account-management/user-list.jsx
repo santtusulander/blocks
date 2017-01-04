@@ -42,6 +42,7 @@ const UserList = props => {
   )
 }
 
+UserList.displayName = "UserList"
 UserList.propTypes = {
   addUser: PropTypes.func,
   deleteUser: PropTypes.func,

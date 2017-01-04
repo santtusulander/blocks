@@ -77,6 +77,7 @@ class ExportFileForm extends React.Component {
 
 export default ExportFileForm
 
+ExportFileForm.displayName = "ExportFileForm"
 ExportFileForm.propTypes = {
   fileType: React.PropTypes.string,
   onCancel: React.PropTypes.func,
