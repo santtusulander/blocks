@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 
