@@ -49,14 +49,8 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName) {
-    if(params.property && hostConfiguredName) {
-      params = Object.assign({}, params, {
-        property: hostConfiguredName
-      })
-    }
-
-    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
+  fetchData(params, filters, location, activeHostConfiguredName) {
+    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location, activeHostConfiguredName })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
@@ -117,7 +111,13 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location, activeHostConfiguredName } = {}) {
+    if (params.property && activeHostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: activeHostConfiguredName
+      })
+    }
+
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -139,6 +139,7 @@ class AnalyticsTabTraffic extends React.Component {
 
   getCitiesWithinBounds(south, west, north, east) {
     const { byCityOpts } = this.buildOpts({
+      activeHostConfiguredName: this.props.activeHostConfiguredName,
       coordinates: {
         south: south,
         west: west,
