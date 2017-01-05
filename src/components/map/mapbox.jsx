@@ -82,7 +82,7 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map) {
+    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map || nextProps.dataKey !== this.props.dataKey) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
@@ -95,7 +95,8 @@ class Mapbox extends React.Component {
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (!nextProps.cityData.equals(this.props.cityData)) {
+    if (!nextProps.cityData.equals(this.props.cityData) ||
+        (nextProps.dataKey !== this.props.dataKey && this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
       this.updateLayers(newLayers)
