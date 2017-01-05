@@ -18,8 +18,6 @@ import {
 // import IconMinimap from '../icons/icon-minimap';
 import IconGlobe from '../icons/icon-globe';
 
-import { formatBitsPerSecond } from '../../util/helpers.js'
-
 const heatMapColors = [
   '#7b0663',
   '#8f2254',
@@ -246,7 +244,7 @@ class Mapbox extends React.Component {
             title: features[0].properties.cluster ?
                     'Cluster of ' + features[0].properties.point_count + ' cities' :
                     features[0].properties.name,
-            total: features[0].properties.total
+            total: features[0].properties[this.props.dataKey]
           },
           [feature.lngLat.lng, feature.lngLat.lat])
 
@@ -367,7 +365,8 @@ class Mapbox extends React.Component {
               type: data.type,
               properties: {
                 name: data.properties.name,
-                total: trafficCountry.bits_per_second
+                average_bits_per_second: trafficCountry.average_bits_per_second,
+                requests: trafficCountry.requests
               },
               geometry: data.geometry
             }]
@@ -419,10 +418,10 @@ class Mapbox extends React.Component {
    */
   renderCountryHighlight(map, countryData, trafficCountry) {
     // Calculate median total for all the countries
-    const countryMedian = calculateMedian(countryData.map((country => country.total)))
+    const countryMedian = calculateMedian(countryData.map((country => country[this.props.dataKey])))
 
     // Gets a score for the country based on its total
-    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
+    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[this.props.dataKey])
     // Choose a color for the country based on its score
     const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
 
@@ -472,15 +471,15 @@ class Mapbox extends React.Component {
       // for example the score (cityHeat) can be anything between 1-9999, with one
       // being 9999 and the next one 200. This is too big of a gap between the two
       // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
-      const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
+      const cityMedian = calculateMedian(cityData.map((city => city[this.props.dataKey])))
 
       // Get the highest value to base the sizing percentage against
-      const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
+      const highestValue = cityData.map(city => getScore(cityMedian, city[this.props.dataKey])).sort((a, b) => b - a)[0]
 
       // Go through the city data and create a Feature of each city.
       const cityFeatures = cityData.map((city) => {
         // Get score for the city based on bits_per_second
-        const cityHeat = getScore(cityMedian, city.bits_per_second)
+        const cityHeat = getScore(cityMedian, city[this.props.dataKey])
         // This city's percentage of the highest score of all cities
         const percentage = cityHeat / highestValue * 100
 
@@ -488,7 +487,8 @@ class Mapbox extends React.Component {
           type: 'Feature',
           properties: {
             name: city.name,
-            total: city.bits_per_second,
+            average_bits_per_second: city.average_bits_per_second,
+            requests: city.requests,
             radiusPercentage: percentage
           },
           geometry: {
@@ -733,7 +733,7 @@ class Mapbox extends React.Component {
                   <tbody>
                     <tr>
                       <td className="bold">Total</td>
-                      <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
+                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -791,6 +791,8 @@ Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
+  dataKeyFormat: React.PropTypes.func,
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,
