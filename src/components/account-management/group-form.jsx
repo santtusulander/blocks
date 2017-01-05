@@ -78,7 +78,8 @@ const GroupForm = ({
             disabled={!canEditBilling}
             placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
             component={FieldFormGroup}
-            label={intl.formatMessage({id:"portal.account.groupForm.charge_number.label"})}/>
+            label={intl.formatMessage({id:"portal.account.groupForm.charge_number.label"})}
+            required={false}/>
         }
 
         {canSeeBilling &&
@@ -86,14 +87,14 @@ const GroupForm = ({
             name="charge_model"
             disabled={!canEditBilling}
             numericValues={true}
-            // value={charge_model.value}
             placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
             component={FieldFormGroupSelect}
             options={[
               [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
               [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
             ]}
-            label={intl.formatMessage({id: "portal.account.groupForm.charge_model.label"})}/>
+            label={intl.formatMessage({id: "portal.account.groupForm.charge_model.label"})}
+            required={false}/>
           }
 
           <hr/>
@@ -119,7 +120,7 @@ const GroupForm = ({
                               <td><TruncatedTitle content={host} /></td>
                           <td>
                             <ActionButtons
-                                  onDelete={() => onDeleteHost(host)}/>
+                              onDelete={() => onDeleteHost(host)}/>
                           </td>
                         </tr>
                       )
