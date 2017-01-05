@@ -12,7 +12,7 @@ import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 
 import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
 import DateRanges from '../../../constants/date-ranges'
-import { MAPBOX_MAX_CITIES_FETCHED } from '../../../constants/mapbox'
+import { MAPBOX_MAX_CITIES_FETCHED, MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -50,11 +50,24 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   fetchData(params, filters, location, activeHostConfiguredName) {
-    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location, activeHostConfiguredName })
+    const { fetchOpts, byTimeOpts, byCityOpts } = this.buildOpts({
+      params,
+      filters,
+      location,
+      activeHostConfiguredName,
+      coordinates: this.props.mapBounds.toJS()
+    })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
+
+    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM) {
+      this.props.trafficActions.startFetching()
+      this.props.trafficActions.fetchByCity(byCityOpts).then(() =>
+        this.props.trafficActions.finishFetching()
+      )
+    }
 
     let totalsOpts
 
@@ -110,6 +123,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
       this.props.trafficActions.fetchByTimeComparison(comparisonByTimeOpts)
     }
+
   }
 
   formatTotals(value) {
@@ -202,6 +216,7 @@ AnalyticsTabTraffic.propTypes = {
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
   mapBounds: React.PropTypes.instanceOf(Immutable.Map),
+  mapZoom: React.PropTypes.number,
   mapboxActions: React.PropTypes.object,
   params: React.PropTypes.object,
   theme: React.PropTypes.string,
@@ -235,7 +250,8 @@ function mapStateToProps(state) {
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress'),
     theme: state.ui.get('theme'),
-    mapBounds: state.mapbox.get('mapBounds')
+    mapBounds: state.mapbox.get('mapBounds'),
+    mapZoom: state.mapbox.get('mapZoom')
   }
 }
 

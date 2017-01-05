@@ -349,13 +349,23 @@ class Mapbox extends React.Component {
    */
   addCountryLayers(map, countryData) {
     if (map && map.style._loaded) {
-      const layers = this.state.layers
+      let layers = this.state.layers
+
+      // Country layers should be removed from the map to prevent old highlighted countries
+      // appearing on the map when changing to a different account
+      map.getStyle().layers.filter(layer => layer.id.includes('country-fill') || layer.id.includes('country-stroke'))
+                           .forEach(layer => {
+                             layers = layers.filter(l => l !== layer.id)
+                             map.removeLayer(layer.id)
+                           })
 
       // Filters through the country GeoJSON and creates sources/layers for countries that have data
       this.props.geoData.features.forEach((data) => {
         const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
         const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
         const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+        const sourceName = 'geo-' + data.properties.iso_a3
+        const layerName = 'country-fill-' + data.properties.iso_a3
 
         // If the country has data and we don't already have a source for it,
         // we create a source layer and add the layer ID to a list.
@@ -374,20 +384,20 @@ class Mapbox extends React.Component {
           }
 
           // If the country already has a source, we should just update the data.
-          if (map.getSource('geo-' + data.properties.iso_a3)) {
-            map.getSource('geo-' + data.properties.iso_a3).setData(geoData)
+          if (map.getSource(sourceName)) {
+            map.getSource(sourceName).setData(geoData)
 
           } else {
-            map.addSource('geo-' + data.properties.iso_a3, {
+            map.addSource(sourceName, {
               type: 'geojson',
               data: geoData
             })
           }
 
+          // Adds a layer ID to a list so we can reference it in onMouseMove
+          // and set a hover style for it.
           if (!layerExists) {
-            // Adds a layer ID to a list so we can reference it in onMouseMove
-            // and set a hover style for it.
-            layers.push('country-fill-' + data.properties.iso_a3)
+            layers.push(layerName)
           }
 
           // Render the actual colored country layers on the map
@@ -425,11 +435,6 @@ class Mapbox extends React.Component {
     const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[this.props.dataKey])
     // Choose a color for the country based on its score
     const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
-
-    if (map.getLayer('country-fill-' + trafficCountry.code)) {
-      map.removeLayer('country-fill-' + trafficCountry.code)
-      map.removeLayer('country-stroke-' + trafficCountry.code)
-    }
 
     map.addLayer({
       id: `country-fill-${trafficCountry.code}`,
@@ -612,6 +617,7 @@ class Mapbox extends React.Component {
    * @param  {object}            map Instance of Mapbox map
    */
   getCitiesOnZoomDrag(map) {
+    this.props.mapboxActions.setMapZoom(map.getZoom())
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       // Get current bounds saved in redux store
