@@ -5515,7 +5515,7 @@ pbkdf2-compat@2.0.1:
 performance-now@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-0.2.0.tgz#33ef30c5c77d4ea21c5a53869d91b56d8f2555e5"
-  
+
 phone@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/phone/-/phone-1.0.9.tgz#33c24386c577ddca2e48c1d435eb2f99c44405db"
@@ -6511,9 +6511,9 @@ redux-devtools@^3.3.1:
     redux "^3.5.2"
     redux-devtools-instrument "^1.0.1"
 
-redux-form@^6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-6.4.2.tgz#71afe3c85744210419f204a5e2421f281c2c3523"
+redux-form@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-6.4.3.tgz#bd83a77770d9805f7b595a4ff18f00fe4267d3c8"
   dependencies:
     array-findindex-polyfill "^0.1.0"
     deep-equal "^1.0.1"
