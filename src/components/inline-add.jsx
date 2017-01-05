@@ -1,64 +1,18 @@
 import React, { PropTypes, cloneElement } from 'react'
-import { Tooltip, ButtonToolbar } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
 import { reduxForm, propTypes as reduxFormPropTypes, getFormValues, getFormSyncErrors } from 'redux-form'
 import { connect } from 'react-redux'
+import classnames from 'classnames'
 
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
 import { FormattedMessage } from 'react-intl'
 
-/**
- * When to display errorTooltip
- * @param meta
- * @returns {*|boolean}
- */
-const displayTooltipRules = (meta) => {
-  return meta &&
-        meta.error &&
-        meta.touched  &&
-        meta.active &&
-        (
-          meta.error !== 'Required'
-        )
-}
+const getClassNames = (touched, error, className) =>
+  classnames(className, { 'has-error': error && touched })
 
-/**
- * When to add `has-error`-classname to input
- * @param meta
- * @returns {*|boolean}
- */
-const errorClassnameRules = (meta) => {
-  return meta &&
-        meta.error &&
-        meta.touched &&
-        (
-          meta.error !== 'Required'
-        )
-}
-
-const ErrorToolTip = (meta) =>
-  displayTooltipRules(meta) &&
-  <Tooltip placement="bottom" className="in" id="tooltip-bottom">
-    {meta.error}
-  </Tooltip>
-
-const generateBsClasses = (meta, bsStyle) => {
-  if (errorClassnameRules(meta)) {
-    let errorStyle;
-    if (bsStyle) {
-      errorStyle = `${bsStyle} error`
-    } else {
-      errorStyle = 'error'
-    }
-
-    return { bsStyle: errorStyle }
-  }
-
-  return bsStyle ? { bsStyle } : {}
-}
-
-const InlineAdd = ({ inputs, invalid, unmount, formValues, save, getMetaData }) =>
+const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMetaData }) =>
   <tr className="inline-add-row">
 
       {inputs.map((cell, index) =>
@@ -68,12 +22,10 @@ const InlineAdd = ({ inputs, invalid, unmount, formValues, save, getMetaData }) 
             ({input, positionClass}, index) => {
 
               const fieldName = input.props.name
-              const bsClasses = generateBsClasses(getMetaData(fieldName), input.props.bsStyle);
+              const className = getClassNames(getMetaData(fieldName).touched, errors[fieldName], input.props.className);
               return (
                 <div className={positionClass} key={index}>
-                  {cloneElement(input, { ...bsClasses })}
-                  {ErrorToolTip(getMetaData(fieldName))}
-                  {/* <ErrorToolTip meta={input.props.meta}/> */}
+                  {cloneElement(input, { className })}
                 </div>
               )
             })
@@ -104,14 +56,14 @@ InlineAdd.propTypes = {
 
 export default connect(
   state => {
-    const errors = getFormSyncErrors('inlineAdd')(state) || {}
     //No selector exists to get a form's metadata
     const form = state.form.inlineAdd || {}
     const metaData = form.fields || {}
 
     return {
+      errors: getFormSyncErrors('inlineAdd')(state) || {},
       formValues: getFormValues('inlineAdd')(state),
-      getMetaData: fieldName => ({ ...metaData[fieldName], error: errors[fieldName] })
+      getMetaData: fieldName => ({ ...metaData[fieldName] })
     }
   }
 )(reduxForm({ form: 'inlineAdd' })(InlineAdd))
