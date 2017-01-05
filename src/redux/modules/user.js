@@ -96,7 +96,8 @@ export function userLoggedInFailure(){
 
 export function fetchSuccess(state, action) {
   return state.merge({
-    currentUser: fromJS(action.payload)
+    currentUser: fromJS(action.payload),
+    fetching: false
   })
 }
 

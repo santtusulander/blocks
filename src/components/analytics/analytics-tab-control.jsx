@@ -66,7 +66,7 @@ const AnalyticsTabControl = (props) => {
 
   return (
     <div>
-      <Tabs activeKey={props.activeTab}>
+      <Tabs activeKey={props.activeTab} className="analytics-tabs">
         {tabs.reduce((lis, tab) => {
           if(!tab.propertyOnly || params.property) {
             const tabContent = tab.permission ?
