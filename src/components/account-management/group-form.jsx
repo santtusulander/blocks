@@ -63,7 +63,7 @@ const GroupForm = ({
 
   return (
     <form
-      onSubmit={handleSubmit((values) => onSubmit(values))}>
+      onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
