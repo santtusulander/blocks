@@ -712,7 +712,8 @@ class Mapbox extends React.Component {
         onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
-        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}>
+        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
+        dragRotate={false}>
 
         {/*
         <div className="map-search">
