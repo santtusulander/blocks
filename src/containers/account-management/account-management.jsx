@@ -133,7 +133,7 @@ export class AccountManagement extends Component {
 
   deleteUser() {
     const { userActions: { deleteUser } } = this.props
-    deleteUser(this.userToDelete)
+    return deleteUser(this.userToDelete)
       .then(() => this.props.toggleModal(null))
   }
 
