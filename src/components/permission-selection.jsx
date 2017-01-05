@@ -47,6 +47,7 @@ const PermissionSelection = ({ className, disabled, onChange, permissions }) => 
   )
 }
 
+PermissionSelection.displayName = "PermissionSelection"
 PermissionSelection.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,

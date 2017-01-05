@@ -14,6 +14,7 @@ const DashboardPanels = (props) => {
   )
 }
 
+DashboardPanels.displayName = "DashboardPanels"
 DashboardPanels.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string

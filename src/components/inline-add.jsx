@@ -83,9 +83,10 @@ const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
     )}
   </tr>
 
+InlineAdd.displayName = "InlineAdd"
 InlineAdd.propTypes = {
   fields: PropTypes.object,
-  inputs: PropTypes.array,
+  inputs: PropTypes.array.isRequired,
   invalid: PropTypes.bool,
   save: PropTypes.func,
   unmount: PropTypes.func,

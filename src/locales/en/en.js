@@ -185,7 +185,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.customDateRange.title': 'Date Range',
   'portal.analysis.filters.dateRangeFrom.title': 'From',
   'portal.analysis.filters.dateRangeTo.title': 'To',
-  'portal.analysis.filters.includeComparison.label': 'Versus Previous Date Range',
+  'portal.analysis.filters.includeComparison.label': 'Comparison Data',
   'portal.analysis.filters.onOffNet.title': 'On-Net/Off-Net',
   'portal.analysis.filters.property.title': 'Properties',
   'portal.analysis.filters.recordType.title': 'Show as',
@@ -553,6 +553,7 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'A password reset link has been sent to your email address.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email to receive instructions to reset your password.',
+  'portal.forgotPassword.emailInvalid.text': 'Your email address is invalid. Please enter a valid address.',
 
   'portal.groups.accountSummary.text': 'Account Summary',
   'portal.groups.accountContentSummary.text': 'Account Content Summary',

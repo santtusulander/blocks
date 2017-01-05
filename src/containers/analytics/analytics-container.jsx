@@ -206,6 +206,7 @@ class AnalyticsContainer extends React.Component {
   }
 }
 
+AnalyticsContainer.displayName = "AnalyticsContainer"
 AnalyticsContainer.propTypes = {
   accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),

@@ -14,6 +14,7 @@ const IconSecurity = (props) => {
   )
 }
 
+IconSecurity.displayName = "IconSecurity"
 IconSecurity.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

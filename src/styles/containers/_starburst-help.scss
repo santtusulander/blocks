@@ -1,26 +1,63 @@
+.help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 40px;
+
+  background-attachment: fixed;
+  background-color: $black;
+  background-image: radial-gradient(
+    circle,
+    rgba($purple, 0),
+    rgba($purple, 0.2)
+  ), linear-gradient(
+    rgba($pale-blue, 0.5),
+    rgba($pale-blue, 0.25)
+  );
+  background-size: 100%;
+
+  .light-theme & {
+    background-color: $white;
+    background-image: none;
+  }
+}
+
 .starburst-help-container {
   position: relative;
   width: 1100px;
   margin: 0 auto;
 
   .help-example {
-    background-image: url('../assets/img/starburst-help-example.png');
-    background-size: cover;
-    width: 320px;
-    height: 319px;
     position: absolute;
     top: 215px;
     right: 472px;
+    width: 320px;
+    height: 319px;
+    background-image: url('../assets/img/starburst-help-example.png');
+    background-size: cover;
   }
 
   .help-detail {
-    background-image: url('../assets/img/starburst-help-detail.png');
-    background-size: cover;
-    width: 188px;
-    height: 198px;
     position: absolute;
     top: 83px;
     right: 187px;
+    width: 188px;
+    height: 198px;
+    background-image: url('../assets/img/starburst-help-detail.png');
+    background-size: cover;
+  }
+
+  .light-theme & {
+    .help-example {
+      background-image: url('../assets/img/starburst-help-example-light.png');
+    }
+
+    .help-detail {
+      background-image: url('../assets/img/starburst-help-detail-light.png');
+    }
   }
 
   svg {
@@ -64,23 +101,25 @@
       fill: rgba($pale-blue, 0.2);
 
       .light-theme & {
-        fill: rgba($pale-blue, 0.6);
+        fill: darken(rgba($pale-blue, 0.8), 15);
       }
     }
+
     path {
       fill: $dt-text-color;
 
       .light-theme & {
-        fill: $lt-text-color;
+        fill: $white;
       }
     }
+
     text {
-      fill: $dt-text-color;
-      font-weight: bold;
       font-size: 32px;
+      font-weight: bold;
+      fill: $dt-text-color;
 
       .light-theme & {
-        fill: $lt-text-color;
+        fill: $white;
       }
     }
   }

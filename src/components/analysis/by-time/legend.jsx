@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import './legend.scss'
 
-const Legend = ({dataSets, values}) => {
+function Legend({dataSets, values}) {
   return (
     <div className='by-time-legend'>
       {dataSets.map((dataset, i) => {
@@ -22,6 +22,7 @@ const Legend = ({dataSets, values}) => {
   )
 }
 
+Legend.displayName = 'Legend'
 Legend.propTypes = {
   dataSets: React.PropTypes.array,
   values: React.PropTypes.array

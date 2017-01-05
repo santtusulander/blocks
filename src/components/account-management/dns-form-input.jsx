@@ -18,6 +18,7 @@ const Input = ({ id, required = true, addonAfter, labelID, children, isVisible =
       {children}
     </FormGroup>
 
+Input.displayName = "Input"
 Input.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   isVisible: PropTypes.bool,
