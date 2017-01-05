@@ -231,6 +231,7 @@ class SupportTicketForm extends React.Component {
   }
 }
 
+SupportTicketForm.displayName = "SupportTicketForm"
 SupportTicketForm.propTypes = {
   fields: PropTypes.object,
   intl: PropTypes.object,

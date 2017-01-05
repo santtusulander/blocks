@@ -3,9 +3,6 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import FormFooterButtons from '../form/form-footer-buttons'
-import FieldFormGroup from '../form/field-form-group'
-
 import './dns-domain-edit-form.scss'
 import { checkForErrors } from '../../util/helpers'
 import {
@@ -15,6 +12,8 @@ import {
   isValidNameserver,
   isValidSOARecord
 } from '../../util/validators'
+import FieldFormGroup from '../form/field-form-group'
+import FormFooterButtons from '../form/form-footer-buttons'
 
 const validate = fields => {
   // TODO: name_server validation

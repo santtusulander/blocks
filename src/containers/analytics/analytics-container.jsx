@@ -23,8 +23,9 @@ import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
 
-
 import './analytics-container.scss'
+
+const BODY_MIN_HEIGHT = 850
 
 class AnalyticsContainer extends React.Component {
   constructor(props){
@@ -61,14 +62,21 @@ class AnalyticsContainer extends React.Component {
 
   handleScroll() {
     const docBody = document.body
-    const headerContainer = document.querySelector('.page-header-container')
-    const navTabsContainer = document.querySelector('.nav-tabs')
+    const pageHeaderHeight = document.querySelector('.page-header-container').offsetHeight
+    const analyticsTabsHeight = document.querySelector('.analytics-tabs').offsetHeight
+    const pageHeaderTotalHeight = pageHeaderHeight + analyticsTabsHeight
+    const analyticsContainer = document.querySelector('.analytics-container')
 
-    if (docBody.scrollTop > (headerContainer.offsetHeight + navTabsContainer.offsetHeight)) {
-      return docBody.classList.add('sticky-filters')
+    if (window.innerHeight > BODY_MIN_HEIGHT && window.pageYOffset > pageHeaderTotalHeight) {
+      if(!docBody.classList.contains('sticky-filters')) {
+        const analyticsFiltersHeight = document.querySelector('.analytics-filters').offsetHeight
+        analyticsContainer.style.marginTop = `${analyticsFiltersHeight}px`
+        docBody.classList.add('sticky-filters')
+      }
+    } else {
+      analyticsContainer.style.marginTop = 0
+      docBody.classList.remove('sticky-filters')
     }
-
-    return docBody.classList.remove('sticky-filters')
   }
 
   fetchActiveItems(props) {
@@ -206,6 +214,7 @@ class AnalyticsContainer extends React.Component {
   }
 }
 
+AnalyticsContainer.displayName = "AnalyticsContainer"
 AnalyticsContainer.propTypes = {
   accountActions: React.PropTypes.object,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),

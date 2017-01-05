@@ -47,6 +47,7 @@ class DnsDomainEditFormContainer  extends Component {
   }
 }
 
+DnsDomainEditFormContainer.displayName = "DnsDomainEditFormContainer"
 DnsDomainEditFormContainer.propTypes = {
   closeModal: PropTypes.func,
   edit: PropTypes.bool,
