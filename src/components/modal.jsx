@@ -14,7 +14,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit = () => {}, submitButton, submitting, title, verifyDelete } = this.props
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
 
     return (
       <Modal show={true} dialogClassName="modal-window">
@@ -160,6 +160,8 @@ ModalWindow.propTypes = {
   verifyDelete: PropTypes.bool,
   ...reduxFormPropTypes
 }
+
+ModalWindow.defaultProps = { onSubmit() {} }
 
 export default reduxForm({
   form: 'ModalWindow',
