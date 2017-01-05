@@ -56,34 +56,43 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
+    let totalsOpts
+
     //REFACTOR:
     if (params.property) {
       this.setState({metricKey: 'hostMetrics'})
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         property: params.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+      if (activeHostConfiguredName) {
+        totalsOpts.property = activeHostConfiguredName
+      }
     } else if(params.group) {
       this.setState({ metricKey: 'groupMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
     } else if(params.account) {
       this.setState({ metricKey: 'accountMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+    }
+
+    if (totalsOpts) {
+      this.props.trafficActions.fetchTotals(totalsOpts)
     }
 
     if (filters.getIn(['includeComparison'])) {
