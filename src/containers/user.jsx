@@ -52,29 +52,33 @@ class User extends React.Component {
         this.setState({
           savingUser: false
         })
+
+        return response
       }
     )
   }
 
-  savePassword(password, editFormCallback) {
-    this.props.userActions.startFetching()
-    this.setState({
-      savingPassword: this.props.userFetching
-    })
+  savePassword(password) {
+    // this.props.userActions.startFetching()
+    // this.setState({
+    //   savingPassword: this.props.userFetching
+    // })
 
     const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
 
-    updatePasswordPromise.then((response) => {
+    return updatePasswordPromise.then((response) => {
       if (!response.error) {
         this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
       }
 
-      editFormCallback(response)
+      return response
 
-      this.props.userActions.finishFetching()
-      this.setState({
-        savingPassword: this.props.userFetching
-      })
+      //editFormCallback(response)
+
+      // this.props.userActions.finishFetching()
+      // this.setState({
+      //   savingPassword: this.props.userFetching
+      // })
     })
   }
 
@@ -92,8 +96,8 @@ class User extends React.Component {
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
       phone: currentUser.get('phone_country_code') + currentUser.get('phone_number'),
-      //phone_number: currentUser.get('phone_number'),
-      //phone_country_code: currentUser.get('phone_country_code'),
+      phone_number: currentUser.get('phone_number'),
+      phone_country_code: currentUser.get('phone_country_code'),
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
       tfa: currentUser.get('tfa')

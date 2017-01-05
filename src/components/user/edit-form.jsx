@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 import { HelpBlock, FormGroup, InputGroup,
          Tooltip, Button, ButtonToolbar,
-         Col, FormControl, ControlLabel, Row } from 'react-bootstrap'
+         Col, FormControl, ControlLabel, Row} from 'react-bootstrap'
 
 import ReactTelephoneInput from 'react-telephone-input'
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -22,6 +22,7 @@ import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupToggle from '../form/field-form-group-toggle'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
+import SetPasswordForm from '../form/set-password-form'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
          TWO_FA_METHODS_OPTIONS,
@@ -40,7 +41,7 @@ const stripNonNumeric = (num) => {
 
 const validate = (values) => {
   const errors = {}
-  console.log(values)
+  console.log('validate', values)
 
   const {
     first_name,
@@ -58,14 +59,6 @@ const validate = (values) => {
 
   if (!last_name) {
     errors.last_name = "Last name is required"
-  }
-
-  if(!email || email.length === 0) {
-    errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
-  }
-
-  if(!current_password || current_password.length === 0) {
-    errors.current_password = <FormattedMessage id="portal.user.edit.currentPasswordRequired.text"/>
   }
 
   if (tfa_toggle && !tfa) {
@@ -92,7 +85,7 @@ class UserEditForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     // SaveBar helpers
-    this.saveBarOnSave = this.saveBarOnSave.bind(this)
+    //this.saveBarOnSave = this.saveBarOnSave.bind(this)
 
     // Password fields helper
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
@@ -133,32 +126,32 @@ class UserEditForm extends React.Component {
 
   }
 
-  saveBarOnSave() {
-    const {
-      fields: {
-        first_name,
-        middle_name,
-        last_name,
-        phone_number,
-        phone_country_code,
-        tfa,
-        timezone
-      },
-      onSave
-    } = this.props
-
-    let newValues = {
-      first_name: first_name.value,
-      middle_name: middle_name.value,
-      last_name: last_name.value,
-      phone_number: phone_number.value,
-      phone_country_code: phone_country_code.value,
-      tfa: tfa.value,
-      timezone: timezone.value
-    }
-
-    onSave(newValues)
-  }
+  // saveBarOnSave() {
+  //   const {
+  //     fields: {
+  //       first_name,
+  //       middle_name,
+  //       last_name,
+  //       phone_number,
+  //       phone_country_code,
+  //       tfa,
+  //       timezone
+  //     },
+  //     onSave
+  //   } = this.props
+  //
+  //   let newValues = {
+  //     first_name: first_name.value,
+  //     middle_name: middle_name.value,
+  //     last_name: last_name.value,
+  //     phone_number: phone_number.value,
+  //     phone_country_code: phone_country_code.value,
+  //     tfa: tfa.value,
+  //     timezone: timezone.value
+  //   }
+  //
+  //   onSave(newValues)
+  // }
 
   currentPasswordChangesCallback(response) {
     if (response.error) {
@@ -172,21 +165,22 @@ class UserEditForm extends React.Component {
     }
   }
 
-  savePasswordOnClick() {
+  savePasswordOnClick(values) {
     const {
-      fields: {
-        current_password,
-        new_password
-      },
       onSavePassword
     } = this.props
 
     let newValues = {
-      current_password: current_password.value,
-      new_password: new_password.value
+      current_password: values.current_password,
+      new_password: values.new_password
     }
 
-    onSavePassword(newValues, this.currentPasswordChangesCallback)
+    this.setState({'savingPassword': true})
+    return onSavePassword(newValues)
+      .then((response) => {
+        this.setState({'savingPassword': false})
+        this.currentPasswordChangesCallback(response)
+      })
   }
 
   showMiddleName() {
@@ -335,15 +329,18 @@ class UserEditForm extends React.Component {
   //     )
   //   }
   // }
+  //
 
   render() {
     const {
       handleSubmit,
+      intl,
       invalid,
       initialValues: {
         email
       },
       submitting,
+      savingPassword,
       resetForm,
       tfa_toggle,
       tfaVerificationMethod
@@ -354,8 +351,6 @@ class UserEditForm extends React.Component {
     // digits have been changed before showing the Save bar
     //const trimmedPhoneNumber = phone.value.replace(/\D/g,'')
     const showSaveBar = this.props.dirty
-
-    console.log(this.props)
 
     // (first_name.dirty || middle_name.dirty || last_name.dirty || tfa.dirty ||
     //                      (phone.dirty && phone.initialValue !== trimmedPhoneNumber)) &&
@@ -409,15 +404,16 @@ class UserEditForm extends React.Component {
           <Field
             type="text"
             name="phone"
-            component={({meta}) => {
+            component={({input, meta}) => {
               return (
                 <ReactTelephoneInput
+                  value={input.value}
                   onChange={(val, {dialCode})=> {
                     const strippedNum = stripNonNumeric( stripCountryCode(val, dialCode) )
-
                     meta.dispatch( change('user-edit-form', 'phone_country_code', dialCode) )
                     meta.dispatch( change('user-edit-form', 'phone_number', strippedNum))
 
+                    input.onChange(val)
                   }}
                   defaultCountry="us"
                 />
@@ -428,8 +424,64 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
+        { /* Password */}
         <Row>
-          <p>Password Form</p>
+          {!this.state.showPasswordField
+            ? <Col xs={9}>
+                <Button bsStyle="primary" onClick={this.togglePasswordEditing}>
+                  <FormattedMessage id="portal.button.CHANGE"/>
+                </Button>
+              </Col>
+            : <div>
+                <Col xs={3}>
+                  <Field
+                    name="current_password"
+                    type="password"
+                    component={FieldFormGroup}
+                    placeholder={intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                  />
+                {/*                <FormGroup>
+                    <InputGroup className={currentPasswordInvalid ?
+                                            "input-addon-after-outside invalid" :
+                                            "input-addon-after-outside"
+                                          }>
+                      {this.renderCurrentPassowrdErrorTooltip(currentPasswordInvalid)}
+                      <FormControl
+                        type="password"
+                        placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.currentPassword.text'})}
+                        {...current_password} />
+                    </InputGroup>
+                  </FormGroup>*/}
+                </Col>
+
+                <Col xs={6}>
+                  <Field
+                    name="new_password"
+                    component={({input}) => {
+                      return <PasswordFields inlinePassword={true} changePassword={this.changePassword} {...input} />
+                    }}
+                  />
+                </Col>
+
+                <Col xs={4} xsOffset={2}>
+                  <ButtonToolbar className="extra-margin-top">
+                    <Button
+                      className="btn-secondary"
+                      bsSize="small"
+                      onClick={this.togglePasswordEditing}>
+                      <FormattedMessage id="portal.button.CANCEL"/>
+                    </Button>
+                    <Button
+
+                      bsStyle="success"
+                      bsSize="small"
+                      onClick={handleSubmit(values => this.savePasswordOnClick({...values, action: 'changePassword'}))}>
+                      {savingPassword ? <FormattedMessage id="portal.button.CHANGING"/> : <FormattedMessage id="portal.button.CHANGE"/>}
+                    </Button>
+                  </ButtonToolbar>
+                </Col>
+              </div>
+            }
         </Row>
 
         <hr/>
@@ -455,25 +507,8 @@ class UserEditForm extends React.Component {
           {this.renderTwoFAMethodsTooltips( tfaVerificationMethod )}
         </Row>
 
-        <FormFooterButtons>
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={resetForm}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
-
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid||submitting}>
-              Submit
-            </Button>
-          </FormFooterButtons>
-
         <SaveBar
           onCancel={resetForm}
-          onSave={this.saveBarOnSave}
           invalid={invalid}
           saving={submitting}
           show={showSaveBar}>
@@ -498,7 +533,7 @@ UserEditForm.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    formValues: getFormValues('user-edit-form')(state),
+    //formValues: getFormValues('user-edit-form')(state),
     tfa_toggle: formValueSelector('user-edit-form')(state, 'tfa_toggle'),
     tfa: formValueSelector('user-edit-form')(state, 'tfa')
   }

@@ -7,7 +7,7 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { 
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}{required && ' *'}</ControlLabel>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <FormControl
