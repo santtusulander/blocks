@@ -115,6 +115,15 @@ $details-item-margin: rem(6px);
       > div:not(:last-child) {
         margin-bottom: $page-header-padding-bottom;
       }
+
+      &.action-cols {
+        display: flex;
+
+        > .action-col:not(:last-child) {
+          padding-right: $action-padding-right;
+          margin-bottom: 0;
+        }
+      }
     }
 
     .action:not(:last-child) {
