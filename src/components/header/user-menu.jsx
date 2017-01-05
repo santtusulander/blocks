@@ -5,78 +5,102 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import { getUserUrlFromParams } from '../../util/routes.js'
-
 import Select from '../select'
-
 import IconUser from '../icons/icon-user.jsx'
 import IconArrowRight from '../icons/icon-arrow-right.jsx'
 
-const UserMenu = ({open, onToggle, theme, handleThemeChange, logout, user, params}) => {
-  return (
-    <Dropdown id="user-menu" pullRight={true}
-              open={open}
-              onToggle={onToggle}>
-      <Dropdown.Toggle className="btn-icon btn-round btn-user-menu"
-                       noCaret={true} id="user-dropdown">
-        <IconUser/>
-      </Dropdown.Toggle>
-      <Dropdown.Menu className="dropdown-user-menu">
-        <li>
-          <ul>
-            <MenuItem header={true}>
-              {user.size &&
-                <span id="user-menu-username">
-                  {user.get('first_name') && user.get('last_name') ?
-                    user.get('first_name') + ' ' + user.get('last_name')
-                  : user.get('email')}
-                </span>
-              }
-            </MenuItem>
+class UserMenu extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    if (this.props.open !== nextProps.open) {
+      return true
+    } else if (this.props.theme !== nextProps.theme) {
+      return true
+    } else if (!Immutable.is(this.props.user, nextProps.user)) {
+      return true
+    } else if (JSON.stringify(this.props.params) !== JSON.stringify(nextProps.params)) {
+      return true
+    }
 
-            <li>
-              <Select
-                className="btn-block"
-                onSelect={handleThemeChange}
-                value={theme}
-                options={[
-                  ['dark',
-                    <div>
-                      <span className="helper-header helper-ui-theme text-sm">
-                        <FormattedMessage id="portal.header.menu.theme.title"/>
-                      </span>
-                      <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
-                    </div>],
-                  ['light',
-                    <div>
-                      <span className="helper-header helper-ui-theme text-sm">
-                        <FormattedMessage id="portal.header.menu.theme.title"/>
-                      </span>
-                      <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
-                    </div>]
-                ]}
-              />
-            </li>
+    return false
+  }
 
-            <li className="no-helper-header" >
-              <Link to={getUserUrlFromParams(params)} onClick={onToggle}>
-                <div className="user-menu-item">
-                  <FormattedMessage id="portal.header.menu.editProfile.text"/>
+  render() {
+    const {
+      open,
+      onToggle,
+      theme,
+      handleThemeChange,
+      logout,
+      user,
+      params
+    } = this.props
+
+    return (
+      <Dropdown id="user-menu" pullRight={true}
+                open={open}
+                onToggle={onToggle}>
+        <Dropdown.Toggle className="btn-icon btn-round btn-user-menu"
+                         noCaret={true} id="user-dropdown">
+          <IconUser/>
+        </Dropdown.Toggle>
+        <Dropdown.Menu className="dropdown-user-menu">
+          <li>
+            <ul>
+              <MenuItem header={true}>
+                {user.size &&
+                  <span id="user-menu-username">
+                    {user.get('first_name') && user.get('last_name') ?
+                      user.get('first_name') + ' ' + user.get('last_name')
+                    : user.get('email')}
+                  </span>
+                }
+              </MenuItem>
+
+              <li>
+                <Select
+                  className="btn-block"
+                  onSelect={handleThemeChange}
+                  value={theme}
+                  options={[
+                    ['dark',
+                      <div>
+                        <span className="helper-header helper-ui-theme text-sm">
+                          <FormattedMessage id="portal.header.menu.theme.title"/>
+                        </span>
+                        <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
+                      </div>],
+                    ['light',
+                      <div>
+                        <span className="helper-header helper-ui-theme text-sm">
+                          <FormattedMessage id="portal.header.menu.theme.title"/>
+                        </span>
+                        <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
+                      </div>]
+                  ]}
+                />
+              </li>
+
+              <li className="no-helper-header" >
+                <Link to={getUserUrlFromParams(params)} onClick={onToggle}>
+                  <div className="user-menu-item">
+                    <FormattedMessage id="portal.header.menu.editProfile.text"/>
+                    <IconArrowRight />
+                  </div>
+                </Link>
+              </li>
+
+              <li className="bottom-item no-helper-header">
+                <a id="log-out" onClick={logout}>
+                  <FormattedMessage id="portal.header.menu.logout.text"/>
                   <IconArrowRight />
-                </div>
-              </Link>
-            </li>
-
-            <li className="bottom-item no-helper-header">
-              <a id="log-out" onClick={logout}>
-                <FormattedMessage id="portal.header.menu.logout.text"/>
-                <IconArrowRight />
-              </a>
-            </li>
-          </ul>
-        </li>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
+                </a>
+              </li>
+            </ul>
+          </li>
+        </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
 }
 
 UserMenu.displayName = "UserMenu"

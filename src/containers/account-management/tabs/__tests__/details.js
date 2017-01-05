@@ -1,8 +1,8 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.unmock('../account.jsx')
-import Account from '../account.jsx'
+jest.unmock('../details.jsx')
+import Account from '../details.jsx'
 
 const fakeRouter = {
   setRouteLeaveHook: jest.fn()
@@ -22,7 +22,14 @@ const intlMaker = () => {
 describe('AccountManagementAccountDetails', () => {
   it('should exist', () => {
     const details = shallow(
-      <Account router={fakeRouter} fields={fakeFields} intl={intlMaker()} />
+      <Account router={fakeRouter}
+        fields={fakeFields}
+        intl={intlMaker()}
+        fetchServiceInfo={ jest.fn() }
+        fetchAccountDetails={ jest.fn() }
+        accountStartFetching={ jest.fn() }
+        params={ {brand: 'udn', account: 1} }
+      />
     )
     expect(details.length).toBe(1)
   })

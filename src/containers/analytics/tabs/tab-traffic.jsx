@@ -49,17 +49,12 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName) {
-    if(params.property && hostConfiguredName) {
-      params = Object.assign({}, params, {
-        property: hostConfiguredName
-      })
-    }
-
+  fetchData(params, filters, location, activeHostConfiguredName) {
     const { fetchOpts, byTimeOpts, byCityOpts } = this.buildOpts({
       params,
       filters,
       location,
+      activeHostConfiguredName,
       coordinates: this.props.mapBounds.toJS()
     })
 
@@ -74,34 +69,43 @@ class AnalyticsTabTraffic extends React.Component {
       )
     }
 
+    let totalsOpts
+
     //REFACTOR:
     if (params.property) {
       this.setState({metricKey: 'hostMetrics'})
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         property: params.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+      if (activeHostConfiguredName) {
+        totalsOpts.property = activeHostConfiguredName
+      }
     } else if(params.group) {
       this.setState({ metricKey: 'groupMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
     } else if(params.account) {
       this.setState({ metricKey: 'accountMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+    }
+
+    if (totalsOpts) {
+      this.props.trafficActions.fetchTotals(totalsOpts)
     }
 
     if (filters.getIn(['includeComparison'])) {
@@ -130,7 +134,13 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
+  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location, activeHostConfiguredName } = {}) {
+    if (params.property && activeHostConfiguredName) {
+      params = Object.assign({}, params, {
+        property: activeHostConfiguredName
+      })
+    }
+
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const startDate  = filters.getIn(['dateRange', 'startDate'])
     const endDate    = filters.getIn(['dateRange', 'endDate'])
@@ -152,6 +162,7 @@ class AnalyticsTabTraffic extends React.Component {
 
   getCitiesWithinBounds(south, west, north, east) {
     const { byCityOpts } = this.buildOpts({
+      activeHostConfiguredName: this.props.activeHostConfiguredName,
       coordinates: {
         south: south,
         west: west,
