@@ -14,8 +14,8 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, title, verifyDelete } = this.props
 
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit = () => {}, submitButton, submitting, title, verifyDelete } = this.props
     return (
       <Modal show={true} dialogClassName="modal-window">
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -83,7 +83,7 @@ class ModalWindow extends React.Component {
                 autoFocus={!verifyDelete}
                 bsStyle="danger"
                 type="submit"
-                disabled={loading || (verifyDelete ? invalid : false)}>
+                disabled={submitting || loading || (verifyDelete ? invalid : false)}>
                 {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
               </Button>}
 

@@ -157,7 +157,7 @@ export class AccountManagement extends Component {
           title: 'Error',
           content: response.payload.data.message,
           okButton: true,
-          cancel: this.props.uiActions.hideInfoDialog
+          cancel: () => this.props.uiActions.hideInfoDialog()
         })
     })
   }
@@ -312,10 +312,9 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteAccountConfirmation.text"/>,
-          invalid: true,
           verifyDelete: true,
-          cancelButton: true,
           deleteButton: true,
+          cancelButton: true,
           cancel: () => toggleModal(null),
           onSubmit: () => onDelete(brand, this.accountToDelete, router)
         }
@@ -324,7 +323,6 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteGroupConfirmation.text"/>,
-          invalid: true,
           verifyDelete: true,
           cancelButton: true,
           deleteButton: true,
@@ -549,21 +547,21 @@ function mapDispatchToProps(dispatch) {
   const toggleModal = uiActions.toggleAccountManagementModal
 
   function onDelete(brandId, accountId, router) {
-    // Hide the delete modal.
-    toggleModal(null)
     // Delete the account.
-    accountActions.deleteAccount(brandId, accountId)
+    return accountActions.deleteAccount(brandId, accountId)
       .then((response) => {
         if (!response.error) {
           // Clear active account and redirect user to brand level account management.
           accountActions.clearActiveAccount()
           router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
         } else {
+          // Hide the delete modal.
+          toggleModal(null)
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
             okButton: true,
-            cancel: uiActions.hideInfoDialog
+            cancel: () => uiActions.hideInfoDialog()
           })
         }
       })
