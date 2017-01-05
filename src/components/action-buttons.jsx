@@ -63,6 +63,7 @@ function ActionButtons ({ arrowDownDisabled, arrowUpDisabled, className, deleteD
   )
 }
 
+ActionButtons.displayName = "ActionButtons"
 ActionButtons.propTypes = {
   arrowDownDisabled: PropTypes.bool,
   arrowUpDisabled: PropTypes.bool,

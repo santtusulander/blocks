@@ -36,6 +36,7 @@ const FieldFormGroup = ({ addonAfter, input, placeholder, type, label, inputRef,
   );
 }
 
+FieldFormGroup.displayName = 'FieldFormGroup'
 FieldFormGroup.propTypes = {
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,

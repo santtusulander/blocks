@@ -1,0 +1,55 @@
+import React from 'react'
+import { shallow } from 'enzyme'
+
+jest.unmock('../login-form-two-factor-app.jsx')
+import { LoginFormTwoFactorApp } from '../login-form-two-factor-app.jsx'
+
+const subject = (loginErrorStr = '') => {
+  const props = {
+    startAppPulling: jest.fn(),
+    loginError: loginErrorStr
+  }
+
+  return (
+    <LoginFormTwoFactorApp {...props} />
+  )
+}
+
+describe('LoginFormTwoFactorApp', () => {
+  it('should exist', () => {
+    const loginFormApp = shallow(
+      subject()
+    )
+    expect(loginFormApp.length).toBe(1)
+  })
+
+  it('should show a small loading spinner', () => {
+    const loginFormApp = shallow(
+      subject()
+    )
+    expect(loginFormApp.find('LoadingSpinnerSmall').length).toBe(1)
+  })
+
+  describe('error handling', () => {
+    it('should not show error message without login error', () => {
+      const loginFormApp = shallow(
+        subject()
+      )
+      expect(loginFormApp.find('.token-input-info').text()).not.toContain('Test error')
+    })
+
+    it('should not show small loading spinner on login error', () => {
+      const loginFormApp = shallow(
+        subject('Test error')
+      )
+      expect(loginFormApp.find('LoadingSpinnerSmall').length).toBe(0)
+    })
+
+    it('should show error message on login error', () => {
+      const loginFormApp = shallow(
+        subject('Test error')
+      )
+      expect(loginFormApp.find('.token-input-info').text()).toContain('Test error')
+    })
+  })
+})

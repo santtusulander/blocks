@@ -14,8 +14,8 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-
     const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit = () => {}, submitButton, submitting, title, verifyDelete } = this.props
+
     return (
       <Modal show={true} dialogClassName="modal-window">
         <form onSubmit={handleSubmit(onSubmit)}>

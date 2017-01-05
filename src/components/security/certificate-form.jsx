@@ -75,6 +75,7 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
   )
 }
 
+CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
   editMode: PropTypes.bool,
   errors: PropTypes.object,

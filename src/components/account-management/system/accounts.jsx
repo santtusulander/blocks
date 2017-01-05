@@ -211,6 +211,8 @@ class AccountList extends Component {
   }
 }
 
+AccountList.displayName = "AccountList"
+
 AccountList.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: PropTypes.instanceOf(List),
