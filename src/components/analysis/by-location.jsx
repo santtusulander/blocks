@@ -14,7 +14,9 @@ const AnalysisByLocation = (props) => {
     getCityData,
     height,
     mapBounds,
-    mapboxActions
+    mapboxActions,
+    dataKey,
+    dataKeyFormat
   } = props
 
   if (!countryData.size) {
@@ -31,7 +33,9 @@ const AnalysisByLocation = (props) => {
         theme={theme}
         height={height}
         mapBounds={mapBounds}
-        mapboxActions={mapboxActions} />
+        mapboxActions={mapboxActions}
+        dataKey={dataKey}
+        dataKeyFormat={dataKeyFormat} />
     </div>
   )
 
@@ -47,6 +51,8 @@ AnalysisByLocation.defaultProps = {
 AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
+  dataKeyFormat: React.PropTypes.func,
   getCityData: React.PropTypes.func,
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
