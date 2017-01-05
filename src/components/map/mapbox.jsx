@@ -595,22 +595,6 @@ class Mapbox extends React.Component {
   }
 
   /**
-   * Method to zoom in and out with animation. This is used by the ZoomControl.
-   * NOTE: This can be removed when we update 'react-mapbox-gl', since the default
-   * zooming methods are fixed in the library. With the current default zooming
-   * methods it doesn't have the animation built-in and just jumps to the
-   * next/previous zoom level.
-   *
-   * @method onZoomClick
-   * @param  {object}    map   Instance of Mapbox map
-   * @param  {number}    value Value to check if we're zooming in or out
-   * @return {method}          Call a correct zoom method
-   */
-  onZoomClick(map, value) {
-    return value < 0 ? map.zoomOut() : map.zoomIn()
-  }
-
-  /**
    * Gets current map bounds and the requests to get city data within those bounds.
    *
    * @method getCitiesOnZoomDrag
@@ -767,8 +751,7 @@ class Mapbox extends React.Component {
                 top: 'auto',
                 right: 'auto',
                 zIndex: 1
-              }}
-              onControlClick={this.onZoomClick.bind(this)} />
+              }}/>
             <div
               className="map-zoom-reset"
               onClick={this.resetZoom.bind(this)}>
