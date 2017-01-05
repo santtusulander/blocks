@@ -13,7 +13,7 @@ export const getServices = (state) => {
  * @return {Map}       services
  */
 export const getProviderTypes = (state) => {
-  return state.serviceInfo.providerTypes && state.serviceInfo.providerTypes
+  return state.serviceInfo && state.serviceInfo.providerTypes
 }
 
 /***
