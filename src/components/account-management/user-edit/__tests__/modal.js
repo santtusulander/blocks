@@ -12,12 +12,28 @@ describe('UserEditModal', () => {
     subject = () => {
       props = {
         user: Immutable.Map({
-          email: 'foo',
+          email: {
+            value: 'foo'
+          },
           roles: Immutable.List('foo'),
-          groups: 'foo',
-          first_name: 'foo',
-          last_name: 'foo',
-          phone_number: 'foo',
+          groups: {
+            value: 'foo'
+          },
+          first_name: {
+            value: 'foo'
+          },
+          last_name: {
+            value: 'foo'
+          },
+          phone: {
+            value: 'foo'
+          },
+          phone_number: {
+            value: 'foo'
+          },
+          phone_country_code: {
+            value: 'foo'
+          }
         })
       }
       return shallow(<UserEditModal {...props}/>)

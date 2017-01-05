@@ -46,6 +46,33 @@ class AccountSelector extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.children !== nextProps.children) {
+      return true
+    }
+
+    if (this.props.open !== nextProps.open) {
+      return true
+    }
+
+    if (this.props.open) {
+      return true
+    } else {
+      if (JSON.stringify(this.props.params) !== JSON.stringify(nextProps.params)) {
+        return true
+      } else if (!is(this.props.items, nextProps.items)) {
+        return true
+      } else if (
+        this.props.startTier !== nextProps.startTier
+        || this.props.restrictedTo !== nextProps.restrictedTo
+      ) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClick, false)
   }
@@ -216,6 +243,7 @@ class AccountSelector extends Component {
 AccountSelector.displayName = "AccountSelector"
 AccountSelector.propTypes = {
   accountSelectorActions: PropTypes.object,
+  children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Map),
   fetchItems: PropTypes.func,
   getChangedItem: PropTypes.func,
