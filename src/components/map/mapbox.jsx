@@ -377,6 +377,7 @@ class Mapbox extends React.Component {
               properties: {
                 name: data.properties.name,
                 average_bits_per_second: trafficCountry.average_bits_per_second,
+                bits_per_second: trafficCountry.bits_per_second,
                 requests: trafficCountry.requests
               },
               geometry: data.geometry
