@@ -1,6 +1,6 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Panel, PanelGroup, Table, Button, FormGroup, FormControl } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
@@ -173,6 +173,12 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
+    const errorTooltip = ({ error, active }) =>
+      !active &&
+        <Tooltip placement="bottom" className="in" id="tooltip-bottom">
+          {error}
+        </Tooltip>
+
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
       [
@@ -180,6 +186,7 @@ export class AccountManagementAccountUsers extends React.Component {
           input: <Field
             name="email"
             ref="emails"
+            ErrorComponent={errorTooltip}
             placeholder=" Email"
             canShowError={false}
             component={FieldFormGroup}/>

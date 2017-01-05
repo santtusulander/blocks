@@ -12,7 +12,7 @@
       padding-bottom: 0 !important;
     }
 
-    & > .has-error input {
+    & .has-error.form-control {
       color: $white;
       background-color: rgba($black, 0.2) !important;
       border: 2px solid $purple;
@@ -50,10 +50,6 @@
 
   .in.tooltip.bottom {
     margin-top: 12px;
-
-    .tooltip-arrow {
-      margin-left: -38px;
-    }
   }
 
   .tooltip {
