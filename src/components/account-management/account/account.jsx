@@ -94,7 +94,7 @@ class AccountManagementAccountDetails extends React.Component {
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
         stayButton: true,
         continueButton: true,
-        cancel: this.props.uiActions.hideInfoDialog,
+        cancel: () => this.props.uiActions.hideInfoDialog(),
         onSubmit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)

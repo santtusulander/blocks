@@ -21,7 +21,7 @@ class FilterServiceType extends React.Component {
           title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
           content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
           okButton: true,
-          cancel: this.props.uiActions.hideInfoDialog
+          cancel: () => this.props.uiActions.hideInfoDialog()
         });
       }
       else {

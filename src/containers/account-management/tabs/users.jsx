@@ -239,7 +239,7 @@ export class AccountManagementAccountUsers extends React.Component {
         content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
         stayButton: true,
         continueButton: true,
-        cancel: this.props.uiActions.hideInfoDialog,
+        cancel: () => this.props.uiActions.hideInfoDialog(),
         onSubmit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
@@ -257,7 +257,7 @@ export class AccountManagementAccountUsers extends React.Component {
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
         okButton: true,
-        cancel: this.props.uiActions.hideInfoDialog
+        cancel: () => this.props.uiActions.hideInfoDialog()
       })
     }
     else {
