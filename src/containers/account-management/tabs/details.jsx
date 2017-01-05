@@ -43,7 +43,7 @@ class AccountDetails extends React.Component {
                 <label><FormattedMessage id="portal.account.manage.brand.title"/></label>
                 <span className='value'>UDN</span>
 
-                <label>Account Name</label>
+                <label><FormattedMessage id="portal.account.manage.accountName.title" /></label>
                 <span className='value'>{account.get('name')}</span>
 
                 <label><FormattedMessage id="portal.account.manage.accountType.text"/></label>

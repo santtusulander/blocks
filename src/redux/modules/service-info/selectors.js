@@ -23,7 +23,7 @@ export const getProviderTypes = (state) => {
  * @return {Map} service
  */
 export const getServiceById = (state, id) => {
-  return state.serviceInfo.services && state.serviceInfo.servicea.get(String(id))
+  return state.serviceInfo.services && state.serviceInfo.services.get(String(id))
 }
 
 /***
