@@ -46,7 +46,7 @@ import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
 import MultiOptionSelector from '../components/multi-option-selector'
-
+import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 
@@ -1123,6 +1123,11 @@ class Styleguide extends React.Component {
             <IconTrash />
             <br />
             IconTrash
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <LoadingSpinnerSmall />
+            <br />
+            LoadingSpinnerSmall
           </span>
 
         </div>
