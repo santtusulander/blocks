@@ -41,6 +41,8 @@ const UdnAdminToolbar = ({accounts, activeAccount, routes, toggleAccountManageme
   )
 }
 
+UdnAdminToolbar.displayName = "UdnAdminToolbar"
+
 UdnAdminToolbar.defaultProps = {
   accounts: Immutable.List(),
   activeAccount: Immutable.Map()

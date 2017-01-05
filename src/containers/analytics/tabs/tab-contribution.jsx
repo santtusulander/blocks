@@ -133,6 +133,7 @@ class AnalyticsTabContribution extends React.Component {
   }
 }
 
+AnalyticsTabContribution.displayName = "AnalyticsTabContribution"
 AnalyticsTabContribution.propTypes = {
   accountType: React.PropTypes.number,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),

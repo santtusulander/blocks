@@ -14,6 +14,7 @@ const IconCalendar = (props) => {
   )
 }
 
+IconCalendar.displayName = "IconCalendar"
 IconCalendar.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

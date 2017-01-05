@@ -64,9 +64,9 @@ const StarburstHelp = ({router}) => {
               <FormattedMessage tagName="tspan" id="portal.startburstHelp.noData.text"/>
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="1560.7" y1="422.9"
+            <line className="pointer" x1="1560.7" y1="428.1"
               x2="1560.7" y2="597.7"/>
-            <circle className="pointer-dot" cx="1560.7" cy="423.1" r="3.8"/>
+            <circle className="pointer-dot" cx="1560.7" cy="428.1" r="3.8"/>
           </g>
           {/* Blue Lines*/}
           <g>
@@ -76,8 +76,8 @@ const StarburstHelp = ({router}) => {
             </text>
             {/* Pointer */}
             <line className="pointer"
-              x1="1598.9" y1="317.6" x2="1762.6" y2="317.6"/>
-            <circle className="pointer-dot" cx="1599" cy="317.6" r="3.8"/>
+              x1="1588" y1="317.6" x2="1762.6" y2="317.6"/>
+            <circle className="pointer-dot" cx="1588" cy="317.6" r="3.8"/>
             {/* Description */}
             <text transform="matrix(1 0 0 1 1780.057 324.5964)">
               <tspan x="0" y="0">
@@ -122,8 +122,8 @@ const StarburstHelp = ({router}) => {
             </text>
             {/* Pointer */}
             <line className="pointer"
-              x1="764" y1="837" x2="184" y2="1037"/>
-            <circle className="pointer-dot" cx="764" cy="837" r="3.8"/>
+              x1="730" y1="797" x2="184" y2="1037"/>
+            <circle className="pointer-dot" cx="730" cy="797" r="3.8"/>
             {/* Description */}
             <text transform="matrix(1 0 0 1 82 945)">
               <FormattedMessage tagName="tspan" id="portal.startburstHelp.metrics.text"/>
@@ -213,9 +213,9 @@ const StarburstHelp = ({router}) => {
               <FormattedMessage tagName="tspan" id="portal.startburstHelp.ttfb.text"/>
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="935" y1="772"
+            <line className="pointer" x1="950" y1="707"
               x2="1197" y2="1066"/>
-            <circle className="pointer-dot" cx="935" cy="772" r="3.8"/>
+            <circle className="pointer-dot" cx="950" cy="707" r="3.8"/>
             {/* Descrition */}
             <text transform="matrix(1 0 0 1 1040 1148)">
               <tspan x="0" y="0">
@@ -233,8 +233,8 @@ const StarburstHelp = ({router}) => {
               <FormattedMessage tagName="tspan" id="portal.startburstHelp.cacheHitRate.text"/>
             </text>
             {/* Pointer */}
-            <line className="pointer" x1="795" y1="745" x2="514" y2="650"/>
-            <circle className="pointer-dot" cx="795" cy="745" r="3.8"/>
+            <line className="pointer" x1="765" y1="680" x2="514" y2="650"/>
+            <circle className="pointer-dot" cx="765" cy="680" r="3.8"/>
             {/* Description */}
             <text transform="matrix(1 0 0 1 0 653)">
               <tspan x="0" y="0">

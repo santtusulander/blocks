@@ -76,6 +76,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 }
 
+AnalyticsTabCacheHitRate.displayName = "AnalyticsTabCacheHitRate"
 AnalyticsTabCacheHitRate.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   fetching: React.PropTypes.bool,

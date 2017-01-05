@@ -27,6 +27,7 @@ const UDNFileInput = (props) => {
   )
 }
 
+UDNFileInput.displayName = "UDNFileInput"
 UDNFileInput.propTypes = {
   addonAfter: React.PropTypes.string,
   id: React.PropTypes.string.isRequired

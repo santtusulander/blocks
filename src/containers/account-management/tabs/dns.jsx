@@ -166,7 +166,7 @@ class AccountManagementSystemDNS extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={this.closeDeleteDnsRecordModal}
-          submit={this.deleteDnsRecord}
+          onSubmit={this.deleteDnsRecord}
           loading={loadingRecords}
           invalid={false}>
           <p>
@@ -193,6 +193,7 @@ class AccountManagementSystemDNS extends Component {
   }
 }
 
+AccountManagementSystemDNS.displayName = "AccountManagementSystemDNS"
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
   activeModal:PropTypes.string,

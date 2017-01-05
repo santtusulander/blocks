@@ -149,6 +149,7 @@ export class FilterChecklistDropdown extends React.Component {
       <div className="form-group">
         <Dropdown
           id="filter-checklist-dropdown"
+          disabled={this.props.disabled}
           open={open}
           onToggle={() => {/*because we pass an open-prop, this needs a handler or react-bs throws a failed proptype-warning.*/}}
           className={className}>

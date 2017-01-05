@@ -60,6 +60,7 @@ const TimeAxisLabels = ({xScale, height, padding, xAxisTickFrequency, showHours}
   )
 }
 
+TimeAxisLabels.displayName = 'TimeAxisLabels'
 TimeAxisLabels.propTypes = {
   height: React.PropTypes.number,
   padding: React.PropTypes.number,

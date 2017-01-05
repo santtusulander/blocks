@@ -41,7 +41,7 @@
   "portal.account.recordForm.address.validationError.IPv6": "Address value must be a valid IPv6 address.",
   "portal.account.recordForm.prio.label": "Priority",
   "portal.account.recordForm.prio.placeholder": "Enter Priority",
-  "portal.account.recordForm.prio.validationError": "priority must be a number.",
+  "portal.account.recordForm.prio.validationError": "Priority must be a number.",
   "portal.account.recordForm.ttl.label": "TTL Value",
   "portal.account.recordForm.ttl.placeholder": "Enter TTL Value",
   "portal.account.recordForm.ttl.validationError": "TTL value must be a number.",

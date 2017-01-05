@@ -164,6 +164,7 @@ class AccountForm extends React.Component {
   }
 }
 
+AccountForm.displayName = "AccountForm"
 AccountForm.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountType: PropTypes.number,

@@ -33,11 +33,9 @@ $header-seach-left-padding: rem(30px);
   }
 
   &__logo {
-    display: flex !important;
-
     .logo {
       display: flex;
-      padding: 0 9px !important;
+      padding: 6px 9px !important;
       margin-right: 15px;
       align-items: center;
       flex: 1;

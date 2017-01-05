@@ -35,6 +35,8 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, cl
   );
 }
 
+FieldFormGroup.displayName = 'FieldFormGroup'
+
 FieldFormGroup.defaultProps = {
   ErrorComponent: ({ error }) => <HelpBlock className='error-msg'>{error}</HelpBlock>,
   required: true

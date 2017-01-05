@@ -19,21 +19,21 @@ export default function(WrappedModal) {
     }
 
     submit() {
-      const { submit, cancel, invalid, verifyDelete } = this.props
-      if (!submit) {
+      const { onSubmit, cancel, invalid, verifyDelete } = this.props
+      if (!onSubmit) {
         return cancel()
       }
 
       if (!this.submitCalled && (!verifyDelete || (verifyDelete && !invalid))) {
-        submit()
         this.submitCalled = true
+        return onSubmit()
       }
     }
 
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 13:
-          if (this.props.submit) {
+          if (this.props.onSubmit) {
             e.preventDefault()
             this.submit()
           }
@@ -46,15 +46,16 @@ export default function(WrappedModal) {
 
     render() {
       let props = Object.assign({}, this.props)
-      delete props.submit
-      return (<WrappedModal submit={this.submit} {...props}/>)
+      delete props.onSubmit
+      return (<WrappedModal onSubmit={this.submit} {...props}/>)
     }
   }
 
+  KeyStrokeSupport.displayName = "KeyStrokeSupport"
   KeyStrokeSupport.propTypes = {
     cancel: PropTypes.func.isRequired,
     invalid: PropTypes.bool,
-    submit: PropTypes.func,
+    onSubmit: PropTypes.func,
     verifyDelete: PropTypes.bool
   }
 

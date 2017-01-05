@@ -44,6 +44,7 @@ const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMeta
       )}
   </tr>
 
+InlineAdd.displayName = "InlineAdd"
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array.isRequired,
