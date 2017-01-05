@@ -180,7 +180,7 @@ export const getById = (state /*, id*/) => {
   /*
   NOTE: this doesn't make much sense at the moment as activeAccount always contains single item but this is for future compatibility
   */
-  return state.account.get('activeAccount') && state.account.get('activeAccount') //In future: find( item => item && item.get('id') === parseInt(id))
+  return state.account.get('activeAccount') //In future: && state.account.get('activeAccount').find( item => item && item.get('id') === parseInt(id))
 }
 
 export const isFetching = (state) => {
