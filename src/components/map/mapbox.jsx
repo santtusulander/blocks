@@ -345,11 +345,11 @@ class Mapbox extends React.Component {
 
     // Country layers should be removed from the map to prevent old highlighted countries
     // appearing on the map when changing to a different account
-    const mapLayers = map.getStyle().layers.filter(layer => layer.id.includes('country-fill') || layer.id.includes('country-stroke'))
-    mapLayers.forEach(layer => {
-      layers = layers.filter(l => l !== layer.id)
-      map.removeLayer(layer.id)
-    })
+    map.getStyle().layers.filter(layer => layer.id.includes('country-fill') || layer.id.includes('country-stroke'))
+                         .forEach(layer => {
+                           layers = layers.filter(l => l !== layer.id)
+                           map.removeLayer(layer.id)
+                         })
 
     // Filters through the country GeoJSON and creates sources/layers for countries that have data
     this.props.geoData.features.forEach((data) => {
@@ -605,6 +605,7 @@ class Mapbox extends React.Component {
    * @param  {object}            map Instance of Mapbox map
    */
   getCitiesOnZoomDrag(map) {
+    this.props.mapboxActions.setMapZoom(map.getZoom())
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       // Get current bounds saved in redux store
