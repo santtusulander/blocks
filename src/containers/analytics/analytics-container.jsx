@@ -58,6 +58,7 @@ class AnalyticsContainer extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    document.body.classList.remove('sticky-filters')
   }
 
   handleScroll() {

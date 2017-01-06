@@ -2,6 +2,8 @@ import React from 'react'
 import { shallow,mount } from 'enzyme'
 import { fromJS } from 'immutable'
 
+jest.unmock('../../../util/helpers')
+
 //jest.autoMockOff()
 jest.unmock('../url-report.jsx')
 
@@ -13,7 +15,7 @@ function intlMaker() {
   }
 }
 
-const urls = fromJS([
+const urlMetrics = fromJS([
   {
     url: 'www.abc.com',
     bytes: 1000,
@@ -25,13 +27,14 @@ const urls = fromJS([
     bytes: 3000,
     requests: 343456,
     service_type: 'https'
+  },
+  {
+    url: 'www.cdg.com/123.mp4',
+    bytes: 4000,
+    requests: 565677,
+    service_type: 'http'
   }
 ])
-
-const urlMetrics = fromJS([
-    {1: 'dummy'},
-    {2: 'dummy 2'}
-  ])
 
 describe('AnalysisURLReport', () => {
   let subject = null
@@ -39,7 +42,6 @@ describe('AnalysisURLReport', () => {
   beforeEach(() => {
     subject = () => {
       props = {
-        urls,
         urlMetrics,
         serviceTypes: fromJS(['http']),
         statusCodes: fromJS(['All']),
@@ -57,8 +59,12 @@ describe('AnalysisURLReport', () => {
     expect(subject().find('AnalysisURLList').props().urls).toEqual(urlMetrics/*.pop()*/)
   })
 
+  it('should aggregate urlMetrics data sharing similar urls', () => {
+    expect(subject().state().topURLs.size).toBe(2)
+  })
+
   it('should pass on proper chart height prop', () => {
-    expect(subject().find('AnalysisHorizontalBar').props().height).toBe(144)
+    expect(subject().find('AnalysisHorizontalBar').props().height).toBeDefined()
   })
 
   it('should select data type properly', () => {

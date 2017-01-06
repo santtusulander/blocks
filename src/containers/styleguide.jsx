@@ -46,7 +46,7 @@ import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
 import MultiOptionSelector from '../components/multi-option-selector'
-
+import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 
@@ -361,11 +361,10 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Charts</h1>
           <Row>
-            <label>Stacked barchart, tooltip only on bar hover</label>
+            <label>Stacked barchart</label>
             <SectionContainer className="analysis-contribution">
               {<BarChart
                 chartLabel="Month to Date"
-                tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
@@ -377,7 +376,7 @@ class Styleguide extends React.Component {
             </Row>
             <hr />
             <Row>
-              <label>Normal barchart, tooltip always active</label>
+              <label>Normal barchart</label>
               <SectionContainer className="analysis-contribution">
                 <BarChart
                   chartLabel="This Week"
@@ -1138,6 +1137,11 @@ class Styleguide extends React.Component {
             <IconTrash />
             <br />
             IconTrash
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <LoadingSpinnerSmall />
+            <br />
+            LoadingSpinnerSmall
           </span>
 
         </div>
