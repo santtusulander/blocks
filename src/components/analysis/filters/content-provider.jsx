@@ -26,17 +26,20 @@ const FilterContentProvider = (props) => {
       </div>
       }
 
-      {props.visibleFields.includes('cp-group') && contentProviderGroupOptions.size !== 0 && <div className="action-col">
-        <h5>
-          <FormattedMessage id="portal.analysis.filters.contentProviderGroups.title"/>
-        </h5>
-        <div className="sidebar-content">
-          <FilterChecklistDropdown className="btn-block"
-          onChange={props.changeContentProviderGroup}
-          value={props.contentProviderGroupValue}
-          options={contentProviderGroupOptions}/>
+      {props.visibleFields.includes('cp-group')
+        && contentProviderGroupOptions.size !== 0
+        && props.contentProviderValue.size === 1 &&
+        <div className="action-col">
+          <h5>
+            <FormattedMessage id="portal.analysis.filters.contentProviderGroups.title"/>
+          </h5>
+          <div className="sidebar-content">
+            <FilterChecklistDropdown className="btn-block"
+              onChange={props.changeContentProviderGroup}
+              value={props.contentProviderGroupValue}
+              options={contentProviderGroupOptions}/>
+          </div>
         </div>
-      </div>
       }
 
       {/*
