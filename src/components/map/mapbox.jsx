@@ -89,7 +89,7 @@ class Mapbox extends React.Component {
       const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCountryLayers(this.state.map, nextProps.countryData.toJS())
+      this.addCountryLayers(this.state.map, nextProps.countryData.toJS(), nextProps.dataKey)
     }
 
     // Current city layers need to be removed to avoid duplicates
@@ -100,7 +100,7 @@ class Mapbox extends React.Component {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCityLayers(this.state.map, nextProps.cityData.toJS())
+      this.addCityLayers(this.state.map, nextProps.cityData.toJS(), nextProps.dataKey)
     }
   }
 
@@ -346,8 +346,9 @@ class Mapbox extends React.Component {
    * @method addCountryLayers
    * @param  {object}         map         Instance of Mapbox map
    * @param  {array}          countryData List of countries with traffic
+   * @param  {string}         dataKey     Name of the key which to show data for
    */
-  addCountryLayers(map, countryData) {
+  addCountryLayers(map, countryData, dataKey = this.props.dataKey) {
     if (map && map.style._loaded) {
       let layers = this.state.layers
 
@@ -376,8 +377,7 @@ class Mapbox extends React.Component {
               type: data.type,
               properties: {
                 name: data.properties.name,
-                average_bits_per_second: trafficCountry.average_bits_per_second,
-                requests: trafficCountry.requests
+                [dataKey]: trafficCountry[dataKey]
               },
               geometry: data.geometry
             }]
@@ -401,7 +401,7 @@ class Mapbox extends React.Component {
           }
 
           // Render the actual colored country layers on the map
-          this.renderCountryHighlight(map, countryData, trafficCountry)
+          this.renderCountryHighlight(map, countryData, trafficCountry, dataKey)
         }
       })
 
@@ -426,13 +426,14 @@ class Mapbox extends React.Component {
    * @param  {object}               map            Instance of Mapbox map
    * @param  {array}                countryData    List of countries with traffic
    * @param  {object}               trafficCountry Object a single country with traffic
+   * @param  {string}               dataKey        Name of the key which to show data for
    */
-  renderCountryHighlight(map, countryData, trafficCountry) {
+  renderCountryHighlight(map, countryData, trafficCountry, dataKey) {
     // Calculate median total for all the countries
-    const countryMedian = calculateMedian(countryData.map((country => country[this.props.dataKey])))
+    const countryMedian = calculateMedian(countryData.map((country => country[dataKey])))
 
     // Gets a score for the country based on its total
-    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[this.props.dataKey])
+    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[dataKey])
     // Choose a color for the country based on its score
     const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
 
@@ -466,10 +467,11 @@ class Mapbox extends React.Component {
    * to access it later on in the componentWillReceiveProps method.
    *
    * @method addCityLayers
-   * @param  {[type]}      map      [description]
-   * @param  {[type]}      cityData [description]
+   * @param  {object}         map      Instance of Mapbox map
+   * @param  {array}          cityData List of cities with traffic
+   * @param  {string}         dataKey  Name of the key which to show data for
    */
-  addCityLayers(map, cityData) {
+  addCityLayers(map, cityData, dataKey = this.props.dataKey) {
     // We might not have map available yet, so check if it exists before doing anything
     if (map && map.style._loaded) {
       // Calculate median total for all the countries
@@ -477,15 +479,15 @@ class Mapbox extends React.Component {
       // for example the score (cityHeat) can be anything between 1-9999, with one
       // being 9999 and the next one 200. This is too big of a gap between the two
       // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
-      const cityMedian = calculateMedian(cityData.map((city => city[this.props.dataKey])))
+      const cityMedian = calculateMedian(cityData.map((city => city[dataKey])))
 
       // Get the highest value to base the sizing percentage against
-      const highestValue = cityData.map(city => getScore(cityMedian, city[this.props.dataKey])).sort((a, b) => b - a)[0]
+      const highestValue = cityData.map(city => getScore(cityMedian, city[dataKey])).sort((a, b) => b - a)[0]
 
       // Go through the city data and create a Feature of each city.
       const cityFeatures = cityData.map((city) => {
         // Get score for the city based on bits_per_second
-        const cityHeat = getScore(cityMedian, city[this.props.dataKey])
+        const cityHeat = getScore(cityMedian, city[dataKey])
         // This city's percentage of the highest score of all cities
         const percentage = cityHeat / highestValue * 100
 
@@ -493,8 +495,7 @@ class Mapbox extends React.Component {
           type: 'Feature',
           properties: {
             name: city.name,
-            average_bits_per_second: city.average_bits_per_second,
-            requests: city.requests,
+            [dataKey]: city[dataKey],
             radiusPercentage: percentage
           },
           geometry: {
