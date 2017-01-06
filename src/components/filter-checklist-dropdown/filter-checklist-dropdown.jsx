@@ -3,6 +3,7 @@ import { List } from 'immutable'
 import { Dropdown, Button, FormControl, FormGroup } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
 
 import autoClose from '../../decorators/select-auto-close'
 import Checkbox from '../checkbox'
@@ -24,7 +25,7 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(optionVal) {
-    let initialVals = this.props.value.size === this.props.options.size ? List() : this.props.value
+    let initialVals = this.props.value
     let newVals = List()
 
     if(optionVal !== 'all') {
@@ -79,7 +80,7 @@ export class FilterChecklistDropdown extends React.Component {
       .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
     if(!numVals || !labels.size) {
-      return <FormattedMessage id="portal.analytics.dropdownMenu.pleaseSelect"/>
+      return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
     }
     else if(numVals === 1) {
       return labels.first()
@@ -171,10 +172,15 @@ export class FilterChecklistDropdown extends React.Component {
                 role="presentation"
                 className="children"
                 tabIndex="-1">
-              <Button onClick={() => this.handleCheck("all")}
-                className="dropdown-toggle clear-selection"
-                style={this.props.value.size !== this.props.options.size ? {display: "block"} : {display: "none"}}>
-                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelection"/>
+              <Button onClick={() => this.handleClear()}
+                className={
+                  classNames(
+                    'dropdown-toggle',
+                    'clear-selection',
+                    {'hidden': this.props.value.size === this.props.options.size || this.props.value.size === 0}
+                  )
+                }>
+                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelections"/>
               </Button>
             </li>
           </Dropdown.Menu>
