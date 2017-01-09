@@ -20,7 +20,7 @@ import CertificateForm from './certificate-form'
 
 const validate = values => {
   let errors = {}
-  const { title, privateKey, certificate, intermediateCertificates, group } = values
+  const { title, privateKey, certificate, group } = values
 
   if (!group || group === '') {
     errors.group = 'Required'
@@ -33,9 +33,6 @@ const validate = values => {
   }
   if (!certificate) {
     errors.certificate = 'Required'
-  }
-  if (!intermediateCertificates) {
-    errors.intermediateCertificates = 'Required'
   }
   return errors
 }
@@ -53,7 +50,7 @@ class CertificateFormContainer extends Component {
   }
 
   handleFormSubmit(values){
-    const { certificateToEdit, upload, edit, securityActions, resetForm } = this.props
+    const { certificateToEdit, upload, edit, securityActions, resetForm, toggleModal } = this.props
     const cert = certificateToEdit && certificateToEdit.get('cn')
     const data = [
       'udn',
@@ -78,7 +75,7 @@ class CertificateFormContainer extends Component {
           throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
         }
         securityActions.resetCertificateToEdit()
-        return resetForm()
+        return resetForm(toggleModal)
       });
     }
 
@@ -88,7 +85,7 @@ class CertificateFormContainer extends Component {
         throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
       }
       securityActions.resetCertificateToEdit()
-      return resetForm()
+      return resetForm(toggleModal)
     });
   }
 
@@ -181,7 +178,10 @@ const mapDispatchToProps = (dispatch) => {
     securityActions,
     upload: data => securityActions.uploadSSLCertificate(...data),
     edit: data => securityActions.editSSLCertificate(...data),
-    resetForm: dispatch => dispatch(reset('certificateForm'))
+    resetForm: toggleModal => {
+      toggleModal(null)
+      dispatch(reset('certificateForm'))
+    }
   }
 }
 

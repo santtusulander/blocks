@@ -8,15 +8,17 @@ import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 
 export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
-  const groupsOptions = groups.map(group => [group.get('id'),
-    group.get('name')])
+  const groupsOptions = groups.map(group => [
+    group.get('id'),
+    group.get('name')
+  ])
 
   return (
     <form>
       <div id="groups">
         <FieldFormGroupSelect
           {...group}
-          label={<FormattedMessage id="'portal.security.ssl.edit.assign.text'"/>}
+          label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
           disabled={editMode}
           numericValues={true}
           className="input-select"
@@ -25,27 +27,38 @@ export const CertificateForm = ({ certificate, editMode, submitting, group, grou
 
       <hr/>
 
-      <FieldFormGroup {...title}>
-        <FormattedMessage id="portal.security.ssl.edit.certTitle.text" />
-      </FieldFormGroup>
+      <FieldFormGroup
+        {...title}
+        label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text" />}
+      />
 
       <hr/>
 
-      <FieldFormGroup type="textarea" className="fixed-size-textarea" {...privateKey} >
-        <FormattedMessage id="portal.security.ssl.edit.privateKey.text" />
-      </FieldFormGroup>
+      <FieldFormGroup
+        {...privateKey}
+        type="textarea"
+        className="fixed-size-textarea"
+        label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text" />}
+      />
 
       <hr/>
 
-      <FieldFormGroup type="textarea" className="fixed-size-textarea" {...intermediateCertificates} >
-        <FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" />
-      </FieldFormGroup>
+      <FieldFormGroup
+        {...intermediateCertificates}
+        type="textarea"
+        className="fixed-size-textarea"
+        required={false}
+        label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" />}
+      />
 
       <hr/>
 
-      <FieldFormGroup type="textarea" className="fixed-size-textarea" {...certificate} >
-        <FormattedMessage id="portal.security.ssl.edit.certificate.text" />
-      </FieldFormGroup>
+      <FieldFormGroup
+        {...certificate}
+        type="textarea"
+        className="fixed-size-textarea"
+        label={<FormattedMessage id="portal.security.ssl.edit.certificate.text" />}
+      />
 
       <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
