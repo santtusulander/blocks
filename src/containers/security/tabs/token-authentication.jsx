@@ -40,6 +40,8 @@ class TabTokenAuthentication extends Component {
   }
 }
 
+TabTokenAuthentication.displayName = 'TabTokenAuthentication'
+
 TabTokenAuthentication.propTypes = {
   fetchProperties: PropTypes.func,
   isFetching: PropTypes.bool,

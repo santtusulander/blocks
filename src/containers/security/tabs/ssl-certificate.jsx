@@ -44,6 +44,7 @@ class TabSslCertificate extends Component {
       activeCertificates,
       fetchAccount,
       groups,
+      isFetching,
       toggleModal,
       onDelete,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
@@ -67,6 +68,7 @@ class TabSslCertificate extends Component {
       activeModal,
       activeCertificates,
       certificates: sslCertificates,
+      isFetching: isFetching,
       onCheck: commonName => toggleActiveCertificates(commonName),
       uploadCertificate: () => toggleModal(UPLOAD_CERTIFICATE),
       editCertificate: (...args) => fetchSSLCertificate(...args).then(() => toggleModal(EDIT_CERTIFICATE)),
@@ -112,6 +114,8 @@ class TabSslCertificate extends Component {
     )
   }
 }
+
+TabSslCertificate.displayName = 'TabSslCertificate'
 
 TabSslCertificate.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),

@@ -79,6 +79,8 @@ export class Security extends React.Component {
   }
 }
 
+Security.displayName = 'Security'
+
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),

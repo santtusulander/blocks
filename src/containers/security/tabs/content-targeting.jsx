@@ -11,4 +11,6 @@ const TabContentTargeting = () => {
   )
 }
 
+TabContentTargeting.displayName = 'TabContentTargeting'
+
 export default TabContentTargeting

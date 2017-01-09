@@ -49,6 +49,8 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
   )
 }
 
+TokenAuthList.displayName = 'TokenAuthList'
+
 TokenAuthList.propTypes = {
   editUrlBuilder: PropTypes.func,
   rules: PropTypes.array
