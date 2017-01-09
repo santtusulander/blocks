@@ -19,8 +19,6 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, cl
           disabled={disabled}
         />
 
-        <FormControl.Feedback />
-
         { addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
