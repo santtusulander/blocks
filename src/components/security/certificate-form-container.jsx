@@ -15,7 +15,6 @@ import { injectIntl } from 'react-intl'
 import { Modal } from 'react-bootstrap'
 
 import * as securityActionCreators from '../../redux/modules/security'
-import * as uiActionCreators from '../../redux/modules/ui'
 
 import CertificateForm from './certificate-form'
 
@@ -139,6 +138,12 @@ CertificateFormContainer.propTypes = {
   toggleModal: PropTypes.func,
   upload: PropTypes.func
 }
+CertificateFormContainer.defaultProps = {
+  accounts: List(),
+  activeAccount: Map(),
+  certificateToEdit: Map(),
+  groups: List()
+}
 
 const mapStateToProps = (state) => {
   const certificateToEdit = state.security.get('certificateToEdit')
@@ -162,8 +167,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
-  // const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  // const toggleModal = uiActions.toggleAccountManagementModal
 
   return {
     fetchGroups: (...params) => {

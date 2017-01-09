@@ -81,5 +81,8 @@ CertificateForm.propTypes = {
   submitting: PropTypes.bool,
   title: PropTypes.object
 }
+CertificateForm.defaultProps = {
+  groups: List()
+}
 
 export default injectIntl(CertificateForm)
