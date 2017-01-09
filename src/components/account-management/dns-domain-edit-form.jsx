@@ -187,7 +187,7 @@ DnsDomainEditForm.displayName = 'DnsDomainEditForm'
 DnsDomainEditForm.propTypes = {
   edit: React.PropTypes.bool,
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.shape(intlShape),
+  intl: intlShape,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   ...reduxFormPropTypes
