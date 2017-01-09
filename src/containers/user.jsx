@@ -75,7 +75,8 @@ class User extends React.Component {
       phone: {val: currentUser.get('phone_country_code') + currentUser.get('phone_number'), country_code: currentUser.get('phone_country_code') },
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
-      tfa: currentUser.get('tfa')
+      tfa: currentUser.get('tfa'),
+      changingPassword: false
     } : {}
 
     return (
