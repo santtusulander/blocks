@@ -112,7 +112,7 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            cancel: this.props.hideInfoDialog,
+            cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
         } else if(item && name) {
@@ -131,7 +131,7 @@ class ContentItems extends React.Component {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
-            cancel: this.props.hideInfoDialog,
+            cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
         } else if(item && name) {

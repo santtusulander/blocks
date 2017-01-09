@@ -155,7 +155,7 @@ export class Main extends React.Component {
           closeButtonSecondary={true}
           reloadButton={true}
           cancel={() => this.props.uiActions.hideErrorDialog()}
-          submit={() => location.reload(true)}/>
+          onSubmit={() => location.reload(true)}/>
         }
         {this.props.showInfoDialog &&
         <ModalWindow
