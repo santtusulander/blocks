@@ -38,7 +38,7 @@ FieldFormGroupSelect.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   numericValues: PropTypes.bool,
   options: PropTypes.array,

@@ -43,12 +43,12 @@ FieldFormGroup.defaultProps = {
 }
 
 FieldFormGroup.propTypes = {
-  ErrorComponent: PropTypes.object,
+  ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
