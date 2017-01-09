@@ -13,11 +13,10 @@ const FieldRadio  = ({ input, disabled, label }) => {
 }
 
 FieldRadio.displayName = 'FieldRadio'
-
 FieldRadio.propTypes = {
   disabled: PropTypes.bool,
-  input: PropTypes.obj,
-  label: PropTypes.obj
+  input: PropTypes.object,
+  label: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ])
 }
 
 export default FieldRadio
