@@ -3,11 +3,11 @@ import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react
 
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, disabled, required = true }) => {
+const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, className, disabled, ErrorComponent, required }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}{required && ' *'}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <FormControl
@@ -19,24 +19,31 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { 
           disabled={disabled}
         />
 
-        <FormControl.Feedback />
-
         { addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
         }
+
+        {meta.error && meta.touched &&
+          <ErrorComponent {...meta}/>
+        }
+
       </InputGroup>
 
-      {error && touched &&
-        <HelpBlock className='error-msg'>{error}</HelpBlock>
-      }
     </FormGroup>
   );
 }
 
 FieldFormGroup.displayName = 'FieldFormGroup'
+
+FieldFormGroup.defaultProps = {
+  ErrorComponent: ({ error }) => <HelpBlock className='error-msg'>{error}</HelpBlock>,
+  required: true
+}
+
 FieldFormGroup.propTypes = {
+  ErrorComponent: PropTypes.object,
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,

@@ -149,6 +149,7 @@ export class Groups extends React.Component {
         selectionStartTier="group"
         selectionDisabled={selectionDisabled}
         showAnalyticsLink={true}
+        showSlices={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}

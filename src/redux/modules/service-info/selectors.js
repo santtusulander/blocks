@@ -13,7 +13,7 @@ export const getServices = (state) => {
  * @return {Map}       services
  */
 export const getProviderTypes = (state) => {
-  return state.serviceInfo.providerTypes
+  return state.serviceInfo && state.serviceInfo.providerTypes
 }
 
 /***
@@ -23,8 +23,19 @@ export const getProviderTypes = (state) => {
  * @return {Map} service
  */
 export const getServiceById = (state, id) => {
-  return state.serviceInfo.servicea.get(String(id))
+  return state.serviceInfo.services && state.serviceInfo.services.get(String(id))
 }
+
+/***
+ * Get providerType by ID
+ * @param  {} state from redux
+ * @param  String id of the item
+ * @return {Map} service
+ */
+export const getProviderTypeById = (state, id) => {
+  return state.serviceInfo.providerTypes && state.serviceInfo.providerTypes.get(String(id))
+}
+
 
 /***
  * Get Provider Types for dropdown
@@ -70,4 +81,35 @@ export const getServiceOptions = (state, providerType) => {
 
     return acc
   }, [])
+}
+
+/* HELPERS */
+export const getProviderTypeName = (providerTypes, id ) => {
+  if (!id) return;
+
+  const providerType = providerTypes.find( item => item.get('id') === id)
+
+  if (providerType) return providerType.get('name')
+
+  return 'N/A'
+}
+
+export const getServiceName = (services, id) => {
+  const service = services.get(String(id))
+
+  if (service) return service.get('name')
+
+  return "N/A"
+}
+
+export const getOptionName = (services, serviceId, optionId) => {
+  const service = services.get(String(serviceId))
+  let optionName = "N/A"
+
+  if (service) {
+    const option = service.get('options').find( item => item.get('id') === optionId)
+    if (option) optionName = option.get('name')
+  }
+
+  return optionName
 }

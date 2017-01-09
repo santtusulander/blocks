@@ -126,7 +126,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
-  'portal.analytics.urlList.top15.text': '15 Top URLs',
+  'portal.analytics.urlList.top15.text': '{urlCount} Top URLs',
   'portal.analytics.urlList.allUrls.text': 'All URLs',
 
   'portal.analytics.visitors.visiorsByTime.text': 'VISITORS BY TIME',

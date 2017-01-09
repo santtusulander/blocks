@@ -18,8 +18,6 @@ import {
 // import IconMinimap from '../icons/icon-minimap';
 import IconGlobe from '../icons/icon-globe';
 
-import { formatBitsPerSecond } from '../../util/helpers.js'
-
 const heatMapColors = [
   '#7b0663',
   '#8f2254',
@@ -84,24 +82,25 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map) {
+    if (!nextProps.countryData.equals(this.props.countryData) && this.state.map || nextProps.dataKey !== this.props.dataKey) {
       // Current country layers need to be removed to avoid duplicates
       // and errors that Mapbox throws if it tries to look for a layer
       // that isn't there.
       const newLayers = this.state.layers.filter(layer => !layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCountryLayers(this.state.map, nextProps.countryData.toJS())
+      this.addCountryLayers(this.state.map, nextProps.countryData.toJS(), nextProps.dataKey)
     }
 
     // Current city layers need to be removed to avoid duplicates
     // and errors that Mapbox throws if it tries to look for a layer
     // that isn't there.
-    if (!nextProps.cityData.equals(this.props.cityData)) {
+    if (!nextProps.cityData.equals(this.props.cityData) ||
+        (nextProps.dataKey !== this.props.dataKey && this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM)) {
       const newLayers = this.state.layers.filter(layer => layer.includes('country-'))
 
       this.updateLayers(newLayers)
-      this.addCityLayers(this.state.map, nextProps.cityData.toJS())
+      this.addCityLayers(this.state.map, nextProps.cityData.toJS(), nextProps.dataKey)
     }
   }
 
@@ -151,6 +150,14 @@ class Mapbox extends React.Component {
     // Fix to draw map correctly on reload
     map.resize()
     this.addCountryLayers(map, this.props.countryData.toJS())
+
+    // If we don't reset hoveredLayer, Mapbox gives an error: Cannot read property 'getPaintProperty' of undefined
+    // Look at onMouseMove else clause –– if we still have this.state.hoveredLayer, it tries and fails to
+    // change the paint properties of a layer when user has changed themes and moves mouse
+    // over the map area.
+    if (this.state.hoveredLayer) {
+      this.setState({ hoveredLayer: null })
+    }
 
     // Only add city layers if we're within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
@@ -238,7 +245,7 @@ class Mapbox extends React.Component {
             title: features[0].properties.cluster ?
                     'Cluster of ' + features[0].properties.point_count + ' cities' :
                     features[0].properties.name,
-            total: features[0].properties.total
+            total: features[0].properties[this.props.dataKey]
           },
           [feature.lngLat.lng, feature.lngLat.lat])
 
@@ -339,62 +346,75 @@ class Mapbox extends React.Component {
    * @method addCountryLayers
    * @param  {object}         map         Instance of Mapbox map
    * @param  {array}          countryData List of countries with traffic
+   * @param  {string}         dataKey     Name of the key which to show data for
    */
-  addCountryLayers(map, countryData) {
-    const layers = this.state.layers
+  addCountryLayers(map, countryData, dataKey = this.props.dataKey) {
+    if (map && map.style._loaded) {
+      let layers = this.state.layers
 
-    // Filters through the country GeoJSON and creates sources/layers for countries that have data
-    this.props.geoData.features.forEach((data) => {
-      const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
-      const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
-      const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+      // Country layers should be removed from the map to prevent old highlighted countries
+      // appearing on the map when changing to a different account
+      map.getStyle().layers.filter(layer => layer.id.includes('country-fill') || layer.id.includes('country-stroke'))
+                           .forEach(layer => {
+                             layers = layers.filter(l => l !== layer.id)
+                             map.removeLayer(layer.id)
+                           })
 
-      // If the country has data and we don't already have a source for it,
-      // we create a source layer and add the layer ID to a list.
-      if (countryExists) {
-        const geoData = {
-          type: 'FeatureCollection',
-          features: [{
-            type: data.type,
-            properties: {
-              name: data.properties.name,
-              total: trafficCountry.bits_per_second
-            },
-            geometry: data.geometry
-          }]
-        }
+      // Filters through the country GeoJSON and creates sources/layers for countries that have data
+      this.props.geoData.features.forEach((data) => {
+        const countryExists = countryData.some(country => country.code === data.properties.iso_a3)
+        const trafficCountry = countryData.find(c => c.code === data.properties.iso_a3)
+        const layerExists = layers.some(layer => layer === 'country-fill-' + data.properties.iso_a3)
+        const sourceName = 'geo-' + data.properties.iso_a3
+        const layerName = 'country-fill-' + data.properties.iso_a3
 
-        // If the country already has a source, we should just update the data.
-        if (map.getSource('geo-' + data.properties.iso_a3)) {
-          map.getSource('geo-' + data.properties.iso_a3).setData(geoData)
+        // If the country has data and we don't already have a source for it,
+        // we create a source layer and add the layer ID to a list.
+        if (countryExists) {
+          const geoData = {
+            type: 'FeatureCollection',
+            features: [{
+              type: data.type,
+              properties: {
+                name: data.properties.name,
+                [dataKey]: trafficCountry[dataKey]
+              },
+              geometry: data.geometry
+            }]
+          }
 
-        } else {
-          map.addSource('geo-' + data.properties.iso_a3, {
-            type: 'geojson',
-            data: geoData
-          })
-        }
+          // If the country already has a source, we should just update the data.
+          if (map.getSource(sourceName)) {
+            map.getSource(sourceName).setData(geoData)
 
-        if (!layerExists) {
+          } else {
+            map.addSource(sourceName, {
+              type: 'geojson',
+              data: geoData
+            })
+          }
+
           // Adds a layer ID to a list so we can reference it in onMouseMove
           // and set a hover style for it.
-          layers.push('country-fill-' + data.properties.iso_a3)
+          if (!layerExists) {
+            layers.push(layerName)
+          }
+
+          // Render the actual colored country layers on the map
+          this.renderCountryHighlight(map, countryData, trafficCountry, dataKey)
         }
-
-        // Render the actual colored country layers on the map
-        this.renderCountryHighlight(map, countryData, trafficCountry)
-      }
-    })
+      })
 
 
-    // Update this.state.layers
-    this.updateLayers(layers)
+      // Update this.state.layers
+      this.updateLayers(layers)
 
-    // Sets updated instance of the map to state so that we can access
-    // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
-    // errors for not found layers since we might not have the map in state
-    // with all the countries and previous cities.
-    this.setState({ map })
+      // Sets updated instance of the map to state so that we can access
+      // in componentWillReceiveProps when adding cities. Otherwise Mapbox gives
+      // errors for not found layers since we might not have the map in state
+      // with all the countries and previous cities.
+      this.setState({ map })
+    }
   }
 
   /**
@@ -406,20 +426,16 @@ class Mapbox extends React.Component {
    * @param  {object}               map            Instance of Mapbox map
    * @param  {array}                countryData    List of countries with traffic
    * @param  {object}               trafficCountry Object a single country with traffic
+   * @param  {string}               dataKey        Name of the key which to show data for
    */
-  renderCountryHighlight(map, countryData, trafficCountry) {
+  renderCountryHighlight(map, countryData, trafficCountry, dataKey) {
     // Calculate median total for all the countries
-    const countryMedian = calculateMedian(countryData.map((country => country.total)))
+    const countryMedian = calculateMedian(countryData.map((country => country[dataKey])))
 
     // Gets a score for the country based on its total
-    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry.total)
+    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[dataKey])
     // Choose a color for the country based on its score
     const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
-
-    if (map.getLayer('country-fill-' + trafficCountry.code)) {
-      map.removeLayer('country-fill-' + trafficCountry.code)
-      map.removeLayer('country-stroke-' + trafficCountry.code)
-    }
 
     map.addLayer({
       id: `country-fill-${trafficCountry.code}`,
@@ -451,44 +467,45 @@ class Mapbox extends React.Component {
    * to access it later on in the componentWillReceiveProps method.
    *
    * @method addCityLayers
-   * @param  {[type]}      map      [description]
-   * @param  {[type]}      cityData [description]
+   * @param  {object}         map      Instance of Mapbox map
+   * @param  {array}          cityData List of cities with traffic
+   * @param  {string}         dataKey  Name of the key which to show data for
    */
-  addCityLayers(map, cityData) {
-    // Calculate median total for all the countries
-    // NOTE: All these city medians and scores should be rethought as currently
-    // for example the score (cityHeat) can be anything between 1-9999, with one
-    // being 9999 and the next one 200. This is too big of a gap between the two
-    // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
-    const cityMedian = calculateMedian(cityData.map((city => city.bits_per_second)))
-
-    // Get the highest value to base the sizing percentage against
-    const highestValue = cityData.map(city => getScore(cityMedian, city.bits_per_second)).sort((a, b) => b - a)[0]
-
-    // Go through the city data and create a Feature of each city.
-    const cityFeatures = cityData.map((city) => {
-      // Get score for the city based on bits_per_second
-      const cityHeat = getScore(cityMedian, city.bits_per_second)
-      // This city's percentage of the highest score of all cities
-      const percentage = cityHeat / highestValue * 100
-
-      return {
-        type: 'Feature',
-        properties: {
-          name: city.name,
-          total: city.bits_per_second,
-          radiusPercentage: percentage
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [city.lon, city.lat]
-        }
-      }
-
-    })
-
+  addCityLayers(map, cityData, dataKey = this.props.dataKey) {
     // We might not have map available yet, so check if it exists before doing anything
-    if (map) {
+    if (map && map.style._loaded) {
+      // Calculate median total for all the countries
+      // NOTE: All these city medians and scores should be rethought as currently
+      // for example the score (cityHeat) can be anything between 1-9999, with one
+      // being 9999 and the next one 200. This is too big of a gap between the two
+      // and sizing can be way off. Maybe city.total instead of city.bits_per_second?
+      const cityMedian = calculateMedian(cityData.map((city => city[dataKey])))
+
+      // Get the highest value to base the sizing percentage against
+      const highestValue = cityData.map(city => getScore(cityMedian, city[dataKey])).sort((a, b) => b - a)[0]
+
+      // Go through the city data and create a Feature of each city.
+      const cityFeatures = cityData.map((city) => {
+        // Get score for the city based on bits_per_second
+        const cityHeat = getScore(cityMedian, city[dataKey])
+        // This city's percentage of the highest score of all cities
+        const percentage = cityHeat / highestValue * 100
+
+        return {
+          type: 'Feature',
+          properties: {
+            name: city.name,
+            [dataKey]: city[dataKey],
+            radiusPercentage: percentage
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [city.lon, city.lat]
+          }
+        }
+
+      })
+
       // If the map already has source for the cities, we should remove it and create it again
       // since data has changed.
       if (map.getSource('geo-cities')) {
@@ -514,6 +531,7 @@ class Mapbox extends React.Component {
 
       // Update map instance since we have added new layers and sources.
       this.updateLayers(layers)
+
     }
   }
 
@@ -578,28 +596,13 @@ class Mapbox extends React.Component {
   }
 
   /**
-   * Method to zoom in and out with animation. This is used by the ZoomControl.
-   * NOTE: This can be removed when we update 'react-mapbox-gl', since the default
-   * zooming methods are fixed in the library. With the current default zooming
-   * methods it doesn't have the animation built-in and just jumps to the
-   * next/previous zoom level.
-   *
-   * @method onZoomClick
-   * @param  {object}    map   Instance of Mapbox map
-   * @param  {number}    value Value to check if we're zooming in or out
-   * @return {method}          Call a correct zoom method
-   */
-  onZoomClick(map, value) {
-    return value < 0 ? map.zoomOut() : map.zoomIn()
-  }
-
-  /**
    * Gets current map bounds and the requests to get city data within those bounds.
    *
    * @method getCitiesOnZoomDrag
    * @param  {object}            map Instance of Mapbox map
    */
   getCitiesOnZoomDrag(map) {
+    this.props.mapboxActions.setMapZoom(map.getZoom())
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       // Get current bounds saved in redux store
@@ -694,7 +697,8 @@ class Mapbox extends React.Component {
         onZoomEnd={this.getCitiesOnZoomDrag.bind(this)}
         onStyleLoad={this.onStyleLoaded.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
-        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}>
+        onDragEnd={this.getCitiesOnZoomDrag.bind(this)}
+        dragRotate={false}>
 
         {/*
         <div className="map-search">
@@ -722,7 +726,7 @@ class Mapbox extends React.Component {
                   <tbody>
                     <tr>
                       <td className="bold">Total</td>
-                      <td>{formatBitsPerSecond(this.state.popupContent.total, 2)}</td>
+                      <td>{this.props.dataKeyFormat(this.state.popupContent.total)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -748,8 +752,7 @@ class Mapbox extends React.Component {
                 top: 'auto',
                 right: 'auto',
                 zIndex: 1
-              }}
-              onControlClick={this.onZoomClick.bind(this)} />
+              }}/>
             <div
               className="map-zoom-reset"
               onClick={this.resetZoom.bind(this)}>
@@ -780,6 +783,8 @@ Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
+  dataKeyFormat: React.PropTypes.func,
   geoData: React.PropTypes.object,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,

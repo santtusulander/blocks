@@ -7,7 +7,7 @@ import { getReduxFormValidationState } from '../../util/helpers'
 const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { touched, error }, className, label, required = true}) => {
   return (
     <FormGroup className={className} controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}{required && ' *'}</ControlLabel>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
     <MultiOptionSelector
         options={options}
