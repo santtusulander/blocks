@@ -6,8 +6,8 @@ import { getReduxFormValidationState } from '../../util/helpers'
 const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, className, disabled, ErrorComponent, required }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}{required && ' *'}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <FormControl
@@ -19,18 +19,18 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, cl
           disabled={disabled}
         />
 
-        <FormControl.Feedback />
-
         { addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
         }
+
+        {meta.error && meta.touched &&
+          <ErrorComponent {...meta}/>
+        }
+
       </InputGroup>
 
-      {meta.error && meta.touched &&
-        <ErrorComponent {...meta}/>
-      }
     </FormGroup>
   );
 }
@@ -43,7 +43,7 @@ FieldFormGroup.defaultProps = {
 }
 
 FieldFormGroup.propTypes = {
-  ErrorComponent: PropTypes.node,
+  ErrorComponent: PropTypes.object,
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
