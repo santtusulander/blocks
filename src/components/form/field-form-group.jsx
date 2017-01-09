@@ -50,6 +50,7 @@ FieldFormGroup.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   placeholder: PropTypes.string,

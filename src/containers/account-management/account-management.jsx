@@ -111,11 +111,12 @@ export class AccountManagement extends Component {
   }
 
   editSOARecord() {
-    const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
-    const activeDomain = dnsData.get('activeDomain')
-    const data = getValues(soaFormData)
-    dnsActions.editSOA({ id: activeDomain.get('id'), data })
-    toggleModal(null)
+    // TODO: to be deleted (or fixed) as part of UDNP-2204
+    // const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
+    // const activeDomain = dnsData.get('activeDomain')
+    // const data = getValues(soaFormData)
+    // dnsActions.editSOA({ id: activeDomain.get('id'), data })
+    // toggleModal(null)
   }
 
   changeActiveAccount(account) {
@@ -503,8 +504,8 @@ AccountManagement.propTypes = {
   // activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
-  dnsActions: PropTypes.object,
-  dnsData: PropTypes.instanceOf(Map),
+  // dnsActions: PropTypes.object,
+  // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
@@ -515,7 +516,7 @@ AccountManagement.propTypes = {
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
   router: PropTypes.object,
-  soaFormData: PropTypes.object,
+  // soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
   userActions: PropTypes.object,
