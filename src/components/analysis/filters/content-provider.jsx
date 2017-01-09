@@ -11,8 +11,8 @@ const FilterContentProvider = (props) => {
   const contentProviderGroupOptions = Immutable.fromJS(props.contentProviderGroupOptions.map(arrayMapping))
 
   return (
-    <div className="action">
-      {props.visibleFields.includes('cp-account') && <div>
+    <div className="action action-cols">
+      {props.visibleFields.includes('cp-account') && <div className="action-col">
         <h5>
           <FormattedMessage id="portal.analysis.filters.contentProvider.title"/>
         </h5>
@@ -26,13 +26,12 @@ const FilterContentProvider = (props) => {
       </div>
       }
 
-      {props.visibleFields.includes('cp-group') && <div>
+      {props.visibleFields.includes('cp-group') && contentProviderGroupOptions.size !== 0 && <div className="action-col">
         <h5>
           <FormattedMessage id="portal.analysis.filters.contentProviderGroups.title"/>
         </h5>
         <div className="sidebar-content">
           <FilterChecklistDropdown className="btn-block"
-          disabled={contentProviderGroupOptions.size === 0}
           onChange={props.changeContentProviderGroup}
           value={props.contentProviderGroupValue}
           options={contentProviderGroupOptions}/>
