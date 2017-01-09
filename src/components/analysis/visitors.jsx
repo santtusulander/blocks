@@ -177,11 +177,15 @@ class AnalysisVisitors extends React.Component {
             {this.props.fetching ?
               <div><FormattedMessage id="portal.loading.text"/></div> :
               <AnalysisByLocation
+                countryData={this.props.byCountry}
+                cityData={this.props.byCity}
+                getCityData={this.props.getCityData}
+                theme={this.props.theme}
+                height={this.state.byTimeWidth / 2}
+                mapBounds={this.props.mapBounds}
+                mapboxActions={this.props.mapboxActions}
                 dataKey="total"
-                timelineKey="detail"
-                width={this.state.byLocationWidth}
-                height={this.state.byLocationWidth / 1.6}
-                countryData={this.props.byCountry}/>
+                dataKeyFormat={val => numeral(val).format('0,0')}/>
               }
           </div>
         </SectionContainer>
@@ -412,15 +416,21 @@ class AnalysisVisitors extends React.Component {
 AnalysisVisitors.displayName = 'AnalysisVisitors'
 AnalysisVisitors.propTypes = {
   byBrowser: React.PropTypes.instanceOf(Immutable.List),
+  byCity: React.PropTypes.instanceOf(Immutable.List),
   byCountry: React.PropTypes.instanceOf(Immutable.List),
   byOS: React.PropTypes.instanceOf(Immutable.List),
   byTime: React.PropTypes.instanceOf(Immutable.List),
   fetching: React.PropTypes.bool,
-  intl: React.PropTypes.object
+  getCityData: React.PropTypes.func,
+  intl: React.PropTypes.object,
+  mapBounds: React.PropTypes.object,
+  mapboxActions: React.PropTypes.object,
+  theme: React.PropTypes.string
 }
 
 AnalysisVisitors.defaultProps = {
   byBrowser: Immutable.List(),
+  byCity: Immutable.List(),
   byCountry: Immutable.List(),
   byOS: Immutable.List(),
   byTime: Immutable.List(),

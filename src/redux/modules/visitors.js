@@ -10,12 +10,14 @@ const VISITORS_START_FETCH = 'VISITORS_START_FETCH'
 const VISITORS_FINISH_FETCH = 'VISITORS_FINISH_FETCH'
 const VISITORS_BY_TIME_FETCHED = 'VISITORS_BY_TIME_FETCHED'
 const VISITORS_BY_COUNTRY_FETCHED = 'VISITORS_BY_COUNTRY_FETCHED'
+const VISITORS_BY_CITY_FETCHED = 'VISITORS_BY_CITY_FETCHED'
 const VISITORS_BY_BROWSER_FETCHED = 'VISITORS_BY_BROWSER_FETCHED'
 const VISITORS_RESET = 'VISITORS_RESET'
 const VISITORS_BY_OS_FETCHED = 'VISITORS_BY_OS_FETCHED'
 
 export const emptyTraffic = fromJS({
   byBrowser: {browsers: []},
+  byCity: [],
   byCountry: {countries: []},
   byOS: {os: []},
   byTime: [],
@@ -40,6 +42,18 @@ export function fetchedByTimeSuccess(state, action) {
 export function fetchedByTimeFailure(state) {
   return state.merge({
     byTime: List()
+  })
+}
+
+export function fetchedByCitySuccess(state, action) {
+  return state.merge({
+    byCity: fromJS(action.payload.data)
+  })
+}
+
+export function fetchedByCityFailure(state) {
+  return state.merge({
+    byCity: fromJS([])
   })
 }
 
@@ -98,6 +112,7 @@ export function finishedFetch(state) {
 
 export default handleActions({
   VISITORS_BY_TIME_FETCHED: mapReducers(fetchedByTimeSuccess, fetchedByOSFailure),
+  VISITORS_BY_CITY_FETCHED: mapReducers(fetchedByCitySuccess, fetchedByCityFailure),
   VISITORS_BY_COUNTRY_FETCHED: mapReducers(fetchedByCountrySuccess, fetchedByCountryFailure),
   VISITORS_BY_BROWSER_FETCHED: mapReducers(fetchedByBrowserSuccess, fetchedByBrowserFailure),
   VISITORS_BY_OS_FETCHED: mapReducers(fetchedByOSSuccess, fetchedByOSFailure),
@@ -110,6 +125,15 @@ export default handleActions({
 
 export const fetchByTime = createAction(VISITORS_BY_TIME_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/time${qsBuilder(opts)}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  });
+})
+
+export const fetchByCity = createAction(VISITORS_BY_CITY_FETCHED, (opts) => {
+  return axios.get(`${analyticsBase()}/visitors/city${qsBuilder(opts)}`)
   .then((res) => {
     if(res) {
       return res.data;
