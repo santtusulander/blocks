@@ -1,17 +1,20 @@
-import React, { PropTypes } from 'react';
-import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react-bootstrap';
+import React, { PropTypes } from 'react'
+import { ControlLabel, FormGroup, FormControl, InputGroup } from 'react-bootstrap';
 
 import { getReduxFormValidationState } from '../../util/helpers'
+import DefaultErrorBlock from './default-error-block'
 
-const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { touched, error }, className, disabled, required = true }) => {
+const FieldFormGroup = ({ addonAfter, input, placeholder, type, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
+
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      <ControlLabel>{label}{required && ' *'}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <FormControl
           {...input}
+          {...{ inputRef }}
           className={className}
           componentClass={componentClass}
           type={type}
@@ -19,29 +22,36 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta: { 
           disabled={disabled}
         />
 
-        <FormControl.Feedback />
-
         { addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
         }
+
+        {meta.error && meta.touched &&
+          <ErrorComponent {...meta}/>
+        }
+
       </InputGroup>
 
-      {error && touched &&
-        <HelpBlock className='error-msg'>{error}</HelpBlock>
-      }
     </FormGroup>
-  );
+  )
 }
 
 FieldFormGroup.displayName = 'FieldFormGroup'
+FieldFormGroup.defaultProps = {
+  ErrorComponent: DefaultErrorBlock,
+  required: true
+}
+
 FieldFormGroup.propTypes = {
+  ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
