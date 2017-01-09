@@ -3,7 +3,7 @@ import {Table, Tr, Td} from 'reactable'
 import {injectIntl} from 'react-intl'
 import Immutable from 'immutable'
 
-import TinyAreaChart from '../charts/tiny-area-chart'
+import TinyLineChart from '../charts/tiny-line-chart'
 
 import { formatBitsPerSecond, formatRequests } from '../../util/helpers'
 
@@ -22,7 +22,7 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
     : val => formatRequests(val)
 
   return (
-    <Table className="table" sortable={true} >
+    <Table className="table table-striped table-analysis" sortable={true} >
     {
       byCountry && byCountry.map( (country,i) => {
         return (
@@ -36,7 +36,7 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
               data={byCountryDataFormat(country.get(byCountryDataKey))}
             />
             <Td column="Period Trend">
-              <TinyAreaChart data={country && country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
+              <TinyLineChart data={country && country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
             </Td>
           </Tr>
         )
