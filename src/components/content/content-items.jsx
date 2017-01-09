@@ -32,7 +32,7 @@ import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import AccountForm from '../../components/account-management/account-form.jsx'
-import GroupForm from '../../components/account-management/group-form.jsx'
+import GroupFormContainer from '../../containers/account-management/modals/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
@@ -426,7 +426,7 @@ class ContentItems extends React.Component {
               show={true}/>
           }
           {this.state.showModal && this.getTier() === 'account' &&
-            <GroupForm
+            <GroupFormContainer
               id="group-form"
               params={this.props.params}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
