@@ -5055,7 +5055,7 @@ normalize-url@^1.4.0:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
-normalizr@^2.3.0:
+normalizr@^2.2.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-2.3.1.tgz#ac12d771ce1fe6a43094c3d828caada4ed9a4540"
   dependencies:
@@ -6531,7 +6531,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@2, request@2.74.x, request@^2.34.0, request@^2.55.0, request@^2.61.0, request@^2.74.0:
+request@2, request@2.74.x, request@^2.34.0, request@^2.39.0, request@^2.55.0, request@^2.61.0, request@^2.74.0:
   version "2.74.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.74.0.tgz#7693ca768bbb0ea5c8ce08c084a45efa05b892ab"
   dependencies:
@@ -6557,7 +6557,7 @@ request@2, request@2.74.x, request@^2.34.0, request@^2.55.0, request@^2.61.0, re
     tough-cookie "~2.3.0"
     tunnel-agent "~0.4.1"
 
-request@^2.39.0, request@^2.79.0:
+request@^2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
