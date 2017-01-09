@@ -11,9 +11,9 @@ describe('LoadingSpinnerSmall', () => {
     expect(spinner.find('.loading-spinner-sm').length).toBe(1)
   })
 
-  it('should have 2 DIVs', () => {
+  it('should have 2 PATHs', () => {
     const spinner = shallow(<LoadingSpinnerSmall />)
 
-    expect(spinner.find('div').length).toBe(2)
+    expect(spinner.find('path').length).toBe(2)
   })
 })

@@ -1,27 +1,48 @@
+@import '../../styles/base/colors';
+
+$spinner-width: 100px;
+$spinner-small-width: 36px;
+
 .spinner-content {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: $spinner-width;
+  height: $spinner-width;
   margin: 100px auto;
 
-  background: url('../../assets/img/loading-spinner-dark.gif');
-}
-
-.spinner-content-sm {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin: 42px auto;
-
-  background: url('../../assets/img/loading-spinner-dark-sm.gif');
-}
-
-.light-theme {
-  .spinner-content {
-    background: url('../../assets/img/loading-spinner-light.gif');
+  .dark-theme & {
+    background: url('../../assets/img/loading-spinner-dark.gif');
   }
 
-  .spinner-content-sm {
-    background: url('../../assets/img/loading-spinner-light-sm.gif');
+  .light-theme & {
+    background: url('../../assets/img/loading-spinner-light.gif');
+  }
+}
+
+.loading-spinner-sm {
+  animation: spinner 1s infinite linear;
+
+  .base {
+    fill: rgba($black, 0.4);
+  }
+
+  .primary {
+
+    .dark-theme & {
+      fill: $white;
+    }
+
+    .light-theme & {
+      fill: $black;
+    }
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }

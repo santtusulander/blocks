@@ -1,0 +1,29 @@
+
+.account-management-account-details {
+
+  .account-details {
+    @extend .row;
+  }
+
+  label {
+    clear: left;
+    @extend .col-xs-3;
+
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  span.value {
+    @extend .col-xs-3;
+  }
+
+  ul.services-list {
+      @extend .col-xs-3;
+
+      list-style: none;
+
+      & ul {
+        list-style: none;
+      }
+  }
+}
