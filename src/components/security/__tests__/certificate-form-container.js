@@ -11,6 +11,7 @@ describe('CertificateFormContainer', () => {
       fetchGroups={jest.fn()}
       activeAccount={Map()}
       toEdit={Map()}
+      handleSubmit={jest.fn()}
       />)
     expect(container.length).toBe(1)
   });

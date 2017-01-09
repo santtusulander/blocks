@@ -1,10 +1,10 @@
 import React from 'react'
 import { List, Map } from 'immutable'
-import { Panel, PanelGroup, Table, Button, FormGroup, FormControl } from 'react-bootstrap'
+import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { change, focus } from 'redux-form'
+import { change, focus, Field } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -16,6 +16,8 @@ import SectionHeader from '../../../components/layout/section-header'
 import SelectWrapper from '../../../components/select-wrapper'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ActionButtons from '../../../components/action-buttons'
+import FieldFormGroup from '../../../components/form/field-form-group'
+import FieldFormGroupSelect from '../../../components/form/field-form-group-select'
 import InlineAdd from '../../../components/inline-add'
 import IconAdd from '../../../components/icons/icon-add'
 import IconInfo from '../../../components/icons/icon-info'
@@ -171,16 +173,32 @@ export class AccountManagementAccountUsers extends React.Component {
      * fields-prop's array items.
      *
      */
+    const errorTooltip = ({ error, active }) =>
+      !active &&
+        <Tooltip placement="bottom" className="in" id="tooltip-bottom">
+          {error}
+        </Tooltip>
+
     const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     return [
-      [{ input: <FormControl ref="emails" id='email' placeholder=" Email" /> }],
       [
         {
-          input: <SelectWrapper
-            id='roles'
-            numericValues={true}
+          input: <Field
+            name="email"
+            ref="emails"
+            ErrorComponent={errorTooltip}
+            placeholder=" Email"
+            canShowError={false}
+            component={FieldFormGroup}/>
+        }
+      ],
+      [
+        {
+          input: <Field
+            name="roles"
             className="inline-add-dropdown"
-            options={roleOptions}/>,
+            options={roleOptions}
+            component={FieldFormGroupSelect}/>,
           positionClass: 'row col-xs-10'
         },
         {
@@ -239,8 +257,8 @@ export class AccountManagementAccountUsers extends React.Component {
         content: 'You have made changes to the User(s), are you sure you want to exit without saving?',
         stayButton: true,
         continueButton: true,
-        cancel: this.props.uiActions.hideInfoDialog,
-        submit: () => {
+        cancel: () => this.props.uiActions.hideInfoDialog(),
+        onSubmit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()
@@ -257,7 +275,7 @@ export class AccountManagementAccountUsers extends React.Component {
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
         okButton: true,
-        cancel: this.props.uiActions.hideInfoDialog
+        cancel: () => this.props.uiActions.hideInfoDialog()
       })
     }
     else {
@@ -399,7 +417,6 @@ export class AccountManagementAccountUsers extends React.Component {
           <tbody>
             {this.state.addingNew && <InlineAdd
               validate={this.validateInlineAdd}
-              fields={['email', 'roles', 'group_id']}
               inputs={this.getInlineAddFields()}
               unmount={this.toggleInlineAdd}
               save={this.newUser}/>}

@@ -1,60 +1,64 @@
 import React, { PropTypes } from 'react'
-import { HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
 import { List } from 'immutable'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import { getReduxFormValidationState } from '../../util/helpers'
-import SelectWrapper from '../select-wrapper'
 import UDNButton from '../button'
+import FieldFormGroup from '../form/field-form-group'
+import FieldFormGroupSelect from '../form/field-form-group-select'
 
-export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, editMode, intl }) => {
-  const { group, title, privateKey, certificate, intermediateCertificates } = fields
-  const groupsOptions = groups.map(group => [group.get('id'), group.get('name')])
+export const CertificateForm = ({ certificate, editMode, submitting, group, groups, intermediateCertificates, intl, invalid, onCancel, onSubmit, privateKey, title }) => {
+  const groupsOptions = groups.map(group => [
+    group.get('id'),
+    group.get('name')
+  ])
 
   return (
     <form>
       <div id="groups">
-        <SelectWrapper
+        <FieldFormGroupSelect
           {...group}
-          label={intl.formatMessage({id: 'portal.security.ssl.edit.assign.text'})}
+          label={<FormattedMessage id="portal.security.ssl.edit.assign.text"/>}
           disabled={editMode}
           numericValues={true}
-          value={group.value}
           className="input-select"
           options={groupsOptions.toJS()}/>
       </div>
 
       <hr/>
 
-      <FormGroup controlId="title" validationState={getReduxFormValidationState(title)}>
-        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certTitle.text" /></ControlLabel>
-        <FormControl componentClass="input" {...title} />
-        {title.touched && title.error && <HelpBlock className="error-msg">{title.error}</HelpBlock>}
-      </FormGroup>
+      <FieldFormGroup
+        {...title}
+        label={<FormattedMessage id="portal.security.ssl.edit.certTitle.text" />}
+      />
 
       <hr/>
 
-      <FormGroup controlId="privateKey" validationState={getReduxFormValidationState(privateKey)}>
-        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.privateKey.text" /></ControlLabel>
-        <FormControl componentClass="textarea" className="fixed-size-textarea" {...privateKey} />
-        {privateKey.touched && privateKey.error && <HelpBlock className="error-msg">{privateKey.error}</HelpBlock>}
-      </FormGroup>
+      <FieldFormGroup
+        {...privateKey}
+        type="textarea"
+        className="fixed-size-textarea"
+        label={<FormattedMessage id="portal.security.ssl.edit.privateKey.text" />}
+      />
 
       <hr/>
 
-      <FormGroup controlId="intermediateCertificates" validationState={getReduxFormValidationState(intermediateCertificates)}>
-        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" /></ControlLabel>
-        <FormControl componentClass="textarea" className="fixed-size-textarea" {...intermediateCertificates} />
-        {intermediateCertificates.touched && intermediateCertificates.error && <HelpBlock className="error-msg">{intermediateCertificates.error}</HelpBlock>}
-      </FormGroup>
+      <FieldFormGroup
+        {...intermediateCertificates}
+        type="textarea"
+        className="fixed-size-textarea"
+        required={false}
+        label={<FormattedMessage id="portal.security.ssl.edit.intermediateCertificates.text" />}
+      />
 
       <hr/>
 
-      <FormGroup controlId="certificate" validationState={getReduxFormValidationState(certificate)}>
-        <ControlLabel><FormattedMessage id="portal.security.ssl.edit.certificate.text" /></ControlLabel>
-        <FormControl componentClass="textarea" className="fixed-size-textarea" {...certificate} />
-        {certificate.touched && certificate.error && <HelpBlock className="error-msg">{certificate.error}</HelpBlock>}
-      </FormGroup>
+      <FieldFormGroup
+        {...certificate}
+        type="textarea"
+        className="fixed-size-textarea"
+        label={<FormattedMessage id="portal.security.ssl.edit.certificate.text" />}
+      />
 
       <ButtonToolbar className="text-right extra-margin-top" bsClass="btn-toolbar">
         <UDNButton
@@ -66,8 +70,8 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
         <UDNButton
           id="save_button"
           bsStyle="primary"
-          disabled={Object.keys(errors).length !== 0}
-          onClick={onSave}>
+          disabled={invalid || submitting}
+          onClick={onSubmit}>
           {intl.formatMessage({id: 'portal.common.button.save'})}
         </UDNButton>
       </ButtonToolbar>
@@ -77,13 +81,21 @@ export const CertificateForm = ({ onCancel, onSave, groups, fields, errors, edit
 
 CertificateForm.displayName = "CertificateForm"
 CertificateForm.propTypes = {
+  certificate: PropTypes.object,
   editMode: PropTypes.bool,
-  errors: PropTypes.object,
-  fields: PropTypes.object,
+  group: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  intermediateCertificates: PropTypes.object,
   intl: intlShape.isRequired,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func
+  onSubmit: PropTypes.func,
+  privateKey: PropTypes.object,
+  submitting: PropTypes.bool,
+  title: PropTypes.object
+}
+CertificateForm.defaultProps = {
+  groups: List()
 }
 
 export default injectIntl(CertificateForm)

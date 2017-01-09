@@ -203,7 +203,7 @@ export class PasswordFields extends Component {
         {stackedPassword &&
           <InputGroup.Addon>
             <a
-              className={classNames('input-addon-link', { active: this.state.confirmVisible })}
+              className={classNames('input-addon-link', { active: this.state.passwordVisible })}
               onClick={this.togglePasswordVisibility}>
               <IconEye/>
             </a>
