@@ -100,7 +100,7 @@ export class Dashboard extends React.Component {
       longitude_west: coordinates.west || null,
       latitude_north: coordinates.north || null,
       longitude_east: coordinates.east || null,
-      show_detal: false
+      show_detail: false
     }, dashboardOpts)
 
     return { dashboardOpts, byCityOpts }
