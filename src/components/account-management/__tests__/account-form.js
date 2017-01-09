@@ -5,6 +5,7 @@ import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 
 jest.unmock('../account-form.jsx')
+jest.unmock('../../../decorators/key-stroke-decorator')
 jest.genMockFromModule('react-bootstrap')
 
 import AccountForm from '../account-form.jsx'
