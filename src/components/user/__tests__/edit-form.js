@@ -59,6 +59,7 @@ describe('UserEditForm', () => {
 
   const fields = makeFakeFields()
   const intl = intlMaker()
+  const initialValues = { email: "abc@example.com" }
   const invalid = false
   const onSave = jest.genMockFunction()
   const onSavePassword = jest.genMockFunction()
@@ -70,6 +71,7 @@ describe('UserEditForm', () => {
      subject = () => {
        props = {
          fields,
+         initialValues,
          intl,
          invalid,
          onSave,
