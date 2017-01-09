@@ -46,7 +46,7 @@ class User extends React.Component {
             title: 'Error',
             content: response.payload.data.message,
             okButton: true,
-            cancel: this.props.uiActions.hideInfoDialog
+            cancel: () => this.props.uiActions.hideInfoDialog()
           })
         }
         this.setState({

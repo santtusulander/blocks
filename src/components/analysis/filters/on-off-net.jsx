@@ -14,7 +14,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
         title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
         content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,
         okButton: true,
-        cancel: hideInfoDialog
+        cancel: () => hideInfoDialog()
       });
     }
     else {
@@ -28,6 +28,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
         <FormGroup>
           <Checkbox
             checked={onOffNetValues.contains('on')}
+            disabled={onOffNetValues.contains('on') && onOffNetValues.size === 1}
             onChange={toggle('on')}>
             <span>On-Net</span>
           </Checkbox>
@@ -35,6 +36,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
         <FormGroup>
           <Checkbox
             checked={onOffNetValues.contains('off')}
+            disabled={onOffNetValues.contains('off') && onOffNetValues.size === 1}
             onChange={toggle('off')}>
             <span>Off-Net</span>
           </Checkbox>

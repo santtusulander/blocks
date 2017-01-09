@@ -91,7 +91,8 @@ describe('User Module', () => {
     it('should handle fetchSuccess', () => {
       const newState = fetchSuccess(state, { payload: {username: 'Username' } })
       const expectedState = Immutable.fromJS({
-        currentUser: {username: 'Username'}
+        currentUser: {username: 'Username'},
+        fetching: false
       })
       expect( Immutable.is(newState, expectedState)).toBeTruthy()
     })
