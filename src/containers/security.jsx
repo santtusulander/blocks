@@ -169,7 +169,7 @@ export class Security extends React.Component {
           cancelButton={true}
           deleteButton={true}
           cancel={() => toggleModal(null)}
-          submit={() => onDelete(toDelete)}
+          onSubmit={() => onDelete(toDelete)}
           invalid={true}
           verifyDelete={true}>
           <p>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { List } from 'Immutable';
+import { List } from 'immutable';
 
 jest.unmock('../group-form')
 import GroupForm from '../group-form'
