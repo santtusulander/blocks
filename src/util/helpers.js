@@ -1,10 +1,11 @@
 import moment from 'moment'
 import numeral from 'numeral'
-import { fromJS } from 'immutable'
+import { List, fromJS } from 'immutable'
 import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
+import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
 import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
@@ -482,4 +483,39 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
  */
 export function getReduxFormValidationState(field) {
   return (field.touched && field.error) ? "error" : null
+}
+
+/**
+ * Aggregate data in 15-top-urls list to prevent repeating similar urls
+ *
+ * @param  {List} urlMetrics
+ * @param  {string} dataKey
+ * @return {List} topURLs
+ */
+export function getTopURLs(urlMetrics, dataKey) {
+  const uniqueURLMetrics = urlMetrics.groupBy(metric => metric.get('url'))
+  const byBytes = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('bytes')), 0))
+  const byRequests = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('requests')), 0))
+
+  let aggregatedByBytes = List()
+  byBytes.map(url => {
+    aggregatedByBytes = aggregatedByBytes.push({
+      url: byBytes.keyOf(url),
+      bytes: url
+    })
+  })
+
+  let aggregatedByRequests = List([])
+  byRequests.map(url => {
+    aggregatedByRequests = aggregatedByRequests.push({
+      url: byRequests.keyOf(url),
+      requests: url
+    })
+  })
+  const aggregatedData = dataKey === 'bytes' ?
+    aggregatedByBytes.sortBy((metric) => -metric.bytes) :
+    aggregatedByRequests.sortBy((metric) => -metric.requests)
+  const topURLs = aggregatedData.filter((metric, i) => i < Math.min(aggregatedData.size, TOP_URLS_MAXIMUM_NUMBER))
+
+  return topURLs
 }

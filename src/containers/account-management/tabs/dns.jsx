@@ -91,9 +91,6 @@ class AccountManagementSystemDNS extends Component {
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
 
-    // Handle concat here instead of in Redux action
-    const fullRecordName = recordToDelete && recordToDelete.name.concat('.' + activeDomain)
-
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
       activeDomain,
@@ -170,7 +167,7 @@ class AccountManagementSystemDNS extends Component {
           loading={loadingRecords}
           invalid={false}>
           <p>
-            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: fullRecordName}}/>
+            <FormattedMessage id="portal.dnsRecord.delete.disclaimer.text" values={{itemToDelete: recordToDelete.name}}/>
           </p>
         </ModalWindow>
         }

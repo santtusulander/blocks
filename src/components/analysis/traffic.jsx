@@ -232,6 +232,8 @@ class AnalysisTraffic extends React.Component {
                 height={this.state.byTimeWidth / 2}
                 mapBounds={this.props.mapBounds}
                 mapboxActions={this.props.mapboxActions}
+                dataKey={byCountryDataKey}
+                dataKeyFormat={byCountryDataFormat}
                 />
             }
           </div>
