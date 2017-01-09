@@ -126,7 +126,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
-  'portal.analytics.urlList.top15.text': '15 Top URLs',
+  'portal.analytics.urlList.top15.text': '{urlCount} Top URLs',
   'portal.analytics.urlList.allUrls.text': 'All URLs',
 
   'portal.analytics.visitors.visiorsByTime.text': 'VISITORS BY TIME',
@@ -426,8 +426,14 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostanme.text': 'New Host Name',
+  'portal.content.addHost.newHostname.text': 'New Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
+  'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
+  
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
