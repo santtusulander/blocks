@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, change, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, change, reset, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -95,7 +95,6 @@ class UserEditForm extends React.Component {
       data.tfa = ""
     }
 
-    console.log('onSubmit', data);
     return this.props.onSave(data)
 
   }
@@ -184,9 +183,9 @@ class UserEditForm extends React.Component {
       initialValues: {
         email
       },
+      resetForm,
       submitting,
       savingPassword,
-      resetForm,
       tfa,
       tfa_toggle
     } = this.props
@@ -389,7 +388,13 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(reduxForm({
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetForm: () => dispatch( reset('user-edit-form') )
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'user-edit-form',
   validate: validate
 })(injectIntl(UserEditForm)))
