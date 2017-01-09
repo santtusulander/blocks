@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 
 import PasswordFields from '../password-fields'
 
-const FieldPasswordFields = ({input, meta, ...rest}) => {
+const FieldPasswordFields = ({ input, ...rest }) => {
 
   return (
     <PasswordFields
@@ -14,6 +14,11 @@ const FieldPasswordFields = ({input, meta, ...rest}) => {
       }}
     />
   )
+}
+
+FieldPasswordFields.displayName = 'FieldPasswordFields'
+FieldPasswordFields.propTypes = {
+  input: PropTypes.object
 }
 
 export default FieldPasswordFields

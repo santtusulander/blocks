@@ -6416,7 +6416,7 @@ redux-devtools@^3.3.1:
     redux "^3.5.2"
     redux-devtools-instrument "^1.0.1"
 
-redux-form@^6.4.2:
+redux-form@^6.4.3:
   version "6.4.3"
   resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-6.4.3.tgz#bd83a77770d9805f7b595a4ff18f00fe4267d3c8"
   dependencies:

@@ -1,6 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
-import { Modal, ButtonGroup, ButtonToolbar } from 'react-bootstrap'
+import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -37,6 +37,9 @@ import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+
+import SidePanel from '../side-panel'
+
 
 const rangeMin = 400
 const rangeMax = 500
@@ -102,7 +105,8 @@ class ContentItems extends React.Component {
   }
   onItemAdd() {
     this.setState({ saving: true })
-    this.props.createNewItem(...arguments)
+
+    return this.props.createNewItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
@@ -121,7 +125,7 @@ class ContentItems extends React.Component {
       })
   }
   onItemSave() {
-    this.props.editItem(...arguments)
+    return this.props.editItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
@@ -307,6 +311,12 @@ class ContentItems extends React.Component {
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
+
+    const addHostTitle = "Add Property"
+    const addHostSubTitle = activeAccount && activeGroup
+      ? `${activeAccount.get('name')} / ${activeGroup.get('name')}`
+    : null
+
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -424,25 +434,22 @@ class ContentItems extends React.Component {
               onCancel={this.hideModal}
               show={true}/>
           }
-          {this.state.showModal && this.getTier() === 'group' &&
-            <Modal show={true} dialogClassName="configuration-sidebar"
-              onHide={this.hideModal}>
-              <Modal.Header>
-                <h1>Add Property</h1>
-                <p>
-                  {activeAccount && activeGroup ?
-                    activeAccount.get('name') + ' / ' +
-                    activeGroup.get('name')
-                  : null}
-                </p>
-              </Modal.Header>
-              <Modal.Body>
-                <AddHost
-                  createHost={this.onItemAdd}
-                  cancelChanges={this.hideModal}
-                  saving={this.state.saving}/>
-              </Modal.Body>
-            </Modal>
+
+          {
+
+            this.state.showModal && this.getTier() === 'group' &&
+              <SidePanel
+                show={true}
+                title={addHostTitle}
+                subTitle={addHostSubTitle}
+                cancel={this.hideModal}
+              >
+
+              <AddHost
+                createHost={this.onItemAdd}
+                cancelChanges={this.hideModal}
+              />
+              </SidePanel>
           }
         </PageContainer>
       </Content>
