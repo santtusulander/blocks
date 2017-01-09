@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
-import {ControlLabel, FormGroup, FormControl, InputGroup, HelpBlock} from 'react-bootstrap';
+import React, { PropTypes } from 'react'
+import { ControlLabel, FormGroup, FormControl, InputGroup } from 'react-bootstrap';
 
 import { getReduxFormValidationState } from '../../util/helpers'
+import DefaultErrorBlock from './default-error-block'
 
 const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, className, disabled, ErrorComponent, required }) => {
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
@@ -32,23 +33,22 @@ const FieldFormGroup  = ({ addonAfter, input, placeholder, type, label, meta, cl
       </InputGroup>
 
     </FormGroup>
-  );
+  )
 }
 
 FieldFormGroup.displayName = 'FieldFormGroup'
-
 FieldFormGroup.defaultProps = {
-  ErrorComponent: ({ error }) => <HelpBlock className='error-msg'>{error}</HelpBlock>,
+  ErrorComponent: DefaultErrorBlock,
   required: true
 }
 
 FieldFormGroup.propTypes = {
-  ErrorComponent: PropTypes.object,
+  ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   placeholder: PropTypes.string,
   required: PropTypes.bool,

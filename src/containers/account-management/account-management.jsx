@@ -22,7 +22,7 @@ import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import ModalWindow from '../../components/modal'
 import AccountForm from '../../components/account-management/account-form'
-import GroupForm from '../../components/account-management/group-form'
+import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
@@ -484,7 +484,7 @@ export class AccountManagement extends Component {
 
         { /* Edit Group */}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-        <GroupForm
+        <GroupFormContainer
           id="group-form"
           params={this.props.params}
           groupId={this.state.groupToUpdate}
