@@ -16,6 +16,7 @@ export function buildOpts({ coordinates = {}, params = {}, filters = {}, locatio
   const byTimeOpts = Object.assign({
     granularity: rangeDiff >= 2 ? 'day' : 'hour'
   }, fetchOpts)
+  const aggregateGranularity = byTimeOpts.granularity
 
   const byCityOpts = Object.assign({
     max_cities: MAPBOX_MAX_CITIES_FETCHED,
@@ -25,11 +26,11 @@ export function buildOpts({ coordinates = {}, params = {}, filters = {}, locatio
     longitude_east: coordinates.east || null
   }, byTimeOpts)
 
-  return { byTimeOpts, fetchOpts, byCityOpts }
+  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
 }
 
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {
-  const { byCityOpts } = buildOpts({
+  const { byCityOpts, aggregateGranularity } = buildOpts({
     params,
     filters,
     location,
@@ -38,7 +39,7 @@ export function getCitiesWithinBounds({ params, filters, location, coordinates, 
   })
 
   actions.startFetching()
-  actions.fetchByCity(byCityOpts).then(
+  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity }).then(
     actions.finishFetching()
   )
 }

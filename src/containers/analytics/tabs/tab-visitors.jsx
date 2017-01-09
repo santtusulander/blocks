@@ -9,6 +9,8 @@ import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 import { changedParamsFiltersQS } from '../../../util/helpers.js'
 import { getCitiesWithinBounds, buildOpts } from '../../../util/mapbox-helpers.js'
 
+import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
+
 class AnalyticsTabVisitors extends React.Component {
   constructor(props) {
     super(props)
@@ -44,19 +46,25 @@ class AnalyticsTabVisitors extends React.Component {
       })
     }
 
-    const { startDate, endDate } = filters.get('customDateRange').toJS()
-    const { fetchOpts } = buildOpts({ params, filters, location, coordinates: this.props.mapBounds })
-    const duration = endDate.diff(startDate, 'days')
-    const aggregateGranularity = duration ? 'month' : 'day'
+    const { fetchOpts, byCityOpts, aggregateGranularity } = buildOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
 
     this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: aggregateGranularity})
     this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: aggregateGranularity})
     this.props.visitorsActions.fetchByTime(fetchOpts)
     this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: aggregateGranularity})
+
+    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM) {
+      this.props.visitorsActions.startFetching()
+      this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity}).then(() =>
+        this.props.visitorsActions.finishFetching()
+      )
+
+    }
   }
 
   getCityData(south, west, north, east) {
     const { params, filters, location } = this.props
+
     return getCitiesWithinBounds({
       params,
       filters,
