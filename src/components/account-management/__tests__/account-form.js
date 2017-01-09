@@ -28,7 +28,11 @@ describe('AccountForm', () => {
         onCancel,
         onSave,
         fetchServiceInfo,
+        handleSubmit: jest.fn(),
         intl: intlMaker(),
+        initialValues: {
+          accountBrand: 'udn'
+        },
         fields: {
           accountName: { touched, error, value: '' },
           accountBrand: { touched, error, value: '' },

@@ -17,6 +17,7 @@ const FieldFormGroupToggle  = ({ input, onToggle, offText = 'OFF', onText = 'ON'
   );
 }
 
+FieldFormGroupToggle.displayName = 'FieldFormGroupToggle'
 FieldFormGroupToggle.propTypes = {
   className: PropTypes.string,
   input: PropTypes.object,

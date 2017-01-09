@@ -24,6 +24,7 @@ const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { touched, e
   );
 }
 
+FieldFormGroupMultiOptionSelector.displayName = 'FieldFormGroupMultiOptionSelector'
 FieldFormGroupMultiOptionSelector.propTypes = {
   className: PropTypes.string,
   input: PropTypes.object,
