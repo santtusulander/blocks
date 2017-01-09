@@ -174,19 +174,16 @@ class AnalysisVisitors extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byGeography.text"/>} />
         <SectionContainer>
           <div ref="byLocationHolder">
-            {this.props.fetching ?
-              <div><FormattedMessage id="portal.loading.text"/></div> :
-              <AnalysisByLocation
-                countryData={this.props.byCountry}
-                cityData={this.props.byCity}
-                getCityData={this.props.getCityData}
-                theme={this.props.theme}
-                height={this.state.byTimeWidth / 2}
-                mapBounds={this.props.mapBounds}
-                mapboxActions={this.props.mapboxActions}
-                dataKey="total"
-                dataKeyFormat={val => numeral(val).format('0,0')}/>
-              }
+            <AnalysisByLocation
+              countryData={this.props.byCountry}
+              cityData={this.props.byCity}
+              getCityData={this.props.getCityData}
+              theme={this.props.theme}
+              height={this.state.byTimeWidth / 2}
+              mapBounds={this.props.mapBounds}
+              mapboxActions={this.props.mapboxActions}
+              dataKey="total"
+              dataKeyFormat={val => numeral(val).format('0,0')}/>
           </div>
         </SectionContainer>
 

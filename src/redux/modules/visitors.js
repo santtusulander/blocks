@@ -47,13 +47,13 @@ export function fetchedByTimeFailure(state) {
 
 export function fetchedByCitySuccess(state, action) {
   return state.merge({
-    byCity: fromJS(action.payload.data)
+    byCity: fromJS(action.payload.data.cities)
   })
 }
 
 export function fetchedByCityFailure(state) {
   return state.merge({
-    byCity: fromJS([])
+    byCity: List()
   })
 }
 

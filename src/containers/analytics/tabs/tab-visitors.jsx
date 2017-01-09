@@ -7,9 +7,15 @@ import AnalysisVisitors from '../../../components/analysis/visitors.jsx'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 import { changedParamsFiltersQS } from '../../../util/helpers.js'
-import { buildOpts } from '../../../util/mapbox-helpers.js'
+import { getCitiesWithinBounds, buildOpts } from '../../../util/mapbox-helpers.js'
 
 class AnalyticsTabVisitors extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.getCityData = this.getCityData.bind(this)
+  }
+
   componentDidMount(){
     this.fetchData(
       this.props.params,
@@ -49,6 +55,18 @@ class AnalyticsTabVisitors extends React.Component {
     this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: aggregateGranularity})
   }
 
+  getCityData(south, west, north, east) {
+    const { params, filters, location } = this.props
+    return getCitiesWithinBounds({
+      params,
+      filters,
+      location,
+      coordinates: { south, west, north, east },
+      activeHostConfiguredName: this.props.activeHostConfiguredName,
+      actions: this.props.visitorsActions
+    })
+  }
+
   render() {
     return (
       <AnalysisVisitors
@@ -61,6 +79,7 @@ class AnalyticsTabVisitors extends React.Component {
         mapBounds={this.props.mapBounds}
         theme={this.props.theme}
         mapboxActions={this.props.mapboxActions}
+        getCityData={this.getCityData}
       />
     )
   }
