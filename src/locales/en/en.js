@@ -125,7 +125,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
-  'portal.analytics.urlList.top15.text': '15 Top URLs',
+  'portal.analytics.urlList.top15.text': '{urlCount} Top URLs',
   'portal.analytics.urlList.allUrls.text': 'All URLs',
 
   'portal.analytics.visitors.visiorsByTime.text': 'VISITORS BY TIME',
@@ -553,6 +553,7 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'A password reset link has been sent to your email address.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email to receive instructions to reset your password.',
+  'portal.forgotPassword.emailInvalid.text': 'Your email address is invalid. Please enter a valid address.',
 
   'portal.groups.accountSummary.text': 'Account Summary',
   'portal.groups.accountContentSummary.text': 'Account Content Summary',

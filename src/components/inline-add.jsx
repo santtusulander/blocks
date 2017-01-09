@@ -83,6 +83,7 @@ const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
     )}
   </tr>
 
+InlineAdd.displayName = "InlineAdd"
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array.isRequired,

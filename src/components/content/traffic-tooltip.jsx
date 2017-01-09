@@ -15,21 +15,23 @@ const ContentTrafficTooltip = ({name, avgTransfer, maxTransfer, minTransfer, dat
     <h3>{name}</h3>
     <b><FormattedMessage id="portal.content.tooltip.badwith.text" values={{date: date}}/></b>
   </div>
-  <div>
+  <div className="clearfix">
     <FormattedMessage id="portal.analytics.peak.text"/>
     <span className="pull-right">
       {getValue(maxTransfer)}
       <span className="data-suffix"> {getUnit(maxTransfer)}</span>
     </span>
   </div>
-  <div>
-    <FormattedMessage id="portal.analytics.average.text"/> <span className="pull-right">
+  <div className="clearfix">
+    <FormattedMessage id="portal.analytics.average.text"/>
+    <span className="pull-right">
       {getValue(avgTransfer)}
       <span className="data-suffix"> {getUnit(avgTransfer)}</span>
     </span>
   </div>
-  <div>
-    <FormattedMessage id="portal.analytics.low.text"/> <span className="pull-right">
+  <div className="clearfix">
+    <FormattedMessage id="portal.analytics.low.text"/>
+    <span className="pull-right">
       {getValue(minTransfer)}
       <span className="data-suffix"> {getUnit(minTransfer)}</span>
     </span>

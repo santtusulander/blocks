@@ -19,6 +19,7 @@ export const AccountManagementHeader = props =>
     </IsAllowed>}
   </h3>
 
+AccountManagementHeader.displayName = "AccountManagementHeader"
 AccountManagementHeader.defaultProps = {
   creationPermission: ALLOW_ALWAYS
 }

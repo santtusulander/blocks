@@ -120,6 +120,7 @@ export class Accounts extends React.Component {
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
+        showSlices={true}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}
