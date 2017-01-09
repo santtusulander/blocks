@@ -4,9 +4,9 @@ import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 import Select from '../select.jsx'
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { touched, error }, label, required = true }) => {
+const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta, meta: { touched, error }, label, required = true }) => {
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(input)}>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
@@ -38,7 +38,7 @@ FieldFormGroupSelect.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
-  label: PropTypes.object,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   numericValues: PropTypes.bool,
   options: PropTypes.array,

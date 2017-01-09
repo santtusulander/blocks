@@ -1,27 +1,37 @@
 import React from 'react'
 import {
   Button,
-  ButtonToolbar,
   FormGroup,
-  ControlLabel,
-  FormControl,
-  Radio
+  ControlLabel
 } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
-import { reduxForm } from 'redux-form'
+
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+
+import FieldRadio from '../form/field-radio'
+import FieldFormGroup from '../form/field-form-group'
+import FormFooterButtons from '../form/form-footer-buttons'
 
 import { isValidHostName } from '../../util/validators'
 
-let errors = {}
 const validate = (values) => {
-  errors = {}
+  const errors = {}
 
   const {
-    hostName
+    hostName,
+    deploymentMode
   } = values
 
-  if(!hostName || !isValidHostName(hostName)) {
-    errors.hostName = true
+  if(!hostName) {
+    errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.required" />
+  }
+
+  if( hostName && !isValidHostName(hostName)) {
+    errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.invalid" />
+  }
+
+  if (!deploymentMode) {
+    errors.deploymentMode = <FormattedMessage id="portal.content.addHost.deploymentMode.required" />
   }
 
   return errors
@@ -31,75 +41,75 @@ class AddHost extends React.Component {
   constructor(props) {
     super(props)
 
-    this.cancelChanges = this.cancelChanges.bind(this)
-    this.createHost = this.createHost.bind(this)
+    this.onCancel = this.onCancel.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  createHost() {
-    const {
-      fields: {
-        hostName,
-        deploymentMode
-      }
-    } = this.props
+  onSubmit(values){
+    return this.props.createHost( values.hostName, values.deploymentMode )
+  }
 
-    if (!Object.keys(errors).length) {
-      this.props.createHost(
-        hostName.value,
-        deploymentMode.value
-      )
-    }
+  onCancel(){
+    return this.props.cancelChanges()
   }
-  cancelChanges(e) {
-    e.preventDefault()
-    this.props.cancelChanges()
-  }
+
   render() {
     const {
-      fields: {
-        hostName,
-        deploymentMode
-      }
+      handleSubmit,
+      invalid,
+      intl,
+      submitting
     } = this.props
 
+    const submitButtonLabel = submitting
+      ? <FormattedMessage id="portal.button.adding" />
+      : <FormattedMessage id="portal.button.add" />
+
     return (
-      <form>
-        <FormGroup controlId="host_name">
-          <ControlLabel><FormattedMessage id="portal.content.addHost.newHostanme.text" /></ControlLabel>
-          <FormControl
-            {...hostName}
-          />
-        </FormGroup>
+      <form onSubmit={handleSubmit(this.onSubmit)}>
+
+        <Field
+          type="text"
+          name="hostName"
+          label={<FormattedMessage id="portal.content.addHost.newHostname.text" />}
+          placeholder={intl.formatMessage({id: 'portal.content.addHost.newHostnamePlaceholder.text'})}
+          component={FieldFormGroup}
+        />
 
         <FormGroup>
           <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /></ControlLabel>
+            <Field
+              name="deploymentMode"
+              type="radio"
+              value="trial"
+              component={FieldRadio}
+              label={<FormattedMessage id="portal.content.addHost.trial.text" />}
+            />
 
-          <Radio
-            {...deploymentMode}
-            value="trial"
-            checked={deploymentMode.value === 'trial'}
-          ><FormattedMessage id="portal.content.addHost.trial.text" /></Radio>
-
-          <Radio
-            {...deploymentMode}
-            value="production"
-            checked={deploymentMode.value === 'production'}
-          ><FormattedMessage id="portal.content.addHost.production.text" /></Radio>
+            <Field
+              type="radio"
+              name="deploymentMode"
+              value="production"
+              component={FieldRadio}
+              label={<FormattedMessage id="portal.content.addHost.production.text" />}
+            />
         </FormGroup>
 
-        <ButtonToolbar className="text-right extra-margin-top">
-          <Button bsStyle="primary" onClick={this.cancelChanges}><FormattedMessage id="portal.button.cancel"/></Button>
+        <FormFooterButtons>
           <Button
-            disabled={this.props.saving || !!Object.keys(errors).length}
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={this.onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
+
+          <Button
             type="submit"
             bsStyle="primary"
-            id="save_button"
-            onClick={this.createHost}>
-            {this.props.saving ?
-              <FormattedMessage id="portal.button.saving"/>
-            : <FormattedMessage id="portal.button.save"/>}
-            </Button>
-        </ButtonToolbar>
+            disabled={invalid||submitting}>
+            {submitButtonLabel}
+          </Button>
+        </FormFooterButtons>
       </form>
     )
   }
@@ -109,18 +119,11 @@ AddHost.displayName = 'AddHost'
 AddHost.propTypes = {
   cancelChanges: React.PropTypes.func,
   createHost: React.PropTypes.func,
-  fields: React.PropTypes.object,
-  saving: React.PropTypes.bool
+  intl: React.PropTypes.object,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
-  form: 'user-form',
-  fields: [
-    'hostName',
-    'deploymentMode'
-  ],
-  initialValues: {
-    deploymentMode: 'trial'
-  },
+  form: 'add-host-form',
   validate: validate
-})(AddHost)
+})(injectIntl(AddHost))
