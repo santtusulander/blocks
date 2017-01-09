@@ -289,7 +289,7 @@ class UserEditForm extends React.Component {
                       disabled={invalid||submitting}
                       bsStyle="success"
                       bsSize="small"
-                      onClick={handleSubmit(values => this.savePasswordOnClick({...values, action: 'changePassword'}))}
+                      onClick={handleSubmit(this.savePasswordOnClick)}
                     >
                       {submitting
                         ? <FormattedMessage id="portal.button.CHANGING"/>
