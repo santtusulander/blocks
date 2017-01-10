@@ -24,17 +24,21 @@ const FilterServiceProvider = (props) => {
         </div>
       </div>
       }
-      {props.visibleFields.includes('sp-group') && serviceProviderGroupOptions.size !== 0 && <div className="action-col">
-        <h5>
-          <FormattedMessage id="portal.analysis.filters.serviceProviderGroups.title"/>
-        </h5>
-        <div className="sidebar-content">
-          <FilterChecklistDropdown className="btn-block"
-          onChange={props.changeServiceProviderGroup}
-          value={props.serviceProviderGroupValue}
-          options={serviceProviderGroupOptions}/>
+
+      {props.visibleFields.includes('sp-group')
+        && serviceProviderGroupOptions.size !== 0
+        && props.serviceProviderValue.size === 1 &&
+        <div className="action-col">
+          <h5>
+            <FormattedMessage id="portal.analysis.filters.serviceProviderGroups.title"/>
+          </h5>
+          <div className="sidebar-content">
+            <FilterChecklistDropdown className="btn-block"
+              onChange={props.changeServiceProviderGroup}
+              value={props.serviceProviderGroupValue}
+              options={serviceProviderGroupOptions}/>
+          </div>
         </div>
-      </div>
       }
     </div>
   );
