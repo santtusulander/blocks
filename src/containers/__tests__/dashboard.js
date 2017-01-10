@@ -18,12 +18,7 @@ jest.mock('../../util/helpers', () => {
     formatBytes: val => val,
     formatTime: val => val,
     getAccountByID: val => val,
-    separateUnit: val => ({ value: val })
-  }
-})
-
-jest.mock('../../util/mapbox-helpers', () => {
-  return {
+    separateUnit: val => ({ value: val }),
     buildFetchOpts: val => val
   }
 })
