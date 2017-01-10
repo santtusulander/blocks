@@ -193,9 +193,6 @@ class AccountManagementUserEditForm extends React.Component {
 
 AccountManagementUserEditForm.displayName = "AccountManagementUserEditForm"
 AccountManagementUserEditForm.propTypes = {
-  //fields: PropTypes.object,
-  // groupOptions: PropTypes.array,
-  //invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   roleOptions: PropTypes.array,

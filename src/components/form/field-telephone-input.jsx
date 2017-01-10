@@ -20,11 +20,11 @@ const FieldTelephoneInput = ({ input, label }) => {
 
 FieldTelephoneInput.displayName = 'FieldTelephoneInput'
 FieldTelephoneInput.propTypes = {
-  label: PropTypes.object,
   input: PropTypes.shape({
     onChange: PropTypes.func,
     value: PropTypes.object
-  })
+  }),
+  label: PropTypes.object
 }
 
 export default FieldTelephoneInput
