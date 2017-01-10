@@ -15,16 +15,25 @@ const validate = (values) => {
   errors = {}
 
   const {
+    first_name,
+    last_name,
     email,
     role
   } = values
 
-  if(!email || email.length === 0) {
-    errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
+  if(!first_name) {
+    errors.first_name = <FormattedMessage id="portal.account.editUser.firstNameRequired.text"/>
+  }
+  if(!last_name) {
+    errors.last_name = <FormattedMessage id="portal.account.editUser.lastNameRequired.text"/>
   }
 
-  if(!role || role.length === 0) {
-    errors.role = <FormattedMessage id="portal.user.edit.roleRequired.text"/>
+  if(!email) {
+    errors.email = <FormattedMessage id="portal.account.editUser.emailRequired.text"/>
+  }
+
+  if(!role) {
+    errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
   }
 
   return errors;
@@ -48,8 +57,8 @@ class AccountManagementUserEditForm extends React.Component {
     const {
       first_name,
       last_name,
-      phone_number,
-      phone_country_code,
+      // phone_number,
+      // phone_country_code,
       groups,
       role
     } = values
@@ -59,8 +68,9 @@ class AccountManagementUserEditForm extends React.Component {
     let newValues = {
       first_name: first_name,
       last_name: last_name,
-      phone_number: phone_number,
-      phone_country_code: phone_country_code,
+      //TODO: UDNP-2229
+      //phone_number: phone_number,
+      //phone_country_code: phone_country_code,
       group_id: groups,
       roles: [ role ]
     }

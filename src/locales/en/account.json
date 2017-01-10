@@ -74,5 +74,10 @@
   "portal.account.soaForm.zoneSerialNumber.label": "Serial # of Zone",
   "portal.account.soaForm.refresh.label": "Refresh",
 
-  "portal.account.editUser.title": "Edit User"
+  "portal.account.editUser.title": "Edit User",
+  "portal.account.editUser.firstNameRequired.text": "First Name is required",
+  "portal.account.editUser.lastNameRequired.text": "Last Name is required",
+  "portal.account.editUser.emailNameRequired.text": "Email is required",
+  "portal.account.editUser.roleNameRequired.text": "Roleis required"
+
 }
