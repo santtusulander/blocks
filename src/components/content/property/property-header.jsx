@@ -103,6 +103,8 @@ const PropertyHeader = ({ currentUser, deleteProperty, intl, params, router, cur
     </PageHeader>
   )
 }
+
+PropertyHeader.displayName = "PropertyHeader"
 PropertyHeader.defaultProps = {
   currentTab: 'summary'
 }

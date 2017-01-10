@@ -204,6 +204,7 @@ class SupportTicketForm extends React.Component {
   }
 }
 
+SupportTicketForm.displayName = "SupportTicketForm"
 SupportTicketForm.propTypes = {
   change: PropTypes.func,
   handleSubmit: PropTypes.func,

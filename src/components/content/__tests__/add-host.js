@@ -21,25 +21,16 @@ describe('AddHost', () => {
     subject = () => {
       props = {
         intl: intlMaker(),
-        errors: {},
+        handleSubmit: jest.fn(),
         createHost,
         cancelChanges,
-        fields: {
-          hostName: { touched, error, value: 'new' },
-          deploymentMode: { touched, error, value: 'trial' }
-        }
       }
       return shallow(<AddHost {...props}/>)
     }
   })
+
   it('should exist', () => {
     expect(subject().length).toBe(1)
   })
-  it('should create host on submit', () => {
 
-    const input = subject().find('#host_name')
-    subject().find('#save_button').simulate('click')
-    expect(createHost.mock.calls[0][0]).toEqual('new')
-    expect(createHost.mock.calls[0][1]).toEqual('trial')
-  })
 })

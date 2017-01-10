@@ -43,7 +43,7 @@ export default class BarChart extends Component {
 
   render() {
     const {
-      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter },
+      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter, hasLegend },
       state: { showTooltip } } = this
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
     return (
@@ -53,7 +53,7 @@ export default class BarChart extends Component {
             <RechartsBarChart
               data={chartData}
               maxBarSize={maxBarSize}
-              margin={{top: 100, right: 30, left: 20, bottom: 20}}>
+              margin={{top: 100, right: 54, left: 70, bottom: 54}}>
               <XAxis
                 padding={{ right: 50 }}
                 tickLine={false}
@@ -65,19 +65,21 @@ export default class BarChart extends Component {
                 tickFormatter={valueFormatter}/>
               {showTooltip &&
                 <Tooltip
-                  animationEasing="linear"
+                  cursor={{ fill: 'rgba(0,0,0,0.1)' }}
                   offset={toolTipOffset}
+                  animationDuration={0}
                   content={
                     <CustomTooltip
                       valueFormatter={valueFormatter}
                       iconClass={tooltipIconClass}/>}
-                    />}
-              <Legend
-                verticalAlign="top"
-                wrapperStyle={{ top: 25 }}
-                align="right"
-                content={<CustomLegend data={barModels}/>}
-                layout="vertical"/>
+                  />}
+              {hasLegend &&
+                <Legend
+                  verticalAlign="top"
+                  wrapperStyle={{ top: 25 }}
+                  align="right"
+                  content={<CustomLegend data={barModels}/>}
+                  layout="vertical"/>}
               {this.renderBars()}
             </RechartsBarChart>
           </ResponsiveContainer>
@@ -86,10 +88,12 @@ export default class BarChart extends Component {
   }
 }
 
+BarChart.displayName = "BarChart"
+
 BarChart.defaultProps = {
   valueFormatter: formatBytes,
   tooltipAlwaysActive: true,
-  toolTipOffset: 40,
+  toolTipOffset: 0,
   maxBarSize: 80
 }
 
@@ -103,6 +107,7 @@ BarChart.propTypes = {
     })).isRequired,
   chartData: PropTypes.arrayOf(PropTypes.object),
   chartLabel: PropTypes.string,
+  hasLegend: PropTypes.bool,
   maxBarSize: PropTypes.number,
   toolTipOffset: PropTypes.number,
   tooltipAlwaysActive: PropTypes.bool,

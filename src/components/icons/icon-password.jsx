@@ -13,6 +13,7 @@ const IconPassword = (props) => {
   )
 }
 
+IconPassword.displayName = "IconPassword"
 IconPassword.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,
