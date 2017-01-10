@@ -1,3 +1,5 @@
+import { buildFetchOpts } from './helpers'
+
 import {
   MAPBOX_BOUNDS_CHANGE_PERCENTAGE
 } from '../constants/mapbox'
@@ -60,4 +62,30 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
 
   // Checks if at least one of the bound values has changed over x-percent
   return boundsChangedBy.some((bound) => bound.difference >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE)
+}
+
+/**
+ * Fetches city data with specific bounds and options
+ *
+ * @method getCitiesWithinBounds
+ * @param  {object}              params                   Object of values to match
+ * @param  {object}              filters                  Filters to match, e.g. date range
+ * @param  {string}              location                 [description]
+ * @param  {object}              coordinates              Object of map bounds, lngLat coordinates
+ * @param  {string}              activeHostConfiguredName String of active host
+ * @param  {object}              actions                  Object of which actions should be called
+ */
+export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {
+  const { byCityOpts, aggregateGranularity } = buildFetchOpts({
+    params,
+    filters,
+    location,
+    coordinates,
+    activeHostConfiguredName
+  })
+
+  actions.startFetching()
+  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity }).then(
+    actions.finishFetching()
+  )
 }
