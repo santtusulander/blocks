@@ -25,4 +25,12 @@ describe('AccountManagementSidebar', () => {
   it('should exist', () => {
     expect(subject().length).toBe(1)
   })
+
+  it('should call \'add account\' when button is clicked', () => {
+    const addAccount = jest.fn()
+    const bar = shallow(<AccountManagementSidebar addAccount={addAccount}
+      intl={intlMaker()}/>)
+    bar.find('ButtonWrapper').simulate('click')
+    expect(addAccount.mock.calls[0]).toBeDefined()
+  })
 })
