@@ -9,7 +9,6 @@ import {formatBytes} from '../../../../util/helpers'
 import AnalysisByTime from '../by-time.jsx'
 
 const LOADING_TEXT = 'Loading...'
-const NO_DATA_FOUND_TEXT = 'No data found'
 
 const datasets = [
   {
@@ -133,10 +132,6 @@ describe('AnalysisByTime', () => {
     let texts = subject({axes: false}).find('text')
 
     expect(texts.length).toBe(0)
-  })
-
-  it('should show no data if the desired dataSet is empty', () => {
-    expect(subject({ dataKey: 'bytes_out' }).text()).toContain(NO_DATA_FOUND_TEXT);
   })
 
   it('should have Legend', () => {
