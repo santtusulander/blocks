@@ -579,7 +579,7 @@ class Mapbox extends React.Component {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       // Get current bounds saved in redux store
-      const currentBounds = this.props.mapBounds.toJS()
+      const currentBounds = this.props.mapBounds
 
       // We need to wrap map center in order to get actual lat/lon coordinates
       // See: https://github.com/mapbox/mapbox-gl-js/issues/3690

@@ -52,9 +52,9 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
   }
 
   // Calculates percent difference between current and new bounds
-  const boundsChangedBy = Object.keys(currentBounds).map((key) => {
+  const boundsChangedBy = currentBounds.keySeq().map((key) => {
     return {
-      difference: Math.abs(100 - (currentBounds[key] / boundsArray[key] * 100))
+      difference: Math.abs(100 - (currentBounds.get(key) / boundsArray[key] * 100))
     }
   })
 
