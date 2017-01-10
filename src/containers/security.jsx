@@ -169,7 +169,7 @@ export class Security extends React.Component {
           cancelButton={true}
           deleteButton={true}
           cancel={() => toggleModal(null)}
-          submit={() => onDelete(toDelete)}
+          onSubmit={() => onDelete(toDelete)}
           invalid={true}
           verifyDelete={true}>
           <p>
@@ -182,6 +182,7 @@ export class Security extends React.Component {
   }
 }
 
+Security.displayName = "Security"
 Security.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),

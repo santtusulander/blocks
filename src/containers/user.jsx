@@ -46,7 +46,7 @@ class User extends React.Component {
             title: 'Error',
             content: response.payload.data.message,
             okButton: true,
-            cancel: this.props.uiActions.hideInfoDialog
+            cancel: () => this.props.uiActions.hideInfoDialog()
           })
         }
         this.setState({
@@ -62,15 +62,11 @@ class User extends React.Component {
       savingPassword: this.props.userFetching
     })
 
-    // TODO: Once the API supports sending a token in the change password response, this needs to be updated to reflect that.
     const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
 
     updatePasswordPromise.then((response) => {
       if (!response.error) {
-        this.props.userActions.logIn(
-          this.props.currentUser.get('email'),
-          password.new_password
-        ).then(this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})))
+        this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
       }
 
       editFormCallback(response)
@@ -95,8 +91,12 @@ class User extends React.Component {
       first_name: currentUser.get('first_name'),
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
+      phone: currentUser.get('phone_country_code') + currentUser.get('phone_number'),
       phone_number: currentUser.get('phone_number'),
-      timezone: currentUser.get('timezone')
+      phone_country_code: currentUser.get('phone_country_code'),
+      timezone: currentUser.get('timezone'),
+      tfa_toggle: !!currentUser.get('tfa'),
+      tfa: currentUser.get('tfa')
     } : {}
 
     return (

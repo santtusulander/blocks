@@ -109,8 +109,8 @@ class AccountList extends Component {
         content: <FormattedMessage id='portal.account.manage.unsavedChanges.warning.content'/>,
         stayButton: true,
         continueButton: true,
-        cancel: this.props.uiActions.hideInfoDialog,
-        submit: () => {
+        cancel: () => this.props.uiActions.hideInfoDialog(),
+        onSubmit: () => {
           this.isLeaving = true
           this.props.router.push(pathname)
           this.props.uiActions.hideInfoDialog()
@@ -210,6 +210,8 @@ class AccountList extends Component {
     )
   }
 }
+
+AccountList.displayName = "AccountList"
 
 AccountList.propTypes = {
   accountActions: React.PropTypes.object,

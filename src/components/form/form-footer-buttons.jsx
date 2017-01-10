@@ -11,6 +11,7 @@ const FormFooterButtons = ({children}) => {
   )
 }
 
+FormFooterButtons.displayName = 'FormFooterButtons'
 FormFooterButtons.propTypes = {
   children: PropTypes.array
 }

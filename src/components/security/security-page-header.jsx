@@ -37,6 +37,7 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
   )
 }
 
+SecurityPageHeader.displayName = "SecurityPageHeader"
 SecurityPageHeader.propTypes = {
   activeAccount: PropTypes.string,
   activeGroup: PropTypes.string,

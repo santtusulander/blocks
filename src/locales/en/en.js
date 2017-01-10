@@ -26,6 +26,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountType.title': 'Account Type',
   'portal.account.manage.services.title': 'Services',
   'portal.account.manage.system.empty.domain': 'No Domain',
+  'portal.account.manage.selectAccountType.text': 'Please, select account type first.',
 
   'portal.account.list.accountName.title': 'ACCOUNT NAME',
   'portal.account.list.type.title': 'TYPE',
@@ -112,7 +113,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.urlList.status.text': 'STATUS',
   'portal.analytics.urlList.bytes.text': 'Bytes',
   'portal.analytics.urlList.requests.text': 'Requests',
-  'portal.analytics.urlList.top15.text': '15 Top URLs',
+  'portal.analytics.urlList.top15.text': '{urlCount} Top URLs',
   'portal.analytics.urlList.allUrls.text': 'All URLs',
 
   'portal.analytics.visitors.visiorsByTime.text': 'VISITORS BY TIME',
@@ -412,8 +413,14 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostanme.text': 'New Host Name',
+  'portal.content.addHost.newHostname.text': 'New Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
+  'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
+  
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
@@ -540,6 +547,7 @@ const TRANSLATED_MESSAGES = {
   'portal.forgotPassword.forgotPassword.text': 'Forgot Password',
   'portal.forgotPassword.instructions.text': 'A password reset link has been sent to your email address.',
   'portal.forgotPassword.enterEmail.text': 'Enter your email to receive instructions to reset your password.',
+  'portal.forgotPassword.emailInvalid.text': 'Your email address is invalid. Please enter a valid address.',
 
   'portal.groups.accountSummary.text': 'Account Summary',
   'portal.groups.accountContentSummary.text': 'Account Content Summary',

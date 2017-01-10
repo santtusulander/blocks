@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { FormGroup, ControlLabel } from 'react-bootstrap';
 import Toggle from '../toggle.jsx'
 
-const FieldFormGroupToggle  = ({ input, onToggle, offText, onText, className, readonly, children }) => {
+const FieldFormGroupToggle = ({ input, onToggle, offText = 'OFF', onText = 'ON', className, readonly, label }) => {
   onToggle = onToggle ? onToggle : e => input.onChange(e)
   return (
     <FormGroup controlId={input.name} className={className}>
-      <ControlLabel>{children}</ControlLabel>
+      <ControlLabel>{label}</ControlLabel>
       <Toggle value={input.value}
               changeValue={onToggle}
               onText={onText}
@@ -17,10 +17,11 @@ const FieldFormGroupToggle  = ({ input, onToggle, offText, onText, className, re
   );
 }
 
+FieldFormGroupToggle.displayName = 'FieldFormGroupToggle'
 FieldFormGroupToggle.propTypes = {
-  children: PropTypes.object,
   className: PropTypes.string,
   input: PropTypes.object,
+  label: PropTypes.object,
   offText: PropTypes.string,
   onText: PropTypes.string,
   onToggle: PropTypes.func,

@@ -1,20 +1,23 @@
 import React, { PropTypes } from 'react';
 import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
-import Select from '../select.jsx'
 
-const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta: { dirty, error }, children }) => {
+import Select from '../select.jsx'
+import { getReduxFormValidationState } from '../../util/helpers'
+
+const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, className, disabled, meta, meta: { touched, error }, label, required = true }) => {
   return (
-    <FormGroup controlId={input.name} validationState={dirty && error ? 'error' : null}>
-      <ControlLabel>{children}</ControlLabel>
+    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <Select
+          {...input}
           numericValues={numericValues}
-          disabled={disabled || false}
+          disabled={disabled}
           className={className}
           onSelect={e => input.onChange(e)}
           options={options}
-          value={input.value} />
+        />
 
           { addonAfter &&
             <InputGroup.Addon>
@@ -22,22 +25,24 @@ const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, clas
             </InputGroup.Addon>
           }
         </InputGroup>
-      {error && dirty &&
+      {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
   );
 }
 
+FieldFormGroupSelect.displayName = 'FieldFormGroupSelect'
 FieldFormGroupSelect.propTypes = {
   addonAfter: PropTypes.node,
-  children: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   numericValues: PropTypes.bool,
-  options: PropTypes.array
+  options: PropTypes.array,
+  required: PropTypes.bool
 }
 
 export default FieldFormGroupSelect
