@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.2.1-b9",
+  "version": "1.2.1-b10",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -148,6 +148,7 @@
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-bootstrap",
       "<rootDir>/node_modules/react-redux",
+      "<rootDir>/node_modules/react-mapbox-gl",
       "<rootDir>/node_modules/intl",
       "<rootDir>/node_modules/react-intl",
       "<rootDir>/node_modules/redux"
