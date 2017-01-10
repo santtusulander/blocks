@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
-import UserEditForm from './form'
+import AccountManagementUserEditForm from './form'
 import { Modal } from 'react-bootstrap'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
@@ -43,7 +43,7 @@ class UserEditModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <UserEditForm
+          <AccountManagementUserEditForm
             initialValues={initialValues}
             groupOptions={getCheckboxArrayOptions(groups)}
             roleOptions={this.getRoleOptions()}

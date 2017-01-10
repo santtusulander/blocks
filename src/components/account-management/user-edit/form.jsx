@@ -28,7 +28,7 @@ const validate = (values) => {
   return errors;
 }
 
-class UserEditForm extends React.Component {
+class AccountManagementUserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
@@ -129,7 +129,6 @@ class UserEditForm extends React.Component {
 
     return (
       <form className="user-form">
-
         <FormGroup validationState={getReduxFormValidationState(email)}>
           <ControlLabel>
             <FormattedMessage id="portal.user.edit.email.text"/>
@@ -228,7 +227,7 @@ class UserEditForm extends React.Component {
         */}
 
         <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
+          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>aaa
           <Button disabled={!allowSave} bsStyle="primary"
                   onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
         </ButtonToolbar>
@@ -237,8 +236,8 @@ class UserEditForm extends React.Component {
   }
 }
 
-UserEditForm.displayName = "UserEditForm"
-UserEditForm.propTypes = {
+AccountManagementUserEditForm.displayName = "AccountManagementUserEditForm"
+AccountManagementUserEditForm.propTypes = {
   fields: PropTypes.object,
   // groupOptions: PropTypes.array,
   invalid: PropTypes.bool,
@@ -248,16 +247,6 @@ UserEditForm.propTypes = {
 }
 
 export default reduxForm({
-  form: 'user-form',
-  fields: [
-    'email',
-    'first_name',
-    'last_name',
-    'phone',
-    'phone_number',
-    'phone_country_code',
-    'role',
-    'groups'
-  ],
+  form: 'account-management-edit-user-form',
   validate: validate
-})(UserEditForm)
+})(AccountManagementUserEditForm)
