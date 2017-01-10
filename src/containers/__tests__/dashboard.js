@@ -24,7 +24,7 @@ jest.mock('../../util/helpers', () => {
 
 jest.mock('../../util/mapbox-helpers', () => {
   return {
-    buildOpts: val => val
+    buildFetchOpts: val => val
   }
 })
 

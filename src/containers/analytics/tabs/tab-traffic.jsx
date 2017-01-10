@@ -10,8 +10,8 @@ import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 
-import { formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
-import { getCitiesWithinBounds, buildOpts } from '../../../util/mapbox-helpers'
+import { formatBitsPerSecond, changedParamsFiltersQS, buildFetchOpts } from '../../../util/helpers.js'
+import { getCitiesWithinBounds } from '../../../util/mapbox-helpers'
 import DateRanges from '../../../constants/date-ranges'
 import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
@@ -51,7 +51,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   fetchData(params, filters, location, activeHostConfiguredName) {
-    const { fetchOpts, byTimeOpts, byCityOpts } = buildOpts({
+    const { fetchOpts, byTimeOpts, byCityOpts } = buildFetchOpts({
       params,
       filters,
       location,

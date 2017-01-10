@@ -1,8 +1,7 @@
-import { buildAnalyticsOpts } from './helpers'
+import { buildFetchOpts } from './helpers'
 
 import {
-  MAPBOX_BOUNDS_CHANGE_PERCENTAGE,
-  MAPBOX_MAX_CITIES_FETCHED
+  MAPBOX_BOUNDS_CHANGE_PERCENTAGE
 } from '../constants/mapbox'
 
 /**
@@ -66,51 +65,6 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
 }
 
 /**
- * Builds options for fetching data
- *
- * @method buildOpts
- * @param  {Object}  coordinates              Object of map bounds
- * @param  {object}  params                   Object of values to match
- * @param  {object}  filters                  Filters to match, e.g. date range
- * @param  {string}  location                 [description]
- * @param  {string}  activeHostConfiguredName String of active host
- * @return {object}                           Object of different fetch options
- */
-export function buildOpts({ coordinates = {}, params = {}, filters = {}, location = {}, activeHostConfiguredName } = {}) {
-  if (params.property && activeHostConfiguredName) {
-    params = Object.assign({}, params, {
-      property: activeHostConfiguredName
-    })
-  }
-
-  const fetchOpts = buildAnalyticsOpts(params, filters, location)
-  const startDate  = filters.getIn(['dateRange', 'startDate'])
-  const endDate    = filters.getIn(['dateRange', 'endDate'])
-  const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-  const byTimeOpts = Object.assign({
-    granularity: rangeDiff >= 2 ? 'day' : 'hour'
-  }, fetchOpts)
-  const aggregateGranularity = byTimeOpts.granularity
-
-  const byCityOpts = Object.assign({
-    max_cities: MAPBOX_MAX_CITIES_FETCHED,
-    latitude_south: coordinates.south || null,
-    longitude_west: coordinates.west || null,
-    latitude_north: coordinates.north || null,
-    longitude_east: coordinates.east || null,
-    show_detail: false
-  }, byTimeOpts)
-
-  const dashboardOpts = Object.assign({
-    startDate,
-    endDate,
-    granularity: 'hour'
-  }, params)
-
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
-}
-
-/**
  * Fetches city data with specific bounds and options
  *
  * @method getCitiesWithinBounds
@@ -122,7 +76,7 @@ export function buildOpts({ coordinates = {}, params = {}, filters = {}, locatio
  * @param  {object}              actions                  Object of which actions should be called
  */
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {
-  const { byCityOpts, aggregateGranularity } = buildOpts({
+  const { byCityOpts, aggregateGranularity } = buildFetchOpts({
     params,
     filters,
     location,

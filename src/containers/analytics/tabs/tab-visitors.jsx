@@ -6,8 +6,8 @@ import { bindActionCreators } from 'redux'
 import AnalysisVisitors from '../../../components/analysis/visitors.jsx'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 import * as mapboxActionCreators from '../../../redux/modules/mapbox'
-import { changedParamsFiltersQS } from '../../../util/helpers.js'
-import { getCitiesWithinBounds, buildOpts } from '../../../util/mapbox-helpers.js'
+import { changedParamsFiltersQS, buildFetchOpts } from '../../../util/helpers.js'
+import { getCitiesWithinBounds } from '../../../util/mapbox-helpers.js'
 
 import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
@@ -46,7 +46,7 @@ class AnalyticsTabVisitors extends React.Component {
       })
     }
 
-    const { fetchOpts, byCityOpts, aggregateGranularity } = buildOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
+    const { fetchOpts, byCityOpts, aggregateGranularity } = buildFetchOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
 
     this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: aggregateGranularity})
     this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: aggregateGranularity})
