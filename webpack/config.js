@@ -4,8 +4,8 @@ var ExtractTextPlugin    = require('extract-text-webpack-plugin');
 const isProductionBuild = () => (process.argv.indexOf('--production-build') !== -1)
 
 const publicUrl = isProductionBuild()
-  ? `${process.env.PUBLIC_URL}`
-  : `${process.env.SCHEMA}://${process.env.HOST}:${process.env.PORT}`
+  ? process.env.PUBLIC_URL || '/'
+  : `${process.env.SCHEMA}://${process.env.HOST}:${process.env.PORT}/`
 
 module.exports = {
   entry: {
@@ -14,7 +14,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
-    publicPath: `${publicUrl}/`,
+    publicPath: publicUrl,
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js'
   },
