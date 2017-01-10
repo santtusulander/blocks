@@ -84,7 +84,6 @@ describe('AnalysisContribution', () => {
   it('should exist', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
-        fetching={true}
         stats={fakeStats}
         intl={intlMaker()}
       />
@@ -95,7 +94,6 @@ describe('AnalysisContribution', () => {
   it('should show data rows in table', () => {
     const analysisContribution = shallow(
       <AnalysisContribution
-        fetching={false}
         stats={fakeStats}
         intl={intlMaker()}
       />

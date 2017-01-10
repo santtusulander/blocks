@@ -1,4 +1,5 @@
 import React from 'react'
+import Immutable from 'immutable'
 import { shallow, mount, render } from 'enzyme'
 import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
@@ -17,6 +18,7 @@ const intlMaker = () => {
 describe('AccountForm', () => {
   const onCancel = jest.fn()
   const onSave = jest.fn()
+  const fetchServiceInfo = () => Immutable.Map()
   let subject, error, props = null
   let touched = false
 
@@ -25,12 +27,13 @@ describe('AccountForm', () => {
       props = {
         onCancel,
         onSave,
+        fetchServiceInfo,
         intl: intlMaker(),
         fields: {
           accountName: { touched, error, value: '' },
           accountBrand: { touched, error, value: '' },
           accountType: { touched, error, value: '' },
-          services: { touched, error, value: '' },
+          services: { touched, error, value: [] },
         }
       }
       return shallow(<AccountForm {...props}/>)
@@ -39,20 +42,6 @@ describe('AccountForm', () => {
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
-  })
-
-  it('should handle onCancel click', () => {
-    subject()
-      .find('#cancel-btn')
-      .simulate('click')
-    expect(onCancel.mock.calls.length).toBe(1)
-  })
-
-  it('should handle onSave click', () => {
-    subject()
-      .find('#save-btn')
-      .simulate('click')
-    expect(onSave.mock.calls.length).toBe(1)
   })
 
   it('should render an error message', () => {

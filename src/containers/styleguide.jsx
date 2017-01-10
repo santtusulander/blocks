@@ -40,12 +40,13 @@ import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
+import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
 import MultiOptionSelector from '../components/multi-option-selector'
-
+import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 
@@ -115,6 +116,7 @@ class Styleguide extends React.Component {
 
     this.state = {
       activeTab: 1,
+      showSidePanel: false,
       customDatePickerEndDate: moment().endOf('day'),
       customDatePickerStartDate: moment().startOf('day'),
       datePickerEndDate: moment().utc().endOf('day'),
@@ -348,11 +350,10 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Charts</h1>
           <Row>
-            <label>Stacked barchart, tooltip only on bar hover</label>
+            <label>Stacked barchart</label>
             <SectionContainer className="analysis-contribution">
               {<BarChart
                 chartLabel="Month to Date"
-                tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
@@ -364,7 +365,7 @@ class Styleguide extends React.Component {
             </Row>
             <hr />
             <Row>
-              <label>Normal barchart, tooltip always active</label>
+              <label>Normal barchart</label>
               <SectionContainer className="analysis-contribution">
                 <BarChart
                   chartLabel="This Week"
@@ -584,7 +585,7 @@ class Styleguide extends React.Component {
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                           </Popover>
                         }>
-                        <Button bsStyle="link" className="col-xs-2">{"?"}</Button>
+                        <Button bsStyle="link" className="col-xs-2"><IconQuestionMark /></Button>
                         </OverlayTrigger>
                       </InputGroup.Addon>
                     </InputGroup>
@@ -872,6 +873,33 @@ class Styleguide extends React.Component {
             </Col>
           </Row>
 
+          <h1 className="page-header">Side Panel</h1>
+          <Button bsStyle="primary" onClick={() => this.setState({showSidePanel: true})}>Trigger Side Panel</Button>
+          {this.state.showSidePanel &&
+            <SidePanel
+            show={this.state.showSidePanel}
+            title="Side Panel"
+            subTitle="Styleguide Example"
+            cancelButton={true}
+            submitButton={true}
+            submitText="Close"
+            cancel={() => this.setState({showSidePanel: false})}
+            submit={() => this.setState({showSidePanel: false})}>
+            <form onSubmit={() => this.setState({showSidePanel: false})}>
+              <FormGroup>
+                <ControlLabel>Name</ControlLabel>
+                <FormControl/>
+              </FormGroup>
+
+              <hr/>
+
+              <FormGroup>
+                <ControlLabel>Type</ControlLabel>
+                <FormControl/>
+              </FormGroup>
+            </form>
+          </SidePanel>}
+
           <h1 className="page-header">Dashboard Panel</h1>
 
           <DashboardPanels>
@@ -1095,6 +1123,11 @@ class Styleguide extends React.Component {
             <IconTrash />
             <br />
             IconTrash
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <LoadingSpinnerSmall />
+            <br />
+            LoadingSpinnerSmall
           </span>
 
         </div>

@@ -11,13 +11,14 @@ import {
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import * as userActionCreators from '../../redux/modules/user'
 
 import IconEmail from '../../components/icons/icon-email.jsx'
 import CopyrightNotice from '../../components/copyright-notice'
 import ReCAPTCHA from '../../components/recaptcha'
+import { isValidEmail } from '../../util/validators.js'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -35,9 +36,9 @@ export class ForgotPassword extends React.Component {
     this.changeField = this.changeField.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
+
   onSubmit(e) {
     e.preventDefault()
-    this.setState({emailError: null})
 
     this.props.userActions.startFetching()
     this.props.userActions
@@ -55,16 +56,24 @@ export class ForgotPassword extends React.Component {
         }
       })
   }
+
   checkEmailActive(hasFocus) {
     return () => {
-      if(hasFocus || !this.state.email) {
+      if (hasFocus || !this.state.email) {
         this.setState({
           emailActive: hasFocus,
           formError: null
         })
+      } else {
+        if (!isValidEmail(this.state.email)) {
+          this.setState({
+            formError: this.props.intl.formatMessage({id: 'portal.forgotPassword.emailInvalid.text'})
+          })
+        }
       }
     }
   }
+
   changeField(key) {
     return e => {
       const newState = {}
@@ -72,8 +81,10 @@ export class ForgotPassword extends React.Component {
       this.setState(newState)
     }
   }
+
   render() {
-    const disableSubmit = this.props.fetching || !this.state.email || !this.state.recaptcha
+    const disableSubmit = this.props.fetching || !this.state.recaptcha ||
+                          !!this.state.formError || !this.state.email
 
     return (
       <Modal.Dialog className="login-modal">
@@ -102,15 +113,14 @@ export class ForgotPassword extends React.Component {
             :
             <form onSubmit={this.onSubmit}>
 
-              <div className="login-info">
-                <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
-              </div>
-
               {this.state.formError ?
                 <div className="login-info">
                   <p>{this.state.formError}</p>
                 </div>
-                : ''
+                :
+                <div className="login-info">
+                  <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
+                </div>
               }
 
               <FormGroup
@@ -118,7 +128,7 @@ export class ForgotPassword extends React.Component {
                   + 'login-label-email'
                   + (this.state.emailActive || this.state.email ? ' active' : '')}
               >
-                <InputGroup>
+                <InputGroup className={this.state.formError ? 'invalid' : ''}>
                   <InputGroup.Addon>
                     <IconEmail/>
                   </InputGroup.Addon>
@@ -127,7 +137,7 @@ export class ForgotPassword extends React.Component {
                       id="username"
                       onFocus={this.checkEmailActive(true)}
                       onBlur={this.checkEmailActive(false)}
-                      value={this.state.username}
+                      value={this.state.email}
                       onChange={this.changeField('email')}/>
                 </InputGroup>
               </FormGroup>
@@ -173,6 +183,7 @@ export class ForgotPassword extends React.Component {
 ForgotPassword.displayName = 'ForgotPassword'
 ForgotPassword.propTypes = {
   fetching: React.PropTypes.bool,
+  intl: React.PropTypes.object,
   userActions: React.PropTypes.object
 }
 
@@ -188,4 +199,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ForgotPassword));

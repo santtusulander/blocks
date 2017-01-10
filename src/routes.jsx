@@ -16,7 +16,7 @@ import {
 } from './util/route-permissions-wrappers'
 
 import AccountManagement from './containers/account-management/account-management'
-import AccountManagementAccount from './components/account-management/account/account'
+import AccountManagementAccountDetails from './containers/account-management/tabs/details'
 import AccountManagementAccountUsers from './containers/account-management/tabs/users'
 import AccountManagementGroups from './containers/account-management/tabs/groups'
 import AccountManagementAccounts from './components/account-management/system/accounts'
@@ -41,6 +41,8 @@ import ConfigurationSecurity from './components/configuration/security'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
+// UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
+// import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
@@ -83,22 +85,27 @@ const analyticsTabs = [
 ]
 
 /* helper for creating Analytics Tab-Routes */
-const getAnalyticsTabRoutes = store => <Route>
-  <IndexRedirect to={routes.analyticsTabTraffic} />
-  {analyticsTabs.map(([permission, path, component], i) => {
-    if (permission === null) {
-      return <Route path={path} key={i} />
-    }
-    return (
-      <Route
-        path={path} key={i}
-        component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
-    )
-  })}
-</Route>
+// eslint-disable-next-line react/display-name
+const getAnalyticsTabRoutes = (store) => {
+  return (
+    <Route>
+      <IndexRedirect to={routes.analyticsTabTraffic} />
+      {analyticsTabs.map(([permission, path, component], i) => {
+        if (permission === null) {
+          return <Route path={path} key={i} />
+        }
+        return (
+          <Route
+            path={path} key={i}
+            component={UserCanViewAnalyticsTab(permission, store, analyticsTabs)(component)} />
+        )
+      })}
+    </Route>
+  )
+}
 
 /* helper for creating Support Tab-Routes */
-function getSupportTabRoutes() {
+const getSupportTabRoutes = () => {
   return (
     <Route>
       <IndexRedirect to={routes.supportTabTickets} />
@@ -108,6 +115,7 @@ function getSupportTabRoutes() {
     </Route>
   )
 }
+getSupportTabRoutes.displayName = "getSupportTabRoutes"
 
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
@@ -140,6 +148,11 @@ export const getRoutes = store => {
     <Route path="/">
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
+      {/*
+        UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
+        Should be used by 2FA components to allow user changing 2FA methods on demand.
+        <Route path="/having-trouble" component={UserIsNotLoggedIn(HavingTrouble)}/>
+      */}
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/password-reset-token-expired" component={UserIsNotLoggedIn(ExpiredPasswordResetToken)}/>
@@ -272,19 +285,19 @@ export const getRoutes = store => {
           </Route>
           <Route path={routes.accountManagementAccount} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
           </Route>
           <Route path={routes.accountManagementGroup} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
           </Route>
           <Route path={routes.accountManagementProperty} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
-            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccount}/>
+            <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
           </Route>
@@ -309,3 +322,4 @@ export const getRoutes = store => {
     </Route>
   )
 }
+getRoutes.displayName = "getRoutes"

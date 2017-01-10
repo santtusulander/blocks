@@ -46,7 +46,8 @@ export class Accounts extends React.Component {
       checkPermissions(roles, user.get('currentUser'), PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     )
   }
-  createAccount(brand, data) {
+  /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
+  createAccount(brand, id, data) {
     return this.props.accountActions.createAccount(brand, data)
   }
   editAccount(brand, id, data) {
@@ -119,6 +120,7 @@ export class Accounts extends React.Component {
         metrics={filteredMetrics}
         nextPageURLBuilder={nextPageURLBuilder}
         selectionDisabled={selectionDisabled}
+        showSlices={true}
         sortDirection={sortDirection}
         sortItems={this.sortItems}
         sortValuePath={sortValuePath}

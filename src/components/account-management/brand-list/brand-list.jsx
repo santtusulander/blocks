@@ -54,6 +54,7 @@ export const BrandList = (props) => {
   )
 }
 
+BrandList.displayName = "BrandList"
 BrandList.propTypes = {
   accountManagementModal: React.PropTypes.string,
   brands: React.PropTypes.array,

@@ -12,6 +12,7 @@ const IconAlerts = (props) => {
   )
 }
 
+IconAlerts.displayName = "IconAlerts"
 IconAlerts.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,
