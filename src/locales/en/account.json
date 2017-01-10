@@ -72,5 +72,7 @@
   "portal.account.soaForm.nameServer.label": "Primary Nameserver",
   "portal.account.soaForm.personResponsible.label": "Responsible Person Mailbox",
   "portal.account.soaForm.zoneSerialNumber.label": "Serial # of Zone",
-  "portal.account.soaForm.refresh.label": "Refresh"
+  "portal.account.soaForm.refresh.label": "Refresh",
+
+  "portal.account.editUser.title": "Edit User"
 }

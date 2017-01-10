@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
+import { FormattedMessage } from 'react-intl'
+
 import AccountManagementUserEditForm from './form'
 
 import SidePanel from '../../side-panel'
@@ -38,14 +40,12 @@ class UserEditModal extends React.Component {
       phone_country_code: user.get('phone_country_code')
     } : {}
 
-    const title = 'Edit User'
-    const subTitle = ''
+    const title = <FormattedMessage id='portal.account.editUser.title' />
 
     return (
       <SidePanel
         show={show}
         title={title}
-        subTitle={subTitle}
         cancel={onCancel}
       >
           <AccountManagementUserEditForm
