@@ -1,10 +1,10 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-jest.unmock('../../util/status-codes')
-jest.unmock('../account-management/account-management.jsx')
+jest.unmock('../../../util/status-codes')
+jest.unmock('../account-management.jsx')
 
-import {AccountManagement} from '../account-management/account-management.jsx'
+import {AccountManagement} from '../account-management.jsx'
 
 const fakeParams = {account: 1}
 
