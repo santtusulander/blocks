@@ -78,6 +78,7 @@ export class Dashboard extends React.Component {
 
   fetchData(params, filters) {
     const { dashboardOpts } = this.buildOpts({ params, filters })
+
     return Promise.all([
       this.props.dashboardActions.startFetching(),
       this.props.accountActions.fetchAccounts(this.props.params.brand),
@@ -283,7 +284,8 @@ export class Dashboard extends React.Component {
                   dataKey="bits_per_second"
                   dataKeyFormat={countriesAverageBandwidth}
                   mapBounds={this.props.mapBounds}
-                  mapboxActions={this.props.mapboxActions}/>
+                  mapboxActions={this.props.mapboxActions}
+                  resetCities={this.props.trafficActions.resetCityData}/>
               </div>
             </DashboardPanel>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.top5CP.title'})}>

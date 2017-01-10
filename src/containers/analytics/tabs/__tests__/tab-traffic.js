@@ -4,12 +4,20 @@ import { shallow } from 'enzyme'
 jest.unmock('../tab-traffic')
 import AnalyticsTabTraffic from '../tab-traffic'
 
+function trafficActionsMaker() {
+  return {
+    resetCityData: jest.fn()
+  }
+}
+
 describe('AnalyticsTabTraffic', () => {
   let subject, error, props = null
 
   beforeEach(() => {
     subject = () => {
-      props = {}
+      props = {
+        trafficActions: trafficActionsMaker()
+      }
       return shallow(<AnalyticsTabTraffic {...props}/>)
     }
   })

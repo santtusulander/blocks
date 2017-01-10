@@ -75,6 +75,10 @@ class Mapbox extends React.Component {
     }
 
     window.removeEventListener('scroll', this.onPageScroll, false)
+
+    // We need to reset city data, so that fetching cities works
+    // after changing accounts and filters on Dashboard and Visitor report
+    this.props.resetCityData()
   }
 
   /**
@@ -734,6 +738,7 @@ Mapbox.propTypes = {
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
+  resetCityData: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 

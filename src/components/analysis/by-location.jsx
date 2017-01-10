@@ -16,7 +16,8 @@ const AnalysisByLocation = (props) => {
     mapBounds,
     mapboxActions,
     dataKey,
-    dataKeyFormat
+    dataKeyFormat,
+    resetCityData
   } = props
 
   if (!countryData.size) {
@@ -35,7 +36,8 @@ const AnalysisByLocation = (props) => {
         mapBounds={mapBounds}
         mapboxActions={mapboxActions}
         dataKey={dataKey}
-        dataKeyFormat={dataKeyFormat} />
+        dataKeyFormat={dataKeyFormat}
+        resetCityData={resetCityData}/>
     </div>
   )
 
@@ -57,6 +59,7 @@ AnalysisByLocation.propTypes = {
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
+  resetCityData: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 
