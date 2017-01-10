@@ -31,14 +31,14 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
   return (
     <FilterChecklistDropdown
       options={options}
-      value={values}
+      value={values.size === options.size ? List() : values}
       handleCheck={onChange}>
       {!errorCodesOnly &&
       <li role="presentation" className="children">
         <FormGroup>
           <Checkbox
             value={twoHundreds}
-            checked={twoHundredsChecked}
+            checked={twoHundredsChecked && values.size !== options.size}
             onChange={handleCheck(twoHundreds, twoHundredsChecked)}>
             <span>2XX</span>
           </Checkbox>
@@ -49,7 +49,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       <FormGroup>
         <Checkbox
           value={fourHundreds}
-          checked={fourHundredsChecked}
+          checked={fourHundredsChecked && values.size !== options.size}
           onChange={handleCheck(fourHundreds, fourHundredsChecked)}>
           <span>4XX</span>
         </Checkbox>
@@ -59,7 +59,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       <FormGroup>
         <Checkbox
           value={fiveHundreds}
-          checked={fiveHundredsChecked}
+          checked={fiveHundredsChecked && values.size !== options.size}
           onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}>
           <span>5XX</span>
         </Checkbox>
