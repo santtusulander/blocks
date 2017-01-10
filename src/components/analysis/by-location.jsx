@@ -2,7 +2,6 @@ import React from 'react'
 import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
-import LoadingSpinner from '../loading-spinner/loading-spinner'
 import Mapbox from '../map/mapbox';
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
