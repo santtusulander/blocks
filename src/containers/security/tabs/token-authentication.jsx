@@ -66,7 +66,6 @@ const mapDispatchToProps = (dispatch) => {
   }
 
   return {
-    propertyActions,
     fetchProperties
   }
 }

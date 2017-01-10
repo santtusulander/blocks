@@ -65,6 +65,7 @@ export class Security extends React.Component {
                 </li> */}
               </Tabs>
 
+              {/* Security Page TABS */}
               <PageContainer className="tab-bodies">
               {
                 this.props.children && React.cloneElement(this.props.children, {
