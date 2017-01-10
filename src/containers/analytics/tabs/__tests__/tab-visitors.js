@@ -1,6 +1,5 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import '../../../../../__mocks__/mapbox.js'
 
 jest.unmock('../tab-visitors')
 import AnalyticsTabVisitors from '../tab-visitors'

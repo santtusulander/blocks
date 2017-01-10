@@ -2,7 +2,6 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
-import '../../../../__mocks__/mapbox.js'
 
 jest.unmock('../by-location.jsx')
 import AnalysisByLocation from '../by-location.jsx'
