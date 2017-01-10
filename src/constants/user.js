@@ -9,10 +9,12 @@ export const TWO_FA_METHODS_OPTIONS = [
     value: 'app',
     intl_label: 'portal.user.edit.2FA.method.app.label.text'
   },
-  {
-    value: 'call',
-    intl_label: 'portal.user.edit.2FA.method.call.label.text'
-  },
+  // UDNP-2268 - Need to remove "Voice Call"
+  //             verification method from 2FA feature
+  // {
+  //   value: 'call',
+  //   intl_label: 'portal.user.edit.2FA.method.call.label.text'
+  // },
   {
     value: 'one_touch',
     intl_label: 'portal.user.edit.2FA.method.one_touch.label.text'

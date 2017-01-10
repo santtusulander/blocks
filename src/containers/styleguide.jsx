@@ -272,7 +272,7 @@ class Styleguide extends React.Component {
       }
     })
 
-    const countryData = [
+    const countryData = Immutable.fromJS([
       {
         "name": "Hong Kong",
         "bits_per_second": 2801215741,
@@ -297,7 +297,7 @@ class Styleguide extends React.Component {
         "code": "MYS",
         "total": 81604876012993
       }
-    ]
+    ])
 
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value

@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import { List, Map } from 'immutable'
 
@@ -12,9 +11,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import ModalWindow from '../../../components/modal'
 import CertificateForm from '../../../components/security/certificate-form-container'
 import SSLList from '../../../components/security/ssl-list'
-//TODO: restore
-// https://vidscale.atlassian.net/browse/UDNP-2043
-//import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import {
   UPLOAD_CERTIFICATE,
@@ -28,13 +26,15 @@ class TabSslCertificate extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ( !Object.is(nextProps.params, this.props.params) ) this.fetchData(nextProps)
+    if(JSON.stringify(nextProps.params) !== JSON.stringify(this.props.params)) {
+      this.fetchData(nextProps)
+    }
   }
 
   fetchData(props) {
-    const { params: { brand, account, group } } = props
-    this.props.securityActions.startFetching()
-    this.props.securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
+    const { securityActions, params: { brand, account, group } } = props
+    securityActions.startFetching()
+    securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
   }
 
   render(){
@@ -51,6 +51,7 @@ class TabSslCertificate extends Component {
       sslCertificates,
       toDelete
       } = this.props
+
 
     const modalTitle = activeModal === EDIT_CERTIFICATE
       ? <FormattedMessage id="portal.security.editCertificate.text"/>
@@ -81,13 +82,9 @@ class TabSslCertificate extends Component {
       </p>
     )
 
-     /*
-     TODO: Add when React 15.4. updated
-     https://vidscale.atlassian.net/browse/UDNP-2043
-
-      if (this.props.isFetching) {
+    if ( isFetching )
       return <LoadingSpinner />
-    }*/
+
 
     return (
       <div className='ssl-certificate-tab'>
@@ -155,7 +152,7 @@ function mapDispatchToProps(dispatch) {
 
   function onDelete(toDelete) {
     toggleModal(null)
-    securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+    return securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
       .then(() => {
         securityActions.resetCertificateToEdit()
       })
@@ -163,9 +160,9 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchAccount,
     onDelete,
-    securityActions: securityActions,
+    securityActions,
     toggleModal
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TabSslCertificate))
+export default connect(mapStateToProps, mapDispatchToProps)(TabSslCertificate)
