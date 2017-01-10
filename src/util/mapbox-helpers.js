@@ -33,7 +33,7 @@ export function buildOpts({ coordinates = {}, params = {}, filters = {}, locatio
     granularity: 'hour'
   }, params)
 
-  return { dashboardOpts, byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
+  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
 }
 
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {

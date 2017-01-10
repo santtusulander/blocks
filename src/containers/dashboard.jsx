@@ -41,8 +41,7 @@ export class Dashboard extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
-    this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
-    this.buildOpts = this.buildOpts.bind(this)
+    this.getCityData = this.getCityData.bind(this)
   }
 
   componentWillMount() {
@@ -99,7 +98,7 @@ export class Dashboard extends React.Component {
     })
   }
 
-  getCitiesWithinBounds(south, west, north, east) {
+  getCityData(south, west, north, east) {
     const { params, filters } = this.props
     return getCitiesWithinBounds({
       params,
@@ -257,7 +256,7 @@ export class Dashboard extends React.Component {
                 <AnalysisByLocation
                   countryData={countries}
                   cityData={this.props.cityData}
-                  getCityData={this.getCitiesWithinBounds}
+                  getCityData={this.getCityData}
                   theme={theme}
                   height={this.state.byLocationWidth / 1.6}
                   dataKey="bits_per_second"

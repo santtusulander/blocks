@@ -23,6 +23,12 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
+jest.mock('../../util/mapbox-helpers', () => {
+  return {
+    buildOpts: val => val
+  }
+})
+
 function accountActionsMaker() {
   return {
     fetchAccounts: jest.fn()
@@ -99,7 +105,8 @@ describe('Dashboard', () => {
         dashboardActions: dashboardActionsMaker(),
         filtersActions: filtersActionsMaker(),
         intl: intlMaker(),
-        params: fakeParams
+        params: fakeParams,
+        mapBounds: Immutable.fromJS({})
       }
       return shallow(<Dashboard {...props}/>)
     }
