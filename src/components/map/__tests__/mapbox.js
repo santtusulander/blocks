@@ -35,7 +35,6 @@ describe('Mapbox', () => {
       countryData: Immutable.List(),
       geoData: countriesGeoJSON,
       getCitiesWithinBounds: jest.fn(),
-      resetCityData: jest.fn(),
       dataKey: 'abc',
       height: 200,
       theme: 'light'

@@ -78,7 +78,6 @@ export class Dashboard extends React.Component {
 
   fetchData(params, filters) {
     const { dashboardOpts } = this.buildOpts({ params, filters })
-
     return Promise.all([
       this.props.dashboardActions.startFetching(),
       this.props.accountActions.fetchAccounts(this.props.params.brand),
