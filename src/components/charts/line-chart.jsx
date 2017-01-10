@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react'
 import { paleblue } from '../../constants/colors'
+import CustomTooltip from './custom-line-chart-tooltip'
+
 
 import {LineChart as ReactLineCharts, ResponsiveContainer, /* XAxis, YAxis, */ Tooltip, Line} from 'recharts'
 
@@ -9,7 +11,10 @@ const LineChart = ({data, dataKey}) => {
   return (
     <ResponsiveContainer height={50} width={'100%'}>
       <ReactLineCharts data={data} >
-        <Tooltip/>
+        <Tooltip
+        content={
+          <CustomTooltip />}
+          />
         <Line type="monotone" dataKey={dataKey} stroke={paleblue} strokeWidth="2" dot={false} />
       </ReactLineCharts>
     </ResponsiveContainer>
