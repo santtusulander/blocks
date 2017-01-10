@@ -3,7 +3,7 @@ import {Table, Tr, Td} from 'reactable'
 import {injectIntl} from 'react-intl'
 import Immutable from 'immutable'
 
-import TinyLineChart from '../charts/tiny-line-chart'
+import LineChart from '../charts/line-chart'
 
 import { formatBitsPerSecond, formatRequests } from '../../util/helpers'
 
@@ -21,22 +21,23 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
     ? val => formatBitsPerSecond(val, true)
     : val => formatRequests(val)
 
+  const transferRate = recordType === 'transfer_rates'
+  ? intl.formatMessage({id: "portal.analytics.trafficOverview.bandwith.text"})
+  : intl.formatMessage({id: "portal.analytics.trafficOverview.requests.text"})
+
   return (
-    <Table className="table table-striped table-analysis" sortable={true} >
+    <Table className="table table-striped table-analysis" sortable={true} defaultSort={{column: transferRate, direction: 'asc'}} >
     {
       byCountry && byCountry.map( (country,i) => {
         return (
           <Tr key={i}>
             <Td column="Country" data={country.get('name')}/>
             <Td
-              column={recordType === 'transfer_rates'
-              ? intl.formatMessage({id: "portal.analytics.trafficOverview.bandwith.text"})
-              : intl.formatMessage({id: "portal.analytics.trafficOverview.requests.text"})
-              }
+              column={transferRate}
               data={byCountryDataFormat(country.get(byCountryDataKey))}
             />
             <Td column="Period Trend">
-              <TinyLineChart data={country && country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
+              <LineChart data={country && country.get('detail') && country.get('detail').toJS()} dataKey={byCountryChartDataKey}/>
             </Td>
           </Tr>
         )
