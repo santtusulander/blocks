@@ -56,7 +56,6 @@ import Security from './containers/security'
 import Services from './containers/services'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'
-import ExpiredPasswordResetToken from './containers/password/expired-password-reset-token'
 import Support from './containers/support/support'
 import SupportTabTickets from './containers/support/tabs/tickets'
 import SupportTabTools from './containers/support/tabs/tools'
@@ -155,7 +154,6 @@ export const getRoutes = store => {
       */}
       <Route path="/set-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
-      <Route path="/password-reset-token-expired" component={UserIsNotLoggedIn(ExpiredPasswordResetToken)}/>
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
       { /* Routes below are protected by login*/}
