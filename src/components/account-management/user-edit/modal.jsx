@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
 import AccountManagementUserEditForm from './form'
-import { Modal } from 'react-bootstrap'
+
+import SidePanel from '../../side-panel'
+
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -36,13 +38,16 @@ class UserEditModal extends React.Component {
       phone_country_code: user.get('phone_country_code')
     } : {}
 
-    return (
-      <Modal dialogClassName="user-form-sidebar" show={show}>
-        <Modal.Header>
-          <h1>Edit User</h1>
-        </Modal.Header>
+    const title = 'Edit User'
+    const subTitle = ''
 
-        <Modal.Body>
+    return (
+      <SidePanel
+        show={show}
+        title={title}
+        subTitle={subTitle}
+        cancel={onCancel}
+      >
           <AccountManagementUserEditForm
             initialValues={initialValues}
             groupOptions={getCheckboxArrayOptions(groups)}
@@ -50,8 +55,7 @@ class UserEditModal extends React.Component {
             onSave={onSave}
             onCancel={onCancel}
           />
-        </Modal.Body>
-      </Modal>
+      </SidePanel>
     )
   }
 }
