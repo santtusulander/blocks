@@ -206,7 +206,6 @@ class AnalyticsTabTraffic extends React.Component {
         theme={this.props.theme}
         mapBounds={this.props.mapBounds.toJS()}
         mapboxActions={this.props.mapboxActions}
-        resetCityData={this.props.trafficActions.resetCityData}
       />
     )
   }

@@ -42,12 +42,6 @@ function filtersActionsMaker() {
   }
 }
 
-function trafficActionsMaker() {
-  return {
-    resetCityData: jest.fn()
-  }
-}
-
 function intlMaker() {
   return {
     formatMessage: jest.fn()
@@ -102,10 +96,9 @@ describe('Dashboard', () => {
         accounts: Immutable.fromJS([1]),
         dashboard: fakeDashboard,
         dashboardActions: dashboardActionsMaker(),
-        trafficActions: trafficActionsMaker(),
         filtersActions: filtersActionsMaker(),
         intl: intlMaker(),
-        params: fakeParams,
+        params: fakeParams
       }
       return shallow(<Dashboard {...props}/>)
     }

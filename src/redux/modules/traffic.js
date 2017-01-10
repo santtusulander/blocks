@@ -19,7 +19,6 @@ const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
 const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
 const TRAFFIC_CONTENT_PROVIDERS_FETCHED = 'TRAFFIC_CONTENT_PROVIDERS_FETCHED'
 const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
-const TRAFFIC_RESET_CITY_DATA = 'TRAFFIC_RESET_CITY_DATA'
 
 const emptyTraffic = Immutable.Map({
   traffic: Immutable.List(),
@@ -224,12 +223,6 @@ export function trafficFinishFetch(state){
   return state.set('fetching', false)
 }
 
-export function trafficResetCityData(state){
-  return state.merge({
-    byCity: Immutable.List()
-  })
-}
-
 export default handleActions({
   TRAFFIC_FETCHED: mapReducers(trafficFetchSuccess, trafficFetchFailure),
   TOTALS_FETCHED: mapReducers(totalsFetchSuccess, totalsFetchFailure),
@@ -244,8 +237,7 @@ export default handleActions({
   TRAFFIC_CONTENT_PROVIDERS_FETCHED: mapReducers(trafficContentProvidersSuccess, trafficContentProvidersFailure),
   TRAFFIC_STORAGE_FETCHED: mapReducers(trafficStorageSuccess, trafficStorageFailure),
   TRAFFIC_START_FETCH: trafficStartFetch,
-  TRAFFIC_FINISH_FETCH: trafficFinishFetch,
-  TRAFFIC_RESET_CITY_DATA: trafficResetCityData
+  TRAFFIC_FINISH_FETCH: trafficFinishFetch
 }, emptyTraffic)
 
 // ACTIONS
@@ -358,5 +350,3 @@ export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {
 export const startFetching = createAction(TRAFFIC_START_FETCH)
 
 export const finishFetching = createAction(TRAFFIC_FINISH_FETCH)
-
-export const resetCityData = createAction(TRAFFIC_RESET_CITY_DATA)

@@ -284,8 +284,7 @@ export class Dashboard extends React.Component {
                   dataKey="bits_per_second"
                   dataKeyFormat={countriesAverageBandwidth}
                   mapBounds={this.props.mapBounds}
-                  mapboxActions={this.props.mapboxActions}
-                  resetCityData={this.props.trafficActions.resetCityData}/>
+                  mapboxActions={this.props.mapboxActions}/>
               </div>
             </DashboardPanel>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.top5CP.title'})}>

@@ -75,10 +75,6 @@ class Mapbox extends React.Component {
     }
 
     window.removeEventListener('scroll', this.onPageScroll, false)
-
-    // We need to reset city data, so that fetching cities works
-    // after changing accounts and filters on Dashboard and Visitor report
-    this.props.resetCityData()
   }
 
   /**
@@ -583,7 +579,7 @@ class Mapbox extends React.Component {
     // Only gets the bounds and city data when within a specific zoom level.
     if (this.state.zoom >= MAPBOX_CITY_LEVEL_ZOOM) {
       // Get current bounds saved in redux store
-      const currentBounds = this.props.mapBounds
+      const currentBounds = this.props.mapBounds.toJS()
 
       // We need to wrap map center in order to get actual lat/lon coordinates
       // See: https://github.com/mapbox/mapbox-gl-js/issues/3690
@@ -738,7 +734,6 @@ Mapbox.propTypes = {
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
   mapboxActions: React.PropTypes.object,
-  resetCityData: React.PropTypes.func,
   theme: React.PropTypes.string
 }
 

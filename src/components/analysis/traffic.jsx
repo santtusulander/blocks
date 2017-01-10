@@ -234,7 +234,6 @@ class AnalysisTraffic extends React.Component {
                 mapboxActions={this.props.mapboxActions}
                 dataKey={byCountryDataKey}
                 dataKeyFormat={byCountryDataFormat}
-                resetCityData={this.props.resetCityData}
                 />
             }
           </div>
@@ -319,7 +318,6 @@ AnalysisTraffic.propTypes   = {
   mapboxActions: React.PropTypes.object,
   peakTraffic: React.PropTypes.string,
   recordType: React.PropTypes.string,
-  resetCityData: React.PropTypes.func,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   theme: React.PropTypes.string
   // totalEgress: React.PropTypes.number
