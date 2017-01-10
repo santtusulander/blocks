@@ -25,10 +25,14 @@ function intlMaker() {
 
 describe('ForgotPassword', () => {
   let forgotPassword;
+  const fakeLocation = { search: null }
 
   beforeEach(() => {
     forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})} intl={intlMaker()}/>
+      <ForgotPassword location={fakeLocation}
+                      userActions={userActionsMaker({})}
+                      intl={intlMaker()}
+      />
     )
   });
 
