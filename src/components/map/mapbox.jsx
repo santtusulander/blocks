@@ -408,7 +408,10 @@ class Mapbox extends React.Component {
     const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[dataKey], MAPBOX_HEAT_MAP_COLORS.length)
 
     // Choose a color for the country based on its score
-    const countryColor = MAPBOX_HEAT_MAP_COLORS[trafficHeat - 1]
+    // See if it's possible to use Mapbox's data-driven styling here.
+    // https://www.mapbox.com/blog/data-driven-styling/
+    const colorIndex = trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length ? trafficHeat - 1 : null
+    const countryColor = colorIndex !== null ? MAPBOX_HEAT_MAP_COLORS[colorIndex] : MAPBOX_HEAT_MAP_DEFAULT_COLOR
 
     map.addLayer({
       id: `country-fill-${trafficCountry.code}`,
@@ -515,14 +518,11 @@ class Mapbox extends React.Component {
    */
   renderCityCircles(map) {
     // Sets radius for the city circle based on the percentage.
+    // There is no need to set all the steps because Mapbox's data-driven styling
+    // is clever enough to proportionally interpolate between the values.
+    // https://www.mapbox.com/blog/data-driven-styling/
     const cityRadiuses = [
       [0, (7 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [10, (10 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [20, (14 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [40, (18 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [60, (24 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [80, (30 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
-      [95, (32 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom],
       [100, (36 / MAPBOX_CITY_RADIUS_DIVIDER) * this.state.zoom]
     ]
 
