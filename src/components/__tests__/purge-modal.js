@@ -1,16 +1,16 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../tab-traffic')
-import AnalyticsTabTraffic from '../tab-traffic'
+jest.unmock('../purge-modal')
+import PurgeModal from '../purge-modal'
 
-describe('AnalyticsTabTraffic', () => {
+describe('PurgeModal', () => {
   let subject, error, props = null
 
   beforeEach(() => {
     subject = () => {
       props = {}
-      return shallow(<AnalyticsTabTraffic {...props}/>)
+      return shallow(<PurgeModal {...props}/>)
     }
   })
 

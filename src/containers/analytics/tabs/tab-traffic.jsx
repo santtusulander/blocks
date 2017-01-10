@@ -150,6 +150,7 @@ class AnalyticsTabTraffic extends React.Component {
     }, fetchOpts)
 
     const byCityOpts = Object.assign({
+      show_detail: false,
       max_cities: MAPBOX_MAX_CITIES_FETCHED,
       latitude_south: coordinates.south || null,
       longitude_west: coordinates.west || null,
