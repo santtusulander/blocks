@@ -1,16 +1,16 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../tab-traffic')
-import AnalyticsTabTraffic from '../tab-traffic'
+jest.unmock('../select-wrapper')
+import SelectWrapper from '../select-wrapper'
 
-describe('AnalyticsTabTraffic', () => {
+describe('SelectWrapper', () => {
   let subject, error, props = null
 
   beforeEach(() => {
     subject = () => {
       props = {}
-      return shallow(<AnalyticsTabTraffic {...props}/>)
+      return shallow(<SelectWrapper {...props}/>)
     }
   })
 
