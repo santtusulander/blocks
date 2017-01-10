@@ -25,8 +25,15 @@ class TabTokenAuthentication extends Component {
   render(){
     const {properties, isFetching} = this.props
 
-    const editUrlBuilder = (property, policyParams) => editOrDelete =>
-      `${getContentUrl('propertyConfiguration', property, this.props.params)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
+    const editUrlBuilder = (propertyId, policyParams) => editOrDelete => {
+      const property = this.props.properties[propertyId]
+      const propertyParams = {
+        brand: this.props.params.brand,
+        account: property.accountId,
+        group: property.groupId
+      }
+      return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
+    }
 
     if ( isFetching )
       return <LoadingSpinner />
