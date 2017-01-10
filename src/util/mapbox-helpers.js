@@ -23,10 +23,17 @@ export function buildOpts({ coordinates = {}, params = {}, filters = {}, locatio
     latitude_south: coordinates.south || null,
     longitude_west: coordinates.west || null,
     latitude_north: coordinates.north || null,
-    longitude_east: coordinates.east || null
+    longitude_east: coordinates.east || null,
+    show_detail: false
   }, byTimeOpts)
 
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
+  const dashboardOpts = Object.assign({
+    startDate,
+    endDate,
+    granularity: 'hour'
+  }, params)
+
+  return { dashboardOpts, byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
 }
 
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {

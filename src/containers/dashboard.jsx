@@ -26,9 +26,8 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
-import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
-
 // import { buildAnalyticsOpts } from '../util/helpers.js'
+import { getCitiesWithinBounds, buildOpts } from '../util/mapbox-helpers'
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -77,33 +76,13 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    const { dashboardOpts } = this.buildOpts({ params, filters })
+    const { dashboardOpts } = buildOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+
     return Promise.all([
       this.props.dashboardActions.startFetching(),
       this.props.accountActions.fetchAccounts(this.props.params.brand),
       this.props.dashboardActions.fetchDashboard(dashboardOpts)
     ]).then(this.props.dashboardActions.finishFetching)
-  }
-
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters } = {}) {
-    const startDate  = Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000)
-    const endDate    = Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000)
-    const dashboardOpts = Object.assign({
-      startDate,
-      endDate,
-      granularity: 'hour'
-    }, params)
-
-    const byCityOpts = Object.assign({
-      max_cities: MAPBOX_MAX_CITIES_FETCHED,
-      latitude_south: coordinates.south || null,
-      longitude_west: coordinates.west || null,
-      latitude_north: coordinates.north || null,
-      longitude_east: coordinates.east || null,
-      show_detail: false
-    }, dashboardOpts)
-
-    return { dashboardOpts, byCityOpts }
   }
 
   measureContainers() {
@@ -121,12 +100,13 @@ export class Dashboard extends React.Component {
   }
 
   getCitiesWithinBounds(south, west, north, east) {
-    const { byCityOpts } = this.buildOpts({ coordinates: { south, west, north, east } })
-
-    this.props.trafficActions.startFetching()
-    this.props.trafficActions.fetchByCity(byCityOpts).then(
-      this.props.trafficActions.finishFetching()
-    )
+    const { params, filters } = this.props
+    return getCitiesWithinBounds({
+      params,
+      filters,
+      coordinates: { south, west, north, east },
+      actions: this.props.trafficActions
+    })
   }
 
   render() {
