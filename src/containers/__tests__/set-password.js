@@ -22,6 +22,9 @@ function userActionsMaker(cbResponse) {
     }),
     checkToken: jest.fn().mockImplementation(() => {
       return {payload: {token:null}}
+    }),
+    getTokenInfo: jest.fn().mockImplementation(() => {
+      return {then: cb => cb(cbResponse)}
     })
   }
 }
