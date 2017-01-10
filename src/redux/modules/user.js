@@ -432,7 +432,7 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
 
 export const saveName = createAction(USER_NAME_SAVED)
 
-export const getTokenInfo = createAction(USER_PASSWORD_RESET, (email, reset_token_id) => {
+export const getTokenInfo = createAction(USER_PASSWORD_RESET_TOKEN_INFO, (email, reset_token_id) => {
   return axios.get(`${BASE_URL_AAA}/users/${email}/reset_password?reset_token_id=${reset_token_id}`)
     .then(parseResponseData)
 })
