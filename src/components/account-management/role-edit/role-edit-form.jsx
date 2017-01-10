@@ -72,6 +72,7 @@ class RoleEditForm extends React.Component {
             name="roleName"
             placeholder={intl.formatMessage({ id: 'portal.account.roleEdit.enterRoleName.text' })}
             component={FieldFormGroup}
+            disabled={true}
           >
             <FormattedMessage id="portal.account.roleEdit.name.text"/>
           </Field>
@@ -105,7 +106,7 @@ class RoleEditForm extends React.Component {
                   <td>
                     {/*TODO: Remove readonly prop in the future when roles are editable*/}
                     <Field
-                      readonly={false}
+                      readonly={true}
                       name={key}
                       className="pull-right"
                       component={FieldFormGroupToggle}/>
