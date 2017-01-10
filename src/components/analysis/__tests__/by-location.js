@@ -120,15 +120,6 @@ describe('AnalysisByLocation', () => {
     expect(byLocation).toBeDefined();
   });
 
-  it('should show loading message if there is no data', () => {
-    let byLocation = shallow(
-      <AnalysisByLocation
-        countryData={Immutable.List()
-        }/>
-    );
-    expect(byLocation.find('LoadingSpinner').length).toBe(1)
-  });
-
   // Not supporting zoom in 0.5
   // it('should show states', () => {
   //   let byLocation = TestUtils.renderIntoDocument(
