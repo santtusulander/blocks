@@ -8,8 +8,6 @@ import { Button, Table } from 'react-bootstrap'
 import { checkForErrors } from '../../../util/helpers'
 
 import SidePanel from '../../side-panel'
-import Toggle from '../../toggle'
-import CheckboxArray from '../../checkboxes'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupToggle from '../../form/field-form-group-toggle'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -19,9 +17,7 @@ import './role-edit-form.scss'
 const validate = ({ roleName }) => {
   const conditions = {}
 
-  const errors = checkForErrors({ roleName }, conditions)
-
-  return errors;
+  return checkForErrors({ roleName }, conditions)
 
 }
 
@@ -36,7 +32,7 @@ class RoleEditForm extends React.Component {
   onSubmit(values) {
     const { onSave } = this.props
     // Add needed arguments when onSave actually does something...
-    return onSave()
+    return onSave(values)
   }
 
   render() {
@@ -141,9 +137,10 @@ class RoleEditForm extends React.Component {
   }
 }
 
+RoleEditForm.displayName = 'RoleEditForm'
 RoleEditForm.propTypes = {
   // roles: PropTypes.object,
-  editPermsUI:PropTypes.instanceOf(Immutable.Map),
+  editPermsUI: PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
@@ -172,7 +169,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
   return {}
 }
 
