@@ -75,7 +75,7 @@ class Mapbox extends React.Component {
     }
 
     window.removeEventListener('scroll', this.onPageScroll, false)
-    // this.props.mapboxActions.setMapBounds({})
+    this.props.mapboxActions.setMapBounds({})
   }
 
   /**
