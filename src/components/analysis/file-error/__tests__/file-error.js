@@ -47,7 +47,7 @@ describe('FileError', () => {
         serviceTypes: fromJS(['http', 'https']),
         summary: fakeSummary,
         urls: fakeURLs,
-        statusCodes: List(['All', '401', '404']),
+        statusCodes: List(),
       }, props)
       return shallow(<FileError {...defaultProps}/>)
     }
@@ -62,7 +62,7 @@ describe('FileError', () => {
 
   it('should have a server error box', () => {
     expect(
-      subject({ statusCodes: List(['All', '500', '503']) })
+      subject({ statusCodes: List() })
         .find('#server-errors')
         .prop('errs')
     ).toEqual([
@@ -73,7 +73,7 @@ describe('FileError', () => {
 
   it('should have a url list', () => {
     expect(
-      subject({ statusCodes: List(['All', '401', '500']) })
+      subject({ statusCodes: List() })
         .find('AnalysisURLList')
         .prop('urls')
     ).toEqual(fakeURLs)

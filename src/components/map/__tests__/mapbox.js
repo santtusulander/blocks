@@ -10,6 +10,12 @@ import Mapbox from '../mapbox.jsx'
 
 jest.useFakeTimers()
 
+function mapboxActionsMaker() {
+  return {
+    setMapBounds: jest.fn()
+  }
+}
+
 import {
   MAPBOX_LIGHT_THEME,
   MAPBOX_DARK_THEME
@@ -37,7 +43,8 @@ describe('Mapbox', () => {
       getCitiesWithinBounds: jest.fn(),
       dataKey: 'abc',
       height: 200,
-      theme: 'light'
+      theme: 'light',
+      mapboxActions: mapboxActionsMaker()
     }
     const subjectProps = Object.assign({}, defaultProps, props)
     const component = shallow(<Mapbox {...subjectProps} />)

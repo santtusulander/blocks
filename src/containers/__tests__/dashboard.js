@@ -18,7 +18,8 @@ jest.mock('../../util/helpers', () => {
     formatBytes: val => val,
     formatTime: val => val,
     getAccountByID: val => val,
-    separateUnit: val => ({ value: val })
+    separateUnit: val => ({ value: val }),
+    buildFetchOpts: val => val
   }
 })
 
@@ -98,7 +99,8 @@ describe('Dashboard', () => {
         dashboardActions: dashboardActionsMaker(),
         filtersActions: filtersActionsMaker(),
         intl: intlMaker(),
-        params: fakeParams
+        params: fakeParams,
+        mapBounds: Immutable.fromJS({})
       }
       return shallow(<Dashboard {...props}/>)
     }
