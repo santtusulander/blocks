@@ -19,5 +19,7 @@ export const recordFields = {
   name: RECORD_TYPES,
   value: RECORD_TYPES,
   ttl: RECORD_TYPES,
-  prio: ['MX', 'NAPTR', 'SRV']
+  prio: ['MX', 'NAPTR', 'SRV'],
+  id: [],
+  class: []
 }
