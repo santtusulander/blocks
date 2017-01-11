@@ -18,7 +18,7 @@ describe('FilterDropdown', () => {
     subject = () => {
       props = {
         className: 'foo',
-        parent: true,
+        parent: 'bar',
         options
       }
       return shallow(<FilterDropdown {...props}/>)
