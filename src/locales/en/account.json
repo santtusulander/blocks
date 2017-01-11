@@ -74,6 +74,16 @@
   "portal.account.soaForm.zoneSerialNumber.label": "Serial # of Zone",
   "portal.account.soaForm.refresh.label": "Refresh",
 
+  "portal.account.editUser.title": "Edit User",
+  "portal.account.editUser.firstNameRequired.text": "First Name is required",
+  "portal.account.editUser.lastNameRequired.text": "Last Name is required",
+  "portal.account.editUser.emailNameRequired.text": "Email is required",
+  "portal.account.editUser.roleNameRequired.text": "Role is required",
+  "portal.account.editUser.phoneNumberInvalid.text": "Phone number is not valid",
+  "portal.account.editUser.phoneNumberCountryCodeInvalid.text": "Phone Country Code is not valid",
+
+  "portal.account.editUser.userIsUpdated.text": "Updates to user saved.",
+
   "portal.account.roleEdit.roleNameRequired.text": "Role name is required",
   "portal.account.roleEdit.title": "Edit Role",
   "portal.account.roleEdit.disclaimer.text": "Edit Role",

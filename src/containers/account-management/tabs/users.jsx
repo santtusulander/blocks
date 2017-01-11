@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { change, focus, Field } from 'redux-form'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
@@ -300,16 +301,18 @@ export class AccountManagementAccountUsers extends React.Component {
     // Get the username from the user we have in state for editing purposes.
     //user.username = this.state.userToEdit.get('username')
 
-    this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
+    return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification('Updates to user saved.')
+          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
             showEditModal: false
           })
         }
+
+        return response
       })
   }
 
