@@ -1,13 +1,14 @@
 import React, {PropTypes} from 'react'
-import {Table, Tr, Td} from 'reactable'
+import {Table, Tr, Td, Thead, Th} from 'reactable'
 import {injectIntl} from 'react-intl'
 import Immutable from 'immutable'
-
+import IconArrowDown from '../../components/icons/icon-arrow-down.jsx'
+import IconArrowUp from '../../components/icons/icon-arrow-up.jsx'
 import LineChart from '../charts/line-chart'
 
 import { formatBitsPerSecond, formatRequests } from '../../util/helpers'
 
-const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
+const TrafficByCountryTable = ({byCountry, recordType, intl, onSort, sortDirection}) => {
 
   const byCountryChartDataKey = recordType === 'transfer_rates'
     ? 'bits_per_second'
@@ -25,13 +26,20 @@ const TrafficByCountryTable = ({byCountry, recordType, intl}) => {
   ? intl.formatMessage({id: "portal.analytics.trafficOverview.bandwith.text"})
   : intl.formatMessage({id: "portal.analytics.trafficOverview.requests.text"})
 
+  const renderSortIcon = sortDirection === 1 ? <IconArrowDown /> : <IconArrowUp />
+
   return (
-    <Table className="table table-striped table-analysis" sortable={true} defaultSort={{column: transferRate, direction: 'asc'}} >
+    <Table className="table table-striped table-analysis" sortable={['Country', transferRate]} defaultSort={{column: transferRate, direction: 'asc'}} onSort={onSort.bind(this)}>
+    <Thead>
+      <Th column="Country">Country {renderSortIcon}</Th>
+      <Th column={transferRate}>{transferRate} {renderSortIcon}</Th>
+      <Th>Period Trend</Th>
+    </Thead>
     {
       byCountry && byCountry.map( (country,i) => {
         return (
           <Tr key={i}>
-            <Td column="Country" data={country.get('name')}/>
+            <Td column="Country" data={country.get('name')} />
             <Td
               column={transferRate}
               data={byCountryDataFormat(country.get(byCountryDataKey))}
@@ -52,7 +60,9 @@ TrafficByCountryTable.displayName = 'TrafficByCountryTable'
 TrafficByCountryTable.propTypes = {
   byCountry: PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
-  recordType: PropTypes.string
+  onSort: PropTypes.func,
+  recordType: PropTypes.string,
+  sortDirection: PropTypes.number
 }
 
 export default injectIntl(TrafficByCountryTable)

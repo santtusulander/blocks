@@ -165,10 +165,6 @@
     }
   }
 
-  th:last-child {
-    text-align: center;
-  }
-
   .light-theme & {
     th {
       &:hover,
@@ -190,24 +186,29 @@
   }
 
   th {
+    &:last-child {
+      text-align: center;
+      cursor: pointer;
+    }
+
     &:not(:last-child) {
-      &.reactable-header-sortable:after {
-        padding-left: 10px;
-        font-size: $base-font-size;
-        content: '\25B2';
-        opacity: 0;
+      &.reactable-header-sortable {
+        svg {
+          opacity: 0;
+        }
       }
-    }
-  }
 
-  th:not(:last-child) {
-    &.reactable-header-sort-desc:after {
-      opacity: 1;
-    }
+      &.reactable-header-sort-desc {
+        svg {
+          opacity: 1;
+        }
+      }
 
-    &.reactable-header-sort-asc:after {
-      content: '\25BC';
-      opacity: 1;
+      &.reactable-header-sort-asc {
+        svg {
+          opacity: 1;
+        }
+      }
     }
   }
 

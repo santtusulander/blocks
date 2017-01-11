@@ -4,7 +4,7 @@ import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} fro
 import d3 from 'd3'
 
 import AreaTooltip from './area-tooltip'
-import CustomLegend from './custom-bar-chart-legend'
+import CustomLegend from './bar-chart-legend'
 
 
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
@@ -120,7 +120,6 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
         <Tooltip
           animationEasing="linear"
-          offset={0}
           content={
             <AreaTooltip
               iconClass={() => 'tooltip-class'}

@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react'
 import { paleblue } from '../../constants/colors'
-import CustomTooltip from './custom-line-chart-tooltip'
-
+import CustomTooltip from './line-chart-tooltip'
+import { formatBitsPerSecond } from '../../util/helpers.js'
 
 import {LineChart as ReactLineCharts, ResponsiveContainer, /* XAxis, YAxis, */ Tooltip, Line} from 'recharts'
 
-const LineChart = ({data, dataKey}) => {
+const LineChart = ({data, dataKey, valueFormatter = formatBitsPerSecond}) => {
   //if No data found
   if (!data || !data[0][dataKey]) return <div>-</div>
   return (
@@ -13,7 +13,7 @@ const LineChart = ({data, dataKey}) => {
       <ReactLineCharts data={data} >
         <Tooltip
         content={
-          <CustomTooltip />}
+            <CustomTooltip valueFormatter={valueFormatter} />}
           />
         <Line type="monotone" dataKey={dataKey} stroke={paleblue} strokeWidth="2" dot={false} />
       </ReactLineCharts>
@@ -25,7 +25,8 @@ LineChart.displayName = 'LineChart'
 
 LineChart.propTypes = {
   data: PropTypes.array,
-  dataKey: PropTypes.string
+  dataKey: PropTypes.string,
+  valueFormatter: PropTypes.func
 }
 
 export default LineChart
