@@ -23,7 +23,7 @@ module.exports = Object.assign({}, {
     new webpack.ProvidePlugin({
       // Polyfill here
     }),
-    new ExtractTextPlugin('style.css'),
+    new ExtractTextPlugin('style.[hash].css'),
     ]
     .concat( helpers.staticAssets )
     .concat([
