@@ -5,6 +5,7 @@ import { reducer as form } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 
 jest.unmock('../account-form.jsx')
+jest.unmock('../../../decorators/key-stroke-decorator')
 jest.genMockFromModule('react-bootstrap')
 
 import AccountForm from '../account-form.jsx'
@@ -28,7 +29,11 @@ describe('AccountForm', () => {
         onCancel,
         onSave,
         fetchServiceInfo,
+        handleSubmit: jest.fn(),
         intl: intlMaker(),
+        initialValues: {
+          accountBrand: 'udn'
+        },
         fields: {
           accountName: { touched, error, value: '' },
           accountBrand: { touched, error, value: '' },

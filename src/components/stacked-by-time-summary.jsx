@@ -87,12 +87,12 @@ class StackedByTimeSummary extends React.Component {
 
         <div className="stacked-by-time-summary-container">
           {total > 0 ? [
-            <div className="dataset-col total">
+            <div key={0} className="dataset-col total">
               <span className="value">{totalDatasetValue}</span>
               <span className="suffix">{totalDatasetUnit}</span>
             </div>,
 
-            <div ref="byTimeHolder" className="dataset-col chart">
+            <div key={1} ref="byTimeHolder" className="dataset-col chart">
               <AnalysisByTime
                 dataKey={dataKey}
                 dataSets={datasets}
@@ -114,8 +114,8 @@ class StackedByTimeSummary extends React.Component {
           <div className="dataset-col">
             <div className="dataset-label dataset-a">{datasetALabel}</div>
             {total > 0 ? [
-              <span className="value">{datasetAValue}</span>,
-              datasetAUnit && <span className="suffix">{datasetAUnit}</span>
+              <span key={0} className="value">{datasetAValue}</span>,
+              datasetAUnit && <span key={1} className="suffix">{datasetAUnit}</span>
             ] : <div className="no-data by-time-summary">
                 <FormattedMessage id="portal.common.no-data.text"/>
               </div>
@@ -126,8 +126,8 @@ class StackedByTimeSummary extends React.Component {
           <div className={dataSetBColClasses}>
             {datasetBLabel && <div className="dataset-label dataset-b">{datasetBLabel}</div>}
             {totalDatasetValue > 0 && [
-              datasetBValue && <span className="value">{datasetBValue}</span>,
-              datasetBUnit && <span className="suffix">{datasetBUnit}</span>
+              datasetBValue && <span key={0} className="value">{datasetBValue}</span>,
+              datasetBUnit && <span key={1} className="suffix">{datasetBUnit}</span>
             ]}
           </div>
           }
