@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-//import TestUtils from 'react-addons-test-utils'
 import {shallow, render, mount} from 'enzyme'
+import { FormattedMessage } from 'react-intl'
 
 jest.unmock('../by-time.jsx')
 jest.unmock('../../../../util/helpers')
@@ -132,6 +132,10 @@ describe('AnalysisByTime', () => {
     let texts = subject({axes: false}).find('text')
 
     expect(texts.length).toBe(0)
+  })
+
+  it('should show no data if the desired dataSet is empty', () => {
+    expect(subject({ dataKey: 'bytes_out' }).contains(<FormattedMessage id="portal.common.no-data.text"/>))
   })
 
   it('should have Legend', () => {
