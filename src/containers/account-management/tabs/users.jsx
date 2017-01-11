@@ -194,7 +194,6 @@ export class AccountManagementAccountUsers extends React.Component {
         // Disable until API support allows listing groups for user with some assigned
         // {
         //   input: <FilterChecklistDropdown
-        //     noClear={true}
         //     className="inline-add-dropdown"
         //     value={this.state.usersGroups}
         //     handleCheck={newValues => {
