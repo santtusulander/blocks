@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Tabs, Tab } from 'react-bootstrap'
 
 import ExportEmailForm from './export-email-form.jsx'
-import { ExportFileForm } from './export-file-form.jsx'
+import ExportFileForm from './export-file-form.jsx'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
