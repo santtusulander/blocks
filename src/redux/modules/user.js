@@ -18,6 +18,7 @@ const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
 const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
+const USER_PASSWORD_RESET_TOKEN_INFO = 'USER_PASSWORD_RESET_TOKEN_INFO'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
 const DESTROY_STORE = 'DESTROY_STORE'
@@ -215,6 +216,18 @@ export function resetPasswordFailure(state) {
   })
 }
 
+export function resetPasswordTokenInfoSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordTokenInfoFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -230,7 +243,8 @@ export default handleActions({
   PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
   [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
-  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure)
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
+  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure)
 }, emptyUser)
 
 /*
@@ -417,6 +431,11 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
+
+export const getTokenInfo = createAction(USER_PASSWORD_RESET_TOKEN_INFO, (email, reset_token_id) => {
+  return axios.get(`${BASE_URL_AAA}/users/${email}/reset_password?reset_token_id=${reset_token_id}`)
+    .then(parseResponseData)
+})
 
 export const requestPasswordReset = createAction(USER_PASSWORD_RESET_REQUESTED, (email, recaptcha_response) => {
   return axios.post(

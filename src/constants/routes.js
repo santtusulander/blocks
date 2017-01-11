@@ -30,7 +30,7 @@ export default {
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
 
-  configurationTabPoliciesEditPolicy: 'edit/id/:policyId/type/:policyType',
+  configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 
   accountManagement: '/account-management',
   accountManagementBrand: '/account-management/:brand',

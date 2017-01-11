@@ -26,6 +26,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountType.title': 'Account Type',
   'portal.account.manage.services.title': 'Services',
   'portal.account.manage.system.empty.domain': 'No Domain',
+  'portal.account.manage.selectAccountType.text': 'Please, select account type first.',
 
   'portal.account.list.accountName.title': 'ACCOUNT NAME',
   'portal.account.list.type.title': 'TYPE',
@@ -66,18 +67,11 @@ const TRANSLATED_MESSAGES = {
   'portal.manage.tabs.dns.title': 'DNS',
   'portal.manage.tabs.roles.title': 'Roles',
 
-  'portal.role.edit.roleNameRequired.text': 'Role name is required',
-  'portal.role.edit.title': 'Edit Role',
-  'portal.role.edit.discalimer.text': 'Edit Role',
-  'portal.role.edit.enterRoleName.text': 'Enter Role Name',
-  'portal.role.edit.name.text': 'Name',
-
-  'portal.role.list.search.placeholder': 'Search',
-  'portal.role.list.header.role.title': 'Role',
-  'portal.role.list.header.permissions.title': 'Permissions',
-  'portal.role.list.header.assignedTo.title': 'Assigned To',
-  'portal.role.list.search.noResults.text': 'No roles found',
-  'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
+  'portal.analytics.dropdownMenu.all': 'All ({options})',
+  'portal.analytics.dropdownMenu.clearSelections': 'Clear selections',
+  'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',
+  'portal.analytics.dropdownMenu.noResults' : 'No results...',
+  'portal.analytics.dropdownMenu.pleaseSelect' : 'Please select',
 
   'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
@@ -425,8 +419,14 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostanme.text': 'New Host Name',
+  'portal.content.addHost.newHostname.text': 'New Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
+  'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
+  
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
