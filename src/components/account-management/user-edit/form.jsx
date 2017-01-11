@@ -38,11 +38,11 @@ const validate = (values) => {
   }
 
   if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
-    errors.phone = "Phone number is not valid"
+    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberInvalid.text"/>
   }
 
   if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
-    errors.phone = "Phone Country Code is not valid"
+    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberCountryCodeInvalid.text"/>
   }
 
   return errors;
