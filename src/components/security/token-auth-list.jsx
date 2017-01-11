@@ -5,7 +5,7 @@ import {formatUnixTimestamp} from '../../util/helpers'
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 
-const TokenAuthList = ({rules}) => {
+const TokenAuthList = ({ rules, editUrlBuilder }) => {
   return (
       <table className="table table-striped cell-text-left">
         <thead >
@@ -21,6 +21,9 @@ const TokenAuthList = ({rules}) => {
         </thead>
         <tbody>
           { rules.map( (rule, index) => {
+
+            const routeTo = editUrlBuilder(rule.propertyName, { policyId: rule.ruleId, policyType: 'request_policy' })
+
             return (
               <tr key={index}>
                 <td>{rule.propertyName}</td>
@@ -29,8 +32,12 @@ const TokenAuthList = ({rules}) => {
                 <td>**********</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <td className="nowrap-column">
-                    <Link to='/ruledit/' className='btn btn-icon'><IconEdit /></Link>
-                    <Link to='/ruledelete/' className='btn btn-icon'><IconTrash /></Link>
+                    <Link
+                      to={routeTo('edit')}
+                      className='btn btn-icon'>
+                      <IconEdit />
+                    </Link>
+                    <Link to={routeTo('delete')} className='btn btn-icon'><IconTrash /></Link>
                 </td>
               </tr>
             )
@@ -45,6 +52,7 @@ const TokenAuthList = ({rules}) => {
 TokenAuthList.displayName = 'TokenAuthList'
 
 TokenAuthList.propTypes = {
+  editUrlBuilder: PropTypes.func,
   rules: PropTypes.array
 }
 TokenAuthList.defaultProps = {

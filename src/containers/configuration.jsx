@@ -52,7 +52,7 @@ export class Configuration extends React.Component {
       showPublishModal: false,
       showVersionModal: false
     }
-
+    this.cancelEditPolicyRoute = this.cancelEditPolicyRoute.bind(this)
     this.changeValue = this.changeValue.bind(this)
     this.changeValues = this.changeValues.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
@@ -108,13 +108,26 @@ export class Configuration extends React.Component {
       activeConfig = activeConfig.setIn(path, value)
     }
 
-    return this.props.hostActions.changeActiveHost(
+    this.props.hostActions.changeActiveHost(
       this.props.activeHost.setIn(
         ['services', 0, 'configurations', this.state.activeConfig],
         activeConfig
       )
     )
   }
+
+  /**
+   * If URL has parameters for editing/deleting a policy, this function can be called to
+   * strip away those parameters.
+   */
+  cancelEditPolicyRoute() {
+    const { params, router } = this.props
+    if (params.editOrDelete) {
+      const url = getContentUrl('propertyConfiguration', params.property, params)
+      router.push(`${url}/policies`)
+    }
+  }
+
   saveActiveHostChanges() {
     this.props.hostActions.startFetching()
     this.props.hostActions.updateHost(
@@ -353,6 +366,8 @@ export class Configuration extends React.Component {
         <PageContainer>
           {React.cloneElement(children, {
             readOnly,
+            params: this.props.params,
+            cancelEditPolicyRoute: this.cancelEditPolicyRoute,
             activateMatch: this.props.uiActions.changePolicyActiveMatch,
             activateRule: this.props.uiActions.changePolicyActiveRule,
             activateSet: this.props.uiActions.changePolicyActiveSet,

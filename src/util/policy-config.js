@@ -258,6 +258,8 @@ export const getTokenAuthRules = (properties) => {
         const returnObj = {
           ruleId: key,
           propertyName: property.published_host_id,
+          accountId: property.accountId,
+          groupId: property.groupId,
           encryption: 'HMAC-SHA1',  //Hardcoded for now
           schema: 'URL',            //
           created: config.config_created
