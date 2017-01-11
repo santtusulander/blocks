@@ -13,3 +13,36 @@ global.MAPBOX_ACCESS_TOKEN = '1234567890'
 window.URL = {
   createObjectURL: jest.genMockFunction()
 }
+
+const consoleErrorMessage = args => {
+  const message = 'Console statements are not allowed in unit tests:\n'
+  args = Array.prototype.slice.call(args)
+  return message + args.join('\n')
+}
+
+/* eslint-disable no-console */
+if (console) {
+  if (console.log) {
+    const old = console.log
+    console.log = function() {
+      old.apply(console, arguments)
+      throw new Error(consoleErrorMessage(arguments))
+    }
+  }
+
+  if (console.warn) {
+    const old = console.warn
+    console.warn = function() {
+      old.apply(console, arguments)
+      throw new Error(consoleErrorMessage(arguments))
+    }
+  }
+
+  if (console.error) {
+    var old = console.error
+    console.error = function() {
+      old.apply(console, arguments)
+      throw new Error(consoleErrorMessage(arguments))
+    }
+  }
+}

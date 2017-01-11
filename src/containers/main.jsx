@@ -195,7 +195,7 @@ Main.propTypes = {
   groupActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
