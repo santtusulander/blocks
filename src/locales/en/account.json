@@ -78,6 +78,8 @@
   "portal.account.editUser.firstNameRequired.text": "First Name is required",
   "portal.account.editUser.lastNameRequired.text": "Last Name is required",
   "portal.account.editUser.emailNameRequired.text": "Email is required",
-  "portal.account.editUser.roleNameRequired.text": "Roleis required"
+  "portal.account.editUser.roleNameRequired.text": "Role is required",
+
+  "portal.account.editUser.userIsUpdated.text": "Updates to user saved."
 
 }
