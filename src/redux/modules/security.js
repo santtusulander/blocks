@@ -12,7 +12,7 @@ const SECURITY_SSL_CERTIFICATES_DELETE = 'SECURITY_SSL_CERTIFICATES_DELETE'
 const SECURITY_SSL_CERTIFICATES_EDIT = 'SECURITY_SSL_CERTIFICATES_EDIT'
 const SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET = 'SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET'
 const SECURITY_MODAL_GROUPS_FETCH = 'SECURITY_MODAL_GROUPS_FETCH'
-const SECURITY_START_FETCH = 'SECURITY_START_FETCH'
+const SECURITY_START_FETCHING = 'SECURITY_START_FETCHING'
 
 export const initialState = fromJS({
   groups: [],
@@ -23,6 +23,11 @@ export const initialState = fromJS({
 })
 
 // REDUCERS
+export const setFetching = (state) => {
+  return state.merge({
+    fetching: true
+  })
+}
 
 export function fetchGroupsSuccess(state, action) {
   return state.merge({
@@ -39,6 +44,7 @@ export function fetchGroupsFailure(state) {
 }
 
 export function fetchSSLCertificatesSuccess(state, action) {
+  //return state.set('sslCertificates', fromJS(action.payload))
   return state.merge({
     sslCertificates: fromJS(action.payload),
     fetching: false
@@ -118,10 +124,6 @@ export function activeCertificatesToggled(state, action) {
   return state.set('activeCertificates', newActiveCertificates)
 }
 
-export function startFetch(state) {
-  return state.set('fetching', true)
-}
-
 export default handleActions({
   SECURITY_MODAL_GROUPS_FETCH: mapReducers(fetchGroupsSuccess, fetchGroupsFailure),
   SECURITY_SSL_CERTIFICATES_FETCH: mapReducers(fetchSSLCertificatesSuccess, fetchSSLCertificatesFailure),
@@ -131,10 +133,12 @@ export default handleActions({
   SECURITY_SSL_CERTIFICATES_DELETE: mapReducers(deleteSSLCertificateSuccess, deleteSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATES_EDIT: mapReducers(editSSLCertificateSuccess, editSSLCertificateFailure),
   SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET: certificateToEditReset,
-  SECURITY_START_FETCH: startFetch
+  [SECURITY_START_FETCHING]: setFetching
 }, initialState)
 
 // ACTIONS
+export const startFetching = createAction(SECURITY_START_FETCHING)
+
 export const uploadSSLCertificate = createAction(SECURITY_SSL_CERTIFICATES_UPLOAD, (brand, account, group, data) => {
   return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, data, {
     headers: {
@@ -171,7 +175,12 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
       cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
     )))
     .then(resp => resp.map(certificate => {
-      return Object.assign({}, { account, group }, certificate.data)
+      return {
+        group,
+        cn: certificate.data.cn,
+        title: certificate.data.title,
+        account
+      }
     }))
 })
 
@@ -189,5 +198,3 @@ export const toggleActiveCertificates = createAction(SECURITY_ACTIVE_CERTIFICATE
 })
 
 export const resetCertificateToEdit = createAction(SECURITY_SSL_CERTIFICATE_TO_EDIT_RESET)
-
-export const startFetching = createAction(SECURITY_START_FETCH)

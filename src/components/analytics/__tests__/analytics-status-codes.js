@@ -3,6 +3,7 @@ import { shallow } from 'enzyme'
 import Immutable from 'immutable'
 
 jest.unmock('../analytics-status-codes')
+jest.unmock('../../../decorators/select-auto-close')
 import StatusCodes from '../analytics-status-codes'
 
 jest.unmock('../../../decorators/select-auto-close')

@@ -154,7 +154,7 @@ export class Main extends React.Component {
           closeButtonSecondary={true}
           reloadButton={true}
           cancel={() => this.props.uiActions.hideErrorDialog()}
-          submit={() => location.reload(true)}/>
+          onSubmit={() => location.reload(true)}/>
         }
         {this.props.showInfoDialog &&
         <ModalWindow
@@ -195,7 +195,7 @@ Main.propTypes = {
   groupActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,

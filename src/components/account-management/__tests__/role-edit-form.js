@@ -2,8 +2,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.unmock('../role-edit-form')
-import RolesEditForm from '../role-edit-form'
+jest.unmock('../role-edit/role-edit-form')
+import RolesEditForm from '../role-edit/role-edit-form'
 
 function intlMaker() {
   return {
@@ -26,7 +26,9 @@ describe('RolesEditForm', () => {
   beforeEach(() => {
     subject = () => {
       props = {
+        handleSubmit: jest.genMockFunction(),
         editRole: Immutable.Map(),
+        editPermsUI: Immutable.Map(),
         fields: fieldsMock,
         intl: intlMaker(),
         params: { brand: 'foo', account: 'bar', group: 'zyx', property: 'qwe' }
