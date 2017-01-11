@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
 
-import * as userActionCreators from '../redux/modules/user'
+import * as userActionCreators from '../../redux/modules/user'
 
-import PasswordFields from '../components/password-fields'
+import PasswordFields from '../../components/password-fields'
 
 
 export class SetPassword extends React.Component {
@@ -20,7 +20,9 @@ export class SetPassword extends React.Component {
       validPassword: false
     }
 
+    this.checkTokenValidity = this.checkTokenValidity.bind(this)
     this.goToLoginPage = this.goToLoginPage.bind(this)
+    this.goToResetTokenExpiredPage = this.goToResetTokenExpiredPage.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.changePassword = this.changePassword.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
@@ -30,10 +32,32 @@ export class SetPassword extends React.Component {
     if (!this.props.params.token || !this.props.location.query.email) {
       this.goToLoginPage()
     }
+
+    this.checkTokenValidity()
+  }
+
+  checkTokenValidity() {
+    this.props.userActions.startFetching()
+
+    this.props.userActions.getTokenInfo(
+      this.props.location.query.email,
+      this.props.params.token
+    ).then(action => {
+      if (action.error) {
+        return this.goToResetTokenExpiredPage()
+      }
+    })
   }
 
   goToLoginPage() {
     this.props.router.push('/login')
+  }
+
+  goToResetTokenExpiredPage() {
+    this.props.router.push({
+      pathname: '/forgot-password',
+      query: { 'token_expired': null }
+    })
   }
 
   onSubmit(e) {
@@ -51,9 +75,7 @@ export class SetPassword extends React.Component {
           this.goToLoginPage()
         }
         else {
-          this.setState({
-            formError: action.payload.data.message || action.payload.message
-          })
+          this.goToResetTokenExpiredPage()
         }
       })
   }

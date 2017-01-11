@@ -163,7 +163,7 @@ class AccountManagementSystemDNS extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={this.closeDeleteDnsRecordModal}
-          submit={this.deleteDnsRecord}
+          onSubmit={this.deleteDnsRecord}
           loading={loadingRecords}
           invalid={false}>
           <p>
@@ -177,7 +177,7 @@ class AccountManagementSystemDNS extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={this.hideDeleteModal}
-          submit={() => {this.deleteDomain()}}
+          onSubmit={() => {this.deleteDomain()}}
           invalid={true}
           verifyDelete={true}>
           <p>

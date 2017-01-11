@@ -36,6 +36,12 @@ class ConfigurationPolicyRules extends React.Component {
     this.showConfirmation = this.showConfirmation.bind(this)
     this.closeConfirmation = this.closeConfirmation.bind(this)
   }
+  componentWillMount() {
+    const { editOrDelete, policyId, policyType } = this.props.params
+    if (editOrDelete === 'delete') {
+      this.showConfirmation(policyType, Number(policyId))()
+    }
+  }
   activateRule(rulePath) {
     return e => {
       e.preventDefault()
@@ -49,6 +55,7 @@ class ConfigurationPolicyRules extends React.Component {
       this.setState({
         [policyType]: false
       })
+      this.props.cancelDeletePolicyRoute()
     }
   }
   showConfirmation(policyType, index) {
@@ -63,6 +70,7 @@ class ConfigurationPolicyRules extends React.Component {
       this.setState({
         [policyType]: null
       })
+      this.props.cancelDeletePolicyRoute()
     }
   }
   render() {
@@ -186,13 +194,16 @@ class ConfigurationPolicyRules extends React.Component {
 ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
+  cancelDeletePolicyRoute: React.PropTypes.func,
   defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
   intl: React.PropTypes.object,
+  params: React.PropTypes.object,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
   responsePolicies: React.PropTypes.instanceOf(Immutable.List)
 }
 ConfigurationPolicyRules.defaultProps = {
+  params: {},
   defaultPolicies: Immutable.List(),
   requestPolicies: Immutable.List(),
   responsePolicies: Immutable.List()

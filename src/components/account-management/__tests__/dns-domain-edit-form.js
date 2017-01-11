@@ -32,6 +32,7 @@ describe('DnsDomainEditForm', () => {
       props = {
         errors: {},
         fields: fieldsMock,
+        handleSubmit: jest.fn(),
         intl: intlMaker()
       }
       return shallow(<DnsDomainEditForm {...props}/>)

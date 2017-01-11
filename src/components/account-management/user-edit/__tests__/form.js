@@ -4,6 +4,12 @@ import { shallow } from 'enzyme'
 jest.unmock('../form')
 import UserEditForm from '../form'
 
+function intlMaker() {
+  return {
+   formatMessage: jest.fn()
+  }
+}
+
 const fakeFields = {
   email: {
     value: 'foo'
@@ -34,7 +40,8 @@ describe('UserEditForm', () => {
   beforeEach(() => {
     subject = () => {
       props = {
-        fields: fakeFields
+        handleSubmit: jest.genMockFunction(),
+        intl: intlMaker(),
       }
       return shallow(<UserEditForm {...props}/>)
     }
@@ -44,16 +51,8 @@ describe('UserEditForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 3 inputs', () => {
-    expect(subject().find('FormControl').length).toBe(3)
-  })
-
-  it('should have 1 select', () => {
-    expect(subject().find('SelectWrapper').length).toBe(1)
-  })
-
-  it('should have 1 telephone input', () => {
-    expect(subject().find('.user-form__telephone').length).toBe(1)
+  it('should have 5 Fields', () => {
+    expect(subject().find('Field').length).toBe(5)
   })
 
   it('should have 2 buttons', () => {

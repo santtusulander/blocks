@@ -36,8 +36,8 @@ const initialState = Immutable.fromJS({
     serviceProviders: [],
     serviceProviderGroups: [],
     onOffNet: ['on', 'off'],
-    errorCodes: getAnalysisErrorCodes(),
-    statusCodes: getAnalysisStatusCodes(),
+    errorCodes: Immutable.List(),
+    statusCodes: Immutable.List(),
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
