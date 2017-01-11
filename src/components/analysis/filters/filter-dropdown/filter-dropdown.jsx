@@ -64,7 +64,8 @@ export class FilterDropdown extends React.Component {
       <div>
         <Dropdown id=""
                   open={dropdownOpen}
-                  className={className}>
+                  className={className}
+                  onToggle={() => null}>
           <Dropdown.Toggle onClick={() => this.toggleDropdown(this.state.dropdownOpen)} noCaret={true}>
             <IconSelectCaret/>
             {label}
@@ -106,7 +107,7 @@ FilterDropdown.displayName = 'FilterDropdown'
 FilterDropdown.propTypes   = {
   className: React.PropTypes.string,
   handleSelect: React.PropTypes.func,
-  options: React.PropTypes.instanceOf(Immutable),
+  options: React.PropTypes.instanceOf(Immutable.List),
   parent: React.PropTypes.string
 }
 

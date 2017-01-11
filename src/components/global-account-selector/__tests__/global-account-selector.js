@@ -6,6 +6,8 @@ jest.unmock('../global-account-selector.jsx')
 jest.unmock('../../../decorators/select-auto-close')
 import AccountSelector from '../global-account-selector.jsx'
 
+jest.unmock('../../../decorators/select-auto-close')
+
 describe('AccountSelector', () => {
   let subject, error, props = null
 
