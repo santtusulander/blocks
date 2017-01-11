@@ -46,27 +46,27 @@ const validate = (values) => {
   } = values
 
   if (changingPassword) {
-    if ( !(current_password && new_password && validPass) ) errors._error = "Check passwords."
-    if ( new_password && !validPass ) errors.new_password = "New password is not valid!"
+    if ( !(current_password && new_password && validPass) ) errors._error = <FormattedMessage id="portal.user.edit.checkPasswords.text" />
+    if ( new_password && !validPass ) errors.new_password = <FormattedMessage id="portal.user.edit.newPasswordInvalid.text" />
   } else {
     if (!first_name) {
-      errors.first_name = "First name is required"
+      errors.first_name = <FormattedMessage id="portal.user.edit.firstNameRequired.text" />
     }
 
     if (!last_name) {
-      errors.last_name = "Last name is required"
+      errors.last_name = <FormattedMessage id="portal.user.edit.lastNameRequired.text" />
     }
 
     if (tfa_toggle && !tfa) {
-      errors.tfa = "Select TFA method"
+      errors.tfa = <FormattedMessage id="portal.user.edit.tfaMethodRequired.text" />
     }
 
     if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
-      errors.phone = "Phone number is not valid"
+      errors.phone = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
     }
 
     if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
-      errors.phone = "Phone Country Code is not valid"
+      errors.phone = <FormattedMessage id="portal.user.edit.phoneCountryCodeInvalid.text" />
     }
 
   }
