@@ -13,12 +13,12 @@ import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import * as userActionCreators from '../redux/modules/user'
+import * as userActionCreators from '../../redux/modules/user'
 
-import IconEmail from '../components/icons/icon-email.jsx'
-import CopyrightNotice from '../components/copyright-notice'
-import ReCAPTCHA from '../components/recaptcha'
-import { isValidEmail } from '../util/validators.js'
+import IconEmail from '../../components/icons/icon-email.jsx'
+import CopyrightNotice from '../../components/copyright-notice'
+import ReCAPTCHA from '../../components/recaptcha'
+import { isValidEmail } from '../../util/validators.js'
 
 export class ForgotPassword extends React.Component {
   constructor(props) {
@@ -85,6 +85,11 @@ export class ForgotPassword extends React.Component {
   render() {
     const disableSubmit = this.props.fetching || !this.state.recaptcha ||
                           !!this.state.formError || !this.state.email
+    const { location: { search }} = this.props
+    const token_expired = search && search === '?token_expired'
+
+    let headerText = token_expired ? <FormattedMessage id="portal.linkExpired.title"/> : <FormattedMessage id="portal.forgotPassword.forgotPassword.text"/>
+    let instructionsText = token_expired ? <span><FormattedMessage id="portal.linkExpired.definition.text"/><br/> <FormattedMessage id="portal.linkExpired.instructions.text"/></span> : <FormattedMessage id="portal.forgotPassword.enterEmail.text"/>
 
     return (
       <Modal.Dialog className="login-modal">
@@ -92,7 +97,7 @@ export class ForgotPassword extends React.Component {
           <div className="login-header-gradient" />
           <h1>
             <div className="logo-ericsson"><FormattedMessage id="portal.login.logo.text"/></div>
-            <FormattedMessage id="portal.forgotPassword.forgotPassword.text"/>
+            {headerText}
           </h1>
           <p className="login-subtitle"><FormattedMessage id="portal.login.subtitle"/></p>
         </Modal.Header>
@@ -105,7 +110,7 @@ export class ForgotPassword extends React.Component {
               <Row>
                 <Col xs={12}>
                   <Link to={`/login`} className="btn btn-primary pull-right">
-                    <FormattedMessage id="portal.button.ok"/>
+                        <FormattedMessage id="portal.button.ok"/>
                   </Link>
                 </Col>
               </Row>
@@ -119,7 +124,7 @@ export class ForgotPassword extends React.Component {
                 </div>
                 :
                 <div className="login-info">
-                  <p><FormattedMessage id="portal.forgotPassword.enterEmail.text"/></p>
+                  <p>{instructionsText}</p>
                 </div>
               }
 
@@ -184,6 +189,11 @@ ForgotPassword.displayName = 'ForgotPassword'
 ForgotPassword.propTypes = {
   fetching: React.PropTypes.bool,
   intl: React.PropTypes.object,
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({
+      email: React.PropTypes.string
+    })
+  }),
   userActions: React.PropTypes.object
 }
 
