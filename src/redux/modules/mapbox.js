@@ -12,14 +12,9 @@ const initialState = Immutable.fromJS({
 })
 
 // REDUCERS
-export function mapboxMapBounds(state, action){
+export function mapboxMapBounds(state, action) {
   return state.merge({
-    mapBounds: Immutable.fromJS({
-      south: action.payload.getSouth(),
-      west: action.payload.getWest(),
-      north: action.payload.getNorth(),
-      east: action.payload.getEast()
-    })
+    mapBounds: Immutable.fromJS(action.payload)
   })
 }
 

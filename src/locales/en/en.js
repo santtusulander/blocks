@@ -67,6 +67,12 @@ const TRANSLATED_MESSAGES = {
   'portal.manage.tabs.dns.title': 'DNS',
   'portal.manage.tabs.roles.title': 'Roles',
 
+  'portal.analytics.dropdownMenu.all': 'All ({options})',
+  'portal.analytics.dropdownMenu.clearSelections': 'Clear selections',
+  'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',
+  'portal.analytics.dropdownMenu.noResults' : 'No results...',
+  'portal.analytics.dropdownMenu.pleaseSelect' : 'Please select',
+
   'portal.analytics.fileErrors.label': 'File Errors',
   'portal.analytics.fileErrors.clientErrors.label': 'Client errors',
   'portal.analytics.fileErrors.serverErrors.label': 'Server errors',
