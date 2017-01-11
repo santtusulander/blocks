@@ -525,6 +525,36 @@ export function getTopURLs(urlMetrics, dataKey) {
 }
 
 /**
+ * Builds options for fetching dashboard data
+ *
+ * @method buildFetchOpts
+ * @param  {Object}  coordinates              Object of map bounds
+ * @param  {object}  params                   Object of values to match
+ * @param  {object}  filters                  Filters to match, e.g. date range
+ * @return {object}                           Object of different fetch options
+ */
+export function buildDashBoardFetchOpts({ coordinates = {}, params = {}, filters = {} } = {}) {
+  const startDate  = Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000)
+  const endDate    = Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000)
+  const dashboardOpts = Object.assign({
+    startDate,
+    endDate,
+    granularity: 'hour'
+  }, params)
+
+  const byCityOpts = Object.assign({
+    max_cities: MAPBOX_MAX_CITIES_FETCHED,
+    latitude_south: coordinates.south || null,
+    longitude_west: coordinates.west || null,
+    latitude_north: coordinates.north || null,
+    longitude_east: coordinates.east || null,
+    show_detail: false
+  }, dashboardOpts)
+
+  return { dashboardOpts, byCityOpts }
+}
+
+/**
  * Builds options for fetching data
  *
  * @method buildFetchOpts
@@ -535,7 +565,7 @@ export function getTopURLs(urlMetrics, dataKey) {
  * @param  {string}  activeHostConfiguredName String of active host
  * @return {object}                           Object of different fetch options
  */
-export function buildFetchOpts({ coordinates = {}, params = {}, filters = {}, location = {}, activeHostConfiguredName } = {}) {
+export function buildFetchOpts({ coordinates = {}, params = {}, filters = fromJS({}), location = {}, activeHostConfiguredName } = {}) {
   if (params.property && activeHostConfiguredName) {
     params = Object.assign({}, params, {
       property: activeHostConfiguredName
@@ -560,11 +590,5 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = {}, lo
     show_detail: false
   }, byTimeOpts)
 
-  const dashboardOpts = Object.assign({
-    startDate,
-    endDate,
-    granularity: 'hour'
-  }, params)
-
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
+  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
 }

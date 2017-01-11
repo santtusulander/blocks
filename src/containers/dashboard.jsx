@@ -26,7 +26,7 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
-import { buildFetchOpts } from '../util/helpers.js'
+import { buildDashBoardFetchOpts } from '../util/helpers.js'
 import { getCitiesWithinBounds } from '../util/mapbox-helpers'
 
 export class Dashboard extends React.Component {
@@ -75,7 +75,7 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+    const { dashboardOpts } = buildDashBoardFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
 
     return Promise.all([
       this.props.dashboardActions.startFetching(),
