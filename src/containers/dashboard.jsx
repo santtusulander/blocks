@@ -75,7 +75,7 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    const { dashboardOpts } = buildDashBoardFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+    const dashboardOpts = buildDashBoardFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
 
     return Promise.all([
       this.props.dashboardActions.startFetching(),

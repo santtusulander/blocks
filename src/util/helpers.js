@@ -533,6 +533,8 @@ export function getTopURLs(urlMetrics, dataKey) {
  * @param  {object}  filters                  Filters to match, e.g. date range
  * @return {object}                           Object of different fetch options
  */
+
+ //eslint-disable-next-line
 export function buildDashBoardFetchOpts({ coordinates = {}, params = {}, filters = {} } = {}) {
   const startDate  = Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000)
   const endDate    = Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000)
@@ -542,16 +544,19 @@ export function buildDashBoardFetchOpts({ coordinates = {}, params = {}, filters
     granularity: 'hour'
   }, params)
 
-  const byCityOpts = Object.assign({
-    max_cities: MAPBOX_MAX_CITIES_FETCHED,
-    latitude_south: coordinates.south || null,
-    longitude_west: coordinates.west || null,
-    latitude_north: coordinates.north || null,
-    longitude_east: coordinates.east || null,
-    show_detail: false
-  }, dashboardOpts)
+  /**
+   * Not currently used in the dashboard
+   */
+  // const byCityOpts = Object.assign({
+  //   max_cities: MAPBOX_MAX_CITIES_FETCHED,
+  //   latitude_south: coordinates.south || null,
+  //   longitude_west: coordinates.west || null,
+  //   latitude_north: coordinates.north || null,
+  //   longitude_east: coordinates.east || null,
+  //   show_detail: false
+  // }, dashboardOpts)
 
-  return { dashboardOpts, byCityOpts }
+  return dashboardOpts
 }
 
 /**
