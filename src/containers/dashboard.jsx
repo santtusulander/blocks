@@ -11,6 +11,8 @@ import DateRanges from '../constants/date-ranges'
 import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import * as filtersActionCreators from '../redux/modules/filters'
+import * as mapboxActionCreators from '../redux/modules/mapbox'
+import * as trafficActionCreators from '../redux/modules/traffic'
 
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
@@ -24,8 +26,8 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
-
-// import { buildAnalyticsOpts } from '../util/helpers.js'
+import { buildFetchOpts } from '../util/helpers.js'
+import { getCitiesWithinBounds } from '../util/mapbox-helpers'
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -39,6 +41,7 @@ export class Dashboard extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
+    this.getCityData = this.getCityData.bind(this)
   }
 
   componentWillMount() {
@@ -72,11 +75,8 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    const dashboardOpts = Object.assign({
-      startDate: Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000),
-      endDate: Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000),
-      granularity: 'hour'
-    }, params)
+    const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+
     return Promise.all([
       this.props.dashboardActions.startFetching(),
       this.props.accountActions.fetchAccounts(this.props.params.brand),
@@ -95,6 +95,16 @@ export class Dashboard extends React.Component {
     this.props.filtersActions.setFilterValue({
       filterName: filterName,
       filterValue: filterValue
+    })
+  }
+
+  getCityData(south, west, north, east) {
+    const { params, filters } = this.props
+    return getCitiesWithinBounds({
+      params,
+      filters,
+      coordinates: { south, west, north, east },
+      actions: this.props.trafficActions
     })
   }
 
@@ -150,6 +160,7 @@ export class Dashboard extends React.Component {
     const cacheHitDetail = !dashboard.size ? [] : dashboard.getIn(['cache_hit', 'detail']).toJS()
 
     const countries = !dashboard.size ? List() : dashboard.get('countries')
+    const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
 
     const topCPamount = 5
     const topCPs = !dashboard.size ? List() : dashboard.get('providers')
@@ -243,9 +254,15 @@ export class Dashboard extends React.Component {
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
               <div ref="byLocationHolder">
                 <AnalysisByLocation
-                  height={this.state.byLocationWidth / 1.6}
                   countryData={countries}
-                  theme={theme}/>
+                  cityData={this.props.cityData}
+                  getCityData={this.getCityData}
+                  theme={theme}
+                  height={this.state.byLocationWidth / 1.6}
+                  dataKey="bits_per_second"
+                  dataKeyFormat={countriesAverageBandwidth}
+                  mapBounds={this.props.mapBounds}
+                  mapboxActions={this.props.mapboxActions}/>
               </div>
             </DashboardPanel>
             <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.top5CP.title'})}>
@@ -302,6 +319,7 @@ Dashboard.propTypes = {
   accountActions: PropTypes.object,
   accounts: PropTypes.object,
   activeAccount: PropTypes.instanceOf(Map),
+  cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
   fetching: PropTypes.bool,
@@ -309,8 +327,11 @@ Dashboard.propTypes = {
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
   intl: PropTypes.object,
+  mapBounds: PropTypes.instanceOf(Map),
+  mapboxActions: PropTypes.object,
   params: PropTypes.object,
   theme: PropTypes.string,
+  trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)
 }
 
@@ -330,7 +351,9 @@ function mapStateToProps(state) {
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
     user: state.user.get('currentUser'),
-    theme: state.ui.get('theme')
+    theme: state.ui.get('theme'),
+    mapBounds: state.mapbox.get('mapBounds'),
+    cityData: state.traffic.get('byCity')
   }
 }
 
@@ -338,7 +361,9 @@ function mapDispatchToProps(dispatch) {
   return {
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
-    filtersActions: bindActionCreators(filtersActionCreators, dispatch)
+    filtersActions: bindActionCreators(filtersActionCreators, dispatch),
+    mapboxActions: bindActionCreators(mapboxActionCreators, dispatch),
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
   }
 }
 

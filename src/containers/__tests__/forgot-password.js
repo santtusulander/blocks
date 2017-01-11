@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.autoMockOff()
-jest.unmock('../forgot-password.jsx')
-import { ForgotPassword } from '../forgot-password.jsx'
+jest.unmock('../password/forgot-password.jsx')
+import { ForgotPassword } from '../password/forgot-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
@@ -17,27 +17,36 @@ function userActionsMaker(cbResponse) {
   }
 }
 
+function intlMaker() {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 describe('ForgotPassword', () => {
-  it('should exist', () => {
-    const forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})}/>
+  let forgotPassword;
+  const fakeLocation = { search: null }
+
+  beforeEach(() => {
+    forgotPassword = shallow(
+      <ForgotPassword location={fakeLocation}
+                      userActions={userActionsMaker({})}
+                      intl={intlMaker()}
+      />
     )
+  });
+
+  it('should exist', () => {
     expect(forgotPassword).toBeDefined();
   })
 
   it('maintains form state', () => {
-    const forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})}/>
-    )
     let inputs = forgotPassword.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'aaa'}})
     expect(forgotPassword.state('email')).toBe('aaa')
   })
 
   it('toggles active class when focused and blurred', () => {
-    const forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})}/>
-    )
     let inputs = forgotPassword.find('FormControl')
 
     const usernameHolder = inputs.at(0)
@@ -49,10 +58,6 @@ describe('ForgotPassword', () => {
   })
 
   it('requires email AND recaptcha token to submit', () => {
-    const forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})}/>
-    )
-
     expect(forgotPassword.find('Button').props().disabled).toBe(true)
 
     forgotPassword.setState({ email: 'a@b.c', recaptcha: null })
@@ -63,5 +68,18 @@ describe('ForgotPassword', () => {
 
     forgotPassword.setState({ email: 'a@b.c', recaptcha: '1234567890' })
     expect(forgotPassword.find('Button').props().disabled).toBe(false)
+  })
+
+  it('handles errors', () => {
+    forgotPassword.setState({ formError: 'Test fail'})
+    expect(forgotPassword.find('.login-info').text()).toContain('Test fail')
+
+  })
+
+  it('toggles invalid class on error', () => {
+    forgotPassword.setState({ formError: 'Test fail'})
+    expect(forgotPassword.find('.invalid').length).toBe(1)
+    forgotPassword.setState({ formError: ''})
+    expect(forgotPassword.find('.invalid').length).toBe(0)
   })
 })

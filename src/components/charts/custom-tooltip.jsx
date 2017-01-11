@@ -15,17 +15,20 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
           <span className='legend-value'>{valueFormatter(value)}</span>
         </div>
       )}
-      <hr style={{ margin: '7px 0' }}/>
-      <div className="tooltip-item">
-        <span className="legend-label">
-          Total
-        </span>
-        <span id="tooltip-total" className="legend-value">{total}</span>
-      </div>
+
+      {payload.length > 1 && [
+        <hr key="hr" style={{ margin: '7px 0' }}/>,
+        <div key="totalRow" className="tooltip-item">
+          <span className="legend-label">
+            Total
+          </span>
+          <span id="tooltip-total" className="legend-value">{total}</span>
+        </div>]}
     </div>
   )
 }
 
+CustomTooltip.displayName = "CustomTooltip"
 CustomTooltip.propTypes = {
   iconClass: PropTypes.func,
   payload: PropTypes.array,

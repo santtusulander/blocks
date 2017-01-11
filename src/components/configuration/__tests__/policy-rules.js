@@ -125,6 +125,7 @@ describe('ConfigurationPolicyRules', () => {
   beforeEach(() => {
     subject = (props) => {
       let defaultProps = Object.assign({}, {
+        cancelDeletePolicyRoute: () => {},
         intl: intlMaker()
       }, props)
       return shallow(<ConfigurationPolicyRules {...defaultProps}/>)

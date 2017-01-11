@@ -1,11 +1,12 @@
 import React from 'react'
 import { List } from 'immutable'
-import { Dropdown, Button, Checkbox, FormControl, FormGroup } from 'react-bootstrap'
+import { Dropdown, Button, FormControl, FormGroup } from 'react-bootstrap'
 import IconSelectCaret from '../icons/icon-select-caret.jsx'
+import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
 
 import autoClose from '../../decorators/select-auto-close'
-
-import './filter-checklist-dropdown.scss'
+import Checkbox from '../checkbox'
 
 export class FilterChecklistDropdown extends React.Component {
   constructor(props) {
@@ -24,12 +25,15 @@ export class FilterChecklistDropdown extends React.Component {
   }
 
   handleCheck(optionVal) {
+    let initialVals = this.props.value
     let newVals = List()
+
     if(optionVal !== 'all') {
-      const valIndex = this.props.value.indexOf(optionVal)
+      const valIndex = initialVals.indexOf(optionVal)
+
       newVals = valIndex === -1 ?
-        this.props.value.push(optionVal) :
-        this.props.value.delete(valIndex)
+        initialVals.push(optionVal) :
+        initialVals.delete(valIndex)
     }
     else {
       newVals = this.props.value.size === this.props.options.size ? List() : this.props.options.map(val => val.get('value'))
@@ -76,25 +80,23 @@ export class FilterChecklistDropdown extends React.Component {
       .filter(opt => this.props.value.indexOf(opt.get('value')) !== -1)
       .map(opt => opt.get('label'))
     if(!numVals || !labels.size) {
-      return 'Please Select'
+      return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
     }
     else if(numVals === 1) {
       return labels.first()
     }
     else if(numVals === this.props.options.size){
-      return `ALL (${this.props.options.size})`
+      return <FormattedMessage id="portal.analytics.dropdownMenu.all" values={{options: this.props.options.size}}/>
     }
     else{
-      return `${labels.first()} and ${numVals - 1} more`
+      return <FormattedMessage id="portal.analytics.dropdownMenu.labelsSelected" values={{firstLabel: labels.first(), rest: numVals - 1}}/>
     }
   }
-
   render() {
-
     const { state: { filterValue }, props: { open, toggle } } = this
     const filteredResults = this.getFilteredResults()
 
-    let itemList;
+    let itemList = List();
     let className = 'dropdown-select dropdown-filter dropdown-checklist btn-block'
 
     if(this.props.className) {
@@ -102,26 +104,12 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     if(filteredResults.size) {
-      itemList = filteredResults.size === this.props.options.size ? List([
-        <li
-            key="all"
-            role="presentation"
-            className="children"
-            tabIndex="-1">
-            <FormGroup>
-              <Checkbox
-                value="all"
-                checked={this.props.value.size === this.props.options.size}
-                onChange={() => this.handleCheck("all")}>
-                <span>{`SELECT ALL (${this.props.options.size})`}</span>
-              </Checkbox>
-            </FormGroup>
-        </li>,
+      itemList = itemList.concat([
         this.props.children && this.props.children.map(child => child)
-      ]) : List()
+      ])
 
-      itemList = itemList.concat(filteredResults.map((option, i) => {
-        return (
+      itemList = itemList.concat(filteredResults.map((option, i) =>
+        (
           <li key={i}
             role="presentation"
             className="children"
@@ -131,16 +119,20 @@ export class FilterChecklistDropdown extends React.Component {
                 value={option.get('value')}
                 checked={this.props.value.indexOf(option.get('value')) !== -1}
                 onChange={() => this.handleCheck(option.get('value'))}>
-                <span>{option.get('label')}</span>
+                {option.get('label')}
               </Checkbox>
             </FormGroup>
           </li>
         )
-      }))
+      ))
     } else {
       itemList = (
         <li role="presentation" className="children" tabIndex="-1">
-          <div className="form-group">No results...</div>
+          <div className="form-group checkbox">
+            <label>
+              <FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>
+            </label>
+          </div>
         </li>
       )
     }
@@ -149,6 +141,7 @@ export class FilterChecklistDropdown extends React.Component {
       <div className="form-group">
         <Dropdown
           id="filter-checklist-dropdown"
+          disabled={this.props.disabled}
           open={open}
           onToggle={() => {/*because we pass an open-prop, this needs a handler or react-bs throws a failed proptype-warning.*/}}
           className={className}>
@@ -174,12 +167,21 @@ export class FilterChecklistDropdown extends React.Component {
                 {itemList}
               </ul>
             </li>
-            {!this.props.noClear &&
-              <li role="presentation" className="action-container">
-                <Button bsClass="btn btn-block btn-primary"
-                      onClick={this.handleClear}>Clear</Button>
-              </li>
-            }
+            <li key="all"
+                role="presentation"
+                className="children"
+                tabIndex="-1">
+              <Button onClick={() => this.handleClear()}
+                className={
+                  classNames(
+                    'dropdown-toggle',
+                    'clear-selection',
+                    {'hidden': this.props.value.size === this.props.options.size || this.props.value.size === 0}
+                  )
+                }>
+                <FormattedMessage id="portal.analytics.dropdownMenu.clearSelections"/>
+              </Button>
+            </li>
           </Dropdown.Menu>
         </Dropdown>
       </div>
@@ -193,7 +195,6 @@ FilterChecklistDropdown.propTypes   = {
   className: React.PropTypes.string,
   disabled: React.PropTypes.bool,
   handleCheck: React.PropTypes.func,
-  noClear: React.PropTypes.bool,
   onChange: React.PropTypes.func,
   open: React.PropTypes.bool,
   options: React.PropTypes.instanceOf(List),

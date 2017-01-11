@@ -107,6 +107,7 @@ export function getTicketTypeOptions() {
   ]
 }
 
+// eslint-disable-next-line react/display-name
 export function getTicketTypeIcon(type) {
   switch (type) {
     case TYPE_PROBLEM:
@@ -122,7 +123,7 @@ export function getTicketTypeIcon(type) {
   }
 }
 
-// eslint-disable-next-line react/no-multi-comp
+// eslint-disable-next-line react/no-multi-comp, react/display-name
 export function getTicketPriorityIcon(priority) {
   const className = classNames('support-ticket__priority-icon', {
     [`support-ticket__priority-icon--${priority.toLowerCase()}`]: true

@@ -33,10 +33,22 @@ function makeFakeFields() {
     new_password: {
       value: "test"
     },
+    phone: {
+      value: "test"
+    },
+    phone_country_code: {
+      value: "test"
+    },
     phone_number: {
       value: "test"
     },
     timezon: {
+      value: "test"
+    },
+    tfa_toggle: {
+      value: "tfa_toggle"
+    },
+    tfa: {
       value: "test"
     }
   }
@@ -47,24 +59,22 @@ describe('UserEditForm', () => {
 
   const fields = makeFakeFields()
   const intl = intlMaker()
+  const initialValues = { email: "abc@example.com" }
   const invalid = false
+  const handleSubmit = jest.genMockFunction()
   const onSave = jest.genMockFunction()
   const onSavePassword = jest.genMockFunction()
-  const resetForm = jest.genMockFunction()
-  const savingPassword = true
-  const savingUser = true
 
   beforeEach(() => {
      subject = () => {
        props = {
+         handleSubmit,
          fields,
+         initialValues,
          intl,
          invalid,
          onSave,
          onSavePassword,
-         resetForm,
-         savingPassword,
-         savingUser
        }
 
        return shallow(<UserEditForm {...props}/>)
@@ -79,8 +89,8 @@ describe('UserEditForm', () => {
      expect(subject().find('form').length).toBe(1)
    })
 
-   it('should have 3 divs inside the form', () => {
-     expect(subject().find('form').find('div.form-group').length).toBe(3)
+   it('should have 6 Fields inside the form', () => {
+     expect(subject().find('Field').length).toBe(6)
    })
 
 })

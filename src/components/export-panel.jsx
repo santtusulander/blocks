@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Tabs, Tab } from 'react-bootstrap'
 
 import ExportEmailForm from './export-email-form.jsx'
-import { ExportFileForm } from './export-file-form.jsx'
+import ExportFileForm from './export-file-form.jsx'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -42,6 +42,7 @@ const ExportPanel = (props) => {
 
 export default injectIntl(ExportPanel)
 
+ExportPanel.displayName = "ExportPanel"
 ExportPanel.propTypes = {
   exportType: React.PropTypes.string,
   intl: React.PropTypes.object,

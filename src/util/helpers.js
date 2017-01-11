@@ -1,13 +1,15 @@
 import moment from 'moment'
 import numeral from 'numeral'
-import { fromJS } from 'immutable'
+import { List, fromJS } from 'immutable'
 import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
+import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
 import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
+import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
 
 const BYTE_BASE = 1000
 
@@ -169,7 +171,7 @@ export function buildAnalyticsOpts(params, filters, location ){
     getCustomDateRange(filters) :
     { startDate: undefined, endDate: undefined }
 
-  const opts = {
+  let opts = {
     account: params.account,
     brand: params.brand,
     group: params.group,
@@ -181,8 +183,11 @@ export function buildAnalyticsOpts(params, filters, location ){
     account_ids: filterValues.contentProviders && filterValues.contentProviders.join(','),
     group_ids: filterValues.contentProviderGroups && filterValues.contentProviderGroups.join(','),
     service_type: filterValues.serviceTypes && createToggledFilter( filterValues.serviceTypes),
-    net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet),
-    status_codes: filterValues.statusCodes && filterValues.statusCodes.join(',') || filterValues.errorCodes && filterValues.errorCodes.join(',')
+    net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet)
+  }
+
+  if (filterValues.statusCodes && filterValues.statusCodes.size || filterValues.errorCodes && filterValues.errorCodes.size) {
+    opts.status_codes = filterValues.statusCodes.size && filterValues.statusCodes.join(',') || filterValues.errorCodes.size && filterValues.errorCodes.join(',')
   }
 
   return opts
@@ -482,4 +487,84 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
  */
 export function getReduxFormValidationState(field) {
   return (field.touched && field.error) ? "error" : null
+}
+
+/**
+ * Aggregate data in 15-top-urls list to prevent repeating similar urls
+ *
+ * @param  {List} urlMetrics
+ * @param  {string} dataKey
+ * @return {List} topURLs
+ */
+export function getTopURLs(urlMetrics, dataKey) {
+  const uniqueURLMetrics = urlMetrics.groupBy(metric => metric.get('url'))
+  const byBytes = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('bytes')), 0))
+  const byRequests = uniqueURLMetrics.map(urlArray => urlArray.reduce((prevVal, url) => (prevVal + url.get('requests')), 0))
+
+  let aggregatedByBytes = List()
+  byBytes.map(url => {
+    aggregatedByBytes = aggregatedByBytes.push({
+      url: byBytes.keyOf(url),
+      bytes: url
+    })
+  })
+
+  let aggregatedByRequests = List([])
+  byRequests.map(url => {
+    aggregatedByRequests = aggregatedByRequests.push({
+      url: byRequests.keyOf(url),
+      requests: url
+    })
+  })
+  const aggregatedData = dataKey === 'bytes' ?
+    aggregatedByBytes.sortBy((metric) => -metric.bytes) :
+    aggregatedByRequests.sortBy((metric) => -metric.requests)
+  const topURLs = aggregatedData.filter((metric, i) => i < Math.min(aggregatedData.size, TOP_URLS_MAXIMUM_NUMBER))
+
+  return topURLs
+}
+
+/**
+ * Builds options for fetching data
+ *
+ * @method buildFetchOpts
+ * @param  {Object}  coordinates              Object of map bounds
+ * @param  {object}  params                   Object of values to match
+ * @param  {object}  filters                  Filters to match, e.g. date range
+ * @param  {string}  location                 [description]
+ * @param  {string}  activeHostConfiguredName String of active host
+ * @return {object}                           Object of different fetch options
+ */
+export function buildFetchOpts({ coordinates = {}, params = {}, filters = {}, location = {}, activeHostConfiguredName } = {}) {
+  if (params.property && activeHostConfiguredName) {
+    params = Object.assign({}, params, {
+      property: activeHostConfiguredName
+    })
+  }
+
+  const fetchOpts = buildAnalyticsOpts(params, filters, location)
+  const startDate  = filters.getIn(['dateRange', 'startDate'])
+  const endDate    = filters.getIn(['dateRange', 'endDate'])
+  const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
+  const byTimeOpts = Object.assign({
+    granularity: rangeDiff >= 2 ? 'day' : 'hour'
+  }, fetchOpts)
+  const aggregateGranularity = byTimeOpts.granularity
+
+  const byCityOpts = Object.assign({
+    max_cities: MAPBOX_MAX_CITIES_FETCHED,
+    latitude_south: coordinates.south || null,
+    longitude_west: coordinates.west || null,
+    latitude_north: coordinates.north || null,
+    longitude_east: coordinates.east || null,
+    show_detail: false
+  }, byTimeOpts)
+
+  const dashboardOpts = Object.assign({
+    startDate,
+    endDate,
+    granularity: 'hour'
+  }, params)
+
+  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
 }

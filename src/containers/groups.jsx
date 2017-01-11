@@ -9,7 +9,10 @@ import {
   getContentUrl,
   getNetworkUrl
 } from '../util/routes.js'
-import { userIsServiceProvider } from '../util/helpers.js'
+import {
+  accountIsServiceProviderType,
+  userIsServiceProvider
+} from '../util/helpers.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
 import * as accountActionCreators from '../redux/modules/account'
@@ -120,7 +123,7 @@ export class Groups extends React.Component {
     const breadcrumbs = [{ label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/> }]
     const headerText = activeAccount && activeAccount.get('provider_type') === PROVIDER_TYPES.SERVICE_PROVIDER ? <FormattedMessage id="portal.groups.accountSummary.text"/> : <FormattedMessage id="portal.groups.accountContentSummary.text"/>
     const currentUser = user.get('currentUser')
-    const selectionDisabled = userIsServiceProvider(currentUser) === true
+    const selectionDisabled = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
 
     return (
       <ContentItems
@@ -146,6 +149,7 @@ export class Groups extends React.Component {
         selectionStartTier="group"
         selectionDisabled={selectionDisabled}
         showAnalyticsLink={true}
+        showSlices={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}

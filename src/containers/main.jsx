@@ -12,7 +12,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 
-import Header from '../components/header/header'
+import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
 
@@ -90,7 +90,6 @@ export class Main extends React.Component {
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
-
   render() {
     if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
@@ -155,7 +154,7 @@ export class Main extends React.Component {
           closeButtonSecondary={true}
           reloadButton={true}
           cancel={() => this.props.uiActions.hideErrorDialog()}
-          submit={() => location.reload(true)}/>
+          onSubmit={() => location.reload(true)}/>
         }
         {this.props.showInfoDialog &&
         <ModalWindow
@@ -196,7 +195,7 @@ Main.propTypes = {
   groupActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
@@ -222,19 +221,17 @@ Main.defaultProps = {
 }
 
 function mapStateToProps(state) {
+  const stateMap = Immutable.Map(state)
+
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
-    fetching: state.account.get('fetching') ||
-      state.content.get('fetching') ||
-      state.group.get('fetching') ||
-      state.host.get('fetching') ||
-      state.topo.get('fetching') ||
-      state.traffic.get('fetching') ||
-      state.visitors.get('fetching'),
+    fetching: stateMap.some(
+      store => store && (store.get ? store.get('fetching') : store.fetching)
+    ),
     notification: state.ui.get('notification'),
     roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),
@@ -244,7 +241,7 @@ function mapStateToProps(state) {
     user: state.user,
     viewingChart: state.ui.get('viewingChart'),
     breadcrumbs: state.ui.get('breadcrumbs')
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch) {

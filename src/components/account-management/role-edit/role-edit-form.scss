@@ -1,0 +1,5 @@
+@import "../../../styles/components/modal-form-panel";
+
+.role-edit-form-sidebar {
+  @extend .modal-form-panel;
+}

@@ -21,7 +21,7 @@ class FilterServiceType extends React.Component {
           title: <FormattedMessage id="portal.analytics.noServiceTypeSelected.title"/>,
           content: <FormattedMessage id="portal.analytics.noServiceTypeSelected.text"/>,
           okButton: true,
-          cancel: this.props.uiActions.hideInfoDialog
+          cancel: () => this.props.uiActions.hideInfoDialog()
         });
       }
       else {
@@ -30,19 +30,22 @@ class FilterServiceType extends React.Component {
     }
   }
   render() {
+    const { serviceTypes } = this.props
     return (
       <div>
         <div className="sidebar-content form-inline">
           <FormGroup>
             <Checkbox
-              checked={this.props.serviceTypes.includes('http')}
+              checked={serviceTypes.includes('http')}
+              disabled={serviceTypes.includes('http') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('http')}>
               <span>HTTP</span>
             </Checkbox>
           </FormGroup>
           <FormGroup>
             <Checkbox
-              checked={this.props.serviceTypes.includes('https')}
+              checked={serviceTypes.includes('https')}
+              disabled={serviceTypes.includes('https') && serviceTypes.size === 1}
               onChange={this.toggleServiceType('https')}>
               <span>HTTPS</span>
             </Checkbox>

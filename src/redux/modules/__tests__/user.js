@@ -23,11 +23,23 @@ import Immutable from 'immutable'
 describe('User Module', () => {
     const state = Immutable.Map();
 
-    it('should handle userLoggedInSuccess', () => {
-      const newState = userLoggedInSuccess(state, { payload: {username: 'Username' } })
+    it('should handle userLoggedInSuccess with code 200', () => {
+      const newState = userLoggedInSuccess(state, { payload: {username: 'Username', status: 200 } })
 
       const expectedState = Immutable.fromJS({
         loggedIn: true
+      })
+
+      expect( Immutable.is(newState, expectedState)).toBeTruthy()
+
+    })
+
+    it('should handle userLoggedInSuccess with code 202', () => {
+      const newState = userLoggedInSuccess(state, { payload: {username: 'Username', status: 202 } })
+
+      const expectedState = Immutable.fromJS({
+        loggedIn: false,
+        fetching: false
       })
 
       expect( Immutable.is(newState, expectedState)).toBeTruthy()
@@ -79,7 +91,8 @@ describe('User Module', () => {
     it('should handle fetchSuccess', () => {
       const newState = fetchSuccess(state, { payload: {username: 'Username' } })
       const expectedState = Immutable.fromJS({
-        currentUser: {username: 'Username'}
+        currentUser: {username: 'Username'},
+        fetching: false
       })
       expect( Immutable.is(newState, expectedState)).toBeTruthy()
     })

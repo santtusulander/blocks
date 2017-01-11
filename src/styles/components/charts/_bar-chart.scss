@@ -7,6 +7,14 @@
     background-color: rgba($black, 0.2);
   }
 
+  .recharts-y-axis {
+    transform: translateX(-35px);
+  }
+
+  .recharts-x-axis {
+    transform: translateY(30px);
+  }
+
   .bar-chart-tooltip {
     @extend %chart-legend;
     position: relative;
@@ -58,13 +66,5 @@
     .bar-chart-legend-item {
       @extend %legend-item;
     }
-  }
-
-  .recharts-bar-rectangle:hover {
-    opacity: 0.8;
-  }
-
-  .recharts-bar-cursor {
-    display: none;
   }
 }

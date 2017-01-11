@@ -83,7 +83,6 @@
 
     .dark-theme .has-error &,
     .light-theme .has-error & {
-      background-color: $purple;
 
       &[type=textarea] {
         color: rgba($dt-text-color, 0.3);

@@ -9,6 +9,7 @@ import AnalysisByTime from '../analysis/by-time'
 import IconChart from '../icons/icon-chart.jsx'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 import { formatBitsPerSecond, formatTime } from '../../util/helpers'
+import ContentItemTag from './content-item-tag'
 import TruncatedTitle from '../truncated-title'
 import { paleblue } from '../../constants/colors'
 import LinkWrapper from './link-wrapper'
@@ -71,6 +72,10 @@ class ContentItemList extends React.Component {
                 </div>
               */}
             </div>
+            {!!this.props.tagText &&
+              <ContentItemTag customClass="content-item-list-tag">
+                <FormattedMessage id={this.props.tagText}/>
+              </ContentItemTag>}
           </LinkWrapper>
 
           <ButtonToolbar>
@@ -163,6 +168,7 @@ ContentItemList.propTypes = {
   name: React.PropTypes.string,
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
+  tagText: React.PropTypes.string,
   timeToFirstByte: React.PropTypes.string
 }
 ContentItemList.defaultProps = {

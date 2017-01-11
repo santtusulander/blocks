@@ -12,6 +12,7 @@ const IconEdit = (props) => {
   )
 }
 
+IconEdit.displayName = "IconEdit"
 IconEdit.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

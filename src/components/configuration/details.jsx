@@ -205,7 +205,9 @@ class ConfigurationDetails extends React.Component {
           </FormGroup>
         </Row>
 
-        <Row>
+        <Row className="form-groups">
+          <InputConnector className="col-xs-offset-3 show"/>
+
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
@@ -251,6 +253,27 @@ class ConfigurationDetails extends React.Component {
                     <FormattedMessage id="portal.configuration.details.publishedHostnameValue.help.text" />
                   </HelpTooltip>
                 </InputGroup.Addon>
+              </InputGroup>
+            </Col>
+          </FormGroup>
+
+          <FormGroup>
+            <Col xs={3}>
+              <ControlLabel>
+                <FormattedMessage id="portal.configuration.details.targetCname.text"/>
+              </ControlLabel>
+            </Col>
+            <Col xs={9}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  disabled={true}
+                  value={this.props.edgeConfiguration.get('customer_cname')}
+                  onChange={this.handleChange(
+                    ['edge_configuration', 'customer_cname']
+                  )}
+                />
+                <InputGroup.Addon />
               </InputGroup>
             </Col>
           </FormGroup>

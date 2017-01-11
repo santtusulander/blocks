@@ -86,6 +86,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
   )
 }
 
+CheckboxArray.displayName = "CheckboxArray"
 CheckboxArray.propTypes = {
   disabled: PropTypes.bool,
   field: PropTypes.object,

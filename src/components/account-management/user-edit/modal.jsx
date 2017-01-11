@@ -1,7 +1,11 @@
 import React, { PropTypes } from 'react'
 import { Map, List } from 'immutable'
-import UserEditForm from './form'
-import { Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
+
+import AccountManagementUserEditForm from './form'
+
+import SidePanel from '../../side-panel'
+
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
@@ -31,28 +35,30 @@ class UserEditModal extends React.Component {
       groups: user.get('group_id'),
       first_name: user.get('first_name'),
       last_name: user.get('last_name'),
-      phone_number: user.get('phone_number')
+      phone: {phone_number: user.get('phone_number'), phone_country_code: user.get('phone_country_code') }
     } : {}
 
-    return (
-      <Modal dialogClassName="user-form-sidebar" show={show}>
-        <Modal.Header>
-          <h1>Edit User</h1>
-        </Modal.Header>
+    const title = <FormattedMessage id='portal.account.editUser.title' />
 
-        <Modal.Body>
-          <UserEditForm
+    return (
+      <SidePanel
+        show={show}
+        title={title}
+        cancel={onCancel}
+      >
+          <AccountManagementUserEditForm
             initialValues={initialValues}
             groupOptions={getCheckboxArrayOptions(groups)}
             roleOptions={this.getRoleOptions()}
             onSave={onSave}
             onCancel={onCancel}
           />
-        </Modal.Body>
-      </Modal>
+      </SidePanel>
     )
   }
 }
+
+UserEditModal.displayName = "UserEditModal"
 
 UserEditModal.propTypes = {
   accountType: PropTypes.number,
