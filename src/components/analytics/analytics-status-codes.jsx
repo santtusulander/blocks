@@ -15,20 +15,23 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
     fourHundredsChecked = isChecked(fourHundreds),
     fiveHundredsChecked = isChecked(fiveHundreds),
     handleCheck = (optionValue, checked) => () => {
-      if(checked) {
+      if (checked) {
         values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
       } else {
-        optionValue.forEach(item => {
-          if(!values.includes(item)) {
-            values = values.push(item)
-          }
-        })
+        if (values.size !== options.size) {
+          optionValue.forEach(item => {
+            if(!values.includes(item)) {
+              values = values.push(item)
+            }
+          })
+        } else {
+          values = values.filterNot(value => optionValue.findIndex(selected => selected === value) < 0)
+        }
       }
       onChange(values)
     }
   return (
     <FilterChecklistDropdown
-      noClear={true}
       options={options}
       value={values}
       handleCheck={onChange}>

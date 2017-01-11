@@ -14,15 +14,9 @@ import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
-
 class User extends React.Component {
   constructor(props) {
     super (props);
-
-    this.state = {
-      savingPassword: false,
-      savingUser: false
-    }
 
     this.notificationTimeout = null
     this.saveUser = this.saveUser.bind(this)
@@ -31,13 +25,9 @@ class User extends React.Component {
   }
 
   saveUser(user) {
-    this.setState({
-      savingUser: !user.password && true
-    })
-    const message = user.password ?
-      this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'})
-    : this.props.intl.formatMessage({id: 'portal.accountManagement.userUpdated.text'})
-    this.props.userActions.updateUser(this.props.currentUser.get('email'), user)
+    const message = this.props.intl.formatMessage({id: 'portal.accountManagement.userUpdated.text'})
+
+    return this.props.userActions.updateUser(this.props.currentUser.get('email'), user)
       .then((response) => {
         if (!response.error) {
           this.showNotification(message)
@@ -46,35 +36,25 @@ class User extends React.Component {
             title: 'Error',
             content: response.payload.data.message,
             okButton: true,
-            cancel: this.props.uiActions.hideInfoDialog
+            cancel: () => this.props.uiActions.hideInfoDialog()
           })
         }
-        this.setState({
-          savingUser: false
-        })
+
+        return response
       }
     )
   }
 
-  savePassword(password, editFormCallback) {
-    this.props.userActions.startFetching()
-    this.setState({
-      savingPassword: this.props.userFetching
-    })
+  savePassword(password) {
 
     const updatePasswordPromise = this.props.userActions.updatePassword(this.props.currentUser.get('email'), password)
 
-    updatePasswordPromise.then((response) => {
+    return updatePasswordPromise.then((response) => {
       if (!response.error) {
         this.showNotification(this.props.intl.formatMessage({id: 'portal.accountManagement.passwordUpdated.text'}))
       }
 
-      editFormCallback(response)
-
-      this.props.userActions.finishFetching()
-      this.setState({
-        savingPassword: this.props.userFetching
-      })
+      return response
     })
   }
 
@@ -91,12 +71,11 @@ class User extends React.Component {
       first_name: currentUser.get('first_name'),
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
-      phone: currentUser.get('phone_country_code') + currentUser.get('phone_number'),
-      phone_number: currentUser.get('phone_number'),
-      phone_country_code: currentUser.get('phone_country_code'),
+      phone: {phone_number: currentUser.get('phone_number'), phone_country_code: currentUser.get('phone_country_code') },
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
-      tfa: currentUser.get('tfa')
+      tfa: currentUser.get('tfa'),
+      changingPassword: false
     } : {}
 
     return (
@@ -109,8 +88,7 @@ class User extends React.Component {
             initialValues={initialValues}
             onSave={this.saveUser}
             onSavePassword={this.savePassword}
-            savingPassword={this.state.savingPassword}
-            savingUser={this.state.savingUser}/>
+            />
         </PageContainer>
       </Content>
     )
@@ -123,8 +101,7 @@ User.propTypes = {
   intl: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  userActions: PropTypes.object,
-  userFetching: PropTypes.bool
+  userActions: PropTypes.object
 }
 
 User.defaultProps = {
