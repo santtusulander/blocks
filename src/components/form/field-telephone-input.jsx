@@ -22,8 +22,8 @@ const FieldTelephoneInput = ({ input, meta, ErrorComponent }) => {
       />
 
       {meta.error &&
-        <ErrorComponent {...meta}/>}
-
+        <ErrorComponent {...meta}/>
+      }
     </FormGroup>
   )
 }
