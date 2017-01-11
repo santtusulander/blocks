@@ -7,12 +7,12 @@ const FieldFormGroupToggle = ({ input, onToggle, offText = 'OFF', onText = 'ON',
   return (
     <FormGroup controlId={input.name} className={className}>
       <ControlLabel>{label}</ControlLabel>
-        <Toggle value={input.value}
-          changeValue={onToggle}
-          onText={onText}
-          offText={offText}
-          readonly={readonly}
-        />
+      <Toggle value={input.value}
+              changeValue={onToggle}
+              onText={onText}
+              offText={offText}
+              readonly={readonly}
+      />
     </FormGroup>
   );
 }
