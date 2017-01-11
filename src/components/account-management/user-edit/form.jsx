@@ -3,12 +3,12 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Row, Col } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-//import phoneValidator from 'phone'
-
 import FieldFormGroup from '../../form/field-form-group'
 import FieldTelephoneInput from '../../form/field-telephone-input'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
+
+import { isValidPhoneNumber, isValidCountryCode } from '../../../util/validators'
 
 let errors = {}
 const validate = (values) => {
@@ -18,6 +18,7 @@ const validate = (values) => {
     first_name,
     last_name,
     email,
+    phone,
     role
   } = values
 
@@ -34,6 +35,14 @@ const validate = (values) => {
 
   if(!role) {
     errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
+  }
+
+  if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
+    errors.phone = "Phone number is not valid"
+  }
+
+  if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
+    errors.phone = "Phone Country Code is not valid"
   }
 
   return errors;
@@ -57,20 +66,16 @@ class AccountManagementUserEditForm extends React.Component {
     const {
       first_name,
       last_name,
-      // phone_number,
-      // phone_country_code,
+      phone,
       groups,
       role
     } = values
 
-
-
-    let newValues = {
+    const newValues = {
       first_name: first_name,
       last_name: last_name,
-      //TODO: UDNP-2229
-      //phone_number: phone_number,
-      //phone_country_code: phone_country_code,
+      phone_number: phone.phone_number,
+      phone_country_code: phone.phone_country_code,
       group_id: groups,
       roles: [ role ]
     }
