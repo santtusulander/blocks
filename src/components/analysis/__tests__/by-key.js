@@ -19,7 +19,7 @@ describe('AnalysisByKey', () => {
         primaryLabel: 'foo',
         secondaryData: [{foo: 'bar'}, {zyx: 'qwe'}],
         secondaryLabel: 'bar',
-        width: !noWidth && 1,
+        width: noWidth ? 0 : 1,
         yKey: 'foo',
         xKey: 'bar'
       }
