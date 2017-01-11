@@ -67,19 +67,6 @@ const TRANSLATED_MESSAGES = {
   'portal.manage.tabs.dns.title': 'DNS',
   'portal.manage.tabs.roles.title': 'Roles',
 
-  'portal.role.edit.roleNameRequired.text': 'Role name is required',
-  'portal.role.edit.title': 'Edit Role',
-  'portal.role.edit.discalimer.text': 'Edit Role',
-  'portal.role.edit.enterRoleName.text': 'Enter Role Name',
-  'portal.role.edit.name.text': 'Name',
-
-  'portal.role.list.search.placeholder': 'Search',
-  'portal.role.list.header.role.title': 'Role',
-  'portal.role.list.header.permissions.title': 'Permissions',
-  'portal.role.list.header.assignedTo.title': 'Assigned To',
-  'portal.role.list.search.noResults.text': 'No roles found',
-  'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
-
   'portal.analytics.dropdownMenu.all': 'All ({options})',
   'portal.analytics.dropdownMenu.clearSelections': 'Clear selections',
   'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',

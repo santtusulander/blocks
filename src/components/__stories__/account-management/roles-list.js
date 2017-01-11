@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import {storiesOf, action} from '@kadira/storybook';
 
 import ThemeWrap from '../theme-wrap.jsx'
-import RolesList from '../../account-management/roles-list.jsx'
+import RolesList from '../../account-management/role-edit/roles-list.jsx'
 
 import {createStore, combineReducers} from 'redux'
 import {reducer as formReducer} from 'redux-form'
