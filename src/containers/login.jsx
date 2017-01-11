@@ -75,6 +75,7 @@ export class Login extends React.Component {
       switch (action.payload.status) {
         case 200:
           this.saveUserName(rememberUser, username)
+          //Need to set correct theme to redux store after it has been destroyed
           this.props.setUiTheme()
           break
 
@@ -108,8 +109,9 @@ export class Login extends React.Component {
     ).then(action => {
       switch (action.payload.status) {
         case 200:
-          this.saveUserName(this.state.rememberUser,
-                            this.state.username)
+          this.saveUserName(this.state.rememberUser, this.state.username)
+          //Need to set correct theme to redux store after it has been destroyed
+          this.props.setUiTheme()
           break
 
         case 202:
@@ -132,8 +134,9 @@ export class Login extends React.Component {
       this.state.username, code
     ).then(action => {
       if (!action.error) {
-        this.saveUserName(this.state.rememberUser,
-                          this.state.username)
+        this.saveUserName(this.state.rememberUser, this.state.username)
+        //Need to set correct theme to redux store after it has been destroyed
+        this.props.setUiTheme()
       } else {
         // Clear inputs values on error.
         codeInputs.forEach((input) => {
@@ -203,6 +206,7 @@ Login.propTypes = {
   fetching: React.PropTypes.bool,
   location: React.PropTypes.object,
   router: React.PropTypes.object,
+  setUiTheme: React.PropTypes.func,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
