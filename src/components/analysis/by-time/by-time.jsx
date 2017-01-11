@@ -3,6 +3,7 @@ import d3 from 'd3'
 import moment from 'moment'
 import numeral from 'numeral'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import Tooltip from '../../tooltip'
 import Legend from './legend'
@@ -140,7 +141,7 @@ class AnalysisByTime extends React.Component {
     }
     if(!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
-      return <h4>No data found.</h4>
+      return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
       if(dataset.get('stackedAgainst')) {
