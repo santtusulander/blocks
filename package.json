@@ -138,6 +138,7 @@
     "automock": true,
     "unmockedModulePathPatterns": [
       "<rootDir>/src/constants",
+      "<rootDir>/src/decorators",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/moment",
