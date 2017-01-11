@@ -63,7 +63,7 @@ class AnalyticsTabTraffic extends React.Component {
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
-    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM) {
+    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.trafficActions.startFetching()
       this.props.trafficActions.fetchByCity(byCityOpts).then(() =>
         this.props.trafficActions.finishFetching()
@@ -173,7 +173,7 @@ class AnalyticsTabTraffic extends React.Component {
         totalEgress={this.props.totalEgress}
         getCityData={this.getCityData}
         theme={this.props.theme}
-        mapBounds={this.props.mapBounds.toJS()}
+        mapBounds={this.props.mapBounds}
         mapboxActions={this.props.mapboxActions}
       />
     )

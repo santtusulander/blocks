@@ -75,6 +75,7 @@ class Mapbox extends React.Component {
     }
 
     window.removeEventListener('scroll', this.onPageScroll, false)
+    // this.props.mapboxActions.setMapBounds({})
   }
 
   /**
@@ -586,7 +587,7 @@ class Mapbox extends React.Component {
       map.setCenter(map.getCenter().wrap())
 
       // Do a check when we should fetch more city data
-      const shouldFetchCities = checkChangeInBounds(currentBounds, map.getBounds()) || !this.props.cityData.size
+      const shouldFetchCities = checkChangeInBounds(currentBounds, map.getBounds()) || !this.props.cityData.size || !currentBounds.size
 
       if (shouldFetchCities) {
         // All of these are longitude/latitude values
@@ -597,7 +598,7 @@ class Mapbox extends React.Component {
 
         // Saves map bounds to Redux so we can do comparison later on and see
         // if use has panned the viewport enough in order to request more cities.
-        this.props.mapboxActions.setMapBounds(map.getBounds())
+        this.props.mapboxActions.setMapBounds({ south, west, north, east })
         this.props.getCitiesWithinBounds(south, west, north, east)
       }
 
