@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import * as userActionCreators from '../redux/modules/user'
+import { changeTheme } from '../redux/modules/ui'
 
 import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
@@ -74,6 +75,7 @@ export class Login extends React.Component {
       switch (action.payload.status) {
         case 200:
           this.saveUserName(rememberUser, username)
+          this.props.setUiTheme()
           break
 
         case 202:
@@ -214,6 +216,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setUiTheme: () => dispatch(changeTheme(localStorage.getItem('EricssonUDNUiTheme'))),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
