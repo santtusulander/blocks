@@ -3,12 +3,12 @@ import Immutable from 'immutable'
 import {FormattedMessage, injectIntl} from 'react-intl'
 import { FormGroup, FormControl } from 'react-bootstrap'
 
-import SectionHeader from '../../components/layout/section-header'
-import RolesEditForm from './role-edit-form.jsx'
-import ActionButtons from '../../components/action-buttons.jsx'
+import SectionHeader from '../../layout/section-header'
+import RoleEditForm from './role-edit-form.jsx'
+import ActionButtons from '../../action-buttons.jsx'
 
-import TableSorter from '../table-sorter'
-import ArrayTd from '../array-td/array-td'
+import TableSorter from '../../table-sorter'
+import ArrayTd from '../../array-td/array-td'
 
 class RolesList extends React.Component {
   constructor(props) {
@@ -154,15 +154,15 @@ class RolesList extends React.Component {
           </tbody>
         </table>
 
-        {this.props.showAddNewDialog ?
-          <RolesEditForm
+        {this.props.showAddNewDialog &&
+          <RoleEditForm
             permissions={this.props.permissions}
             roles={this.props.roles}
             editRole={this.props.editRole}
             show={this.props.showAddNewDialog}
             onCancel={this.props.onCancel}
             onSave={this.props.onSave}/>
-        : null}
+        }
 
       </div>
     )
@@ -186,4 +186,4 @@ RolesList.defaultProps = {
   users: Immutable.List()
 }
 
-module.exports = injectIntl(RolesList)
+export default injectIntl(RolesList)

@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getValues } from 'redux-form';
 import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-bootstrap'
@@ -22,7 +21,7 @@ import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import ModalWindow from '../../components/modal'
 import AccountForm from '../../components/account-management/account-form'
-import GroupForm from '../../components/account-management/group-form'
+import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
@@ -112,11 +111,12 @@ export class AccountManagement extends Component {
   }
 
   editSOARecord() {
-    const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
-    const activeDomain = dnsData.get('activeDomain')
-    const data = getValues(soaFormData)
-    dnsActions.editSOA({ id: activeDomain.get('id'), data })
-    toggleModal(null)
+    // TODO: to be deleted (or fixed) as part of UDNP-2204
+    // const { soaFormData, dnsActions, dnsData, toggleModal } = this.props
+    // const activeDomain = dnsData.get('activeDomain')
+    // const data = getValues(soaFormData)
+    // dnsActions.editSOA({ id: activeDomain.get('id'), data })
+    // toggleModal(null)
   }
 
   changeActiveAccount(account) {
@@ -147,7 +147,7 @@ export class AccountManagement extends Component {
 
   deleteUser() {
     const { userActions: { deleteUser } } = this.props
-    deleteUser(this.userToDelete)
+    return deleteUser(this.userToDelete)
       .then(() => this.props.toggleModal(null))
   }
 
@@ -171,7 +171,7 @@ export class AccountManagement extends Component {
           title: 'Error',
           content: response.payload.data.message,
           okButton: true,
-          cancel: this.props.uiActions.hideInfoDialog
+          cancel: () => this.props.uiActions.hideInfoDialog()
         })
     })
   }
@@ -326,24 +326,22 @@ export class AccountManagement extends Component {
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Account'}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteAccountConfirmation.text"/>,
-          invalid: true,
           verifyDelete: true,
-          cancelButton: true,
           deleteButton: true,
+          cancelButton: true,
           cancel: () => toggleModal(null),
-          submit: () => onDelete(brand, this.accountToDelete, router)
+          onSubmit: () => onDelete(brand, this.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
         deleteModalProps = {
           title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
           content: <FormattedMessage id="portal.accountManagement.deleteGroupConfirmation.text"/>,
-          invalid: true,
           verifyDelete: true,
           cancelButton: true,
           deleteButton: true,
           cancel: () => toggleModal(null),
-          submit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
+          onSubmit: () => this.deleteGroupFromActiveAccount(this.state.groupToDelete)
         }
         break
     }
@@ -473,7 +471,7 @@ export class AccountManagement extends Component {
           cancelButton={true}
           deleteButton={true}
           cancel={() => toggleModal(null)}
-          submit={() => this.deleteUser()}>
+          onSubmit={() => this.deleteUser()}>
           <h3>
             {this.userToDelete}<br/>
           </h3>
@@ -484,7 +482,7 @@ export class AccountManagement extends Component {
 
         { /* Edit Group */}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-        <GroupForm
+        <GroupFormContainer
           id="group-form"
           params={this.props.params}
           groupId={this.state.groupToUpdate}
@@ -506,8 +504,8 @@ AccountManagement.propTypes = {
   // activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
-  dnsActions: PropTypes.object,
-  dnsData: PropTypes.instanceOf(Map),
+  // dnsActions: PropTypes.object,
+  // dnsData: PropTypes.instanceOf(Map),
   //fetchAccountData: PropTypes.func,
   groupActions: PropTypes.object,
   hostActions: PropTypes.object,
@@ -518,7 +516,7 @@ AccountManagement.propTypes = {
   roles: PropTypes.instanceOf(List),
   rolesActions: PropTypes.object,
   router: PropTypes.object,
-  soaFormData: PropTypes.object,
+  // soaFormData: PropTypes.object,
   toggleModal: PropTypes.func,
   uiActions: PropTypes.object,
   userActions: PropTypes.object,
@@ -558,21 +556,21 @@ function mapDispatchToProps(dispatch) {
   const toggleModal = uiActions.toggleAccountManagementModal
 
   function onDelete(brandId, accountId, router) {
-    // Hide the delete modal.
-    toggleModal(null)
     // Delete the account.
-    accountActions.deleteAccount(brandId, accountId)
+    return accountActions.deleteAccount(brandId, accountId)
       .then((response) => {
         if (!response.error) {
           // Clear active account and redirect user to brand level account management.
           accountActions.clearActiveAccount()
           router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))
         } else {
+          // Hide the delete modal.
+          toggleModal(null)
           uiActions.showInfoDialog({
             title: 'Error',
             content: response.payload.data.message,
             okButton: true,
-            cancel: uiActions.hideInfoDialog
+            cancel: () => uiActions.hideInfoDialog()
           })
         }
       })

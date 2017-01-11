@@ -278,6 +278,10 @@ array-find-index@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/array-find-index/-/array-find-index-1.0.2.tgz#df010aa1287e164bbda6f9723b0a96a1ec4187a1"
 
+array-findindex-polyfill@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/array-findindex-polyfill/-/array-findindex-polyfill-0.1.0.tgz#c362665bec7645f22d7a3c3aac9793f71c3622ef"
+
 array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
@@ -2336,6 +2340,10 @@ es5-shim@^4.5.9:
   version "4.5.9"
   resolved "https://registry.yarnpkg.com/es5-shim/-/es5-shim-4.5.9.tgz#2a1e2b9e583ff5fed0c20a3ee2cbf3f75230a5c0"
 
+es6-error@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/es6-error/-/es6-error-4.0.1.tgz#eeb3e280f57e2ec48d72a9fccaf6247d3c1f5719"
+
 es6-iterator@2:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/es6-iterator/-/es6-iterator-2.0.0.tgz#bd968567d61635e33c0b80727613c9cb4b096bac"
@@ -3322,7 +3330,7 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@1.2.0, hoist-non-react-statics@1.x.x, hoist-non-react-statics@^1.0.3, hoist-non-react-statics@^1.0.5, hoist-non-react-statics@^1.2.0:
+hoist-non-react-statics@1.2.0, hoist-non-react-statics@1.x.x, hoist-non-react-statics@^1.0.3, hoist-non-react-statics@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
@@ -3572,7 +3580,7 @@ intl@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/intl/-/intl-1.2.5.tgz#82244a2190c4e419f8371f5aa34daa3420e2abde"
 
-invariant@2.x.x, invariant@^2.0.0, invariant@^2.1.0, invariant@^2.1.1, invariant@^2.2.0, invariant@^2.2.1:
+invariant@2.x.x, invariant@^2.0.0, invariant@^2.1.0, invariant@^2.1.1, invariant@^2.2.0, invariant@^2.2.1, invariant@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
@@ -4262,7 +4270,7 @@ loader-utils@0.2.x, loader-utils@^0.2.11, loader-utils@^0.2.15, loader-utils@^0.
     json5 "^0.5.0"
     object-assign "^4.0.1"
 
-lodash-es@^4.2.0, lodash-es@^4.2.1:
+lodash-es@^4.17.3, lodash-es@^4.2.0, lodash-es@^4.2.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.4.tgz#dcc1d7552e150a0640073ba9cb31d70f032950e7"
 
@@ -6072,12 +6080,6 @@ react-komposer@^2.0.0:
     react-stubber "^1.0.0"
     shallowequal "^0.2.2"
 
-react-lazy-cache@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/react-lazy-cache/-/react-lazy-cache-3.0.1.tgz#0dc64d38df1767ef77678c5c94190064cb11b0cd"
-  dependencies:
-    deep-equal "^1.0.1"
-
 react-mapbox-gl@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/react-mapbox-gl/-/react-mapbox-gl-0.25.0.tgz#ec852cfbe7cfcf9893a4e8a6079aa99dd2ea10ed"
@@ -6414,14 +6416,19 @@ redux-devtools@^3.3.1:
     redux "^3.5.2"
     redux-devtools-instrument "^1.0.1"
 
-redux-form@^5.2.5:
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-5.3.3.tgz#e65e995095c739f068a7c2adfd8229d966a43af8"
+redux-form@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-6.4.3.tgz#bd83a77770d9805f7b595a4ff18f00fe4267d3c8"
   dependencies:
+    array-findindex-polyfill "^0.1.0"
     deep-equal "^1.0.1"
-    hoist-non-react-statics "^1.0.5"
+    es6-error "^4.0.0"
+    hoist-non-react-statics "^1.2.0"
+    invariant "^2.2.2"
     is-promise "^2.1.0"
-    react-lazy-cache "^3.0.1"
+    lodash "^4.17.3"
+    lodash-es "^4.17.3"
+    shallowequal "^0.2.2"
 
 redux-promise@^0.5.1:
   version "0.5.3"
@@ -6531,7 +6538,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@2, request@2.74.x, request@^2.34.0, request@^2.55.0, request@^2.61.0, request@^2.74.0:
+request@2, request@2.74.x, request@^2.34.0, request@^2.39.0, request@^2.55.0, request@^2.61.0, request@^2.74.0:
   version "2.74.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.74.0.tgz#7693ca768bbb0ea5c8ce08c084a45efa05b892ab"
   dependencies:
@@ -6557,7 +6564,7 @@ request@2, request@2.74.x, request@^2.34.0, request@^2.55.0, request@^2.61.0, re
     tough-cookie "~2.3.0"
     tunnel-agent "~0.4.1"
 
-request@^2.39.0, request@^2.79.0:
+request@^2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:

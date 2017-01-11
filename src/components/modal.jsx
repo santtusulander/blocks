@@ -1,125 +1,123 @@
 import React, { PropTypes } from 'react'
-import { Button, ButtonToolbar, FormGroup, ControlLabel, FormControl, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { reduxForm } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 
+import FieldFormGroup from './form/field-form-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 import IconClose from './icons/icon-close.jsx'
 
 class ModalWindow extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.handleOnEntered = this.handleOnEntered.bind(this)
-  }
-
-  handleOnEntered(){
-    const { verifyDelete } = this.props
-    if (verifyDelete) {
-      this.deleteInput.focus()
-    }
+  componentDidMount() {
+    this.props.verifyDelete && this.deleteInput.focus()
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, fields: { modalField }, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, submit, submitButton, title, verifyDelete } = this.props
+    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-window" onEntered={this.handleOnEntered}>
-        <Modal.Header>
-          <h1>{title}</h1>
-        </Modal.Header>
+      <Modal show={true} dialogClassName="modal-window">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Modal.Header>
+            <h1>{title}</h1>
+          </Modal.Header>
 
-        <Modal.Body>
-          {children}
-          {content &&
-            <p>{content}</p>
-          }
-          {verifyDelete &&
-            <FormGroup>
-              <ControlLabel><FormattedMessage id="portal.deleteModal.validation.label" /></ControlLabel>
-              <FormControl
+          <Modal.Body>
+            {children}
+            {content &&
+              <p>{content}</p>
+            }
+            {verifyDelete &&
+              <Field
+                label={<FormattedMessage id="portal.deleteModal.validation.label" />}
+                name="modalField"
+                required={false}
                 inputRef={ref => this.deleteInput = ref}
                 placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
-                {...modalField}
-              />
-            </FormGroup>
-          }
-        </Modal.Body>
+                component={FieldFormGroup}/>
+            }
+          </Modal.Body>
 
-        <Modal.Footer>
-          <ButtonToolbar className="pull-right">
-            {closeButton &&
-            <Button
-              bsStyle="primary"
-              onClick={cancel}>
-              <FormattedMessage id="portal.button.close"/>
-            </Button>}
+          <Modal.Footer>
+            <ButtonToolbar className="pull-right">
+              {closeButton &&
+              <Button
+                bsStyle="primary"
+                onClick={cancel}>
+                <FormattedMessage id="portal.button.close"/>
+              </Button>}
 
-            {submitButton &&
-            <Button
-              bsStyle="primary"
-              onClick={submit}>
-              <FormattedMessage id="portal.button.submt"/>
-            </Button>}
+              {submitButton &&
+              <Button
+                autoFocus={!verifyDelete}
+                bsStyle="primary"
+                type="submit">
+                <FormattedMessage id="portal.button.submt"/>
+              </Button>}
 
-            {stayButton &&
-            <Button
-              className="btn-secondary"
-              onClick={cancel}>
-              <FormattedMessage id="portal.button.stay"/>
-            </Button>}
+              {stayButton &&
+              <Button
+                className="btn-secondary"
+                onClick={cancel}>
+                <FormattedMessage id="portal.button.stay"/>
+              </Button>}
 
-            {continueButton &&
-            <Button
-              bsStyle="primary"
-              onClick={submit}>
-              <FormattedMessage id="portal.button.continue"/>
-            </Button>}
+              {continueButton &&
+              <Button
+                autoFocus={!verifyDelete}
+                bsStyle="primary"
+                type="submit">
+                <FormattedMessage id="portal.button.continue"/>
+              </Button>}
 
-            {cancelButton &&
-            <Button
-              className="btn-secondary"
-              onClick={cancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>}
+              {cancelButton &&
+              <Button
+                className="btn-secondary"
+                onClick={cancel}>
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>}
 
-            {deleteButton &&
-            <Button
-              bsStyle="danger"
-              onClick={submit}
-              disabled={loading || (verifyDelete ? invalid : false)}>
-              {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
-            </Button>}
+              {deleteButton &&
+              <Button
+                autoFocus={!verifyDelete}
+                bsStyle="danger"
+                type="submit"
+                disabled={submitting || loading || (verifyDelete ? invalid : false)}>
+                {loading ? <FormattedMessage id='portal.common.button.deleting' /> : <FormattedMessage id="portal.button.delete"/>}
+              </Button>}
 
-            {okButton &&
-            <Button
-              bsStyle="primary"
-              onClick={cancel}>
-              <FormattedMessage id="portal.button.ok"/>
-            </Button>}
+              {okButton &&
+              <Button
+                bsStyle="primary"
+                onClick={cancel}>
+                <FormattedMessage id="portal.button.ok"/>
+              </Button>}
 
-            {loginButton &&
-            <a href="/login">
-              <Button bsStyle="primary">
-                <FormattedMessage id='portal.common.error.tokenExpire.button'/>
-              </Button>
-            </a>}
+              {loginButton &&
+              <a href="/login">
+                <Button bsStyle="primary">
+                  <FormattedMessage id='portal.common.error.tokenExpire.button'/>
+                </Button>
+              </a>}
 
-            {closeButtonSecondary &&
-            <Button
-              className="btn-secondary"
-              onClick={cancel}>
-              <FormattedMessage id="portal.button.close"/>
-            </Button>}
+              {closeButtonSecondary &&
+              <Button
+                className="btn-secondary"
+                onClick={cancel}>
+                <FormattedMessage id="portal.button.close"/>
+              </Button>}
 
-            {reloadButton &&
-            <Button
-              bsStyle="primary"
-              onClick={submit}>
-              <FormattedMessage id="portal.button.reload"/>
-            </Button>}
-          </ButtonToolbar>
-        </Modal.Footer>
+              {reloadButton &&
+              <Button
+                autoFocus={!verifyDelete}
+                bsStyle="primary"
+                type="submit">
+                <FormattedMessage id="portal.button.reload"/>
+              </Button>}
+            </ButtonToolbar>
+          </Modal.Footer>
+        </form>
 
         {closeModal &&
         <a
@@ -146,25 +144,26 @@ ModalWindow.propTypes = {
   ]),
   continueButton: PropTypes.bool,
   deleteButton: PropTypes.bool,
-  fields: PropTypes.object,
   intl: React.PropTypes.object,
   invalid: PropTypes.bool,
   loading: PropTypes.bool,
   loginButton: PropTypes.bool,
   okButton: PropTypes.bool,
+  onSubmit: PropTypes.func,
   reloadButton: PropTypes.bool,
   stayButton: PropTypes.bool,
-  submit: PropTypes.func,
   submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
   ]),
-  verifyDelete: PropTypes.bool
+  verifyDelete: PropTypes.bool,
+  ...reduxFormPropTypes
 }
 
+ModalWindow.defaultProps = { onSubmit() {} }
+
 export default reduxForm({
-  fields: ['modalField'],
   form: 'ModalWindow',
   validate: ({ modalField }) => {
     if (!modalField || modalField.toLowerCase() !== 'delete') {

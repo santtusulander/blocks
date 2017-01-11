@@ -13,7 +13,7 @@ const intlMaker = () => {
 }
 
 describe('Certificate Form', () => {
-  const onSave = jest.genMockFunction()
+  const onSubmit = jest.genMockFunction()
   const onCancel = jest.genMockFunction()
   let subject, error, props = null
   let touched = false
@@ -24,7 +24,7 @@ describe('Certificate Form', () => {
         errors: {},
         accounts: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
         groups: fromJS([{ name: 'aaa', id: 1 }, { name: 'bbb', id: 2 }]),
-        onSave,
+        onSubmit,
         onCancel,
         fields: {
           account: { touched, error, value: '' },
@@ -44,17 +44,11 @@ describe('Certificate Form', () => {
 
   it('should handle onSave click', () => {
     subject().find('#save_button').simulate('click')
-    expect(onSave.mock.calls.length).toBe(1)
+    expect(onSubmit.mock.calls.length).toBe(1)
   })
 
   it('should handle onCancel click', () => {
     subject().find('#cancel_button').simulate('click')
     expect(onCancel.mock.calls.length).toBe(1)
-  })
-
-  it('should render an error message', () => {
-    touched = true
-    error = REQUIRED
-    expect(subject().find('FormGroup').at(1).find('.error-msg').children().text()).toBe(REQUIRED)
   })
 })
