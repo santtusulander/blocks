@@ -2,12 +2,12 @@ import React from 'react'
 import { fromJS } from 'immutable'
 import {shallow} from 'enzyme'
 
-jest.unmock('../roles-list.jsx')
+jest.unmock('../role-edit/roles-list.jsx')
 jest.unmock('../../../components/action-buttons.jsx')
 jest.unmock('../../table-sorter.jsx')
 jest.unmock('../account-management-header.jsx')
 jest.unmock('../../array-td/array-td.jsx')
-import RolesList from '../roles-list.jsx'
+import RolesList from '../role-edit/roles-list.jsx'
 
 const fakeRoles = fromJS([
   {id: 1, name: 'UDN Admin', parentRoles: [1], permissions: {

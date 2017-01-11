@@ -7,7 +7,7 @@ import Dialog from './layout/dialog'
 import { FormattedMessage } from 'react-intl'
 
 const SaveBar = (props) => {
-  const {children, onCancel, onSave, saving, show} = props
+  const {children, invalid, onCancel, onSave, saving, show} = props
   return (
     <ReactCSSTransitionGroup
       component="div"
@@ -27,8 +27,9 @@ const SaveBar = (props) => {
             </Button>
             <Button
               bsStyle="primary"
+              type='submit'
               onClick={onSave}
-              disabled={saving}>
+              disabled={saving||invalid}>
               {saving ? <FormattedMessage id="portal.button.saving"/> : <FormattedMessage id="portal.button.SAVE"/>}
             </Button>
           </ButtonToolbar>
@@ -44,6 +45,7 @@ const SaveBar = (props) => {
 SaveBar.displayName = "SaveBar"
 SaveBar.propTypes = {
   children: PropTypes.node,
+  invalid: React.PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: React.PropTypes.func,
   saving: React.PropTypes.bool,

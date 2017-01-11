@@ -1,7 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
-import '../../../__mocks__/mapbox.js'
 
 jest.unmock('../dashboard.jsx')
 import Dashboard from '../dashboard.jsx'
@@ -19,7 +18,8 @@ jest.mock('../../util/helpers', () => {
     formatBytes: val => val,
     formatTime: val => val,
     getAccountByID: val => val,
-    separateUnit: val => ({ value: val })
+    separateUnit: val => ({ value: val }),
+    buildFetchOpts: val => val
   }
 })
 
@@ -99,7 +99,8 @@ describe('Dashboard', () => {
         dashboardActions: dashboardActionsMaker(),
         filtersActions: filtersActionsMaker(),
         intl: intlMaker(),
-        params: fakeParams
+        params: fakeParams,
+        mapBounds: Immutable.fromJS({})
       }
       return shallow(<Dashboard {...props}/>)
     }

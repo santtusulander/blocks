@@ -41,7 +41,6 @@ import ConfigurationSecurity from './components/configuration/security'
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
-import ForgotPassword from './containers/forgot-password'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
@@ -53,9 +52,13 @@ import Property from './containers/property/property'
 import PropertySummary from './containers/property/tabs/property-summary'
 import PurgeStatus from './containers/property/tabs/purge-status'
 import Purge from './containers/configure/purge'
-import Security from './containers/security'
+import Security from './containers/security/security'
+import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificate'
+import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
+import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
 import Services from './containers/services'
-import SetPassword from './containers/set-password'
+import ForgotPassword from './containers/password/forgot-password'
+import SetPassword from './containers/password/set-password'
 import Support from './containers/support/support'
 import SupportTabTickets from './containers/support/tabs/tickets'
 import SupportTabTools from './containers/support/tabs/tools'
@@ -225,21 +228,22 @@ export const getRoutes = store => {
           <Route path={routes.securityBrand} component={UserCanListAccounts(store)(Security)} />
           <Route path={routes.securityAccount} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
-            <Route path={routes.securityTabSslCertificate} component={Security}/>
-            <Route path={routes.securityTabContentTargeting} component={Security}/>
-            <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
           </Route>
           <Route path={routes.securityGroup} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
-            <Route path={routes.securityTabSslCertificate} component={Security}/>
-            <Route path={routes.securityTabContentTargeting} component={Security}/>
-            <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
           </Route>
+
           <Route path={routes.securityProperty} component={Security}>
             <IndexRedirect to={routes.securityTabSslCertificate} />
-            <Route path={routes.securityTabSslCertificate} component={Security}/>
-            <Route path={routes.securityTabContentTargeting} component={Security}/>
-            <Route path={routes.securityTabTokenAuthentication} component={Security}/>
+            <Route path={routes.securityTabSslCertificate} component={SecurityTabSslCertificate}/>
+            <Route path={routes.securityTabContentTargeting} component={SecurityTabContentTargeting}/>
+            <Route path={routes.securityTabTokenAuthentication} component={SecurityTabTokenAuthentication}/>
           </Route>
         </Route>
 

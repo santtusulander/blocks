@@ -26,9 +26,8 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
-import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
-
-// import { buildAnalyticsOpts } from '../util/helpers.js'
+import { buildFetchOpts } from '../util/helpers.js'
+import { getCitiesWithinBounds } from '../util/mapbox-helpers'
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -42,8 +41,7 @@ export class Dashboard extends React.Component {
     this.measureContainers = this.measureContainers.bind(this)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
-    this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
-    this.buildOpts = this.buildOpts.bind(this)
+    this.getCityData = this.getCityData.bind(this)
   }
 
   componentWillMount() {
@@ -77,33 +75,13 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    const { dashboardOpts } = this.buildOpts({ params, filters })
+    const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+
     return Promise.all([
       this.props.dashboardActions.startFetching(),
       this.props.accountActions.fetchAccounts(this.props.params.brand),
       this.props.dashboardActions.fetchDashboard(dashboardOpts)
     ]).then(this.props.dashboardActions.finishFetching)
-  }
-
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters } = {}) {
-    const startDate  = Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000)
-    const endDate    = Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000)
-    const dashboardOpts = Object.assign({
-      startDate,
-      endDate,
-      granularity: 'hour'
-    }, params)
-
-    const byCityOpts = Object.assign({
-      max_cities: MAPBOX_MAX_CITIES_FETCHED,
-      latitude_south: coordinates.south || null,
-      longitude_west: coordinates.west || null,
-      latitude_north: coordinates.north || null,
-      longitude_east: coordinates.east || null,
-      show_detail: false
-    }, dashboardOpts)
-
-    return { dashboardOpts, byCityOpts }
   }
 
   measureContainers() {
@@ -120,13 +98,14 @@ export class Dashboard extends React.Component {
     })
   }
 
-  getCitiesWithinBounds(south, west, north, east) {
-    const { byCityOpts } = this.buildOpts({ coordinates: { south, west, north, east } })
-
-    this.props.trafficActions.startFetching()
-    this.props.trafficActions.fetchByCity(byCityOpts).then(
-      this.props.trafficActions.finishFetching()
-    )
+  getCityData(south, west, north, east) {
+    const { params, filters } = this.props
+    return getCitiesWithinBounds({
+      params,
+      filters,
+      coordinates: { south, west, north, east },
+      actions: this.props.trafficActions
+    })
   }
 
   render() {
@@ -277,7 +256,7 @@ export class Dashboard extends React.Component {
                 <AnalysisByLocation
                   countryData={countries}
                   cityData={this.props.cityData}
-                  getCityData={this.getCitiesWithinBounds}
+                  getCityData={this.getCityData}
                   theme={theme}
                   height={this.state.byLocationWidth / 1.6}
                   dataKey="bits_per_second"

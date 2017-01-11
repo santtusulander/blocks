@@ -9,55 +9,19 @@ import {
   MAPBOX_ZOOM_MIN,
   MAPBOX_ZOOM_MAX,
   MAPBOX_SCROLL_TIMEOUT,
-  MAPBOX_BOUNDS_CHANGE_PERCENTAGE,
   MAPBOX_CITY_LEVEL_ZOOM,
-  MAPBOX_CITY_RADIUS_DIVIDER
+  MAPBOX_CITY_RADIUS_DIVIDER,
+  MAPBOX_HEAT_MAP_COLORS,
+  MAPBOX_HEAT_MAP_DEFAULT_COLOR
 } from '../../constants/mapbox'
-
+import {
+  calculateMedian,
+  checkChangeInBounds,
+  getScore
+} from '../../util/mapbox-helpers.js'
 // import IconExpand from '../icons/icon-expand';
 // import IconMinimap from '../icons/icon-minimap';
 import IconGlobe from '../icons/icon-globe';
-
-const heatMapColors = [
-  '#7b0663',
-  '#8f2254',
-  '#a54242',
-  '#ba5f32',
-  '#d4851d',
-  '#f9ba01'
-]
-
-/**
- * Calculate Median -value
- * @param values
- * @returns {value}
- */
-const calculateMedian = (values) => {
-
-  values.sort( function(a,b) {return a - b;} );
-
-  var half = Math.floor(values.length/2);
-
-  if(values.length % 2)
-    return values[half];
-  else
-    return (values[half-1] + values[half]) / 2.0;
-}
-/**
- * Get Score for value compared to 'median' range (0 - steps)
- * @param median
- * @param value
- * @param steps
- * @returns {number}
- */
-const getScore = (median, value, steps = 5) => {
-
-  const diff = (value / median)
-  const score = Math.ceil(diff * (steps / 2)) ;
-
-  return score;
-}
-
 class Mapbox extends React.Component {
   constructor(props) {
     super(props)
@@ -105,8 +69,13 @@ class Mapbox extends React.Component {
   }
 
   componentWillUnmount() {
-    window.clearTimeout(this.timeout)
+    if (this.timeout) {
+      window.clearTimeout(this.timeout)
+      this.timeout = null
+    }
+
     window.removeEventListener('scroll', this.onPageScroll, false)
+    this.props.mapboxActions.setMapBounds({})
   }
 
   /**
@@ -119,8 +88,8 @@ class Mapbox extends React.Component {
   onPageScroll() {
     // We might not have the map instance saved in this.state yet, so we need to
     // get it from the the ReactMapboxGl components state instead.
-    if (this.refs && this.refs.mapbox && this.refs.mapbox.state && this.refs.mapbox.state.map) {
-      this.disableAndEnableZoom(this.refs.mapbox.state.map)
+    if (this.mapbox && this.mapbox.state && this.mapbox.state.map) {
+      this.disableAndEnableZoom(this.mapbox.state.map)
     }
   }
 
@@ -133,7 +102,11 @@ class Mapbox extends React.Component {
   disableAndEnableZoom(map) {
     map.scrollZoom.disable()
 
-    window.clearTimeout(this.timeout)
+    if (this.timeout) {
+      window.clearTimeout(this.timeout)
+      this.timeout = null
+    }
+
     this.timeout = window.setTimeout(() => map.scrollZoom.enable(), MAPBOX_SCROLL_TIMEOUT)
   }
 
@@ -433,11 +406,13 @@ class Mapbox extends React.Component {
     const countryMedian = calculateMedian(countryData.map((country => country[dataKey])))
 
     // Gets a score for the country based on its total
-    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[dataKey])
+    const trafficHeat = trafficCountry && getScore(countryMedian, trafficCountry[dataKey], MAPBOX_HEAT_MAP_COLORS.length)
+
     // Choose a color for the country based on its score
     // See if it's possible to use Mapbox's data-driven styling here.
     // https://www.mapbox.com/blog/data-driven-styling/
-    const countryColor = trafficCountry && trafficHeat < heatMapColors.length ? heatMapColors[trafficHeat - 1] : '#f9ba01'
+    const colorIndex = trafficCountry && trafficHeat < MAPBOX_HEAT_MAP_COLORS.length ? trafficHeat - 1 : null
+    const countryColor = colorIndex !== null ? MAPBOX_HEAT_MAP_COLORS[colorIndex] : MAPBOX_HEAT_MAP_DEFAULT_COLOR
 
     map.addLayer({
       id: `country-fill-${trafficCountry.code}`,
@@ -565,7 +540,7 @@ class Mapbox extends React.Component {
       type: 'circle',
       filter: ['!has', 'point_count'],
       paint: {
-        'circle-color': '#f9ba01',
+        'circle-color': MAPBOX_HEAT_MAP_DEFAULT_COLOR,
         'circle-radius': {
           property: 'radiusPercentage',
           stops: cityRadiuses
@@ -586,7 +561,7 @@ class Mapbox extends React.Component {
       minzoom: MAPBOX_CITY_LEVEL_ZOOM,
       type: 'circle',
       paint: {
-        'circle-color': '#f9ba01',
+        'circle-color': MAPBOX_HEAT_MAP_DEFAULT_COLOR,
         'circle-radius': 32,
         'circle-opacity': 0.5
       },
@@ -612,7 +587,7 @@ class Mapbox extends React.Component {
       map.setCenter(map.getCenter().wrap())
 
       // Do a check when we should fetch more city data
-      const shouldFetchCities = this.checkChangeInBounds(currentBounds, map.getBounds()) || !this.props.cityData.size
+      const shouldFetchCities = checkChangeInBounds(currentBounds, map.getBounds()) || !this.props.cityData.size || !currentBounds.size
 
       if (shouldFetchCities) {
         // All of these are longitude/latitude values
@@ -623,40 +598,11 @@ class Mapbox extends React.Component {
 
         // Saves map bounds to Redux so we can do comparison later on and see
         // if use has panned the viewport enough in order to request more cities.
-        this.props.mapboxActions.setMapBounds(map.getBounds())
+        this.props.mapboxActions.setMapBounds({ south, west, north, east })
         this.props.getCitiesWithinBounds(south, west, north, east)
       }
 
     }
-  }
-
-  /**
-   * Checks if map bounds have changed x-percentage.
-   *
-   * @method checkChangeInBounds
-   * @param  {object}            currentBounds Object of map bounds saved in Redux
-   *                                           –– previous map bounds
-   * @param  {object}            newBounds     LngLatBounds object of new map bounds
-   * @return {boolean}                         Return true or false if any change is over x-percentage
-   */
-  checkChangeInBounds(currentBounds, newBounds) {
-    // Build an object of bounds so we can reference them nicely later on
-    const boundsArray = {
-      south: newBounds.getSouth(),
-      west: newBounds.getWest(),
-      north: newBounds.getNorth(),
-      east: newBounds.getEast()
-    }
-
-    // Calculates percent difference between current and new bounds
-    const boundsChangedBy = Object.keys(currentBounds).map((key) => {
-      return {
-        difference: Math.abs(100 - (currentBounds[key] / boundsArray[key] * 100))
-      }
-    })
-
-    // Checks if at least one of the bound values has changed over x-percent
-    return boundsChangedBy.some((bound) => bound.difference >= MAPBOX_BOUNDS_CHANGE_PERCENTAGE)
   }
 
   /**
@@ -683,7 +629,7 @@ class Mapbox extends React.Component {
 
     return (
       <ReactMapboxGl
-        ref="mapbox"
+        ref={ref => { this.mapbox = ref }}
         accessToken={MAPBOX_ACCESS_TOKEN}
         style={mapboxUrl}
         containerStyle={{
@@ -793,7 +739,8 @@ Mapbox.propTypes = {
 }
 
 Mapbox.defaultProps = {
+  dataKeyFormat: data => data,
   getCitiesWithinBounds: () => {}
 }
 
-export default Mapbox;
+export default Mapbox

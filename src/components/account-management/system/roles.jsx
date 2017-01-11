@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import PageContainer from '../../layout/page-container'
 import LoadingSpinner from '../../loading-spinner/loading-spinner'
-import RolesList from '../roles-list.jsx'
+import RolesList from '../role-edit/roles-list.jsx'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 
