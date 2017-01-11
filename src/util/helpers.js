@@ -1,6 +1,6 @@
 import moment from 'moment'
 import numeral from 'numeral'
-import { List, fromJS } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
@@ -525,41 +525,6 @@ export function getTopURLs(urlMetrics, dataKey) {
 }
 
 /**
- * Builds options for fetching dashboard data
- *
- * @method buildFetchOpts
- * @param  {Object}  coordinates              Object of map bounds
- * @param  {object}  params                   Object of values to match
- * @param  {object}  filters                  Filters to match, e.g. date range
- * @return {object}                           Object of different fetch options
- */
-
- //eslint-disable-next-line
-export function buildDashBoardFetchOpts({ coordinates = {}, params = {}, filters = {} } = {}) {
-  const startDate  = Math.floor(filters.getIn(['dateRange', 'startDate']) / 1000)
-  const endDate    = Math.floor(filters.getIn(['dateRange', 'endDate']) / 1000)
-  const dashboardOpts = Object.assign({
-    startDate,
-    endDate,
-    granularity: 'hour'
-  }, params)
-
-  /**
-   * Not currently used in the dashboard
-   */
-  // const byCityOpts = Object.assign({
-  //   max_cities: MAPBOX_MAX_CITIES_FETCHED,
-  //   latitude_south: coordinates.south || null,
-  //   longitude_west: coordinates.west || null,
-  //   latitude_north: coordinates.north || null,
-  //   longitude_east: coordinates.east || null,
-  //   show_detail: false
-  // }, dashboardOpts)
-
-  return dashboardOpts
-}
-
-/**
  * Builds options for fetching data
  *
  * @method buildFetchOpts
@@ -570,14 +535,14 @@ export function buildDashBoardFetchOpts({ coordinates = {}, params = {}, filters
  * @param  {string}  activeHostConfiguredName String of active host
  * @return {object}                           Object of different fetch options
  */
-export function buildFetchOpts({ coordinates = {}, params = {}, filters = fromJS({}), location = {}, activeHostConfiguredName } = {}) {
+export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}), location = {}, activeHostConfiguredName } = {}) {
   if (params.property && activeHostConfiguredName) {
     params = Object.assign({}, params, {
       property: activeHostConfiguredName
     })
   }
 
-  const fetchOpts = buildAnalyticsOpts(params, filters, location)
+  const fetchOpts = location.pathname && buildAnalyticsOpts(params, filters, location)
   const startDate  = filters.getIn(['dateRange', 'startDate'])
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
@@ -585,6 +550,14 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = fromJS
     granularity: rangeDiff >= 2 ? 'day' : 'hour'
   }, fetchOpts)
   const aggregateGranularity = byTimeOpts.granularity
+
+  const dashboardStartDate  = Math.floor(startDate / 1000)
+  const dashboardEndDate    = Math.floor(endDate / 1000)
+  const dashboardOpts = Object.assign({
+    startDate: dashboardStartDate,
+    endDate: dashboardEndDate,
+    granularity: 'hour'
+  }, params)
 
   const byCityOpts = Object.assign({
     max_cities: MAPBOX_MAX_CITIES_FETCHED,
@@ -595,5 +568,5 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = fromJS
     show_detail: false
   }, byTimeOpts)
 
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity }
+  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
 }
