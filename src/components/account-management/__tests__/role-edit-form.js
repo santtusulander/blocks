@@ -28,7 +28,7 @@ describe('RolesEditForm', () => {
       props = {
         handleSubmit: jest.genMockFunction(),
         editRole: Immutable.Map(),
-        editPermsUI: Immutable.List(),
+        editPermsUI: Immutable.Map(),
         fields: fieldsMock,
         intl: intlMaker(),
         params: { brand: 'foo', account: 'bar', group: 'zyx', property: 'qwe' }

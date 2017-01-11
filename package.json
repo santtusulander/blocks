@@ -66,6 +66,7 @@
     "node-zendesk": "^1.1.10",
     "normalizr": "^2.3.0",
     "numeral": "^1.5.6",
+    "normalizr": "^2.2.1",
     "phone": "^1.0.9",
     "raven-js": "^3.9.1",
     "react": "^15.4.1",
@@ -137,6 +138,7 @@
     "automock": true,
     "unmockedModulePathPatterns": [
       "<rootDir>/src/constants",
+      "<rootDir>/src/decorators",
       "<rootDir>/node_modules/axios",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/moment",
@@ -151,7 +153,8 @@
       "<rootDir>/node_modules/react-mapbox-gl",
       "<rootDir>/node_modules/intl",
       "<rootDir>/node_modules/react-intl",
-      "<rootDir>/node_modules/redux"
+      "<rootDir>/node_modules/redux",
+      "<rootDir>/node_modules/normalizr"
     ]
   },
   "repository": {

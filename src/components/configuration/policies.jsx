@@ -33,6 +33,18 @@ class ConfigurationPolicies extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
   }
+
+
+  /**
+   * If URL has parameters for editing a policy, open the edit-modal for that policy
+   */
+  componentWillMount() {
+    const { activateRule, params: { editOrDelete, policyId, policyType } } = this.props
+    if (editOrDelete === 'edit') {
+      activateRule([policyType, 'policy_rules', Number(policyId)])
+    }
+  }
+
   componentWillUnmount() {
     if (this.props.activeRule) {
       this.handleCancel()
@@ -77,6 +89,7 @@ class ConfigurationPolicies extends React.Component {
     this.props.saveChanges()
   }
   handleHide(){
+    this.props.cancelEditPolicyRoute()
     this.setState({ isEditingRule: true })
     this.props.activateRule(null)
   }
@@ -121,6 +134,8 @@ class ConfigurationPolicies extends React.Component {
         </SectionHeader>
         <SectionContainer>
           <ConfigurationPolicyRules
+            cancelDeletePolicyRoute={this.props.cancelEditPolicyRoute}
+            params={this.props.params}
             requestPolicies={config.getIn([POLICY_TYPES.REQUEST, 'policy_rules'])}
             responsePolicies={config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])}
             activateRule={this.props.activateRule}
@@ -154,6 +169,8 @@ class ConfigurationPolicies extends React.Component {
 }
 
 ConfigurationPolicies.displayName = 'ConfigurationPolicies'
+
+ConfigurationPolicies.defaultProps = { params: {} }
 ConfigurationPolicies.propTypes = {
   activateMatch: React.PropTypes.func,
   activateRule: React.PropTypes.func,
@@ -161,10 +178,12 @@ ConfigurationPolicies.propTypes = {
   activeMatch: React.PropTypes.instanceOf(Immutable.List),
   activeRule: React.PropTypes.instanceOf(Immutable.List),
   activeSet: React.PropTypes.instanceOf(Immutable.List),
+  cancelEditPolicyRoute: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  params: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }
 
