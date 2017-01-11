@@ -15,30 +15,32 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
     fourHundredsChecked = isChecked(fourHundreds),
     fiveHundredsChecked = isChecked(fiveHundreds),
     handleCheck = (optionValue, checked) => () => {
-      if(checked) {
-        values = values.size === options.size ?
-          values.filterNot(value => optionValue.findIndex(selected => selected === value) < 0) :
-          values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
+      if (checked) {
+        values = values.filter(value => optionValue.findIndex(selected => selected === value) < 0)
       } else {
-        optionValue.forEach(item => {
-          if(!values.includes(item)) {
-            values = values.push(item)
-          }
-        })
+        if (values.size !== options.size) {
+          optionValue.forEach(item => {
+            if(!values.includes(item)) {
+              values = values.push(item)
+            }
+          })
+        } else {
+          values = values.filterNot(value => optionValue.findIndex(selected => selected === value) < 0)
+        }
       }
       onChange(values)
     }
   return (
     <FilterChecklistDropdown
       options={options}
-      value={values.size === options.size ? List() : values}
+      value={values}
       handleCheck={onChange}>
       {!errorCodesOnly &&
       <li role="presentation" className="children">
         <FormGroup>
           <Checkbox
             value={twoHundreds}
-            checked={twoHundredsChecked && values.size !== options.size}
+            checked={twoHundredsChecked}
             onChange={handleCheck(twoHundreds, twoHundredsChecked)}>
             <span>2XX</span>
           </Checkbox>
@@ -49,7 +51,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       <FormGroup>
         <Checkbox
           value={fourHundreds}
-          checked={fourHundredsChecked && values.size !== options.size}
+          checked={fourHundredsChecked}
           onChange={handleCheck(fourHundreds, fourHundredsChecked)}>
           <span>4XX</span>
         </Checkbox>
@@ -59,7 +61,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       <FormGroup>
         <Checkbox
           value={fiveHundreds}
-          checked={fiveHundredsChecked && values.size !== options.size}
+          checked={fiveHundredsChecked}
           onChange={handleCheck(fiveHundreds, fiveHundredsChecked)}>
           <span>5XX</span>
         </Checkbox>
