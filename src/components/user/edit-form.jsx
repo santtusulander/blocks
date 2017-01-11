@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, change, reset, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, reset, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -22,6 +22,8 @@ import { AUTHY_APP_DOWNLOAD_LINK,
 
 import '../../styles/components/user/_edit-form.scss'
 
+import { isValidPhoneNumber, isValidCountryCode } from '../../util/validators'
+
 const ErrorTooltip = ({ error, active }) =>
     !active &&
       <Tooltip placement="top" className="input-tooltip in" id="tooltip-top">
@@ -35,6 +37,7 @@ const validate = (values) => {
     changingPassword,
     first_name,
     last_name,
+    phone,
     tfa_toggle,
     tfa,
     current_password,
@@ -42,26 +45,31 @@ const validate = (values) => {
     validPass
   } = values
 
-
-  if (!first_name) {
-    errors.first_name = "First name is required"
-  }
-
-  if (!last_name) {
-    errors.last_name = "Last name is required"
-  }
-
-  if (tfa_toggle && !tfa) {
-    errors.tfa = "Select TFA method"
-  }
-
   if (changingPassword) {
     if ( !(current_password && new_password && validPass) ) errors._error = "Check passwords."
     if ( new_password && !validPass ) errors.new_password = "New password is not valid!"
-  }
+  } else {
+    if (!first_name) {
+      errors.first_name = "First name is required"
+    }
 
-  //TODO: UDNP-2229
-  //Validate phone
+    if (!last_name) {
+      errors.last_name = "Last name is required"
+    }
+
+    if (tfa_toggle && !tfa) {
+      errors.tfa = "Select TFA method"
+    }
+
+    if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
+      errors.phone = "Phone number is not valid"
+    }
+
+    if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
+      errors.phone = "Phone Country Code is not valid"
+    }
+
+  }
 
   return errors;
 }
@@ -84,8 +92,8 @@ class UserEditForm extends React.Component {
       first_name: values.first_name,
       middle_name: values.middle_name,
       last_name:  values.last_name,
-      phone_country_code: values.phone.dialCode,
-      phone_number: values.phone.val
+      phone_country_code: values.phone.phone_country_code,
+      phone_number: values.phone.phone_number
     }
 
     //handle 2FA,  add method if ON
@@ -112,12 +120,26 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) throw new SubmissionError( {'current_password': response.payload.message})
+        else {
+          /* eslint-disable no-unused-vars */
+          /* stip unneeded vars from values */
+          const {
+            current_password,
+            new_password,
+            validPass,
+            ...formData
+          } = values
+          /* eslint-enable no-unused-vars */
+
+          this.props.initialize( {...formData, changingPassword: false} )
+
+        }
       })
   }
 
   togglePasswordEditing() {
     //Set field in redux, because changingPassword is needed in validate()
-    this.props.dispatch(change('user-edit-form', 'changingPassword', !this.props.changingPassword))
+    this.props.change('changingPassword', !this.props.changingPassword)
   }
 
   tfaMethodOptions() {
@@ -206,7 +228,7 @@ class UserEditForm extends React.Component {
             <Col xs={3}>
               <Field
                 type="text"
-                name="middleName"
+                name="middle_name"
                 placeholder={this.props.intl.formatMessage({id: 'portal.user.edit.middleName.text'})}
                 component={FieldFormGroup}
               />
@@ -272,7 +294,7 @@ class UserEditForm extends React.Component {
                     name="new_password"
                     component={FieldPasswordFields}
                     validCallBack={(valid) => {
-                      this.props.dispatch(change('user-edit-form', 'validPass', valid))
+                      this.props.change('validPass', valid)
                     }}
                   />
                 </Col>

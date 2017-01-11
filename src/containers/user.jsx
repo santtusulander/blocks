@@ -14,7 +14,6 @@ import PageHeader from '../components/layout/page-header'
 import Content from '../components/layout/content'
 import UserEditForm from '../components/user/edit-form'
 
-
 class User extends React.Component {
   constructor(props) {
     super (props);
@@ -72,7 +71,7 @@ class User extends React.Component {
       first_name: currentUser.get('first_name'),
       last_name: currentUser.get('last_name'),
       middle_name: currentUser.get('middle_name'),
-      phone: {val: currentUser.get('phone_country_code') + currentUser.get('phone_number'), country_code: currentUser.get('phone_country_code') },
+      phone: {phone_number: currentUser.get('phone_number'), phone_country_code: currentUser.get('phone_country_code') },
       timezone: currentUser.get('timezone'),
       tfa_toggle: !!currentUser.get('tfa'),
       tfa: currentUser.get('tfa'),
