@@ -53,7 +53,7 @@ class AnalyticsTabVisitors extends React.Component {
     this.props.visitorsActions.fetchByTime(fetchOpts)
     this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: aggregateGranularity})
 
-    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM) {
+    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.visitorsActions.startFetching()
       this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity}).then(() =>
         this.props.visitorsActions.finishFetching()
