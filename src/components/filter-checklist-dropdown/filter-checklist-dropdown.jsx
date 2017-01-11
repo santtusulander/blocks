@@ -68,9 +68,9 @@ export class FilterChecklistDropdown extends React.Component {
     this.setState({filterValue: ''})
 
     if (this.props.handleCheck) {
-      this.props.handleCheck(this.props.options.map(val => val.get('value')))
+      this.props.handleCheck(List())
     } else {
-      this.props.onChange(this.props.options.map(val => val.get('value')))
+      this.props.onChange(List())
     }
   }
 
@@ -117,7 +117,7 @@ export class FilterChecklistDropdown extends React.Component {
             <FormGroup>
               <Checkbox
                 value={option.get('value')}
-                checked={this.props.options.size === this.props.value.size || this.props.value.indexOf(option.get('value')) !== -1}
+                checked={this.props.value.indexOf(option.get('value')) !== -1}
                 onChange={() => this.handleCheck(option.get('value'))}>
                 {option.get('label')}
               </Checkbox>
