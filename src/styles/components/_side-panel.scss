@@ -50,6 +50,10 @@ $lt-side-panel-bg-color: $white;
     padding: 0 $side-panel-horizontal-padding;
     margin: $side-panel-body-margin 0 0 0;
     overflow: auto;
+
+    > form {
+      padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
+    }
   }
 
   .modal-footer {
