@@ -5,7 +5,7 @@ $content-item-tag-font-size: rem(16px);
 .content-item-chart,
 .content-item-list {
 
-  &:hover .content-item-tag {
+  &:hover .content-item-chart-tag {
     opacity: 0;
     visibility: hidden;
     transition: opacity 250ms;
@@ -13,14 +13,10 @@ $content-item-tag-font-size: rem(16px);
 
   .content-item-tag {
     position: absolute;
-    bottom: 12%;
-    left: 50%;
-    padding: 0 $content-item-tag-font-size;
     font-size: $content-item-tag-font-size;
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 2px;
-    transform: translate(-50%, -32%);
 
 
     .dark-theme & {
