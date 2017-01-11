@@ -2,8 +2,8 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.autoMockOff()
-jest.unmock('../forgot-password.jsx')
-import { ForgotPassword } from '../forgot-password.jsx'
+jest.unmock('../password/forgot-password.jsx')
+import { ForgotPassword } from '../password/forgot-password.jsx'
 
 function userActionsMaker(cbResponse) {
   return {
@@ -25,10 +25,14 @@ function intlMaker() {
 
 describe('ForgotPassword', () => {
   let forgotPassword;
+  const fakeLocation = { search: null }
 
   beforeEach(() => {
     forgotPassword = shallow(
-      <ForgotPassword userActions={userActionsMaker({})} intl={intlMaker()}/>
+      <ForgotPassword location={fakeLocation}
+                      userActions={userActionsMaker({})}
+                      intl={intlMaker()}
+      />
     )
   });
 
