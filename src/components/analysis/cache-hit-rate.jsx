@@ -58,24 +58,21 @@ class AnalysisCacheHitRate extends React.Component {
     const detail = stats.get('detail') || Immutable.List()
 
     const data = detail.map(datapoint => {
+      const timestamp = datapoint.get('timestamp')
       return {
+        formattedDate: moment(timestamp).format('MM/DD/YYYY'),
         chit_ratio: datapoint.get('chit_ratio'),
-        name: datapoint.get('timestamp').getDate()
+        name: timestamp.getDate()
       }
     })
 
     if(this.state.chartType === 'column') {
       chart = (
         <BarChart
+          valueFormatter={(value) => value + ' %'}
           chartLabel="testingendeeros"
-          barModels={[{ dataKey: 'chit_ratio', name: 'Daily Cache Hit Ratio', className: 'line-0' }]}
+          barModels={[{ dataKey: 'chit_ratio', name: '', className: 'line-0' }]}
           chartData={data.toJS()}/>
-      //   <AnalysisStackedByTime
-      //     padding={40}
-      //     dontShowHours={true}
-      //     dataKey='chit_ratio'
-      //     dataSets={dataSets}
-      //     width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     } else {
       const dataset = {
