@@ -71,9 +71,7 @@ class AnalysisCacheHitRate extends React.Component {
       chart = (
         <BarChart
           valueFormatter={(value) => value + ' %'}
-          chartLabel={
-            <FormattedMessage id={this.props.dateRange}/>
-          }
+          chartLabel={<FormattedMessage id={this.props.dateRange}/>}
           maxBarSize={70}
           barModels={[{ dataKey: 'chit_ratio', name: '', className: 'line-1' }]}
           chartData={data.toJS()}/>
@@ -156,11 +154,13 @@ class AnalysisCacheHitRate extends React.Component {
 
 AnalysisCacheHitRate.displayName = 'AnalysisCacheHitRate'
 AnalysisCacheHitRate.propTypes = {
+  dateRange: React.PropTypes.string,
   fetching: React.PropTypes.bool,
   traffic: React.PropTypes.instanceOf(Immutable.List)
 }
 
 AnalysisCacheHitRate.defaultProps = {
+  dateRange: "portal.constants.date-ranges.month_to_date",
   cacheHitRateFilter: Immutable.Map(),
   traffic: Immutable.List()
 }
