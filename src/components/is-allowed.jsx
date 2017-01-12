@@ -13,7 +13,7 @@ const IsAllowed = (props, context) => {
     isAllowed = !isAllowed
   }
   return (
-    isAllowed && Children.only(children)
+    !!isAllowed && Children.only(children)
   )
 }
 
