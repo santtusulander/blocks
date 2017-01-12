@@ -45,45 +45,45 @@ export default class BarChart extends Component {
     const {
       props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter, hasLegend },
       state: { showTooltip } } = this
+
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
+
     return (
-        <div className="bar-chart-container">
-          <span id="bar-chart-label" className="bar-chart-label">{chartLabel}</span>
-          <ResponsiveContainer>
-            <RechartsBarChart
-              data={chartData}
-              maxBarSize={maxBarSize}
-              margin={{top: 100, right: 54, left: 70, bottom: 54}}>
-              <XAxis
-                padding={{ right: 50 }}
-                tickLine={false}
-                axisLine={false}
-                dataKey="name"/>
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={valueFormatter}/>
-              {showTooltip &&
-                <Tooltip
-                  cursor={{ fill: 'rgba(0,0,0,0.1)' }}
-                  offset={toolTipOffset}
-                  animationDuration={0}
-                  content={
-                    <CustomTooltip
-                      valueFormatter={valueFormatter}
-                      iconClass={tooltipIconClass}/>}
-                  />}
-              {hasLegend &&
-                <Legend
-                  verticalAlign="top"
-                  wrapperStyle={{ top: 25 }}
-                  align="right"
-                  content={<CustomLegend data={barModels}/>}
-                  layout="vertical"/>}
-              {this.renderBars()}
-            </RechartsBarChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="bar-chart-container">
+        <span id="bar-chart-label" className="bar-chart-label">{chartLabel}</span>
+        <ResponsiveContainer>
+          <RechartsBarChart
+            data={chartData}
+            maxBarSize={maxBarSize}
+            margin={{top: 100, right: 54, left: 70, bottom: 54}}>
+            <XAxis
+              padding={{ right: 50 }}
+              tickLine={false}
+              axisLine={false}
+              dataKey="name"/>
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={valueFormatter}/>
+            {showTooltip &&
+              <Tooltip
+                content={<CustomTooltip/>}
+                cursor={{ fill: 'rgba(0,0,0,0.1)' }}
+                offset={toolTipOffset}
+                animationDuration={0}
+                valueFormatter={valueFormatter}
+                iconClass={tooltipIconClass}/>}
+            {hasLegend &&
+              <Legend
+                verticalAlign="top"
+                wrapperStyle={{ top: 25 }}
+                align="right"
+                content={<CustomLegend data={barModels}/>}
+                layout="vertical"/>}
+            {this.renderBars()}
+          </RechartsBarChart>
+        </ResponsiveContainer>
+      </div>
     );
   }
 }
@@ -105,7 +105,12 @@ BarChart.propTypes = {
       dataKey: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
       stackId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ])
     })).isRequired,
-  chartData: PropTypes.arrayOf(PropTypes.object),
+  chartData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+      formattedDate: PropTypes.string
+    })
+  ),
   chartLabel: PropTypes.string,
   hasLegend: PropTypes.bool,
   maxBarSize: PropTypes.number,
