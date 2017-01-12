@@ -4,6 +4,7 @@ import moment from 'moment'
 import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import BarChart from '../charts/bar-chart'
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
@@ -70,8 +71,11 @@ class AnalysisCacheHitRate extends React.Component {
       chart = (
         <BarChart
           valueFormatter={(value) => value + ' %'}
-          chartLabel="testingendeeros"
-          barModels={[{ dataKey: 'chit_ratio', name: '', className: 'line-0' }]}
+          chartLabel={
+            <FormattedMessage id={this.props.dateRange}/>
+          }
+          maxBarSize={70}
+          barModels={[{ dataKey: 'chit_ratio', name: '', className: 'line-1' }]}
           chartData={data.toJS()}/>
       )
     } else {
@@ -117,8 +121,8 @@ class AnalysisCacheHitRate extends React.Component {
           */}
         </SectionHeader>
 
-        <SectionContainer className="analysis-contribution">
-          {chart}
+        <SectionContainer className="analysis-chart-container">
+          {this.props.fetching ? <LoadingSpinner/> : chart}
         </SectionContainer>
 
         <SectionContainer>

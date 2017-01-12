@@ -36,7 +36,7 @@ export default class BarChart extends Component {
     return this.bars.map((bar, index) =>
       <Bar
         key={index}
-        isAnimationActive={true}
+        isAnimationActive={false}
         {...bar}/>
     )
   }
@@ -111,7 +111,7 @@ BarChart.propTypes = {
       formattedDate: PropTypes.string
     })
   ),
-  chartLabel: PropTypes.string,
+  chartLabel: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   hasLegend: PropTypes.bool,
   maxBarSize: PropTypes.number,
   toolTipOffset: PropTypes.number,
