@@ -143,7 +143,7 @@ permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-  const userRoles = user.get('roles')
+  const userRoles = user && user.size > 0 && user.get('roles')
   if (!userRoles) return false
 
   return userRoles.some(roleId => {
