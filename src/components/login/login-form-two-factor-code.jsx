@@ -12,7 +12,6 @@ export class LoginFormTwoFactorCode extends Component {
     super(props);
 
     this.onClick = this.onClick.bind(this)
-    this.onFocus = this.onFocus.bind(this)
     this.onKeyPress = this.onKeyPress.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -26,10 +25,6 @@ export class LoginFormTwoFactorCode extends Component {
     } else {
       return false
     }
-  }
-
-  onFocus() {
-    this.props.onFocus()
   }
 
   onChange(e) {
@@ -72,6 +67,8 @@ export class LoginFormTwoFactorCode extends Component {
         }
       }
     }
+
+    this.props.onCodeChange()
   }
 
   onKeyPress(e) {
@@ -109,7 +106,6 @@ export class LoginFormTwoFactorCode extends Component {
           maxLength={TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH}
           onClick={this.onClick}
           onChange={this.onChange}
-          onFocus={this.onFocus}
           onKeyPress={this.onKeyPress}
           onKeyDown={this.onKeyDown}
           disabled={this.props.fetching}
@@ -171,7 +167,7 @@ LoginFormTwoFactorCode.displayName = "LoginFormTwoFactorCode"
 LoginFormTwoFactorCode.propTypes = {
   fetching: React.PropTypes.bool,
   loginError: React.PropTypes.string,
-  onFocus: React.PropTypes.func,
+  onCodeChange: React.PropTypes.func,
   onSubmit: React.PropTypes.func
 }
 
