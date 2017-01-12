@@ -15,7 +15,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
     publicPath: publicUrl,
-    sourceMapFilename: '[name].[hash].js.map',
+    sourceMapFilename: '[file].map',
     chunkFilename: '[id].chunk.js'
   },
   resolve: {
