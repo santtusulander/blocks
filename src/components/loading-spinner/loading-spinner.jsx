@@ -10,4 +10,6 @@ function LoadingSpinner() {
   )
 }
 
+LoadingSpinner.displayName = "LoadingSpinner"
+
 export default LoadingSpinner

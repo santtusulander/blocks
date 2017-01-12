@@ -33,6 +33,7 @@ describe('SupportTicketForm', () => {
       props = {
         fields: fieldsMock,
         intl: intlMaker(),
+        handleSubmit: jest.fn(),
         ticket: Immutable.Map({ id: 'foo' })
       }
       return shallow(<SupportTicketForm {...props}/>)

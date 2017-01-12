@@ -18,6 +18,7 @@ const USER_UPDATED = 'USER_UPDATED'
 const USER_NAME_SAVED = 'USER_NAME_SAVED'
 const USER_PASSWORD_RESET_REQUESTED = 'USER_PASSWORD_RESET_REQUESTED'
 const USER_PASSWORD_RESET = 'USER_PASSWORD_RESET'
+const USER_PASSWORD_RESET_TOKEN_INFO = 'USER_PASSWORD_RESET_TOKEN_INFO'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
 const DESTROY_STORE = 'DESTROY_STORE'
@@ -60,19 +61,34 @@ export function updateFailure(state) {
   })
 }
 
-export function updatePasswordSuccess(state) {
+export function updatePasswordSuccess(state, action) {
+  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+  axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
+
   return state.merge({
     fetching: false
   })
 }
 
 export function userLoggedInSuccess(state, action){
-  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
-  axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
+  switch (action.payload.status) {
+    case 200:
+      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+      axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
-  return state.merge({
-    loggedIn: true
-  })
+      return state.merge({
+        loggedIn: true
+      })
+
+    case 202:
+      return state.merge({
+        loggedIn: false,
+        fetching: false
+      })
+
+    default:
+      return emptyUser
+  }
 }
 
 export function userLoggedInFailure(){
@@ -81,7 +97,8 @@ export function userLoggedInFailure(){
 
 export function fetchSuccess(state, action) {
   return state.merge({
-    currentUser: fromJS(action.payload)
+    currentUser: fromJS(action.payload),
+    fetching: false
   })
 }
 
@@ -199,6 +216,18 @@ export function resetPasswordFailure(state) {
   })
 }
 
+export function resetPasswordTokenInfoSuccess(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
+export function resetPasswordTokenInfoFailure(state) {
+  return state.merge({
+    fetching: false
+  })
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -214,10 +243,15 @@ export default handleActions({
   PASSWORD_UPDATED: mapReducers(updatePasswordSuccess, updateFailure),
   [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
-  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure)
+  USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
+  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure)
 }, emptyUser)
 
-// ACTIONS
+/*
+ * =============================
+ * Actions creator starts here
+ * =============================
+ */
 export const destroyStore = createAction(DESTROY_STORE);
 
 export const setLogin = createAction(SET_LOGIN, (value) => {
@@ -235,8 +269,64 @@ export const logIn = createAction(USER_LOGGED_IN, (username, password) => {
     }
   })
   .then((res) => {
-    if(res) {
-      return {token: res.data}
+    if (res) {
+      switch (res.status) {
+        case 200:
+          return {
+            token: res.data,
+            status: res.status
+          }
+
+        case 202:
+        default:
+          return {
+            data: res.data,
+            status: res.status
+          }
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
+export const twoFALogInWithCode = createAction(USER_LOGGED_IN, (username, code) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "code": code
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        token: res.data
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  });
+})
+
+export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) => {
+  return loginAxios.post(`${BASE_URL_AAA}/tokens`, {
+    "username": username,
+    "code": code
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then((res) => {
+    if (res) {
+      return {
+        status: res.status,
+        code: res.code,
+        token: res.data
+      }
     }
   }, (res) => {
     throw new Error(res.data.message)
@@ -329,10 +419,23 @@ export const updatePassword = createAction(PASSWORD_UPDATED, (email, password) =
       'Content-Type': 'application/json'
     }
   })
-    .then(parseResponseData)
+  .then((res) => {
+    if (res) {
+      return {
+        token: res.data.token
+      }
+    }
+  }, (res) => {
+    throw new Error(res.data.message)
+  })
 })
 
 export const saveName = createAction(USER_NAME_SAVED)
+
+export const getTokenInfo = createAction(USER_PASSWORD_RESET_TOKEN_INFO, (email, reset_token_id) => {
+  return axios.get(`${BASE_URL_AAA}/users/${email}/reset_password?reset_token_id=${reset_token_id}`)
+    .then(parseResponseData)
+})
 
 export const requestPasswordReset = createAction(USER_PASSWORD_RESET_REQUESTED, (email, recaptcha_response) => {
   return axios.post(

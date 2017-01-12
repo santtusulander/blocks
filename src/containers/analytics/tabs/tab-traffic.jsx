@@ -8,9 +8,12 @@ import moment from 'moment'
 import AnalysisTraffic from '../../../components/analysis/traffic.jsx'
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
+import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 
-import { buildAnalyticsOpts, formatBitsPerSecond, changedParamsFiltersQS } from '../../../util/helpers.js'
+import { formatBitsPerSecond, changedParamsFiltersQS, buildFetchOpts } from '../../../util/helpers.js'
+import { getCitiesWithinBounds } from '../../../util/mapbox-helpers'
 import DateRanges from '../../../constants/date-ranges'
+import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
 class AnalyticsTabTraffic extends React.Component {
   constructor(props) {
@@ -22,7 +25,7 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.fetchData = this.fetchData.bind(this)
     this.formatTotals = this.formatTotals.bind(this)
-    this.getCitiesWithinBounds = this.getCitiesWithinBounds.bind(this)
+    this.getCityData = this.getCityData.bind(this)
   }
 
   componentDidMount() {
@@ -47,47 +50,63 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName) {
-    if(params.property && hostConfiguredName) {
-      params = Object.assign({}, params, {
-        property: hostConfiguredName
-      })
-    }
-
-    const { fetchOpts, byTimeOpts } = this.buildOpts({ params, filters, location })
+  fetchData(params, filters, location, activeHostConfiguredName) {
+    const { fetchOpts, byTimeOpts, byCityOpts } = buildFetchOpts({
+      params,
+      filters,
+      location,
+      activeHostConfiguredName,
+      coordinates: this.props.mapBounds.toJS()
+    })
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
     this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
+    if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
+      this.props.trafficActions.startFetching()
+      this.props.trafficActions.fetchByCity(byCityOpts).then(() =>
+        this.props.trafficActions.finishFetching()
+      )
+    }
+
+    let totalsOpts
+
     //REFACTOR:
     if (params.property) {
       this.setState({metricKey: 'hostMetrics'})
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         property: params.property,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+      if (activeHostConfiguredName) {
+        totalsOpts.property = activeHostConfiguredName
+      }
     } else if(params.group) {
       this.setState({ metricKey: 'groupMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         group: params.group,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
     } else if(params.account) {
       this.setState({ metricKey: 'accountMetrics' })
-      this.props.trafficActions.fetchTotals({
+      totalsOpts = {
         account: params.account,
         startDate: fetchOpts.startDate,
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
-      })
+      }
+    }
+
+    if (totalsOpts) {
+      this.props.trafficActions.fetchTotals(totalsOpts)
     }
 
     if (filters.getIn(['includeComparison'])) {
@@ -105,6 +124,7 @@ class AnalyticsTabTraffic extends React.Component {
       })
       this.props.trafficActions.fetchByTimeComparison(comparisonByTimeOpts)
     }
+
   }
 
   formatTotals(value) {
@@ -115,40 +135,16 @@ class AnalyticsTabTraffic extends React.Component {
     }
   }
 
-  buildOpts({ coordinates = {}, params = this.props.params, filters = this.props.filters, location = this.props.location } = {}) {
-    const fetchOpts = buildAnalyticsOpts(params, filters, location)
-    const startDate  = filters.getIn(['dateRange', 'startDate'])
-    const endDate    = filters.getIn(['dateRange', 'endDate'])
-    const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
-    const byTimeOpts = Object.assign({
-      granularity: rangeDiff >= 2 ? 'day' : 'hour'
-    }, fetchOpts)
-
-    const byCityOpts = Object.assign({
-      max_cities: 999,
-      latitude_south: coordinates.south || null,
-      longitude_west: coordinates.west || null,
-      latitude_north: coordinates.north || null,
-      longitude_east: coordinates.east || null
-    }, byTimeOpts)
-
-    return { byTimeOpts, fetchOpts, byCityOpts }
-  }
-
-  getCitiesWithinBounds(south, west, north, east) {
-    const { byCityOpts } = this.buildOpts({
-      coordinates: {
-        south: south,
-        west: west,
-        north: north,
-        east: east
-      }
+  getCityData(south, west, north, east) {
+    const { params, filters, location } = this.props
+    return getCitiesWithinBounds({
+      params,
+      filters,
+      location,
+      coordinates: { south, west, north, east },
+      activeHostConfiguredName: this.props.activeHostConfiguredName,
+      actions: this.props.trafficActions
     })
-
-    this.props.trafficActions.startFetching()
-    this.props.trafficActions.fetchByCity(byCityOpts).then(
-      this.props.trafficActions.finishFetching()
-    )
   }
 
   render() {
@@ -175,17 +171,23 @@ class AnalyticsTabTraffic extends React.Component {
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
         totalEgress={this.props.totalEgress}
-        getCityData={this.getCitiesWithinBounds}
+        getCityData={this.getCityData}
         theme={this.props.theme}
+        mapBounds={this.props.mapBounds}
+        mapboxActions={this.props.mapboxActions}
       />
     )
   }
 }
 
+AnalyticsTabTraffic.displayName = "AnalyticsTabTraffic"
 AnalyticsTabTraffic.propTypes = {
   activeHostConfiguredName: React.PropTypes.string,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
+  mapBounds: React.PropTypes.instanceOf(Immutable.Map),
+  mapZoom: React.PropTypes.number,
+  mapboxActions: React.PropTypes.object,
   params: React.PropTypes.object,
   theme: React.PropTypes.string,
   totalEgress: React.PropTypes.number,
@@ -199,6 +201,7 @@ AnalyticsTabTraffic.propTypes = {
 
 AnalyticsTabTraffic.defaultProps = {
   filters: Immutable.Map(),
+  mapBounds: Immutable.Map(),
   totals: Immutable.Map(),
   trafficByCity: Immutable.List(),
   trafficByCountry: Immutable.List(),
@@ -216,13 +219,16 @@ function mapStateToProps(state) {
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress'),
-    theme: state.ui.get('theme')
+    theme: state.ui.get('theme'),
+    mapBounds: state.mapbox.get('mapBounds'),
+    mapZoom: state.mapbox.get('mapZoom')
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    trafficActions: bindActionCreators(trafficActionCreators, dispatch)
+    trafficActions: bindActionCreators(trafficActionCreators, dispatch),
+    mapboxActions: bindActionCreators(mapboxActionCreators, dispatch)
   }
 }
 

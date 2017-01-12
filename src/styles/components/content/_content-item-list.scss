@@ -130,6 +130,12 @@
     }
   }
 
+  .content-item-list-tag {
+    bottom: 15px;
+    left: 15px;
+    padding: 0 $content-item-tag-font-size * 1.5;
+  }
+
   .content-item-list-details {
     position: absolute;
     bottom: 30px;
@@ -151,13 +157,14 @@
 
   .btn-toolbar {
     position: absolute;
+    right: 15px;
     bottom: 15px;
   }
 
   .content-item-list-chart {
+    display: flex;
     height: $content-item-list-height;
     margin: 0 700px 0 450px;
-    display: flex;
     align-items: center;
     justify-content: center;
 

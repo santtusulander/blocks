@@ -102,7 +102,7 @@ export class PasswordFields extends Component {
   }
 
   doPasswordsMatch(password, confirm, isValidString) {
-    const validPassword = password === confirm && isValidString
+    const validPassword = (password === confirm ) && isValidString
 
     this.setState({
       confirmValid: validPassword
@@ -203,7 +203,7 @@ export class PasswordFields extends Component {
         {stackedPassword &&
           <InputGroup.Addon>
             <a
-              className={classNames('input-addon-link', { active: this.state.confirmVisible })}
+              className={classNames('input-addon-link', { active: this.state.passwordVisible })}
               onClick={this.togglePasswordVisibility}>
               <IconEye/>
             </a>
@@ -233,7 +233,7 @@ export class PasswordFields extends Component {
           <FormControl
             id="confirm"
             type={this.state.confirmVisible ? 'text' : 'password'}
-            placeholder={!stackedPassword && intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'})}
+            placeholder={!stackedPassword ? intl.formatMessage({id: 'portal.user.edit.confirmNewPassword.text'}) : ''}
             className="form-control"
             onFocus={this.confirmFocus(true)}
             onBlur={this.confirmFocus(false)}

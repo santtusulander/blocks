@@ -8,7 +8,7 @@ import * as accountSelectorActionCreators from '../../redux/modules/account-sele
 import * as PERMISSIONS from '../../constants/permissions.js'
 import checkPermissions from '../../util/permissions'
 
-import Menu from './selector-component.jsx'
+import SelectorComponent from './selector-component.jsx'
 
 const tierHierarchy = [
   'property',
@@ -44,6 +44,33 @@ class AccountSelector extends Component {
       this.fetchByTier(nextProps.params)
       this.props.accountSelectorActions.setOpen(false)
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.children !== nextProps.children) {
+      return true
+    }
+
+    if (this.props.open !== nextProps.open) {
+      return true
+    }
+
+    if (this.props.open) {
+      return true
+    } else {
+      if (JSON.stringify(this.props.params) !== JSON.stringify(nextProps.params)) {
+        return true
+      } else if (!is(this.props.items, nextProps.items)) {
+        return true
+      } else if (
+        this.props.startTier !== nextProps.startTier
+        || this.props.restrictedTo !== nextProps.restrictedTo
+      ) {
+        return true
+      }
+    }
+
+    return false
   }
 
   componentWillUnmount() {
@@ -208,13 +235,15 @@ class AccountSelector extends Component {
       onCaretClick: this.onCaretClick
     })
     return (
-      <Menu {...menuProps}/>
+      <SelectorComponent {...menuProps}/>
     )
   }
 }
 
+AccountSelector.displayName = "AccountSelector"
 AccountSelector.propTypes = {
   accountSelectorActions: PropTypes.object,
+  children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Map),
   fetchItems: PropTypes.func,
   getChangedItem: PropTypes.func,

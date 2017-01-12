@@ -12,6 +12,7 @@ const IconHeaderCaret = (props) => {
   )
 }
 
+IconHeaderCaret.displayName = "IconHeaderCaret"
 IconHeaderCaret.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

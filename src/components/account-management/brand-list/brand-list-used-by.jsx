@@ -28,6 +28,7 @@ const BrandlistUsedBy = (props) => {
   )
 }
 
+BrandlistUsedBy.displayName = "BrandlistUsedBy"
 BrandlistUsedBy.propTypes = {
   fieldVal: React.PropTypes.object
 }

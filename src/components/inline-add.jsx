@@ -1,97 +1,70 @@
 import React, { PropTypes, cloneElement } from 'react'
-import { Tooltip, ButtonToolbar } from 'react-bootstrap'
-import { reduxForm, getValues } from 'redux-form'
+import { ButtonToolbar } from 'react-bootstrap'
+import { reduxForm, propTypes as reduxFormPropTypes, getFormValues, getFormSyncErrors } from 'redux-form'
+import { connect } from 'react-redux'
+import classnames from 'classnames'
 
 import UDNButton from './button'
 import IconClose from './icons/icon-close'
 
 import { FormattedMessage } from 'react-intl'
 
-/**
- * When to display errorTooltip
- * @param attributes
- * @returns {*|boolean}
- */
-const displayTooltipRules = (attributes) => {
-  return attributes &&
-        attributes.error &&
-        attributes.touched  &&
-        attributes.active &&
-        (
-          attributes.error !== 'Required'
-        )
-}
+const getClassNames = (touched, error, className) =>
+  classnames(className, { 'has-error': error && touched })
 
-/**
- * When to add `has-error`-classname to input
- * @param attributes
- * @returns {*|boolean}
- */
-const errorClassnameRules = (attributes) => {
-  return attributes &&
-        attributes.error &&
-        attributes.touched &&
-        (
-          attributes.error !== 'Required'
-        )
-}
-
-const ErrorToolTip = attributes =>
-  displayTooltipRules(attributes) &&
-  <Tooltip placement="bottom" className="in" id="tooltip-bottom">
-    {attributes.error}
-  </Tooltip>
-
-const generateBsClasses = (attributes, input) => {
-  if (errorClassnameRules(attributes)) {
-    let errorStyle;
-    if (input.props.bsStyle) {
-      errorStyle = `${input.props.bsStyle} error`
-    } else {
-      errorStyle = 'error'
-    }
-
-    return { bsStyle: errorStyle }
-  }
-
-  return input.props.bsStyle ? { bsStyle: input.props.bsStyle } : {}
-}
-
-const InlineAdd = ({save, inputs, fields, invalid, values, unmount}) =>
+const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMetaData }) =>
   <tr className="inline-add-row">
-    {inputs.map((cell, index) =>
-      <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
-        {cell.map(({input, positionClass}, index) => {
-          const bsClasses = generateBsClasses(fields[input.props.id], input);
-          return (
-            <div className={positionClass} key={index}>
-              {cloneElement(input, {...bsClasses, ...fields[input.props.id]})}
-              {ErrorToolTip(fields[input.props.id])}
-            </div>
-          )
-        })}
-        {index === inputs.length - 1 &&
-        <ButtonToolbar className="pull-right">
-          <UDNButton disabled={invalid} onClick={() => save(values)}>
-            <FormattedMessage id="portal.button.SAVE"/>
-          </UDNButton>
-          <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
-            <IconClose/>
-          </UDNButton>
-        </ButtonToolbar>}
-      </td>
-    )}
+
+      {inputs.map((cell, index) =>
+        <td key={index} colSpan={index === inputs.length - 1 ? 2 : 1}>
+
+          {cell.map(
+            ({input, positionClass}, index) => {
+
+              const fieldName = input.props.name
+              const className = getClassNames(getMetaData(fieldName).touched, errors[fieldName], input.props.className);
+              return (
+                <div className={positionClass} key={index}>
+                  {cloneElement(input, { className })}
+                </div>
+              )
+            })
+          }
+
+          {index === inputs.length - 1 &&
+          <ButtonToolbar className="pull-right">
+            <UDNButton disabled={invalid} onClick={() => save(formValues)}>
+              <FormattedMessage id="portal.button.SAVE"/>
+            </UDNButton>
+            <UDNButton bsStyle="primary" onClick={unmount} icon={true}>
+              <IconClose/>
+            </UDNButton>
+          </ButtonToolbar>}
+        </td>
+      )}
   </tr>
 
+InlineAdd.displayName = "InlineAdd"
 InlineAdd.propTypes = {
   fields: PropTypes.object,
   inputs: PropTypes.array.isRequired,
   invalid: PropTypes.bool,
-  save: PropTypes.func,
+  onSubmit: PropTypes.func,
   unmount: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
+  ...reduxFormPropTypes
 }
 
-export default reduxForm({form: 'inlineAdd'}, state => {
-  values: getValues(state.form.inlineAdd)
-})(InlineAdd)
+export default connect(
+  state => {
+    //No selector exists to get a form's metadata
+    const form = state.form.inlineAdd || {}
+    const metaData = form.fields || {}
+
+    return {
+      errors: getFormSyncErrors('inlineAdd')(state) || {},
+      formValues: getFormValues('inlineAdd')(state),
+      getMetaData: fieldName => ({ ...metaData[fieldName] })
+    }
+  }
+)(reduxForm({ form: 'inlineAdd' })(InlineAdd))

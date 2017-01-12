@@ -46,7 +46,7 @@ import DashboardPanels from '../components/dashboard/dashboard-panels'
 import CustomDatePicker from '../components/custom-date-picker'
 import DateRangeSelect from '../components/date-range-select'
 import MultiOptionSelector from '../components/multi-option-selector'
-
+import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 
@@ -96,15 +96,15 @@ import { formatBytes, separateUnit } from '../util/helpers'
 import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
-  { value: 'link1', label: 'Property 1', checked: true },
-  { value: 'link2', label: 'Property 2', checked: true },
-  { value: 'link3', label: 'Property 3', checked: false },
-  { value: 'link4', label: 'Property 4', checked: false },
-  { value: 'link5', label: 'Property 5', checked: true },
-  { value: 'link6', label: 'Property 6', checked: false },
-  { value: 'link7', label: 'Property 7', checked: false },
-  { value: 'link8', label: 'Property 8', checked: false },
-  { value: 'link9', label: 'Property 9', checked: false }
+  { value: 'link1', label: 'Property 1' },
+  { value: 'link2', label: 'Property 2' },
+  { value: 'link3', label: 'Property 3' },
+  { value: 'link4', label: 'Property 4' },
+  { value: 'link5', label: 'Property 5' },
+  { value: 'link6', label: 'Property 6' },
+  { value: 'link7', label: 'Property 7' },
+  { value: 'link8', label: 'Property 8' },
+  { value: 'link9', label: 'Property 9' }
 ]);
 
 import * as countriesGeoJSON from '../assets/topo/custom.geo.json';
@@ -122,6 +122,17 @@ class Styleguide extends React.Component {
       datePickerEndDate: moment().utc().endOf('day'),
       datePickerLimit: false,
       datePickerStartDate: moment().utc().startOf('month'),
+      filterCheckboxValue: Immutable.fromJS([
+        'link1',
+        'link2',
+        'link3',
+        'link4',
+        'link5',
+        'link6',
+        'link7',
+        'link8',
+        'link9'
+      ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
     }
   }
@@ -272,7 +283,7 @@ class Styleguide extends React.Component {
       }
     })
 
-    const countryData = [
+    const countryData = Immutable.fromJS([
       {
         "name": "Hong Kong",
         "bits_per_second": 2801215741,
@@ -297,7 +308,7 @@ class Styleguide extends React.Component {
         "code": "MYS",
         "total": 81604876012993
       }
-    ]
+    ])
 
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
@@ -350,11 +361,10 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Charts</h1>
           <Row>
-            <label>Stacked barchart, tooltip only on bar hover</label>
+            <label>Stacked barchart</label>
             <SectionContainer className="analysis-contribution">
               {<BarChart
                 chartLabel="Month to Date"
-                tooltipAlwaysActive={false}
                 chartData={stackedBarChartData}
                 barModels={[
                   { dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' },
@@ -366,7 +376,7 @@ class Styleguide extends React.Component {
             </Row>
             <hr />
             <Row>
-              <label>Normal barchart, tooltip always active</label>
+              <label>Normal barchart</label>
               <SectionContainer className="analysis-contribution">
                 <BarChart
                   chartLabel="This Week"
@@ -445,7 +455,10 @@ class Styleguide extends React.Component {
           <br/>
           <div className="row">
             <div className="col-xs-6">
-              <FilterChecklistDropdown options={filterCheckboxOptions}/>
+              <FilterChecklistDropdown
+                options={filterCheckboxOptions}
+                value={this.state.filterCheckboxValue}
+                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})} />
             </div>
           </div>
 
@@ -1124,6 +1137,11 @@ class Styleguide extends React.Component {
             <IconTrash />
             <br />
             IconTrash
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <LoadingSpinnerSmall />
+            <br />
+            LoadingSpinnerSmall
           </span>
 
         </div>

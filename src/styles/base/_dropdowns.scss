@@ -234,6 +234,56 @@ $search-input-left-padding: em(36px, $search-font-size);
   }
 }
 
+.dropdown-checklist.dropdown-select .dropdown-menu {
+  overflow-y: visible;
+  text-transform: none;
+
+  > li {
+    display: block;
+    height: auto;
+  }
+}
+
+.dropdown-filter {
+  .dropdown-menu {
+    .children {
+      outline: 0;
+
+      .clear-selection {
+        padding: $dd-vertical-padding $dd-horizontal-padding;
+        background-color: transparent !important;
+      }
+
+      &:focus {
+        box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
+      }
+
+      .form-group {
+        .dark-theme & {
+          box-shadow: inset 0 1px 0 0 rgba($pale-blue, 0.1);
+        }
+
+        .light-theme & {
+          box-shadow: inset 0 1px 0 0 rgba($black, 0.1);
+        }
+
+        label {
+          display: block;
+          padding: $dd-vertical-padding $dd-horizontal-padding;
+        }
+
+        .checkbox input + span::before {
+          border: 1px solid rgba($white, 0.3);
+        }
+      }
+    }
+
+    .scrollable-menu {
+      max-height: 300px;
+    }
+  }
+}
+
 @keyframes showDropdown {
   0% {
     margin-top: -10px;

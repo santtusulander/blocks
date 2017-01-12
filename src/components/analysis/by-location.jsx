@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
-import LoadingSpinner from '../loading-spinner/loading-spinner'
 import Mapbox from '../map/mapbox';
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
@@ -12,11 +12,15 @@ const AnalysisByLocation = (props) => {
     cityData,
     theme,
     getCityData,
-    height
+    height,
+    mapBounds,
+    mapboxActions,
+    dataKey,
+    dataKeyFormat
   } = props
 
   if (!countryData.size) {
-    return <LoadingSpinner />
+    return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
   }
 
   return (
@@ -24,14 +28,20 @@ const AnalysisByLocation = (props) => {
       <Mapbox
         getCitiesWithinBounds={getCityData}
         geoData={countriesGeoJSON}
-        countryData={countryData.toJS()}
-        cityData={cityData.toJS()}
+        countryData={countryData}
+        cityData={cityData}
         theme={theme}
-        height={height} />
+        height={height}
+        mapBounds={mapBounds}
+        mapboxActions={mapboxActions}
+        dataKey={dataKey}
+        dataKeyFormat={dataKeyFormat} />
     </div>
   )
 
 }
+
+AnalysisByLocation.displayName = 'AnalysisByLocation'
 
 AnalysisByLocation.defaultProps = {
   cityData: Immutable.List(),
@@ -41,8 +51,12 @@ AnalysisByLocation.defaultProps = {
 AnalysisByLocation.propTypes = {
   cityData: React.PropTypes.instanceOf(Immutable.List),
   countryData: React.PropTypes.instanceOf(Immutable.List),
+  dataKey: React.PropTypes.string,
+  dataKeyFormat: React.PropTypes.func,
   getCityData: React.PropTypes.func,
   height: React.PropTypes.number,
+  mapBounds: React.PropTypes.object,
+  mapboxActions: React.PropTypes.object,
   theme: React.PropTypes.string
 }
 

@@ -1,33 +1,54 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
-import { HelpBlock, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Row, Col } from 'react-bootstrap'
-import ReactTelephoneInput from 'react-telephone-input'
-import { FormattedMessage } from 'react-intl'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Button, Row, Col } from 'react-bootstrap'
+import { FormattedMessage, injectIntl } from 'react-intl';
 
-import SelectWrapper from '../../select-wrapper'
-import { getReduxFormValidationState } from '../../../util/helpers'
+import FieldFormGroup from '../../form/field-form-group'
+import FieldTelephoneInput from '../../form/field-telephone-input'
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FormFooterButtons from '../../form/form-footer-buttons'
+
+import { isValidPhoneNumber, isValidCountryCode } from '../../../util/validators'
 
 let errors = {}
 const validate = (values) => {
   errors = {}
 
   const {
+    first_name,
+    last_name,
     email,
+    phone,
     role
   } = values
 
-  if(!email || email.length === 0) {
-    errors.email = <FormattedMessage id="portal.user.edit.emailRequired.text"/>
+  if(!first_name) {
+    errors.first_name = <FormattedMessage id="portal.account.editUser.firstNameRequired.text"/>
+  }
+  if(!last_name) {
+    errors.last_name = <FormattedMessage id="portal.account.editUser.lastNameRequired.text"/>
   }
 
-  if(!role || role.length === 0) {
-    errors.role = <FormattedMessage id="portal.user.edit.roleRequired.text"/>
+  if(!email) {
+    errors.email = <FormattedMessage id="portal.account.editUser.emailRequired.text"/>
+  }
+
+  if(!role) {
+    errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
+  }
+
+  if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
+    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberInvalid.text"/>
+  }
+
+  if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
+    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberCountryCodeInvalid.text"/>
   }
 
   return errors;
 }
 
-class UserEditForm extends React.Component {
+class AccountManagementUserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
@@ -41,90 +62,96 @@ class UserEditForm extends React.Component {
   //   // TODO: call password reset function and display toast on success
   // }
 
-  save() {
+  save(values) {
     const {
-      fields: {
-        first_name,
-        last_name,
-        phone_number,
-        groups,
-        role
-      }
-    } = this.props
+      first_name,
+      last_name,
+      phone,
+      groups,
+      role
+    } = values
 
-    let newValues = {
-      first_name: first_name.value,
-      last_name: last_name.value,
-      phone_number: phone_number.value,
-      group_id: groups.value,
-      roles: [ role.value ]
+    const newValues = {
+      first_name: first_name,
+      last_name: last_name,
+      phone_number: phone.phone_number,
+      phone_country_code: phone.phone_country_code,
+      group_id: groups,
+      roles: [ role ]
     }
 
-    this.props.onSave(newValues)
+    return this.props.onSave(newValues)
   }
 
   render() {
     const {
-      fields: {
-        email,
-        first_name,
-        last_name,
-        phone_number,
-        role
-      },
+      intl,
+      invalid,
+      handleSubmit,
       roleOptions,
-      onCancel
+      onCancel,
+      submitting
     } = this.props
 
-    return (
-      <form className="user-form">
+    const submitButtonLabel = submitting
+      ? <FormattedMessage id="portal.button.saving" />
+      : <FormattedMessage id="portal.button.save" />
 
-        <FormGroup validationState={getReduxFormValidationState(email)}>
-          <ControlLabel>
-            <FormattedMessage id="portal.user.edit.email.text"/>
-          </ControlLabel>
-          <FormControl
-            {...email}
-            disabled={true}/>
-          {email.touched && email.error &&
-            <HelpBlock className="error-msg">{email.error}</HelpBlock>
-          }
-        </FormGroup>
+    return (
+      <form className="user-form" onSubmit={handleSubmit(this.save)}>
+
+        <Field
+          type="text"
+          name="email"
+          placeholder={intl.formatMessage({id: 'portal.user.edit.email.text'})}
+          component={FieldFormGroup}
+          label={<FormattedMessage id="portal.user.edit.email.text"/>}
+          disabled={true}
+          required={false}
+        />
 
         <div className="user-form__name">
           <Row>
             <Col sm={6}>
-              <ControlLabel>
-                <FormattedMessage id="portal.user.edit.firstName.text"/>
-              </ControlLabel>
-                <FormControl {...first_name}/>
-              {first_name.touched && first_name.error &&
-              <div className="error-msg">{first_name.error}</div>}
+              <Field
+                type="text"
+                name="first_name"
+                placeholder={intl.formatMessage({id: 'portal.user.edit.firstName.text'})}
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.user.edit.firstName.text"/>}
+              />
             </Col>
 
             <Col sm={6}>
-              <ControlLabel>
-                <FormattedMessage id="portal.user.edit.lastName.text"/>
-              </ControlLabel>
-              <FormControl {...last_name}/>
-              {last_name.touched && last_name.error &&
-              <div className="error-msg">{last_name.error}</div>}
+              <Field
+                type="text"
+                name="last_name"
+                placeholder={intl.formatMessage({id: 'portal.user.edit.lastName.text'})}
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.user.edit.lastName.text"/>}
+              />
             </Col>
           </Row>
         </div>
 
         <div className="user-form__telephone">
-          <label className="control-label"><FormattedMessage id="portal.user.edit.phoneNumber.text"/></label>
-          <ReactTelephoneInput
-            value={phone_number.value !== '+' ? phone_number.value : '1'}
-            defaultCountry="us"
-            onChange={(value) => {
-              phone_number.onChange(value)
-            }}
+          <Field
+            name="phone"
+            component={FieldTelephoneInput}
+            label={<FormattedMessage id="portal.user.edit.phoneNumber.text"/>}
           />
-          {phone_number.touched && phone_number.error &&
-          <div className="error-msg">{phone_number.error}</div>}
         </div>
+
+        <hr/>
+
+        <Field
+          name="role"
+          component={FieldFormGroupSelect}
+          options={roleOptions}
+          label={<FormattedMessage id="portal.user.edit.role.text"/>}
+          className="input-select"
+        />
+
 
         {/* TODO: uncomment once UDNP-2008 is unblocked
         <hr/>
@@ -149,19 +176,6 @@ class UserEditForm extends React.Component {
 
         <hr/>
 
-        <div className='form-group'>
-          <label className='control-label'><FormattedMessage id="portal.user.edit.role.text"/></label>
-          <SelectWrapper
-            {...role}
-            numericValues={true}
-            className="input-select"
-            value={role.value}
-            options={roleOptions}
-          />
-        </div>
-        {role.touched && role.error &&
-        <div className='error-msg'>{role.error}</div>}
-
         {/* Hiding group assignment until the API supports listing groups for
             users that have them assigned
         <hr/>
@@ -172,34 +186,35 @@ class UserEditForm extends React.Component {
           headerText="Groups"/>
         */}
 
-        <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={this.props.invalid} bsStyle="primary"
-                  onClick={this.save}><FormattedMessage id="portal.button.save"/></Button>
-        </ButtonToolbar>
+        <FormFooterButtons>
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
+
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting}>
+              {submitButtonLabel}
+            </Button>
+          </FormFooterButtons>
       </form>
     )
   }
 }
 
-UserEditForm.propTypes = {
-  fields: PropTypes.object,
-  // groupOptions: PropTypes.array,
-  invalid: PropTypes.bool,
+AccountManagementUserEditForm.displayName = "AccountManagementUserEditForm"
+AccountManagementUserEditForm.propTypes = {
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  roleOptions: PropTypes.array
+  roleOptions: PropTypes.array,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
-  form: 'user-form',
-  fields: [
-    'email',
-    'first_name',
-    'last_name',
-    'phone_number',
-    'role',
-    'groups'
-  ],
+  form: 'account-management-edit-user-form',
   validate: validate
-})(UserEditForm)
+})(injectIntl(AccountManagementUserEditForm))

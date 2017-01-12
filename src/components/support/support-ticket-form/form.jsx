@@ -1,25 +1,21 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Map } from 'immutable'
-import { reduxForm } from 'redux-form'
-import {
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  HelpBlock,
-  ButtonToolbar,
-  Button
-} from 'react-bootstrap'
+import { reduxForm, Field } from 'redux-form'
+import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import Toggle from '../../toggle'
-import SelectWrapper from '../../select-wrapper.jsx'
-import { STATUS_OPEN, STATUS_SOLVED } from '../../../constants/ticket'
+// import { STATUS_OPEN, STATUS_SOLVED } from '../../../constants/ticket'
 import {
-  isStatusOpen,
-  getTicketPriorityOptions,
-  getTicketTypeOptions
+  isStatusClosed,
+  getTicketTypeOptions,
+  getTicketPriorityOptions
 } from '../../../util/support-helper'
-import { getReduxFormValidationState } from '../../../util/helpers'
+
+import FieldFormGroup from '../../form/field-form-group'
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FieldFormGroupToggle from '../../form/field-form-group-toggle'
+import FormFooterButtons from '../../form/form-footer-buttons'
 
 let errors = {}
 const maxSubjectLength = 150
@@ -42,7 +38,7 @@ const validate = (values) => {
   }
 
   if (subject && subject.length > maxSubjectLength) {
-    errors.subject = <FormattedMessage id="portal.support.tickets.validation.title.maxLength.text" values={{maxLength: maxSubjectLength}}/>
+    errors.subject = <FormattedMessage id="portal.support.tickets.validation.title.maxLength.text" values={{ maxLength: maxSubjectLength }}/>
   }
 
   if (!description || description.length === 0) {
@@ -50,7 +46,7 @@ const validate = (values) => {
   }
 
   if (description && description.length > maxDescriptionLength) {
-    errors.description = <FormattedMessage id="portal.support.tickets.validation.description.maxLength.text" values={{maxLength: maxDescriptionLength}}/>
+    errors.description = <FormattedMessage id="portal.support.tickets.validation.description.maxLength.text" values={{ maxLength: maxDescriptionLength }}/>
   }
 
   if (!status || status.length === 0) {
@@ -77,181 +73,171 @@ class SupportTicketForm extends React.Component {
     super(props)
 
     this.save = this.save.bind(this)
-    this.toggleStatus = this.toggleStatus.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
   }
 
-  componentWillMount() {
-    if (this.props.ticket) {
-      const {
-        ticket,
-        fields: {
-          subject,
-          description,
-          status,
-          type,
-          priority,
-          assignee
-        }
-      } = this.props
-
-      subject.onChange(ticket.get('subject'))
-      description.onChange(ticket.get('description'))
-      status.onChange(ticket.get('status'))
-      type.onChange(ticket.get('type'))
-      priority.onChange(ticket.get('priority'))
-      assignee.onChange(ticket.get('assignee_id'))
-    }
-  }
-
-  save() {
+  save(values) {
     const {
       ticket,
-      fields: {
-        subject,
-        description,
-        status,
-        type,
-        priority,
-        assignee
-      }
+      onSave
     } = this.props
 
     let data = {
-      subject: subject.value,
-      description: description.value,
-      status: status.value,
-      type: type.value,
-      priority: priority.value,
-      assignee: assignee.value
+      subject: values.subject,
+      description: values.description,
+      status: values.status,
+      type: values.type,
+      priority: values.priority,
+      assignee: values.assignee
     }
 
     if (ticket) {
       data.id = ticket.get('id')
     }
 
-    this.props.onSave(data)
+    // TODO: Handle submissionError with redux form
+    onSave(data)
   }
 
-  toggleStatus(value) {
-    const {
-      fields: { status }
-    } = this.props
-
-    status.onChange(value ? STATUS_OPEN : STATUS_SOLVED)
+  handleToggle(value) {
+    const { change } = this.props
+    // TODO: make use of isStatusOpen || isStatusClosed after Zendesk-integration
+    change('status', value)
   }
 
   render() {
     const {
       ticket,
-      fields: {
-        subject,
-        description,
-        status,
-        type,
-        priority,
-        assignee
-      },
-      onCancel
+      onCancel,
+      invalid,
+      submitting,
+      handleSubmit
     } = this.props
 
     return (
-      <form className="ticket-form">
-        <FormGroup validationState={getReduxFormValidationState(subject)}>
-          <ControlLabel><FormattedMessage id="portal.support.tickets.label.title.text" /></ControlLabel>
-          {getReduxFormValidationState(subject) &&
-            <HelpBlock>{subject.error}</HelpBlock>
-          }
-          <FormControl {...subject} />
-        </FormGroup>
+      <form onSubmit={handleSubmit(values => this.save(values))} className="ticket-form">
+        <Field
+          type="text"
+          name="subject"
+          placeholder={this.props.intl.formatMessage({ id: 'portal.support.tickets.label.title.text' })}
+          component={FieldFormGroup}
+        >
+          <FormattedMessage id="portal.support.tickets.label.title.text"/>
+        </Field>
 
         <hr/>
 
-        <FormGroup validationState={getReduxFormValidationState(description)}>
-          <ControlLabel><FormattedMessage id="portal.support.tickets.label.description.text" /></ControlLabel>
-          {getReduxFormValidationState(description) &&
-            <HelpBlock>{description.error}</HelpBlock>
-          }
-          <FormControl componentClass="textarea" {...description} />
-        </FormGroup>
+        <Field
+          type="textarea"
+          name="description"
+          placeholder={this.props.intl.formatMessage({ id: 'portal.support.tickets.label.description.text' })}
+          component={FieldFormGroup}
+        >
+          <FormattedMessage id="portal.support.tickets.label.description.text"/>
+        </Field>
 
         <hr/>
 
-        <div className='form-group ticket-form__status'>
-          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.status.text"/></label>
-          <Toggle
-            value={isStatusOpen(status.value)}
-            changeValue={this.toggleStatus}
-            onText={this.props.intl.formatMessage({id: 'portal.support.tickets.status.open.text'})}
-            offText={this.props.intl.formatMessage({id: 'portal.support.tickets.status.closed.text'})}
-          />
-        </div>
+        <Field
+          name="status"
+          component={FieldFormGroupToggle}
+          className="ticket-form__status"
+          onToggle={this.handleToggle}
+          onText={this.props.intl.formatMessage({ id: 'portal.support.tickets.status.open.text' })}
+          offText={this.props.intl.formatMessage({ id: 'portal.support.tickets.status.closed.text' })}
+        >
+          <FormattedMessage id="portal.support.tickets.label.status.text"/>
+        </Field>
 
         <hr/>
 
-        <div className='form-group'>
-          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.type.text"/></label>
-          <SelectWrapper
-            {...type}
-            className="input-select"
-            options={getTicketTypeOptions()}
-          />
-        </div>
+        <Field
+          name="type"
+          className="input-select"
+          component={FieldFormGroupSelect}
+          options={getTicketTypeOptions()}
+        >
+          <FormattedMessage id="portal.support.tickets.label.type.text"/>
+        </Field>
+
+        <hr />
+
+        <Field
+          name="priority"
+          className="input-select"
+          component={FieldFormGroupSelect}
+          options={getTicketPriorityOptions()}
+        >
+          <FormattedMessage id="portal.support.tickets.label.priority.text"/>
+        </Field>
 
         <hr/>
 
-        <div className='form-group'>
-          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.priority.text"/></label>
-          <SelectWrapper
-            {...priority}
-            className="input-select"
-            options={getTicketPriorityOptions()}
-          />
-        </div>
+        <Field
+          name="assignee"
+          className="input-select"
+          component={FieldFormGroupSelect}
+          options={[
+            { value: 235323, label: <FormattedMessage id="portal.support.tickets.label.support.text"/> }
+          ]}
+        >
+          <FormattedMessage id="portal.support.tickets.label.assignee.text"/>
+        </Field>
 
-        <hr/>
+        <FormFooterButtons>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
 
-        <div className='form-group'>
-          <label className='control-label'><FormattedMessage id="portal.support.tickets.label.assignee.text"/></label>
-          <SelectWrapper
-            {...assignee}
-            className="input-select"
-            options={[
-              { value: 235323, label: <FormattedMessage id="portal.support.tickets.label.support.text"/>}
-            ]}
-          />
-        </div>
-
-        <ButtonToolbar className="text-right extra-margin-top">
-          <Button className="btn-outline" onClick={onCancel}><FormattedMessage id="portal.button.cancel"/></Button>
-          <Button disabled={!!Object.keys(errors).length} bsStyle="primary"
-                  onClick={this.save}>{ticket ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}</Button>
-        </ButtonToolbar>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}>
+            {ticket ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}
+          </Button>
+        </FormFooterButtons>
       </form>
     )
   }
 }
 
+SupportTicketForm.displayName = "SupportTicketForm"
 SupportTicketForm.propTypes = {
-  fields: PropTypes.object,
+  change: PropTypes.func,
+  handleSubmit: PropTypes.func,
   intl: PropTypes.object,
+  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  submitting: PropTypes.bool,
   ticket: PropTypes.instanceOf(Map)
 }
 
-export default reduxForm({
+const mapStateToProps = (state, ownProps) => {
+  const hasTicket = !!ownProps.ticket
+
+  return {
+    initialValues: {
+      subject: hasTicket ? ownProps.ticket.get('subject') : null,
+      description: hasTicket ? ownProps.ticket.get('description') : null,
+      status: hasTicket ? isStatusClosed(ownProps.ticket.get('status')) : true,
+      assignee: hasTicket ? ownProps.ticket.get('assignee') : null,
+      type: hasTicket ? ownProps.ticket.get('type') : null,
+      priority: hasTicket ? ownProps.ticket.get('priority') : null
+    }
+  }
+}
+
+const mapDispatchToProps = () => {
+  return {}
+}
+
+const form = reduxForm({
   form: 'user-form',
-  fields: [
-    'subject',
-    'description',
-    'status',
-    'type',
-    'priority',
-    'assignee'
-  ],
-  initialValues: {
-    status: STATUS_OPEN,
-    assignee: null
-  },
-  validate: validate
-})(injectIntl(SupportTicketForm))
+  validate
+})(SupportTicketForm)
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))

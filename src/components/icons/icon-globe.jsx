@@ -17,6 +17,7 @@ const IconGlobe = (props) => {
   )
 }
 
+IconGlobe.displayName = 'IconGlobe'
 IconGlobe.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

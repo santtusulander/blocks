@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
-import { reduxForm } from 'redux-form'
-import { Modal } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { reduxForm, formValueSelector } from 'redux-form'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import * as recordActionCreators from '../../../redux/modules/dns-records/actions'
 
 import RecordForm from '../../../components/account-management/record-form'
+import SidePanel from '../../../components/side-panel'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidIPv4Address, isValidIPv6Address, isInt } from '../../../util/validators'
@@ -45,10 +46,8 @@ const validateIpAddress = (fields, intl) => {
     errorText: ''
   }
 }
-
-const validate = (fields, props) => {
-  let filteredFields = filterFields(fields)
-  const { type = '', ...rest } = filteredFields
+const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, props) => {
+  let filteredFields = filterFields({ type, value, name, ttl, prio })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
@@ -68,17 +67,16 @@ const validate = (fields, props) => {
       errorText: ipAddressConfig.errorText
     }
   }
-  return checkForErrors({ type, ...rest }, conditions)
+  return checkForErrors({ type, ...filteredFields }, conditions)
 }
 
-const RecordFormContainer = props => {
-  const { domain, edit, updateRecord, addRecord, closeModal, values, activeRecord, ...formProps } = props
-  const filteredValues = filterFields(values)
+const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal, recordType, recordName, activeRecord, ...formProps }) => {
   const recordFormProps = {
     domain,
     edit,
-    shouldShowField: isShown(props.fields.type.value),
-    submit: () => {
+    shouldShowField: isShown(recordType),
+    onSubmit: values => {
+      const filteredValues = filterFields(values)
       let { ttl, prio } = filteredValues
       if (ttl) {
         filteredValues.ttl = Number(ttl)
@@ -86,26 +84,28 @@ const RecordFormContainer = props => {
       if (prio) {
         filteredValues.prio = Number(prio)
       }
-      edit ?
+      return edit ?
         updateRecord(filteredValues, domain, activeRecord) :
         addRecord(filteredValues, domain)
     },
     cancel: closeModal,
     ...formProps
   }
+  const title = edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />
+  const subTitle = edit && recordName
   return (
-    <Modal show={true} dialogClassName="dns-edit-form-sidebar">
-      <Modal.Header>
-        <h1>{edit ? <FormattedMessage id='portal.account.recordForm.editRecord.title' /> : <FormattedMessage id='portal.account.recordForm.newRecord.title' />}</h1>
-        {edit && <p>{props.fields.name.value}</p>}
-      </Modal.Header>
-      <Modal.Body>
-        <RecordForm {...recordFormProps}/>
-      </Modal.Body>
-    </Modal>
+    <SidePanel
+      show={true}
+      title={title}
+      className="dns-edit-form-sidebar"
+      subTitle={subTitle}
+      cancel={closeModal}>
+      <RecordForm {...recordFormProps}/>
+    </SidePanel>
   )
 }
 
+RecordFormContainer.displayName = "RecordFormContainer"
 RecordFormContainer.propTypes = {
   activeRecord: PropTypes.object,
   addRecord: PropTypes.func,
@@ -113,51 +113,56 @@ RecordFormContainer.propTypes = {
   domain: PropTypes.string,
   edit: PropTypes.bool,
   fields: PropTypes.object,
-  updateRecord: PropTypes.func,
-  values: PropTypes.object
+  recordName: PropTypes.string,
+  recordType: PropTypes.string,
+  updateRecord: PropTypes.func
 
 }
 
-function mapStateToProps({ dnsRecords, dns }, { edit }) {
+function mapStateToProps(state, { edit }) {
+  const { dnsRecords, dns } = state
   const getRecordById = recordActionCreators.getById
+  const getField = formValueSelector('record-edit')
   let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
-  let initialValues = undefined
-  initialValues = activeRecord && edit && getRecordFormInitialValues(activeRecord.toJS())
-  let props = {
+  let initialValues = {}
+  if (activeRecord && edit) {
+    initialValues = getRecordFormInitialValues(activeRecord.toJS())
+  }
+  return {
     activeRecord,
+    initialValues,
+    recordName: getField(state, 'name'),
+    recordType: getField(state, 'type'),
     domain: dns.get('activeDomain'),
     loading: dnsRecords.get('fetching')
   }
-  if (initialValues) {
-    props.initialValues = initialValues
-  }
-  return props
 }
 
 function mapDispatchToProps(dispatch, { closeModal }) {
   const { startFetching, createResource, updateResource } = bindActionCreators(recordActionCreators, dispatch)
   return {
-    addRecord: (values, domain) => {
-      values = recordValues(values)
+    addRecord: (vals, domain) => {
+      vals = recordValues(vals)
       // Hardcode class-key as it is not set anywhere
-      values.class = 'IN'
+      vals.class = 'IN'
       startFetching()
-      createResource(domain, values.name, values)
+      return createResource(domain, vals.name, vals)
         .then(() => closeModal())
     },
     updateRecord: (formValues, zone, activeRecord) => {
-      let values = recordValues(formValues)
-      values.id = activeRecord.get('id')
-      values.class = 'IN'
+      let vals = recordValues(formValues)
+      vals.id = activeRecord.get('id')
+      vals.class = 'IN'
       startFetching()
-      updateResource(zone, activeRecord.get('name'), values)
+      return updateResource(zone, activeRecord.get('name'), vals)
         .then(() => closeModal())
     }
   }
 }
 
-export default injectIntl(reduxForm({
-  form: 'dns-edit',
-  fields: ['type', 'name', 'value', 'ttl', 'prio'],
+const form = reduxForm({
+  form: 'record-edit',
   validate
-}, mapStateToProps, mapDispatchToProps)(RecordFormContainer))
+})(RecordFormContainer)
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))

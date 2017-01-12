@@ -12,6 +12,7 @@ const IconEmail = (props) => {
   )
 }
 
+IconEmail.displayName = "IconEmail"
 IconEmail.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

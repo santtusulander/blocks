@@ -172,7 +172,7 @@
   }
 
   .primary-data .content-item-chart-line {
-    stroke-width: 1.5;
+    stroke-width: 2;
 
     .dark-theme &,
     .light-theme  & {
@@ -261,6 +261,13 @@
     text-overflow: ellipsis;
     word-wrap: break-word;
     white-space: nowrap;
+  }
+
+  .content-item-chart-tag {
+    bottom: 12%;
+    left: 50%;
+    padding: 0 $content-item-tag-font-size;
+    transform: translate(-50%, -32%);
   }
 
   .content-item-toolbar {

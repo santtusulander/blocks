@@ -14,6 +14,7 @@ const IconItemChart = (props) => {
   )
 }
 
+IconItemChart.displayName = "IconItemChart"
 IconItemChart.propTypes = {
   className: React.PropTypes.string,
   height: React.PropTypes.number,

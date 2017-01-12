@@ -11,6 +11,17 @@ $login-modal-logo-width: rem(28px);
 $login-modal-logo-right-padding: rem(18px);
 $login-modal-logo-bottom-padding: rem(18px);
 $login-modal-logo-left-padding: rem(12px);
+$login-modal-token-input-info-top-padding: rem(16px);
+$login-modal-token-input-width-height: rem(52px);
+$login-modal-token-input-margins: rem(12px);
+$login-modal-token-inputs-group-padding: rem(70px);
+$login-modal-token-inputs-group-margin-bottom: rem(102px);
+$login-modal-token-trouble-btn-margin-top: rem(64px);
+$login-modal-token-trouble-btn-margin-bottom: rem(10px);
+$login-modal-token-having-trouble-radio-padding-top: rem(15px);
+$login-modal-token-having-trouble-radio-first-margint-top: rem(-20px);
+$login-modal-token-having-trouble-radio-span-padding-left: rem(5px);
+$login-modal-token-having-trouble-support-text-margin-bottom: rem(20px);
 
 .login-modal {
   .modal-dialog {
@@ -64,7 +75,34 @@ $login-modal-logo-left-padding: rem(12px);
       margin: $login-modal-body-bottom-margin 0 0;
       color: rgba($dt-text-color, 0.5);
     }
+
+    .support-text {
+      margin-bottom: $login-modal-token-having-trouble-support-text-margin-bottom;
+    }
+
+    .token-trouble-btn {
+      margin-top: $login-modal-token-trouble-btn-margin-top;
+      margin-bottom: $login-modal-token-trouble-btn-margin-bottom;
+    }
+
+    .having-trouble .radio {
+      padding-top: $login-modal-token-having-trouble-radio-padding-top;
+    }
+
+    .having-trouble .radio span > span {
+      padding-left: $login-modal-token-having-trouble-radio-span-padding-left;
+    }
+
+    .having-trouble .radio:first-child {
+      margin-top: $login-modal-token-having-trouble-radio-first-margint-top;
+    }
+
   }
+}
+
+.token-inputs-group.modal-body {
+  padding: 0 $login-modal-token-inputs-group-padding $login-modal-body-bottom-padding;
+  margin-bottom: $login-modal-token-inputs-group-margin-bottom;
 }
 
 .login-header {
@@ -140,6 +178,10 @@ $login-modal-logo-left-padding: rem(12px);
   margin-bottom: 20px;
 }
 
+.token-input-info {
+  padding-top: $login-modal-token-input-info-top-padding;
+}
+
 .action-button-container {
   text-align: right;
 
@@ -159,5 +201,29 @@ $login-modal-logo-left-padding: rem(12px);
     &.active {
       fill: $pale-blue;
     }
+  }
+}
+
+.input-group {
+  .token-input-xs {
+    position: relative;
+    float: left;
+    min-height: $login-modal-token-input-width-height;
+
+    input {
+      width: $login-modal-token-input-width-height;
+      height: $login-modal-token-input-width-height;
+      margin-right: $login-modal-token-input-margins;
+      margin-left: $login-modal-token-input-margins;
+      text-align: center;
+    }
+  }
+
+  .token-input-xs input:first-child {
+    margin-left: 0;
+  }
+
+  .token-input-xs input:last-child {
+    margin-right: 0;
   }
 }
