@@ -99,7 +99,7 @@ export class LoginFormTwoFactorCode extends Component {
   }
 
   render() {
-    const tokenInputs = TWO_FA_CODE_INPUT_FIELD_NAMES.map((id) => {
+    const tokenInputs = TWO_FA_CODE_INPUT_FIELD_NAMES.map((id, index) => {
       return (
         <FormControl
           type="text"
@@ -111,7 +111,8 @@ export class LoginFormTwoFactorCode extends Component {
           onFocus={this.onFocus}
           onKeyPress={this.onKeyPress}
           onKeyDown={this.onKeyDown}
-          disabled={this.props.fetching} />
+          disabled={this.props.fetching}
+          autoFocus={(index === 0) ? true : false} />
       )
     })
 
