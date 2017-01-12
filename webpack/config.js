@@ -13,7 +13,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].js',
     publicPath: isProductionBuild() ? publicUrl : `http://localhost:${process.env.PORT}/`,
-    sourceMapFilename: '[name].[hash].js.map',
+    sourceMapFilename: '[file].map',
     chunkFilename: '[id].chunk.js'
   },
   resolve: {

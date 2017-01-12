@@ -4,6 +4,10 @@
 
   .popup-title {
     font-weight: 700;
+
+    .city-name {
+      text-transform: capitalize;
+    }
   }
 
   table {
