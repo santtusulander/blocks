@@ -205,9 +205,7 @@ class ConfigurationDetails extends React.Component {
           </FormGroup>
         </Row>
 
-        <Row className="form-groups">
-          <InputConnector className="col-xs-offset-3 show"/>
-
+        <Row>
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
@@ -230,7 +228,9 @@ class ConfigurationDetails extends React.Component {
           </FormGroup>
         </Row>
 
-        <Row>
+        <Row className="form-groups">
+          <InputConnector className="col-xs-offset-3 show"/>
+
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
