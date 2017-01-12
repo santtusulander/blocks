@@ -525,7 +525,9 @@ export function getTopURLs(urlMetrics, dataKey) {
 }
 
 /**
- * Builds options for fetching data
+ * Builds options for fetching data.
+ * TODO: Refactor this so that we'll have one function for each option, e.g. buildByCityOpts
+ * UDNP-2305 –– https://vidscale.atlassian.net/browse/UDNP-2305
  *
  * @method buildFetchOpts
  * @param  {Object}  coordinates              Object of map bounds
@@ -542,7 +544,7 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
     })
   }
 
-  const fetchOpts = location.pathname && buildAnalyticsOpts(params, filters, location)
+  const fetchOpts = location.pathname ? buildAnalyticsOpts(params, filters, location) : {}
   const startDate  = filters.getIn(['dateRange', 'startDate'])
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
