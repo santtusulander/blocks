@@ -217,7 +217,7 @@ class Mapbox extends React.Component {
           {
             title: features[0].properties.cluster ?
                     'Cluster of ' + features[0].properties.point_count + ' cities' :
-                    features[0].properties.name,
+                    <span className="city-name">{features[0].properties.name}</span>,
             total: features[0].properties[this.props.dataKey]
           },
           [feature.lngLat.lng, feature.lngLat.lat])
