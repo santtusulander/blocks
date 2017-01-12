@@ -2,6 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../icon.jsx')
+jest.unmock('classnames')
 import Icon from '../icon.jsx'
 
 describe('Icon', () => {

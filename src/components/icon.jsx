@@ -1,13 +1,10 @@
 import React from 'react'
+import classnames from 'classnames'
 
 const Icon = (props) => {
   const {children, className, height, viewbox, width} = props
-  let classNames = 'icon';
-  if(className) {
-    classNames = classNames + ' ' + className;
-  }
   return (
-    <svg className={classNames}
+    <svg className={classnames('icon', className)}
       viewBox={viewbox || '0 0 36 36'}
       width={width || 36}
       height={height || 36}>
