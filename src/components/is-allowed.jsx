@@ -1,20 +1,22 @@
-import React, { PropTypes, Children } from 'react'
+import { PropTypes, Children, Component } from 'react'
 import { List, Map } from 'immutable'
 
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 
-const IsAllowed = (props, context) => {
-  const { children,  to, not } = props;
-  const { currentUser, roles } = context;
+class IsAllowed extends Component {
+  render(){
+    const { children,  to, not } = this.props;
+    const { currentUser, roles } = this.context;
 
-  let isAllowed = checkPermissions(roles, currentUser, to)
-  if(not) {
-    isAllowed = !isAllowed
+    let isAllowed = checkPermissions(roles, currentUser, to)
+    if(not) {
+      isAllowed = !isAllowed
+    }
+    return (
+      !!isAllowed && Children.only(children)
+    )
   }
-  return (
-    !!isAllowed && Children.only(children)
-  )
 }
 
 IsAllowed.displayName = 'IsAllowed'
@@ -25,8 +27,8 @@ IsAllowed.contextTypes = {
 }
 
 IsAllowed.propTypes = {
-  children: React.PropTypes.node,
-  not: React.PropTypes.bool,
+  children: PropTypes.node,
+  not: PropTypes.bool,
   to: PropTypes.oneOf(Object.keys(PERMISSIONS))
 }
 
