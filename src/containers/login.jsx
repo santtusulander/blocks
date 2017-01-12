@@ -134,10 +134,10 @@ export class Login extends React.Component {
                           this.state.username)
       } else {
         // Clear inputs values on error.
-        codeInputs.forEach((input) => {
-          input.value = ''
-        })
-
+        for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
+          codeInputs[inputIndex].value = ''
+        }
+        
         this.setState({
           loginError: action.payload.message
         })

@@ -43,11 +43,12 @@ export class LoginFormTwoFactorCode extends Component {
       let next = target.nextElementSibling;
 
       // Verify all inputs
-      codeInputs.forEach(({value}) => {
-        if (value.length == TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
-          code += value
+      for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
+        let inputValue = codeInputs[inputIndex].value
+        if (inputValue.length == TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
+          code += inputValue
         }
-      })
+      }
 
       // If all inputs has a value, parse those value and submit token
       if (code.length == codeInputs.length) {
@@ -151,7 +152,7 @@ export class LoginFormTwoFactorCode extends Component {
             </FormGroup>
             <div className="text-center">
               { this.props.fetching &&
-                <LoadingSpinnerSmall />
+                <div className='token-input-info loading'><LoadingSpinnerSmall /></div>
               }
               { !this.props.fetching &&
                 <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
