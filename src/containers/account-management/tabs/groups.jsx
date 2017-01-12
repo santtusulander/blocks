@@ -1,15 +1,17 @@
 import React from 'react'
-import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
+import { Tooltip, FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { Field } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import FieldFormGroup from '../../../components/form/field-form-group'
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
@@ -224,10 +226,20 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
+    const errorTooltip = ({ error, active }) =>
+      !active &&
+        <Tooltip placement="bottom" className="in" id="tooltip-bottom">
+          {error}
+        </Tooltip>
     const inlineAddInputs = [
       [
         {
-          input: <FormControl id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}/>
+          input: <Field
+            name="name"
+            id="name"
+            ErrorComponent={errorTooltip}
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}
+            component={FieldFormGroup}/>
         }
       ],
       [
@@ -286,7 +298,6 @@ class AccountManagementAccountGroups extends React.Component {
           <tbody>
           {this.state.adding && <InlineAdd
             validate={this.validateInlineAdd}
-            fields={['name']}
             inputs={inlineAddInputs}
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
