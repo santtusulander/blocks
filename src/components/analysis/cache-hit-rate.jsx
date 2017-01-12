@@ -4,9 +4,9 @@ import moment from 'moment'
 import Immutable from 'immutable'
 import {FormattedMessage} from 'react-intl'
 
+import BarChart from '../charts/bar-chart'
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
-import AnalysisStackedByTime from './stacked-by-time'
 import AnalysisByTime from './by-time'
 import TableSorter from '../table-sorter'
 import { paleblue } from '../../constants/colors'
@@ -24,28 +24,11 @@ class AnalysisCacheHitRate extends React.Component {
       chartType: 'column'
     }
 
-    this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.changeChartType = this.changeChartType.bind(this)
     this.sortedData = this.sortedData.bind(this)
+  }
 
-    this.measureContainersTimeout = null
-  }
-  componentDidMount() {
-    this.measureContainers()
-    // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
-    window.addEventListener('resize', this.measureContainers)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
-    clearTimeout(this.measureContainersTimeout)
-  }
-  measureContainers() {
-    this.setState({
-      stacksWidth: this.refs.stacksHolder.clientWidth
-    })
-  }
   changeSort(column, direction, sortFunc) {
     this.setState({
       sortBy: column,
@@ -74,45 +57,43 @@ class AnalysisCacheHitRate extends React.Component {
 
     const detail = stats.get('detail') || Immutable.List()
 
-    const details = detail.map(datapoint => {
+    const data = detail.map(datapoint => {
       return {
         chit_ratio: datapoint.get('chit_ratio'),
-        timestamp: datapoint.get('timestamp')
+        name: datapoint.get('timestamp').getDate()
       }
     })
 
-    let dataSets = [];
-    dataSets.push( details.toJS() )
-
     if(this.state.chartType === 'column') {
       chart = (
-        <AnalysisStackedByTime
-          padding={40}
-          dontShowHours={true}
-          dataKey='chit_ratio'
-          dataSets={dataSets}
-          width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
+        <BarChart
+          chartLabel="testingendeeros"
+          barModels={[{ dataKey: 'chit_ratio', name: 'Daily Cache Hit Ratio', className: 'line-0' }]}
+          chartData={data.toJS()}/>
+      //   <AnalysisStackedByTime
+      //     padding={40}
+      //     dontShowHours={true}
+      //     dataKey='chit_ratio'
+      //     dataSets={dataSets}
+      //     width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
       )
     } else {
-      const datasets = []
-      if(dataSets) {
-        datasets.push({
-          area: false,
-          color: paleblue,
-          comparisonData: false,
-          data: dataSets[0],
-          id: 'http',
-          label: 'Cache Hit Ratio',
-          line: true,
-          stackedAgainst: false,
-          xAxisFormatter: false
-        })
+      const dataset = {
+        area: false,
+        color: paleblue,
+        comparisonData: false,
+        data,
+        id: 'http',
+        label: 'Cache Hit Ratio',
+        line: true,
+        stackedAgainst: false,
+        xAxisFormatter: false
       }
       chart = (
         <AnalysisByTime
           axes={true}
           dataKey="chit_ratio"
-          dataSets={datasets}
+          dataSets={[dataset]}
           padding={40}
           showLegend={true}
           showTooltip={false}
@@ -139,11 +120,8 @@ class AnalysisCacheHitRate extends React.Component {
           */}
         </SectionHeader>
 
-        <SectionContainer>
-          <div ref="stacksHolder">
-            {this.props.fetching ?
-              <FormattedMessage id="portal.loading.text"/> : chart}
-          </div>
+        <SectionContainer className="analysis-contribution">
+          {chart}
         </SectionContainer>
 
         <SectionContainer>

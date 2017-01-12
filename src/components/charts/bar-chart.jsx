@@ -36,7 +36,7 @@ export default class BarChart extends Component {
     return this.bars.map((bar, index) =>
       <Bar
         key={index}
-        isAnimationActive={false}
+        isAnimationActive={true}
         {...bar}/>
     )
   }
