@@ -544,13 +544,13 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
     })
   }
 
-  const fetchOpts = location.pathname ? buildAnalyticsOpts(params, filters, location) : {}
+  const fetchOpts = location.pathname && buildAnalyticsOpts(params, filters, location)
   const startDate  = filters.getIn(['dateRange', 'startDate'])
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
   const byTimeOpts = Object.assign({
     granularity: rangeDiff >= 2 ? 'day' : 'hour'
-  }, fetchOpts)
+  }, fetchOpts || params)
   const aggregateGranularity = byTimeOpts.granularity
 
   const dashboardStartDate  = Math.floor(startDate / 1000)
@@ -562,6 +562,8 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
   }, params)
 
   const byCityOpts = Object.assign({
+    startDate: byTimeOpts.startDate || toUnixTimestamp(startDate),
+    endDate: byTimeOpts.endDate || toUnixTimestamp(endDate),
     max_cities: MAPBOX_MAX_CITIES_FETCHED,
     latitude_south: coordinates.south || null,
     longitude_west: coordinates.west || null,
