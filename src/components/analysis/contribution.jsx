@@ -32,6 +32,7 @@ class AnalysisContribution extends React.Component {
       sortFunc: sortFunc
     })
   }
+
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
       if(a.get(sortBy) < b.get(sortBy)) {
@@ -50,35 +51,33 @@ class AnalysisContribution extends React.Component {
     const isOnNet = this.props.onOffFilter.includes('on')
     const isOffNet = this.props.onOffFilter.includes('off')
 
+    const barModels = []
+    if (isHttps && isOffNet)
+      barModels.push({ dataKey: 'offNetHttps', name: 'Off-Net HTTPS', className: 'line-3' })
+    if (isHttp && isOffNet)
+      barModels.push({ dataKey: 'offNetHttp', name: 'Off-Net HTTP', className: 'line-2' })
+    if (isHttps && isOnNet)
+      barModels.push({ dataKey: 'onNetHttps', name: 'On-Net HTTPS', className: 'line-1' })
+    if (isHttp && isOnNet)
+      barModels.push({ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' })
 
-    const providers = this.props.stats.reduce((list, provider, i) => {
-      let data = [0, 0, 0, 0];
-
+    const chartData = this.props.stats.map(provider => {
+      const dataObject = {}
       if (isHttp && isOnNet)
-        data[0] = (provider.getIn(['http','net_on_bytes'], 0))
+        dataObject.onNetHttp = provider.getIn(['http','net_on_bytes'])
       if (isHttps && isOnNet)
-        data[1] = (provider.getIn(['https','net_on_bytes'], 0))
+        dataObject.onNetHttps = provider.getIn(['https','net_on_bytes'])
       if (isHttp && isOffNet)
-        data[2] = (provider.getIn(['http','net_off_bytes'], 0))
+        dataObject.offNetHttp = provider.getIn(['http','net_off_bytes'])
       if (isHttps && isOffNet)
-        data[3] = (provider.getIn(['https','net_off_bytes'], 0))
+        dataObject.offNetHttps = provider.getIn(['https','net_off_bytes'])
 
-      const providerRecord = Immutable.fromJS({
-        group: provider.get('name'),
-        groupIndex: i,
-        data: data
-      })
-
-      // Only show the data for this provider if it is selected in the filter
-      // and there is data for the provider after taking the on/off net and
-      // service type filters into account.
-      if (data.length && data.some(val => val > 0)) {
-        return list.push(providerRecord);
-      } else {
-        return list;
+      return {
+        name: provider.get('name'),
+        ...dataObject
       }
 
-    }, Immutable.List())
+    }).toJS()
 
     const byCountryStats = this.props.stats.reduce((byCountry, provider) => {
       const countryRecord = provider.get('countries').map(country => {
@@ -106,19 +105,12 @@ class AnalysisContribution extends React.Component {
       <div>
         <SectionHeader sectionHeaderTitle={this.props.sectionHeaderTitle} />
         <div>
-          <SectionContainer className="analysis-contribution">
-            <div ref="stacksHolder">
-              <AnalysisStackedByGroup padding={40}
-                chartLabel={`${this.props.intl.formatMessage({id: 'portal.analytics.contribution.traffic.label'})} ${trafficByDateRangeLabel}`}
-                datasets={providers}
-                datasetLabels={[
-                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttp.label"/>,
-                  <FormattedMessage id="portal.analytics.serviceProviderContribution.onNetHttps.label"/>,
-                  <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttp.label"/>,
-                  <FormattedMessage id="portal.analytics.serviceProviderContribution.offNetHttps.label"/>
-                ]}
-                width={this.state.stacksWidth} height={this.state.stacksWidth / 3}/>
-            </div>
+          <SectionContainer className="analysis-chart-container">
+            <BarChart
+              chartLabel={trafficByDateRangeLabel}
+              maxBarSize={90}
+              barModels={barModels}
+              chartData={chartData}/>
           </SectionContainer>
 
           <SectionContainer>
