@@ -9,13 +9,13 @@ import StackAreaCustomTick from './stacked-area-chart-tick.js'
 
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
-import { paleblue, green, darkblue, semiblue, black, tealgreen, yellow, purple } from '../../constants/colors'
+import { paleblue, green, black20, darkblue, black, tealgreen, yellow, purple } from '../../constants/colors'
 import './stacked-area-chart.scss'
 
 const AREA_COLORS = {
   http: paleblue,
   https: tealgreen,
-  comparison_http: semiblue,
+  comparison_http: black20,
   comparison_https: darkblue,
 
   odd: paleblue,
@@ -54,19 +54,23 @@ const getAreaColor = (key, i) => {
 }
 
 const getStrokeColor = (key) => {
-  let colorKey;
+  let stroke;
 
-  if ( key.includes('comparison_https') ) colorKey = 'comparison_https'
-  else if ( key.includes('comparison_http') ) colorKey = 'comparison_http'
+  if ( key.includes('comparison_https') ) stroke = 'comparison_https'
+  else if ( key.includes('comparison_http') ) stroke = 'comparison_http'
 
-  if(colorKey) {
-    return STROKE_COLORS[colorKey]
+  if(stroke) {
+    return STROKE_COLORS[stroke]
   }
-  return false;
+  return "false";
 }
 
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) => {
+
   let dateFormat = "MM/DD"
+
+  const isComparison = areas.filter( ({dataKey}) => dataKey.includes('comparison_'))
+  const customLegendArea = isComparison.length ? areas.reverse() : areas
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
 
@@ -87,13 +91,14 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
   };
+
   const renderAreas = (areas) => {
     return areas.map((area, i) =>
       <Area
         key={i}
         isAnimationActive={false}
-        stroke={getStrokeColor(area.dataKey, i)}
-        strokeWidth='3'
+        stroke={getStrokeColor(area.dataKey)}
+        strokeWidth='2'
         fill={getAreaColor(area.dataKey, i)}
         {...area}
       />
@@ -111,7 +116,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
         <Legend
           wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
           margin={{top: 0, left: 0, right: 0, bottom: 0}}
-          content={<CustomLegend data={areas}/>}
+          content={<CustomLegend data={customLegendArea}/>}
         />
 
         <Tooltip

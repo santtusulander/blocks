@@ -10,4 +10,4 @@ export const grey = '#333'
 export const silver = '#b1b3b4'
 export const darkblue = '#0c546e'
 export const tealgreen ='#009f80'
-export const semiblue='#0e68b0'
+export const black20 = 'rgba(0, 0, 0, 0.2)';
