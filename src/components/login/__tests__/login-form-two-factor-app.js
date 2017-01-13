@@ -35,7 +35,7 @@ describe('LoginFormTwoFactorApp', () => {
       const loginFormApp = shallow(
         subject()
       )
-      expect(loginFormApp.find('.token-input-info').text()).not.toContain('Test error')
+      expect(loginFormApp.find('.token-input-info').at(0).text()).not.toContain('Test error')
     })
 
     it('should not show small loading spinner on login error', () => {
@@ -49,7 +49,7 @@ describe('LoginFormTwoFactorApp', () => {
       const loginFormApp = shallow(
         subject('Test error')
       )
-      expect(loginFormApp.find('.token-input-info').text()).toContain('Test error')
+      expect(loginFormApp.find('.token-input-info').at(0).text()).toContain('Test error')
     })
   })
 })

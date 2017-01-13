@@ -71,7 +71,7 @@ export class LoginFormTwoFactorApp extends Component {
           </div>
           <div className="text-center">
             { !this.props.loginError &&
-              <LoadingSpinnerSmall />
+              <div className='token-input-info loading'><LoadingSpinnerSmall /></div>
             }
             <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
               <FormattedMessage id="portal.login.2fa.goBack.text"/>
