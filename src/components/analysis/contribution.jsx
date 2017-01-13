@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
-import AnalysisStackedByGroup from './stacked-by-group'
+import BarChart from '../charts/bar-chart'
 import TableSorter from '../table-sorter'
 import {formatBytes} from '../../util/helpers'
 
@@ -17,36 +17,14 @@ class AnalysisContribution extends React.Component {
     super(props);
 
     this.state = {
-      stacksWidth: 100,
       sortBy: 'percent_total',
       sortDir: -1,
       sortFunc: ''
     }
-
-    this.measureContainers = this.measureContainers.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.sortedData = this.sortedData.bind(this)
+  }
 
-    this.measureContainersTimeout = null
-  }
-  componentDidMount() {
-    this.measureContainers()
-    // TODO: remove this timeout as part of UDNP-1426
-    this.measureContainersTimeout = setTimeout(() => {this.measureContainers()}, 500)
-    window.addEventListener('resize', this.measureContainers)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
-    clearTimeout(this.measureContainersTimeout)
-  }
-  measureContainers() {
-    if (!this.refs.stacksHolder) {
-      return;
-    }
-    this.setState({
-      stacksWidth: this.refs.stacksHolder && this.refs.stacksHolder.clientWidth
-    })
-  }
   changeSort(column, direction, sortFunc) {
     this.setState({
       sortBy: column,
