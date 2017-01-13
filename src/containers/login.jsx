@@ -10,7 +10,7 @@ import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
 
-import { getUserToken, getUserName, getTheme } from '../util/local-storage'
+import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -223,7 +223,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUiTheme: () => dispatch(changeTheme( getTheme() )),
+    setUiTheme: () => dispatch(changeTheme( getUITheme() )),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
