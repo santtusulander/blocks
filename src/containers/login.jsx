@@ -180,7 +180,6 @@ export class Login extends React.Component {
 
     const twoFAByAppLoginForm = (
       <LoginFormTwoFactorApp
-        router={this.props.router}
         userName={this.state.username}
         loginError={this.state.loginError}
         startAppPulling={this.authyAppPolling}
