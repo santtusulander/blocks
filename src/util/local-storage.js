@@ -16,7 +16,7 @@ export const setUserToken = (token) => {
  * @return {String}
  */
 export const getUserToken = () => {
-  localStorage.setItem( LOCALSTORAGE_USER_TOKEN )
+  return localStorage.getItem( LOCALSTORAGE_USER_TOKEN )
 }
 
 /**
@@ -40,7 +40,7 @@ export const setTokenMeta = ( tokenMeta ) => {
  * @return {Object}
  */
 export const getTokenMeta = () => {
-  return JSON.parse(localStorage.getItem( LOCALSTORAGE_USER_TOKEN_META )||{})
+  return JSON.parse( localStorage.getItem( LOCALSTORAGE_USER_TOKEN_META ) || {})
 }
 
 /**
@@ -88,7 +88,7 @@ export const setUserName = (userName) => {
  * @return {String} userName
  */
 export const getUserName = () => {
-  return localStorage.setItem( LOCALSTORAGE_USER_NAME )
+  return localStorage.getItem( LOCALSTORAGE_USER_NAME )
 }
 
 /**
