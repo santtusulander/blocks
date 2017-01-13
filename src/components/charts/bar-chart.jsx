@@ -10,34 +10,27 @@ export default class BarChart extends Component {
   constructor(props) {
     super(props)
     this.state = { showTooltip: props.tooltipAlwaysActive }
-    this.bars = props.barModels.map(barModel => this.getBarProps(barModel))
   }
 
   /**
    * Attach mouse-event handlers to a bar if tooltip is desired to be shown only on bar hover.
-   * If there are multiple bars to display per dataset, add stackId-prop that defines which stack
-   * each bar belongs in. Otherwise delete the property as Recharts throws an error.
-   * Defaulting all bars representing data for one entity to one stack.
+   * If no stackId is present, default all bars to the same stack.
    */
   getBarProps(bar) {
     if (!this.props.tooltipAlwaysActive) {
       bar.onMouseEnter = () => this.setState({ showTooltip: true })
       bar.onMouseLeave = () => this.setState({ showTooltip: false })
     }
-    if (this.props.barModels.length > 1) {
-      bar.stackId = bar.stackId || 0
-    } else if (bar.stackId) {
-      delete bar.stackId
-    }
+    bar.stackId = bar.stackId || 0
     return bar
   }
 
   renderBars() {
-    return this.bars.map((bar, index) =>
+    return this.props.barModels.map((bar, index) =>
       <Bar
         key={index}
         isAnimationActive={false}
-        {...bar}/>
+        {...this.getBarProps(bar)}/>
     )
   }
 
