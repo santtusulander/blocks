@@ -46,12 +46,10 @@ class AnalyticsTabVisitors extends React.Component {
       })
     }
 
-    const startDate = filters.getIn(['customDateRange', 'startDate'])
-    const endDate = filters.getIn(['customDateRange', 'endDate'])
-    const aggregate = this.determineAggregation(startDate, endDate)
+    const aggregation = this.determineAggregation(filters)
 
     const { fetchOpts, byCityOpts } = buildFetchOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
-    const optsWithAggregation = {...fetchOpts, aggregate_granularity: aggregate}
+    const optsWithAggregation = {...fetchOpts, aggregate_granularity: aggregation}
 
     this.props.visitorsActions.fetchByBrowser(optsWithAggregation)
     this.props.visitorsActions.fetchByCountry(optsWithAggregation)
@@ -60,7 +58,7 @@ class AnalyticsTabVisitors extends React.Component {
 
     if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.visitorsActions.startFetching()
-      this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregate}).then(() =>
+      this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation}).then(() =>
         this.props.visitorsActions.finishFetching()
       )
 
@@ -70,9 +68,7 @@ class AnalyticsTabVisitors extends React.Component {
   getCityData(south, west, north, east) {
     const { params, filters, location } = this.props
 
-    const startDate = filters.getIn(['customDateRange', 'startDate'])
-    const endDate = filters.getIn(['customDateRange', 'endDate'])
-    const aggregate = this.determineAggregation(startDate, endDate)
+    const aggregation = this.determineAggregation(filters)
 
     return getCitiesWithinBounds({
       params,
@@ -81,11 +77,13 @@ class AnalyticsTabVisitors extends React.Component {
       coordinates: { south, west, north, east },
       activeHostConfiguredName: this.props.activeHostConfiguredName,
       actions: this.props.visitorsActions,
-      aggregate
+      aggregation
     })
   }
 
-  determineAggregation(startDate, endDate) {
+  determineAggregation(filters) {
+    const startDate = filters.getIn(['customDateRange', 'startDate'])
+    const endDate = filters.getIn(['customDateRange', 'endDate'])
     const rangeDiff = startDate && endDate ? endDate.diff(startDate, 'day') : 0
     return rangeDiff > 0 ? 'month' : 'day'
   }
