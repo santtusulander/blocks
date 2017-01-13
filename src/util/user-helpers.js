@@ -39,6 +39,7 @@ export const stripNonNumeric = (numStr) => {
  * @return {Boolean}
  */
 export const tokenDidExpire = () => {
+  //TODO: UDNP-2308 Make this use use localStorage - methods after UDNP-2304 is merged
   const tokenMeta = JSON.parse(localStorage.getItem( 'EricssonUDNUserTokenMeta')||{})
   const expiresAt = tokenMeta.expires_at
   const currentUnixTime = Math.floor(Date.now() / 1000)
