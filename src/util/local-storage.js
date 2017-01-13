@@ -55,7 +55,7 @@ export const deleteTokenMeta = () => {
  * Set theme in localStorage
  * @param {String} theme
  */
-export const setTheme = (theme) => {
+export const setUITheme = (theme) => {
   localStorage.setItem( LOCALSTORAGE_UI_THEME, theme)
 }
 
@@ -63,8 +63,16 @@ export const setTheme = (theme) => {
  * Get theme from localStorage
  * @return {String} theme
  */
-export const getTheme = () => {
+export const getUITheme = () => {
   return localStorage.getItem(LOCALSTORAGE_UI_THEME)
+}
+
+/**
+ * delete ui theme from localStorage
+ *
+ */
+export const deleteUITheme = () => {
+  localStorage.removeItem(LOCALSTORAGE_UI_THEME)
 }
 
 /**
@@ -81,4 +89,12 @@ export const setUserName = (userName) => {
  */
 export const getUserName = () => {
   return localStorage.setItem( LOCALSTORAGE_USER_NAME )
+}
+
+/**
+ * Delete userName from localStorage
+ *
+ */
+export const deleteUserName = () => {
+  localStorage.removeItem( LOCALSTORAGE_USER_NAME)
 }
