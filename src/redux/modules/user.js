@@ -125,6 +125,8 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   localStorage.removeItem('EricssonUDNUserToken')
+  localStorage.removeItem('EricssonUDNUserTokenMeta')
+  
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.merge({'loggedIn': false, 'fetching': false})
@@ -166,6 +168,7 @@ export function deleteUserFailure(state) {
 export function userTokenChecked(state, action){
   if(action.payload && action.payload.token) {
     localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+    localStorage.setItem('EricssonUDNUserTokenMeta', JSON.stringify(action.payload.tokenMeta))
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
@@ -354,10 +357,16 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
+      //TODO: UDNP-2357 Should we save services object?
       if(res) {
         return {
           token: token,
-          username: res.data.username
+          username: res.data.username,
+          tokenMeta: {
+            expires_at: res.data.expires_at,
+            issued_at: res.data.issued_at,
+            validity_duration: res.data.validity_duration
+          }
         }
       }
     })
