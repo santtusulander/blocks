@@ -46,16 +46,21 @@ class AnalyticsTabVisitors extends React.Component {
       })
     }
 
-    const { fetchOpts, byCityOpts, aggregateGranularity } = buildFetchOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
+    const startDate = filters.getIn(['customDateRange', 'startDate'])
+    const endDate = filters.getIn(['customDateRange', 'endDate'])
+    const aggregate = this.determineAggregation(startDate, endDate)
 
-    this.props.visitorsActions.fetchByBrowser({...fetchOpts, aggregate_granularity: aggregateGranularity})
-    this.props.visitorsActions.fetchByCountry({...fetchOpts, aggregate_granularity: aggregateGranularity})
+    const { fetchOpts, byCityOpts } = buildFetchOpts({ params, filters, location, coordinates: this.props.mapBounds.toJS() })
+    const optsWithAggregation = {...fetchOpts, aggregate_granularity: aggregate}
+
+    this.props.visitorsActions.fetchByBrowser(optsWithAggregation)
+    this.props.visitorsActions.fetchByCountry(optsWithAggregation)
     this.props.visitorsActions.fetchByTime(fetchOpts)
-    this.props.visitorsActions.fetchByOS({...fetchOpts, aggregate_granularity: aggregateGranularity})
+    this.props.visitorsActions.fetchByOS(optsWithAggregation)
 
     if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.visitorsActions.startFetching()
-      this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity}).then(() =>
+      this.props.visitorsActions.fetchByCity({...byCityOpts, aggregate_granularity: aggregate}).then(() =>
         this.props.visitorsActions.finishFetching()
       )
 
@@ -65,14 +70,24 @@ class AnalyticsTabVisitors extends React.Component {
   getCityData(south, west, north, east) {
     const { params, filters, location } = this.props
 
+    const startDate = filters.getIn(['customDateRange', 'startDate'])
+    const endDate = filters.getIn(['customDateRange', 'endDate'])
+    const aggregate = this.determineAggregation(startDate, endDate)
+
     return getCitiesWithinBounds({
       params,
       filters,
       location,
       coordinates: { south, west, north, east },
       activeHostConfiguredName: this.props.activeHostConfiguredName,
-      actions: this.props.visitorsActions
+      actions: this.props.visitorsActions,
+      aggregate
     })
+  }
+
+  determineAggregation(startDate, endDate) {
+    const rangeDiff = startDate && endDate ? endDate.diff(startDate, 'day') : 0
+    return rangeDiff > 0 ? 'month' : 'day'
   }
 
   render() {

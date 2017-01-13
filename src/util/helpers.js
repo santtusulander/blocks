@@ -549,16 +549,15 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
   const byTimeOpts = Object.assign({
-    granularity: rangeDiff >= 2 ? 'day' : 'hour'
+    granularity:  rangeDiff >= 2 ? 'day' : 'hour'
   }, fetchOpts || params)
-  const aggregateGranularity = byTimeOpts.granularity
 
   const dashboardStartDate  = Math.floor(startDate / 1000)
   const dashboardEndDate    = Math.floor(endDate / 1000)
   const dashboardOpts = Object.assign({
     startDate: dashboardStartDate,
     endDate: dashboardEndDate,
-    granularity: 'hour'
+    granularity: rangeDiff >= 1 ? 'day' : 'hour'
   }, params)
 
   const byCityOpts = Object.assign({
@@ -572,5 +571,5 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
     show_detail: false
   }, byTimeOpts)
 
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
+  return { byTimeOpts, fetchOpts, byCityOpts, dashboardOpts }
 }
