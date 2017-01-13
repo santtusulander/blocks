@@ -24,8 +24,8 @@ export class Login extends React.Component {
     }
 
     this.onLoginPasswordSubmit = this.onLoginPasswordSubmit.bind(this)
+    this.onCodeChange = this.onCodeChange.bind(this)
     this.onCodeSubmit = this.onCodeSubmit.bind(this)
-    this.onCodeFocus = this.onCodeFocus.bind(this)
     this.authyAppPolling = this.authyAppPolling.bind(this)
     this.saveUserName = this.saveUserName.bind(this)
   }
@@ -134,9 +134,11 @@ export class Login extends React.Component {
                           this.state.username)
       } else {
         // Clear inputs values on error.
-        codeInputs.forEach((input) => {
-          input.value = ''
-        })
+        for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
+          codeInputs[inputIndex].value = ''
+        }
+        // Focus first code input
+        codeInputs[0].focus()
 
         this.setState({
           loginError: action.payload.message
@@ -145,8 +147,7 @@ export class Login extends React.Component {
     })
   }
 
-  onCodeFocus() {
-    // Clear error on token fields focus
+  onCodeChange() {
     this.setState({
       loginError: null
     })
@@ -166,7 +167,7 @@ export class Login extends React.Component {
     const twoFAByCodeLoginForm = (
       <LoginFormTwoFactorCode
         onSubmit={this.onCodeSubmit}
-        onFocus={this.onCodeFocus}
+        onCodeChange={this.onCodeChange}
         loginError={this.state.loginError}
         fetching={this.props.fetching}
       />
