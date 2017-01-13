@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import { paleblue } from '../../constants/colors'
+import { paleblue, black } from '../../constants/colors'
 import CustomTooltip from './line-chart-tooltip'
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
@@ -12,6 +12,7 @@ const LineChart = ({data, dataKey, valueFormatter = formatBitsPerSecond}) => {
     <ResponsiveContainer height={50} width={'100%'}>
       <ReactLineCharts data={data} >
         <Tooltip
+        cursor={{stroke: black}}
         content={
             <CustomTooltip valueFormatter={valueFormatter} />}
           />

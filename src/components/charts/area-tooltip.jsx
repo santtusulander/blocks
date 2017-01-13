@@ -12,11 +12,13 @@ const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSe
   return (
     <div className="area-chart-tooltip">
 
-      <TooltipDataset
-        iconClass={iconClass}
-        payload={currentPayload}
-        valueFormatter={valueFormatter}
-      />
+      <div className="normal-data">
+        <TooltipDataset
+          iconClass={iconClass}
+          payload={currentPayload}
+          valueFormatter={valueFormatter}
+        />
+      </div>
 
       {
         comparisonPayload.length > 0 && <div className='comparison-data'>
@@ -47,23 +49,33 @@ const TooltipDataset = ({payload, valueFormatter, iconClass}) => {
 
   return (
     <div>
-      Date: {formatUnixTimestamp( ts, "MM/DD/YYYY, HH:mm") }
-
-      {payload.map(({ name, value, dataKey }, i) =>
-        <div key={i} className="tooltip-item">
-          <span className="legend-label">
-            <span className={`legend-icon ${dataKey} ${iconClass}`}>&mdash; </span>
-            {name}
+      <div className="tooltip-item">
+        <span className="legend-label">
+          <span className="legend-line">
+            {formatUnixTimestamp( ts, "MMM D H:mm A") }
           </span>
-          <span className='legend-value'>{valueFormatter(value, true)}</span>
-        </div>
-      ).reverse()}
+        </span>
+      </div>
 
-      <hr style={{ margin: '7px 0' }}/>
+      <div className="tooltip-metric-item">
+        {payload.map(({ name, value, dataKey }, i) =>
+          <div key={i} className="tooltip-item">
+            <span className="legend-label">
+              <span className={`legend-icon ${dataKey} ${iconClass}`}>&mdash; </span>
+              {name}
+            </span>
+            <span className='legend-value'>{valueFormatter(value, true)}</span>
+          </div>
+        ).reverse()}
+      </div>
+
+      <hr style={{ margin: '8px -20px' }}/>
 
       <div className="tooltip-item">
         <span className="legend-label">
-          Total
+          <span className="legend-line">
+            Total
+          </span>
         </span>
         <span id="tooltip-total" className="legend-value">{total}</span>
       </div>

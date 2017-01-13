@@ -5,23 +5,28 @@ import d3 from 'd3'
 
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './bar-chart-legend'
-
+import StackAreaCustomTick from './stacked-area-chart-tick.js'
 
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
-import { paleblue, green, darkblue, darkgreen } from '../../constants/colors'
+import { paleblue, green, darkblue, semiblue, black, tealgreen, yellow, purple } from '../../constants/colors'
 import './stacked-area-chart.scss'
 
 const AREA_COLORS = {
   http: paleblue,
-  https: green,
-  comparison_http: darkblue,
-  comparison_https: darkgreen,
+  https: tealgreen,
+  comparison_http: semiblue,
+  comparison_https: darkblue,
 
   odd: paleblue,
   even: green,
 
   fallback: paleblue
+}
+
+const STROKE_COLORS = {
+  comparison_http: yellow,
+  comparison_https: purple
 }
 
 /**
@@ -48,9 +53,20 @@ const getAreaColor = (key, i) => {
 
 }
 
+const getStrokeColor = (key) => {
+  let colorKey;
+
+  if ( key.includes('comparison_https') ) colorKey = 'comparison_https'
+  else if ( key.includes('comparison_http') ) colorKey = 'comparison_http'
+
+  if(colorKey) {
+    return STROKE_COLORS[colorKey]
+  }
+  return false;
+}
+
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) => {
   let dateFormat = "MM/DD"
-
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
 
@@ -71,29 +87,14 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
   };
-
-  const renderGradients = (areas) => {
-    return areas.map( (area,i) => {
-      let opacity = 0.8
-      const {dataKey} = area
-
-      return (
-        <linearGradient key={i} id={`color-${dataKey}`} x1="0" y1="0" x2="0" y2="100%">
-          <stop offset="0%" stopColor={getAreaColor(dataKey, i)} stopOpacity={opacity}/>
-          <stop offset="100%" stopColor={getAreaColor(dataKey, i)} stopOpacity={0}/>
-        </linearGradient>
-      )
-    })
-  }
-
   const renderAreas = (areas) => {
     return areas.map((area, i) =>
       <Area
         key={i}
         isAnimationActive={false}
-        stroke={getAreaColor(area.dataKey, i)}
-        strokeWidth='2'
-        fill={`url(#color-${area.dataKey})`}
+        stroke={getStrokeColor(area.dataKey, i)}
+        strokeWidth='3'
+        fill={getAreaColor(area.dataKey, i)}
         {...area}
       />
     ).reverse()
@@ -101,16 +102,11 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
   return (
     <ResponsiveContainer minHeight={200} aspect={2.5} className='stacked-area-chart-container'>
-      <AreaChart data={data} >
-
-        <defs>
-          { renderGradients(areas) }
-        </defs>
-
+      <AreaChart data={data} margin={{left:50, bottom: 30}}>
         { renderAreas(areas) }
 
-        <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)}/>
-        <YAxis tickFormatter={(val) => valueFormatter(val, true)}/>
+        <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
+        <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
         <Legend
           wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
@@ -120,6 +116,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
         <Tooltip
           animationEasing="linear"
+          cursor={{stroke: black}}
           content={
             <AreaTooltip
               iconClass={() => 'tooltip-class'}
