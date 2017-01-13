@@ -23,8 +23,10 @@ const UI_POLICY_ACTIVE_MATCH_CHANGED = 'UI_POLICY_ACTIVE_MATCH_CHANGED'
 const UI_POLICY_ACTIVE_SET_CHANGED = 'UI_POLICY_ACTIVE_SET_CHANGED'
 const UI_POLICY_ACTIVE_RULE_CHANGED = 'UI_POLICY_ACTIVE_RULE_CHANGED'
 
-const theme = localStorage.getItem('EricssonUDNUiTheme') ?
-  localStorage.getItem('EricssonUDNUiTheme') : 'dark'
+import { getUITheme, setUITheme } from '../../util/local-storage'
+
+const theme = getUITheme() ?
+  getUITheme() : 'dark'
 
 export const docBody = document.body
 
@@ -69,7 +71,9 @@ export function themeChanged(state, action) {
   docBody.className = docBody.className.replace(
     /dark-theme|light-theme/gi, action.payload + '-theme'
   )
-  localStorage.setItem('EricssonUDNUiTheme', action.payload)
+
+  setUITheme( action.payload)
+
   return state.set('theme', action.payload)
 }
 

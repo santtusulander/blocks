@@ -5,6 +5,8 @@ import { Map, List, fromJS } from 'immutable'
 import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
 import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
+import { getUserToken, setUserToken, deleteUserToken, setUserName, deleteUserName } from '../../util/local-storage'
+
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 const USER_START_FETCH = 'USER_START_FETCH'
@@ -27,7 +29,7 @@ const DESTROY_STORE = 'DESTROY_STORE'
 const loginAxios = axios.create()
 
 //
-//const username = localStorage.getItem('EricssonUDNUserName') || null
+//const username = getUserName() || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
@@ -62,7 +64,8 @@ export function updateFailure(state) {
 }
 
 export function updatePasswordSuccess(state, action) {
-  localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+  setUserToken( action.payload.token)
+
   axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
   return state.merge({
@@ -73,7 +76,7 @@ export function updatePasswordSuccess(state, action) {
 export function userLoggedInSuccess(state, action){
   switch (action.payload.status) {
     case 200:
-      localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+      setUserToken(action.payload.token)
       axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
       return state.merge({
@@ -124,7 +127,8 @@ export function fetchAllFailure(state) {
 }
 
 export function userLoggedOutSuccess(state){
-  localStorage.removeItem('EricssonUDNUserToken')
+  deleteUserToken()
+
   delete axios.defaults.headers.common['X-Auth-Token']
 
   return state.merge({'loggedIn': false, 'fetching': false})
@@ -165,13 +169,13 @@ export function deleteUserFailure(state) {
 
 export function userTokenChecked(state, action){
   if(action.payload && action.payload.token) {
-    localStorage.setItem('EricssonUDNUserToken', action.payload.token)
+    setUserToken(action.payload.token)
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
   }
   else {
-    localStorage.removeItem('EricssonUDNUserToken')
+    deleteUserToken()
     delete axios.defaults.headers.common['X-Auth-Token']
 
     return state.set('loggedIn', false)
@@ -180,10 +184,10 @@ export function userTokenChecked(state, action){
 
 export function userNameSave(state, action){
   if(action.payload) {
-    localStorage.setItem('EricssonUDNUserName', action.payload)
+    setUserName(action.payload)
   }
   else {
-    localStorage.removeItem('EricssonUDNUserName')
+    deleteUserName()
   }
   return state.set('username', action.payload)
 }
@@ -334,7 +338,7 @@ export const twoFALogInWithApp = createAction(USER_LOGGED_IN, (username, code) =
 })
 
 export const logOut = createAction(USER_LOGGED_OUT, () => {
-  const token = localStorage.getItem('EricssonUDNUserToken')
+  const token = getUserToken()
 
   if (token) {
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
@@ -348,7 +352,7 @@ export const startFetching = createAction(USER_START_FETCH)
 export const finishFetching = createAction(USER_FINISH_FETCH)
 
 export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
-  const token = localStorage.getItem('EricssonUDNUserToken')
+  const token = getUserToken()
   if(token) {
     return loginAxios.get(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
