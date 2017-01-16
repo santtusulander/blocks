@@ -2,6 +2,11 @@ import {fromJS} from 'immutable'
 
 /*Reducers*/
 export const receiveEntity = (key) => (state, action) => {
+<<<<<<< HEAD
+  console.log('normalzed Data', action, 'key', key )
+
+=======
+>>>>>>> develop
   if (action.payload.entities && action.payload.entities[key])
     return state.mergeDeep( state, fromJS(action.payload.entities[key]) )
 
