@@ -10,14 +10,12 @@ import * as fetchingReducers from './reducers'
  * @returns {*}
  */
 export const createFetchingReducers = (actionTypes) => {
-  let mappedActions = []
-  Object.keys( actionTypes).forEach( actionType => {
-    if (actionType === 'START_FETCHING') {
-      mappedActions[actionTypes[actionType]] = fetchingReducers.set
-    } else {
-      mappedActions[actionTypes[actionType]] = fetchingReducers.clear
-    }
-  })
+  const mappedActions = {}
+
+  for (const actionType  in actionTypes) {
+    if (actionType === 'REQUEST') mappedActions[ actionTypes[actionType] ] = fetchingReducers.set
+    else  mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear
+  }
 
   return handleActions(mappedActions, false)
 }
