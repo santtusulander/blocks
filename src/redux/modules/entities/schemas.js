@@ -1,50 +1,31 @@
-import {Schema, arrayOf, valuesOf} from 'normalizr'
+import { schema } from 'normalizr'
 
-const brand = new Schema('brands')
-const account = new Schema('accounts')
-const group = new Schema('groups')
-const property = new Schema('properties', {idAttribute: 'published_host_id'})
+const brand = new schema.Entity('brands')
 
-const groupProperties = new Schema('groupProperties', {idAttribute: 'group'})
-const accountGroups = new Schema('accountGroups', {idAttribute: 'account'})
-const entityId = new Schema('entityId')
-
-accountGroups.define({
-  account: account,
-  groups: arrayOf( group )
+const account = new schema.Entity('accounts', {}, {
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
 })
 
-groupProperties.define({
-  properties: valuesOf( entityId )
+const group = new schema.Entity('groups', {}, {
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
 })
 
-/*property.define({
-  brand: brand,
-  account: account,
-  group: group
-})*/
+const brandAccounts = new schema.Entity('brandAccounts', {
+  accounts: [ account ]
+})
+
+const accountGroups = new schema.Entity('accountGroups', {
+  groups: [ group ]
+})
+
 
 export const Schemas = {
   brand,
   account,
   accountGroups,
-  group,
-  property,
-  groupProperties
+  brandAccounts
 }
-
-/*
-  REMOVE
-
- brandSchema.define({
-  accounts: arrayOf(accountSchema)
-})
-
-accountSchema.define({
-  groups: arrayOf(groupSchema)
-})
-
-groupSchema.define({
-  properties: arrayOf(propertySchema)
-})
-*/

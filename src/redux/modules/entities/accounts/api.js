@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {arrayOf, normalize} from 'normalizr'
+import { normalize} from 'normalizr'
 
 import { BASE_URL_AAA }  from '../../../util.js'
 
@@ -14,6 +14,7 @@ import {Schemas} from '../schemas'
 export const fetch = (brand, account) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
     .then( ({data}) => {
+
       return normalize(data, Schemas.account)
     })
 }
@@ -25,14 +26,15 @@ export const fetch = (brand, account) => {
  * @return {[type]}         [description]
  */
 export const fetchAll = (brand) => {
-  console.warn('accounts.fetchAll() is not yet implemented.'), brand;
-/*  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
     .then( ({data}) => {
-      const obj = {
-        account: account,
-        groups: data.data
+
+      const brandAccounts = {
+        id: brand,
+        accounts:  data.data
       }
-      return normalize(obj, Schemas.accountGroups)
+
+      return normalize(brandAccounts, Schemas.brandAccounts)
     })
-*/
+
 }

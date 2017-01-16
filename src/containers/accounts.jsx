@@ -29,6 +29,9 @@ import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 
 import { FormattedMessage } from 'react-intl';
 
+import {fetchAll} from '../redux/modules/entities/accounts/actions'
+import { getEntitiesByParent } from '../redux/modules/entity/selectors'
+
 export class Accounts extends React.Component {
   constructor(props) {
     super(props);
@@ -164,7 +167,7 @@ Accounts.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
-    accounts: state.account.get('allAccounts'),
+    accounts: getEntitiesByParent(state, 'accounts', 'udn'),  //state.account.get('allAccounts'),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
@@ -187,6 +190,10 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
+
+      dispatch( fetchAll('udn', ) )
+
+
       if (!canListAccounts) {
         metricsOpts.account = ownProps.params.account;
       }
@@ -205,6 +212,7 @@ function mapDispatchToProps(dispatch, ownProps) {
         // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
         //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
         metricsActions.fetchDailyAccountTraffic(metricsOpts)
+
       }
     },
     accountActions: accountActions,

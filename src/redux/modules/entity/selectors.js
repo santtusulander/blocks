@@ -5,11 +5,7 @@
  * @returns {*}
  */
 export const getEntityById = ( id, state) => {
-<<<<<<< HEAD
-  return state.get('id').toJS()
-=======
   return state.get(String(id)).toJS()
->>>>>>> develop
 }
 
 /**
@@ -19,11 +15,8 @@ export const getEntityById = ( id, state) => {
  * @param parentState
  * @returns {*}
  */
-export const getEntitiesByParent = ( parentId, entityState, parentState) => {
-  //get array of ids (if found) and call getEntityById
-  if ( parentState[parentId] ) {
-    return parentState[parentId].map( id => getEntityById( id, entityState ) )
-  }
-
-  return undefined
+export const getEntitiesByParent = ( state, entityType, parentId) => {
+  const result = state.entities.entities[entityType].filter( entity => { return entity.get('parentId') === parentId } ).toList()
+  
+  return result;
 }

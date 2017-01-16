@@ -1,4 +1,4 @@
-import {createAction} from 'redux-actions'
+//import {createAction} from 'redux-actions'
 
 import * as api from './api'
 import {actionTypes} from '../index'
@@ -7,16 +7,16 @@ import {actionTypes} from '../index'
 //   return api.fetch( brand, account, group)
 // })
 
-export const fetchAll = createAction(actionTypes.FETCH_ALL, (brand, account) => {
-  return api.fetchAll( brand, account)
-})
+// export const fetchAll = createAction(actionTypes.FETCH_ALL, (brand, account) => {
+//   return api.fetchAll( brand, account)
+// })
 
 
 ///
-export const fetch = (brand, account, group, cacheSelector ) => {
+export const fetchAll = (brand, cacheSelector ) => {
   return {
     types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
     shouldCallApi: cacheSelector,
-    callApi: () => { return api.fetch(brand, account, group) }
+    callApi: () => { return api.fetchAll(brand) }
   }
 }

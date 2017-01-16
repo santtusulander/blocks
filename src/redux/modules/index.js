@@ -33,6 +33,9 @@ export const security = require('./security').default;
 //Properties
 export const properties = require('./properties').default
 
+//Entities
+export const entities = require('./entities').default
+
 //serviceInfo
 export const serviceInfo = require('./service-info/index.js').default;
 

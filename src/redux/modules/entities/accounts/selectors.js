@@ -13,6 +13,10 @@ export const getById = (state, id) => {
   return null
 }
 
+export const getByBrand = (state, brand) => {
+  return state.entities.accounts.filter( account => account.brand === brand )
+}
+
 /**
  * isFetching ?
  * @param  {}  state
