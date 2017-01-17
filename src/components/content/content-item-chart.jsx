@@ -301,7 +301,7 @@ class ContentItemChart extends React.Component {
                 </div>
               </div>
               {!!tagText &&
-                <ContentItemTag>
+                <ContentItemTag customClass="content-item-chart-tag">
                   <FormattedMessage id={tagText}/>
                 </ContentItemTag>}
             </div>

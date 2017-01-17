@@ -182,7 +182,7 @@ export class PlaybackDemo extends React.Component {
               primaryData={this.state.events.toJS()}
               xKey="index" yKey="bandwidth"/>
             <div className="title">
-              <FormattedMessage id="portal.analytics.demoPlayback.bandwithBySegment.text"/>
+              <FormattedMessage id="portal.analytics.demoPlayback.bandwidthBySegment.text"/>
             </div>
             <div className="stat">
               {this.state.events.size ?

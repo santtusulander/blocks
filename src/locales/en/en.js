@@ -26,6 +26,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountType.title': 'Account Type',
   'portal.account.manage.services.title': 'Services',
   'portal.account.manage.system.empty.domain': 'No Domain',
+  'portal.account.manage.selectAccountType.text': 'Please, select account type first.',
 
   'portal.account.list.accountName.title': 'ACCOUNT NAME',
   'portal.account.list.type.title': 'TYPE',
@@ -66,19 +67,6 @@ const TRANSLATED_MESSAGES = {
   'portal.manage.tabs.dns.title': 'DNS',
   'portal.manage.tabs.roles.title': 'Roles',
 
-  'portal.role.edit.roleNameRequired.text': 'Role name is required',
-  'portal.role.edit.title': 'Edit Role',
-  'portal.role.edit.discalimer.text': 'Edit Role',
-  'portal.role.edit.enterRoleName.text': 'Enter Role Name',
-  'portal.role.edit.name.text': 'Name',
-
-  'portal.role.list.search.placeholder': 'Search',
-  'portal.role.list.header.role.title': 'Role',
-  'portal.role.list.header.permissions.title': 'Permissions',
-  'portal.role.list.header.assignedTo.title': 'Assigned To',
-  'portal.role.list.search.noResults.text': 'No roles found',
-  'portal.role.list.search.noResultsWithTerm.text': 'No roles found with the search term {searchTerm}',
-
   'portal.analytics.dropdownMenu.all': 'All ({options})',
   'portal.analytics.dropdownMenu.clearSelections': 'Clear selections',
   'portal.analytics.dropdownMenu.labelsSelected' : '{firstLabel} and {rest} more',
@@ -103,7 +91,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.clientBufferEvents.text': 'Client Buffer Events',
   'portal.analytics.demoPlayback.droppedFrames.text': 'Dropped Frames',
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
-  'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
+  'portal.analytics.demoPlayback.bandwidthBySegment.text': 'Bandwidth by Segment',
 
   'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
@@ -116,13 +104,13 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
   'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
   'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
-  'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
+  'portal.analytics.trafficOverview.bandwidth.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
   'portal.analytics.trafficOverview.byGeography.text': 'BY GEOGRAPHY',
   'portal.analytics.trafficOverview.byCountry.text': 'BY COUNTRY',
   'portal.analytics.trafficOverview.byCountry.country.header': 'Country',
-  'portal.analytics.trafficOverview.byCountry.bandwith.header': 'Bandwith',
+  'portal.analytics.trafficOverview.byCountry.bandwidth.header': 'Bandwidth',
   'portal.analytics.trafficOverview.byCountry.request.header': 'Requests',
   'portal.analytics.trafficOverview.byCountry.periodTrend.header': 'Period Trend',
 
@@ -431,15 +419,21 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostanme.text': 'New Host Name',
+  'portal.content.addHost.newHostname.text': 'New Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
+  'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
-  'portal.content.tooltip.bandwith.text': 'Bandwith',
-  'portal.content.tooltip.bandwithVsLast28.text': '{bandwith} vs 28 days ago',
+  'portal.content.tooltip.bandwidth.text': 'Bandwidth',
+  'portal.content.tooltip.bandwidthVsLast28.text': '{bandwidth} vs 28 days ago',
   'portal.content.tooltip.higher.text': 'Higher',
   'portal.content.tooltip.same.text': 'Same',
   'portal.content.tooltip.lower.text': 'Lower',
@@ -454,8 +448,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.content.text': 'Content',
 
   'portal.header.menu.theme.title': 'UI Theme',
-  'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
-  'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
+  'portal.header.menu.theme.ericssonTitle.text': 'Ericsson {themeTitle} theme',
   'portal.header.menu.logout.text': 'Logout',
   'portal.header.menu.editProfile.text': 'Edit Profile',
 
@@ -601,9 +594,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.settings.text': 'Settings',
   'portal.startburstHelp.help.text': 'Help',
   'portal.startburstHelp.starburst.text': 'Starburst',
-  'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidth.text': 'Average bandwidth for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthFttb.text': 'Average Time to First Byte for the prior 4 weeks',
   'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
   'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
   'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',

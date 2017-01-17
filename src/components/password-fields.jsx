@@ -102,7 +102,7 @@ export class PasswordFields extends Component {
   }
 
   doPasswordsMatch(password, confirm, isValidString) {
-    const validPassword = password === confirm && isValidString
+    const validPassword = (password === confirm ) && isValidString
 
     this.setState({
       confirmValid: validPassword

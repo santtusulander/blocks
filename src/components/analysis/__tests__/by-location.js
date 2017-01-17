@@ -2,6 +2,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
+import { FormattedMessage } from 'react-intl'
 
 jest.unmock('../by-location.jsx')
 import AnalysisByLocation from '../by-location.jsx'
@@ -126,7 +127,7 @@ describe('AnalysisByLocation', () => {
         countryData={Immutable.List()
         }/>
     );
-    expect(byLocation.find('LoadingSpinner').length).toBe(1)
+    expect(byLocation.contains(<FormattedMessage id="portal.common.no-data.text"/>))
   });
 
   // Not supporting zoom in 0.5

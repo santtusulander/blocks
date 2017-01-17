@@ -1,7 +1,7 @@
 import React from 'react'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
-import LoadingSpinner from '../loading-spinner/loading-spinner'
 import Mapbox from '../map/mapbox';
 
 import * as countriesGeoJSON from '../../assets/topo/custom.geo.json';
@@ -20,7 +20,7 @@ const AnalysisByLocation = (props) => {
   } = props
 
   if (!countryData.size) {
-    return <LoadingSpinner />
+    return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
   }
 
   return (

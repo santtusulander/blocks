@@ -14,7 +14,7 @@ const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfo
         title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
         content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,
         okButton: true,
-        cancel: hideInfoDialog
+        cancel: () => hideInfoDialog()
       });
     }
     else {
