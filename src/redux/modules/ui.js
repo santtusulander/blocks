@@ -2,6 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import { fromJS } from 'immutable'
 
 import { getAnalysisErrorCodes } from '../../util/status-codes'
+import { AVAILABLE_THEMES } from '../../constants/themes'
 
 const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
@@ -23,8 +24,10 @@ const UI_POLICY_ACTIVE_MATCH_CHANGED = 'UI_POLICY_ACTIVE_MATCH_CHANGED'
 const UI_POLICY_ACTIVE_SET_CHANGED = 'UI_POLICY_ACTIVE_SET_CHANGED'
 const UI_POLICY_ACTIVE_RULE_CHANGED = 'UI_POLICY_ACTIVE_RULE_CHANGED'
 
-const theme = localStorage.getItem('EricssonUDNUiTheme') ?
-  localStorage.getItem('EricssonUDNUiTheme') : 'dark'
+const theme = AVAILABLE_THEMES.includes(localStorage.getItem('EricssonUDNUiTheme')) ?
+  localStorage.getItem('EricssonUDNUiTheme') : AVAILABLE_THEMES[0]
+
+localStorage.setItem('EricssonUDNUiTheme', theme)
 
 export const docBody = document.body
 
