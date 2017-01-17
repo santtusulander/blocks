@@ -1,6 +1,4 @@
 /*eslint consistent-return: 0*/
-import moment from 'moment'
-
 
 /**
  *
@@ -13,11 +11,9 @@ export default function apiMiddleware({ dispatch, getState }) {
     const {
       types,
       callApi,
-      cacheKey,
+      shouldCallApi = () => true,
       payload = {}
     } = action;
-    const cachedRequest = getState().cache[cacheKey]
-    const now = moment()
 
     if (!types) {
       // Normal action: pass it on
@@ -32,22 +28,19 @@ export default function apiMiddleware({ dispatch, getState }) {
       throw new Error('Expected `callApi` to be a function.');
     }
 
-    if (cachedRequest && cachedRequest > now.subtract(5, 'minutes').unix()) {
+    if (!shouldCallApi(getState())) {
       return;
-    }
-
-    if (cacheKey) {
-      dispatch({ type: 'CACHE_REQUEST', payload: { [cacheKey]: now.unix() } })
     }
 
     const [ requestType, successType, failureType ] = types;
 
     dispatch({ ...payload, type: requestType });
-    debugger
-    return callApi().then(
+
+    return callApi(dispatch).then(
       response => {
-        console.log(response);
+        //response.json().then(
         return dispatch({ ...payload, response, type: successType })
+        //);
       },
       error => dispatch({ ...payload, error, type: failureType })
     );
