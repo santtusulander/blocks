@@ -15,7 +15,7 @@ export const SidePanel = ({ children, className, show, subTitle, subSubTitle, ti
     subTitleElements = (
       <div className="sub-title-two-line">
         <div className="sub-title">{subTitle}</div>
-        <div className="sub-sub-title text-sm">
+        <div className="sub-sub-title">
           {subSubTitle}
         </div>
       </div>
