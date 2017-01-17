@@ -4,6 +4,10 @@
 .input-group {
   width: 100%;
   max-width: 900px;
+
+  .form-control {
+    min-height: $bar-height;
+  }
 }
 
 .input-group-addon {
