@@ -1,6 +1,7 @@
 import { schema } from 'normalizr'
 
 const brand = new schema.Entity('brands')
+const footprint = new schema.Entity('footprint')
 
 const account = new schema.Entity('accounts', {}, {
   processStrategy: (value, parent) => {
@@ -21,11 +22,17 @@ const property = new schema.Entity('properties', {}, {
   }
 })
 
-// , {
-//   processStrategy: (value, parent) => {
-//     return { ...value, parentId: parent.id}
-//   }
-// })
+const pod = new schema.Entity('pods', {
+  footprints: [ footprint ]
+}, {
+  idAttribute: `cloud-location-id`
+})
+
+
+const pop = new schema.Entity('pops', {
+  pods: [ pod ]
+})
+
 
 const brandAccounts = new schema.Entity('brandAccounts', {
   accounts: [ account ]
@@ -45,6 +52,9 @@ export const Schemas = {
   account,
   group,
   property,
+  pop,
+  pod,
+  footprint,
   brandAccounts,
   accountGroups,
   groupProperties
