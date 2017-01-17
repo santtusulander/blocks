@@ -13,6 +13,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import PageContainer from '../../../components/layout/page-container'
 import PurgeHistoryReport from '../../../components/content/property/purge-status'
 
+import withPagination from '../../../components/paginator/pagination-hoc'
+
 class PurgeStatus extends React.Component {
 
   constructor(props) {
@@ -28,27 +30,31 @@ class PurgeStatus extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params !== this.props.params) {
+    if (
+        nextProps.params !== this.props.params ||
+        nextProps.pagingQueryParams.offset !== this.props.pagingQueryParams.offset
+    ) {
       this.fetchData(nextProps.params)
     }
   }
 
   fetchData(params) {
-    const { purgeActions } = this.props
+    const { purgeActions, pagingQueryParams } = this.props
     const { brand, account, group, property } = params
     purgeActions.startFetching()
-    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
+    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingQueryParams })
   }
 
   render() {
-
-    const { fetching, purgeObjects } = this.props
+    const { fetching, purgeObjects, pagingConfig, sortColumn } = this.props
 
     return (
       <PageContainer className="property-container">
         <PurgeHistoryReport
           fetching={fetching}
           historyData={purgeObjects}
+          pagination={pagingConfig}
+          columnSorter={sortColumn}
         />
       </PageContainer>
     )
@@ -94,4 +100,5 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PurgeStatus));
+// export default connect(mapStateToProps, mapDispatchToProps)(withRouter((PurgeStatus)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus)));

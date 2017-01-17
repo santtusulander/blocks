@@ -5,6 +5,8 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
 import TableSorter from '../../table-sorter'
+import Paginator from '../../paginator/paginator'
+
 // TODO: temporarily hidden, see UDNP-1926 for more context
 // import SelectWrapper from '../../../components/select-wrapper'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -59,6 +61,9 @@ class PurgeHistoryReport extends React.Component {
   }
 
   changeSort(column, direction, sortFunc) {
+    const sortOrder = direction > 0 ? 'asc' : 'desc';
+    this.props.columnSorter(column, sortOrder);
+
     this.setState({
       sortBy: column,
       sortDir: direction,
@@ -72,7 +77,7 @@ class PurgeHistoryReport extends React.Component {
       return (<LoadingSpinner/>);
     }
 
-    const { intl } = this.props
+    const { intl, pagination } = this.props
     const { sortedStats } = this.state
 
     const sorterProps = {
@@ -105,42 +110,46 @@ class PurgeHistoryReport extends React.Component {
         </SectionHeader>*/}
         <SectionContainer>
           {sortedStats.size ?
-            <table className="table table-striped table-analysis">
-              <thead>
-              <tr>
-                {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
-                {/*<TableSorter {...sorterProps} column="status">
-                  <FormattedMessage id="portal.content.property.purgeStatus.table.status.label"/>
-                </TableSorter>*/}
-                <TableSorter {...sorterProps} column="created_at">
-                  <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
-                </TableSorter>
-                <TableSorter {...sorterProps} column="completed_at">
-                  <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
-                </TableSorter>
-                <TableSorter {...sorterProps} column="created_by">
-                  <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
-                </TableSorter>
-                <TableSorter {...sorterProps} column="note">
-                  <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
-                </TableSorter>
-              </tr>
-              </thead>
-              <tbody>
-              {sortedStats.map((data, i) => {
-                return (
-                  <tr key={i}>
-                    {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
-                    {/*<td>{getLabelForStatus(data.get('status'))}</td>*/}
-                    <td>{formatTime(data.get('created_at'))}</td>
-                    <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
-                    <td>{data.get('created_by')}</td>
-                    <td>{data.get('note')}</td>
-                  </tr>
-                )
-              })}
-              </tbody>
-            </table>
+            <div>
+              <table className="table table-striped table-analysis">
+                <thead>
+                <tr>
+                  {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+                  {/*<TableSorter {...sorterProps} column="status">
+                   <FormattedMessage id="portal.content.property.purgeStatus.table.status.label"/>
+                   </TableSorter>*/}
+                  <TableSorter {...sorterProps} column="created_at">
+                    <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="completed_at">
+                    <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="created_by">
+                    <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="note">
+                    <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
+                  </TableSorter>
+                </tr>
+                </thead>
+                <tbody>
+                {sortedStats.map((data, i) => {
+                  return (
+                    <tr key={i}>
+                      {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+                      {/*<td>{getLabelForStatus(data.get('status'))}</td>*/}
+                      <td>{formatTime(data.get('created_at'))}</td>
+                      <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
+                      <td>{data.get('created_by')}</td>
+                      <td>{data.get('note')}</td>
+                    </tr>
+                  )
+                })}
+                </tbody>
+              </table>
+              <Paginator {...pagination} />
+            </div>
+
             :
             <p><FormattedMessage id="portal.content.property.purgeStatus.notFound.label"/></p>
           }
