@@ -40,7 +40,7 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
-  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain {itemToDelete} will also delete all the records related to it.',
+  'portal.dnsDomain.delete.disclaimer.text': 'Are you sure you want to delete {itemToDelete}?',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
   'portal.brand.edit.newBrand.title': 'New Brand',
