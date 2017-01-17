@@ -31,6 +31,14 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
+
+  getChildContext(){
+    return {
+      currentUser: this.props.currentUser,
+      roles: this.props.roles
+    }
+  }
+
   componentWillMount() {
     // Validate token
     this.props.userActions.checkToken()
@@ -154,7 +162,7 @@ export class Main extends React.Component {
           closeButtonSecondary={true}
           reloadButton={true}
           cancel={() => this.props.uiActions.hideErrorDialog()}
-          submit={() => location.reload(true)}/>
+          onSubmit={() => location.reload(true)}/>
         }
         {this.props.showInfoDialog &&
         <ModalWindow
@@ -195,7 +203,7 @@ Main.propTypes = {
   groupActions: React.PropTypes.object,
   infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   roles: React.PropTypes.instanceOf(Immutable.List),
   rolesActions: React.PropTypes.object,
@@ -218,6 +226,11 @@ Main.defaultProps = {
   currentUser: Immutable.Map(),
   roles: Immutable.List(),
   user: Immutable.Map()
+}
+
+Main.childContextTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  roles: React.PropTypes.instanceOf(Immutable.List)
 }
 
 function mapStateToProps(state) {

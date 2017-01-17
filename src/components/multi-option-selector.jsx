@@ -29,6 +29,7 @@ class MultiOptionSelector extends React.Component {
       options.splice(index, 1)
     }
     field.onChange(copy)
+    this.setState({options: copy})
   }
 
   handleToggleChange(option, hasValue, index, panel, panelOpen) {
@@ -46,6 +47,7 @@ class MultiOptionSelector extends React.Component {
       }
     }
     field.onChange(copy)
+    this.setState({toggles: copy})
   }
 
   togglePanel(panel) {

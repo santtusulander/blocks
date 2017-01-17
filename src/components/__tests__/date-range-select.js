@@ -18,6 +18,7 @@ describe('DateRangeSelect', () => {
         startDate={moment()}
         endDate={moment()}
         availableRanges={[1]}
+        changeDateRange={jest.fn()}
         intl={intlMaker()} />
     )
     expect(filter).toBeDefined()

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import * as userActionCreators from '../redux/modules/user'
+import { changeTheme } from '../redux/modules/ui'
 
 import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
@@ -24,8 +25,8 @@ export class Login extends React.Component {
     }
 
     this.onLoginPasswordSubmit = this.onLoginPasswordSubmit.bind(this)
+    this.onCodeChange = this.onCodeChange.bind(this)
     this.onCodeSubmit = this.onCodeSubmit.bind(this)
-    this.onCodeFocus = this.onCodeFocus.bind(this)
     this.authyAppPolling = this.authyAppPolling.bind(this)
     this.saveUserName = this.saveUserName.bind(this)
   }
@@ -74,6 +75,8 @@ export class Login extends React.Component {
       switch (action.payload.status) {
         case 200:
           this.saveUserName(rememberUser, username)
+          //Need to set correct theme to redux store after it has been destroyed
+          this.props.setUiTheme()
           break
 
         case 202:
@@ -106,8 +109,9 @@ export class Login extends React.Component {
     ).then(action => {
       switch (action.payload.status) {
         case 200:
-          this.saveUserName(this.state.rememberUser,
-                            this.state.username)
+          this.saveUserName(this.state.rememberUser, this.state.username)
+          //Need to set correct theme to redux store after it has been destroyed
+          this.props.setUiTheme()
           break
 
         case 202:
@@ -130,13 +134,16 @@ export class Login extends React.Component {
       this.state.username, code
     ).then(action => {
       if (!action.error) {
-        this.saveUserName(this.state.rememberUser,
-                          this.state.username)
+        this.saveUserName(this.state.rememberUser, this.state.username)
+        //Need to set correct theme to redux store after it has been destroyed
+        this.props.setUiTheme()
       } else {
         // Clear inputs values on error.
-        codeInputs.forEach((input) => {
-          input.value = ''
-        })
+        for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
+          codeInputs[inputIndex].value = ''
+        }
+        // Focus first code input
+        codeInputs[0].focus()
 
         this.setState({
           loginError: action.payload.message
@@ -145,8 +152,7 @@ export class Login extends React.Component {
     })
   }
 
-  onCodeFocus() {
-    // Clear error on token fields focus
+  onCodeChange() {
     this.setState({
       loginError: null
     })
@@ -166,7 +172,7 @@ export class Login extends React.Component {
     const twoFAByCodeLoginForm = (
       <LoginFormTwoFactorCode
         onSubmit={this.onCodeSubmit}
-        onFocus={this.onCodeFocus}
+        onCodeChange={this.onCodeChange}
         loginError={this.state.loginError}
         fetching={this.props.fetching}
       />
@@ -201,6 +207,7 @@ Login.propTypes = {
   fetching: React.PropTypes.bool,
   location: React.PropTypes.object,
   router: React.PropTypes.object,
+  setUiTheme: React.PropTypes.func,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
@@ -214,6 +221,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setUiTheme: () => dispatch(changeTheme(localStorage.getItem('EricssonUDNUiTheme'))),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }

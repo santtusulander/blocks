@@ -171,7 +171,7 @@ export function buildAnalyticsOpts(params, filters, location ){
     getCustomDateRange(filters) :
     { startDate: undefined, endDate: undefined }
 
-  let opts = {
+  const opts = {
     account: params.account,
     brand: params.brand,
     group: params.group,
@@ -186,8 +186,12 @@ export function buildAnalyticsOpts(params, filters, location ){
     net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet)
   }
 
-  if (filterValues.statusCodes && filterValues.statusCodes.size || filterValues.errorCodes && filterValues.errorCodes.size) {
-    opts.status_codes = filterValues.statusCodes.size && filterValues.statusCodes.join(',') || filterValues.errorCodes.size && filterValues.errorCodes.join(',')
+  if (filterValues.statusCodes && filterValues.statusCodes.size) {
+    opts.status_codes = filterValues.statusCodes.size && filterValues.statusCodes.join(',')
+  }
+
+  if (filterValues.errorCodes && filterValues.errorCodes.size) {
+    opts.status_codes = filterValues.errorCodes.size && filterValues.errorCodes.join(',')
   }
 
   return opts

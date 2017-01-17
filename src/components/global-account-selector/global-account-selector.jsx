@@ -8,7 +8,7 @@ import * as accountSelectorActionCreators from '../../redux/modules/account-sele
 import * as PERMISSIONS from '../../constants/permissions.js'
 import checkPermissions from '../../util/permissions'
 
-import Menu from './selector-component.jsx'
+import SelectorComponent from './selector-component.jsx'
 
 const tierHierarchy = [
   'property',
@@ -235,7 +235,7 @@ class AccountSelector extends Component {
       onCaretClick: this.onCaretClick
     })
     return (
-      <Menu {...menuProps}/>
+      <SelectorComponent {...menuProps}/>
     )
   }
 }
