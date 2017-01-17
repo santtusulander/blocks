@@ -36,7 +36,7 @@ $lt-side-panel-bg-color: $white;
   }
 
   .modal-header {
-    height: $side-panel-header-height;
+    min-height: $side-panel-header-height;
     padding: $side-panel-header-top-padding $side-panel-horizontal-padding 0;
     border-bottom: 2px solid rgba($black, 0.2);
 
@@ -45,12 +45,8 @@ $lt-side-panel-bg-color: $white;
     }
 
     .sub-title-two-line {
-      .sub-title {
-        margin-top: -5px;
-      }
-
       .sub-sub-title {
-        margin-top: -5px;
+        margin-bottom: 5px;
         opacity: 0.5;
       }
     }
