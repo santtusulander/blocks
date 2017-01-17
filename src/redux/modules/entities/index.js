@@ -12,6 +12,15 @@ export const actionTypes = {
   RECEIVE: 'entities/RECEIVE',
   REMOVE: 'entities/REMOVE',
   FAIL: 'entities/FAIL'
+
+  // CREATE:'entities/CREATE',
+  // FETCH: 'entities/FETCH',
+  // FETCH_ALL: 'entities/FETCH_ALL',
+  // FETCH_ALL_WITH_DETAILS: 'entities/FETCH_ALL_WITH_DETAILS',
+  // REMOVE: 'entities/REMOVE',
+  // UPDATE: 'entities/UPDATE',
+  //
+  //START_FETCHING: 'entities/START_FETCHING'
 }
 
 const accounts =
@@ -44,13 +53,6 @@ const groups =
     // [actionTypes.UPDATE]:  mapReducers(receiveEntity('groups'), failEntity)
   }, Map())
 
-const nodes =
-  handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('nodes'),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
-  }, Map())
-
 const properties =
   handleActions({
     [actionTypes.RECEIVE] : receiveEntity('properties'),
@@ -65,10 +67,27 @@ const properties =
     // [actionTypes.UPDATE]:  mapReducers(receiveEntity('properties'), failEntity)
   }, Map())
 
+// const groupProperties =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('groupProperties')
+//     }, Map())
+//
+// const accountGroups =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('accountGroups')
+//       // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
+//     }, Map())
+//
+// const brandAccounts =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('brandAccounts')
+//       // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
+//     }, Map())
+
+
 const entities = combineReducers({
   accounts,
   //accountGroups,
-  nodes,
   groups,
   //groupProperties,
   properties

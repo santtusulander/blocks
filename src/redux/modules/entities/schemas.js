@@ -2,8 +2,6 @@ import { schema } from 'normalizr'
 
 const brand = new schema.Entity('brands')
 
-const node = new schema.Entity('nodes')
-
 const account = new schema.Entity('accounts', {}, {
   processStrategy: (value, parent) => {
     return { ...value, parentId: parent.id}
@@ -23,6 +21,12 @@ const property = new schema.Entity('properties', {}, {
   }
 })
 
+// , {
+//   processStrategy: (value, parent) => {
+//     return { ...value, parentId: parent.id}
+//   }
+// })
+
 const brandAccounts = new schema.Entity('brandAccounts', {
   accounts: [ account ]
 })
@@ -38,7 +42,6 @@ const groupProperties = new schema.Entity('groupProperties', {
 
 export const Schemas = {
   brand,
-  node,
   account,
   group,
   property,
