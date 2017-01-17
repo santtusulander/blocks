@@ -1,5 +1,3 @@
-import './map/poc'
-
 import './confirmation';
 import './export-panel';
 import './export-email-form';
@@ -11,7 +9,6 @@ import './delete-modal'
 import './inline-add'
 
 //account management
-import './account-management/account-details'
 import './account-management/dns-soa-form'
 import './account-management/sidebar'
 import './account-management/user-list'

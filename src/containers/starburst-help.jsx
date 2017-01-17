@@ -172,13 +172,13 @@ const StarburstHelp = ({router}) => {
             {/* Description */}
             <text transform="matrix(1 0 0 1 0 353)">
               <tspan x="0" y="0">
-                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwith.text"/>
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwidth.text"/>
               </tspan>
               <tspan x="0" y="28">
-                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwithCacheHit.text"/>
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwidthCacheHit.text"/>
               </tspan>
               <tspan x="0" y="56">
-                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwithFttb.text"/>
+                <FormattedMessage tagName="tspan" id="portal.startburstHelp.prior4weeksBandwidthFttb.text"/>
               </tspan>
               <tspan x="0" y="98">
                 <FormattedMessage tagName="tspan" id="portal.startburstHelp.sortingNote.text"/>
