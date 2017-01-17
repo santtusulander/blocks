@@ -9,6 +9,8 @@ import Select from '../select'
 import IconUser from '../icons/icon-user.jsx'
 import IconArrowRight from '../icons/icon-arrow-right.jsx'
 
+import { AVAILABLE_THEMES } from '../../constants/themes'
+
 class UserMenu extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (this.props.open !== nextProps.open) {
@@ -61,23 +63,18 @@ class UserMenu extends React.Component {
                   className="btn-block"
                   onSelect={handleThemeChange}
                   value={theme}
-                  options={[
-                    ['dark',
+                  options={AVAILABLE_THEMES.map((theme) =>
+                    [theme,
                       <div>
                         <span className="helper-header helper-ui-theme text-sm">
                           <FormattedMessage id="portal.header.menu.theme.title"/>
                         </span>
-                        <FormattedMessage id="portal.header.menu.theme.ericssonDark.text"/>
-                      </div>],
-                    ['light',
-                      <div>
-                        <span className="helper-header helper-ui-theme text-sm">
-                          <FormattedMessage id="portal.header.menu.theme.title"/>
+                        <span className="theme-title">
+                          <FormattedMessage id="portal.header.menu.theme.ericssonTitle.text" values={{themeTitle: theme}}/>
                         </span>
-                        <FormattedMessage id="portal.header.menu.theme.ericssonLight.text"/>
-                      </div>]
-                  ]}
-                />
+                      </div>
+                    ])
+                  }/>
               </li>
 
               <li className="no-helper-header" >
