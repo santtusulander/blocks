@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import 'classlist-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { browserHistory } from 'react-router'

@@ -91,7 +91,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.clientBufferEvents.text': 'Client Buffer Events',
   'portal.analytics.demoPlayback.droppedFrames.text': 'Dropped Frames',
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
-  'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
+  'portal.analytics.demoPlayback.bandwidthBySegment.text': 'Bandwidth by Segment',
 
   'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
@@ -104,13 +104,13 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
   'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
   'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
-  'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
+  'portal.analytics.trafficOverview.bandwidth.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
   'portal.analytics.trafficOverview.byGeography.text': 'BY GEOGRAPHY',
   'portal.analytics.trafficOverview.byCountry.text': 'BY COUNTRY',
   'portal.analytics.trafficOverview.byCountry.country.header': 'Country',
-  'portal.analytics.trafficOverview.byCountry.bandwith.header': 'Bandwith',
+  'portal.analytics.trafficOverview.byCountry.bandwidth.header': 'Bandwidth',
   'portal.analytics.trafficOverview.byCountry.request.header': 'Requests',
   'portal.analytics.trafficOverview.byCountry.periodTrend.header': 'Period Trend',
 
@@ -426,14 +426,14 @@ const TRANSLATED_MESSAGES = {
 
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
-  
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
-  'portal.content.tooltip.bandwith.text': 'Bandwith',
-  'portal.content.tooltip.bandwithVsLast28.text': '{bandwith} vs 28 days ago',
+  'portal.content.tooltip.bandwidth.text': 'Bandwidth',
+  'portal.content.tooltip.bandwidthVsLast28.text': '{bandwidth} vs 28 days ago',
   'portal.content.tooltip.higher.text': 'Higher',
   'portal.content.tooltip.same.text': 'Same',
   'portal.content.tooltip.lower.text': 'Lower',
@@ -448,8 +448,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.content.text': 'Content',
 
   'portal.header.menu.theme.title': 'UI Theme',
-  'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
-  'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
+  'portal.header.menu.theme.ericssonTitle.text': 'Ericsson {themeTitle} theme',
   'portal.header.menu.logout.text': 'Logout',
   'portal.header.menu.editProfile.text': 'Edit Profile',
 
@@ -595,9 +594,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.settings.text': 'Settings',
   'portal.startburstHelp.help.text': 'Help',
   'portal.startburstHelp.starburst.text': 'Starburst',
-  'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidth.text': 'Average bandwidth for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthFttb.text': 'Average Time to First Byte for the prior 4 weeks',
   'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
   'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
   'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',
