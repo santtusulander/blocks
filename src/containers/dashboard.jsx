@@ -14,6 +14,7 @@ import {
   userIsServiceProvider } from '../util/helpers'
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
+import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -169,10 +170,9 @@ export class Dashboard extends React.Component {
     const countries = !dashboard.size ? List() : dashboard.get('countries')
     const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
 
-    const topProviderAmount = 5
     const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-      .take(topProviderAmount)
+      .take(TOP_PROVIDER_LENGTH)
     const topProvidersIDs = topProviders.map(provider => provider.get('account')).toJS()
     const topProvidersAccounts = getAccountByID(accounts, topProvidersIDs)
 
@@ -275,7 +275,7 @@ export class Dashboard extends React.Component {
                   mapboxActions={this.props.mapboxActions}/>
               </div>
             </DashboardPanel>
-            <DashboardPanel title={intl.formatMessage({ id: topProvicedTitleId }, { amount: topProviderAmount })}>
+            <DashboardPanel title={intl.formatMessage({ id: topProvicedTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
               <Table className="table-simple">
                 <thead>
                   <tr>
