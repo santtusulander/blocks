@@ -12,6 +12,7 @@
     width: 100%;
     height: auto;
     max-width: 900px;
+    min-height: $bar-height;
     padding: $form-vertical-padding $form-horizontal-padding;
     padding-left: 36px !important;
     margin-top: 0 !important;
