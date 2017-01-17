@@ -85,12 +85,29 @@ const properties =
 //     }, Map())
 
 
+const pops =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('pops'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+const pods =
+    handleActions({
+      [actionTypes.RECEIVE] : receiveEntity('pods'),
+      [actionTypes.REMOVE] : removeEntity,
+      [actionTypes.FAIL] : failEntity
+    }, Map())
+
+
 const entities = combineReducers({
   accounts,
   //accountGroups,
   groups,
   //groupProperties,
-  properties
+  properties,
+  pods,
+  pops
 })
 
 export default combineReducers({
