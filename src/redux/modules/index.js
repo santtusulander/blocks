@@ -27,6 +27,9 @@ export const dns = require('./dns').default;
 //Analytics
 export const filters = require('./filters').default;
 
+//Cache
+export const cache = require('./cache').default;
+
 //Security
 export const security = require('./security').default;
 
