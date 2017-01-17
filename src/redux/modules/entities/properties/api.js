@@ -53,7 +53,7 @@ export const fetchAllWithDetails = (brand, account, group) => {
     })
     .then( data => {
       const hostData = {
-        id: account,
+        id: group,
         properties: data
       }
 

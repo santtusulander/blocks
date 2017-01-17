@@ -18,6 +18,8 @@ import * as PERMISSIONS from '../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
+import { getConfiguredName } from '../util/helpers'
+
 import {FormattedMessage, injectIntl} from 'react-intl'
 
 import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
@@ -90,15 +92,25 @@ export class Hosts extends React.Component {
   render() {
     const params = this.props.params
     const { brand, account, group } = this.props.params
-    const { activeAccount, activeGroup, roles, user } = this.props
-    const propertyNames = this.props.propertyNames.size ?
-      this.props.propertyNames : this.props.hosts
-    const properties = propertyNames.map(host => {
+    const { activeAccount, activeGroup, roles, user, hosts } = this.props
+
+    // const propertyNames = this.props.propertyNames.size ?
+    //   this.props.propertyNames : this.props.hosts
+    // const properties = propertyNames.map(host => {
+    //   return Immutable.Map({
+    //     id: host,
+    //     name: host
+    //   })
+    // })
+
+    /* id needs to be configuredName for metrics to match */
+    const properties = hosts.map( (host) => {
       return Immutable.Map({
-        id: host,
-        name: host
+        id: getConfiguredName(host),
+        name: getConfiguredName(host)
       })
     })
+
     const nextPageURLBuilder = (property) => {
       return getContentUrl('property', property, params)
     }
@@ -163,7 +175,6 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  configuredHostNames: React.PropTypes.instanceOf(Immutable.List),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
@@ -172,7 +183,6 @@ Hosts.propTypes = {
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
-  propertyNames: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
