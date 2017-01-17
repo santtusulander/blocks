@@ -195,7 +195,7 @@ function mapDispatchToProps(dispatch, ownProps) {
         metricsOpts.account = ownProps.params.account;
       }
       metricsOpts.list_children = !!canListAccounts;
-      if(accounts.isEmpty() && canListAccounts) {
+      if( /*accounts.isEmpty() &&*/ canListAccounts) {
         //accountActions.startFetching()
         //accountActions.fetchAccounts(ownProps.params.brand)
         //replaced with the new call:

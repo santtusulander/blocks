@@ -44,6 +44,7 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
+
 /*    if(!this.props.activeGroup ||
       String(this.props.activeGroup.get('id')) !== this.props.params.group ||
       this.props.configuredHostNames.size === 0) {
@@ -238,8 +239,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     dispatch( fetchGroup( brand, account, group ) );
     dispatch( fetchHosts( brand, account, group ) );
 
-
-
     // return Promise.all([
     //   // hostActions.startFetching(),
     //   // accountActions.fetchAccount(brand, account),
@@ -247,9 +246,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     //   // hostActions.fetchHosts(brand, account, group),
     //   // hostActions.fetchConfiguredHostNames(brand, account, group)
     //
-    //   dispatch( fetchAccount( brand, account) ),
-    //   dispatch( fetchGroup( brand, account, group)),
-    //   dispatch( fetchHosts( brand, account, group))
     //
     //
     // ])
