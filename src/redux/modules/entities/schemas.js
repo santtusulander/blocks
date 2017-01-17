@@ -14,6 +14,19 @@ const group = new schema.Entity('groups', {}, {
   }
 })
 
+const property = new schema.Entity('properties', {}, {
+  idAttribute: 'published_host_id',
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
+})
+
+// , {
+//   processStrategy: (value, parent) => {
+//     return { ...value, parentId: parent.id}
+//   }
+// })
+
 const brandAccounts = new schema.Entity('brandAccounts', {
   accounts: [ account ]
 })
@@ -22,10 +35,17 @@ const accountGroups = new schema.Entity('accountGroups', {
   groups: [ group ]
 })
 
+const groupProperties = new schema.Entity('groupProperties', {
+  properties: [ property ]
+})
+
 
 export const Schemas = {
   brand,
   account,
+  group,
+  property,
+  brandAccounts,
   accountGroups,
-  brandAccounts
+  groupProperties
 }

@@ -6,8 +6,8 @@ import moment from 'moment'
 
 import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
+//import * as accountActionCreators from '../redux/modules/account'
+//import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -19,6 +19,13 @@ import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
+
+import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
+import {fetch as fetchGroup} from '../redux/modules/entities/groups/actions'
+import {fetchAllWithDetails as fetchHosts} from '../redux/modules/entities/properties/actions'
+import { getEntityById, getEntitiesByParent } from '../redux/modules/entity/selectors'
+
+
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -35,7 +42,7 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeGroup ||
+/*    if(!this.props.activeGroup ||
       String(this.props.activeGroup.get('id')) !== this.props.params.group ||
       this.props.configuredHostNames.size === 0) {
       this.startFetching();
@@ -46,7 +53,10 @@ export class Hosts extends React.Component {
         })
     } else {
       this.props.fetchMetricsData()
-    }
+    }*/
+
+    this.props.fetchGroupData();
+    this.props.fetchMetricsData();
   }
 
   startFetching() {
@@ -182,15 +192,15 @@ Hosts.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
-    configuredHostNames: state.host.get('configuredHostNames'),
+    activeAccount: getEntityById(state, 'accounts', ownProps.params.account), //state.account.get('activeAccount'),
+    activeGroup: getEntityById(state, 'groups', ownProps.params.group), //state.group.get('activeGroup'),
+    //configuredHostNames: state.host.get('configuredHostNames'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    hosts: state.host.get('allHosts'),
-    propertyNames: state.host.get('configuredHostNames'),
+    hosts: getEntitiesByParent(state, 'properties', ownProps.params.group), // state.host.get('allHosts'),
+    //propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
@@ -202,8 +212,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
   const {brand, account, group} = ownProps.params
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  // const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  // const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
@@ -213,13 +223,26 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchGroupData = () => {
-    return Promise.all([
-      hostActions.startFetching(),
-      accountActions.fetchAccount(brand, account),
-      groupActions.fetchGroup(brand, account, group),
-      hostActions.fetchHosts(brand, account, group),
-      hostActions.fetchConfiguredHostNames(brand, account, group)
-    ])
+
+    dispatch( fetchAccount( brand, account, ) );
+    dispatch( fetchGroup( brand, account, group ) );
+    dispatch( fetchHosts( brand, account, group ) );
+
+
+
+    // return Promise.all([
+    //   // hostActions.startFetching(),
+    //   // accountActions.fetchAccount(brand, account),
+    //   // groupActions.fetchGroup(brand, account, group),
+    //   // hostActions.fetchHosts(brand, account, group),
+    //   // hostActions.fetchConfiguredHostNames(brand, account, group)
+    //
+    //   dispatch( fetchAccount( brand, account) ),
+    //   dispatch( fetchGroup( brand, account, group)),
+    //   dispatch( fetchHosts( brand, account, group))
+    //
+    //
+    // ])
   }
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()

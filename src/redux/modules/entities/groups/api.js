@@ -1,8 +1,7 @@
 import axios from 'axios'
-import {arrayOf, valuesOf, normalize} from 'normalizr'
+import {normalize} from 'normalizr'
 
 import { BASE_URL_AAA }  from '../../../util.js'
-
 import {Schemas} from '../schemas'
 
 /**
@@ -14,7 +13,13 @@ import {Schemas} from '../schemas'
 export const fetch = (brand, account, group) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}`)
     .then( ({data}) => {
-      return normalize(data, Schemas.group)
+
+      const accountGroups = {
+        id: account,
+        groups: [data]
+      }
+
+      return normalize(accountGroups, Schemas.accountGroups)
     })
 }
 
@@ -27,10 +32,11 @@ export const fetch = (brand, account, group) => {
 export const fetchAll = (brand, account) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
     .then( ({data}) => {
-      const obj = {
-        account: account,
+
+      const accountGroups = {
+        id: account,
         groups: data.data
       }
-      return normalize(obj, Schemas.accountGroups)
+      return normalize(accountGroups, Schemas.accountGroups)
     })
 }

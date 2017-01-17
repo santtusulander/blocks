@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { normalize} from 'normalizr'
+import { normalize } from 'normalizr'
 
-import { BASE_URL_AAA }  from '../../../util.js'
+import { BASE_URL_AAA } from '../../../util.js'
 
 import {Schemas} from '../schemas'
 
@@ -15,7 +15,12 @@ export const fetch = (brand, account) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
     .then( ({data}) => {
 
-      return normalize(data, Schemas.account)
+      const accountData = {
+        id: brand,
+        accounts: [ data ]
+      }
+
+      return normalize(accountData, Schemas.brandAccounts)
     })
 }
 

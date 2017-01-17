@@ -67,29 +67,29 @@ const properties =
     // [actionTypes.UPDATE]:  mapReducers(receiveEntity('properties'), failEntity)
   }, Map())
 
-const groupProperties =
-    handleActions({
-      [actionTypes.RECEIVE]:  receiveEntity('groupProperties')
-    }, Map())
+// const groupProperties =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('groupProperties')
+//     }, Map())
+//
+// const accountGroups =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('accountGroups')
+//       // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
+//     }, Map())
+//
+// const brandAccounts =
+//     handleActions({
+//       [actionTypes.RECEIVE]:  receiveEntity('brandAccounts')
+//       // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
+//     }, Map())
 
-const accountGroups =
-    handleActions({
-      [actionTypes.RECEIVE]:  receiveEntity('accountGroups')
-      // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
-    }, Map())
-
-/*const brandAccounts =
-    handleActions({
-      [actionTypes.RECEIVE]:  receiveEntity('brandAccounts')
-      // [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('accountGroups'), failEntity)
-    }, Map())
-*/
 
 const entities = combineReducers({
   accounts,
-  accountGroups,
+  //accountGroups,
   groups,
-  groupProperties,
+  //groupProperties,
   properties
 })
 

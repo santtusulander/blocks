@@ -20,3 +20,12 @@ export const fetchAll = (brand, cacheSelector ) => {
     callApi: () => { return api.fetchAll(brand) }
   }
 }
+
+
+export const fetch = (brand, account, cacheSelector ) => {
+  return {
+    types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
+    shouldCallApi: cacheSelector,
+    callApi: () => { return api.fetch(brand, account) }
+  }
+}

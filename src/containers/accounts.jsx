@@ -191,16 +191,17 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
 
-      dispatch( fetchAll('udn', ) )
-
-
       if (!canListAccounts) {
         metricsOpts.account = ownProps.params.account;
       }
       metricsOpts.list_children = !!canListAccounts;
       if(accounts.isEmpty() && canListAccounts) {
-        accountActions.startFetching()
-        accountActions.fetchAccounts(ownProps.params.brand)
+        //accountActions.startFetching()
+        //accountActions.fetchAccounts(ownProps.params.brand)
+        //replaced with the new call:
+        dispatch( fetchAll('udn', ) )
+          //.then( () => {console.log('done');})
+
       }
       if(metrics.isEmpty()) {
         metricsActions.startAccountFetching()
