@@ -14,6 +14,7 @@ import Content from '../components/layout/content'
 import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import PlaceholderEntityList from '../components/network/placeholder-entity-list'
+import PageContainer from '../components/layout/page-container'
 
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
@@ -113,7 +114,7 @@ class Network extends React.Component {
     } = this.state
 
     return (
-      <Content>
+      <Content className="network-content">
 
         <PageHeader pageSubTitle="Network">
           <div className="dropdown-toggle header-toggle">
@@ -123,9 +124,9 @@ class Network extends React.Component {
           </div>
         </PageHeader>
 
-        {params.account &&
+        <PageContainer className="network-entities-container">
           <PlaceholderEntityList
-            entities={groups}
+            entities={params.account && groups}
             addEntity={() => null}
             deleteEntity={() => () => null}
             editEntity={() => () => null}
@@ -133,11 +134,10 @@ class Network extends React.Component {
             selectedEntityId={`${params.group}`}
             title="Groups"
           />
-        }
 
-        {params.group &&
+
           <PlaceholderEntityList
-            entities={networks}
+            entities={params.group && networks}
             addEntity={() => null}
             deleteEntity={() => () => null}
             editEntity={() => () => null}
@@ -145,11 +145,10 @@ class Network extends React.Component {
             selectedEntityId={`${params.network}`}
             title="Networks"
           />
-        }
 
-        {params.network &&
+
           <PlaceholderEntityList
-            entities={pops}
+            entities={params.network && pops}
             addEntity={() => null}
             deleteEntity={() => () => null}
             editEntity={() => () => null}
@@ -157,11 +156,9 @@ class Network extends React.Component {
             selectedEntityId={`${params.pop}`}
             title="Pops"
           />
-        }
 
-        {params.pop &&
           <PlaceholderEntityList
-            entities={pods}
+            entities={params.pop && pods}
             addEntity={() => null}
             deleteEntity={() => () => null}
             editEntity={() => () => null}
@@ -169,18 +166,16 @@ class Network extends React.Component {
             selectedEntityId={`${params.pod}`}
             title="Pods"
           />
-        }
 
-        {params.pod &&
           <PlaceholderEntityList
-            entities={nodes}
+            entities={params.pod && nodes}
             addEntity={() => null}
             deleteEntity={() => () => null}
             editEntity={() => () => null}
             selectEntity={() => null}
             title="Nodes"
           />
-        }
+      </PageContainer>
 
       </Content>
     )

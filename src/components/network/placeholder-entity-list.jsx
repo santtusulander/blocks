@@ -61,7 +61,7 @@ class PlaceholderEntityList extends React.Component {
     } = this.state
 
     return (
-      <PageContainer>
+      <PageContainer className="network-entity-list">
         <AccountManagementHeader
           title={title}
           onAdd={addEntity}
