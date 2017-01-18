@@ -12,7 +12,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 
-import{fetchAll}from '../redux/modules/entities/pops/actions'
+import popActions from '../redux/modules/entities/pops/actions'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -253,8 +253,7 @@ function mapDispatchToProps(dispatch) {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-
-    fetchAllPops: fetchAll(dispatch)
+    fetchAllPops: popActions.fetchAllThunk(dispatch)
   }
 }
 
