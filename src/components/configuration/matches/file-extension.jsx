@@ -116,7 +116,7 @@ FileExtension.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
 module.exports = FileExtension
