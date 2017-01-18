@@ -20,6 +20,8 @@
   "portal.common.error.invalid.email.text": "Email address is invalid.",
   "portal.common.ON.text": "ON",
   "portal.common.OFF.text": "OFF",
+  "portal.common.name": "Name",
+  "portal.common.description": "Description",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
