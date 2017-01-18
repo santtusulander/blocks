@@ -57,7 +57,6 @@ class RoutingDaemonForm extends React.Component {
 
   fetchBGPName(e) {
     const { fetchBGPName, setBGPName } = this.props
-    const { BGPName } = this.state
     const BGPNumber = e.target.value
 
     if (!BGPNumber || this.state.BGPNumber === BGPNumber) {
@@ -188,7 +187,7 @@ RoutingDaemonForm.propTypes = {
   submitting: PropTypes.bool
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = () => {
   return {}
 }
 
