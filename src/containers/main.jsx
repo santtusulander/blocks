@@ -12,8 +12,6 @@ import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 
-import popActions from '../redux/modules/entities/pops/actions'
-
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
@@ -252,8 +250,7 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
-    fetchAllPops: popActions.fetchAllThunk(dispatch)
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
   }
 }
 
