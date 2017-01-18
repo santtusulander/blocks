@@ -16,7 +16,7 @@ export default ({
 
   const fetchAllThunk = dispatch => (...requestParameters) => {
     dispatch({ type: actionTypes.REQUEST })
-    api.fetchAll(...requestParameters)
+    return api.fetchAll(...requestParameters)
       .then(data =>
         data.map(id => dispatch(fetchOne(...requestParameters, id)))
       )
