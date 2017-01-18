@@ -81,7 +81,7 @@ $lt-side-panel-bg-color: $white;
     }
 
     @include sm {
-      padding: $side-panel-footer-vertical-padding ($side-panel-horizontal-padding + $side-panel-small-display-margin);
+      padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
       margin-left: $side-panel-small-display-margin;
     }
   }
