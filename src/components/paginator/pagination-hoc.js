@@ -1,14 +1,38 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { fromJS } from 'immutable'
 
-import selector from '../../redux/modules/pagination/pagination-selectors'
+import pagingQueryParamsSelector from '../../redux/modules/pagination/pagination-selectors'
 import { setActivePage, resetPaginationState, setTotal, setSorting } from '../../redux/modules/pagination/actions'
+
+const delegated = [];
 
 export default function withPagination(WrappedComponent) {
   class WithPagination extends Component {
 
+    /**
+     * Do clean-up when component unmounted
+     */
     componentWillUnmount() {
       this.props.resetPaginationState()
+      this.resetDelegated()
+    }
+
+    componentWillReceiveProps(nextProps) {
+      const { pagingQueryParams } = this.props;
+      if (this.hasQueryParamsChanged(pagingQueryParams, nextProps.pagingQueryParams)) {
+        this.callDelegatedFn();
+      }
+    }
+
+    /**
+     * Determinate equality of two objects values
+     * @param currentParams {object}
+     * @param nextParams {object}
+     * @returns {boolean}
+     */
+    hasQueryParamsChanged(currentParams, nextParams) {
+      return !fromJS(currentParams).equals(fromJS(nextParams))
     }
 
     /**
@@ -49,15 +73,43 @@ export default function withPagination(WrappedComponent) {
       return { pagingConfig };
     }
 
+    /**
+     * Save function passed by wrapped component
+     * @param fn {function} - function to be called when pagination updates
+     */
+    setDelegatedFn(fn) {
+      delegated.push(fn)
+    }
+
+    /**
+     * Call delegated function if exist
+     */
+    callDelegatedFn() {
+      if (delegated.length) delegated[0]()
+    }
+
+    /**
+     * Reset delegated array
+     */
+    resetDelegated() {
+      delegated.length = 0;
+    }
+
     render() {
 
       const pagingConfig = WithPagination.getPagingConfig(this.props);
 
-      return (<WrappedComponent {...this.props} {...pagingConfig} />);
+      const delegateToPagination = this.setDelegatedFn;
+
+      return (<WrappedComponent {...this.props} {...pagingConfig} {...{delegateToPagination}} />);
     }
   }
 
-  return connect(selector, {
+  WithPagination.propTypes = {
+    pagingQueryParams: PropTypes.object
+  }
+
+  return connect(pagingQueryParamsSelector, {
     onSelect: setActivePage,
     sortColumn: setSorting,
     setTotal,

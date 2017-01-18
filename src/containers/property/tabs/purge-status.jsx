@@ -23,6 +23,7 @@ class PurgeStatus extends React.Component {
     this.state = {}
 
     this.fetchData = this.fetchData.bind(this)
+    this.props.delegateToPagination(this.fetchData)
   }
 
   componentWillMount() {
@@ -30,19 +31,19 @@ class PurgeStatus extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-        nextProps.params !== this.props.params ||
-        nextProps.pagingQueryParams.offset !== this.props.pagingQueryParams.offset
-    ) {
+    if (nextProps.params !== this.props.params) {
       this.fetchData(nextProps.params)
     }
   }
 
-  fetchData(params) {
+  fetchData(params = this.props.params) {
     const { purgeActions, pagingQueryParams } = this.props
     const { brand, account, group, property } = params
     purgeActions.startFetching()
     purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingQueryParams })
+      /*.then(resp => {
+        debugger
+      })*/
   }
 
   render() {

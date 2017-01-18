@@ -10,7 +10,6 @@ export const actionTypes = {
 };
 
 
-
 export const setActivePage = createAction(actionTypes.SET_ACTIVE_PAGE, (page) => page);
 
 export const setTotal = createAction(actionTypes.SET_TOTAL, (total) => total);

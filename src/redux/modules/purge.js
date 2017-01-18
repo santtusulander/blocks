@@ -77,7 +77,7 @@ export function fetchListFailure(state) {
 
 export function fetchObjectsSuccess(state, action) {
   return state.merge({
-    purgeObjects: Immutable.fromJS(action.payload.purge_objects),
+    purgeObjects: Immutable.fromJS(action.payload.data),
     fetching: false
   })
 }
@@ -148,6 +148,7 @@ export const fetchPurgeList = createAction(PURGE_LIST_FETCHED, (brand, account, 
 export const fetchPurgeObjects = createAction(PURGE_OBJECTS_FETCHED, (brand, account, group, params = {}) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/purge_many`, { params })
   .then((res) => {
+    console.info(res.data.data)
     if(res) {
       return res.data;
     }
