@@ -5,25 +5,41 @@ import { getReduxFormValidationState } from '../../util/helpers'
 import DefaultErrorBlock from './default-error-block'
 import NumberInput from '../number-input'
 
-const FieldFormGroupNumber = ({ addonAfter, input, placeholder, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
+const FieldFormGroupNumber = ({
+  addonAfter,
+  addonBefore,
+  className,
+  disabled,
+  input,
+  label,
+  inputRef,
+  meta,
+  placeholder,
+  required,
+  ErrorComponent
+}) => {
 
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
-        <InputGroup className="number-input-group">
 
-          <NumberInput
-            {...input}
-            {...{ inputRef }}
-            className={className}
-            disabled={disabled}
-            placeholder={placeholder} />
+        {addonBefore &&
+          <InputGroup.Addon>
+            {addonBefore}
+          </InputGroup.Addon>
+        }
 
-        </InputGroup>
+        <NumberInput
+          {...input}
+          {...{ inputRef }}
+          className={className}
+          disabled={disabled}
+          placeholder={placeholder} />
 
-        { addonAfter &&
+
+        {addonAfter &&
           <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
@@ -48,6 +64,7 @@ FieldFormGroupNumber.defaultProps = {
 FieldFormGroupNumber.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,
   input: PropTypes.object,
