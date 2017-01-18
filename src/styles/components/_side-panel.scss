@@ -1,6 +1,7 @@
 // Side Panels
 // ===========
 $side-panel-width: rem(636px);
+$side-panel-small-display-margin: rem(12px);
 $side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(108px);
 $side-panel-header-top-padding: rem(30px);
@@ -31,7 +32,7 @@ $lt-side-panel-bg-color: $white;
 
   .modal-content {
     @include sm {
-      margin-left: 12px;
+      margin-left: $side-panel-small-display-margin;
     }
   }
 
@@ -77,6 +78,11 @@ $lt-side-panel-bg-color: $white;
 
     .light-theme & {
       background: rgba($black, 0.04);
+    }
+
+    @include sm {
+      padding: $side-panel-footer-vertical-padding ($side-panel-horizontal-padding + $side-panel-small-display-margin);
+      margin-left: $side-panel-small-display-margin;
     }
   }
 }
