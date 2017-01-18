@@ -7,6 +7,7 @@ import SidePanel from '../../../components/side-panel'
 import NetworkForm from '../../../components/network/modals/network-form'
 import '../../../components/account-management/group-form.scss'
 
+//TODO Remove mock after Redux integration
 const mockRedux = {
   get: function(field) {
     switch (field) {
@@ -29,7 +30,7 @@ class NetworkFormContainer extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  //TODO Fix onSubmit
+  //TODO Fix onSubmit after Redux integration
   onSubmit(values) {
     const { networkId, invalid, onSave } = this.props
     if(!invalid) {
