@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
 import { Button, FormGroup, ControlLabel } from 'react-bootstrap'
+import Typeahead from 'react-bootstrap-typeahead'
+
 
 import FieldRadio from '../../form/field-radio'
 import FieldFormGroup from '../../form/field-form-group'
@@ -15,6 +17,8 @@ import { checkForErrors } from '../../../util/helpers'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import './service-provider-footprint-form.scss'
+
 const validate = ({ footPrintName, footPrintDescription }) => {
 
   const errors = checkForErrors({ footPrintName, footPrintDescription })
@@ -23,23 +27,19 @@ const validate = ({ footPrintName, footPrintDescription }) => {
 
 }
 
-class FootPrintForm extends React.Component {
+class FootprintForm extends React.Component {
   constructor(props) {
     super(props)
 
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(){
-
+  onSubmit(values){
+    console.log(values);
   }
 
   render() {
-    const { providerTypes, invalid, submitting, initialValues: { accountBrand }, show, onCancel, intl, useCSVFile } = this.props
-    const title = this.props.account
-      ? <FormattedMessage id="portal.account.manage.editAccount.title" />
-      : <FormattedMessage id="portal.account.manage.newAccount.title" />
-    const subTitle = this.props.account ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
+    const { providerTypes, invalid, submitting, show, onCancel, intl, useCSVFile = true } = this.props
 
     const submitButtonLabel = this.props.account
       ? <FormattedMessage id="portal.button.save" />
@@ -49,8 +49,7 @@ class FootPrintForm extends React.Component {
     return (
       <SidePanel
         show={show}
-        title={title}
-        subTitle={subTitle}
+        title={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.title.text" />}
         cancel={onCancel}
       >
 
@@ -61,7 +60,7 @@ class FootPrintForm extends React.Component {
 
           <FormGroup>
               <Field
-                name="manualAddFootprint"
+                name="addFootprintMethod"
                 type="radio"
                 value="manual"
                 component={FieldRadio}
@@ -69,8 +68,8 @@ class FootPrintForm extends React.Component {
               />
 
               <Field
+                name="addFootprintMethod"
                 type="radio"
-                name="addCSVFile"
                 value="addfile"
                 component={FieldRadio}
                 label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.checkbox.option.useCSV.text" />}
@@ -91,14 +90,14 @@ class FootPrintForm extends React.Component {
                 name="footPrintDescription"
                 type="text"
                 placeholder={intl.formatMessage({id: 'portal.serviceProviderConfig.form.footprint.description.placeholder.text'})}
-                component={FieldFormGroupSelect}
+                component={FieldFormGroup}
                 label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.description.title.text" />}
               />
 
               <FormGroup>
                   <ControlLabel>{<FormattedMessage id="portal.serviceProviderConfig.form.footprint.dataType.title.text" />}</ControlLabel>
                   <Field
-                    name="CIDR"
+                    name="dataType"
                     type="radio"
                     value="cidr"
                     component={FieldRadio}
@@ -107,19 +106,16 @@ class FootPrintForm extends React.Component {
 
                   <Field
                     type="radio"
-                    name="ASN"
+                    name="dataType"
                     value="asn"
                     component={FieldRadio}
                     label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.dataType.option.asn.text" />}
                   />
 
-                  <Field
-                    type="text"
-                    name="footPrintName"
-                    placeholder={intl.formatMessage({id: 'portal.serviceProviderConfig.form.footprint.name.placeholder.text'})}
-                    component={FieldFormGroup}
-                    label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.UDNType.title.text" />}
-                  />
+                  <Typeahead
+                    multiple={true}
+                    onChange={() => null}
+                    />
               </FormGroup>
 
               <Field
@@ -127,7 +123,7 @@ class FootPrintForm extends React.Component {
                 className="input-select"
                 component={FieldFormGroupSelect}
                 options={providerTypes}
-                label={<FormattedMessage id="portal.account.manage.accountType.title" />}
+                label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.UDNType.title.text" />}
               />
             </div>
           }
@@ -162,8 +158,8 @@ class FootPrintForm extends React.Component {
   }
 }
 
-FootPrintForm.displayName = "AccountForm"
-FootPrintForm.propTypes = {
+FootprintForm.displayName = "FootprintForm"
+FootprintForm.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountType: PropTypes.number,
   fetchServiceInfo: PropTypes.func,
@@ -176,14 +172,14 @@ FootPrintForm.propTypes = {
   show: PropTypes.bool
 }
 
-FootPrintForm.defaultProps = {
+FootprintForm.defaultProps = {
   serviceOptions: []
 }
 
 
 const form = reduxForm({
-  form: 'accountForm',
+  form: 'footprintForm',
   validate
-})(FootPrintForm)
+})(FootprintForm)
 
 export default connect()(injectIntl(form))
