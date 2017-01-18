@@ -1,5 +1,7 @@
 /*eslint consistent-return: 0*/
 
+const CACHE_EXPIRATION_TIME = 300000
+
 /**
  *
  * @param {function} dispatch
@@ -11,7 +13,8 @@ export default function apiMiddleware({ dispatch, getState }) {
     const {
       types,
       callApi,
-      shouldCallApi = () => true,
+      cacheKey,
+      forceReload,
       payload = {}
     } = action;
 
@@ -28,20 +31,19 @@ export default function apiMiddleware({ dispatch, getState }) {
       throw new Error('Expected `callApi` to be a function.');
     }
 
-    if (!shouldCallApi(getState())) {
+    if (!forceReload && getState().cache[cacheKey] > CACHE_EXPIRATION_TIME) {
       return;
+    }
+
+    if (cacheKey) {
+      dispatch({ type: 'CACHE_REQUEST', payload: { [cacheKey]: Math.floor(Date.now() / 1000) } })
     }
 
     const [ requestType, successType, failureType ] = types;
 
     dispatch({ ...payload, type: requestType });
-
-    return callApi(dispatch).then(
-      response => {
-        //response.json().then(
-        return dispatch({ ...payload, response, type: successType })
-        //);
-      },
+    return callApi().then(
+      response => dispatch({ ...payload, response, type: successType }),
       error => dispatch({ ...payload, error, type: failureType })
     );
   };
