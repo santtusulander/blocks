@@ -11,15 +11,14 @@ export default ({
     forceReload,
     types: receiveActionTypes,
     cacheKey: `fetch-one-${entityType}-${requestParameters.join('-')}`,
-    callApi: api.fetch(...requestParameters)
+    callApi: () => api.fetch(...requestParameters)
   })
 
   const fetchAllThunk = dispatch => (...requestParameters) => {
     api.fetchAll(...requestParameters)
       .then(data =>
-        data.map(id => dispatch(fetchOne(...requestParameters, id))
+        data.map(id => dispatch(fetchOne(...requestParameters, id)))
       )
-    )
   }
 
   return {

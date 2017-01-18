@@ -7,14 +7,14 @@ import {getFetching} from '../../fetching/selectors'
  * @return {} property
  */
 export const getById = (state, id) => {
-  const prop =  state.entities.entities.accounts.get(String(id))
+  const prop =  state.entities.accounts.get(String(id))
   if (prop) return prop
 
   return null
 }
 
 export const getByBrand = (state, brand) => {
-  return state.entities.accounts.filter( account => account.brand === brand )
+  return state.accounts.filter( account => account.brand === brand )
 }
 
 /**
