@@ -15,7 +15,7 @@ const fakeConfig = Immutable.fromJS({
   "cases": [["foo"]]
 })
 
-const fakePath = ['foo', 'bar']
+const fakePath = Immutable.fromJS(['foo', 'bar'])
 
 describe('FileExtension', () => {
   it('should exist', () => {
