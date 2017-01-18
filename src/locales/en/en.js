@@ -755,6 +755,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.no': 'No',
   'portal.button.export': 'Export',
   'portal.button.delete': 'Delete',
+  'portal.button.deleting': 'Deleting...',
   'portal.button.ok': 'OK',
   'portal.button.resetting': 'Resetting...',
   'portal.button.reset': 'Reset',
