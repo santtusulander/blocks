@@ -15,10 +15,13 @@ export default ({
   })
 
   const fetchAllThunk = dispatch => (...requestParameters) => {
-    api.fetchAll(...requestParameters)
+    return api.fetchAll(...requestParameters)
       .then(data =>
         data.map(id => dispatch(fetchOne(...requestParameters, id)))
       )
+      .catch( (err) => {
+        dispatch( {type: actionTypes.FAIL, payload: err } )
+      })
   }
 
   return {
