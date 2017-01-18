@@ -37,13 +37,12 @@ class PurgeStatus extends React.Component {
   }
 
   fetchData(params = this.props.params) {
-    const { purgeActions, pagingQueryParams } = this.props
+    const { purgeActions, pagingQueryParams, updatePagingTotal } = this.props
     const { brand, account, group, property } = params
     purgeActions.startFetching()
-    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingQueryParams })
-      /*.then(resp => {
-        debugger
-      })*/
+    purgeActions
+      .fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingQueryParams })
+      .then(updatePagingTotal)
   }
 
   render() {

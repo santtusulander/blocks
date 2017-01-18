@@ -35,12 +35,12 @@ export default (state) => (
   {
     pagingQueryParams: {
       offset: getOffset(state),
-      total: getTotal(state),
       page_size: getPageSize(state),
       sort_by: getSortBy(state),
       sort_order: getSortOrder(state),
       filter_by: getFilterBy(state),
       filter_value: getFilterValue(state)
-    }
+    },
+    pagingTotal: getTotal(state)
   }
 )

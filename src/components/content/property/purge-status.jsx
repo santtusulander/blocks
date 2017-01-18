@@ -161,9 +161,11 @@ class PurgeHistoryReport extends React.Component {
 
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
 PurgeHistoryReport.propTypes = {
+  columnSorter: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   historyData: React.PropTypes.instanceOf(List),
-  intl: React.PropTypes.object
+  intl: React.PropTypes.object,
+  pagination: React.PropTypes.object
 }
 
 PurgeHistoryReport.defaultProps = {}
