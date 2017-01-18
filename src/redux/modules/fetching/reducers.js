@@ -2,10 +2,10 @@
  * Reducers for Fetching - module
  * @returns {boolean}
  */
-export const set = () => {
-  return true
+export const set = (state) => {
+  return state + 1
 }
 
-export const clear = () => {
-  return false
+export const clear = (state) => {
+  return state - 1
 }

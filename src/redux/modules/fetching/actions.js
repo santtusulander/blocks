@@ -17,5 +17,5 @@ export const createFetchingReducers = (actionTypes) => {
     else  mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear
   }
 
-  return handleActions(mappedActions, false)
+  return handleActions(mappedActions, 0)
 }
