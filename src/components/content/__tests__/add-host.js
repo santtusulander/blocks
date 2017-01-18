@@ -38,7 +38,9 @@ describe('AddHost', () => {
   it('should create host on submit', () => {
 
     const input = subject().find('#host_name')
-    subject().find('#save_button').simulate('click')
+    subject().find('#save_button').simulate('click', {
+      preventDefault: jest.fn()
+    })
     expect(createHost.mock.calls[0][0]).toEqual('new')
     expect(createHost.mock.calls[0][1]).toEqual('trial')
   })
