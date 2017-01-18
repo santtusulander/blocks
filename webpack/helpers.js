@@ -39,6 +39,7 @@ module.exports = {
       {from: 'src/assets/topo/countries.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
+      {from: 'src/assets/img/logo-udn-dark.png', to: 'assets/img'},
       {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
     ])
   ]
