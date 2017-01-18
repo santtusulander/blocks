@@ -635,10 +635,17 @@ class Styleguide extends React.Component {
             <Col xs={6}>
 
               <ControlLabel>Number Input</ControlLabel>
+              <p>Example min = 0, max = 200</p>
 
               <FormGroup>
                 <NumberInput
-                  onChange={val => this.setState({ numberInputValue: val })}
+                  max={200}
+                  min={0}
+                  onChange={val => this.setState({
+                    numberInputValue: val === parseInt(val, 10) ?
+                      val :
+                      val.target.value
+                  })}
                   value={this.state.numberInputValue} />
               </FormGroup>
 
