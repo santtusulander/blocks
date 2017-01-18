@@ -40,6 +40,7 @@ import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
+import NumberInput from '../components/number-input'
 import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
@@ -133,7 +134,8 @@ class Styleguide extends React.Component {
         'link8',
         'link9'
       ]),
-      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
+      numberInputValue: 100
     }
   }
 
@@ -624,6 +626,25 @@ class Styleguide extends React.Component {
             </div>
 
           </div>
+
+
+          <hr />
+
+          <Row>
+
+            <Col xs={6}>
+
+              <ControlLabel>Number Input</ControlLabel>
+
+              <FormGroup>
+                <NumberInput
+                  onChange={val => this.setState({ numberInputValue: val })}
+                  value={this.state.numberInputValue} />
+              </FormGroup>
+
+            </Col>
+
+          </Row>
 
 
           <hr />
