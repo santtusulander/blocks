@@ -1,6 +1,6 @@
 import moment from 'moment'
 import numeral from 'numeral'
-import { List, fromJS } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import { getDateRange, getCustomDateRange } from '../redux/util.js'
 import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
@@ -171,7 +171,7 @@ export function buildAnalyticsOpts(params, filters, location ){
     getCustomDateRange(filters) :
     { startDate: undefined, endDate: undefined }
 
-  let opts = {
+  const opts = {
     account: params.account,
     brand: params.brand,
     group: params.group,
@@ -186,8 +186,12 @@ export function buildAnalyticsOpts(params, filters, location ){
     net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet)
   }
 
-  if (filterValues.statusCodes && filterValues.statusCodes.size || filterValues.errorCodes && filterValues.errorCodes.size) {
-    opts.status_codes = filterValues.statusCodes.size && filterValues.statusCodes.join(',') || filterValues.errorCodes.size && filterValues.errorCodes.join(',')
+  if (filterValues.statusCodes && filterValues.statusCodes.size) {
+    opts.status_codes = filterValues.statusCodes.size && filterValues.statusCodes.join(',')
+  }
+
+  if (filterValues.errorCodes && filterValues.errorCodes.size) {
+    opts.status_codes = filterValues.errorCodes.size && filterValues.errorCodes.join(',')
   }
 
   return opts
@@ -525,7 +529,9 @@ export function getTopURLs(urlMetrics, dataKey) {
 }
 
 /**
- * Builds options for fetching data
+ * Builds options for fetching data.
+ * TODO: Refactor this so that we'll have one function for each option, e.g. buildByCityOpts
+ * UDNP-2305 –– https://vidscale.atlassian.net/browse/UDNP-2305
  *
  * @method buildFetchOpts
  * @param  {Object}  coordinates              Object of map bounds
@@ -535,23 +541,32 @@ export function getTopURLs(urlMetrics, dataKey) {
  * @param  {string}  activeHostConfiguredName String of active host
  * @return {object}                           Object of different fetch options
  */
-export function buildFetchOpts({ coordinates = {}, params = {}, filters = {}, location = {}, activeHostConfiguredName } = {}) {
+export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}), location = {}, activeHostConfiguredName } = {}) {
   if (params.property && activeHostConfiguredName) {
     params = Object.assign({}, params, {
       property: activeHostConfiguredName
     })
   }
 
-  const fetchOpts = buildAnalyticsOpts(params, filters, location)
+  const fetchOpts = location.pathname && buildAnalyticsOpts(params, filters, location)
   const startDate  = filters.getIn(['dateRange', 'startDate'])
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
   const byTimeOpts = Object.assign({
-    granularity: rangeDiff >= 2 ? 'day' : 'hour'
-  }, fetchOpts)
-  const aggregateGranularity = byTimeOpts.granularity
+    granularity:  rangeDiff >= 2 ? 'day' : 'hour'
+  }, fetchOpts || params)
+
+  const dashboardStartDate  = Math.floor(startDate / 1000)
+  const dashboardEndDate    = Math.floor(endDate / 1000)
+  const dashboardOpts = Object.assign({
+    startDate: dashboardStartDate,
+    endDate: dashboardEndDate,
+    granularity: rangeDiff >= 1 ? 'day' : 'hour'
+  }, params)
 
   const byCityOpts = Object.assign({
+    startDate: byTimeOpts.startDate || toUnixTimestamp(startDate),
+    endDate: byTimeOpts.endDate || toUnixTimestamp(endDate),
     max_cities: MAPBOX_MAX_CITIES_FETCHED,
     latitude_south: coordinates.south || null,
     longitude_west: coordinates.west || null,
@@ -560,11 +575,5 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = {}, lo
     show_detail: false
   }, byTimeOpts)
 
-  const dashboardOpts = Object.assign({
-    startDate,
-    endDate,
-    granularity: 'hour'
-  }, params)
-
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
+  return { byTimeOpts, fetchOpts, byCityOpts, dashboardOpts }
 }

@@ -92,6 +92,14 @@ export function getNetworkUrl(linkType, val, params) {
       return getRoute('networkAccount', { ...params, account: val })
     case 'groups':
       return getRoute('networkGroups', { ...params, account: val })
+    case 'group':
+      return getRoute('networkGroup', { ...params, group: val })
+    case 'network':
+      return getRoute('networkNetwork', { ...params, network: val })
+    case 'pop':
+      return getRoute('networkPop', { ...params, pop: val })
+    case 'pod':
+      return getRoute('networkPod', { ...params, pod: val })
   }
 }
 

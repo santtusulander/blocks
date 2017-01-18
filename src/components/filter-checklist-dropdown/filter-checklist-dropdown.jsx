@@ -104,9 +104,11 @@ export class FilterChecklistDropdown extends React.Component {
     }
 
     if(filteredResults.size) {
-      itemList = itemList.concat([
-        this.props.children && this.props.children.map(child => child)
-      ])
+      if(!this.state.filterValue.length) {
+        itemList = itemList.concat([
+          this.props.children && this.props.children.map(child => child)
+        ])
+      }
 
       itemList = itemList.concat(filteredResults.map((option, i) =>
         (
