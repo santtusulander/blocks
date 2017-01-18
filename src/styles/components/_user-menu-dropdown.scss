@@ -43,20 +43,13 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
 
     .dropdown-header {
       padding: $user-menu-header-vertical-padding $user-menu-horizontal-padding;
-      overflow: hidden;
       font-size: inherit;
       line-height: 1;
       color: inherit;
-      text-overflow: ellipsis;
 
       .light-theme & {
         color: $lt-text-color;
         background-color: rgba($black, 0.04);
-      }
-
-      > span {
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
 

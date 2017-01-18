@@ -4,10 +4,11 @@ import { Dropdown, MenuItem } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
-import { getUserUrlFromParams } from '../../util/routes.js'
+import { getUserUrlFromParams } from '../../util/routes'
 import Select from '../select'
-import IconUser from '../icons/icon-user.jsx'
-import IconArrowRight from '../icons/icon-arrow-right.jsx'
+import IconUser from '../icons/icon-user'
+import IconArrowRight from '../icons/icon-arrow-right'
+import TruncatedTitle from '../truncated-title'
 
 class UserMenu extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -48,11 +49,13 @@ class UserMenu extends React.Component {
             <ul>
               <MenuItem header={true}>
                 {user.size &&
-                  <span id="user-menu-username">
-                    {user.get('first_name') && user.get('last_name') ?
-                      user.get('first_name') + ' ' + user.get('last_name')
-                    : user.get('email')}
-                  </span>
+                  <div id="user-menu-username">
+                    <TruncatedTitle
+                      content={user.get('first_name') && user.get('last_name') ?
+                        user.get('first_name') + ' ' + user.get('last_name')
+                      : user.get('email')}
+                      tooltipPlacement="bottom"/>
+                  </div>
                 }
               </MenuItem>
 
