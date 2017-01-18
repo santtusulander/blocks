@@ -4,9 +4,9 @@ import Immutable from 'immutable'
 // import { Provider } from 'react-redux'
 // import { createStore } from 'redux'
 
-jest.unmock('../../util/status-codes')
-jest.unmock('../security/security.jsx')
-import { Security } from '../security/security.jsx'
+jest.unmock('../../../util/status-codes')
+jest.unmock('../security.jsx')
+import { Security } from '../security.jsx'
 
 const privateKey =
 `-----BEGIN RSA PRIVATE KEY-----
