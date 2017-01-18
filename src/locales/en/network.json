@@ -1,0 +1,11 @@
+{
+  "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.asNumber.label": "BGP AS Number",
+  "portal.network.spConfig.routingDaemon.editForm.asName.label": "BGP AS Name",
+  "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
+  "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
+  "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.bgpRouter.label": "BGP Router IP",
+  "portal.network.spConfig.routingDaemon.editForm.bgpPassword.label": "Password"
+}
