@@ -5,6 +5,7 @@ import Typeahead from 'react-bootstrap-typeahead'
 import Immutable from 'immutable'
 
 import {
+  FILE_EXTENSION_REGEXP,
   FILE_EXTENSION_CASE_START,
   FILE_EXTENSION_CASE_END
 } from '../../../util/policy-config'
@@ -23,18 +24,23 @@ class FileExtension extends React.Component {
       isValid: this.validate(extensions)
     }
   }
+
   extensionsFromMatchCase(match) {
     const matchCase = match.getIn(['cases', 0, 0])
-    const rawExtensionList = matchCase.substring(
-      FILE_EXTENSION_CASE_START.length,
-      matchCase.length - FILE_EXTENSION_CASE_END.length
-    )
-    return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
+    const rawExtensionList = matchCase.match(FILE_EXTENSION_REGEXP)[1];
+
+    if (rawExtensionList) {
+      return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
+    } else {
+      return []
+    }
   }
+
   matchCaseFromExtensions(extensions) {
     const rawExtensions = extensions.map(extension => extension.label)
     return FILE_EXTENSION_CASE_START + rawExtensions.join('|') + FILE_EXTENSION_CASE_END
   }
+
   handleExtensionsChange() {
     return extensions => {
       this.setState({
@@ -43,6 +49,7 @@ class FileExtension extends React.Component {
       })
     }
   }
+
   validate(extensions) {
     if (!extensions || !(extensions instanceof Array)) {
       return false
@@ -61,6 +68,7 @@ class FileExtension extends React.Component {
 
     return true
   }
+
   saveChanges() {
     const matchCase = this.matchCaseFromExtensions(this.state.extensions)
     let newMatch = this.props.match
@@ -69,6 +77,7 @@ class FileExtension extends React.Component {
     this.props.changeValue(this.props.path, newMatch)
     this.props.close()
   }
+
   render() {
     const {
       extensions,
