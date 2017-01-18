@@ -35,7 +35,8 @@ class AddHost extends React.Component {
     this.createHost = this.createHost.bind(this)
   }
 
-  createHost() {
+  createHost(e) {
+    e.preventDefault()
     const {
       fields: {
         hostName,
