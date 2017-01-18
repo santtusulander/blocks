@@ -1,10 +1,4 @@
-import { fetch } from './api'
-import { actionTypes } from '../index'
+import * as api from './api'
+import actionCreatorBuilder from '../action-creators'
 
-export const fetchAll = (brand, account, group) => ({
-  types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
-  cacheKey: `fetch-nodes-${brand}-${account}-${group}`,
-  callApi: fetch
-})
-
-// groups-fetch-all-udn-232-565
+export default actionCreatorBuilder({ entityType: 'node', api })
