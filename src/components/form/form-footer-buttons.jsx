@@ -1,25 +1,27 @@
 import React, { PropTypes } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 
-const FormFooterButtons = ({children, deleteBtn}) => {
+const FormFooterButtons = ({children, autoAlign}) => {
+  const footerButtonsElems = autoAlign ? (
+    <ButtonToolbar className="pull-right">
+      {children}
+    </ButtonToolbar>
+  ) : children
+
   return (
     <div className='modal-footer'>
-      { deleteBtn &&
-        <ButtonToolbar className="pull-left">
-          {deleteBtn}
-        </ButtonToolbar>
-      }
-      <ButtonToolbar className="pull-right">
-        {children}
-      </ButtonToolbar>
+      {footerButtonsElems}
     </div>
   )
 }
 
 FormFooterButtons.displayName = 'FormFooterButtons'
 FormFooterButtons.propTypes = {
-  children: PropTypes.array,
-  deleteBtn: PropTypes.node
+  autoAlign: PropTypes.bool,
+  children: PropTypes.array
+}
+FormFooterButtons.defaultProps = {
+  autoAlign: true
 }
 
 export default FormFooterButtons
