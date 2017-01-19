@@ -11,6 +11,7 @@ import support from './support.json'
 import user from './user.json'
 import password from './password.json'
 import spConfig from './sp-config.json';
+import validators from './validators.json';
 
 //TODO: Should be removed when all strings have been moved to separate files
 import en from './en.js'
@@ -29,5 +30,6 @@ export default Object.assign({},
   user,
   password,
   spConfig,
+  validators,
   en
 )
