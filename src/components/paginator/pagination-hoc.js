@@ -5,13 +5,6 @@ import { fromJS } from 'immutable'
 import paginationSelector from '../../redux/modules/pagination/pagination-selectors'
 import { setActivePage, resetPaginationState, setTotal, setSorting } from '../../redux/modules/pagination/actions'
 
-/**
- * @private
- * Holds apiMethod passed from wrapped component
- * @type {Array}
- */
-const delegated = [];
-
 export default function withPagination(WrappedComponent) {
   class WithPagination extends Component {
     /**
@@ -58,51 +51,22 @@ export default function withPagination(WrappedComponent) {
       this.updatePagingTotalFromResponse = this.updatePagingTotalFromResponse.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-      const { pagingQueryParams } = this.props;
-      if (this.hasQueryParamsChanged(pagingQueryParams, nextProps.pagingQueryParams)) {
-        this.callDelegatedFn();
-      }
-    }
-
     /**
      * Do clean-up when component unmounted
      */
     componentWillUnmount() {
-      this.props.resetPaginationState()
-      this.resetDelegated()
+      this.props.resetPaginationState();
     }
 
     /**
-     * Determinate equality of two objects values
-     * @param currentParams {object}
-     * @param nextParams {object}
+     * Determinate if pagination params has been changed.
+     * Useful in  React life-hook 'componentWillReceiveProps'.
+     * @param currentParams {object} - object referenced to this.props
+     * @param nextParams {object} - object referenced to nextProps in life-hook
      * @returns {boolean}
      */
-    hasQueryParamsChanged(currentParams, nextParams) {
+    hasPagingParamsChanged(currentParams, nextParams) {
       return !fromJS(currentParams).equals(fromJS(nextParams))
-    }
-
-    /**
-     * Save function passed by wrapped component
-     * @param fn {function} - function to be called when pagination updates
-     */
-    setDelegatedFn(fn) {
-      delegated.push(fn)
-    }
-
-    /**
-     * Call delegated function if exist
-     */
-    callDelegatedFn() {
-      if (delegated.length) delegated[0]()
-    }
-
-    /**
-     * Reset delegated array
-     */
-    resetDelegated() {
-      delegated.length = 0;
     }
 
     /**
@@ -126,14 +90,14 @@ export default function withPagination(WrappedComponent) {
 
       const updatePagingTotal = this.updatePagingTotalFromResponse;
 
-      const delegateToPagination = this.setDelegatedFn;
+      const hasPagingParamsChanged = this.hasPagingParamsChanged;
 
       return (
         <WrappedComponent
           {...this.props}
           {...pagingConfig}
-          {...{delegateToPagination}}
           {...{updatePagingTotal}}
+          {...{hasPagingParamsChanged}}
         />
       );
     }
@@ -146,7 +110,7 @@ export default function withPagination(WrappedComponent) {
     pagingTotal: PropTypes.number,
     resetPaginationState: PropTypes.func,
     setTotal: PropTypes.func
-  }
+  };
 
   return connect(paginationSelector, {
     onSelect: setActivePage,
