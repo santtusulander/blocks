@@ -321,10 +321,11 @@ export function filterAccountsByUserName (accounts) {
  */
 export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   let errors = {}
+
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if ((isEmptyArray || field === '')) {
+    if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
