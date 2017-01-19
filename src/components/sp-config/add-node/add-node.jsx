@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import {
   Button,
+  ButtonToolbar,
   FormGroup,
   ControlLabel
 } from 'react-bootstrap'
@@ -38,7 +39,7 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
         errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.howMany.title" /> } }/>
       },
       {
-        condition: isInt(numNodes) === false,
+        condition: isInt(numNodes) === false || numNodes < 1,
         errorText: <FormattedMessage id="portal.validators.type.number" values={ {field : <FormattedMessage id="portal.spConfig.addNode.howMany.title" /> } }/>
       }
     ],
@@ -114,19 +115,22 @@ class AddNodeForm extends React.Component {
 
     if (showAddConfirmation) {
       const confirmText = <FormattedMessage id="portal.spConfig.addNode.confirmAdd" values={ {numNodes} }/>
-      return <FormFooterButtons textContent={confirmText}>
-        <Button
-          id="cancel-btn"
-          className="btn-secondary"
-          onClick={this.onCancelConfirm}>
-          <FormattedMessage id="portal.button.back"/>
-        </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid||submitting}>
-          {submitButtonLabel}
-        </Button>
+      return <FormFooterButtons autoAlign={false}>
+        <div className="modal-footer__text">{confirmText}</div>
+        <ButtonToolbar className="pull-right">
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={this.onCancelConfirm}>
+            <FormattedMessage id="portal.button.back"/>
+          </Button>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid||submitting}>
+            {submitButtonLabel}
+          </Button>
+        </ButtonToolbar>
       </FormFooterButtons>
     } else {
       return <FormFooterButtons>
