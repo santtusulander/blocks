@@ -7,19 +7,30 @@ export default ({
   removeActionTypes = [actionTypes.REQUEST, actionTypes.REMOVE, actionTypes.FAIL]
 }) => {
 
-  const fetchOne = (forceReload, ...requestParameters) => ({
-    forceReload,
-    types: receiveActionTypes,
-    cacheKey: `fetch-one-${entityType}-${requestParameters.join('-')}`,
-    callApi: () => api.fetch(...requestParameters)
-  })
+  const fetchOne = ({ forceReload, entityType, ...requestParams }) => {
+    return {
+      forceReload,
+      types: receiveActionTypes,
+      cacheKey: `fetch-one-${entityType}-${JSON.stringify(requestParams)}`,
+      callApi: () => {
+        return api.fetch(requestParams)
+      }
+    }
+  }
 
-  const fetchAllThunk = dispatch => (...requestParameters) => {
+  const fetchAllThunk = dispatch => requestParams => {
     dispatch({ type: actionTypes.REQUEST })
-    return api.fetchAll(...requestParameters)
-      .then(data =>
-        data.map(id => dispatch(fetchOne(...requestParameters, id)))
-      )
+    return api.fetchAll(requestParams)
+      .then(data => {
+
+        dispatch({ type: actionTypes.RECEIVE })
+
+        return data.forEach(id => {
+
+          dispatch(fetchOne({ ...requestParams, id }))
+
+        })
+      })
       .catch(() => dispatch({ type: actionTypes.FAIL }))
   }
 
@@ -29,26 +40,26 @@ export default ({
 
     fetchOne,
 
-    fetchAll: (forceReload, ...requestParameters) => ({
+    fetchAll: ({ forceReload, ...requestParams }) => ({
       forceReload,
       types: receiveActionTypes,
-      cacheKey: `fetch-all-${entityType}-${requestParameters.join('-')}`,
-      callApi: () => api.fetchAll(...requestParameters)
+      cacheKey: `fetch-all-${entityType}-${JSON.stringify(requestParams)}`,
+      callApi: () => api.fetchAll(requestParams)
     }),
 
-    create: (...requestParameters) => ({
+    create: (requestParams) => ({
       types: receiveActionTypes,
-      callApi: () => api.create(...requestParameters)
+      callApi: () => api.create(requestParams)
     }),
 
-    update: (...requestParameters) => ({
+    update: (requestParams) => ({
       types: receiveActionTypes,
-      callApi: () => api.update(...requestParameters)
+      callApi: () => api.update(requestParams)
     }),
 
-    remove: (...requestParameters) => ({
+    remove: (requestParams) => ({
       types: removeActionTypes,
-      callApi: () => api.remove(...requestParameters)
+      callApi: () => api.remove(requestParams)
     })
 
   }

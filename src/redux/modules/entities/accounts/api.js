@@ -11,7 +11,7 @@ import {Schemas} from '../schemas'
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetch = (brand, account) => {
+export const fetch = ({brand, account}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
     .then( ({data}) => {
 
@@ -30,7 +30,7 @@ export const fetch = (brand, account) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = (brand) => {
+export const fetchAll = ({brand}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
     .then( ({data}) => {
 

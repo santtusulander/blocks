@@ -13,9 +13,17 @@ import { normalize } from 'normalizr'
  * @param  {String} id      published_host_id
  * @return {Object}         normalized API response
  */
-export const fetch = (brand, account, group, id) => {
+export const fetch = ({brand, account, group, id}) => {
   return fetchHost(brand, account, group, id)
-    .then( ({data}) => normalize(data, Schemas.property ) )
+    .then( ({data}) => {
+
+      const groupProperties = {
+        id: group,
+        properties: [data]
+      }
+
+      return normalize(groupProperties, Schemas.groupProperties )
+    })
 }
 
 /**
@@ -25,16 +33,17 @@ export const fetch = (brand, account, group, id) => {
  * @param  {Number} group   group id (optional, if not provided fetches all groups for an account)
  * @return {Object}         normalized API response
  */
-export const fetchAll = (brand, account, group) => {
+export const fetchAll = ({brand, account, group}) => {
   return fetchHostIds(brand, account, group)
     .then( ({data}) => {
+      return data;
       //const objs = data.map( val => ({published_host_id: val}) )
 
 /*      const objs = {
         id: group,
         properties: data.data
       }*/
-      return normalize(data, Schemas.groupProperties)
+      //return normalize(data, Schemas.groupProperties)
     })
 }
 
