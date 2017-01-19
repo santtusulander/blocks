@@ -74,7 +74,7 @@ const NetworkForm = ({
         name="description"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.description.placeholder'})}
         component={FieldFormGroup}
-        label={intl.formatMessage({id:"portal.common.description"})} />
+        label={<FormattedMessage id="portal.common.description" />} />
 
       <FormFooterButtons>
         <Button
