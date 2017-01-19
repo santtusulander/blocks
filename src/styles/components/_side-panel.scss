@@ -84,18 +84,14 @@ $lt-side-panel-bg-color: $white;
 
     @include sm {
       padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
-      margin-left: $side-panel-small-display-margin;
-    }
-
-    @include sm {
-      left: 12px;
-      padding-right: $side-panel-horizontal-padding + rem(12px);
+      left: $side-panel-small-display-margin;
     }
 
     &__text {
       display: inline-block;
       float: left;
       text-align: left;
+      padding: .5rem .5rem .5rem 0;
     }
   }
 
