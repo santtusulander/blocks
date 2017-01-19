@@ -25,7 +25,8 @@ import PageContainer from '../components/layout/page-container'
 import {
   NETWORK_ENTITIES_REFS,
   NETWORK_VISIBLE_BY_PIXELS,
-  NETWORK_SCROLL_AMOUNT } from '../constants/network'
+  NETWORK_SCROLL_AMOUNT,
+  NETWORK_WINDOW_OFFSET } from '../constants/network'
 
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
@@ -189,15 +190,19 @@ class Network extends React.Component {
    */
   selectEntityAndScroll(selectedEntity, scrollToPrevious) {
     // Get the next entity ref
-    let nextEntity = NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) + 1]
+    let nextEntity = NETWORK_ENTITIES_REFS.indexOf(selectedEntity) + 2 <= NETWORK_ENTITIES_REFS.length - 1 ?
+                        NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) + 2] :
+                        NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.length - 1]
 
     if (scrollToPrevious) {
       // Get the previous entity ref
-      nextEntity = NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1 >= 0 ? NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1] : NETWORK_ENTITIES_REFS[0]
+      nextEntity = NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1 >= 0 ?
+                      NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1] :
+                      NETWORK_ENTITIES_REFS[0]
     }
 
     // Start the scrolling animation
-    requestAnimationFrame(() => this.scrollToEntity(nextEntity, scrollToPrevious))
+    this.scrollToEntity(nextEntity, scrollToPrevious)
   }
 
   /**
@@ -218,8 +223,9 @@ class Network extends React.Component {
     // If we're scrolling back to the previous entity, we need to add some
     // offset so it doesn't just stay underneath the navigation bar.
     const visibleByPixels = scrollToPrevious ? NETWORK_VISIBLE_BY_PIXELS : 0
-    // Check if element is visible fully in the viewport
-    const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth)
+    // Check if element is visible fully in the viewport. We're adding pixels to
+    // window.innerWidth in order to stop the animation from stucking in a loop.
+    const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth + NETWORK_WINDOW_OFFSET)
 
     if (!isVisible) {
       // If scrollToPrevious is true, we should scroll to right –– backwards. Otherwise keep scrolling to left
