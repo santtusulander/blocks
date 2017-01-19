@@ -13,7 +13,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import PageContainer from '../../../components/layout/page-container'
 import PurgeHistoryReport from '../../../components/content/property/purge-status'
 
-import withPagination from '../../../components/paginator/pagination-hoc'
+import withPagination from '../../../decorators/pagination-hoc'
 
 class PurgeStatus extends React.Component {
 
@@ -46,7 +46,7 @@ class PurgeStatus extends React.Component {
   }
 
   render() {
-    const { fetching, purgeObjects, pagingConfig, sortColumn } = this.props
+    const { fetching, purgeObjects, pagingConfig, sortColumn, setFilter } = this.props
 
     return (
       <PageContainer className="property-container">
@@ -55,6 +55,7 @@ class PurgeStatus extends React.Component {
           historyData={purgeObjects}
           pagination={pagingConfig}
           columnSorter={sortColumn}
+          filterBySearch={setFilter}
         />
       </PageContainer>
     )
@@ -77,9 +78,13 @@ PurgeStatus.defaultProps = {
 
 PurgeStatus.propTypes = {
   fetching: React.PropTypes.bool,
+  hasPagingParamsChanged: React.PropTypes.func,
+  pagingQueryParams: React.PropTypes.object,
+  pagingConfig: React.PropTypes.object,
   params: React.PropTypes.object,
   purgeActions: React.PropTypes.object,
-  purgeObjects: React.PropTypes.instanceOf(List)
+  purgeObjects: React.PropTypes.instanceOf(List),
+  updatePagingTotal: React.PropTypes.func
 }
 
 function mapStateToProps(state) {
@@ -100,5 +105,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(withRouter((PurgeStatus)));
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus)));

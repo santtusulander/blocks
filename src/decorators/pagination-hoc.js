@@ -2,20 +2,11 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 
-import paginationSelector from '../../redux/modules/pagination/pagination-selectors'
-import { setActivePage, resetPaginationState, setTotal, setSorting } from '../../redux/modules/pagination/actions'
+import paginationSelector from '../redux/modules/pagination/pagination-selectors'
+import { setActivePage, resetPaginationState, setTotal, setSorting, setFilter } from '../redux/modules/pagination/actions'
 
 export default function withPagination(WrappedComponent) {
   class WithPagination extends Component {
-    /**
-     * Get current page number
-     * @param {number} offset
-     * @returns {number}
-     */
-    static getActivePage({ offset }) {
-      return offset + 1;
-    }
-
     /**
      * Get count of pages
      * @param {number} total - total number of items
@@ -34,12 +25,10 @@ export default function withPagination(WrappedComponent) {
     static getPagingConfig(props) {
       const { pagingQueryParams, pagingTotal, onSelect } = props;
       const items = this.getPagesCount(pagingTotal, pagingQueryParams.page_size);
-      const activePage = this.getActivePage(pagingQueryParams);
 
       const pagingConfig = {
         onSelect,
-        items,
-        activePage
+        items
       };
 
       return { pagingConfig };
@@ -115,6 +104,7 @@ export default function withPagination(WrappedComponent) {
   return connect(paginationSelector, {
     onSelect: setActivePage,
     sortColumn: setSorting,
+    setFilter,
     setTotal,
     resetPaginationState
   })(WithPagination)

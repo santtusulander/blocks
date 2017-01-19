@@ -1,6 +1,8 @@
 import React from 'react'
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import { Form, FormGroup, FormControl, InputGroup } from 'react-bootstrap'
+import SelectWrapper from '../../select-wrapper'
 
 import SectionHeader from '../../layout/section-header'
 import SectionContainer from '../../layout/section-container'
@@ -27,15 +29,21 @@ class PurgeHistoryReport extends React.Component {
     this.state = {
       // TODO: temporarily hidden, see UDNP-1926 for more context
       // sortBy: 'status',
-      sortBy: 'created_at',
-      sortDir: -1,
-      sortFunc: '',
+      // sortBy: 'created_at',
+      // sortDir: -1,
+      // sortFunc: '',
+      activePage: 1,
       filteredStatus: filterOptions[0].value,
-      sortedStats: List()
+      sortedStats: List(),
+      searchText: '',
+      selectedColumn: null
     }
 
     this.changeSort = this.changeSort.bind(this)
     this.filterData = this.filterData.bind(this)
+    this.onSearchChange = this.onSearchChange.bind(this)
+    this.onColumnSelect = this.onColumnSelect.bind(this)
+    this.updateFilter = this.updateFilter.bind(this)
   }
 
   componentWillMount() {
@@ -48,11 +56,6 @@ class PurgeHistoryReport extends React.Component {
     this.setData(historyData)
   }
 
-  setData(historyData){
-    const sortedStats = getSortData(this.filterData(historyData), this.state.sortBy, this.state.sortDir, this.state.sortFunc)
-    return this.setState({ sortedStats })
-  }
-
   filterData(data) {
     const activeFilter = this.state.filteredStatus
     return data.filter(item => {
@@ -61,7 +64,7 @@ class PurgeHistoryReport extends React.Component {
   }
 
   changeSort(column, direction, sortFunc) {
-    const sortOrder = direction > 0 ? 'asc' : 'desc';
+    const sortOrder = direction > 0 ? 'desc' : 'asc';
     this.props.columnSorter(column, sortOrder);
 
     this.setState({
@@ -71,11 +74,34 @@ class PurgeHistoryReport extends React.Component {
     }, () => this.setData(this.props.historyData))
   }
 
-  render() {
+  updateFilter() {
+    const { searchText: filter_value, selectedColumn: filter_by } = this.state;
 
-    if(this.props.fetching){
-      return (<LoadingSpinner/>);
+    if (filter_value && filter_value.length >2 && filter_by) {
+      this.props.filterBySearch(filter_by, filter_value);
     }
+  }
+
+  onSearchChange({ target: { value } }) {
+    this.setState({searchText: value});
+  }
+
+  onColumnSelect(col) {
+    this.setState({selectedColumn: col});
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!fromJS(prevState).equals(fromJS(this.state))) {
+      this.updateFilter();
+    }
+  }
+
+  setData(historyData){
+    const sortedStats = getSortData(this.filterData(historyData), this.state.sortBy, this.state.sortDir, this.state.sortFunc)
+    return this.setState({ sortedStats })
+  }
+
+  render() {
 
     const { intl, pagination } = this.props
     const { sortedStats } = this.state
@@ -86,33 +112,55 @@ class PurgeHistoryReport extends React.Component {
       activeDirection: this.state.sortDir
     }
 
+    const colSelectOptions = [
+      {
+        value: 'created_by',
+        label: <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
+      },
+      {
+        value: 'note',
+        label: <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
+      }
+    ];
+
     const formatTime = timestamp => formatUnixTimestamp(timestamp, 'MM/DD/YYYY HH:mm')
     // TODO: temporarily hidden, see UDNP-1926 for more context
     // const getLabelForStatus = status => {
     //   const option = filterOptions.find(option => option.value === status)
     //   return option.label
     // }
+    const handlePageSelect = (page) => {
+      this.setState({activePage: page});
+      pagination.onSelect(page);
+    }
 
     return (
       <div>
         <SectionHeader
-          sectionHeaderTitle={intl.formatMessage({ id: 'portal.content.property.purgeStatus.section.title' })} />
-          {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
-          {/*<div className="form-group inline">
-            <SelectWrapper
-              id='filtered-status'
-              value={this.state.filteredStatus}
-              onChange={value => {
-                this.setState({ filteredStatus: value }, () => this.setData(this.props.historyData))
-              }}
-              options={filterOptions}/>
+          sectionHeaderTitle={intl.formatMessage({ id: 'portal.content.property.purgeStatus.section.title' })} >
+          <div className="form-inline">
+            <FormGroup>
+              <InputGroup>
+                <FormControl
+                  className="search-input"
+                  placeholder="Search"
+                  onChange={this.onSearchChange}
+                  value={this.state.searchText}
+                />
+                <SelectWrapper
+                  className="input-group-btn"
+                  options={colSelectOptions}
+                  onChange={this.onColumnSelect}
+                  value={this.state.selectedColumn}
+                />
+              </InputGroup>
+            </FormGroup>
           </div>
-        </SectionHeader>*/}
+        </SectionHeader>
         <SectionContainer>
-          {sortedStats.size ?
-            <div>
-              <table className="table table-striped table-analysis">
-                <thead>
+          <div style={{opacity: this.props.fetching? 0.6 : 1}}>
+            <table className="table table-striped table-analysis">
+              <thead>
                 <tr>
                   {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
                   {/*<TableSorter {...sorterProps} column="status">
@@ -131,38 +179,41 @@ class PurgeHistoryReport extends React.Component {
                     <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
                   </TableSorter>
                 </tr>
-                </thead>
-                <tbody>
-                {sortedStats.map((data, i) => {
-                  return (
-                    <tr key={i}>
-                      {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
-                      {/*<td>{getLabelForStatus(data.get('status'))}</td>*/}
-                      <td>{formatTime(data.get('created_at'))}</td>
-                      <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
-                      <td>{data.get('created_by')}</td>
-                      <td>{data.get('note')}</td>
-                    </tr>
-                  )
-                })}
-                </tbody>
-              </table>
-              <Paginator {...pagination} />
-            </div>
-
-            :
-            <p><FormattedMessage id="portal.content.property.purgeStatus.notFound.label"/></p>
-          }
+              </thead>
+              <tbody>
+              {sortedStats.map((data, i) => {
+                return (
+                  <tr key={i}>
+                    {/* TODO: temporarily hidden, see UDNP-1926 for more context */}
+                    {/*<td>{getLabelForStatus(data.get('status'))}</td>*/}
+                    <td>{formatTime(data.get('created_at'))}</td>
+                    <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
+                    <td>{data.get('created_by')}</td>
+                    <td>{data.get('note')}</td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </table>
+            <Paginator
+              {...pagination}
+              activePage={this.state.activePage}
+              onSelect={handlePageSelect}
+            />
+          </div>
         </SectionContainer>
       </div>
     )
   }
 }
 
+{/*<p><FormattedMessage id="portal.content.property.purgeStatus.notFound.label"/></p>*/}
+
 PurgeHistoryReport.displayName = 'PurgeHistoryReport'
 PurgeHistoryReport.propTypes = {
   columnSorter: React.PropTypes.func,
   fetching: React.PropTypes.bool,
+  filterBySearch: React.PropTypes.func,
   historyData: React.PropTypes.instanceOf(List),
   intl: React.PropTypes.object,
   pagination: React.PropTypes.object
