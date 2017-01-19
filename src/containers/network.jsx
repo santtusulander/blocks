@@ -79,6 +79,24 @@ class Network extends React.Component {
     this.props.fetchData()
   }
 
+  componentDidMount() {
+    if (this.props.params.group) {
+      this.selectEntityAndScroll('groups', false)
+    }
+
+    if (this.props.params.network) {
+      this.selectEntityAndScroll('networks', false)
+    }
+
+    if (this.props.params.pop) {
+      this.selectEntityAndScroll('pops', false)
+    }
+
+    if (this.props.params.pod) {
+      this.selectEntityAndScroll('pods', false)
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.group) {
       this.setState({ networks: placeholderNetworks })
@@ -96,7 +114,7 @@ class Network extends React.Component {
 
   handleGroupClick(groupId) {
     const scrollToPrevious = groupId === parseInt(this.props.params.group)
-    const url = getNetworkUrl('group', groupId, this.props.params)
+    const url = scrollToPrevious ? getNetworkUrl('groups', this.props.params.account, this.props.params) : getNetworkUrl('group', groupId, this.props.params)
     this.props.router.push(url)
     this.selectEntityAndScroll('groups', scrollToPrevious)
   }
