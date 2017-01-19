@@ -5,6 +5,7 @@ import configuration from './configuration.json'
 import content from './content.json'
 import dashboard from './dashboard.json'
 import login from './login.json'
+import network from './network.json'
 import security from './security.json'
 import services from './security.json'
 import support from './support.json'
@@ -22,6 +23,7 @@ export default Object.assign({},
   content,
   dashboard,
   login,
+  network,
   security,
   services,
   support,
