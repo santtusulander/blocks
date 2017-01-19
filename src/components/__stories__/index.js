@@ -33,3 +33,6 @@ import './security/certificate-form'
 // content
 import './content/add-host'
 import './content/content-item-chart'
+
+// SP Config
+import './sp-config/add-node'
