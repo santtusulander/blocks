@@ -1,9 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../network-form.jsx')
+jest.unmock('../network-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
-import NetworkFormContainer from '../network-form.jsx'
+import NetworkFormContainer from '../network-modal.jsx'
 
 const intlMaker = () => {
   return {
