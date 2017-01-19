@@ -127,9 +127,8 @@ export const fetchAll = () => Promise.resolve(mockNodeIdList)
 //       return data
 //     })
 
-export const fetch = ({ brand, account, group, id }) => {
-  return Promise.resolve(normalize(mockNodeList.find((node) => node.id === id), nodeSchema))
-}
+export const fetch = ({ id }) =>
+  Promise.resolve(normalize(mockNodeList.find((node) => node.id === id), nodeSchema))
 // export const fetch = ({ id, ...baseUrlParams }) =>
 //   axios.get(`${baseURL(baseUrlParams)}/${id}`)
 //     .then(data => {
@@ -138,17 +137,17 @@ export const fetch = ({ brand, account, group, id }) => {
 //     })
 
 
-// export const create = () => Promise.resolve(normalize(mockNodeToCreate, nodeSchema))
-export const create = ({ payload, ...urlParams }) =>
-  axios.post(baseURL(urlParams), payload)
-    .then(data => normalize(data, nodeSchema))
+export const create = () => Promise.resolve(normalize(mockNodeToCreate, nodeSchema))
+// export const create = ({ payload, ...urlParams }) =>
+//   axios.post(baseURL(urlParams), payload)
+//     .then(data => normalize(data, nodeSchema))
 
-// export const update = () => Promise.resolve(normalize(mockNodeList[0], nodeSchema))
-export const update = ({ id, payload, ...baseUrlParams }) =>
-  axios.put(`${baseURL(baseUrlParams)}/${id}`, payload)
-    .then(data => normalize(data, nodeSchema))
+export const update = () => Promise.resolve(normalize(mockNodeList[0], nodeSchema))
+// export const update = ({ id, payload, ...baseUrlParams }) =>
+//   axios.put(`${baseURL(baseUrlParams)}/${id}`, payload)
+//     .then(data => normalize(data, nodeSchema))
 
-// export const remove = () => Promise.resolve('1')
-export const remove = ({ id, ...baseUrlParams }) =>
-  axios.delete(`${baseURL(baseUrlParams)}/${id}`)
-    .then(() => { id })
+export const remove = () => Promise.resolve({ id: 'sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net' })
+// export const remove = ({ id, ...baseUrlParams }) =>
+//   axios.delete(`${baseURL(baseUrlParams)}/${id}`)
+//     .then(() => { id })
