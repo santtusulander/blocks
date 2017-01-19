@@ -18,7 +18,7 @@ const StarburstHelp = ({router}) => {
       <div className="starburst-help-container">
         <div className="help-example"/>
         <div className="help-detail"/>
-        <svg x="0px" y="0px" viewBox="0 0 2061 1271">
+        <svg className="help-svg" x="0px" y="0px" viewBox="0 0 2061 1271">
           {/* Date labels */}
           <text transform="matrix(1 0 0 1 851.9116 373.5339)">
             <FormattedMessage tagName="tspan" id="portal.startburstHelp.today.text"/>
