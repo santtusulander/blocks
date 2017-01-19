@@ -1,12 +1,13 @@
 // Network Item
 // ============
 
-$network-item-padding: 16px;
+$network-item-padding-horizontal: 12px;
+$network-item-padding-vertical: 16px;
 $network-item-status-indicator-width: 8px;
 
 .network-item {
   position: relative;
-  padding: $network-item-padding;
+  padding: $network-item-padding-horizontal $network-item-padding-vertical;
   cursor: pointer;
   border: 2px solid $black;
 
@@ -33,7 +34,7 @@ $network-item-status-indicator-width: 8px;
 
   .status-indicator {
     position: relative;
-    padding-left: $network-item-padding;
+    padding-left: $network-item-padding-vertical;
 
     .dark-theme & {
       color: rgba($silver-60, 0.5);
@@ -67,7 +68,7 @@ $network-item-status-indicator-width: 8px;
   .btn-toolbar {
     position: absolute;
     top: 50%;
-    right: $network-item-padding;
+    right: $network-item-padding-vertical;
     display: none;
     transform: translateY(-50%);
 
