@@ -1,30 +1,35 @@
-//import {createAction} from 'redux-actions'
 import * as api from './api'
-import {actionTypes} from '../index'
-//import {fetchAll as fetchAllGroups} from '../groups/actions'
-//import {fetch as fetchAccount} from '../accounts/actions'
+import actionCreatorBuilder from '../action-creators'
+
+export default actionCreatorBuilder({entityType: 'properties', api})
+
+// //import {createAction} from 'redux-actions'
+// import * as api from './api'
+// import {actionTypes} from '../index'
+// //import {fetchAll as fetchAllGroups} from '../groups/actions'
+// //import {fetch as fetchAccount} from '../accounts/actions'
+// //
+// //
+// export const fetch = (brand, account, group, propertyId, cacheSelector ) => {
+//
+//   return {
+//     types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
+//     shouldCallApi: cacheSelector, //state => state.entities.entities.properties,
+//     callApi: () => { return api.fetch(brand, account, group, propertyId) }
+//   }
+// }
+//
+// //export fetchAll =
 //
 //
-export const fetch = (brand, account, group, propertyId, cacheSelector ) => {
-
-  return {
-    types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
-    shouldCallApi: cacheSelector, //state => state.entities.entities.properties,
-    callApi: () => { return api.fetch(brand, account, group, propertyId) }
-  }
-}
-
-//export fetchAll =
-
-
-export const fetchAllWithDetails = (brand, account, group, cacheSelector ) => {
-
-  return {
-    types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
-    shouldCallApi: cacheSelector,
-    callApi: () => { return api.fetchAllWithDetails(brand, account, group) }
-  }
-}
+// export const fetchAllWithDetails = (brand, account, group, cacheSelector ) => {
+//
+//   return {
+//     types: [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
+//     shouldCallApi: cacheSelector,
+//     callApi: () => { return api.fetchAllWithDetails(brand, account, group) }
+//   }
+// }
 //
 // /*actions creators*/
 // export const startFetching = createAction(actionTypes.START_FETCHING)
