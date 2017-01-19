@@ -22,6 +22,11 @@ import TruncatedTitle from '../components/truncated-title'
 import PlaceholderEntityList from '../components/network/placeholder-entity-list'
 import PageContainer from '../components/layout/page-container'
 
+import {
+  NETWORK_ENTITIES_REFS,
+  NETWORK_VISIBLE_BY_PIXELS,
+  NETWORK_SCROLL_AMOUNT } from '../constants/network'
+
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
   { id: 2, name: 'Network 2' },
@@ -49,13 +54,6 @@ const placeholderNodes = Immutable.fromJS([
   { id: 'slsb-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' }
 ])
 
-const placeholderEntities = [
-  'groups',
-  'networks',
-  'pops',
-  'pods',
-  'nodes'
-]
 
 class Network extends React.Component {
   constructor(props) {
@@ -113,61 +111,122 @@ class Network extends React.Component {
   }
 
   handleGroupClick(groupId) {
-    const scrollToPrevious = groupId === parseInt(this.props.params.group)
-    const url = scrollToPrevious ? getNetworkUrl('groups', this.props.params.account, this.props.params) : getNetworkUrl('group', groupId, this.props.params)
-    this.props.router.push(url)
+    const scrollToPrevious = this.determineNextState({
+      currentId: groupId,
+      previousId: this.props.params.group,
+      goToRoute: 'group',
+      goBackToRoute: 'account'
+    })
+
     this.selectEntityAndScroll('groups', scrollToPrevious)
   }
 
   handleNetworkClick(networkId) {
-    const scrollToPrevious = networkId === parseInt(this.props.params.network)
+    const scrollToPrevious = this.determineNextState({
+      currentId: networkId,
+      previousId: this.props.params.network,
+      goToRoute: 'network',
+      goBackToRoute: 'group'
+    })
 
-    const url = scrollToPrevious ? getNetworkUrl('group', this.props.params.group, this.props.params) : getNetworkUrl('network', networkId, this.props.params)
-    this.props.router.push(url)
     this.selectEntityAndScroll('networks', scrollToPrevious)
   }
 
   handlePopClick(popId) {
-    const scrollToPrevious = popId === this.props.params.pop
+    const scrollToPrevious = this.determineNextState({
+      currentId: popId,
+      previousId:
+      this.props.params.pop,
+      goToRoute: 'pop',
+      goBackToRoute: 'network'
+    })
 
-    const url = scrollToPrevious ? getNetworkUrl('network', this.props.params.network, this.props.params) : getNetworkUrl('pop', popId, this.props.params)
-    this.props.router.push(url)
     this.selectEntityAndScroll('pops', scrollToPrevious)
   }
 
   handlePodClick(podId) {
-    const scrollToPrevious = podId === parseInt(this.props.params.pod)
+    const scrollToPrevious = this.determineNextState({
+      currentId: podId,
+      previousId: this.props.params.pod,
+      goToRoute: 'pod',
+      goBackToRoute: 'pop'
+    })
 
-    const url = scrollToPrevious ? getNetworkUrl('pop', this.props.params.pop, this.props.params) : getNetworkUrl('pod', podId, this.props.params)
-    this.props.router.push(url)
     this.selectEntityAndScroll('pods', scrollToPrevious)
   }
 
+  /**
+   * Determines the next state and sets the correct URL based on id.
+   * It checks if the user clicked an already selected entity and then either
+   * goes up one level or unselects it and goes back one level. Hence returning
+   * scrollToPrevious boolean that determines the scrolling direction.
+   *
+   * @method determineNextState
+   * @param  {number OR string} currentId     ID of recently selected entity
+   * @param  {number OR string} previousId    ID of already selected entity
+   * @param  {string}           goToRoute     Name of a level where we should go to
+   * @param  {string}           goBackToRoute Name of a level where we should go back to
+   * @return {boolean}                        Boolean to determine scrolling direction
+   */
+  determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
+    // Transform IDs to strings as they can be numbers, too.
+    const scrollToPrevious = previousId && currentId.toString() === previousId.toString()
+    const entityId = scrollToPrevious ? this.props.params[goBackToRoute] : currentId
+    const nextEntity = scrollToPrevious ? goBackToRoute : goToRoute
+    const url = getNetworkUrl(nextEntity, entityId, this.props.params)
+
+    this.props.router.push(url)
+
+    return scrollToPrevious
+  }
+
+  /**
+   * Selects the next entity to be scrolled to. Entities are determined by refs.
+   *
+   * @method selectEntityAndScroll
+   * @param  {string}              selectedEntity   Name of current entity
+   * @param  {boolean}             scrollToPrevious A boolean to determine scroll direction
+   */
   selectEntityAndScroll(selectedEntity, scrollToPrevious) {
-    let nextEntity = placeholderEntities[placeholderEntities.indexOf(selectedEntity) + 1]
+    // Get the next entity ref
+    let nextEntity = NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) + 1]
 
     if (scrollToPrevious) {
-      nextEntity = placeholderEntities.indexOf(selectedEntity) - 1 >= 0 ? placeholderEntities[placeholderEntities.indexOf(selectedEntity) - 1] : placeholderEntities[0]
+      // Get the previous entity ref
+      nextEntity = NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1 >= 0 ? NETWORK_ENTITIES_REFS[NETWORK_ENTITIES_REFS.indexOf(selectedEntity) - 1] : NETWORK_ENTITIES_REFS[0]
     }
 
+    // Start the scrolling animation
     requestAnimationFrame(() => this.scrollToEntity(nextEntity, scrollToPrevious))
   }
 
+  /**
+   * Scrolls the container until the given entity is visible on the viewport.
+   *
+   * @method scrollToEntity
+   * @param  {string}       entity           Target entity to scroll to
+   * @param  {boolean}      scrollToPrevious A boolean to determine scroll direction
+   */
   scrollToEntity(entity, scrollToPrevious) {
     const container = findDOMNode(this.refs['network-entities']);
     const element = findDOMNode(this.refs[entity]);
 
-    let elemLeft = element.getBoundingClientRect().left
-    let elemRight = element.getBoundingClientRect().right
+    // Get the element's –– entity's –– offset/location in the viewport
+    const elemLeft = element.getBoundingClientRect().left
+    const elemRight = element.getBoundingClientRect().right
 
-    const visibleByPixels = scrollToPrevious ? 84 : 0
+    // If we're scrolling back to the previous entity, we need to add some
+    // offset so it doesn't just stay underneath the navigation bar.
+    const visibleByPixels = scrollToPrevious ? NETWORK_VISIBLE_BY_PIXELS : 0
+    // Check if element is visible fully in the viewport
     const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth)
 
     if (!isVisible) {
-      scrollToPrevious ? container.scrollLeft -= 25 : container.scrollLeft += 25
+      // If scrollToPrevious is true, we should scroll to right –– backwards. Otherwise keep scrolling to left
+      scrollToPrevious ? container.scrollLeft -= NETWORK_SCROLL_AMOUNT : container.scrollLeft += NETWORK_SCROLL_AMOUNT
+      // Continue scrolling animation
       requestAnimationFrame(() => this.scrollToEntity(entity, scrollToPrevious))
     }
-
   }
 
   render() {
@@ -197,7 +256,7 @@ class Network extends React.Component {
 
         <PageContainer ref="network-entities" className="network-entities-container">
           <PlaceholderEntityList
-            ref={placeholderEntities[0]}
+            ref={NETWORK_ENTITIES_REFS[0]}
             entities={params.account && groups}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -209,7 +268,7 @@ class Network extends React.Component {
 
 
           <PlaceholderEntityList
-            ref={placeholderEntities[1]}
+            ref={NETWORK_ENTITIES_REFS[1]}
             entities={params.group && networks}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -221,7 +280,7 @@ class Network extends React.Component {
 
 
           <PlaceholderEntityList
-            ref={placeholderEntities[2]}
+            ref={NETWORK_ENTITIES_REFS[2]}
             entities={params.network && pops}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -232,7 +291,7 @@ class Network extends React.Component {
           />
 
           <PlaceholderEntityList
-            ref={placeholderEntities[3]}
+            ref={NETWORK_ENTITIES_REFS[3]}
             entities={params.pop && pods}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -243,7 +302,7 @@ class Network extends React.Component {
           />
 
           <PlaceholderEntityList
-            ref={placeholderEntities[4]}
+            ref={NETWORK_ENTITIES_REFS[4]}
             entities={params.pod && nodes}
             addEntity={() => null}
             deleteEntity={() => () => null}
