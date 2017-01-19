@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
-import { Button } from 'react-bootstrap'
+import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
@@ -24,7 +24,7 @@ import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName, accountBrand, accountType, accountServices, services }) => {
   const conditions = {
     accountName: [
       {
@@ -42,7 +42,7 @@ const validate = ({ accountName, accountBrand, accountType, services }) => {
     ]
   }
 
-  const errors = checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
+  const errors = checkForErrors({ accountName, accountBrand, accountType, accountServices, services }, conditions)
 
   return errors;
 
@@ -78,7 +78,10 @@ class AccountForm extends React.Component {
   }
 
   render() {
-    const { providerTypes, serviceOptions, invalid, submitting, initialValues: { accountBrand }, show, onCancel } = this.props
+    let providerType = ''
+    let providerTypeLabel = ''
+    const { accountType, providerTypes, serviceOptions, invalid, submitting,
+            initialValues: { accountBrand }, show, onCancel } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
@@ -88,6 +91,15 @@ class AccountForm extends React.Component {
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
+    if (accountType && providerTypes) {
+      providerType = providerTypes.find((type) => {
+        return type.value === accountType
+      })
+
+      providerTypeLabel = providerType && providerType.label ?
+                                          providerType.label :
+                                          <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+    }
 
     return (
       <SidePanel
@@ -122,18 +134,23 @@ class AccountForm extends React.Component {
           />
 
           <hr/>
-
-          <Field
-            name="accountType"
-            className="input-select"
-            component={FieldFormGroupSelect}
-            options={providerTypes}
-            label={<FormattedMessage id="portal.account.manage.accountType.title" />}
-          />
+          {!this.props.account
+            ? <Field
+                name="accountType"
+                className="input-select"
+                component={FieldFormGroupSelect}
+                options={providerTypes}
+                label={<FormattedMessage id="portal.account.manage.accountType.title" />}
+              />
+            : <FormGroup>
+                <ControlLabel>{<FormattedMessage id="portal.account.manage.accountType.title" />}</ControlLabel>
+                <p>{providerTypeLabel}</p>
+              </FormGroup>
+          }
 
           <hr/>
 
-          {this.props.accountType
+          {accountType
               ? <Field
                   name="accountServices"
                   component={FieldFormGroupMultiOptionSelector}
