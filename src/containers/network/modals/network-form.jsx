@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Map } from 'immutable'
 
 import SidePanel from '../../../components/side-panel'
-import NetworkForm from '../../../components/network/modals/network-form'
+import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
 //TODO Remove mock after Redux integration
