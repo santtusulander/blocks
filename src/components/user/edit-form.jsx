@@ -395,7 +395,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) )
   }
