@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Map }from 'immutable'
+import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, FormGroup, ControlLabel } from 'react-bootstrap'
 import Typeahead from 'react-bootstrap-typeahead'
-
+import classNames from 'classnames'
 
 import FieldRadio from '../../form/field-radio'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import SidePanel from '../../side-panel'
+import { isValidAccountName, isValidIPv4AddressWithSubnet } from '../../../util/validators'
 
 
 import { checkForErrors } from '../../../util/helpers'
@@ -19,9 +19,25 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import './service-provider-footprint-form.scss'
 
-const validate = ({ footPrintName, footPrintDescription }) => {
+const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
 
-  const errors = checkForErrors({ footPrintName, footPrintDescription })
+  const conditions = {
+    footPrintName: [
+      {
+        condition: ! isValidAccountName(footPrintName),
+        errorText: <div key={footPrintName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
+                    <div style={{marginTop: '0.5em'}}>
+                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                      <ul>
+                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
+                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                      </ul>
+                    </div></div>]}
+                  </div>
+      }
+    ]
+  }
+  const errors = checkForErrors({ footPrintName, footPrintDescription, UDNType }, conditions)
 
   return errors;
 
@@ -31,15 +47,40 @@ class FootprintForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.renderCIDRToken = this.renderCIDRToken.bind(this)
+    this.renderASNToken = this.renderASNToken.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(values){
-    console.log(values);
+  onSubmit(){
+  }
+
+  renderCIDRToken(token, onRemove, key) {
+    const tokenClass = isValidIPv4AddressWithSubnet(token.label) ? 'valid' : 'invalid'
+
+    return (
+      <div className={classNames('token token-removeable',`token__${tokenClass}`)} key={key} >
+        {token.label}
+        <span className="close-button" role="button" onClick={onRemove}>×</span>
+      </div>
+    )
+  }
+
+  renderASNToken(token, onRemove, key) {
+    const tokenClass = isValidIPv4AddressWithSubnet(token.label) ? 'valid' : 'invalid'
+
+    // TODO: Waiting for ASN validation, no idea what it is
+
+    return (
+      <div className={classNames('token token-removeable',`token__${tokenClass}`)} key={key} >
+        {token.label}
+        <span className="close-button" role="button" onClick={onRemove}>×</span>
+      </div>
+    )
   }
 
   render() {
-    const { providerTypes, invalid, submitting, show, onCancel, intl, useCSVFile = true } = this.props
+    const { providerTypes, invalid, submitting, show, onCancel, intl, addManual, dataType } = this.props
 
     const submitButtonLabel = this.props.account
       ? <FormattedMessage id="portal.button.save" />
@@ -51,6 +92,7 @@ class FootprintForm extends React.Component {
         show={show}
         title={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.title.text" />}
         cancel={onCancel}
+        className="sp-footprint-form"
       >
 
         <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
@@ -76,7 +118,7 @@ class FootprintForm extends React.Component {
               />
           </FormGroup>
 
-          { useCSVFile &&
+          { addManual === 'manual' &&
             <div>
               <Field
                 type="text"
@@ -112,10 +154,27 @@ class FootprintForm extends React.Component {
                     label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.dataType.option.asn.text" />}
                   />
 
-                  <Typeahead
-                    multiple={true}
-                    onChange={() => null}
-                    />
+                  { dataType === 'cidr' &&
+                      <Typeahead
+                        multiple={true}
+                        onChange={() => null}
+                        allowNew={true}
+                        renderToken={this.renderCIDRToken}
+                        options={[
+                          {id: 'BY', label: 'Belarus'}
+                        ]}/>
+                  }
+
+                  { dataType !== 'cidr' &&
+                      <Typeahead
+                        multiple={true}
+                        onChange={() => null}
+                        allowNew={true}
+                        renderToken={this.renderASNToken}
+                        options={[
+                          {id: 'BY', label: 'Waa'}
+                        ]}/>
+                  }
               </FormGroup>
 
               <Field
@@ -127,13 +186,14 @@ class FootprintForm extends React.Component {
               />
             </div>
           }
-          { !useCSVFile &&
+
+          { addManual !== 'manual' &&
             <Field
               name="CSVUploader"
               type="text"
               placeholder={intl.formatMessage({id: 'portal.serviceProviderConfig.form.footprint.description.placeholder.text'})}
               component={FieldFormGroupSelect}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.description.title.text" />}
+              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.csvfile.title.text" />}
             />
           }
 
@@ -160,26 +220,33 @@ class FootprintForm extends React.Component {
 
 FootprintForm.displayName = "FootprintForm"
 FootprintForm.propTypes = {
-  account: PropTypes.instanceOf(Map),
-  accountType: PropTypes.number,
-  fetchServiceInfo: PropTypes.func,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  providerTypes: PropTypes.array,
   ...reduxFormPropTypes,
-  serviceOptions: PropTypes.array,
   show: PropTypes.bool
 }
-
-FootprintForm.defaultProps = {
-  serviceOptions: []
-}
-
 
 const form = reduxForm({
   form: 'footprintForm',
   validate
 })(FootprintForm)
 
-export default connect()(injectIntl(form))
+const selector = formValueSelector('footprintForm')
+const mapStateToProps = (state) => {
+  const addManual = selector(state, 'addFootprintMethod')
+  const dataType = selector(state, 'dataType')
+  return {
+    selector,
+    initialValues: {
+      addFootprintMethod: 'manual',
+      dataType: 'cidr'
+    },
+    addManual,
+    dataType,
+    invalid: isInvalid('footprintForm')(state)
+  }
+}
+
+
+export default connect(mapStateToProps)(injectIntl(form))

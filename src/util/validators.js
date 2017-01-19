@@ -25,6 +25,25 @@ export function isValidIPv4Address(address) {
 }
 
 /**
+ * Check if valid IPv4 address and valid subnet
+ * @param address
+ * @returns {*}
+ */
+export function isValidIPv4AddressWithSubnet(address) {
+  if(!address) {
+    return false;
+  }
+
+  const splitadd = address.split(/\/([0-9]+)(?=[^\/]*$)/)
+
+  if(splitadd) {
+    return validator.isIP(splitadd[0], 4) && ( parseInt(splitadd[1]) < 32 )
+  }
+
+  return false;
+}
+
+/**
  * Check if valid IPv6 address
  * @param address
  * @returns {*}
