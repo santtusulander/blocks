@@ -1,4 +1,10 @@
+/* eslint-disable react/no-find-dom-node */
+// It is acceptible to use ReactDOM.findDOMNode, since it is not deprecated.
+// react/no-find-dom-node is designed to avoid use of React.findDOMNode and
+// Component.getDOMNode
+
 import React, { PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -43,6 +49,14 @@ const placeholderNodes = Immutable.fromJS([
   { id: 'slsb-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' }
 ])
 
+const placeholderEntities = [
+  'groups',
+  'networks',
+  'pops',
+  'pods',
+  'nodes'
+]
+
 class Network extends React.Component {
   constructor(props) {
     super(props)
@@ -51,6 +65,7 @@ class Network extends React.Component {
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handlePopClick = this.handlePopClick.bind(this)
     this.handlePodClick = this.handlePodClick.bind(this)
+    this.scrollToEntity = this.scrollToEntity.bind(this)
 
     this.state = {
       networks: Immutable.List(),
@@ -80,23 +95,61 @@ class Network extends React.Component {
   }
 
   handleGroupClick(groupId) {
+    const scrollToPrevious = groupId === parseInt(this.props.params.group)
     const url = getNetworkUrl('group', groupId, this.props.params)
     this.props.router.push(url)
+    this.selectEntityAndScroll('groups', scrollToPrevious)
   }
 
   handleNetworkClick(networkId) {
-    const url = getNetworkUrl('network', networkId, this.props.params)
+    const scrollToPrevious = networkId === parseInt(this.props.params.network)
+
+    const url = scrollToPrevious ? getNetworkUrl('group', this.props.params.group, this.props.params) : getNetworkUrl('network', networkId, this.props.params)
     this.props.router.push(url)
+    this.selectEntityAndScroll('networks', scrollToPrevious)
   }
 
   handlePopClick(popId) {
-    const url = getNetworkUrl('pop', popId, this.props.params)
+    const scrollToPrevious = popId === this.props.params.pop
+
+    const url = scrollToPrevious ? getNetworkUrl('network', this.props.params.network, this.props.params) : getNetworkUrl('pop', popId, this.props.params)
     this.props.router.push(url)
+    this.selectEntityAndScroll('pops', scrollToPrevious)
   }
 
   handlePodClick(podId) {
-    const url = getNetworkUrl('pod', podId, this.props.params)
+    const scrollToPrevious = podId === parseInt(this.props.params.pod)
+
+    const url = scrollToPrevious ? getNetworkUrl('pop', this.props.params.pop, this.props.params) : getNetworkUrl('pod', podId, this.props.params)
     this.props.router.push(url)
+    this.selectEntityAndScroll('pods', scrollToPrevious)
+  }
+
+  selectEntityAndScroll(selectedEntity, scrollToPrevious) {
+    let nextEntity = placeholderEntities[placeholderEntities.indexOf(selectedEntity) + 1]
+
+    if (scrollToPrevious) {
+      nextEntity = placeholderEntities.indexOf(selectedEntity) - 1 >= 0 ? placeholderEntities[placeholderEntities.indexOf(selectedEntity) - 1] : placeholderEntities[0]
+    }
+
+    requestAnimationFrame(() => this.scrollToEntity(nextEntity, scrollToPrevious))
+  }
+
+  scrollToEntity(entity, scrollToPrevious) {
+    const container = findDOMNode(this.refs['network-entities']);
+    const element = findDOMNode(this.refs[entity]);
+
+    let elemLeft = element.getBoundingClientRect().left
+    let elemRight = element.getBoundingClientRect().right
+
+    const visibleByPixels = scrollToPrevious ? 84 : 0
+    const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth)
+
+    if (!isVisible) {
+      scrollToPrevious ? container.scrollLeft -= 25 : container.scrollLeft += 25
+      requestAnimationFrame(() => this.scrollToEntity(entity, scrollToPrevious))
+    }
+
   }
 
   render() {
@@ -124,8 +177,9 @@ class Network extends React.Component {
           </div>
         </PageHeader>
 
-        <PageContainer className="network-entities-container">
+        <PageContainer ref="network-entities" className="network-entities-container">
           <PlaceholderEntityList
+            ref={placeholderEntities[0]}
             entities={params.account && groups}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -137,6 +191,7 @@ class Network extends React.Component {
 
 
           <PlaceholderEntityList
+            ref={placeholderEntities[1]}
             entities={params.group && networks}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -148,6 +203,7 @@ class Network extends React.Component {
 
 
           <PlaceholderEntityList
+            ref={placeholderEntities[2]}
             entities={params.network && pops}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -158,6 +214,7 @@ class Network extends React.Component {
           />
 
           <PlaceholderEntityList
+            ref={placeholderEntities[3]}
             entities={params.pop && pods}
             addEntity={() => null}
             deleteEntity={() => () => null}
@@ -168,6 +225,7 @@ class Network extends React.Component {
           />
 
           <PlaceholderEntityList
+            ref={placeholderEntities[4]}
             entities={params.pod && nodes}
             addEntity={() => null}
             deleteEntity={() => () => null}
