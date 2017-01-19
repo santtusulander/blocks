@@ -37,7 +37,7 @@ export function isValidIPv4AddressWithSubnet(address) {
   const splitadd = address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
   if(splitadd) {
-    return validator.isIP(splitadd[0], 4) && ( parseInt(splitadd[1]) < 32 )
+    return validator.isIP(splitadd[0], 4) && ( parseInt(splitadd[1]) < 32 )  // TODO: add proper IPv4 and IPv6 validator
   }
 
   return false;

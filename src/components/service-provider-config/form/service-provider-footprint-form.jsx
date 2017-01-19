@@ -20,17 +20,30 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import './service-provider-footprint-form.scss'
 
 const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
-
+  // TODO: those error should stay in a reuseable component, seen it's been used 3 times
   const conditions = {
     footPrintName: [
       {
         condition: ! isValidAccountName(footPrintName),
-        errorText: <div key={footPrintName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
+        errorText: <div key={footPrintName}>{[<FormattedMessage key={1} id="portal.serviceProviderConfig.form.footprint.name.invalid.text" />, <div key={2}>
                     <div style={{marginTop: '0.5em'}}>
                       <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
                       <ul>
                         <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
                         <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
+                      </ul>
+                    </div></div>]}
+                  </div>
+      }
+    ],
+    footPrintDescription: [
+      {
+        condition: ! isValidAccountName(footPrintName),
+        errorText: <div key={footPrintDescription}>{[<FormattedMessage key={1} id="portal.serviceProviderConfig.form.footprint.description.invalid.text" />, <div key={2}>
+                    <div style={{marginTop: '0.5em'}}>
+                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
+                      <ul>
+                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
                       </ul>
                     </div></div>]}
                   </div>
@@ -80,7 +93,7 @@ class FootprintForm extends React.Component {
   }
 
   render() {
-    const { providerTypes, invalid, submitting, show, onCancel, intl, addManual, dataType } = this.props
+    const { UDNTypes, invalid, submitting, show, onCancel, intl, addManual, dataType } = this.props
 
     const submitButtonLabel = this.props.account
       ? <FormattedMessage id="portal.button.save" />
@@ -178,10 +191,10 @@ class FootprintForm extends React.Component {
               </FormGroup>
 
               <Field
-                name="dataTypeList"
+                name="UDNTypeList"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={providerTypes}
+                options={UDNTypes}
                 label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.UDNType.title.text" />}
               />
             </div>
@@ -222,7 +235,6 @@ FootprintForm.displayName = "FootprintForm"
 FootprintForm.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func,
   ...reduxFormPropTypes,
   show: PropTypes.bool
 }

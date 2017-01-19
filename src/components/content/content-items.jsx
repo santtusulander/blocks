@@ -31,8 +31,7 @@ import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-// import AccountForm from '../../components/account-management/account-form.jsx'
-import FootprintForm from '../../components/service-provider-config/form/service-provider-footprint-form'
+import AccountForm from '../../components/account-management/account-form.jsx'
 import GroupFormContainer from '../../containers/account-management/modals/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
@@ -419,7 +418,9 @@ class ContentItems extends React.Component {
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
-            <FootprintForm
+            <AccountForm
+              id="account-form"
+              account={this.state.itemToEdit}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
               show={true}/>
