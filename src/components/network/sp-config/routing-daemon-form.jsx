@@ -19,27 +19,19 @@ const validate = (values) => {
   const { bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password } = values
 
   if (!bgp_as_number) {
-    errors.bgp_as_number = <FormattedMessage
-      values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label"/> }}
-      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+    errors.bgp_as_number = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
   }
 
   if (!bgp_as_name) {
-    errors.bgp_as_name = <FormattedMessage
-      values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label"/> }}
-      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+    errors.bgp_as_name = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
   }
 
   if (!bgp_router_ip) {
-    errors.bgp_router_ip = <FormattedMessage
-      values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label"/> }}
-      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+    errors.bgp_router_ip = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
   }
 
   if (!bgp_password) {
-    errors.bgp_password = <FormattedMessage
-      values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_password.label"/> }}
-      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+    errors.bgp_password = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_password.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
   }
 
   return errors
