@@ -17,9 +17,9 @@ describe('NetworkPopFormContainer', () => {
   beforeEach(() => {
     subject = (edit = false) => {
       let props = {
-        closeModal: jest.fn(),
+        onCancel: jest.fn(),
         onSave: jest.fn(),
-        handleSubmit: jest.fn(),
+        onSubmit: jest.fn(),
         intl: intlMaker(),
         initialValues: {
           name: 'udn'
