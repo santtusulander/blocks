@@ -4,14 +4,13 @@ import { connect } from 'react-redux'
 import {
   Button,
   ButtonToolbar,
-  FormGroup,
-  ControlLabel
+  FormGroup
 } from 'react-bootstrap'
 
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { SidePanel, modalClassDim } from '../../side-panel'
+import SidePanel from '../../side-panel'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
@@ -169,7 +168,7 @@ class AddNodeForm extends React.Component {
         title={panelTitle}
         subTitle={panelSubTitle}
         cancel={this.onCancel}
-        className={ showAddConfirmation ? modalClassDim : '' }
+        dim={showAddConfirmation}
       >
         <form className="add-node__form" onSubmit={handleSubmit(this.onSubmit)}>
           <div className="form-input-container">
