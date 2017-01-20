@@ -34,13 +34,9 @@ const properties =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const entities = combineReducers({
+export default combineReducers({
   accounts,
   groups,
-  properties
-})
-
-export default combineReducers({
-  entities,
+  properties,
   fetching: createFetchingReducers( actionTypes, 'entities')
 })
