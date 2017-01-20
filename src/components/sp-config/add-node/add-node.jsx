@@ -232,8 +232,9 @@ const FORM_NAME = 'addNodeForm'
 
 AddNodeForm.displayName = 'AddNode'
 AddNodeForm.propTypes = {
-  cancelChanges: React.PropTypes.func,
-  createNode: React.PropTypes.func,
+  show: React.PropTypes.bool,
+  onSave: React.PropTypes.func,
+  onCancel: React.PropTypes.func,
   intl: React.PropTypes.object,
   ...reduxFormPropTypes
 }
