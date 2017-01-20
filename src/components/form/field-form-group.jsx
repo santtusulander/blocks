@@ -23,17 +23,15 @@ const FieldFormGroup = ({ addonAfter, input, placeholder, type, label, inputRef,
         />
 
         { addonAfter &&
-          <InputGroup.Addon>
+          <InputGroup.Addon bsClass="input-group-addon addon-after">
             {addonAfter}
           </InputGroup.Addon>
         }
-
-        {meta.error && meta.touched &&
-          <ErrorComponent {...meta}/>
-        }
-
       </InputGroup>
 
+      {meta.error && meta.touched &&
+        <ErrorComponent {...meta}/>
+      }
     </FormGroup>
   )
 }
