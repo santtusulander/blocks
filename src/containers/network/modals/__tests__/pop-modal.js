@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../pop-form.jsx')
+jest.unmock('../pop-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
 import NetworkPopFormContainer from '../pop-modal.jsx'
 
