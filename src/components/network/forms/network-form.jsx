@@ -9,9 +9,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
-// TODO: UDNP-2421 Extend errorText html snippet(shows 3 to 40 characters multiline validatiot message) to separate component
-// with configurable name field since we already had it duplicated in 5 forms for now + new form for SP config probably will need it
-// Generalize naming for isValidAccountName util since it used for name validation in different forms(not only for account)
+
 const validate = ({ name, description }) => {
   const conditions = {
     name: {
