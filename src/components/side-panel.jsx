@@ -6,7 +6,7 @@ import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
 const modalClassDim = 'side-panel--dim'
 
-const SidePanelComponent = ({ children, className, dim, show, subTitle, subSubTitle, title }) => {
+export const SidePanelComponent = ({ children, className, dim, show, subTitle, subSubTitle, title }) => {
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
