@@ -7,7 +7,7 @@
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 0;
+  padding: $page-container-vertical-padding $page-container-horizontal-padding;
   overflow-x: auto;
   overflow-y: hidden;
   flex: 1;
