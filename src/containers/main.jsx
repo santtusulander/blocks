@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import { fetchAll as fetchNodes } from '../redux/modules/entities/nodes/actions'
-
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -34,7 +32,6 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
   componentWillMount() {
-    this.props.aaa()
     // Validate token
     this.props.userActions.checkToken()
       .then(action => {
@@ -52,9 +49,6 @@ export class Main extends React.Component {
 
         this.fetchAccountData(accountId, this.props.accounts)
       })
-      this.props.aaa()
-      this.props.aaa()
-      this.props.aaa()
   }
 
   //update account if account prop changed (in url) or clear active if there is no account in route
@@ -252,7 +246,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    aaa: () => dispatch(fetchNodes('uu', 'jee', 'maelli')),
     accountActions: bindActionCreators(accountActionCreators, dispatch),
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
