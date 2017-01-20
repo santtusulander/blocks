@@ -10,8 +10,6 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import './routing-daemon-form.scss'
-
 const errors = {}
 
 const validate = (values) => {
