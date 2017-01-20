@@ -4,7 +4,6 @@ import {Map} from 'immutable'
 
 import {createFetchingReducers} from '../fetching/actions'
 
-//import {mapReducers} from '../../util'
 import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
 
 export const actionTypes = {
