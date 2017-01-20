@@ -40,7 +40,7 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
-  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain {itemToDelete} will also delete all the records related to it.',
+  'portal.dnsDomain.delete.disclaimer.text': 'Are you sure you want to delete {itemToDelete}?',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
   'portal.brand.edit.newBrand.title': 'New Brand',
@@ -91,7 +91,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.clientBufferEvents.text': 'Client Buffer Events',
   'portal.analytics.demoPlayback.droppedFrames.text': 'Dropped Frames',
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
-  'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
+  'portal.analytics.demoPlayback.bandwidthBySegment.text': 'Bandwidth by Segment',
 
   'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
@@ -104,13 +104,13 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
   'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
   'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
-  'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
+  'portal.analytics.trafficOverview.bandwidth.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
   'portal.analytics.trafficOverview.byGeography.text': 'BY GEOGRAPHY',
   'portal.analytics.trafficOverview.byCountry.text': 'BY COUNTRY',
   'portal.analytics.trafficOverview.byCountry.country.header': 'Country',
-  'portal.analytics.trafficOverview.byCountry.bandwith.header': 'Bandwith',
+  'portal.analytics.trafficOverview.byCountry.bandwidth.header': 'Bandwidth',
   'portal.analytics.trafficOverview.byCountry.request.header': 'Requests',
   'portal.analytics.trafficOverview.byCountry.periodTrend.header': 'Period Trend',
 
@@ -306,7 +306,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.removeVary.header': 'Remove Vary',
   'portal.policy.edit.removeVary.text': 'Remove Vary Header',
   'portal.policy.edit.fileExtension.header': 'File Extension',
-  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like .GIF, JPG, .MOV, .MP3',
+  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like GIF, JPG, MOV, MP3',
   'portal.policy.edit.fileExtension.fileExtension.text': 'File Extension',
   'portal.policy.edit.fileExtension.fileExtension.placeholder': 'Enter File Extensions separated by commas',
   'portal.policy.edit.fileExtension.ignoreCase.text': 'Ignore case',
@@ -426,14 +426,14 @@ const TRANSLATED_MESSAGES = {
 
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
-  
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
-  'portal.content.tooltip.bandwith.text': 'Bandwith',
-  'portal.content.tooltip.bandwithVsLast28.text': '{bandwith} vs 28 days ago',
+  'portal.content.tooltip.bandwidth.text': 'Bandwidth',
+  'portal.content.tooltip.bandwidthVsLast28.text': '{bandwidth} vs 28 days ago',
   'portal.content.tooltip.higher.text': 'Higher',
   'portal.content.tooltip.same.text': 'Same',
   'portal.content.tooltip.lower.text': 'Lower',
@@ -594,9 +594,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.settings.text': 'Settings',
   'portal.startburstHelp.help.text': 'Help',
   'portal.startburstHelp.starburst.text': 'Starburst',
-  'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidth.text': 'Average bandwidth for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthFttb.text': 'Average Time to First Byte for the prior 4 weeks',
   'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
   'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
   'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',
@@ -755,6 +755,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.no': 'No',
   'portal.button.export': 'Export',
   'portal.button.delete': 'Delete',
+  'portal.button.deleting': 'Deleting...',
   'portal.button.ok': 'OK',
   'portal.button.resetting': 'Resetting...',
   'portal.button.reset': 'Reset',

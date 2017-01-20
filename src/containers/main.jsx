@@ -31,6 +31,14 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
+
+  getChildContext(){
+    return {
+      currentUser: this.props.currentUser,
+      roles: this.props.roles
+    }
+  }
+
   componentWillMount() {
     // Validate token
     this.props.userActions.checkToken()
@@ -211,6 +219,11 @@ Main.defaultProps = {
   currentUser: Immutable.Map(),
   roles: Immutable.List(),
   user: Immutable.Map()
+}
+
+Main.childContextTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  roles: React.PropTypes.instanceOf(Immutable.List)
 }
 
 function mapStateToProps(state) {
