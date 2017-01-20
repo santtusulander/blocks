@@ -11,7 +11,6 @@ import services from './services.json'
 import support from './support.json'
 import user from './user.json'
 import password from './password.json'
-import network from './network.json'
 
 //TODO: Should be removed when all strings have been moved to separate files
 import en from './en.js'
