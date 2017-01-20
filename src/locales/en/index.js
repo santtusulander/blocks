@@ -7,7 +7,7 @@ import dashboard from './dashboard.json'
 import login from './login.json'
 import network from './network.json'
 import security from './security.json'
-import services from './security.json'
+import services from './services.json'
 import support from './support.json'
 import user from './user.json'
 import password from './password.json'
@@ -29,5 +29,6 @@ export default Object.assign({},
   support,
   user,
   password,
+  network,
   en
 )
