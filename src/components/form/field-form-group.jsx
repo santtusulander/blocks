@@ -23,7 +23,7 @@ const FieldFormGroup = ({ addonAfter, input, placeholder, type, label, inputRef,
         />
 
         { addonAfter &&
-          <InputGroup.Addon bsClass="input-group-addon addon-after">
+          <InputGroup.Addon>
             {addonAfter}
           </InputGroup.Addon>
         }
