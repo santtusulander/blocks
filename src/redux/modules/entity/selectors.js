@@ -5,7 +5,7 @@
  * @returns {*}
  */
 export const getEntityById = ( state, entityType, id) => {
-  return state.entities.entities[entityType].get(String(id))
+  return state.entities[entityType].get(String(id))
 }
 
 /**
@@ -16,7 +16,7 @@ export const getEntityById = ( state, entityType, id) => {
  * @returns {*}
  */
 export const getEntitiesByParent = ( state, entityType, parentId, parentIdKey = 'parentId') => {
-  const result = state.entities.entities[entityType].filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } ).toList()
+  const result = state.entities[entityType].filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } ).toList()
 
   return result;
 }
