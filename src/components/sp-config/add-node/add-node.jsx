@@ -118,7 +118,7 @@ class AddNodeForm extends React.Component {
         <div className="modal-footer__text">{confirmText}</div>
         <ButtonToolbar className="pull-right">
           <Button
-            id="cancel-btn"
+            id="cancel-confirm-btn"
             className="btn-secondary"
             onClick={this.onCancelConfirm}>
             <FormattedMessage id="portal.button.back"/>
