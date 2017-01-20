@@ -15,7 +15,7 @@ import {
 } from '../util/helpers.js'
 
 import { fetchUsers, updateUser } from '../redux/modules/user'
-//import * as accountActionCreators from '../redux/modules/account'
+import * as accountActionCreators from '../redux/modules/account'
 import { clearFetchedHosts } from '../redux/modules/host'
 import * as groupActionCreators from '../redux/modules/group'
 import * as metricsActionCreators from '../redux/modules/metrics'
@@ -29,9 +29,9 @@ import checkPermissions from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
-import {fetchAll as fetchGroups} from '../redux/modules/entities/groups/actions'
-import { getEntityById, getEntitiesByParent } from '../redux/modules/entity/selectors'
+// import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
+// import {fetchAll as fetchGroups} from '../redux/modules/entities/groups/actions'
+// import { getEntityById, getEntitiesByParent } from '../redux/modules/entity/selectors'
 
 
 export class Groups extends React.Component {
@@ -203,12 +203,12 @@ Groups.defaultProps = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    activeAccount: getEntityById(state, 'accounts', ownProps.params.account), //state.account.get('activeAccount'),
-    activeGroup: getEntityById(state, 'groups', ownProps.params.group), //state.group.get('activeGroup'),
+    activeAccount: state.account.get('activeAccount'),
+    activeGroup: state.group.get('activeGroup'),
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
     fetching: state.group.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
-    groups: getEntitiesByParent(state, 'groups', ownProps.params.account), //state.group.get('allGroups'),
+    groups: state.group.get('allGroups'),
     metrics: state.metrics.get('groupMetrics'),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
@@ -220,7 +220,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch, ownProps) {
   const {brand, account} = ownProps.params
-//  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+  const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -230,13 +230,13 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchData = () => {
-    //accountActions.fetchAccount(brand, account)
-    //groupActions.startFetching()
+    accountActions.fetchAccount(brand, account)
+    groupActions.startFetching()
     metricsActions.startGroupFetching()
-    //groupActions.fetchGroups(brand, account)
+    groupActions.fetchGroups(brand, account)
 
-    dispatch( fetchAccount(brand, account) ),
-    dispatch( fetchGroups(brand, account) )
+    // dispatch( fetchAccount(brand, account) ),
+    // dispatch( fetchGroups(brand, account) )
 
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
