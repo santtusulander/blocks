@@ -7,7 +7,7 @@ import { formValueSelector } from 'redux-form'
 import SidePanel from '../../../components/side-panel'
 //TODO: import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
-import NetworkPopForm from '../../../components/network/modals/pop-form.jsx'
+import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 
 const mockReduxCalls = {
   get: function(cmd) {
