@@ -4,14 +4,15 @@ import classNames from 'classnames'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-export const modalClassDim = 'side-panel--dim'
+const modalClassDim = 'side-panel--dim'
 
-const SidePanelComponent = ({ children, className, show, subTitle, subSubTitle, title }) => {
+const SidePanelComponent = ({ children, className, dim, show, subTitle, subSubTitle, title }) => {
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
-    className
-  );
+    className,
+    dim ? modalClassDim : null
+  )
 
   if (subTitle && subSubTitle) {
     subTitleElements = (
@@ -47,6 +48,7 @@ SidePanelComponent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   show: PropTypes.bool,
+  dim: PropTypes.bool,
   subSubTitle: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
