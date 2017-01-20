@@ -35,4 +35,4 @@ import './content/add-host'
 import './content/content-item-chart'
 
 // sp-config
-import './network/sp-config/routing-daemon-form'
+import './network/form/routing-daemon-form'
