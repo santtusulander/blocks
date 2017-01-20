@@ -10,6 +10,7 @@ import {
 
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select.jsx'
+import FieldFormGroupNumber from '../../form/field-form-group-number.jsx'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
 const validate = fields => {
@@ -81,9 +82,8 @@ const NetworkPopForm = (props) => {
 
         {selectedLocationId
             ? <Field
-                type="number"
                 name="popId"
-                component={FieldFormGroup}
+                component={FieldFormGroupNumber}
                 addonBefore={`${selectedLocationId}${selectedPopId}`}
                 label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
               />
@@ -136,8 +136,8 @@ NetworkPopForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  selectedLocationId: PropTypes.string,
-  selectedPopId: PropTypes.string,
+  selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   ...reduxFormPropTypes
 }
 

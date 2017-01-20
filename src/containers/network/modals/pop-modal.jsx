@@ -1,12 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-//TODO: import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector } from 'redux-form'
 
 import SidePanel from '../../../components/side-panel'
-//TODO: import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
-
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 
 const mockReduxCalls = {
@@ -57,15 +54,32 @@ const mockReduxCalls = {
 class NetworkPopFormContainer extends Component {
   constructor(props) {
     super(props)
+
+    this.onSubmit = this.onSubmit.bind(this)
+    this.onDelete = this.onDelete.bind(this)
+  }
+
+  onSubmit(values) {
+    // TODO: on submit functionality
+    this.props.onSave(values)
+  }
+
+  onDelete(popId) {
+    // TODO: on delete functionality
+    this.props.onDelete(popId)
   }
 
   render() {
-    const { edit, fetching, initialValues, selectedLocationId, selectedPopId, onSave, onDelete, closeModal } = this.props
+    const { edit, fetching, initialValues, selectedLocationId, selectedPopId, onCancel } = this.props
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
     const subTitle = `${initialValues.group} / ${initialValues.network}`
-    const subSubTitle = edit ? `Created: ${initialValues.createdDate} | Updated: ${initialValues.updatedDate}` : ''
+    const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
+                                                  values={{
+                                                    createdDate: initialValues.createdDate,
+                                                    updatedDate: initialValues.updatedDate
+                                                  }} />) : ''
 
     return (
       <SidePanel
@@ -73,7 +87,7 @@ class NetworkPopFormContainer extends Component {
         title={title}
         subTitle={subTitle}
         subSubTitle={subSubTitle}
-        cancel={() => closeModal()}
+        cancel={() => onCancel()}
       >
 
         <NetworkPopForm
@@ -82,9 +96,9 @@ class NetworkPopFormContainer extends Component {
           selectedLocationId={selectedLocationId}
           selectedPopId={selectedPopId}
           initialValues={initialValues}
-          onDelete={(popId) => onDelete(popId)}
-          onSave={(values) => onSave(edit, values)}
-          onCancel={() => closeModal()}
+          onDelete={(popId) => this.onDelete(popId)}
+          onSave={(values) => this.onSubmit(edit, values)}
+          onCancel={() => onCancel()}
         />
 
       </SidePanel>
@@ -94,14 +108,14 @@ class NetworkPopFormContainer extends Component {
 
 NetworkPopFormContainer.displayName = "NetworkPopFormContainer"
 NetworkPopFormContainer.propTypes = {
-  closeModal: PropTypes.func,
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   initialValues: PropTypes.object,
+  onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  selectedLocationId: PropTypes.string,
-  selectedPopId: PropTypes.string
+  selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 const formSelector = formValueSelector('networkPopEditForm')
