@@ -1,6 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import Immutable from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 jest.unmock('../dashboard.jsx')
 import Dashboard from '../dashboard.jsx'
@@ -14,6 +15,7 @@ jest.mock('../../util/status-codes', () => {
 
 jest.mock('../../util/helpers', () => {
   return {
+    accountIsServiceProviderType: val => val,
     formatBitsPerSecond: val => val,
     formatBytes: val => val,
     formatTime: val => val,
@@ -108,5 +110,17 @@ describe('Dashboard', () => {
 
   it('should exist', () => {
     expect(subject().length).toBe(1);
-  });
+  })
+
+  it('should show loading spinner', () => {
+    const component = subject()
+    component.setProps({ fetching: true })
+    expect(component.find('LoadingSpinner').length).toBe(1)
+  })
+
+  it('should show no data text', () => {
+    const component = subject()
+    component.setProps({ dashboard: Immutable.Map() })
+    expect(component.contains(<FormattedMessage id="portal.common.no-data.text"/>))
+  })
 });
