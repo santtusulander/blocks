@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../../theme-wrap'
-import RoutingDaemonForm from '../../../network/sp-config/routing-daemon-form'
+import RoutingDaemonForm from '../../../network/forms/routing-daemon-form'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
