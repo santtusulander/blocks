@@ -19,7 +19,7 @@ jest.mock('../../util/helpers', () => {
     formatTime: val => val,
     getAccountByID: val => val,
     separateUnit: val => ({ value: val }),
-    buildFetchOpts: val => val
+    buildFetchOpts: val => ({ dashboardOpts: val })
   }
 })
 
