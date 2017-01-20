@@ -3,8 +3,9 @@ import Immutable from 'immutable'
 
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import PlaceholderTable from './placeholder-table'
+import NetworkItem from './network-item'
 
-class PlaceholderEntityList extends React.Component {
+class EntityList extends React.Component {
   constructor(props) {
     super(props)
 
@@ -65,22 +66,31 @@ class PlaceholderEntityList extends React.Component {
           onAdd={addEntity}
         />
 
-        {showEntitiesTable &&
-          <PlaceholderTable
-            entities={entities}
-            deleteEntity={deleteEntity}
-            editEntity={editEntity}
-            selectEntity={selectEntity}
-            selectedEntityId={selectedEntityId}
-          />
-        }
+        <div className="network-entity-list-items">
+          {showEntitiesTable &&
+            entities.map(entity => {
+              const entityId = entity.get('id')
+              const entityName = entity.get('name')
+              return (
+                <NetworkItem
+                  key={entityId}
+                  onEdit={() => editEntity(entityId)}
+                  title={entityName}
+                  active={selectedEntityId === entityId.toString()}
+                  onSelect={() => selectEntity(entityId)}
+                  status="enabled"
+                  />
+              )
+            })
+          }
+        </div>
       </div>
     )
   }
 }
 
-PlaceholderEntityList.displayName = 'PlaceholderEntityList'
-PlaceholderEntityList.propTypes = {
+EntityList.displayName = 'EntityList'
+EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   deleteEntity: PropTypes.func.isRequired,
   editEntity: PropTypes.func.isRequired,
@@ -91,10 +101,10 @@ PlaceholderEntityList.propTypes = {
   selectedEntityId: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
-PlaceholderEntityList.defaultProps = {
+EntityList.defaultProps = {
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name'
 }
 
-export default PlaceholderEntityList
+export default EntityList

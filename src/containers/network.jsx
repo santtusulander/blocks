@@ -14,7 +14,7 @@ import Content from '../components/layout/content'
 import PageContainer from '../components/layout/page-container'
 import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
-import PlaceholderEntityList from '../components/network/placeholder-entity-list'
+import EntityList from '../components/network/entity-list'
 
 import {
   NETWORK_VISIBLE_BY_PIXELS,
@@ -24,20 +24,44 @@ import {
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
   { id: 2, name: 'Network 2' },
-  { id: 3, name: 'Network 3' }
+  { id: 3, name: 'Network 3' },
+  { id: 4, name: 'Network 4' },
+  { id: 5, name: 'Network 5' },
+  { id: 6, name: 'Network 6' },
+  { id: 7, name: 'Network 7' },
+  { id: 8, name: 'Network 8' },
+  { id: 9, name: 'Network 9' },
+  { id: 10, name: 'Network 10' },
+  { id: 11, name: 'Network 11' },
+  { id: 12, name: 'Network 12' },
+  { id: 13, name: 'Network 13' },
+  { id: 14, name: 'Network 14' }
 ])
 
 const placeholderPops = Immutable.fromJS([
   { id: 'JFK1', name: 'Pod 1 for JFK' },
   { id: 'JFK2', name: 'Pod 2 for JFK' },
   { id: 'JFK7', name: 'Pod 7 for JFK' },
-  { id: 'SJC1', name: 'Pod 1 for SJC' }
+  { id: 'SJC1', name: 'Pod 1 for SJC' },
+  { id: 'SJC2', name: 'Pod 2 for SJC' },
+  { id: 'KFC1', name: 'Pod 1 for KFC' },
+  { id: 'KFC2', name: 'Pod 2 for KFC' },
+  { id: 'MCD1', name: 'Pod 1 for MCD' },
+  { id: 'MCD2', name: 'Pod 2 for MCD' }
 ])
 
 const placeholderPods = Immutable.fromJS([
   { id: 1, name: 'Pod 1' },
   { id: 2, name: 'Pod 2' },
-  { id: 3, name: 'Pod 3' }
+  { id: 3, name: 'Pod 3' },
+  { id: 4, name: 'Pod 4' },
+  { id: 5, name: 'Pod 5' },
+  { id: 6, name: 'Pod 6' },
+  { id: 7, name: 'Pod 7' },
+  { id: 8, name: 'Pod 8' },
+  { id: 9, name: 'Pod 9' },
+  { id: 10, name: 'Pod 10' },
+  { id: 11, name: 'Pod 11' }
 ])
 
 const placeholderNodes = Immutable.fromJS([
@@ -45,7 +69,52 @@ const placeholderNodes = Immutable.fromJS([
   { id: 'cache-2.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
   { id: 'gslb-1.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
   { id: 'cache-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' }
+  { id: 'slsb-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-12.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-23.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-14.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-15.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-17.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-17.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-26.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-13.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-1435.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-1435.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-1134.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-4562.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-8761.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-1345.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-124.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-156.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-28.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-113.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-1444.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-165.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-1987.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-2123.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-156867.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-145.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-31.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-15.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-62.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-187.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-198.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-3121.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-451.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-20890.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-135467.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-19000.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-11111.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-4444.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-276888.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-199000.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-13422.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-1690.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
+  { id: 'cache-36781.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
+  { id: 'cache-2789078.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
+  { id: 'gslb-123234.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
+  { id: 'cache-6786781.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
+  { id: 'slsb-17878.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' }
 ])
 
 
@@ -270,7 +339,7 @@ class Network extends React.Component {
         </PageHeader>
 
         <PageContainer ref={container => this.container = container} className="network-entities-container">
-          <PlaceholderEntityList
+          <EntityList
             ref={groups => this.entityList.groupList = groups}
             entities={params.account && groups}
             addEntity={() => null}
@@ -282,7 +351,7 @@ class Network extends React.Component {
           />
 
 
-          <PlaceholderEntityList
+          <EntityList
             ref={networks => this.entityList.networkList = networks}
             entities={params.group && networks}
             addEntity={() => null}
@@ -294,7 +363,7 @@ class Network extends React.Component {
           />
 
 
-          <PlaceholderEntityList
+          <EntityList
             ref={pops => this.entityList.popList = pops}
             entities={params.network && pops}
             addEntity={() => null}
@@ -305,7 +374,7 @@ class Network extends React.Component {
             title="Pops"
           />
 
-          <PlaceholderEntityList
+          <EntityList
             ref={pods => this.entityList.podList = pods}
             entities={params.pop && pods}
             addEntity={() => null}
@@ -316,7 +385,7 @@ class Network extends React.Component {
             title="Pods"
           />
 
-          <PlaceholderEntityList
+          <EntityList
             ref={nodes => this.entityList.nodeList = nodes}
             entities={params.pod && nodes}
             addEntity={() => null}

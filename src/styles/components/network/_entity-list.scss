@@ -1,5 +1,22 @@
 .network-entity-list {
-  width: $md-sidebar-width;
-  padding: $page-container-vertical-padding $page-container-horizontal-padding;
+  position: relative;
+  min-width: $md-sidebar-width;
+  border-right: 2px solid rgba($black, 0.3);
   flex: none;
+
+  &:last-child {
+    border-right: 0;
+  }
+
+  .account-management-header,
+  .network-entity-list-items {
+    padding: 0 $page-container-horizontal-padding;
+  }
+
+  .network-entity-list-items {
+    position: relative;
+    max-height: calc(100vh - 375px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }

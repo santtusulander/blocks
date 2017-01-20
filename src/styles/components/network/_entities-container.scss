@@ -6,8 +6,7 @@
 .network-entities-container {
   display: flex;
   width: 100%;
-  height: 100%;
-  padding: $page-container-vertical-padding $page-container-horizontal-padding;
+  padding: $page-container-vertical-padding 0;
   overflow-x: auto;
   overflow-y: hidden;
   flex: 1;
