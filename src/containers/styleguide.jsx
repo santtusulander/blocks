@@ -50,6 +50,7 @@ import MultiOptionSelector from '../components/multi-option-selector'
 import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
+import NetworkItem from '../components/network/network-item'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -964,6 +965,17 @@ class Styleguide extends React.Component {
             theme={this.props.theme}
             height={600}
             />
+
+
+          <h1 className="page-header">Network</h1>
+
+          <NetworkItem
+            title="Network 1"
+            content="Lorem ipsum dolor sit amet"
+            status="enabled"
+            onSelect={() => null}
+            onEdit={() => null} />
+
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
