@@ -183,7 +183,7 @@ export class Dashboard extends React.Component {
       DateRanges.LAST_WEEK
     ]
 
-    const topProvicedTitleId = (accountIsServiceProviderType(activeAccount) || userIsServiceProvider(user)) ?
+    const topProviderTitleId = (accountIsServiceProviderType(activeAccount) || userIsServiceProvider(user)) ?
       'portal.dashboard.topCP.title' : 'portal.dashboard.topSP.title'
 
     return (
@@ -275,7 +275,7 @@ export class Dashboard extends React.Component {
                   mapboxActions={this.props.mapboxActions}/>
               </div>
             </DashboardPanel>
-            <DashboardPanel title={intl.formatMessage({ id: topProvicedTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+            <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
               <Table className="table-simple">
                 <thead>
                   <tr>
