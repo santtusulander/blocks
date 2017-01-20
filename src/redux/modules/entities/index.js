@@ -4,7 +4,6 @@ import {Map} from 'immutable'
 
 import {createFetchingReducers} from '../fetching/actions'
 
-//import {mapReducers} from '../../util'
 import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
 
 export const actionTypes = {
@@ -41,16 +40,10 @@ const properties =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const entities = combineReducers({
+export default combineReducers({
   accounts,
   footprints,
-  //accountGroups,
   groups,
-  //groupProperties,
-  properties
-})
-
-export default combineReducers({
-  entities,
+  properties,
   fetching: createFetchingReducers( actionTypes, 'entities')
 })

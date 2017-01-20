@@ -1,10 +1,10 @@
 import accountSelector from './account-selector'
 import multireducer from 'multireducer'
 
-export const account = require('./account').default;
+//export const account = require('./account').default;
 export const form = require('redux-form').reducer;
-export const group = require('./group').default;
-export const host = require('./host').default;
+//export const group = require('./group').default;
+//export const host = require('./host').default;
 export const topo = require('./topo').default;
 export const content = require('./content').default;
 export const traffic = require('./traffic').default;

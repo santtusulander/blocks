@@ -10,7 +10,7 @@ import {Schemas} from '../schemas'
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetch = (brand, account, group) => {
+export const fetch = ({brand, account, group}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}`)
     .then( ({data}) => {
 
@@ -29,7 +29,7 @@ export const fetch = (brand, account, group) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = (brand, account) => {
+export const fetchAll = ({brand, account}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
     .then( ({data}) => {
 
