@@ -16,5 +16,13 @@
 
   "portal.network.popEditForm.locationId.label" : "Location ID",
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
-  "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required"
+  "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
+
+  "portal.network.item.status.enabled": "Enabled",
+  "portal.network.networkForm.newNetwork.title": "Add Network",
+  "portal.network.networkForm.editNetwork.title": "Edit Network",
+  "portal.network.networkForm.name.placeholder": "Enter Network Name",
+  "portal.network.networkForm.description.placeholder": "Enter Network Description",
+  "portal.network.networkForm.name.validation.error": "Invalid Network name",
+  "portal.network.networkForm.description.validation.error": "Invalid Network description"
 }

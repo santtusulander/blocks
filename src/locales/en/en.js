@@ -306,7 +306,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.removeVary.header': 'Remove Vary',
   'portal.policy.edit.removeVary.text': 'Remove Vary Header',
   'portal.policy.edit.fileExtension.header': 'File Extension',
-  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like .GIF, JPG, .MOV, .MP3',
+  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like GIF, JPG, MOV, MP3',
   'portal.policy.edit.fileExtension.fileExtension.text': 'File Extension',
   'portal.policy.edit.fileExtension.fileExtension.placeholder': 'Enter File Extensions separated by commas',
   'portal.policy.edit.fileExtension.ignoreCase.text': 'Ignore case',
