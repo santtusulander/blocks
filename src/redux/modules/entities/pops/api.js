@@ -10,8 +10,8 @@ import {Schemas} from '../schemas'
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetch = (brand, account, group, network, popId) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${popId}`)
+export const fetch = ({brand, account, group, network, id}) => {
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${id}`)
     .then( ({data}) => {
       return normalize(data, Schemas.pop)
     })
@@ -23,7 +23,7 @@ export const fetch = (brand, account, group, network, popId) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = (brand, account, group, network) => {
+export const fetchAll = ({brand, account, group, network}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`)
     .then( ({data}) => {
       return data
