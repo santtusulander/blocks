@@ -22,7 +22,7 @@ const PlaceholderTable = ({ entities, deleteEntity, editEntity, selectEntity, se
             <td width="15%">
               <ActionButtons
                 onDelete={deleteEntity(entityId)}
-                onEdit={editEntity(entityId)}
+                onEdit={() => editEntity(entityId)}
               />
             </td>
           </tr>

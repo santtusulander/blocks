@@ -15,6 +15,8 @@ import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import PlaceholderEntityList from '../components/network/placeholder-entity-list'
 
+import PodFormContainer from './network/modals/pod-modal'
+
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
   { id: 2, name: 'Network 2' },
@@ -50,12 +52,15 @@ class Network extends React.Component {
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handlePopClick = this.handlePopClick.bind(this)
     this.handlePodClick = this.handlePodClick.bind(this)
+    this.handleEditPodClick = this.handleEditPodClick.bind(this)
+    this.togglePodModal = this.togglePodModal.bind(this)
 
     this.state = {
       networks: Immutable.List(),
       pops: Immutable.List(),
       pods: Immutable.List(),
-      nodes: Immutable.List()
+      nodes: Immutable.List(),
+      showPodModal: false
     }
   }
 
@@ -98,6 +103,26 @@ class Network extends React.Component {
     this.props.router.push(url)
   }
 
+  savePod() {
+    this.setState({
+      showPodModal: !this.state.showPodModal
+    })
+  }
+
+  togglePodModal() {
+    this.setState({
+      showPodModal: !this.state.showPodModal,
+      podId: undefined
+    })
+  }
+
+  handleEditPodClick(podId) {
+    this.setState({
+      showPodModal: !this.state.showPodModal,
+      podId: podId
+    })
+  }
+
   render() {
     const {
       activeAccount,
@@ -111,7 +136,6 @@ class Network extends React.Component {
       pods,
       nodes
     } = this.state
-
     return (
       <Content>
 
@@ -162,9 +186,9 @@ class Network extends React.Component {
         {params.pop &&
           <PlaceholderEntityList
             entities={pods}
-            addEntity={() => null}
+            addEntity={this.togglePodModal}
             deleteEntity={() => () => null}
-            editEntity={() => () => null}
+            editEntity={this.handleEditPodClick}
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
             title="Pods"
@@ -181,6 +205,15 @@ class Network extends React.Component {
             title="Nodes"
           />
         }
+        <PodFormContainer
+          id="pod-form"
+          // params={this.props.params}
+          podId={this.state.podId}
+          onSave={() => this.savePod()}
+          onCancel={() => this.togglePodModal()}
+          show={this.state.showPodModal}
+          {...params}
+        />
 
       </Content>
     )
@@ -224,5 +257,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: groupActions
   };
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
