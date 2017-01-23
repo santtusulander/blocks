@@ -10,6 +10,27 @@ import FootprintForm from '../../network/forms/footprint-form'
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
 
+const dummyCIDROptions = [
+  { id: '1', label: '192.168.1.100/1' },
+  { id: '2', label: '192.168.1.100/2' },
+  { id: '3', label: '192.168.1.100/3' },
+  { id: '4', label: '192.168.1.100/4' }
+];
+
+const dummyASNOptions = [
+  { id: '1', label: 'DummyASN1' },
+  { id: '2', label: 'DummyASN2' },
+  { id: '3', label: 'DummyASN3' },
+  { id: '4', label: 'DummyASN4' }
+];
+
+const dummyUDNTypeOptions = [
+  { value: '1', label: 'DummyType1' },
+  { value: '2', label: 'DummyType2' },
+  { value: '3', label: 'DummyType3' },
+  { value: '4', label: 'DummyType4' }
+];
+
 storiesOf('Network', module)
   .addDecorator((story) => (
     <ThemeWrap>
@@ -21,6 +42,10 @@ storiesOf('Network', module)
   .add('FootprintForm', () => (
     <FootprintForm
       show={true}
+      editing={false}
+      ASNOptions={dummyASNOptions}
+      CIDROptions={dummyCIDROptions}
+      UNDTypeOptions={dummyUDNTypeOptions}
       onCancel={action('Handling cancel')}
       onSubmit={action('Handling submit')}
     />

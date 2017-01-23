@@ -22,7 +22,7 @@ const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
       {
         condition: !footPrintName || !isValidAccountName(footPrintName),
         errorText: <div key={footPrintName}>{[<FormattedMessage key={1}
-                                                                id="portal.serviceProviderConfig.form.footprint.name.invalid.text"/>,
+                                                                id="portal.network.footprintForm.name.invalid.text"/>,
           <div key={2}>
             <div style={{ marginTop: '0.5em' }}>
               <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text"/>
@@ -39,7 +39,7 @@ const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
       {
         condition: !footPrintDescription,
         errorText: <div key={footPrintDescription}>{[<FormattedMessage key={1}
-                                                                       id="portal.serviceProviderConfig.form.footprint.description.invalid.text"/>,
+                                                                       id="portal.network.footprintForm.description.invalid.text"/>,
           <div key={2}>
             <div style={{ marginTop: '0.5em' }}>
               <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text"/>
@@ -103,17 +103,33 @@ class FootprintForm extends React.Component {
   }
 
   render() {
-    const { UDNTypes, invalid, submitting, show, onCancel, intl, addManual, dataType } = this.props
+    const {
+      ASNOptions,
+      addManual,
+      CIDROptions,
+      dataType,
+      editing,
+      intl,
+      invalid,
+      onCancel,
+      show,
+      submitting,
+      UNDTypeOptions
+    } = this.props
 
-    const submitButtonLabel = this.props.account
-      ? <FormattedMessage id="portal.button.save"/>
-      : <FormattedMessage id="portal.button.add"/>
+    const formTitle = editing
+      ? <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
+      : <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
+
+    const submitButtonLabel = editing
+      ? <FormattedMessage id="portal.button.add"/>
+      : <FormattedMessage id="portal.button.save"/>
 
 
     return (
       <SidePanel
         show={show}
-        title={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.title.text"/>}
+        title={formTitle}
         cancel={onCancel}
         className="sp-footprint-form"
       >
@@ -129,7 +145,7 @@ class FootprintForm extends React.Component {
               type="radio"
               value="manual"
               component={FieldRadio}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.checkbox.option.manual.text"/>}
+              label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
             />
 
             <Field
@@ -137,37 +153,39 @@ class FootprintForm extends React.Component {
               type="radio"
               value="addfile"
               component={FieldRadio}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.checkbox.option.useCSV.text"/>}
+              label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
             />
           </FormGroup>
 
           { addManual === 'manual' &&
           <div>
-            <Field
-              type="text"
-              name="footPrintName"
-              placeholder={intl.formatMessage({ id: 'portal.serviceProviderConfig.form.footprint.name.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.name.title.text"/>}
-            />
+            <FormGroup>
+              <Field
+                type="text"
+                name="footPrintName"
+                placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
+              />
 
-            <Field
-              name="footPrintDescription"
-              type="text"
-              placeholder={intl.formatMessage({ id: 'portal.serviceProviderConfig.form.footprint.description.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.description.title.text"/>}
-            />
+              <Field
+                name="footPrintDescription"
+                type="text"
+                placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
+                component={FieldFormGroup}
+                label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
+              />
+            </FormGroup>
 
             <FormGroup>
               <ControlLabel>{<FormattedMessage
-                id="portal.serviceProviderConfig.form.footprint.dataType.title.text"/>}</ControlLabel>
+                id="portal.network.footprintForm.dataType.title.text"/>}</ControlLabel>
               <Field
                 name="dataType"
                 type="radio"
                 value="cidr"
                 component={FieldRadio}
-                label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.dataType.option.cidr.text"/>}
+                label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
               />
 
               <Field
@@ -175,7 +193,7 @@ class FootprintForm extends React.Component {
                 name="dataType"
                 value="asn"
                 component={FieldRadio}
-                label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.dataType.option.asn.text"/>}
+                label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
               />
 
               { dataType === 'cidr' &&
@@ -184,9 +202,7 @@ class FootprintForm extends React.Component {
                 onChange={() => null}
                 allowNew={true}
                 renderToken={this.renderCIDRToken}
-                options={[
-                  { id: 'BY', label: 'Belarus' }
-                ]}/>
+                options={CIDROptions}/>
               }
 
               { dataType !== 'cidr' &&
@@ -195,9 +211,7 @@ class FootprintForm extends React.Component {
                 onChange={() => null}
                 allowNew={true}
                 renderToken={this.renderASNToken}
-                options={[
-                  { id: 'BY', label: 'Waa' }
-                ]}/>
+                options={ASNOptions}/>
               }
             </FormGroup>
 
@@ -205,8 +219,8 @@ class FootprintForm extends React.Component {
               name="UDNTypeList"
               className="input-select"
               component={FieldFormGroupSelect}
-              options={UDNTypes}
-              label={<FormattedMessage id="portal.serviceProviderConfig.form.footprint.UDNType.title.text"/>}
+              options={UNDTypeOptions}
+              label={<FormattedMessage id="portal.network.footprintForm.UDNType.title.text"/>}
             />
           </div>
           }
@@ -236,10 +250,14 @@ class FootprintForm extends React.Component {
 
 FootprintForm.displayName = "FootprintForm"
 FootprintForm.propTypes = {
+  ASNOptions: PropTypes.array,
+  CIDROptions: PropTypes.array,
+  editing: PropTypes.bool,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   show: PropTypes.bool,
-  ...reduxFormPropTypes
+  ...reduxFormPropTypes,
+  UNDTypeOptions: PropTypes.array,
 }
 
 const form = reduxForm({
@@ -248,18 +266,19 @@ const form = reduxForm({
 })(FootprintForm)
 
 const selector = formValueSelector('footprintForm')
+
 const mapStateToProps = (state) => {
   const addManual = selector(state, 'addFootprintMethod')
   const dataType = selector(state, 'dataType')
+
   return {
+    addManual,
+    dataType,
     selector,
     initialValues: {
       addFootprintMethod: 'manual',
       dataType: 'cidr'
-    },
-    addManual,
-    dataType,
-    invalid: isInvalid('footprintForm')(state)
+    }
   }
 }
 
