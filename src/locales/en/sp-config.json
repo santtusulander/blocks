@@ -1,9 +1,0 @@
-{
-  "portal.spConfig.addNode.title": "Add nodes",
-  "portal.spConfig.addNode.confirmAdd": "Create {numNodes} nodes? Are you sure?",
-  "portal.spConfig.addNode.howMany.title": "How many?",
-  "portal.spConfig.addNode.role.title": "Role",
-  "portal.spConfig.addNode.environment.title": "Environment",
-  "portal.spConfig.addNode.type.title": "Type",
-  "portal.spConfig.addNode.cloudDriver.title": "Cloud Driver"
-}

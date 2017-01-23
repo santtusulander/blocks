@@ -34,5 +34,5 @@ import './security/certificate-form'
 import './content/add-host'
 import './content/content-item-chart'
 
-// SP Config
-import './sp-config/add-node'
+// network
+import './network/add-node-form'

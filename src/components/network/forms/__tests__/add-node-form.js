@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../add-node.jsx')
-import AddNode from '../add-node.jsx'
+jest.unmock('../add-node-form.jsx')
+import AddNode from '../add-node-form.jsx'
 
 const intlMaker = () => {
   return {

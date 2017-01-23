@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import {storiesOf, action} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import AddNode from '../../sp-config/add-node/add-node.jsx'
+import AddNode from '../../network/forms/add-node-form.jsx'
 
 const reducers = {
   form: formReducer
