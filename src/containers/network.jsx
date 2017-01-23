@@ -54,6 +54,7 @@ class Network extends React.Component {
     super(props)
 
     this.addEntity = this.addEntity.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
 
     this.handleGroupClick = this.handleGroupClick.bind(this)
     this.handleGroupEdit = this.handleGroupEdit.bind(this)
@@ -118,12 +119,22 @@ class Network extends React.Component {
     }
   }
 
+  handleCancel(entityModal) {
+    switch (entityModal) {
+      case ADD_EDIT_POP:
+        this.props.toggleModal(null)
+        this.setState({selectedPopId: null})
+        break;
+
+      default:
+        break;
+    }
+  }
+
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
     const url = getNetworkUrl('group', groupId, this.props.params)
     this.props.router.push(url)
-
-    this.setState({selectedGroupId: groupId})
   }
 
   handleGroupEdit(groupId) {
@@ -143,8 +154,6 @@ class Network extends React.Component {
   handleNetworkClick(networkId) {
     const url = getNetworkUrl('network', networkId, this.props.params)
     this.props.router.push(url)
-
-    this.setState({selectedNetworkId: networkId})
   }
 
   handleNetworkEdit(networkId) {
@@ -164,8 +173,6 @@ class Network extends React.Component {
   handlePopClick(popId) {
     const url = getNetworkUrl('pop', popId, this.props.params)
     this.props.router.push(url)
-
-    this.setState({selectedPopId: popId})
   }
 
   handlePopEdit(popId) {
@@ -185,8 +192,6 @@ class Network extends React.Component {
   handlePodClick(podId) {
     const url = getNetworkUrl('pod', podId, this.props.params)
     this.props.router.push(url)
-
-    this.setState({selectedPodId: podId})
   }
 
   handlePodEdit(podId) {
@@ -208,7 +213,6 @@ class Network extends React.Component {
       networkModal,
       groups,
       params,
-      toggleModal,
       fetching
     } = this.props
 
@@ -302,7 +306,7 @@ class Network extends React.Component {
             TODO: Add/edit POD
         */}
 
-        
+
         {/* MODALS
             Add/edit POP
         */}
@@ -314,7 +318,7 @@ class Network extends React.Component {
             fetching={fetching}
             onDelete={this.handlePopDelete}
             onSave={this.handlePopSave}
-            onCancel={() => toggleModal(null)}
+            onCancel={() => this.handleCancel(ADD_EDIT_POP)}
             selectedPopId={params.pop}
             show={true}
             edit={(selectedPopId !== null) ? true : false}
