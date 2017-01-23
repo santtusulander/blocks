@@ -10,28 +10,17 @@ import {
 import {
   checkForErrors
 } from '../../../util/helpers'
-import { isValidAccountName } from '../../../util/validators'
+import { isValidTextField } from '../../../util/validators'
 import HelpTooltip from '../../../components/help-tooltip'
+import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
 import './pod-form.scss'
 
 const validate = ({ pod_name }) => {
   const conditions = {
     pod_name: {
-      condition: !isValidAccountName(pod_name),
-      errorText:
-        <div style={{display: "inline-block"}}>
-          <FormattedMessage id="portal.network.podForm.name.validation.error"/>,
-          <div key={1}>
-            <div style={{marginTop: '0.5em'}}>
-              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-              <ul>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      condition: !isValidTextField(pod_name),
+      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
     }
   }
   return checkForErrors(
