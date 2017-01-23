@@ -1,10 +1,10 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../service-provider-footprint-form.jsx')
+jest.unmock('../footprint-form.jsx')
 jest.genMockFromModule('react-bootstrap')
 
-import FootprintForm from '../form/service-provider-footprint-form'
+import FootprintForm from '../footprint-form'
 
 const intlMaker = () => {
   return {
@@ -13,14 +13,18 @@ const intlMaker = () => {
 }
 
 describe('FootprintForm', () => {
-  const onCancel = jest.fn()
   let subject, error, props = null
   let touched = false
+  const onCancel = jest.fn()
+  const onSave = jest.fn()
+  const handleSubmit = jest.fn()
 
   beforeEach(() => {
     subject = () => {
       props = {
         onCancel,
+        onSave,
+        handleSubmit,
         intl: intlMaker(),
         initialValues: {
           addFootprintMethod: 'manual',
