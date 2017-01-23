@@ -230,7 +230,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     create: (data) => dispatch(popActions.create(data)),
     update: (data) => dispatch(popActions.update(data)),
     get: (data) => dispatch(popActions.fetchOne(data)),
-    del: (data) => dispatch(popActions.remove(data)),
+    del: (data) => dispatch(popActions.remove(data))
 
   };
 }
