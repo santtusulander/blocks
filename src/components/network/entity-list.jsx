@@ -93,7 +93,7 @@ class EntityList extends React.Component {
         // We only want to show the specified amount of columns.
         if (i < numOfColumns) {
           return (
-            <div key={i} className="multi-col">
+            <div key={i} className="list-col">
               {col.map(entity => entity)}
             </div>
           )

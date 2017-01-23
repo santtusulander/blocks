@@ -1,4 +1,4 @@
-$multi-col-item-right-margin: 16px;
+$multi-col-item-right-margin: 12px;
 
 .network-entity-list {
   position: relative;
@@ -25,7 +25,7 @@ $multi-col-item-right-margin: 16px;
       display: flex;
     }
 
-    .multi-col {
+    .list-col {
       min-width: $md-sidebar-width;
       margin-right: $multi-col-item-right-margin;
     }
