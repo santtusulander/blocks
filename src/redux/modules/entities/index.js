@@ -15,7 +15,7 @@ export const actionTypes = {
 
 const locations =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('location'),
+    [actionTypes.RECEIVE] : receiveEntity('locations'),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
