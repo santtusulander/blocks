@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../../theme-wrap'
-import RoutingDaemonForm from '../../../network/forms/routing-daemon-form'
+import RoutingDaemonForm from '../../../../containers/network/modals/routing-daemon-form'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
@@ -31,8 +31,8 @@ storiesOf('SP-Config', module)
   ))
   .add('RoutingDaemonForm', () => (
     <RoutingDaemonForm
-      fetchBGPName={dummyFetch}
       show={true}
+      fetchBGPName={dummyFetch}
       onCancel={action('Cancelled')}
       onSave={action('Submitting')}
     />
