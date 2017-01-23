@@ -4,7 +4,12 @@ import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
 import PolicyRuleOption from './policy-rule-option'
-import { parsePolicy, policyIsCompatibleWithMatch, WILDCARD_REGEXP } from '../../util/policy-config'
+import {
+  parsePolicy,
+  policyIsCompatibleWithMatch,
+  FILE_EXTENSION_DEFAULT_CASE,
+  WILDCARD_REGEXP
+} from '../../util/policy-config'
 import { availableMatches } from '../../constants/property-config'
 
 class MatchesSelection extends React.Component {
@@ -13,10 +18,13 @@ class MatchesSelection extends React.Component {
 
     this.setMatchField = this.setMatchField.bind(this)
     this.setMatchFieldForContentTargeting = this.setMatchFieldForContentTargeting.bind(this)
+    this.setMatchFieldForFileExtension = this.setMatchFieldForFileExtension.bind(this)
   }
   setMatchField(field) {
     if (field === 'content_targeting') {
       return this.setMatchFieldForContentTargeting()
+    } else if (field === 'file_extension') {
+      return this.setMatchFieldForFileExtension()
     }
     return e => {
       e.preventDefault()
@@ -39,6 +47,18 @@ class MatchesSelection extends React.Component {
           }]]
         ],
         field: 'request_host'
+      })
+      this.props.changeValue(this.props.path, match)
+    }
+  }
+  setMatchFieldForFileExtension() {
+    return e => {
+      e.preventDefault()
+      const match = Immutable.fromJS({
+        cases: [
+          [FILE_EXTENSION_DEFAULT_CASE, []]
+        ],
+        field: 'request_url'
       })
       this.props.changeValue(this.props.path, match)
     }
