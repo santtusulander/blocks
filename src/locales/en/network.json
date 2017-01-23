@@ -24,6 +24,7 @@
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
+
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
 
@@ -43,5 +44,8 @@
   "portal.network.podForm.discoveryMethod.help.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
 
-  "portal.network.podForm.name.validation.error": "Invalid Pod name"
+  "portal.network.podForm.name.validation.error": "Invalid Pod name",
+
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required"
 }

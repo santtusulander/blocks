@@ -11,6 +11,7 @@ import IconAdd from '../../icons/icon-add'
 import ActionButtons from '../../../components/action-buttons'
 import ArrayCell from '../../array-td/array-td'
 import TableSorter from '../../table-sorter'
+import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -19,7 +20,7 @@ import {getServices, getProviderTypes} from '../../../redux/modules/service-info
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
 import { checkForErrors } from '../../../util/helpers'
-import { isValidAccountName } from '../../../util/validators'
+import { isValidTextField } from '../../../util/validators'
 
 import {FormattedMessage} from 'react-intl';
 
@@ -57,20 +58,8 @@ class AccountList extends Component {
           errorText: 'That account name is taken'
         },
         {
-          condition: ! isValidAccountName(name),
-          errorText:
-          <div>
-          {[<FormattedMessage id="portal.account.manage.enterAccount.placeholder.text"/>,
-            <div key={name}>
-              <div style={{marginTop: '0.5em'}}>
-                <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                <ul>
-                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                  <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                </ul>
-              </div>
-            </div>]}
-          </div>
+          condition: ! isValidTextField(name),
+          errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
         }
       ]
     }
