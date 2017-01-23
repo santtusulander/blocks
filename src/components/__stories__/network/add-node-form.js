@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import {storiesOf, action} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import AddNode from '../../network/forms/add-node-form.jsx'
+import NetworkAddNodeForm from '../../network/forms/add-node-form.jsx'
 
 const reducers = {
   form: formReducer
@@ -17,7 +17,7 @@ const store = createStore(reducer);
 
 let showModal = true;
 
-storiesOf('SPConfig', module)
+storiesOf('Network', module)
   .addDecorator((story) => (
     <ThemeWrap>
       <Provider store={store}>
@@ -25,6 +25,6 @@ storiesOf('SPConfig', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('AddNode', () => (
-    <AddNode show={showModal} onSave={action('onSave')} onCancel={action('onCancel')}/>
+  .add('Add Nodes Form', () => (
+    <NetworkAddNodeForm show={showModal} onSave={action('onSave')} onCancel={action('onCancel')}/>
   ));

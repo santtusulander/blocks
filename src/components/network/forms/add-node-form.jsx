@@ -35,35 +35,35 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
     numNodes: [
       {
         condition: isEmpty(numNodes),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.howMany.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> } }/>
       },
       {
         condition: isInt(numNodes) === false || numNodes < 1,
-        errorText: <FormattedMessage id="portal.validators.type.number" values={ {field : <FormattedMessage id="portal.spConfig.addNode.howMany.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.type.number" values={ {field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> } }/>
       }
     ],
     node_role: [
       {
         condition: isEmpty(node_role),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.role.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.role.title" /> } }/>
       }
     ],
     node_env: [
       {
         condition: isEmpty(node_env),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.environment.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.environment.title" /> } }/>
       }
     ],
     node_type: [
       {
         condition: isEmpty(node_type),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.type.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.type.title" /> } }/>
       }
     ],
     cloud_driver: [
       {
         condition: isEmpty(cloud_driver),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.spConfig.addNode.cloudDriver.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" /> } }/>
       }
     ]
   }
@@ -71,7 +71,7 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
   return checkForErrors({ numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
 }
 
-class AddNodeForm extends React.Component {
+class NetworkAddNodeForm extends React.Component {
 
   constructor(props) {
     super(props)
@@ -116,7 +116,7 @@ class AddNodeForm extends React.Component {
       : <FormattedMessage id="portal.button.yes" />
 
     if (showAddConfirmation) {
-      const confirmText = <FormattedMessage id="portal.spConfig.addNode.confirmAdd" values={ {numNodes} }/>
+      const confirmText = <FormattedMessage id="portal.network.addNodeForm.confirmAdd" values={ {numNodes} }/>
       return <FormFooterButtons autoAlign={false}>
         <div className="modal-footer__text">{confirmText}</div>
         <ButtonToolbar className="pull-right">
@@ -160,7 +160,7 @@ class AddNodeForm extends React.Component {
 
     const { showAddConfirmation } = this.state
 
-    const panelTitle = <FormattedMessage id="portal.spConfig.addNode.title" />
+    const panelTitle = <FormattedMessage id="portal.network.addNodeForm.title" />
     const panelSubTitle = ['Group X', 'Network Y', 'POP 1 - Chicago', 'POD2'].join(' / ') // @TODO add real values when redux connected
 
     const footerButtons = this.getFooterButtons()
@@ -181,7 +181,7 @@ class AddNodeForm extends React.Component {
                 type="number"
                 name="numNodes"
                 component={FieldFormGroup}
-                label={<FormattedMessage id="portal.spConfig.addNode.howMany.title" />}
+                label={<FormattedMessage id="portal.network.addNodeForm.howMany.title" />}
               />
             </FormGroup>
             <FormGroup>
@@ -190,7 +190,7 @@ class AddNodeForm extends React.Component {
                 className="input-select"
                 component={FieldFormGroupSelect}
                 options={ ROLE_OPTIONS }
-                label={<FormattedMessage id="portal.spConfig.addNode.role.title" />}
+                label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
               />
             </FormGroup>
 
@@ -200,7 +200,7 @@ class AddNodeForm extends React.Component {
                 className="input-select"
                 component={FieldFormGroupSelect}
                 options={ ENVIRONMENT_OPTIONS }
-                label={<FormattedMessage id="portal.spConfig.addNode.environment.title" />}
+                label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
               />
             </FormGroup>
 
@@ -210,7 +210,7 @@ class AddNodeForm extends React.Component {
                 className="input-select"
                 component={FieldFormGroupSelect}
                 options={ TYPE_OPTIONS }
-                label={<FormattedMessage id="portal.spConfig.addNode.type.title" />}
+                label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
               />
             </FormGroup>
 
@@ -220,7 +220,7 @@ class AddNodeForm extends React.Component {
                 className="input-select"
                 component={FieldFormGroupSelect}
                 options={ CLOUD_DRIVER_OPTIONS }
-                label={<FormattedMessage id="portal.spConfig.addNode.cloudDriver.title" />}
+                label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
               />
             </FormGroup>
           </div>
@@ -231,10 +231,10 @@ class AddNodeForm extends React.Component {
   }
 }
 
-const FORM_NAME = 'addNodeForm'
+const FORM_NAME = 'networkAddNodeForm'
 
-AddNodeForm.displayName = 'AddNode'
-AddNodeForm.propTypes = {
+NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
+NetworkAddNodeForm.propTypes = {
   show: React.PropTypes.bool,
   onSave: React.PropTypes.func,
   onCancel: React.PropTypes.func,
@@ -245,7 +245,7 @@ AddNodeForm.propTypes = {
 const form = reduxForm({
   form: FORM_NAME,
   validate
-})(AddNodeForm)
+})(NetworkAddNodeForm)
 
 const formSelector = formValueSelector(FORM_NAME)
 

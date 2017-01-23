@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../add-node-form.jsx')
-import AddNode from '../add-node-form.jsx'
+import NetworkAddNodeForm from '../add-node-form.jsx'
 
 const intlMaker = () => {
   return {
@@ -10,7 +10,7 @@ const intlMaker = () => {
   }
 }
 
-describe('AddNode', () => {
+describe('NetworkAddNodeForm', () => {
   let subject = null
   const onCancel = jest.fn()
   const onSave = jest.fn()
@@ -28,7 +28,7 @@ describe('AddNode', () => {
         intl: intlMaker()
       }
 
-      return shallow(<AddNode {...props}/>)
+      return shallow(<NetworkAddNodeForm {...props}/>)
     }
   })
 
