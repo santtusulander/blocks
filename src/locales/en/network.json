@@ -25,7 +25,7 @@
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.validation.error": "Invalid Network description"
+  "portal.network.networkForm.description.validation.error": "Invalid Network description",
 
   "portal.network.addNodeForm.title": "Add nodes",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
