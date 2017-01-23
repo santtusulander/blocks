@@ -82,11 +82,15 @@ class AddNodeForm extends React.Component {
 
     this.onCancel = this.onCancel.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.onConfirm = this.onConfirm.bind(this)
     this.onCancelConfirm = this.onCancelConfirm.bind(this)
   }
 
   onSubmit() {
+    const { showAddConfirmation } = this.state
+    if (!showAddConfirmation) {
+      this.showConfirm();
+      return
+    }
     // @TODO submit data
     this.props.onSave()
   }
@@ -95,8 +99,7 @@ class AddNodeForm extends React.Component {
     return this.props.onCancel()
   }
 
-  onConfirm(event) {
-    event.preventDefault()
+  showConfirm() {
     this.setState({ showAddConfirmation: true })
   }
 
@@ -140,8 +143,8 @@ class AddNodeForm extends React.Component {
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
         <Button
+          type="submit"
           bsStyle="primary"
-          onClick={this.onConfirm}
           disabled={invalid||submitting}>
           <FormattedMessage id="portal.button.add" />
         </Button>
