@@ -22,7 +22,6 @@ import {
 } from '../constants/network-modals.js'
 
 import {
-  NETWORK_VISIBLE_BY_PIXELS,
   NETWORK_SCROLL_AMOUNT,
   NETWORK_WINDOW_OFFSET
 } from '../constants/network'
@@ -334,6 +333,7 @@ class Network extends React.Component {
    */
   scrollToEntity(entity, shouldScrollToPrevious) {
     const container = this.container.pageContainerRef
+    const containerLeft = container.getBoundingClientRect().left
 
     // Get the element's –– entity's –– offset/location in the viewport
     const elemLeft = entity.getBoundingClientRect().left
@@ -341,7 +341,7 @@ class Network extends React.Component {
 
     // If we're scrolling back to the previous entity, we need to add some
     // offset so it doesn't just stay underneath the navigation bar.
-    const visibleByPixels = shouldScrollToPrevious ? NETWORK_VISIBLE_BY_PIXELS : 0
+    const visibleByPixels = shouldScrollToPrevious ? containerLeft : 0
     // Check if element is visible fully in the viewport. We're adding pixels to
     // window.innerWidth in order to stop the animation from stucking in a loop.
     const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth + NETWORK_WINDOW_OFFSET)
