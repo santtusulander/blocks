@@ -15,6 +15,8 @@ import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import PlaceholderEntityList from '../components/network/placeholder-entity-list'
 
+import popActions from '../redux/modules/entities/pops/actions'
+
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
   { id: 2, name: 'Network 2' },
@@ -219,9 +221,17 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions.startFetching()
     groupActions.fetchGroups(brand, account)
   }
+
   return {
     fetchData: fetchData,
-    groupActions: groupActions
+    groupActions: groupActions,
+
+    getall: (data) => dispatch(popActions.fetchAll(data)),
+    create: (data) => dispatch(popActions.create(data)),
+    update: (data) => dispatch(popActions.update(data)),
+    get: (data) => dispatch(popActions.fetchOne(data)),
+    del: (data) => dispatch(popActions.remove(data)),
+
   };
 }
 

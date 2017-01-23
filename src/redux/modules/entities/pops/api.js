@@ -26,6 +26,6 @@ export const fetch = ({brand, account, group, network, id}) => {
 export const fetchAll = ({brand, account, group, network}) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`)
     .then( ({data}) => {
-      return data
+      return normalize(data.data, Schemas.pops)
     })
 }

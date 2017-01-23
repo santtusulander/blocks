@@ -25,14 +25,17 @@ const property = new schema.Entity('properties', {}, {
 const pod = new schema.Entity('pods', {
   footprints: [ footprint ]
 }, {
-  idAttribute: `cloud-location-id`
+  idAttribute: 'pod_name',
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
 })
-
 
 const pop = new schema.Entity('pops', {
   pods: [ pod ]
 })
 
+const pops = [ pop ]
 
 const brandAccounts = new schema.Entity('brandAccounts', {
   accounts: [ account ]
@@ -53,6 +56,7 @@ export const Schemas = {
   group,
   property,
   pop,
+  pops,
   pod,
   footprint,
   brandAccounts,
