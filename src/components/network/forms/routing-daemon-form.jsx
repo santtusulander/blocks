@@ -4,7 +4,6 @@ import { reduxForm, Field, change } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import SidePanel from '../../side-panel'
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
@@ -48,13 +47,6 @@ class RoutingDaemonForm extends React.Component {
     }
 
     this.fetchBGPName = this.fetchBGPName.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
-  }
-
-  onSubmit(values) {
-    const { onSave } = this.props
-
-    onSave(values)
   }
 
   fetchBGPName(e) {
@@ -91,19 +83,17 @@ class RoutingDaemonForm extends React.Component {
   }
 
   render() {
+
     const {
       handleSubmit,
       intl,
       invalid,
       onCancel,
-      show,
       submitting,
-      editing
+      onSubmit
     } = this.props
 
     const { BGPName, BGPNameNotFound, isFetchingBGPName } = this.state
-
-    const formTitle = editing ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
 
     const BGB_AS_NUMBER_PROPS = {
       input: {
@@ -112,80 +102,72 @@ class RoutingDaemonForm extends React.Component {
     }
 
     return (
-      <SidePanel
-        show={show}
-        title={intl.formatMessage({ id: formTitle })}
-        cancel={onCancel}
-      >
-        <form onSubmit={handleSubmit(this.onSubmit)} className="routing-daemon__form">
+      <form onSubmit={handleSubmit(onSubmit)} className="routing-daemon__form">
 
-          <Field
-            type="text"
-            name="bgp_as_number"
-            label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
-            placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
-            component={FieldFormGroup}
-            props={BGB_AS_NUMBER_PROPS}
-          />
+        <Field
+          type="text"
+          name="bgp_as_number"
+          label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
+          placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
+          component={FieldFormGroup}
+          props={BGB_AS_NUMBER_PROPS}
+        />
 
-          <Field
-            type="text"
-            name="bgp_as_name"
-            label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label' })}
-            placeholder={isFetchingBGPName ? intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameFetching.label' }) : intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label' })}
-            disabled={!BGPName && !BGPNameNotFound}
-            addonAfter={isFetchingBGPName ? <LoadingSpinnerSmall/> : ''}
-            component={FieldFormGroup}
-          />
+        <Field
+          type="text"
+          name="bgp_as_name"
+          label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label' })}
+          placeholder={isFetchingBGPName ? intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameFetching.label' }) : intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label' })}
+          disabled={!BGPName && !BGPNameNotFound}
+          addonAfter={isFetchingBGPName ? <LoadingSpinnerSmall/> : ''}
+          component={FieldFormGroup}
+        />
 
-          <Field
-            type="text"
-            name="bgp_router_ip"
-            label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
-            placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
-            component={FieldFormGroup}
-          />
+        <Field
+          type="text"
+          name="bgp_router_ip"
+          label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
+          placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
+          component={FieldFormGroup}
+        />
 
-          <Field
-            type="password"
-            name="bgp_password"
-            label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
-            placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
-            component={FieldFormGroup}
-          />
+        <Field
+          type="password"
+          name="bgp_password"
+          label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
+          placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
+          component={FieldFormGroup}
+        />
 
-          <FormFooterButtons>
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
+        <FormFooterButtons>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || isFetchingBGPName}>
-              <FormattedMessage id="portal.button.save"/>
-            </Button>
-          </FormFooterButtons>
-        </form>
-      </SidePanel>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || isFetchingBGPName}>
+            <FormattedMessage id="portal.button.save"/>
+          </Button>
+        </FormFooterButtons>
+      </form>
     )
   }
 }
 
 RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
-  editing: PropTypes.bool,
   fetchBGPName: PropTypes.func,
   handleSubmit: PropTypes.func,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
-  onSave: PropTypes.func,
+  onSubmit: PropTypes.func,
   setBGPName: PropTypes.func,
-  show: PropTypes.bool,
   submitting: PropTypes.bool
 }
 
@@ -198,6 +180,7 @@ const mapDispatchToProps = (dispatch) => {
     setBGPName: (name) => dispatch(change('routing-daemon-form', 'bgp_as_name', name))
   }
 }
+
 
 const form = reduxForm({
   form: 'routing-daemon-form',
