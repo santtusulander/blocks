@@ -18,5 +18,14 @@
     max-height: calc(100vh - 375px);
     overflow-x: hidden;
     overflow-y: auto;
+
+    &.multi-column {
+      display: flex;
+    }
+
+    .multi-col {
+      min-width: $md-sidebar-width;
+      margin-right: 16px;
+    }
   }
 }

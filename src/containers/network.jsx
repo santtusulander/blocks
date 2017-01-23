@@ -23,7 +23,9 @@ import {
 
 import {
   NETWORK_SCROLL_AMOUNT,
-  NETWORK_WINDOW_OFFSET
+  NETWORK_WINDOW_OFFSET,
+  NETWORK_NUMBER_OF_NODE_COLUMNS,
+  NETWORK_NODES_PER_COLUMN
 } from '../constants/network'
 
 import NetworkPopFormContainer from './network/modals/pop-modal.jsx'
@@ -504,6 +506,9 @@ class Network extends React.Component {
             editEntity={() => () => null}
             selectEntity={() => null}
             title="Nodes"
+            multiColumn={true}
+            numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
+            itemsPerColumn={NETWORK_NODES_PER_COLUMN}
           />
         </PageContainer>
 

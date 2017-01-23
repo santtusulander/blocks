@@ -11,6 +11,7 @@ $network-item-status-indicator-width: 8px;
   margin-bottom: $network-item-padding-horizontal;
   cursor: pointer;
   border: 2px solid $black;
+  flex: none;
 
   &:last-child {
     margin-bottom: 0;
