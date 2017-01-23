@@ -25,5 +25,21 @@
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.validation.error": "Invalid Network description"
+  "portal.network.networkForm.description.validation.error": "Invalid Network description",
+
+  "portal.network.footprintForm.title.add.text": "Add Footprint",
+  "portal.network.footprintForm.title.edit.text": "Edit Footprint",
+  "portal.network.footprintForm.checkbox.option.manual.text": "Add Manually",
+  "portal.network.footprintForm.checkbox.option.useCSV.text": "Use CSV File",
+  "portal.network.footprintForm.dataType.option.cidr.text": "IPV4 CIDR",
+  "portal.network.footprintForm.dataType.option.asn.text": "ASN List",
+  "portal.network.footprintForm.name.title.text": "Name",
+  "portal.network.footprintForm.description.title.text" : "Description",
+  "portal.network.footprintForm.dataType.title.text": "Data Type",
+  "portal.network.footprintForm.UDNType.title.text": "UDN Type",
+  "portal.network.footprintForm.name.placeholder.text" : "Enter footprint name",
+  "portal.network.footprintForm.description.placeholder.text" : "Enter footprint description",
+  "portal.network.footprintForm.csvfile.title.text" : "CSV File",
+  "portal.network.footprintForm.name.invalid.text": "Footprint name is invalid",
+  "portal.network.footprintForm.description.invalid.text": "Footprint name is invalid"
 }

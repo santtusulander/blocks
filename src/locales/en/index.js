@@ -4,7 +4,6 @@ import common from './common.json'
 import configuration from './configuration.json'
 import content from './content.json'
 import dashboard from './dashboard.json'
-import footprint from './footprint.json'
 import login from './login.json'
 import network from './network.json'
 import password from './password.json'
@@ -23,7 +22,6 @@ export default Object.assign({},
   configuration,
   content,
   dashboard,
-  footprint,
   login,
   network,
   network,
