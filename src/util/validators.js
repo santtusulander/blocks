@@ -101,13 +101,13 @@ export function isValidHostName(hostName) {
 }
 
 /**
- * Check if valid account-name
- * @param name
+ * Check if valid text-field
+ * @param text
  * @returns {boolean}
  */
-export function isValidAccountName(name) {
-  const accountNameRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
-  return name && accountNameRegexp.test(name) && !isOnlyWhiteSpace(name)
+export function isValidTextField(text) {
+  const textFieldRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
+  return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
 }
 
 /**

@@ -25,6 +25,6 @@
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
-  "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.validation.error": "Invalid Network description"
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required"
 }
