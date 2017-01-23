@@ -221,8 +221,6 @@ class Network extends React.Component {
       pops,
       pods,
       nodes,
-      selectedGroupId,
-      selectedNetworkId,
       selectedPopId
     } = this.state
 
@@ -313,8 +311,8 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POP &&
           <NetworkPopFormContainer
             account={activeAccount.get('name')}
-            groupId={selectedGroupId}
-            networkId={selectedNetworkId}
+            groupId={params.group}
+            networkId={params.network}
             fetching={fetching}
             onDelete={this.handlePopDelete}
             onSave={this.handlePopSave}

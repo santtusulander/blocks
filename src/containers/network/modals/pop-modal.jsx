@@ -109,9 +109,9 @@ NetworkPopFormContainer.displayName = "NetworkPopFormContainer"
 NetworkPopFormContainer.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
-  groupId: PropTypes.number,
+  groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   initialValues: PropTypes.object,
-  networkId: PropTypes.number,
+  networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
