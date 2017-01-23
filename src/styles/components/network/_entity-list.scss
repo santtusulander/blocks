@@ -1,3 +1,5 @@
+$multi-col-item-right-margin: 16px;
+
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
@@ -25,7 +27,7 @@
 
     .multi-col {
       min-width: $md-sidebar-width;
-      margin-right: 16px;
+      margin-right: $multi-col-item-right-margin;
     }
   }
 }
