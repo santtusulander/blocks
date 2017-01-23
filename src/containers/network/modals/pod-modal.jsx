@@ -55,7 +55,8 @@ class PodFormContainer extends React.Component {
       intl,
       invalid} = this.props
 
-    const title = <FormattedMessage id="portal.network.podForm.newPod.title"/>
+    const title = podId ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
+      <FormattedMessage id="portal.network.podForm.newPod.title"/>
     const subTitle = `${groupName} / ${network} / ${pop}${podId ? ' / ' + podId : ''}`
     return (
       <div>
