@@ -33,6 +33,14 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
+
+  getChildContext(){
+    return {
+      currentUser: this.props.currentUser,
+      roles: this.props.roles
+    }
+  }
+
   componentWillMount() {
     // Validate token
     this.props.userActions.checkToken()
@@ -100,14 +108,7 @@ export class Main extends React.Component {
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
-    let activeAccount = this.props.activeAccount
-    /* If no activeAccount is set, but some accounts have been queried, use the
-       first found. TODO: Is there a better way to pick default account?
-     */
-    if((!activeAccount || !activeAccount.size)
-      && this.props.accounts && this.props.accounts.size) {
-      activeAccount = this.props.accounts.first()
-    }
+
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
@@ -115,7 +116,7 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
         <Navigation
-          activeAccount={activeAccount}
+          activeAccount={this.props.activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
           currentUser={this.props.currentUser}
@@ -220,6 +221,11 @@ Main.defaultProps = {
   currentUser: Immutable.Map(),
   roles: Immutable.List(),
   user: Immutable.Map()
+}
+
+Main.childContextTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  roles: React.PropTypes.instanceOf(Immutable.List)
 }
 
 function mapStateToProps(state) {
