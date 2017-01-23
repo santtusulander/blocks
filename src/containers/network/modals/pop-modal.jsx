@@ -12,12 +12,6 @@ const mockReduxCalls = {
       case 'name':
         return "POP Name"
 
-      case 'group':
-        return "Group 1"
-
-      case 'network':
-        return "Network 1"
-
       case 'location':
         return [{
           value: 'ORD',
@@ -59,9 +53,9 @@ class NetworkPopFormContainer extends Component {
     this.onDelete = this.onDelete.bind(this)
   }
 
-  onSubmit(values) {
+  onSubmit(edit, values) {
     // TODO: on submit functionality
-    this.props.onSave(values)
+    this.props.onSave(edit, values)
   }
 
   onDelete(popId) {
@@ -70,11 +64,16 @@ class NetworkPopFormContainer extends Component {
   }
 
   render() {
-    const { edit, fetching, initialValues, selectedLocationId, selectedPopId, onCancel } = this.props
+    const { edit, fetching, initialValues, selectedLocationId,
+            selectedPopId, onCancel, groupId, networkId, show } = this.props
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
-    const subTitle = `${initialValues.group} / ${initialValues.network}`
+    const subTitle = (<FormattedMessage id="portal.network.subTitle.context.text"
+                                        values={{
+                                          groupId: groupId,
+                                          networkId: networkId
+                                        }} />)
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
                                                     createdDate: initialValues.createdDate,
@@ -83,7 +82,7 @@ class NetworkPopFormContainer extends Component {
 
     return (
       <SidePanel
-        show={true}
+        show={show}
         title={title}
         subTitle={subTitle}
         subSubTitle={subSubTitle}
@@ -110,12 +109,15 @@ NetworkPopFormContainer.displayName = "NetworkPopFormContainer"
 NetworkPopFormContainer.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
+  groupId: PropTypes.number,
   initialValues: PropTypes.object,
+  networkId: PropTypes.number,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
   selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  show: PropTypes.bool
 }
 
 const formSelector = formValueSelector('networkPopEditForm')
@@ -129,8 +131,6 @@ const mapStateToProps = (state, ownProps) => {
     selectedPopId: selectedPopId,
     initialValues: {
       name: ownProps.edit ? mockReduxCalls.get('name') : '',
-      group: mockReduxCalls.get('group'),
-      network: mockReduxCalls.get('network'),
       createdDate: ownProps.edit ? mockReduxCalls.get('createdDate') : '',
       updatedDate: ownProps.edit ? mockReduxCalls.get('updatedDate') : '',
       locationOptions: mockReduxCalls.get('location'),
