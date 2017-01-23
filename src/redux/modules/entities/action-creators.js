@@ -7,7 +7,7 @@ export default ({
   removeActionTypes = [actionTypes.REQUEST, actionTypes.REMOVE, actionTypes.FAIL]
 }) => {
 
-  const fetchOne = ({ forceReload, entityType, ...requestParams }) => {
+  const fetchOne = ({ forceReload, ...requestParams }) => {
     return {
       forceReload,
       types: receiveActionTypes,
