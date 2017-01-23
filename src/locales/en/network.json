@@ -27,6 +27,8 @@
 
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.name.label": "Name",
@@ -44,8 +46,5 @@
   "portal.network.podForm.discoveryMethod.help.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
 
-  "portal.network.podForm.name.validation.error": "Invalid Pod name",
-
-  "portal.network.networkForm.name.required.error": "Network name is required",
-  "portal.network.networkForm.description.required.error": "Description is required"
+  "portal.network.podForm.name.validation.error": "Invalid Pod name"
 }
