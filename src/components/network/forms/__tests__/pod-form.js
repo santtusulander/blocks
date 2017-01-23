@@ -1,8 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { List } from 'immutable';
-
 jest.unmock('../pod-form')
 import PodForm from '../pod-form'
 
