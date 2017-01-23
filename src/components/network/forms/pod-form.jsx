@@ -174,6 +174,6 @@ PodForm.propTypes = {
 }
 
 export default reduxForm({
-  form: 'groupEdit',
+  form: 'pod-form',
   validate
 })(injectIntl(PodForm))
