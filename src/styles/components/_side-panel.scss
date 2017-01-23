@@ -62,13 +62,18 @@ $lt-side-panel-bg-color: $white;
     > form {
       padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
     }
+
+    @include sm {
+      max-width: ($side-panel-width - $side-panel-small-display-margin);
+    }
   }
 
   .modal-footer {
     position: fixed;
+    right: 0;
     bottom: 0;
-    left: 0;
     width: 100%;
+    max-width: $side-panel-width;
 
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
@@ -81,8 +86,7 @@ $lt-side-panel-bg-color: $white;
     }
 
     @include sm {
-      padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
-      margin-left: $side-panel-small-display-margin;
+      max-width: ($side-panel-width - $side-panel-small-display-margin);
     }
   }
 }

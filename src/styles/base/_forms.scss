@@ -429,6 +429,10 @@ textarea {
   .has-error & {
     color: $form-error-color;
   }
+
+  .multiline-tex-field-error {
+    margin-top: 0.5em;
+  }
 }
 
 .search-input {

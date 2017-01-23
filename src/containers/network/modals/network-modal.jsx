@@ -105,7 +105,7 @@ function mapStateToProps(state) {
   return {
     account: state.account.get('activeAccount'),
     group: state.group.get('activeGroup'),
-    name: state.network.getIn(['activeNetwork', 'name']),
+    //name: state.network.getIn(['activeNetwork', 'name']),
     initialValues: {
       name: mockRedux.get('name'),
       description: mockRedux.get('description')

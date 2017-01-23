@@ -26,7 +26,7 @@ const FieldFormGroupNumber = ({
       <InputGroup>
 
         {addonBefore &&
-          <InputGroup.Addon>
+          <InputGroup.Addon bsClass="input-group-addon addon-before">
             {addonBefore}
           </InputGroup.Addon>
         }
@@ -45,11 +45,11 @@ const FieldFormGroupNumber = ({
           </InputGroup.Addon>
         }
 
-        {meta.error && meta.touched &&
-          <ErrorComponent {...meta}/>
-        }
-
       </InputGroup>
+
+      {meta.error && meta.touched &&
+        <ErrorComponent {...meta}/>
+      }
 
     </FormGroup>
   )
