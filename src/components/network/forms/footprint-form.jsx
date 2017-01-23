@@ -196,6 +196,9 @@ class FootprintForm extends React.Component {
                 label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
               />
 
+              {
+                // TODO: Add redux-form connected typeahead-field when UDNP-2447 gets merged
+              }
               { dataType === 'cidr' &&
               <Typeahead
                 multiple={true}
@@ -205,6 +208,9 @@ class FootprintForm extends React.Component {
                 options={CIDROptions}/>
               }
 
+              {
+                // TODO: Add redux-form connected typeahead-field when UDNP-2447 gets merged
+              }
               { dataType !== 'cidr' &&
               <Typeahead
                 multiple={true}
