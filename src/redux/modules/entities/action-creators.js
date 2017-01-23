@@ -23,6 +23,10 @@ export default ({
     return api.fetchAll(requestParams)
       .then(data => {
 
+        if (!Array.isArray(data)) {
+          throw new Error('Expected fetchAll to resolve with an array of IDs. ' + typeof data + ' passed instead.')
+        }
+
         dispatch({ type: actionTypes.RECEIVE })
 
         return data.forEach(id => {
@@ -31,7 +35,11 @@ export default ({
 
         })
       })
-      .catch(() => dispatch({ type: actionTypes.FAIL }))
+      .catch(err => {
+        /* eslint-disable no-console */
+        console.error(err);
+        dispatch({ type: actionTypes.FAIL })
+      })
   }
 
   return {
