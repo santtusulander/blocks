@@ -377,9 +377,7 @@ class Network extends React.Component {
 
 
     // Get the next entity ref
-    let selectedIndex = entityKeys.indexOf(selectedEntity) + 2 <= entityKeys.length - 1 ?
-                        entityKeys.indexOf(selectedEntity) + 2 :
-                        entityKeys.length - 1
+    let selectedIndex = entityKeys.indexOf(selectedEntity)
 
     if (shouldScrollToPrevious) {
       // Get the previous entity ref
@@ -405,6 +403,7 @@ class Network extends React.Component {
   scrollToEntity(entity, shouldScrollToPrevious) {
     const container = this.container.pageContainerRef
     const containerLeft = container.getBoundingClientRect().left
+    const containerRight = container.getBoundingClientRect().right
 
     // Get the element's –– entity's –– offset/location in the viewport
     const elemLeft = entity.getBoundingClientRect().left
@@ -412,10 +411,12 @@ class Network extends React.Component {
 
     // If we're scrolling back to the previous entity, we need to add some
     // offset so it doesn't just stay underneath the navigation bar.
-    const visibleByPixels = shouldScrollToPrevious ? containerLeft : 0
-    // Check if element is visible fully in the viewport. We're adding pixels to
-    // window.innerWidth in order to stop the animation from stucking in a loop.
-    const isVisible = (elemLeft >= visibleByPixels) && (elemRight <= window.innerWidth + NETWORK_WINDOW_OFFSET)
+    const visibleByPixels = containerLeft
+
+    // Check if element is visible fully in the viewport.
+    const leftSideVisibility = shouldScrollToPrevious ? (elemLeft >= visibleByPixels) : (elemLeft <= visibleByPixels)
+    const rightSideVisibility = elemRight <= containerRight
+    const isVisible = leftSideVisibility && rightSideVisibility
 
     if (!isVisible) {
       // If shouldScrollToPrevious is true, we should scroll to right –– backwards. Otherwise keep scrolling to left
