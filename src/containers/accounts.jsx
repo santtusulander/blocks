@@ -29,9 +29,6 @@ import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 
 import { FormattedMessage } from 'react-intl';
 
-import {fetchAll} from '../redux/modules/entities/accounts/actions'
-import { getEntitiesByParent } from '../redux/modules/entity/selectors'
-
 export class Accounts extends React.Component {
   constructor(props) {
     super(props);
@@ -167,7 +164,7 @@ Accounts.defaultProps = {
 function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
-    accounts: getEntitiesByParent(state, 'accounts', 'udn'),  //state.account.get('allAccounts'),
+    accounts: state.account.get('allAccounts'),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
     fetching: state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
@@ -195,11 +192,11 @@ function mapDispatchToProps(dispatch, ownProps) {
         metricsOpts.account = ownProps.params.account;
       }
       metricsOpts.list_children = !!canListAccounts;
-      if( /*accounts.isEmpty() &&*/ canListAccounts) {
-        //accountActions.startFetching()
-        //accountActions.fetchAccounts(ownProps.params.brand)
+      if( accounts.isEmpty() && canListAccounts) {
+        accountActions.startFetching()
+        accountActions.fetchAccounts(ownProps.params.brand)
         //replaced with the new call:
-        dispatch( fetchAll('udn', ) )
+        //dispatch( fetchAll('udn', ) )
           //.then( () => {console.log('done');})
 
       }
@@ -209,9 +206,9 @@ function mapDispatchToProps(dispatch, ownProps) {
       }
       if(dailyTraffic.isEmpty()) {
         // TODO: Replace metrics endpoint with traffic endpoint after 0.7
-        // metricsActions.startAccountFetching()
-        // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
-        //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
+        metricsActions.startAccountFetching()
+        metricsActions.fetchHourlyAccountTraffic(metricsOpts)
+          .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
         metricsActions.fetchDailyAccountTraffic(metricsOpts)
 
       }
