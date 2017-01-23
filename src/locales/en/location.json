@@ -1,0 +1,20 @@
+{
+  "portal.location.locationForm.newLocation.title": "Add Location",
+  "portal.location.locationForm.editLocation.title": "Edit Location",
+  "portal.location.locationForm.name.placeholder": "Enter Location Name",
+  "portal.location.locationForm.iataCode.label": "IATA Code",
+  "portal.location.locationForm.iataCode.placeholder": "Enter IATA Code",
+  "portal.location.locationForm.latitude.label": "Latitude",
+  "portal.location.locationForm.latitude.placeholder": "eg. 37.774929",
+  "portal.location.locationForm.longitude.label": "Longitude",
+  "portal.location.locationForm.longitude.placeholder": "e.g.-122.419416",
+  "portal.location.locationForm.cloudProvider.label": "Cloud Provider",
+  "portal.location.locationForm.cloudProviderId.label": "Cloud Provider ID (optional)",
+  "portal.location.locationForm.cloudProviderRegion.label": "Cloud Provider Region (optional)",
+  "portal.location.locationForm.cloudProviderRegion.placeholder": "Enter Cloud Provider Region",
+  "portal.location.locationForm.cloudProviderLocationId.label": "Cloud Provider Location ID",
+  "portal.location.locationForm.cloudProviderLocationId.placeholder": "Enter Cloud Provider Location ID",
+  "portal.location.locationForm.latLongFields.helperText.address": "ADDRESS:",
+  "portal.location.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
+  "portal.location.locationForm.latLongFields.helperTextLoading.address": "Fetching address"
+}

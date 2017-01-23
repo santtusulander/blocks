@@ -4,6 +4,7 @@ import common from './common.json'
 import configuration from './configuration.json'
 import content from './content.json'
 import dashboard from './dashboard.json'
+import location from './location.json'
 import login from './login.json'
 import security from './security.json'
 import services from './services.json'
@@ -22,6 +23,7 @@ export default Object.assign({},
   configuration,
   content,
   dashboard,
+  location,
   login,
   network,
   security,
