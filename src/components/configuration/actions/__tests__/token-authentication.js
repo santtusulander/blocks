@@ -3,24 +3,25 @@ import { Map } from 'immutable'
 import { shallow } from 'enzyme'
 
 jest.unmock('../token-authentication.jsx')
-jest.unmock('react-bootstrap')
-jest.unmock('redux-form')
 
 const TokenAuthentication = require('../token-authentication.jsx').TokenAuthentication
 
 describe('TokenAuthentication', () => {
   const intlMaker = () => { return { formatMessage: jest.fn() } }
-  let changeValue, onChange, close
+  let changeValue, onChange, close, change
   let component, buttons
 
   beforeEach(() => {
     changeValue = jest.fn()
     onChange = jest.fn()
     close = jest.fn()
+    change = jest.fn()
 
     let props = {
+      change,
       changeValue,
       close,
+      invalid: false,
       set: Map(),
       fields: { sharedKey: { onChange } },
       intl: intlMaker()
@@ -37,7 +38,7 @@ describe('TokenAuthentication', () => {
   it('should update internal state as changes happen', () => {
     let inputs = component.find('FormControl')
     inputs.at(0).simulate('change', {target: {value: 'c2hhcmVkLXNlY3JldA=='}})
-    expect(onChange).toHaveBeenCalled()
+    expect(change).toHaveBeenCalled()
     expect(changeValue).not.toHaveBeenCalled()
   })
 
