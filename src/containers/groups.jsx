@@ -29,11 +29,6 @@ import checkPermissions from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-// import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
-// import {fetchAll as fetchGroups} from '../redux/modules/entities/groups/actions'
-// import { getEntityById, getEntitiesByParent } from '../redux/modules/entity/selectors'
-
-
 export class Groups extends React.Component {
   constructor(props) {
     super(props)
@@ -201,7 +196,7 @@ Groups.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
@@ -234,13 +229,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions.startFetching()
     metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
-
-    // dispatch( fetchAccount(brand, account) ),
-    // dispatch( fetchGroups(brand, account) )
-
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
-
   }
   return {
     fetchData: fetchData,
