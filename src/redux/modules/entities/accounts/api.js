@@ -27,10 +27,10 @@ export const fetch = ({brand, id }) => {
 
       const accountData = {
         id: brand,
-        accounts: data
+        accounts: [ data ]
       }
 
-      return normalize(accountData, accountSchema)
+      return normalize(accountData, brandAccountSchema)
     })
 }
 

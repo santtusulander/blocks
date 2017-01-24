@@ -1,8 +1,19 @@
 import axios from 'axios'
-import {normalize} from 'normalizr'
+import {normalize, schema} from 'normalizr'
 
 import { BASE_URL_AAA }  from '../../../util.js'
-import {Schemas} from '../schemas'
+
+const groupSchema = new schema.Entity('groups', {}, {
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
+})
+
+const accountGroupSchema = new schema.Entity('accountGroups', {
+  groups: [ groupSchema ]
+})
+
+const baseURL = (brand, account) => `${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`
 
 /**
  * Fetch single group
@@ -19,7 +30,7 @@ export const fetch = ({brand, account, group}) => {
         groups: [data]
       }
 
-      return normalize(accountGroups, Schemas.accountGroups)
+      return normalize(accountGroups, accountGroupSchema)
     })
 }
 
@@ -37,6 +48,51 @@ export const fetchAll = ({brand, account}) => {
         id: account,
         groups: data.data
       }
-      return normalize(accountGroups, Schemas.accountGroups)
+      return normalize(accountGroups, accountGroupSchema)
     })
 }
+
+
+/**
+ * create a new account
+ * @param  {[type]} brand   [brand id]
+ * @param  {[type]} payload [data to create account with]
+ */
+export const create = ({ brand, account, payload }) =>
+  axios.post(baseURL(brand, account), payload)
+    .then(({ data }) => {
+
+      const accountData = {
+        id: brand,
+        accounts: data.data
+      }
+
+      return normalize(accountData, accountGroups)
+    })
+
+/**
+ * update an account
+ * @param  {[type]} brand   [brand id]
+ * @param  {[type]} id      [account id]
+ * @param  {[type]} payload [data to update account with]
+ */
+export const update = ({ brand, account, id, payload }) =>
+  axios.put(`${baseURL(brand, account)}/${id}`, payload)
+    .then(({ data }) => {
+
+      const accountData = {
+        id: brand,
+        accounts: data.data
+      }
+
+      return normalize(accountData, accountSchema)
+    })
+
+/**
+ * remove an account
+ * @param  {[type]} brand [brand id]
+ * @param  {[type]} id    [account id]
+ */
+export const remove = ({ brand, account, id }) =>
+  axios.delete(`${baseURL(brand, account)}/${id}`)
+    .then(() => ({ id }))
