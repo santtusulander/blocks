@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../location-modal.js')
+jest.unmock('../location-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
 import LocationFormContainer from '../location-modal'
 

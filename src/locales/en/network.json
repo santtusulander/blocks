@@ -25,5 +25,24 @@
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.validation.error": "Invalid Network description"
+  "portal.network.networkForm.description.validation.error": "Invalid Network description",
+
+  "portal.network.locationForm.newLocation.title": "Add Location",
+  "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.name.placeholder": "Enter Location Name",
+  "portal.network.locationForm.iataCode.label": "IATA Code",
+  "portal.network.locationForm.iataCode.placeholder": "Enter IATA Code",
+  "portal.network.locationForm.latitude.label": "Latitude",
+  "portal.network.locationForm.latitude.placeholder": "eg. 37.774929",
+  "portal.network.locationForm.longitude.label": "Longitude",
+  "portal.network.locationForm.longitude.placeholder": "e.g.-122.419416",
+  "portal.network.locationForm.cloudProvider.label": "Cloud Provider",
+  "portal.network.locationForm.cloudProviderId.label": "Cloud Provider ID (optional)",
+  "portal.network.locationForm.cloudProviderRegion.label": "Cloud Provider Region (optional)",
+  "portal.network.locationForm.cloudProviderRegion.placeholder": "Enter Cloud Provider Region",
+  "portal.network.locationForm.cloudProviderLocationId.label": "Cloud Provider Location ID",
+  "portal.network.locationForm.cloudProviderLocationId.placeholder": "Enter Cloud Provider Location ID",
+  "portal.network.locationForm.latLongFields.helperText.address": "ADDRESS:",
+  "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
+  "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address"
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import SidePanel from '../../../components/side-panel'
-import LocationForm from '../../../components/location/forms/location-form'
+import LocationForm from '../../../components/network/forms/location-form'
 
 class LocationFormContainer extends Component {
   constructor(props) {
@@ -38,8 +38,8 @@ class LocationFormContainer extends Component {
     } = this.props;
 
     const title = this.state.editMode
-      ? <FormattedMessage id="portal.location.locationForm.editLocation.title"/>
-      : <FormattedMessage id="portal.location.locationForm.newLocation.title"/>;
+      ? <FormattedMessage id="portal.network.locationForm.editLocation.title"/>
+      : <FormattedMessage id="portal.network.locationForm.newLocation.title"/>;
 
     return (
       <div>

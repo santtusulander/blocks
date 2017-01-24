@@ -8,7 +8,7 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import './location-form.scss'
+import './styles/location-form.scss'
 
 /** validator
  * Returns common error message for required state if value invalid or undefined if valid;
@@ -43,7 +43,7 @@ const LocationForm = (props) => {
           <Field
             name="name"
             type="text"
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.name.placeholder'})}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.common.name" />}
             validate={[ required("portal.common.name") ]}
@@ -55,10 +55,10 @@ const LocationForm = (props) => {
           <Field
             name="iataCode"
             type="text"
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.iataCode.placeholder'})}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
             component={FieldFormGroup}
-            label={<FormattedMessage id="portal.location.locationForm.iataCode.label" />}
-            validate={[ required("portal.location.locationForm.iataCode.label") ]}
+            label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}
+            validate={[ required("portal.network.locationForm.iataCode.label") ]}
           />
         </Col>
       </Row>
@@ -68,9 +68,9 @@ const LocationForm = (props) => {
             name="latitude"
             type="text"
             component={FieldFormGroup}
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.latitude.placeholder'})}
-            label={<FormattedMessage id="portal.location.locationForm.latitude.label" />}
-            validate={[ required("portal.location.locationForm.latitude.label") ]}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
+            label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
+            validate={[ required("portal.network.locationForm.latitude.label") ]}
           />
         </Col>
         <Col md={5}>
@@ -78,19 +78,19 @@ const LocationForm = (props) => {
             name="longitude"
             type="text"
             component={FieldFormGroup}
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.longitude.placeholder'})}
-            label={<FormattedMessage id="portal.location.locationForm.longitude.label" />}
-            validate={[ required("portal.location.locationForm.longitude.label") ]}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
+            label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
+            validate={[ required("portal.network.locationForm.longitude.label") ]}
           />
         </Col>
       </Row>
       <Row>
         <Col md={4}>
           <div>
-            <FormattedMessage id="portal.location.locationForm.latLongFields.helperText.address" />
+            <FormattedMessage id="portal.network.locationForm.latLongFields.helperText.address" />
           </div>
           <div>
-            <FormattedMessage id="portal.location.locationForm.latLongFields.helperTextHint.address" />
+            <FormattedMessage id="portal.network.locationForm.latLongFields.helperTextHint.address" />
           </div>
           { addressFetching && <LoadingSpinnerSmall /> }
         </Col>
@@ -102,8 +102,8 @@ const LocationForm = (props) => {
             type="select"
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
-            label={intl.formatMessage({id: 'portal.location.locationForm.cloudProvider.label'})}
-            validate={[ required("portal.location.locationForm.cloudProvider.label") ]}
+            label={intl.formatMessage({id: 'portal.network.locationForm.cloudProvider.label'})}
+            validate={[ required("portal.network.locationForm.cloudProvider.label") ]}
           />
         </Col>
       </Row>
@@ -115,7 +115,7 @@ const LocationForm = (props) => {
             options={cloudProvidersIdOptions}
             required={false}
             component={FieldFormGroupSelect}
-            label={intl.formatMessage({id: 'portal.location.locationForm.cloudProviderId.label'})}
+            label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
           />
         </Col>
       </Row>
@@ -126,8 +126,8 @@ const LocationForm = (props) => {
             required={false}
             type="text"
             component={FieldFormGroup}
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.cloudProviderRegion.placeholder'})}
-            label={<FormattedMessage id="portal.location.locationForm.cloudProviderRegion.label" />}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderRegion.placeholder'})}
+            label={<FormattedMessage id="portal.network.locationForm.cloudProviderRegion.label" />}
           />
         </Col>
       </Row>
@@ -137,9 +137,9 @@ const LocationForm = (props) => {
             name="cloudProviderLocationId"
             type="text"
             component={FieldFormGroup}
-            placeholder={intl.formatMessage({id: 'portal.location.locationForm.cloudProviderLocationId.placeholder'})}
-            label={<FormattedMessage id="portal.location.locationForm.cloudProviderLocationId.label" />}
-            validate={[ required("portal.location.locationForm.cloudProviderLocationId.label") ]}
+            placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderLocationId.placeholder'})}
+            label={<FormattedMessage id="portal.network.locationForm.cloudProviderLocationId.label" />}
+            validate={[ required("portal.network.locationForm.cloudProviderLocationId.label") ]}
           />
         </Col>
       </Row>
