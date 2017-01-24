@@ -62,12 +62,12 @@ export const create = ({ brand, payload }) =>
   axios.post(baseURL(brand), payload)
     .then(({ data }) => {
 
-      const accountData = {
+      const brandAccounts = {
         id: brand,
-        accounts: data.data
+        accounts: [ data ]
       }
 
-      return normalize(accountData, accountSchema)
+      return normalize(brandAccounts, brandAccountSchema)
     })
 
 /**
@@ -80,12 +80,12 @@ export const update = ({ brand, id, payload }) =>
   axios.put(`${baseURL(brand)}/${id}`, payload)
     .then(({ data }) => {
 
-      const accountData = {
+      const brandAccounts = {
         id: brand,
-        accounts: data.data
+        accounts: [ data ]
       }
 
-      return normalize(accountData, accountSchema)
+      return normalize(brandAccounts, brandAccountSchema)
     })
 
 /**
