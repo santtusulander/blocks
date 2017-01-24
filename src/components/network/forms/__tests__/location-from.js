@@ -36,7 +36,7 @@ describe('NetworkLocationForm', () => {
         },
         edit
       }
-      return shallow(<LocationEditForm {...props}/>)
+      return shallow(<NetworkLocationForm {...props}/>)
     }
   })
 

@@ -26,7 +26,7 @@ describe('NetworkLocationFormContainer', () => {
         },
         editMode
       }
-      return shallow(<LocationFormContainer {...props}/>)
+      return shallow(<NetworkLocationFormContainer {...props}/>)
     }
   })
 
