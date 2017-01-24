@@ -28,8 +28,8 @@
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
   "portal.network.networkForm.name.required.error": "Network name is required",
-  "portal.network.networkForm.description.required.error": "Description is required"
-  
+  "portal.network.networkForm.description.required.error": "Description is required",
+
   "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
