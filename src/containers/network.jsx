@@ -473,7 +473,7 @@ class Network extends React.Component {
             onSave={this.handlePopSave}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
             selectedPopId={params.pop}
-            show={networkModal === ADD_EDIT_POP}
+            show={true}
             edit={(selectedPopId !== null) ? true : false}
           />
         }
