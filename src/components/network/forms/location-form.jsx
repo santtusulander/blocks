@@ -3,6 +3,7 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button, Col, Row } from 'react-bootstrap'
 
+import { checkForErrors } from '../../../util/helpers'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -10,26 +11,32 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import './styles/location-form.scss'
 
-/** validator
- * Returns common error message for required state if value invalid or undefined if valid;
- * @param id {string} - react-intl message id
- */
-const required = (id) => (value) => value
-  ? undefined
-  : (<FormattedMessage
-      id="portal.common.error.field.required.text"
-      values={{label: <FormattedMessage {...{id}} />}}
-    />);
+const validate = fields => {
+  const customConditions = {};
 
-const LocationForm = (props) => {
+  const requiredTexts = {
+    'name': <FormattedMessage id='portal.network.locationForm.name.required.error'/>,
+    'iataCode': <FormattedMessage id='portal.network.locationForm.iataCode.required.error'/>,
+    'latitude': <FormattedMessage id='portal.network.locationForm.latitude.required.error'/>,
+    'longitude': <FormattedMessage id='portal.network.locationForm.longitude.required.error'/>,
+    'cloudProvider': <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
+    'cloudProviderLocationId': <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
+  };
+
+  return checkForErrors(fields, customConditions, requiredTexts);
+}
+
+const NetworkLocationForm = (props) => {
   const {
     addressFetching,
     cloudProvidersOptions,
     cloudProvidersIdOptions,
-    editMode,
+    edit,
+    fetching,
     intl,
     invalid,
     onCancel,
+    onDelete,
     handleSubmit
   } = props;
 
@@ -46,7 +53,6 @@ const LocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.common.name" />}
-            validate={[ required("portal.common.name") ]}
           />
         </Col>
       </Row>
@@ -58,7 +64,6 @@ const LocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}
-            validate={[ required("portal.network.locationForm.iataCode.label") ]}
           />
         </Col>
       </Row>
@@ -70,7 +75,6 @@ const LocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
-            validate={[ required("portal.network.locationForm.latitude.label") ]}
           />
         </Col>
         <Col md={5}>
@@ -80,7 +84,6 @@ const LocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
-            validate={[ required("portal.network.locationForm.longitude.label") ]}
           />
         </Col>
       </Row>
@@ -103,7 +106,6 @@ const LocationForm = (props) => {
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProvider.label'})}
-            validate={[ required("portal.network.locationForm.cloudProvider.label") ]}
           />
         </Col>
       </Row>
@@ -139,22 +141,34 @@ const LocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderLocationId.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.cloudProviderLocationId.label" />}
-            validate={[ required("portal.network.locationForm.cloudProviderLocationId.label") ]}
           />
         </Col>
       </Row>
 
+
       <FormFooterButtons>
+        { edit &&
+          <Button
+            className="btn-danger pull-left"
+            disabled={fetching}
+            onClick={onDelete}
+          >
+            <FormattedMessage id="portal.button.delete"/>
+          </Button>
+        }
+
         <Button
           className="btn-secondary"
-          onClick={onCancel}>
+          onClick={onCancel}
+        >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
         <Button
           type="submit"
           bsStyle="primary"
-          disabled={invalid}>
-          {editMode
+          disabled={invalid || fetching}
+        >
+          {edit
             ? <FormattedMessage id='portal.button.save' />
             : <FormattedMessage id='portal.button.add' />
           }
@@ -163,18 +177,22 @@ const LocationForm = (props) => {
     </form>
   )};
 
-LocationForm.displayName = 'LocationEditForm';
-LocationForm.propTypes = {
+NetworkLocationForm.displayName = 'NetworkLocationEditForm';
+NetworkLocationForm.propTypes = {
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.bool,
+  fetching: PropTypes.bool,
   handleSubmit: PropTypes.func,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   ...reduxFormPropTypes
 };
 
 export default reduxForm({
-  form: 'locationEditForm'
-})(injectIntl(LocationForm))
+  form: 'networkLocationForm',
+  validate
+})(injectIntl(NetworkLocationForm))

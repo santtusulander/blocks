@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 jest.unmock('../location-form.jsx')
 jest.genMockFromModule('react-bootstrap')
 
-import LocationEditForm from '../location-form'
+import NetworkLocationForm from '../location-form'
 import { FormattedMessage } from 'react-intl'
 
 const intlMaker = () => {
@@ -13,14 +13,14 @@ const intlMaker = () => {
   }
 }
 
-describe('LocationEditForm', () => {
+describe('NetworkLocationForm', () => {
   const onCancel = jest.fn()
   const onSave = jest.fn()
   let subject, error, props = null
   let touched = false
 
   beforeEach(() => {
-    subject = (editMode = false) => {
+    subject = (edit = false) => {
       props = {
         onCancel,
         onSave,
@@ -31,10 +31,10 @@ describe('LocationEditForm', () => {
         },
         fields: {
           name: { touched, error, value: '' },
-          localatitude: { touched, error, value: '' },
+          latitude: { touched, error, value: '' },
           cloudProviderLocationId: { touched, error, value: '' }
         },
-        editMode
+        edit
       }
       return shallow(<LocationEditForm {...props}/>)
     }
@@ -46,6 +46,10 @@ describe('LocationEditForm', () => {
 
   it('should have 2 buttons on Add', () => {
     expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should have 3 buttons on Edit', () => {
+    expect(subject(true).find('Button').length).toBe(3)
   })
 
   it('should render an error message', () => {

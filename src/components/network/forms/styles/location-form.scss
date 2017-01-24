@@ -4,4 +4,9 @@
       min-width: 100%;
     }
   }
+  .modal-footer {
+    .btn-toolbar {
+      float: none !important;
+    }
+  }
 }

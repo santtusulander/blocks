@@ -5,28 +5,29 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import SidePanel from '../../../components/side-panel'
 import LocationForm from '../../../components/network/forms/location-form'
 
-class LocationFormContainer extends Component {
+class NetworkLocationFormContainer extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {};
-
     this.onSubmit = this.onSubmit.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
-  componentWillMount() {
-    // editMode for testing
-    this.setState({ editMode: true });
-  }
-
+  //TODO: Implement onSubmit
   onSubmit(values) {
     const { brandId, accountId, groupId } = this.props.initialValues;
 
     return {values, ...{ brandId, accountId, groupId }};
   }
 
+  //TODO: Implement onDelete
+  onDelete(id) {
+    return id;
+  }
+
   render() {
     const {
+      edit,
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
@@ -37,7 +38,7 @@ class LocationFormContainer extends Component {
       initialValues
     } = this.props;
 
-    const title = this.state.editMode
+    const title = edit
       ? <FormattedMessage id="portal.network.locationForm.editLocation.title"/>
       : <FormattedMessage id="portal.network.locationForm.newLocation.title"/>;
 
@@ -49,8 +50,8 @@ class LocationFormContainer extends Component {
           cancel={() => onCancel()}
         >
           <LocationForm
-            editMode={this.state.editMode}
-            initialValues={this.state.editMode ? initialValues: ({})}
+            edit={edit}
+            initialValues={initialValues}
             cloudProvidersOptions={cloudProvidersOptions}
             cloudProvidersIdOptions={cloudProvidersIdOptions}
             fetching={fetching}
@@ -58,6 +59,7 @@ class LocationFormContainer extends Component {
             intl={intl}
             invalid={invalid}
             onCancel={onCancel}
+            onDelete={this.onDelete}
             onSubmit={this.onSubmit}
           />
         </SidePanel>
@@ -66,17 +68,17 @@ class LocationFormContainer extends Component {
   }
 }
 
-LocationFormContainer.displayName = 'LocationFormContainer';
-LocationFormContainer.propTypes = {
+NetworkLocationFormContainer.displayName = 'NetworkLocationEditForm';
+NetworkLocationFormContainer.propTypes = {
   addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.bool,
   fetching: PropTypes.bool,
-  invalid: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
-  onCancel: PropTypes.func,
-  onSubmit: PropTypes.func
+  invalid: PropTypes.bool,
+  onCancel: PropTypes.func
 };
 
 const cloudProvidersOptions = {
@@ -157,4 +159,4 @@ const mapStateToProps = () => ({
   }
 });
 
-export default connect(mapStateToProps)(injectIntl((LocationFormContainer)))
+export default connect(mapStateToProps)(injectIntl((NetworkLocationFormContainer)))

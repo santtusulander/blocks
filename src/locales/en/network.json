@@ -45,6 +45,13 @@
   "portal.network.locationForm.cloudProviderLocationId.placeholder": "Enter Cloud Provider Location ID",
   "portal.network.locationForm.latLongFields.helperText.address": "ADDRESS:",
   "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
-  "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address"
+  "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address",
+
+  "portal.network.locationForm.name.required.error": "Location name is required",
+  "portal.network.locationForm.iataCode.required.error": "IATA code is required",
+  "portal.network.locationForm.latitude.required.error": "Latitude is required",
+  "portal.network.locationForm.longitude.required.error": "Longitude is required",
+  "portal.network.locationForm.cloudProvider.required.error": "Cloud Provider is required",
+  "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required"
 }
 

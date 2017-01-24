@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../location-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
-import LocationFormContainer from '../location-modal'
+import NetworkLocationFormContainer from '../location-modal'
 
 const intlMaker = () => {
   return {
@@ -11,7 +11,7 @@ const intlMaker = () => {
   }
 }
 
-describe('LocationFormContainer', () => {
+describe('NetworkLocationFormContainer', () => {
   let subject = null
 
   beforeEach(() => {
