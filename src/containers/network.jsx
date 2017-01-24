@@ -23,7 +23,6 @@ import {
 
 import {
   NETWORK_SCROLL_AMOUNT,
-  NETWORK_WINDOW_OFFSET,
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
 } from '../constants/network'
@@ -180,38 +179,56 @@ class Network extends React.Component {
     this.props.fetchData()
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    const { group, network, pop, pod } = nextProps.params
+
+    if (group) {
+      this.setState({ networks: placeholderNetworks })
+    }
+
+    if (network) {
+      this.setState({ pops: placeholderPops })
+    }
+
+    if (pop) {
+      this.setState({ pods: placeholderPods })
+    }
+
+    if (pod) {
+      this.setState({ nodes: placeholderNodes })
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // We're doing the scrolling in componentDidUpdate because we'll need to access
+    // the DOM element's widths and other attributes AFTER they become visible.
+    // Otherwise, for example, we're not able to do the twoLastFitToView check
+    // in scrollToEntity method. Having the scrolling determined here also
+    // allows us to use the browsers navigation buttons to active the scrolling.
     const { group, network, pop, pod } = this.props.params
 
     if (group) {
       this.selectEntityAndScroll('groupList', false)
+    } else if (prevProps.params.group && !group) {
+      this.selectEntityAndScroll('groupList', true)
     }
 
     if (network) {
       this.selectEntityAndScroll('networkList', false)
+    } else if (prevProps.params.network && !network) {
+      this.selectEntityAndScroll('networkList', true)
     }
 
     if (pop) {
       this.selectEntityAndScroll('popList', false)
+    } else if (prevProps.params.pop && !pop) {
+      this.selectEntityAndScroll('popList', true)
     }
 
     if (pod) {
       this.selectEntityAndScroll('podList', false)
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.params.group) {
-      this.setState({ networks: placeholderNetworks })
-    }
-    if (nextProps.params.network) {
-      this.setState({ pops: placeholderPops })
-    }
-    if (nextProps.params.pop) {
-      this.setState({ pods: placeholderPods })
-    }
-    if (nextProps.params.pod) {
-      this.setState({ nodes: placeholderNodes })
+    } else if (prevProps.params.pod && !pod) {
+      this.selectEntityAndScroll('podList', true)
     }
   }
 
@@ -240,14 +257,12 @@ class Network extends React.Component {
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
-    const shouldScrollToPrevious = this.determineNextState({
+    this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
       goBackToRoute: 'account'
     })
-
-    this.selectEntityAndScroll('groupList', shouldScrollToPrevious)
   }
 
   handleGroupEdit(groupId) {
@@ -265,14 +280,12 @@ class Network extends React.Component {
 
   /* ==== Network Handlers ==== */
   handleNetworkClick(networkId) {
-    const shouldScrollToPrevious = this.determineNextState({
+    this.determineNextState({
       currentId: networkId,
       previousId: this.props.params.network,
       goToRoute: 'network',
       goBackToRoute: 'group'
     })
-
-    this.selectEntityAndScroll('networkList', shouldScrollToPrevious)
   }
 
   handleNetworkEdit(networkId) {
@@ -290,15 +303,12 @@ class Network extends React.Component {
 
   /* ==== POP Handlers ==== */
   handlePopClick(popId) {
-    const shouldScrollToPrevious = this.determineNextState({
+    this.determineNextState({
       currentId: popId,
-      previousId:
-      this.props.params.pop,
+      previousId: this.props.params.pop,
       goToRoute: 'pop',
       goBackToRoute: 'network'
     })
-
-    this.selectEntityAndScroll('popList', shouldScrollToPrevious)
   }
 
   handlePopEdit(popId) {
@@ -316,14 +326,12 @@ class Network extends React.Component {
 
   /* ==== POD Handlers ==== */
   handlePodClick(podId) {
-    const shouldScrollToPrevious = this.determineNextState({
+    this.determineNextState({
       currentId: podId,
       previousId: this.props.params.pod,
       goToRoute: 'pod',
       goBackToRoute: 'pop'
     })
-
-    this.selectEntityAndScroll('podList', shouldScrollToPrevious)
   }
 
   handlePodEdit(podId) {
@@ -342,8 +350,7 @@ class Network extends React.Component {
   /**
    * Determines the next state and sets the correct URL based on id.
    * It checks if the user clicked an already selected entity and then either
-   * goes up one level or unselects it and goes back one level. Hence returning
-   * shouldScrollToPrevious boolean that determines the scrolling direction.
+   * goes up one level or unselects it and goes back one level.
    *
    * @method determineNextState
    * @param  {number OR string} currentId     ID of recently selected entity
@@ -360,8 +367,6 @@ class Network extends React.Component {
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
 
     this.props.router.push(url)
-
-    return shouldScrollToPrevious
   }
 
   /**
@@ -372,9 +377,7 @@ class Network extends React.Component {
    * @param  {boolean}             shouldScrollToPrevious A boolean to determine scroll direction
    */
   selectEntityAndScroll(selectedEntity, shouldScrollToPrevious) {
-    const entities = this.entityList
-    const entityKeys = Object.keys(entities)
-
+    const { entities, entityKeys } = this.elementAndContainerValues()
 
     // Get the next entity ref
     let selectedIndex = entityKeys.indexOf(selectedEntity)
@@ -397,17 +400,22 @@ class Network extends React.Component {
    * Scrolls the container until the given entity is visible on the viewport.
    *
    * @method scrollToEntity
-   * @param  {string}       entity           Target entity to scroll to
+   * @param  {DOMElement}   entity                 Target entity to scroll to
    * @param  {boolean}      shouldScrollToPrevious A boolean to determine scroll direction
    */
   scrollToEntity(entity, shouldScrollToPrevious) {
-    const container = this.container.pageContainerRef
-    const containerLeft = container.getBoundingClientRect().left
-    const containerRight = container.getBoundingClientRect().right
-
-    // Get the element's –– entity's –– offset/location in the viewport
-    const elemLeft = entity.getBoundingClientRect().left
-    const elemRight = entity.getBoundingClientRect().right
+    const {
+      container,
+      containerLeft,
+      containerRight,
+      containerScrollLeft,
+      containerWidth,
+      containerScrollWidth,
+      elemLeft,
+      elemRight,
+      lastEntity,
+      secondLastEntity
+    } = this.elementAndContainerValues(entity)
 
     // If we're scrolling back to the previous entity, we need to add some
     // offset so it doesn't just stay underneath the navigation bar.
@@ -418,11 +426,61 @@ class Network extends React.Component {
     const rightSideVisibility = elemRight <= containerRight
     const isVisible = leftSideVisibility && rightSideVisibility
 
-    if (!isVisible) {
+    // We also have to check if we're already at the right end of the scrolling container
+    // or that we're scrolling backwards to prevent scrolling looping or not working.
+    // Without checking shouldScrollToPrevious the backwards scroll won't happen past
+    // PODs and without checking the right end the scrolling stays in a loop on bigger
+    // resolutions (above 2000px in width).
+    const scrollingBackOrAtEnd = shouldScrollToPrevious || containerScrollWidth - containerScrollLeft !== containerWidth
+
+    // If two last entities fit into the view, we should scroll to the very end
+    const entityWidthSum = lastEntity.clientWidth + entity.clientWidth
+    const twoLastFitToView = entity === secondLastEntity && entityWidthSum < containerWidth && containerScrollWidth - containerScrollLeft !== containerWidth
+
+    if ((!isVisible && scrollingBackOrAtEnd) || twoLastFitToView) {
       // If shouldScrollToPrevious is true, we should scroll to right –– backwards. Otherwise keep scrolling to left
       shouldScrollToPrevious ? container.scrollLeft -= NETWORK_SCROLL_AMOUNT : container.scrollLeft += NETWORK_SCROLL_AMOUNT
       // Continue scrolling animation
       requestAnimationFrame(() => this.scrollToEntity(entity, shouldScrollToPrevious))
+    }
+  }
+
+  /**
+   * Wrapper for various DOM element values and what-not.
+   *
+   * @method elementAndContainerValues
+   * @param  {DOMElement}              entity Target entity
+   * @return {object}                         Object containing needed values for
+   *                                          calculations
+   */
+  elementAndContainerValues(entity) {
+    const entities = this.entityList
+    const entityKeys = Object.keys(entities)
+    const container = this.container.pageContainerRef
+    const containerLeft = container.getBoundingClientRect().left
+    const containerRight = container.getBoundingClientRect().right
+    const containerScrollLeft = container.scrollLeft
+    const containerWidth = container.clientWidth
+    const containerScrollWidth = container.scrollWidth
+    const lastEntity = entities[entityKeys[entityKeys.length - 1]].entityList
+    const secondLastEntity = entities[entityKeys[entityKeys.length - 2]].entityList
+    // Get the element's –– entity's –– offset/location in the viewport
+    const elemLeft = entity && entity.getBoundingClientRect().left
+    const elemRight = entity && entity.getBoundingClientRect().right
+
+    return {
+      entities,
+      entityKeys,
+      elemLeft,
+      elemRight,
+      container,
+      containerLeft,
+      containerRight,
+      containerScrollLeft,
+      containerWidth,
+      containerScrollWidth,
+      lastEntity,
+      secondLastEntity
     }
   }
 
