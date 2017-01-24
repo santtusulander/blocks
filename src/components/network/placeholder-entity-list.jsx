@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 
 import { AccountManagementHeader } from '../account-management/account-management-header'
-import PageContainer from '../layout/page-container'
 import PlaceholderTable from './placeholder-table'
 
 class PlaceholderEntityList extends React.Component {
@@ -10,7 +9,6 @@ class PlaceholderEntityList extends React.Component {
     super(props)
 
     this.updateEntities = this.updateEntities.bind(this)
-
     this.state = this.updateEntities(props.entities)
   }
 
@@ -61,7 +59,7 @@ class PlaceholderEntityList extends React.Component {
     } = this.state
 
     return (
-      <PageContainer>
+      <div ref={(ref) => this.entityList = ref} className="network-entity-list">
         <AccountManagementHeader
           title={title}
           onAdd={addEntity}
@@ -76,7 +74,7 @@ class PlaceholderEntityList extends React.Component {
             selectedEntityId={selectedEntityId}
           />
         }
-      </PageContainer>
+      </div>
     )
   }
 }
