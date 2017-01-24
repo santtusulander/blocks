@@ -187,18 +187,13 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
-
       if (!canListAccounts) {
         metricsOpts.account = ownProps.params.account;
       }
       metricsOpts.list_children = !!canListAccounts;
-      if( accounts.isEmpty() && canListAccounts) {
+      if(accounts.isEmpty() && canListAccounts) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
-        //replaced with the new call:
-        //dispatch( fetchAll('udn', ) )
-          //.then( () => {console.log('done');})
-
       }
       if(metrics.isEmpty()) {
         metricsActions.startAccountFetching()
@@ -206,11 +201,10 @@ function mapDispatchToProps(dispatch, ownProps) {
       }
       if(dailyTraffic.isEmpty()) {
         // TODO: Replace metrics endpoint with traffic endpoint after 0.7
-        metricsActions.startAccountFetching()
-        metricsActions.fetchHourlyAccountTraffic(metricsOpts)
-          .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
+        // metricsActions.startAccountFetching()
+        // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
+        //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
         metricsActions.fetchDailyAccountTraffic(metricsOpts)
-
       }
     },
     accountActions: accountActions,

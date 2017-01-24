@@ -84,8 +84,14 @@ export default {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
+
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
-  networkGroups: '/network/:brand/:account/groups'
+  networkGroups: '/network/:brand/:account/groups',
+  networkGroupsV2: '/network-v2/:brand/:account/groups',
+  networkGroup: '/network-v2/:brand/:account/groups/:group',
+  networkNetwork: '/network-v2/:brand/:account/groups/:group/:network',
+  networkPop: '/network-v2/:brand/:account/groups/:group/:network/:pop',
+  networkPod: '/network-v2/:brand/:account/groups/:group/:network/:pop/:pod'
 }

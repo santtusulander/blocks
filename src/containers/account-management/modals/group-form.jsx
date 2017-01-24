@@ -230,7 +230,7 @@ class GroupFormContainer extends React.Component {
           cancelButton={true}
           deleteButton={true}
           cancel={() => this.setState({ hostToDelete: null })}
-          submit={() => this.deleteHost(this.state.hostToDelete)}/>
+          onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
       </div>
     )
