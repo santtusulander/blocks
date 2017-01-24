@@ -12,50 +12,31 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { isValidAccountName, isValidIPv4AddressWithSubnet } from '../../../util/validators'
+import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+
+import { isValidTextField, isValidIPv4AddressWithSubnet } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
 const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
-  // TODO: those error should stay in a reuseable component, seen it's been used 3 times
   const conditions = {
-    footPrintName: [
-      {
-        condition: !footPrintName || !isValidAccountName(footPrintName),
-        errorText: <div key={footPrintName}>{[<FormattedMessage key={1}
-                                                                id="portal.network.footprintForm.name.invalid.text"/>,
-          <div key={2}>
-            <div style={{ marginTop: '0.5em' }}>
-              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text"/>
-              <ul>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text"/></li>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text"/></li>
-              </ul>
-            </div>
-          </div>]}
-        </div>
-      }
-    ],
-    footPrintDescription: [
-      {
-        condition: !footPrintDescription,
-        errorText: <div key={footPrintDescription}>{[<FormattedMessage key={1}
-                                                                       id="portal.network.footprintForm.description.invalid.text"/>,
-          <div key={2}>
-            <div style={{ marginTop: '0.5em' }}>
-              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text"/>
-              <ul>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text"/></li>
-              </ul>
-            </div>
-          </div>]}
-        </div>
-      }
-    ]
+    footPrintName: {
+      condition: !isValidTextField(footPrintName),
+      errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text" />
+    },
+    footPrintDescription: {
+      condition: !isValidTextField(footPrintDescription),
+      errorText: <MultilineTextFieldError fieldLabel="portal.common.description" />
+    }
   }
-  const errors = checkForErrors({ footPrintName, footPrintDescription, UDNType }, conditions)
 
-  return errors;
-
+  return checkForErrors(
+    { footPrintName, footPrintDescription, UDNType },
+    conditions,
+    {
+      footPrintName: <FormattedMessage values={{ field: 'Footprint Name' }} id="portal.network.footprintForm.field.required.text"/>,
+      footPrintDescription: <FormattedMessage values={{ field: 'Footprint Description' }} id="portal.network.footprintForm.field.required.text"/>
+    }
+  )
 }
 
 class FootprintForm extends React.Component {
