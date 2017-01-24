@@ -1,21 +1,24 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, FormGroup, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Typeahead from 'react-bootstrap-typeahead'
-import classNames from 'classnames'
 
 import SidePanel from '../../side-panel'
 import FieldRadio from '../../form/field-radio'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
 import { isValidTextField, isValidIPv4AddressWithSubnet } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
+
+const validateTypeaheadToken = (item) => {
+  return item.label && isValidIPv4AddressWithSubnet(item.label)
+}
 
 const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
   const conditions = {
@@ -43,37 +46,11 @@ class FootprintForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.renderCIDRToken = this.renderCIDRToken.bind(this)
-    this.renderASNToken = this.renderASNToken.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
   }
 
   onSubmit(values) {
     this.props.onSubmit(values)
-  }
-
-  renderCIDRToken(token, onRemove, key) {
-    const tokenClass = isValidIPv4AddressWithSubnet(token.label) ? 'valid' : 'invalid'
-
-    return (
-      <div className={classNames('token token-removeable', `token__${tokenClass}`)} key={key}>
-        {token.label}
-        <span className="close-button" role="button" onClick={onRemove}>×</span>
-      </div>
-    )
-  }
-
-  renderASNToken(token, onRemove, key) {
-    const tokenClass = isValidIPv4AddressWithSubnet(token.label) ? 'valid' : 'invalid'
-
-    // TODO: Waiting for ASN validation, no idea what it is
-
-    return (
-      <div className={classNames('token token-removeable', `token__${tokenClass}`)} key={key}>
-        {token.label}
-        <span className="close-button" role="button" onClick={onRemove}>×</span>
-      </div>
-    )
   }
 
   renderDropZone() {
@@ -177,28 +154,27 @@ class FootprintForm extends React.Component {
                 label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
               />
 
-              {
-                // TODO: Add redux-form connected typeahead-field when UDNP-2447 gets merged
-              }
               { dataType === 'cidr' &&
-              <Typeahead
+              <Field
+                required={false}
+                name="cidr"
+                allowNew={true}
+                component={FieldFormGroupTypeahead}
                 multiple={true}
                 onChange={() => null}
-                allowNew={true}
-                renderToken={this.renderCIDRToken}
-                options={CIDROptions}/>
+                options={CIDROptions}
+                validation={validateTypeaheadToken}/>
               }
 
-              {
-                // TODO: Add redux-form connected typeahead-field when UDNP-2447 gets merged
-              }
               { dataType !== 'cidr' &&
-              <Typeahead
+              <Field
+                name="asn"
+                allowNew={true}
+                component={FieldFormGroupTypeahead}
                 multiple={true}
                 onChange={() => null}
-                allowNew={true}
-                renderToken={this.renderASNToken}
-                options={ASNOptions}/>
+                options={ASNOptions}
+                validation={validateTypeaheadToken}/>
               }
             </FormGroup>
 
@@ -244,7 +220,7 @@ FootprintForm.propTypes = {
   onCancel: PropTypes.func,
   show: PropTypes.bool,
   ...reduxFormPropTypes,
-  UNDTypeOptions: PropTypes.array,
+  UNDTypeOptions: PropTypes.array
 }
 
 const form = reduxForm({
@@ -264,6 +240,8 @@ const mapStateToProps = (state) => {
     selector,
     initialValues: {
       addFootprintMethod: 'manual',
+      asn: [],
+      cidr: [],
       dataType: 'cidr'
     }
   }
