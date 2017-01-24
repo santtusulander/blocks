@@ -6,7 +6,11 @@ import { BASE_URL_NORTH } from '../../../util'
 const baseURL = ({ brand, account }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/footprints`
 
-const footprintSchema = new schema.Entity('footprints')
+const footprintSchema = new schema.Entity('footprints', {}, {
+  processStrategy: (value, parent) => ({ ...value, parentId: parent.id})
+})
+
+const accountFootprintSchema = new schema.Entity('accountFootprints', [ footprintSchema ])
 
 const normalizeWithParentId = (footprint, parentId) =>
   normalize({ ...footprint, parentId: parentId }, footprintSchema)
@@ -14,7 +18,13 @@ const normalizeWithParentId = (footprint, parentId) =>
 export const fetchAll = (urlParams) =>
   axios.get(baseURL(urlParams))
     .then(({ data }) => {
-      return normalize(data.data, [ footprintSchema ])
+
+      const footprintData = {
+        id: urlParams.account,
+        footprints: data.data
+      }
+
+      return normalize(footprintData, accountFootprintSchema)
     })
 
 export const fetch = ({ id, ...baseUrlParams }) =>
