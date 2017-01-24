@@ -7,7 +7,7 @@ import {
   FormGroup
 } from 'react-bootstrap'
 
-import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, formValueSelector, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import SidePanel from '../../side-panel'
@@ -20,10 +20,10 @@ import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
 
 import {
-  ROLE_OPTIONS,
+  CLOUD_DRIVER_OPTIONS,
   ENVIRONMENT_OPTIONS,
-  TYPE_OPTIONS,
-  CLOUD_DRIVER_OPTIONS
+  ROLE_OPTIONS,
+  TYPE_OPTIONS
 } from '../../../constants/network'
 
 const isEmpty = function(value) {
@@ -35,35 +35,35 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
     numNodes: [
       {
         condition: isEmpty(numNodes),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
       },
       {
         condition: isInt(numNodes) === false || numNodes < 1,
-        errorText: <FormattedMessage id="portal.validators.type.number" values={ {field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.type.number" values={{field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
       }
     ],
     node_role: [
       {
         condition: isEmpty(node_role),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.role.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.role.title" /> }}/>
       }
     ],
     node_env: [
       {
         condition: isEmpty(node_env),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.environment.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.environment.title" /> }}/>
       }
     ],
     node_type: [
       {
         condition: isEmpty(node_type),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.type.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.type.title" /> }}/>
       }
     ],
     cloud_driver: [
       {
         condition: isEmpty(cloud_driver),
-        errorText: <FormattedMessage id="portal.validators.required" values={ {field: <FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" /> } }/>
+        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" /> }}/>
       }
     ]
   }
@@ -116,8 +116,8 @@ class NetworkAddNodeForm extends React.Component {
       : <FormattedMessage id="portal.button.yes" />
 
     if (showAddConfirmation) {
-      const confirmText = <FormattedMessage id="portal.network.addNodeForm.confirmAdd" values={ {numNodes} }/>
-      return <FormFooterButtons autoAlign={false}>
+      const confirmText = <FormattedMessage id="portal.network.addNodeForm.confirmAdd" values={{numNodes}}/>
+      return (<FormFooterButtons autoAlign={false}>
         <div className="modal-footer__text">{confirmText}</div>
         <ButtonToolbar className="pull-right">
           <Button
@@ -133,9 +133,9 @@ class NetworkAddNodeForm extends React.Component {
             {submitButtonLabel}
           </Button>
         </ButtonToolbar>
-      </FormFooterButtons>
+      </FormFooterButtons>)
     } else {
-      return <FormFooterButtons>
+      return (<FormFooterButtons>
         <Button
           id="cancel-btn"
           className="btn-secondary"
@@ -148,7 +148,7 @@ class NetworkAddNodeForm extends React.Component {
           disabled={invalid||submitting}>
           <FormattedMessage id="portal.button.add" />
         </Button>
-      </FormFooterButtons>
+      </FormFooterButtons>)
     }
   }
 
@@ -189,7 +189,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_role"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ ROLE_OPTIONS }
+                options={ROLE_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
               />
             </FormGroup>
@@ -199,7 +199,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_env"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ ENVIRONMENT_OPTIONS }
+                options={ENVIRONMENT_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
               />
             </FormGroup>
@@ -209,7 +209,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_type"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ TYPE_OPTIONS }
+                options={TYPE_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
               />
             </FormGroup>
@@ -219,7 +219,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="cloud_driver"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ CLOUD_DRIVER_OPTIONS }
+                options={CLOUD_DRIVER_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
               />
             </FormGroup>
@@ -235,10 +235,10 @@ const FORM_NAME = 'networkAddNodeForm'
 
 NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
-  show: React.PropTypes.bool,
-  onSave: React.PropTypes.func,
-  onCancel: React.PropTypes.func,
   intl: React.PropTypes.object,
+  onCancel: React.PropTypes.func,
+  onSave: React.PropTypes.func,
+  show: React.PropTypes.bool,
   ...reduxFormPropTypes
 }
 
@@ -266,7 +266,7 @@ const mapStateToProps = (state) => {
     }
   }
 }
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = () => {
   return {} // @TODO connect to Redux
 }
 

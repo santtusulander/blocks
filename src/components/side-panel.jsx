@@ -29,7 +29,7 @@ export const SidePanelComponent = ({ children, className, dim, show, subTitle, s
 
   return (
     <Modal show={show} dialogClassName={dialogClassName}>
-      <div className="side-panel__veil"></div>
+      <div className="side-panel__veil" />
       <Modal.Header>
         <h1>{title}</h1>
         {subTitleElements}
@@ -47,8 +47,8 @@ SidePanelComponent.displayName = 'SidePanel'
 SidePanelComponent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  show: PropTypes.bool,
   dim: PropTypes.bool,
+  show: PropTypes.bool,
   subSubTitle: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
