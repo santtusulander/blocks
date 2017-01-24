@@ -9,29 +9,20 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-const errors = {}
+import { checkForErrors } from '../../../util/helpers'
 
-const validate = (values) => {
+const validate = ({ bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password }) => {
 
-  const { bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password } = values
-
-  if (!bgp_as_number) {
-    errors.bgp_as_number = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
-  }
-
-  if (!bgp_as_name) {
-    errors.bgp_as_name = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
-  }
-
-  if (!bgp_router_ip) {
-    errors.bgp_router_ip = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
-  }
-
-  if (!bgp_password) {
-    errors.bgp_password = <FormattedMessage values={{ field: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_password.label"/> }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
-  }
-
-  return errors
+  return checkForErrors(
+    { bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password },
+    {},
+    {
+      bgp_as_number: <FormattedMessage values={{ field: 'BGP AS Number' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_as_name: <FormattedMessage values={{ field: 'BGP AS Name' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_router_ip: <FormattedMessage values={{ field: 'BGP Router IP' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_password: <FormattedMessage values={{ field: 'BGP Password' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+    }
+  )
 }
 
 class RoutingDaemonForm extends React.Component {
