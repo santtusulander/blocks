@@ -1,5 +1,6 @@
 {
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
+  "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",
   "portal.network.popEditForm.editPop.title": "Edit POP",
   "portal.network.popEditForm.pop.deleteError" : "Unable to delete POP",

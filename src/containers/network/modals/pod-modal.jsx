@@ -49,15 +49,16 @@ class PodFormContainer extends React.Component {
       network,
       pop,
       podId,
+      edit,
       initialValues,
       show,
       onCancel,
       intl,
       invalid} = this.props
 
-    const title = podId ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
+    const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
-    const subTitle = `${groupName} / ${network} / ${pop}${podId ? ' / ' + podId : ''}`
+    const subTitle = `${groupName} / ${network} / ${pop}${edit ? ' / ' + podId : ''}`
     return (
       <div>
         <SidePanel
@@ -89,6 +90,7 @@ PodFormContainer.displayName = "PodFormContainer"
 PodFormContainer.propTypes = {
   account: PropTypes.string,
   brand: PropTypes.string,
+  edit: PropTypes.bool,
   group: PropTypes.string,
   groupName: PropTypes.string,
   initialValues: PropTypes.object,
