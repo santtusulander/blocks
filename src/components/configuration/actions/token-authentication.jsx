@@ -1,15 +1,19 @@
 import React from 'react'
-import { reduxForm } from 'redux-form'
-import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, HelpBlock, Modal } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import { checkForErrors, getReduxFormValidationState } from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 import { isBase64 } from '../../../util/validators'
-import Select from '../../select'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-const placeholderEncryptionOptions = [{label: "SHA1", value: "HMAC-SHA1"}]
+import FieldFormGroup from '../../form/field-form-group'
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FormFooterButtons from '../../form/form-footer-buttons'
+
+const placeholderEncryptionOptions = [{label: "SHA1", value: "HMAC-SHA1", selected: "true"}]
 const placeholderEncryptionValue = placeholderEncryptionOptions[0].value
 const placeholderSchemaOptions = [{label: "URL", value: "url"}]
 const placeholderSchemaValue = placeholderSchemaOptions[0].value
@@ -42,22 +46,24 @@ export class TokenAuthentication extends React.Component {
   }
 
   componentWillMount() {
-    const { fields: { sharedKey }, set } = this.props
-    sharedKey.onChange(set.get('shared_key'))
+    const { set } = this.props
+
+    this.props.change('sharedKey', set.get('shared_key'))
+    this.props.change('schema', placeholderSchemaValue)
+    this.props.change('encryption', placeholderEncryptionValue)
   }
 
   saveChanges() {
-    const { close, invalid, changeValue, path, fields: { sharedKey } } = this.props
-
+    const { close, invalid, changeValue, path, sharedKey } = this.props
     if (!invalid) {
-      const newSet = Immutable.fromJS({ shared_key: sharedKey.value })
+      const newSet = Immutable.fromJS({ shared_key: sharedKey })
       changeValue(path, newSet)
       close()
     }
   }
 
   render() {
-    const { close, fields: { sharedKey }, intl: { formatMessage } } = this.props
+    const { close, intl: { formatMessage }, invalid, submitting } = this.props
 
     return (
       <div>
@@ -70,53 +76,53 @@ export class TokenAuthentication extends React.Component {
           {/* This component is mostly for display purposes only until this functionality
             * is flushed out on the backend. The backend doesn't currently support
             * user-configuration of this value. */}
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.tokenauth.encryption.text" />
-            </ControlLabel>
-            <Select className="input-select"
-              disabled={true}
-              onSelect={() => {/* no-op */}}
-              options={placeholderEncryptionOptions}
-              value={placeholderEncryptionValue} />
-          </FormGroup>
+          <Field
+            required={false}
+            disabled={true}
+            name="encryption"
+            className="input-select"
+            component={FieldFormGroupSelect}
+            options={placeholderEncryptionOptions}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.encryption.text" />}
+          />
 
           {/* This component is mostly for display purposes only until this functionality
             * is flushed out on the backend. The backend doesn't currently support
             * user-configuration of this value. */}
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />
-            </ControlLabel>
-            <Select className="input-select"
-              disabled={true}
-              onSelect={() => {/* no-op */}}
-              options={placeholderSchemaOptions}
-              value={placeholderSchemaValue} />
-          </FormGroup>
+          <Field
+            required={false}
+            disabled={true}
+            name="schema"
+            className="input-select"
+            component={FieldFormGroupSelect}
+            options={placeholderSchemaOptions}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
+          />
 
-          <FormGroup validationState={getReduxFormValidationState(sharedKey)}>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />
-            </ControlLabel>
-            <FormControl
-              {...sharedKey}
-              placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
-            />
-              {sharedKey.touched && sharedKey.error &&
-                <HelpBlock className='error-msg'>{sharedKey.error}</HelpBlock>
-              }
-          </FormGroup>
+          <Field
+            type="text"
+            name="sharedKey"
+            placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
+          />
 
-          <ButtonToolbar className="text-right">
-            <Button className="btn-secondary" onClick={close}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
-            <Button bsStyle="primary" disabled={this.props.invalid} onClick={this.saveChanges}>
-              <FormattedMessage id="portal.button.saveAction"/>
-            </Button>
-          </ButtonToolbar>
+          <FormFooterButtons>
+              <Button
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={close}>
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>
 
+              <Button
+                type="submit"
+                bsStyle="primary"
+                onClick={this.saveChanges}
+                disabled={invalid||submitting}>
+                <FormattedMessage id="portal.button.saveAction"/>
+              </Button>
+            </FormFooterButtons>
         </Modal.Body>
       </div>
     )
@@ -127,15 +133,20 @@ TokenAuthentication.displayName = 'TokenAuthentication'
 TokenAuthentication.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  fields: React.PropTypes.object,
   intl: React.PropTypes.object,
   invalid: React.PropTypes.bool,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  sharedKey: React.PropTypes.string,
+  ...reduxFormPropTypes
 }
 
-export default reduxForm({
-  fields: ['sharedKey'],
+const form = reduxForm({
   form: 'token-authentication',
   validate
-})(injectIntl(TokenAuthentication))
+})(TokenAuthentication)
+
+const selector = formValueSelector('token-authentication')
+export default connect(state => ({
+  sharedKey: selector(state, 'sharedKey')
+}))(injectIntl(form))

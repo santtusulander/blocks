@@ -1,5 +1,6 @@
 {
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
+  "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",
   "portal.network.popEditForm.editPop.title": "Edit POP",
   "portal.network.popEditForm.pop.deleteError" : "Unable to delete POP",
@@ -24,8 +25,8 @@
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
-  "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.validation.error": "Invalid Network description",
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
@@ -46,3 +47,4 @@
   "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
   "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address"
 }
+

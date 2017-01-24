@@ -21,10 +21,11 @@ import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import IsAllowed from '../../../components/is-allowed'
+import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
-import { isValidAccountName } from '../../../util/validators'
+import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
@@ -115,23 +116,8 @@ class AccountManagementAccountGroups extends React.Component {
           errorText: <FormattedMessage id="portal.account.groups.name.error.exists"/>
         },
         {
-          condition: !isValidAccountName(name),
-          errorText: (
-            <div>
-              {[
-                <FormattedMessage key={`${name}-0`} id="portal.account.groups.name.error.invalid"/>,
-                <div key={`${name}-1`}>
-                  <div style={{marginTop: '0.5em'}}>
-                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                    <ul>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                    </ul>
-                  </div>
-                </div>
-              ]}
-            </div>
-          )
+          condition: !isValidTextField(name),
+          errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
         }
       ]
     }
