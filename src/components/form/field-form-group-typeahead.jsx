@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { FormGroup, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { injectIntl, intlShape } from 'react-intl'
 import Typeahead from 'react-bootstrap-typeahead'
 import classNames from 'classnames'
 
@@ -9,12 +10,13 @@ const FieldFormGroupTypeahead = ({
   allowNew = false,
   className,
   disabled,
-  emptyLabel = "Add values by typing",
+  emptyLabel,
   input,
+  intl,
   label,
   meta, meta: { touched, error },
   multiple = false,
-  newSelectionPrefix = "Add value: ",
+  newSelectionPrefix,
   options,
   required = true,
   validation
@@ -44,9 +46,9 @@ const FieldFormGroupTypeahead = ({
         allowNew={allowNew}
         className={className}
         disabled={disabled}
-        emptyLabel={emptyLabel}
+        emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
-        newSelectionPrefix={newSelectionPrefix}
+        newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
         onChange={e => input.onChange(e)}
         options={options}
         renderToken={renderToken}
@@ -69,6 +71,7 @@ FieldFormGroupTypeahead.propTypes = {
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.string,
   input: PropTypes.object,
+  intl: intlShape.isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
   multiple: PropTypes.bool,
@@ -78,4 +81,4 @@ FieldFormGroupTypeahead.propTypes = {
   validation: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
 }
 
-export default FieldFormGroupTypeahead
+export default injectIntl(FieldFormGroupTypeahead)

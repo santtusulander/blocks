@@ -96,5 +96,8 @@
   "portal.common.weekdayShort.wednesday": "We",
   "portal.common.weekdayShort.thursday": "Th",
   "portal.common.weekdayShort.friday": "Fr",
-  "portal.common.weekdayShort.saturday": "Sa"
+  "portal.common.weekdayShort.saturday": "Sa",
+
+  "portal.common.typeahead.emptyLabel": "Add values by typing",
+  "portal.common.typeahead.newSelectionPrefix": "Add value: "
 }
