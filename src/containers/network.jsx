@@ -150,10 +150,12 @@ class Network extends React.Component {
   addEntity(entityModal) {
     switch (entityModal) {
       case ADD_EDIT_POP:
+        this.setState({selectedPopId: null})
         this.props.toggleModal(ADD_EDIT_POP)
         break;
 
       case ADD_EDIT_POD:
+        this.setState({selectedPodId: null})
         this.props.toggleModal(ADD_EDIT_POD)
         break;
 
