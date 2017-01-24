@@ -28,9 +28,9 @@
 
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
-  "portal.network.networkForm.description.required.error": "Description is required"
+  "portal.network.networkForm.description.required.error": "Description is required",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
-  
+
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
   "portal.network.footprintForm.checkbox.option.manual.text": "Add Manually",
@@ -45,5 +45,6 @@
   "portal.network.footprintForm.description.placeholder.text" : "Enter footprint description",
   "portal.network.footprintForm.csvfile.title.text" : "CSV File",
   "portal.network.footprintForm.name.invalid.text": "Footprint name is invalid",
-  "portal.network.footprintForm.description.invalid.text": "Footprint name is invalid"
+  "portal.network.footprintForm.description.invalid.text": "Footprint description is invalid",
+  "portal.network.footprintForm.field.required.text": "{field} is required"
 }
