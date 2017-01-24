@@ -18,6 +18,7 @@ import TruncatedTitle from '../components/truncated-title'
 import PlaceholderEntityList from '../components/network/placeholder-entity-list'
 
 import {
+  ADD_EDIT_NETWORK,
   ADD_EDIT_POP
 } from '../constants/network-modals.js'
 
@@ -26,6 +27,7 @@ import {
   NETWORK_WINDOW_OFFSET
 } from '../constants/network'
 
+import NetworkFormContainer from './network/modals/network-modal.jsx'
 import NetworkPopFormContainer from './network/modals/pop-modal.jsx'
 
 const placeholderNetworks = Immutable.fromJS([
@@ -90,10 +92,11 @@ class Network extends React.Component {
       pods: Immutable.List(),
       nodes: Immutable.List(),
 
-      selectedGroupId: null,
-      selectedNetworkId: null,
-      selectedPopId: null,
-      selectedPodId: null
+
+      groupId: null,
+      networkId: null,
+      popId: null,
+      podId: null
     }
 
     this.entityList = {
@@ -146,6 +149,11 @@ class Network extends React.Component {
 
   addEntity(entityModal) {
     switch (entityModal) {
+
+      case ADD_EDIT_NETWORK:
+        this.props.toggleModal(ADD_EDIT_NETWORK)
+        break;
+
       case ADD_EDIT_POP:
         this.props.toggleModal(ADD_EDIT_POP)
         break;
@@ -157,9 +165,15 @@ class Network extends React.Component {
 
   handleCancel(entityModal) {
     switch (entityModal) {
+
+      case ADD_EDIT_NETWORK:
+        this.props.toggleModal(null)
+        this.setState({networkId: null})
+        break;
+
       case ADD_EDIT_POP:
         this.props.toggleModal(null)
-        this.setState({selectedPopId: null})
+        this.setState({popId: null})
         break;
 
       default:
@@ -180,7 +194,7 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
-    this.setState({selectedGroupId: groupId})
+    this.setState({groupId: groupId})
     // TODO: this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
@@ -205,8 +219,8 @@ class Network extends React.Component {
   }
 
   handleNetworkEdit(networkId) {
-    this.setState({selectedGroupId: networkId})
-    // TODO: this.props.toggleModal(ADD_EDIT_NETWORK)
+    this.setState({networkId: networkId})
+    this.props.toggleModal(ADD_EDIT_NETWORK)
   }
 
   handleNetworkSave() {
@@ -231,7 +245,7 @@ class Network extends React.Component {
   }
 
   handlePopEdit(popId) {
-    this.setState({selectedPopId: popId})
+    this.setState({popId: popId})
     this.props.toggleModal(ADD_EDIT_POP)
   }
 
@@ -256,7 +270,7 @@ class Network extends React.Component {
   }
 
   handlePodEdit(podId) {
-    this.setState({selectedPodId: podId})
+    this.setState({podId: podId})
     // TODO: this.props.toggleModal(ADD_EDIT_POD)
   }
 
@@ -354,6 +368,7 @@ class Network extends React.Component {
     }
   }
 
+
   render() {
     const {
       activeAccount,
@@ -368,7 +383,8 @@ class Network extends React.Component {
       pops,
       pods,
       nodes,
-      selectedPopId
+      networkId,
+      popId
     } = this.state
 
     return (
@@ -397,7 +413,7 @@ class Network extends React.Component {
           <PlaceholderEntityList
             ref={networks => this.entityList.networkList = networks}
             entities={params.group && networks}
-            addEntity={() => null}
+            addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
             deleteEntity={() => (networkId) => this.handleNetworkEdit(networkId)}
             editEntity={() => (networkId) => this.handleNetworkEdit(networkId)}
             selectEntity={this.handleNetworkClick}
@@ -441,31 +457,40 @@ class Network extends React.Component {
         {/* MODALS
             TODO: Add/edit Group
         */}
-        {/* MODALS
-            TODO: Add/edit Network
-        */}
-        {/* MODALS
-            TODO: Add/edit POD
-        */}
 
+        {networkModal === ADD_EDIT_NETWORK &&
+          <NetworkFormContainer
+            account={activeAccount.get('name')}
+            groupId={params.group}
+            networkId={params.network}
+            fetching={fetching}
+            onDelete={this.handleNetworkDelete}
+            onSave={this.handleNetworkSave}
+            onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
+            show={true}
+            edit={networkId ? true : false}
+          />
 
-        {/* MODALS
-            Add/edit POP
-        */}
+        }
+
         {networkModal === ADD_EDIT_POP &&
           <NetworkPopFormContainer
             account={activeAccount.get('name')}
             groupId={params.group}
             networkId={params.network}
+            popId={params.pop}
             fetching={fetching}
             onDelete={this.handlePopDelete}
             onSave={this.handlePopSave}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
-            selectedPopId={params.pop}
             show={true}
-            edit={(selectedPopId !== null) ? true : false}
+            edit={(popId !== null) ? true : false}
           />
         }
+
+        {/* MODALS
+            TODO: Add/edit POD
+        */}
 
       </Content>
     )
