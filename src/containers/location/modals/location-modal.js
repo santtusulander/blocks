@@ -9,49 +9,52 @@ class LocationFormContainer extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {};
+
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(values) {
-    const { brandId, accountId, groupId, onSave } = this.props;
+  componentWillMount() {
+    // editMode for testing
+    this.setState({ editMode: true });
+  }
 
-    console.info('values to submit ', values);
-    this.props.onSave(values, ...{brandId, accountId, groupId});
+  onSubmit(values) {
+    const { brandId, accountId, groupId } = this.props.initialValues;
+
+    return {values, ...{ brandId, accountId, groupId }};
   }
 
   render() {
     const {
       intl,
-      locationId,
-      locationName,
-      iataCode,
-      latitude,
-      longitude,
+      cloudProvidersOptions,
+      cloudProvidersIdOptions,
+      fetching,
       addressFetching,
-      cloudProvider,
-      cloudProviderId,
-      cloudProviderRegion,
-      cloudProviderLocationId,
-      onCancel = () => {},
+      onCancel,
       invalid,
-      internalValues
+      initialValues
     } = this.props;
 
-    const title = locationId
+    const title = this.state.editMode
       ? <FormattedMessage id="portal.location.locationForm.editLocation.title"/>
       : <FormattedMessage id="portal.location.locationForm.newLocation.title"/>;
-
 
     return (
       <div>
         <SidePanel
           show={true}
           title={title}
-          cancel={onCancel}
+          cancel={() => onCancel()}
         >
           <LocationForm
-            locationId={locationId}
-            internalValues={internalValues}
+            editMode={this.state.editMode}
+            initialValues={this.state.editMode ? initialValues: ({})}
+            cloudProvidersOptions={cloudProvidersOptions}
+            cloudProvidersIdOptions={cloudProvidersIdOptions}
+            fetching={fetching}
+            addressFetching={addressFetching}
             intl={intl}
             invalid={invalid}
             onCancel={onCancel}
@@ -65,73 +68,93 @@ class LocationFormContainer extends Component {
 
 LocationFormContainer.displayName = 'LocationFormContainer';
 LocationFormContainer.propTypes = {
-  intl: intlShape.isRequired,
-  locationName: PropTypes.string,
-  iataCode: PropTypes.string,
-  latitude: PropTypes.string,
-  longitude: PropTypes.string,
   addressFetching: PropTypes.bool,
-  cloudProvider: PropTypes.array,
-  cloudProviderId: PropTypes.string,
-  cloudProviderRegion: PropTypes.string,
-  cloudProviderLocationId: PropTypes.string,
-  onCancel: PropTypes.func,
+  cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
+  cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
+  fetching: PropTypes.bool,
   invalid: PropTypes.bool,
-  internalValues: PropTypes.object
+  initialValues: PropTypes.object,
+  intl: intlShape.isRequired,
+  onCancel: PropTypes.func,
+  onSubmit: PropTypes.func
+};
+
+const cloudProvidersOptions = {
+  get() {
+    return [
+      {
+        value: 'Bare Metal',
+        label: 'Bare Metal'
+      }
+    ]
+  }
+};
+const cloudProvidersIdOptions = {
+  get() {
+    return [
+      {
+        value: 'sl',
+        label: 'IBM SoftLayer'
+      },{
+        value: 'do',
+        label: 'Digital Ocean'
+      },{
+        value: 'ec2',
+        label: 'Amazon EC2'
+      }
+    ]
+  }
 };
 
 const reduxStoreMock = {
   get(field) { return this[field] },
-  internal: {
-    brand_id: 'udn',
-    account_id: 1,
-    group_id: 1,
-  },
-  id: 'mil01',
-  cloud_name: [
-    {
-      value: 'bm',
-      label: 'IBM SoftLayer'
-    }
+
+  "account_id": 40032,
+  "postalcode": "Unknown",
+  "brand_id": "udn",
+  "street": "Unknown",
+  "cloud_location_id": "bkk",
+  "country_code": "th",
+  "city_name": "Bangkok",
+  "id": "bkk",
+  "cloud_provider": "sl",
+  "lat": 13.75,
+  "cloud_name": "Bare Metal",
+  "lon": 100.5167,
+  "iata_code": "bkk",
+  "state": "Unknown",
+  "boundingbox": [
+    13.75,
+    13.7501,
+    100.5167,
+    100.5167
   ],
-  cloud_provider: [
-    {
-      value: 'sl',
-      label: 'SL'
-    },{
-      value: 'do',
-      label: 'DO'
-    },{
-      value: 'ec2',
-      label: 'EC2'
-    }
-  ],
-  cloud_region: '',
-  cloud_location_id: '',
-  country_code: 'it',
-  state: 'Lombardia',
-  city_name: 'Milan',
-  iata_code: '',
-  street: 'some street address',
-  postalcode: '',
-  lat: '',
-  lon: ''
+  "group_id": 40038,
+  "cloud_region": "AP"
 };
 
-const mapStateToProps = (state) => ({
-  locationId: reduxStoreMock.get('id'),
-  cloudName: reduxStoreMock.get('cloud_name'),
-  cloudProvider: reduxStoreMock.get('cloud_provider'),
-  cloudRegion: reduxStoreMock.get('cloud_region'),
-  cloudLocationId: reduxStoreMock.get('cloud_location_id'),
-  countryCode: reduxStoreMock.get('country_code'),
-  state: reduxStoreMock.get('state'),
-  cityName: reduxStoreMock.get('city_name'),
-  iataCode: reduxStoreMock.get('iata_code'),
-  street: reduxStoreMock.get('street'),
-  postalCode: reduxStoreMock.get('postalcode'),
-  lat: reduxStoreMock.get('lat'),
-  lon: reduxStoreMock.get('lon')
+const mapStateToProps = () => ({
+  cloudProvidersOptions: cloudProvidersOptions.get(),
+  cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
+
+  initialValues: {
+    groupId: reduxStoreMock.get('group_id'),
+    accountId: reduxStoreMock.get('account_id'),
+    brandId: reduxStoreMock.get('brand_id'),
+    name: reduxStoreMock.get('id'),
+    iataCode: reduxStoreMock.get('iata_code'),
+    latitude: reduxStoreMock.get('lat'),
+    longitude: reduxStoreMock.get('lon'),
+    cloudName: reduxStoreMock.get('cloud_name'),
+    cloudProvider: reduxStoreMock.get('cloud_provider'),
+    cloudRegion: reduxStoreMock.get('cloud_region'),
+    cloudProviderLocationId: reduxStoreMock.get('cloud_location_id'),
+    countryCode: reduxStoreMock.get('country_code'),
+    state: reduxStoreMock.get('state'),
+    cityName: reduxStoreMock.get('city_name'),
+    street: reduxStoreMock.get('street'),
+    postalCode: reduxStoreMock.get('postalcode')
+  }
 });
 
 export default connect(mapStateToProps)(injectIntl((LocationFormContainer)))
