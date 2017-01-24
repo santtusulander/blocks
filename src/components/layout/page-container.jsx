@@ -8,7 +8,7 @@ class PageContainer extends React.Component {
     }
 
     return (
-      <div className={className}>
+      <div ref={ref => this.pageContainerRef = ref} className={className}>
         {this.props.children}
       </div>
     )

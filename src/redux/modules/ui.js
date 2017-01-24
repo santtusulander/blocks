@@ -14,6 +14,7 @@ const UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED = 'UI_ANALYSIS_ON_OFF_NET_CHART_CHANG
 const UI_ANALYSIS_SP_CHART_CHANGED = 'UI_ANALYSIS_SP_CHART_CHANGED'
 const UI_CONTENT_ITEM_SORTED = 'UI_CONTENT_ITEM_SORTED'
 const UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED = 'UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED'
+const UI_NETWORK_MODAL_TOGGLED = 'UI_NETWORK_MODAL_TOGGLED'
 
 const UI_SHOW_ERROR_DIALOG = 'UI_SHOW_ERROR_DIALOG'
 const UI_HIDE_ERROR_DIALOG = 'UI_HIDE_ERROR_DIALOG'
@@ -39,6 +40,7 @@ docBody.className += theme + '-theme'
 
 export const defaultUI = fromJS({
   accountManagementModal: null,
+  networkModal: null,
   contentItemSortDirection: -1,
   contentItemSortValuePath: ['metrics', 'totalTraffic'],
   theme: theme,
@@ -66,6 +68,10 @@ export const getTheme = (state) => {
 
 export function accountManagementModalToggled(state, action) {
   return state.merge({ accountManagementModal: action.payload })
+}
+
+export function networkModalToggled(state, action) {
+  return state.merge({ networkModal: action.payload })
 }
 
 export function themeChanged(state, action) {
@@ -170,6 +176,7 @@ export function policyActiveRuleChanged(state, action) {
 
 export default handleActions({
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
+  UI_NETWORK_MODAL_TOGGLED: networkModalToggled,
   UI_THEME_CHANGED: themeChanged,
   UI_CHART_VIEW_TOGGLED: chartViewToggled,
   UI_CHANGE_NOTIFICATION: notificationChanged,
@@ -195,6 +202,7 @@ export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
 export const toggleAccountManagementModal = createAction(UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED)
+export const toggleNetworkModal = createAction(UI_NETWORK_MODAL_TOGGLED)
 export const toggleAnalysisStatusCode = createAction(UI_ANALYSIS_STATUS_CODE_TOGGLED)
 export const toggleAnalysisServiceType = createAction(UI_ANALYSIS_SERVICE_TYPE_TOGGLED)
 export const changeOnOffNetChartType = createAction(UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED)
