@@ -345,7 +345,7 @@ class UserEditForm extends React.Component {
             </p>
           </Col>
 
-          <Col xs={2}>
+          <Col xs={1}>
             <Field
               name="tfa"
               component={FieldFormGroupSelect}

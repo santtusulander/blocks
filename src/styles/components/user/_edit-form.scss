@@ -7,17 +7,17 @@
 
   .form-group {
     padding-bottom: 0;
+  }
 
-    .select-box-tooltip {
-      line-height: 35px;
+  .select-box-tooltip {
+    line-height: 35px;
 
-      @media (max-width: $screen-lg-min) {
-        margin-left: 40px;
-      }
+    @media (max-width: $screen-lg-min) {
+      margin-left: 40px;
+    }
 
-      @media (max-width: $screen-md-min) {
-        margin-left: 60px;
-      }
+    @media (max-width: $screen-md-min) {
+      margin-left: 60px;
     }
   }
 }
