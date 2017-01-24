@@ -26,7 +26,7 @@ const validate = ({ pod_name }) => {
   return checkForErrors(
     { pod_name },
     conditions,
-    { pod_name: <FormattedMessage id="portal.account.groupForm.name.required.error"/> }
+    { pod_name: <FormattedMessage id="portal.network.podForm.name.required.error"/> }
   )
 }
 
