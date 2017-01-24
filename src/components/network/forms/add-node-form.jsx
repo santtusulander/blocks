@@ -24,7 +24,7 @@ import {
   ENVIRONMENT_OPTIONS,
   TYPE_OPTIONS,
   CLOUD_DRIVER_OPTIONS
-} from '../../../constants/sp-config-options'
+} from '../../../constants/network'
 
 const isEmpty = function(value) {
   return !!value === false
