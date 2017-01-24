@@ -25,7 +25,6 @@
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
-
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
   "portal.network.networkForm.name.required.error": "Network name is required",
@@ -47,6 +46,16 @@
   "portal.network.podForm.discoveryMethod.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
+  "portal.network.podForm.name.validation.error": "Invalid Pod name",
 
-  "portal.network.podForm.name.validation.error": "Invalid Pod name"
+  "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label": "BGP AS Name",
+  "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
+  "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
+  "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
+  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
 }
