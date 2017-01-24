@@ -6,7 +6,7 @@ import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
-import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER } from '../constants/account-management-options'
+import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
@@ -321,10 +321,11 @@ export function filterAccountsByUserName (accounts) {
  */
 export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   let errors = {}
+
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if ((isEmptyArray || field === '')) {
+    if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
@@ -419,6 +420,10 @@ export function userHasRole(user, roleToFind) {
 
 export function accountIsServiceProviderType(account) {
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
+}
+
+export function accountIsContentProviderType(account) {
+  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
 export function getAccountByID(accounts, ids) {
@@ -553,16 +558,15 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
   const byTimeOpts = Object.assign({
-    granularity: rangeDiff >= 2 ? 'day' : 'hour'
+    granularity:  rangeDiff >= 2 ? 'day' : 'hour'
   }, fetchOpts || params)
-  const aggregateGranularity = byTimeOpts.granularity
 
   const dashboardStartDate  = Math.floor(startDate / 1000)
   const dashboardEndDate    = Math.floor(endDate / 1000)
   const dashboardOpts = Object.assign({
     startDate: dashboardStartDate,
     endDate: dashboardEndDate,
-    granularity: 'hour'
+    granularity: rangeDiff >= 1 ? 'day' : 'hour'
   }, params)
 
   const byCityOpts = Object.assign({
@@ -576,5 +580,5 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
     show_detail: false
   }, byTimeOpts)
 
-  return { byTimeOpts, fetchOpts, byCityOpts, aggregateGranularity, dashboardOpts }
+  return { byTimeOpts, fetchOpts, byCityOpts, dashboardOpts }
 }
