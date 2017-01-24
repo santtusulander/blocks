@@ -9,6 +9,7 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
 import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
@@ -17,7 +18,7 @@ import {
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 
 
 import './account-form.scss'
@@ -28,24 +29,13 @@ const validate = ({ accountName, accountBrand, accountType, accountServices, ser
   const conditions = {
     accountName: [
       {
-        condition: ! isValidAccountName(accountName),
-        errorText: <div key={accountName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
-                    <div style={{marginTop: '0.5em'}}>
-                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                      <ul>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                      </ul>
-                    </div></div>]}
-                  </div>
+        condition: ! isValidTextField(accountName),
+        errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
       }
     ]
   }
 
-  const errors = checkForErrors({ accountName, accountBrand, accountType, accountServices, services }, conditions)
-
-  return errors;
-
+  return checkForErrors({ accountName, accountBrand, accountType, accountServices, services }, conditions)
 }
 
 class AccountForm extends React.Component {

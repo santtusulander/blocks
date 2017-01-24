@@ -1,5 +1,6 @@
 {
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
+  "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",
   "portal.network.popEditForm.editPop.title": "Edit POP",
   "portal.network.popEditForm.pop.deleteError" : "Unable to delete POP",
@@ -26,6 +27,8 @@
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required",
 
   "portal.network.addNodeForm.title": "Add nodes",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
