@@ -64,8 +64,9 @@ class NetworkPopFormContainer extends Component {
   }
 
   render() {
-    const { edit, fetching, initialValues, selectedLocationId,
-            selectedPopId, onCancel, groupId, networkId, show } = this.props
+    const { edit, fetching, initialValues, locationId,
+            onCancel, groupId, networkId, popId, show } = this.props
+
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
@@ -92,8 +93,8 @@ class NetworkPopFormContainer extends Component {
         <NetworkPopForm
           edit={edit}
           fetching={fetching}
-          selectedLocationId={selectedLocationId}
-          selectedPopId={selectedPopId}
+          locationId={locationId}
+          popId={popId}
           initialValues={initialValues}
           onDelete={(popId) => this.onDelete(popId)}
           onSave={(values) => this.onSubmit(edit, values)}
@@ -111,24 +112,24 @@ NetworkPopFormContainer.propTypes = {
   fetching: PropTypes.bool,
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   initialValues: PropTypes.object,
+  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   show: PropTypes.bool
 }
 
 const formSelector = formValueSelector('networkPopEditForm')
 const mapStateToProps = (state, ownProps) => {
-  const selectedLocationId = formSelector(state, 'locationId')
-  const selectedPopId = formSelector(state, 'popId')
+  const locationId = formSelector(state, 'locationId')
+  const popId = formSelector(state, 'popId')
 
   const props = {
     fetching: mockReduxCalls.get('fetching'),
-    selectedLocationId: selectedLocationId,
-    selectedPopId: selectedPopId,
+    locationId: locationId,
+    popId: popId,
     initialValues: {
       name: ownProps.edit ? mockReduxCalls.get('name') : '',
       createdDate: ownProps.edit ? mockReduxCalls.get('createdDate') : '',

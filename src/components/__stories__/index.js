@@ -33,3 +33,6 @@ import './security/certificate-form'
 // content
 import './content/add-host'
 import './content/content-item-chart'
+
+// sp-config
+import './network/form/routing-daemon-form'
