@@ -3,8 +3,8 @@ import axios from 'axios'
 
 import { BASE_URL_NORTH } from '../../../util'
 
-const baseURL = ({ brand, account, group, network, pop }) =>
-  `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${pop}/nodes`
+const baseURL = ({ brand, account, group, network, pop, pod }) =>
+  `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${pop}/pods/${pod}/nodes`
 
 const nodeSchema = new schema.Entity('nodes')
 
