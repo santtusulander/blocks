@@ -8,7 +8,7 @@ import IconArrowUp from './icons/icon-arrow-up'
 const NumberInput = (props) => {
   const { max, min, onChange, value } = props
 
-  const changeValue = (enteredValue, isIncrement) => {
+  const handleChange = (enteredValue, isIncrement) => {
     let newValue = 0
 
     if (isIncrement) {
@@ -32,6 +32,15 @@ const NumberInput = (props) => {
     }
   }
 
+  const handleKeyDown = e => {
+    // e.keyCode 38 = UP, 40 = DOWN
+    if (e.keyCode === 38) {
+      handleChange(1, true)
+    } else if (e.keyCode === 40) {
+      handleChange(-1, true)
+    }
+  }
+
   return (
     <InputGroup className="number-input-group">
 
@@ -41,23 +50,22 @@ const NumberInput = (props) => {
           props.className,
           'number-input'
         )}
-        onChange={e => changeValue(e.target.value)}
-        max={max}
-        min={min}
+        onChange={e => handleChange(e.target.value)}
+        onKeyDown={e => handleKeyDown(e)}
         type="text" />
 
       <InputGroup.Addon>
         <Button
           disabled={value >= max}
           className="number-input-increase" onClick={() => {
-            changeValue(1, true)
+            handleChange(1, true)
           }}>
           <IconArrowUp width={18} height={18} />
         </Button>
         <Button
           disabled={value <= min}
           className="number-input-decrease" onClick={() => {
-            changeValue(-1, true)
+            handleChange(-1, true)
           }}>
           <IconArrowDown width={18} height={18} />
         </Button>
