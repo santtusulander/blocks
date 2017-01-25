@@ -15,12 +15,12 @@ const validate = fields => {
   const customConditions = {};
 
   const requiredTexts = {
-    'name': <FormattedMessage id='portal.network.locationForm.name.required.error'/>,
-    'iataCode': <FormattedMessage id='portal.network.locationForm.iataCode.required.error'/>,
-    'latitude': <FormattedMessage id='portal.network.locationForm.latitude.required.error'/>,
-    'longitude': <FormattedMessage id='portal.network.locationForm.longitude.required.error'/>,
-    'cloudProvider': <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
-    'cloudProviderLocationId': <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
+    name: <FormattedMessage id='portal.network.locationForm.name.required.error'/>,
+    iataCode: <FormattedMessage id='portal.network.locationForm.iataCode.required.error'/>,
+    latitude: <FormattedMessage id='portal.network.locationForm.latitude.required.error'/>,
+    longitude: <FormattedMessage id='portal.network.locationForm.longitude.required.error'/>,
+    cloudProvider: <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
+    cloudProviderLocationId: <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
   };
 
   return checkForErrors(fields, customConditions, requiredTexts);
