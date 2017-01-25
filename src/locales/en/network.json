@@ -66,6 +66,32 @@
   "portal.network.footprintForm.description.invalid.text": "Footprint description is invalid",
   "portal.network.footprintForm.field.required.text": "{field} is required",
 
+  "portal.network.locationForm.newLocation.title": "Add Location",
+  "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.name.placeholder": "Enter Location Name",
+  "portal.network.locationForm.iataCode.label": "IATA Code",
+  "portal.network.locationForm.iataCode.placeholder": "Enter IATA Code",
+  "portal.network.locationForm.latitude.label": "Latitude",
+  "portal.network.locationForm.latitude.placeholder": "eg. 37.774929",
+  "portal.network.locationForm.longitude.label": "Longitude",
+  "portal.network.locationForm.longitude.placeholder": "e.g.-122.419416",
+  "portal.network.locationForm.cloudProvider.label": "Cloud Provider",
+  "portal.network.locationForm.cloudProviderId.label": "Cloud Provider ID (optional)",
+  "portal.network.locationForm.cloudProviderRegion.label": "Cloud Provider Region (optional)",
+  "portal.network.locationForm.cloudProviderRegion.placeholder": "Enter Cloud Provider Region",
+  "portal.network.locationForm.cloudProviderLocationId.label": "Cloud Provider Location ID",
+  "portal.network.locationForm.cloudProviderLocationId.placeholder": "Enter Cloud Provider Location ID",
+  "portal.network.locationForm.latLongFields.helperText.address": "ADDRESS:",
+  "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
+  "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address",
+
+  "portal.network.locationForm.name.required.error": "Location name is required",
+  "portal.network.locationForm.iataCode.required.error": "IATA code is required",
+  "portal.network.locationForm.latitude.required.error": "Latitude is required",
+  "portal.network.locationForm.longitude.required.error": "Longitude is required",
+  "portal.network.locationForm.cloudProvider.required.error": "Cloud Provider is required",
+  "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required",
+
   "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
@@ -77,3 +103,4 @@
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
 }
+
