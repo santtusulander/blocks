@@ -151,7 +151,7 @@ const PodForm = ({
               disabled={hasNodes}
               onClick={onDelete}
               tooltipId="tooltip-help"
-              tooltipMessage={{text :"tooltip-help"}}>
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
               <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           </ButtonToolbar>

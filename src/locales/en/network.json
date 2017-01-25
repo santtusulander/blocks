@@ -48,6 +48,7 @@
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
   "portal.network.podForm.name.validation.error": "Invalid Pod name",
   "portal.network.podForm.name.required.error": "POD Name is required",
+  "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
