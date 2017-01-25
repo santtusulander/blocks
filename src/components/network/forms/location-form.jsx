@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { Button, Col, Row } from 'react-bootstrap'
+import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 import FieldFormGroup from '../../form/field-form-group'
@@ -145,34 +145,36 @@ const NetworkLocationForm = (props) => {
         </Col>
       </Row>
 
-
-      <FormFooterButtons>
+      <FormFooterButtons autoAlign={false}>
         { edit &&
-          <Button
-            className="btn-danger pull-left"
-            disabled={fetching}
-            onClick={onDelete}
-          >
-            <FormattedMessage id="portal.button.delete"/>
-          </Button>
+          <ButtonToolbar className="pull-left">
+            <Button
+              className="btn-danger"
+              disabled={fetching}
+              onClick={onDelete}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
+          </ButtonToolbar>
         }
-
-        <Button
-          className="btn-secondary"
-          onClick={onCancel}
-        >
-          <FormattedMessage id="portal.button.cancel"/>
-        </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || fetching}
-        >
-          {edit
-            ? <FormattedMessage id='portal.button.save' />
-            : <FormattedMessage id='portal.button.add' />
-          }
-        </Button>
+        <ButtonToolbar className="pull-right">
+          <Button
+            className="btn-secondary"
+            onClick={onCancel}
+          >
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || fetching}
+          >
+            {edit
+              ? <FormattedMessage id='portal.button.save' />
+              : <FormattedMessage id='portal.button.add' />
+            }
+          </Button>
+        </ButtonToolbar>
       </FormFooterButtons>
     </form>
   )};
