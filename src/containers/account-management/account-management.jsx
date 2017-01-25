@@ -27,6 +27,7 @@ import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
 import IconEdit from '../../components/icons/icon-edit'
+import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
 
 import Tabs from '../../components/tabs'
 
@@ -41,7 +42,7 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 export class AccountManagement extends Component {
@@ -281,20 +282,8 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: !isValidAccountName(accountName),
-          errorText:
-            <div key={accountName}>
-              <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>
-              <div>
-                <div style={{marginTop: '0.5em'}}>
-                  <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                  <ul>
-                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          condition: !isValidTextField(accountName),
+          errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
         }
       ]
     }

@@ -4,9 +4,17 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
-import { formatBitsPerSecond, formatBytes, formatTime, getAccountByID, separateUnit } from '../util/helpers'
+import {
+  accountIsServiceProviderType,
+  formatBitsPerSecond,
+  formatBytes,
+  formatTime,
+  getAccountByID,
+  separateUnit,
+  userIsServiceProvider } from '../util/helpers'
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
+import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -162,12 +170,11 @@ export class Dashboard extends React.Component {
     const countries = !dashboard.size ? List() : dashboard.get('countries')
     const countriesAverageBandwidth = val => formatBitsPerSecond(val, true)
 
-    const topCPamount = 5
-    const topCPs = !dashboard.size ? List() : dashboard.get('providers')
+    const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-      .take(topCPamount)
-    const topCPsIDs = topCPs.map(provider => provider.get('account')).toJS()
-    const topCPsAccounts = getAccountByID(accounts, topCPsIDs)
+      .take(TOP_PROVIDER_LENGTH)
+    const topProvidersIDs = topProviders.map(provider => provider.get('account')).toJS()
+    const topProvidersAccounts = getAccountByID(accounts, topProvidersIDs)
 
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -175,6 +182,9 @@ export class Dashboard extends React.Component {
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
+
+    const topProviderTitleId = (accountIsServiceProviderType(activeAccount) || userIsServiceProvider(user)) ?
+      'portal.dashboard.topCP.title' : 'portal.dashboard.topSP.title'
 
     return (
       <Content>
@@ -265,7 +275,7 @@ export class Dashboard extends React.Component {
                   mapboxActions={this.props.mapboxActions}/>
               </div>
             </DashboardPanel>
-            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.top5CP.title'})}>
+            <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
               <Table className="table-simple">
                 <thead>
                   <tr>
@@ -275,12 +285,12 @@ export class Dashboard extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {topCPs.map((provider, i) => {
+                  {topProviders.map((provider, i) => {
                     const traffic = separateUnit(formatBytes(provider.get('bytes')))
                     const trafficPercentage = separateUnit(numeral(provider.get('bytes') / trafficBytes).format('0 %'))
                     return (
                       <tr key={i}>
-                        <td><b>{topCPsAccounts[i] ? topCPsAccounts[i].get('name') : provider.get('account')}</b></td>
+                        <td><b>{topProvidersAccounts[i] ? topProvidersAccounts[i].get('name') : provider.get('account')}</b></td>
                         <td>
                           <MiniChart
                             kpiRight={true}
@@ -302,7 +312,7 @@ export class Dashboard extends React.Component {
                   })}
                 </tbody>
               </Table>
-              {!topCPs.size &&
+              {!topProviders.size &&
                 <div className="no-data">
                   <FormattedMessage id="portal.common.no-data.text"/>
                 </div>}

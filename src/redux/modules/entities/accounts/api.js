@@ -1,9 +1,19 @@
 import axios from 'axios'
-import { normalize } from 'normalizr'
+import { normalize, schema } from 'normalizr'
 
 import { BASE_URL_AAA } from '../../../util.js'
 
-import {Schemas} from '../schemas'
+const accountSchema = new schema.Entity('accounts', {}, {
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
+})
+
+const brandAccountSchema = new schema.Entity('brandAccounts', {
+  accounts: [ accountSchema ]
+})
+
+const baseURL = brand => `${BASE_URL_AAA}/brands/${brand}/accounts`
 
 /**
  * Fetch single account
@@ -11,16 +21,16 @@ import {Schemas} from '../schemas'
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetch = ({brand, account}) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}`)
-    .then( ({data}) => {
+export const fetch = ({brand, id }) => {
+  return axios.get(`${baseURL(brand)}/${id}`)
+    .then( ({ data }) => {
 
       const accountData = {
         id: brand,
         accounts: [ data ]
       }
 
-      return normalize(accountData, Schemas.brandAccounts)
+      return normalize(accountData, brandAccountSchema)
     })
 }
 
@@ -30,16 +40,59 @@ export const fetch = ({brand, account}) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = ({brand}) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
+export const fetchAll = ({ brand }) => {
+  return axios.get(baseURL(brand))
     .then( ({data}) => {
 
       const brandAccounts = {
         id: brand,
-        accounts:  data.data
+        accounts: data.data
       }
 
-      return normalize(brandAccounts, Schemas.brandAccounts)
+      return normalize(brandAccounts, brandAccountSchema)
+    })
+}
+
+/**
+ * create a new account
+ * @param  {[type]} brand   [brand id]
+ * @param  {[type]} payload [data to create account with]
+ */
+export const create = ({ brand, payload }) =>
+  axios.post(baseURL(brand), payload)
+    .then(({ data }) => {
+
+      const brandAccounts = {
+        id: brand,
+        accounts: [ data ]
+      }
+
+      return normalize(brandAccounts, brandAccountSchema)
     })
 
-}
+/**
+ * update an account
+ * @param  {[type]} brand   [brand id]
+ * @param  {[type]} id      [account id]
+ * @param  {[type]} payload [data to update account with]
+ */
+export const update = ({ brand, id, payload }) =>
+  axios.put(`${baseURL(brand)}/${id}`, payload)
+    .then(({ data }) => {
+
+      const brandAccounts = {
+        id: brand,
+        accounts: [ data ]
+      }
+
+      return normalize(brandAccounts, brandAccountSchema)
+    })
+
+/**
+ * remove an account
+ * @param  {[type]} brand [brand id]
+ * @param  {[type]} id    [account id]
+ */
+export const remove = ({ brand, id }) =>
+  axios.delete(`${baseURL(brand)}/${id}`)
+    .then(() => ({ id }))

@@ -1,0 +1,2 @@
+export const NETWORK_SCROLL_AMOUNT = 25
+export const NETWORK_WINDOW_OFFSET = 10

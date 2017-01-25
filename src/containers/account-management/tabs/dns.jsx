@@ -13,7 +13,6 @@ import { DNS_DOMAIN_EDIT, EDIT_RECORD } from '../../../constants/account-managem
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import DomainToolbar from '../../../components/account-management/domain-toolbar'
 import DNSList from '../../../components/account-management/dns-list'
-// import SoaEditForm from '../soa-edit-form'
 import RecordForm from '../modals/record-form'
 import DomainForm from '../modals/domain-form'
 import ModalWindow from '../../../components/modal'
