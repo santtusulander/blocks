@@ -558,8 +558,8 @@ class Network extends React.Component {
             ref={networks => this.entityList.networkList = networks}
             entities={params.group && networks}
             addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-            deleteEntity={() => (networkId) => this.handleNetworkEdit(networkId)}
-            editEntity={() => (networkId) => this.handleNetworkEdit(networkId)}
+            deleteEntity={this.handleNetworkEdit}
+            editEntity={this.handleNetworkEdit}
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
             title="Networks"
@@ -615,7 +615,7 @@ class Network extends React.Component {
             onSave={this.handleNetworkSave}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
             show={true}
-            edit={networkId ? true : false}
+            edit={(networkId !== null) ? true : false}
           />
         }
 
@@ -633,7 +633,7 @@ class Network extends React.Component {
             edit={(popId !== null) ? true : false}
           />
         }
-        
+
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
