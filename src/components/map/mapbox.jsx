@@ -726,11 +726,11 @@ class Mapbox extends React.Component {
 
 Mapbox.displayName = "Mapbox"
 Mapbox.propTypes = {
-  cityData: React.PropTypes.instanceOf(Immutable.List),
-  countryData: React.PropTypes.instanceOf(Immutable.List),
+  cityData: React.PropTypes.instanceOf(Immutable.List).isRequired,
+  countryData: React.PropTypes.instanceOf(Immutable.List).isRequired,
   dataKey: React.PropTypes.string,
   dataKeyFormat: React.PropTypes.func,
-  geoData: React.PropTypes.object,
+  geoData: React.PropTypes.object.isRequired,
   getCitiesWithinBounds: React.PropTypes.func,
   height: React.PropTypes.number,
   mapBounds: React.PropTypes.object,
@@ -740,7 +740,12 @@ Mapbox.propTypes = {
 
 Mapbox.defaultProps = {
   dataKeyFormat: data => data,
-  getCitiesWithinBounds: () => {}
+  getCitiesWithinBounds: () => {},
+  mapboxActions: {
+    setMapBounds: () => null,
+    setMapZoom: () => null
+  },
+  mapBounds: Immutable.Map()
 }
 
 export default Mapbox
