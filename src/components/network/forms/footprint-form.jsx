@@ -13,11 +13,11 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
-import { isValidTextField, isValidIPv4AddressWithSubnet } from '../../../util/validators'
+import { isValidTextField, isValidIPv4Address } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
 const validateTypeaheadToken = (item) => {
-  return item.label && isValidIPv4AddressWithSubnet(item.label)
+  return item.label && isValidIPv4Address(item.label)
 }
 
 const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
