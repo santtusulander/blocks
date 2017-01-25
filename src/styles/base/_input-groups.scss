@@ -4,6 +4,10 @@
 .input-group {
   width: 100%;
   max-width: 900px;
+
+  .form-control {
+    min-height: $bar-height;
+  }
 }
 
 .input-group-addon {
@@ -17,6 +21,17 @@
   .icon {
     fill: $white;
   }
+}
+
+.input-group-addon.addon-before {
+  padding-left: 0;
+}
+
+.has-error .input-group-addon {
+  // UDNP-2419: Don't allow overriding border-color and background-color by has-error.
+  color: $form-error-color;
+  background-color: inherit;
+  border-color: inherit;
 }
 
 .input-addon-before .input-group-addon:first-child {
