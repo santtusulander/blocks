@@ -25,7 +25,7 @@ const property = new schema.Entity('properties', {}, {
 const pod = new schema.Entity('pods', {
   footprints: [ footprint ]
 }, {
-  idAttribute: 'pod_name',
+  idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
   processStrategy: (value, parent) => {
     return { ...value, parentId: parent.id}
   }
