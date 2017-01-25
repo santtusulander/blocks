@@ -1,0 +1,10 @@
+// ButtonDisableTooltip
+// =============
+
+.button-wrapper {
+  cursor: not-allowed;
+
+  button {
+    pointer-events: none;
+  }
+}
