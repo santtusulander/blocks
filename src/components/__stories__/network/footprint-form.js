@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../theme-wrap'
-import FootprintForm from '../../network/forms/footprint-form'
+import FootprintFormContainer from '../../../containers/network/modals/footprint-modal'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
@@ -13,8 +13,8 @@ const store = createStore(stateReducer)
 const dummyCIDROptions = [
   { id: '1', label: '192.168.1.100/1' },
   { id: '2', label: '192.168.1.100/2' },
-  { id: '3', label: '192.168.1.100/3' },
-  { id: '4', label: '192.168.1.100/4' }
+  { id: '3', label: '192.168.1.100' },
+  { id: '4', label: '192.168.1.101' }
 ];
 
 const dummyASNOptions = [
@@ -40,7 +40,7 @@ storiesOf('Network', module)
     </ThemeWrap>
   ))
   .add('FootprintForm', () => (
-    <FootprintForm
+    <FootprintFormContainer
       show={true}
       editing={false}
       ASNOptions={dummyASNOptions}
