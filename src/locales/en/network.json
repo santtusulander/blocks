@@ -25,8 +25,29 @@
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
+  "portal.network.networkForm.name.validation.error": "Invalid Network name",
+  "portal.network.networkForm.description.validation.error": "Invalid Network description",
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
+
+  "portal.network.podForm.newPod.title": "Add POD",
+  "portal.network.podForm.editPod.title": "Edit POD",
+  "portal.network.podForm.name.label": "Name",
+  "portal.network.podForm.name.text": "Enter POD Name",
+  "portal.network.podForm.lbMethod.label": "Lb Method",
+  "portal.network.podForm.lbMethod.help.label": "Lb Method",
+  "portal.network.podForm.lbMethod.help.text": "Lb Method Help text",
+  "portal.network.podForm.type.label": "Type",
+  "portal.network.podForm.localAS.label": "Local AS",
+  "portal.network.podForm.localAS.help.label": "Local AS",
+  "portal.network.podForm.localAS.help.text": "Local AS Help text",
+  "portal.network.podForm.requestForwardType.label": "Request Forward Type",
+  "portal.network.podForm.providerWeight.label": "Provider Weight",
+  "portal.network.podForm.discoveryMethod.label": "Discovery Method",
+  "portal.network.podForm.discoveryMethod.help.label": "Discovery Method",
+  "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
+  "portal.network.podForm.name.validation.error": "Invalid Pod name",
+  "portal.network.podForm.name.required.error": "POD Name is required",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
@@ -52,6 +73,16 @@
   "portal.network.locationForm.latitude.required.error": "Latitude is required",
   "portal.network.locationForm.longitude.required.error": "Longitude is required",
   "portal.network.locationForm.cloudProvider.required.error": "Cloud Provider is required",
-  "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required"
-}
+  "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required",
+
+  "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label": "BGP AS Name",
+  "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
+  "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
+  "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
+  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"}
 
