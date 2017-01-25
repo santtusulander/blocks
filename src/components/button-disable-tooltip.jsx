@@ -10,7 +10,7 @@ const ButtonDisableTooltip = (props) => {
           {tooltipMessage.title && <div className="tooltip-header">{tooltipMessage.title}</div>}
           <div className="text-sm">{tooltipMessage.text}</div>
         </Tooltip>}>
-        <div className="button-wrapper">
+        <div className="button-disable-wrapper">
           <Button
             disabled={disabled}
             {...rest}>
