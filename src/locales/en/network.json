@@ -84,5 +84,6 @@
   "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
   "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
-  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"}
+  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
+}
 
