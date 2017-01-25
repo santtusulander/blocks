@@ -429,6 +429,10 @@ textarea {
   .has-error & {
     color: $form-error-color;
   }
+
+  .multiline-tex-field-error {
+    margin-top: 0.5em;
+  }
 }
 
 .search-input {
@@ -553,3 +557,18 @@ textarea {
     }
   }
 }
+
+// Routing Daemon Form
+// =====
+.routing-daemon__form {
+  .input-group-addon {
+    .dark-theme & {
+      padding: 0;
+      background-color: rgba($black, 0.2);
+    }
+    .light-theme & {
+      background-color: $white;
+    }
+  }
+}
+

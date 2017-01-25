@@ -55,11 +55,6 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
         color: $lt-text-color;
         background-color: rgba($black, 0.04);
       }
-
-      > span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
     }
 
     .dropdown-select {
