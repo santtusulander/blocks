@@ -76,7 +76,7 @@ class FootprintForm extends React.Component {
     } = this.props
 
     const formTitle = editing
-      ? <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
+      ? <FormattedMessage id="portal.network.footprintForm.title.edit.text"/>
       : <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
 
     const submitButtonLabel = editing
