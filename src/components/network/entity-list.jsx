@@ -144,7 +144,7 @@ class EntityList extends React.Component {
           onAdd={addEntity}
         />
 
-      <div className={entityListClasses}>
+        <div className={entityListClasses}>
           {showEntitiesTable && this.renderListItems()}
         </div>
       </div>
