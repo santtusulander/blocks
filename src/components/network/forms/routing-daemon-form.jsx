@@ -17,10 +17,14 @@ const validate = ({ bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password }) =
     { bgp_as_number, bgp_as_name, bgp_router_ip, bgp_password },
     {},
     {
-      bgp_as_number: <FormattedMessage values={{ field: 'BGP AS Number' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
-      bgp_as_name: <FormattedMessage values={{ field: 'BGP AS Name' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
-      bgp_router_ip: <FormattedMessage values={{ field: 'BGP Router IP' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
-      bgp_password: <FormattedMessage values={{ field: 'BGP Password' }} id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
+      bgp_as_number: <FormattedMessage values={{ field: 'BGP AS Number' }}
+                                       id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_as_name: <FormattedMessage values={{ field: 'BGP AS Name' }}
+                                     id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_router_ip: <FormattedMessage values={{ field: 'BGP Router IP' }}
+                                       id="portal.network.spConfig.routingDaemon.editForm.required.text"/>,
+      bgp_password: <FormattedMessage values={{ field: 'BGP Password' }}
+                                      id="portal.network.spConfig.routingDaemon.editForm.required.text"/>
     }
   )
 }
@@ -41,7 +45,7 @@ class RoutingDaemonForm extends React.Component {
   }
 
   fetchBGPName(e) {
-    const { fetchBGPName, setBGPName } = this.props
+    const { fetchBGPName, setBGPName, intl } = this.props
     const BGPNumber = e.target.value
 
     if (!BGPNumber || this.state.BGPNumber === BGPNumber) {
@@ -53,14 +57,15 @@ class RoutingDaemonForm extends React.Component {
       isFetchingBGPName: true
     })
 
-    fetchBGPName()
-      .then(res => {
+    fetchBGPName(BGPNumber)
+      .then(({ data: { holder } }) => {
+        holder = holder ? holder : intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label' })
         this.setState({
           BGPNumber,
-          BGPName: res.payload,
+          BGPName: holder,
           BGPNameNotFound: false,
           isFetchingBGPName: false
-        }, () => setBGPName(res.payload))
+        }, () => setBGPName(holder))
 
       })
       .catch(() => {
@@ -69,7 +74,7 @@ class RoutingDaemonForm extends React.Component {
           BGPName: null,
           BGPNameNotFound: true,
           isFetchingBGPName: false
-        }, () => setBGPName(this.props.intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameNotFound' })))
+        }, () => setBGPName(intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label' })))
       })
   }
 
