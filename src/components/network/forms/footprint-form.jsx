@@ -161,7 +161,6 @@ class FootprintForm extends React.Component {
                 allowNew={true}
                 component={FieldFormGroupTypeahead}
                 multiple={true}
-                onChange={() => null}
                 options={CIDROptions}
                 validation={validateTypeaheadToken}/>
               }
@@ -172,7 +171,6 @@ class FootprintForm extends React.Component {
                 allowNew={true}
                 component={FieldFormGroupTypeahead}
                 multiple={true}
-                onChange={() => null}
                 options={ASNOptions}
                 validation={validateTypeaheadToken}/>
               }
