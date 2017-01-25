@@ -75,7 +75,7 @@ class FootprintForm extends React.Component {
       onDelete,
       handleSubmit,
       submitting,
-      UNDTypeOptions
+      udnTypeOptions
     } = this.props
 
     const submitButtonLabel = editing
@@ -172,7 +172,7 @@ class FootprintForm extends React.Component {
             name="UDNTypeList"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={UNDTypeOptions}
+            options={udnTypeOptions}
             label={<FormattedMessage id="portal.network.footprintForm.UDNType.title.text"/>}
           />
         </div>
@@ -226,7 +226,7 @@ FootprintForm.propTypes = {
   onDelete: PropTypes.func,
   show: PropTypes.bool,
   ...reduxFormPropTypes,
-  UNDTypeOptions: PropTypes.array
+  udnTypeOptions: PropTypes.array
 }
 
 const form = reduxForm({

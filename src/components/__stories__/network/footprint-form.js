@@ -46,7 +46,7 @@ storiesOf('Network', module)
       fetching={false}
       ASNOptions={dummyASNOptions}
       CIDROptions={dummyCIDROptions}
-      UNDTypeOptions={dummyUDNTypeOptions}
+      udnTypeOptions={dummyUDNTypeOptions}
       onCancel={action('Handling cancel')}
       onDelete={action('Handling submit')}
       onSubmit={action('Handling submit')}

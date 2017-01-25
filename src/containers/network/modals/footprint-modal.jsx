@@ -29,7 +29,7 @@ class FootprintFormContainer extends React.Component {
       onCancel,
       onDelete,
       show,
-      UNDTypeOptions
+      udnTypeOptions
     } = this.props
 
     const formTitle = editing
@@ -47,7 +47,7 @@ class FootprintFormContainer extends React.Component {
           fetching={fetching}
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
-          UNDTypeOptions={UNDTypeOptions}
+          udnTypeOptions={udnTypeOptions}
           onCancel={onCancel}
           onDelete={onDelete}
           onSubmit={this.onSubmit}
@@ -68,7 +68,7 @@ FootprintFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
   show: PropTypes.bool,
-  UNDTypeOptions: PropTypes.array
+  udnTypeOptions: PropTypes.array
 }
 
 const mapStateToProps = () => {
