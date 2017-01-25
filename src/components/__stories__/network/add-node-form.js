@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import {storiesOf, action} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import NetworkAddNodeForm from '../../network/forms/add-node-form.jsx'
+import NetworkAddNodeFormContainer from '../../../containers/network/modals/add-node-modal.jsx'
 
 const reducers = {
   form: formReducer
@@ -25,6 +25,6 @@ storiesOf('Network', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('Add Nodes Form', () => (
-    <NetworkAddNodeForm show={showModal} onSave={action('onSave')} onCancel={action('onCancel')}/>
+  .add('Add Node Form', () => (
+    <NetworkAddNodeFormContainer show={showModal} onSave={action('onSave')} onCancel={action('onCancel')}/>
   ));
