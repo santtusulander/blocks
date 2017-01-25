@@ -8,9 +8,7 @@ import {
 } from 'react-bootstrap'
 
 import { Field, formValueSelector, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { FormattedMessage, injectIntl } from 'react-intl'
-
-import SidePanel from '../../side-panel'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
@@ -82,29 +80,24 @@ class NetworkAddNodeForm extends React.Component {
 
     this.onCancel = this.onCancel.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.onCancelConfirm = this.onCancelConfirm.bind(this)
   }
 
-  onSubmit() {
+  onSubmit(values) {
     const { showAddConfirmation } = this.state
     if (!showAddConfirmation) {
-      this.showConfirm();
+      this.toggleAddConfirm(true)
       return
     }
-    // @TODO submit data
-    this.props.onSave()
+    this.props.onSave(values)
   }
 
   onCancel(){
     return this.props.onCancel()
   }
 
-  showConfirm() {
-    this.setState({ showAddConfirmation: true })
-  }
-
-  onCancelConfirm() {
-    this.setState({ showAddConfirmation: false })
+  toggleAddConfirm(showAddConfirmation) {
+    this.setState({ showAddConfirmation })
+    this.props.onToggleConfirm(showAddConfirmation)
   }
 
   getFooterButtons() {
@@ -123,7 +116,7 @@ class NetworkAddNodeForm extends React.Component {
           <Button
             id="cancel-confirm-btn"
             className="btn-secondary"
-            onClick={this.onCancelConfirm}>
+            onClick={() => this.toggleAddConfirm(false)}>
             <FormattedMessage id="portal.button.back"/>
           </Button>
           <Button
@@ -153,80 +146,63 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const {
-      handleSubmit,
-      show
-    } = this.props
-
-    const { showAddConfirmation } = this.state
-
-    const panelTitle = <FormattedMessage id="portal.network.addNodeForm.title" />
-    const panelSubTitle = ['Group X', 'Network Y', 'POP 1 - Chicago', 'POD2'].join(' / ') // @TODO add real values when redux connected
-
+    const { handleSubmit } = this.props
     const footerButtons = this.getFooterButtons()
 
     return (
-      <SidePanel
-        show={show}
-        title={panelTitle}
-        subTitle={panelSubTitle}
-        cancel={this.onCancel}
-        dim={showAddConfirmation}
-      >
-        <form className="add-node__form" onSubmit={handleSubmit(this.onSubmit)}>
-          <div className="form-input-container">
-            <span className='submit-error'>{this.props.error}</span>
-            <FormGroup>
-              <Field
-                type="number"
-                name="numNodes"
-                component={FieldFormGroup}
-                label={<FormattedMessage id="portal.network.addNodeForm.howMany.title" />}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Field
-                name="node_role"
-                className="input-select"
-                component={FieldFormGroupSelect}
-                options={NODE_ROLE_OPTIONS}
-                label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
-              />
-            </FormGroup>
+      <form className="add-node__form" onSubmit={handleSubmit(this.onSubmit)}>
+        <div className="form-input-container">
+          <span className='submit-error'>{this.props.error}</span>
+          <FormGroup>
+            <Field
+              type="number"
+              name="numNodes"
+              component={FieldFormGroup}
+              label={<FormattedMessage id="portal.network.addNodeForm.howMany.title" />}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Field
+              name="node_role"
+              className="input-select"
+              component={FieldFormGroupSelect}
+              options={NODE_ROLE_OPTIONS}
+              label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
+            />
+          </FormGroup>
 
-            <FormGroup>
-              <Field
-                name="node_env"
-                className="input-select"
-                component={FieldFormGroupSelect}
-                options={NODE_ENVIRONMENT_OPTIONS}
-                label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
-              />
-            </FormGroup>
+          <FormGroup>
+            <Field
+              name="node_env"
+              className="input-select"
+              component={FieldFormGroupSelect}
+              options={NODE_ENVIRONMENT_OPTIONS}
+              label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
+            />
+          </FormGroup>
 
-            <FormGroup>
-              <Field
-                name="node_type"
-                className="input-select"
-                component={FieldFormGroupSelect}
-                options={NODE_TYPE_OPTIONS}
-                label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
-              />
-            </FormGroup>
+          <FormGroup>
+            <Field
+              name="node_type"
+              className="input-select"
+              component={FieldFormGroupSelect}
+              options={NODE_TYPE_OPTIONS}
+              label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
+            />
+          </FormGroup>
 
-            <FormGroup>
-              <Field
-                name="cloud_driver"
-                className="input-select"
-                component={FieldFormGroupSelect}
-                options={NODE_CLOUD_DRIVER_OPTIONS}
-                label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
-              />
-            </FormGroup>
-          </div>
-          {footerButtons}
-        </form>
-      </SidePanel>
+          <FormGroup>
+            <Field
+              name="cloud_driver"
+              className="input-select"
+              component={FieldFormGroupSelect}
+              options={NODE_CLOUD_DRIVER_OPTIONS}
+              label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
+            />
+          </FormGroup>
+        </div>
+        {footerButtons}
+      </form>
     )
   }
 }
@@ -235,10 +211,10 @@ const FORM_NAME = 'networkAddNodeForm'
 
 NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
-  intl: React.PropTypes.object,
+  intl: intlShape.isRequired,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  show: React.PropTypes.bool,
+  onToggleConfirm: React.PropTypes.func,
   ...reduxFormPropTypes
 }
 
