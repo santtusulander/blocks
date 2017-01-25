@@ -4,17 +4,31 @@ import classNames from 'classnames'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-export const SidePanel = ({ children, className, show, subTitle, title }) => {
+export const SidePanel = ({ children, className, show, subTitle, subSubTitle, title }) => {
+  let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
     className
   );
 
+  if (subTitle && subSubTitle) {
+    subTitleElements = (
+      <div className="sub-title-two-line">
+        <div className="sub-title">{subTitle}</div>
+        <div className="sub-sub-title">
+          {subSubTitle}
+        </div>
+      </div>
+    )
+  } else if (subTitle) {
+    subTitleElements = <p>{subTitle}</p>
+  }
+
   return (
     <Modal show={show} dialogClassName={dialogClassName}>
       <Modal.Header>
         <h1>{title}</h1>
-        {subTitle && <p>{subTitle}</p>}
+        {subTitleElements}
       </Modal.Header>
 
       <Modal.Body>
@@ -30,6 +44,10 @@ SidePanel.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   show: PropTypes.bool,
+  subSubTitle: PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.node
+  ]),
   subTitle: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, reset, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, initialize, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -345,7 +345,7 @@ class UserEditForm extends React.Component {
             </p>
           </Col>
 
-          <Col xs={2}>
+          <Col xs={1}>
             <Field
               name="tfa"
               component={FieldFormGroupSelect}
@@ -395,9 +395,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    resetForm: () => dispatch( reset('user-edit-form') )
+    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) )
   }
 }
 

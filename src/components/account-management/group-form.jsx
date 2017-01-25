@@ -5,39 +5,25 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import {
-  Button,
-  Table
-} from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import {
   checkForErrors
 } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 
 import './group-form.scss'
 
 const validate = ({ name }) => {
   const conditions = {
     name: {
-      condition: !isValidAccountName(name),
-      errorText:
-        <div>
-          <FormattedMessage id="portal.account.groupForm.name.validation.error"/>,
-          <div key={1}>
-            <div style={{marginTop: '0.5em'}}>
-              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-              <ul>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      condition: !isValidTextField(name),
+      errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
     }
   }
   return checkForErrors(

@@ -19,8 +19,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
   } = option
 
   if (compatibleWith.indexOf(policyType) < 0) {
-    // TODO: replace this with `return null` — UDNP-1852
-    return <noscript />
+    return null
   }
 
   const isEnabled = checkIfEnabled(key) && !notYetImplemented

@@ -18,16 +18,7 @@ import * as PERMISSIONS from '../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
-import { getConfiguredName } from '../util/helpers'
-
 import {FormattedMessage, injectIntl} from 'react-intl'
-
-// import {fetch as fetchAccount} from '../redux/modules/entities/accounts/actions'
-// import {fetch as fetchGroup} from '../redux/modules/entities/groups/actions'
-// import {fetchAllWithDetails as fetchHosts} from '../redux/modules/entities/properties/actions'
-// import { getEntityById, getEntitiesByParent } from '../redux/modules/entity/selectors'
-
-
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -44,8 +35,7 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-
-/*    if(!this.props.activeGroup ||
+    if(!this.props.activeGroup ||
       String(this.props.activeGroup.get('id')) !== this.props.params.group ||
       this.props.configuredHostNames.size === 0) {
       this.startFetching();
@@ -56,10 +46,7 @@ export class Hosts extends React.Component {
         })
     } else {
       this.props.fetchMetricsData()
-    }*/
-
-    this.props.fetchGroupData();
-    this.props.fetchMetricsData();
+    }
   }
 
   startFetching() {
@@ -94,7 +81,6 @@ export class Hosts extends React.Component {
     const params = this.props.params
     const { brand, account, group } = this.props.params
     const { activeAccount, activeGroup, roles, user } = this.props
-
     const propertyNames = this.props.propertyNames.size ?
       this.props.propertyNames : this.props.hosts
     const properties = propertyNames.map(host => {
@@ -103,15 +89,6 @@ export class Hosts extends React.Component {
         name: host
       })
     })
-
-    /* id needs to be configuredName for metrics to match */
-    // const properties = hosts.map( (host) => {
-    //   return Immutable.Map({
-    //     id: getConfiguredName(host),
-    //     name: getConfiguredName(host)
-    //   })
-    // })
-
     const nextPageURLBuilder = (property) => {
       return getContentUrl('property', property, params)
     }
@@ -176,6 +153,7 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  configuredHostNames: React.PropTypes.instanceOf(Immutable.List),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
@@ -184,6 +162,7 @@ Hosts.propTypes = {
   hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
+  propertyNames: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
@@ -234,11 +213,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchGroupData = () => {
-
-    // dispatch( fetchAccount( brand, account, ) );
-    // dispatch( fetchGroup( brand, account, group ) );
-    // dispatch( fetchHosts( brand, account, group ) );
-
     return Promise.all([
       hostActions.startFetching(),
       accountActions.fetchAccount(brand, account),

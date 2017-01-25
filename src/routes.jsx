@@ -44,6 +44,7 @@ import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
+import Network from './containers/network'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
@@ -218,8 +219,13 @@ export const getRoutes = store => {
           <Route component={ContentTransition}>
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-            <Route path={routes.networkGroups} component={Groups}/>
           </Route>
+          <Route path={routes.networkGroups} component={Groups}/>
+          <Route path={routes.networkGroupsV2} component={Network}/>
+          <Route path={routes.networkGroup} component={Network}/>
+          <Route path={routes.networkNetwork} component={Network}/>
+          <Route path={routes.networkPop} component={Network}/>
+          <Route path={routes.networkPod} component={Network}/>
         </Route>
 
         {/* Security - routes */}
