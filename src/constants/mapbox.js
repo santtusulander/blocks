@@ -16,3 +16,5 @@ export const MAPBOX_HEAT_MAP_COLORS = [
   '#f9ba01'
 ]
 export const MAPBOX_HEAT_MAP_DEFAULT_COLOR = MAPBOX_HEAT_MAP_COLORS[5]
+
+export const MAPBOX_REVERSE_LOOKUP_ENDPOINT = 'https://api.mapbox.com/geocoding/v5'
