@@ -80,8 +80,8 @@ class FootprintForm extends React.Component {
       : <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
 
     const submitButtonLabel = editing
-      ? <FormattedMessage id="portal.button.add"/>
-      : <FormattedMessage id="portal.button.save"/>
+      ? <FormattedMessage id="portal.button.save"/>
+      : <FormattedMessage id="portal.button.add"/>
 
 
     return (
