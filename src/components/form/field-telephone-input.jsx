@@ -6,7 +6,7 @@ import DefaultErrorBlock from './default-error-block'
 
 import { stripCountryCode, stripNonNumeric } from '../../util/user-helpers'
 
-const FieldTelephoneInput = ({ input, meta, label, required, ErrorComponent }) => {
+const FieldTelephoneInput = ({ input, meta, label, required, disabled, ErrorComponent }) => {
   return (
     <FormGroup controlId={input.name} validationState={meta.error ? 'error' : null}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
@@ -20,6 +20,7 @@ const FieldTelephoneInput = ({ input, meta, label, required, ErrorComponent }) =
           input.onChange({phone_number: phoneNumber, phone_country_code: countryCode})
         }}
         defaultCountry="us"
+        disabled={disabled}
       />
 
       {meta.error &&
@@ -39,6 +40,7 @@ FieldTelephoneInput.defaultProps = {
 
 FieldTelephoneInput.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+  disabled: PropTypes.bool,
   input: PropTypes.shape({
     onChange: PropTypes.func,
     value: PropTypes.object
