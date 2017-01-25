@@ -138,6 +138,7 @@ class AccountManagementUserEditForm extends React.Component {
           <Field
             name="phone"
             component={FieldTelephoneInput}
+            disabled={true}
             label={<FormattedMessage id="portal.user.edit.phoneNumber.text"/>}
           />
         </div>
