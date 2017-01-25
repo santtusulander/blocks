@@ -51,9 +51,6 @@ const groupProperties = new schema.Entity('groupProperties', {
 
 
 export const Schemas = {
-  brand,
-  account,
-  group,
   property,
   pop,
   pops,

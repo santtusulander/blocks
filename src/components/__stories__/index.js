@@ -34,5 +34,6 @@ import './security/certificate-form'
 import './content/add-host'
 import './content/content-item-chart'
 
-// sp-config
+// network
+import './network/footprint-form'
 import './network/form/routing-daemon-form'
