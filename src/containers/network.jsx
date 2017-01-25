@@ -17,9 +17,12 @@ import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import EntityList from '../components/network/entity-list'
 
+import PodFormContainer from './network/modals/pod-modal'
+
 import {
   ADD_EDIT_NETWORK,
-  ADD_EDIT_POP
+  ADD_EDIT_POP,
+  ADD_EDIT_POD
 } from '../constants/network-modals.js'
 
 import {
@@ -239,11 +242,18 @@ class Network extends React.Component {
     switch (entityModal) {
 
       case ADD_EDIT_NETWORK:
+        this.setState({networkId: null})
         this.props.toggleModal(ADD_EDIT_NETWORK)
         break;
 
       case ADD_EDIT_POP:
+        this.setState({popId: null})
         this.props.toggleModal(ADD_EDIT_POP)
+        break;
+
+      case ADD_EDIT_POD:
+        this.setState({podId: null})
+        this.props.toggleModal(ADD_EDIT_POD)
         break;
 
       default:
@@ -262,6 +272,11 @@ class Network extends React.Component {
       case ADD_EDIT_POP:
         this.props.toggleModal(null)
         this.setState({popId: null})
+        break;
+
+      case ADD_EDIT_POD:
+        this.props.toggleModal(null)
+        this.setState({podId: null})
         break;
 
       default:
@@ -350,7 +365,7 @@ class Network extends React.Component {
 
   handlePodEdit(podId) {
     this.setState({podId: podId})
-    // TODO: this.props.toggleModal(ADD_EDIT_POD)
+    this.props.toggleModal(ADD_EDIT_POD)
   }
 
   handlePodSave() {
@@ -513,9 +528,9 @@ class Network extends React.Component {
       pods,
       nodes,
       networkId,
-      popId
+      popId,
+      podId
     } = this.state
-
     return (
       <Content className="network-content">
 
@@ -554,8 +569,8 @@ class Network extends React.Component {
             ref={pops => this.entityList.popList = pops}
             entities={params.network && pops}
             addEntity={() => this.addEntity(ADD_EDIT_POP)}
-            deleteEntity={() => (popId) => this.handlePopEdit(popId)}
-            editEntity={() => (popId) => this.handlePopEdit(popId)}
+            deleteEntity={this.handlePopEdit}
+            editEntity={this.handlePopEdit}
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
             title="Pops"
@@ -563,10 +578,10 @@ class Network extends React.Component {
 
           <EntityList
             ref={pods => this.entityList.podList = pods}
+            addEntity={() => this.addEntity(ADD_EDIT_POD)}
+            deleteEntity={() => () => null}
+            editEntity={this.handlePodEdit}
             entities={params.pop && pods}
-            addEntity={() => null}
-            deleteEntity={() => (podId) => this.handlePodEdit(podId)}
-            editEntity={() => (podId) => this.handlePodEdit(podId)}
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
             title="Pods"
@@ -602,7 +617,6 @@ class Network extends React.Component {
             show={true}
             edit={networkId ? true : false}
           />
-
         }
 
         {networkModal === ADD_EDIT_POP &&
@@ -617,6 +631,18 @@ class Network extends React.Component {
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
             show={true}
             edit={(popId !== null) ? true : false}
+          />
+        }
+        
+        {networkModal === ADD_EDIT_POD &&
+          <PodFormContainer
+            id="pod-form"
+            podId={podId}
+            edit={(podId !== null) ? true : false}
+            onSave={this.handlePodSave}
+            onCancel={() => this.handleCancel(ADD_EDIT_POD)}
+            show={true}
+            {...params}
           />
         }
 
@@ -672,5 +698,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: groupActions
   };
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
