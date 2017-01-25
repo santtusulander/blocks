@@ -14,6 +14,7 @@ describe('NetworkAddNodeForm', () => {
   let subject = null
   const onCancel = jest.fn()
   const onSave = jest.fn()
+  const onToggleConfirm = jest.fn()
   const handleSubmit = () => {
     onSave() // @TODO could this be handled somehow better?
   }
@@ -21,9 +22,9 @@ describe('NetworkAddNodeForm', () => {
   beforeEach(() => {
     subject = () => {
       let props = {
-        show: true,
         onSave,
         onCancel,
+        onToggleConfirm,
         handleSubmit,
         intl: intlMaker()
       }
@@ -65,6 +66,7 @@ describe('NetworkAddNodeForm', () => {
   it('should show confirmation', () => {
     subject = subject()
     subject.setState({ showAddConfirmation: true })
+    // Check if cancel confirmation button exists aka confirmation is visible
     const cancelButton = subject.find('#cancel-confirm-btn')
     expect(cancelButton.length).toBe(1)
   })
