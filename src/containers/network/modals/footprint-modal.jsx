@@ -49,6 +49,7 @@ class FootprintFormContainer extends React.Component {
           CIDROptions={CIDROptions}
           UNDTypeOptions={UNDTypeOptions}
           onCancel={onCancel}
+          onDelete={onDelete}
           onSubmit={this.onSubmit}
         />
       </SidePanel>
