@@ -6,7 +6,7 @@ import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
-import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER } from '../constants/account-management-options'
+import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
@@ -321,10 +321,11 @@ export function filterAccountsByUserName (accounts) {
  */
 export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   let errors = {}
+
   for(const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
-    if ((isEmptyArray || field === '')) {
+    if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
@@ -419,6 +420,10 @@ export function userHasRole(user, roleToFind) {
 
 export function accountIsServiceProviderType(account) {
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
+}
+
+export function accountIsContentProviderType(account) {
+  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
 export function getAccountByID(accounts, ids) {

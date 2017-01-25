@@ -1,0 +1,43 @@
+{
+  "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
+  "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
+  "portal.network.popEditForm.addPop.title": "Add POP",
+  "portal.network.popEditForm.editPop.title": "Edit POP",
+  "portal.network.popEditForm.pop.deleteError" : "Unable to delete POP",
+  "portal.network.popEditForm.pop.saveError" : "Unable to save POP",
+
+  "portal.network.popEditForm.popName.placeholder": "Enter POP Name",
+  "portal.network.popEditForm.popName.label" : "Name",
+  "portal.network.popEditForm.popName.validation.error.text": "POP Name is invalid",
+  "portal.network.popEditForm.popName.validation.required.text": "POP Name is required",
+
+  "portal.network.popEditForm.popId.label" : "ID",
+  "portal.network.popEditForm.popId.validation.error.text": "POP ID is invalid",
+  "portal.network.popEditForm.popId.validation.required.text": "POP ID is required",
+  "portal.network.popEditForm.popId.selectLocation.text": "Please, select Location ID first.",
+
+  "portal.network.popEditForm.locationId.label" : "Location ID",
+  "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
+  "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
+
+  "portal.network.item.status.enabled": "Enabled",
+  "portal.network.networkForm.newNetwork.title": "Add Network",
+  "portal.network.networkForm.editNetwork.title": "Edit Network",
+  "portal.network.networkForm.name.placeholder": "Enter Network Name",
+  "portal.network.networkForm.description.placeholder": "Enter Network Description",
+  "portal.network.networkForm.name.validation.error": "Invalid Network name",
+  "portal.network.networkForm.description.validation.error": "Invalid Network description",
+  "portal.network.networkForm.name.required.error": "Network name is required",
+  "portal.network.networkForm.description.required.error": "Description is required",
+
+  "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label": "BGP AS Name",
+  "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
+  "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
+  "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
+  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
+}
