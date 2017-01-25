@@ -89,7 +89,8 @@ AnalyticsTabCacheHitRate.propTypes = {
 
 AnalyticsTabCacheHitRate.defaultProps = {
   filters: Immutable.Map(),
-  traffic: Immutable.List()
+  traffic: Immutable.List(),
+  trafficByTime: Immutable.Map()
 }
 
 const mapStateToProps = (state) => ({

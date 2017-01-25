@@ -83,6 +83,7 @@ AnalyticsExport.propTypes = {
 AnalyticsExport.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
+  contribution: Map(),
   fileErrorURLs: List(),
   onOffStats: List(),
   serviceTypes: List(),
