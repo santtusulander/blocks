@@ -43,10 +43,12 @@ storiesOf('Network', module)
     <FootprintFormContainer
       show={true}
       editing={false}
+      fetching={false}
       ASNOptions={dummyASNOptions}
       CIDROptions={dummyCIDROptions}
       UNDTypeOptions={dummyUDNTypeOptions}
       onCancel={action('Handling cancel')}
+      onDelete={action('Handling submit')}
       onSubmit={action('Handling submit')}
     />
   ));
