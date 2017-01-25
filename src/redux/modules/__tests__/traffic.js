@@ -55,9 +55,9 @@ describe('Traffic Module', () => {
     })
 
     it('should handle trafficByTimeSuccess', () => {
-      const newState = trafficByTimeSuccess(state, {payload: {data:  [{value: 'test', timestamp: timestamp}] } })
+      const newState = trafficByTimeSuccess(state, {payload: {data: {details: [{value: 'test', timestamp: timestamp}] }} })
 
-      expect(newState.get('byTime').count() ).toBe(1);
+      expect(newState.getIn(['byTime', 'details']).count() ).toBe(1);
     })
 
     it('should handle trafficByTimeFailure', () => {
