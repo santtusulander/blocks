@@ -529,7 +529,7 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.dns.form.validation.email.text' : 'Responsible Person Mailbox is required',
   'portal.accountManagement.dns.form.validation.nameServer.text' : 'Primary Nameserver is required',
   'portal.accountManagement.dns.form.validation.refresh.text' : 'Refresh is required',
-  'portal.accountManagement.dns.form.validation.minRefresh.text' : 'Minumum Refresh value is {minRefresh}',
+  'portal.accountManagement.dns.form.validation.minRefresh.text' : 'Minimum Refresh value is {minRefresh}',
   'portal.accountManagement.dns.form.validation.ttl.text' : 'TTL is required',
   'portal.accountManagement.dns.form.validation.minTtl.text' : 'Minimum TTL is {minTtl}',
   'portal.accountManagement.dns.form.validation.maxTtl.text' : 'Maximum TTL is {maxTtl}',

@@ -20,10 +20,10 @@ import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
 
 import {
-  CLOUD_DRIVER_OPTIONS,
-  ENVIRONMENT_OPTIONS,
-  ROLE_OPTIONS,
-  TYPE_OPTIONS
+  NODE_CLOUD_DRIVER_OPTIONS,
+  NODE_ENVIRONMENT_OPTIONS,
+  NODE_ROLE_OPTIONS,
+  NODE_TYPE_OPTIONS
 } from '../../../constants/network'
 
 const isEmpty = function(value) {
@@ -189,7 +189,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_role"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ROLE_OPTIONS}
+                options={NODE_ROLE_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
               />
             </FormGroup>
@@ -199,7 +199,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_env"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={ENVIRONMENT_OPTIONS}
+                options={NODE_ENVIRONMENT_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
               />
             </FormGroup>
@@ -209,7 +209,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="node_type"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={TYPE_OPTIONS}
+                options={NODE_TYPE_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
               />
             </FormGroup>
@@ -219,7 +219,7 @@ class NetworkAddNodeForm extends React.Component {
                 name="cloud_driver"
                 className="input-select"
                 component={FieldFormGroupSelect}
-                options={CLOUD_DRIVER_OPTIONS}
+                options={NODE_CLOUD_DRIVER_OPTIONS}
                 label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
               />
             </FormGroup>
