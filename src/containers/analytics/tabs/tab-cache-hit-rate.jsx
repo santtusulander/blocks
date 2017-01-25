@@ -97,7 +97,7 @@ const mapStateToProps = (state) => ({
   fetching: state.traffic.get('fetching'),
   filters: state.filters.get('filters'),
   traffic: state.traffic.get('traffic'),
-  trafficByTime: state.traffic.get('byTime')
+  trafficByTime: state.traffic.getIn(['byTime', 'details'])
 })
 
 function mapDispatchToProps(dispatch) {
