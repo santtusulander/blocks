@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
+import classNames from 'classnames'
 
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
@@ -132,7 +133,9 @@ class EntityList extends React.Component {
       showEntitiesTable
     } = this.state
 
-
+    const entityListClasses = classNames('network-entity-list-items', {
+      'multi-column': multiColumn
+    })
 
     return (
       <div ref={(ref) => this.entityList = ref} className="network-entity-list">
@@ -141,7 +144,7 @@ class EntityList extends React.Component {
           onAdd={addEntity}
         />
 
-      <div className={'network-entity-list-items ' + (multiColumn && 'multi-column')}>
+      <div className={entityListClasses}>
           {showEntitiesTable && this.renderListItems()}
         </div>
       </div>
