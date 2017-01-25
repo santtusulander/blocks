@@ -70,14 +70,10 @@ class FootprintForm extends React.Component {
       intl,
       invalid,
       onCancel,
-      show,
+      handleSubmit,
       submitting,
       UNDTypeOptions
     } = this.props
-
-    const formTitle = editing
-      ? <FormattedMessage id="portal.network.footprintForm.title.edit.text"/>
-      : <FormattedMessage id="portal.network.footprintForm.title.add.text"/>
 
     const submitButtonLabel = editing
       ? <FormattedMessage id="portal.button.save"/>
@@ -85,14 +81,7 @@ class FootprintForm extends React.Component {
 
 
     return (
-      <SidePanel
-        show={show}
-        title={formTitle}
-        cancel={onCancel}
-        className="sp-footprint-form"
-      >
-
-        <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
           <span className='submit-error'>
           {this.props.error}
           </span>
@@ -204,7 +193,6 @@ class FootprintForm extends React.Component {
             </Button>
           </FormFooterButtons>
         </form>
-      </SidePanel>
     )
   }
 }
