@@ -5,6 +5,7 @@ import { formValueSelector } from 'redux-form'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
+import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 
 const mockReduxCalls = {
   get: function(cmd) {
@@ -45,7 +46,7 @@ const mockReduxCalls = {
   }
 }
 
-class NetworkPopFormContainer extends Component {
+class PopFormContainer extends Component {
   constructor(props) {
     super(props)
 
@@ -113,8 +114,8 @@ class NetworkPopFormContainer extends Component {
   }
 }
 
-NetworkPopFormContainer.displayName = "NetworkPopFormContainer"
-NetworkPopFormContainer.propTypes = {
+PopFormContainer.displayName = "PopFormContainer"
+PopFormContainer.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -128,7 +129,7 @@ NetworkPopFormContainer.propTypes = {
   show: PropTypes.bool
 }
 
-const formSelector = formValueSelector('networkPopEditForm')
+const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
   const locationId = formSelector(state, 'locationId')
   const popId = formSelector(state, 'popId')
@@ -150,4 +151,4 @@ const mapStateToProps = (state, ownProps) => {
   return props
 }
 
-export default connect(mapStateToProps)(NetworkPopFormContainer)
+export default connect(mapStateToProps)(PopFormContainer)

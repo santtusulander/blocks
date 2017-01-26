@@ -5,9 +5,9 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
-import { FORM_NAME } from '../../../components/network/forms/add-node-form'
+import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
 
-class AddNodeFormContainer extends React.Component {
+class AddNodeContainer extends React.Component {
   constructor(props) {
     super(props)
 
@@ -56,9 +56,9 @@ class AddNodeFormContainer extends React.Component {
   }
 }
 
-AddNodeFormContainer.displayName = "NetworkFormContainer"
+AddNodeContainer.displayName = "AddNodeContainer"
 
-AddNodeFormContainer.propTypes = {
+AddNodeContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   numNodes: PropTypes.number,
@@ -67,7 +67,7 @@ AddNodeFormContainer.propTypes = {
   show: PropTypes.bool
 }
 
-const formSelector = formValueSelector(FORM_NAME)
+const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 
 const mapStateToProps = (state) => {
   const numNodes = formSelector(state, 'numNodes') || 1
@@ -87,4 +87,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(AddNodeFormContainer))
+export default connect(mapStateToProps)(injectIntl(AddNodeContainer))
