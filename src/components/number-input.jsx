@@ -35,8 +35,10 @@ const NumberInput = (props) => {
   const handleKeyDown = e => {
     // e.keyCode 38 = UP, 40 = DOWN
     if (e.keyCode === 38) {
+      e.preventDefault()
       handleChange(1, true)
     } else if (e.keyCode === 40) {
+      e.preventDefault()
       handleChange(-1, true)
     }
   }
