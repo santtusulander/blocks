@@ -4,9 +4,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import { checkForErrors } from '../../../util/helpers'
-import {
-  isInt
-} from '../../../util/validators'
+import { isInt } from '../../../util/validators'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select.jsx'
@@ -49,8 +47,8 @@ const NetworkPopForm = (props) => {
     invalid,
     submitting,
     onSave,
-    selectedPopId,
-    selectedLocationId,
+    popId,
+    locationId,
     onDelete,
     initialValues
   } = props
@@ -66,8 +64,7 @@ const NetworkPopForm = (props) => {
           name="name"
           placeholder={intl.formatMessage({id: 'portal.network.popEditForm.popName.placeholder'})}
           component={FieldFormGroup}
-          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />}
-        />
+          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
 
         <hr />
 
@@ -75,18 +72,16 @@ const NetworkPopForm = (props) => {
           name="locationId"
           component={FieldFormGroupSelect}
           options={initialValues.locationOptions}
-          label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />}
-        />
+          label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         <hr/>
 
-        {selectedLocationId
+        {locationId
             ? <Field
                 name="popId"
                 component={FieldFormGroupNumber}
-                addonBefore={`${selectedLocationId}${selectedPopId}`}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
-              />
+                addonBefore={`${locationId}${popId}`}
+                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
             : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
@@ -100,10 +95,7 @@ const NetworkPopForm = (props) => {
                 className="btn-danger"
                 disabled={submitting || fetching}
                 onClick={onDelete}>
-                {
-                  fetching
-                  ? <FormattedMessage id="portal.button.deleting"/>
-                  : <FormattedMessage id="portal.button.delete"/>
+                {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
                 }
               </Button>
             </ButtonToolbar>
@@ -133,11 +125,12 @@ NetworkPopForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   intl: intlShape,
+  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
   ...reduxFormPropTypes
 }
 

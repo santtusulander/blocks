@@ -1,4 +1,4 @@
-import {getFetching} from '../../fetching/selectors'
+import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
  * Get property by ID
@@ -7,21 +7,15 @@ import {getFetching} from '../../fetching/selectors'
  * @return {} property
  */
 export const getById = (state, id) => {
-  const prop =  state.entities.accounts.get(String(id))
-  if (prop) return prop
-
-  return null
-}
-
-export const getByBrand = (state, brand) => {
-  return state.accounts.filter( account => account.brand === brand )
+  return getEntityById(state, 'accounts', id)
 }
 
 /**
- * isFetching ?
- * @param  {}  state
- * @return Boolean
+ * Get Accounts By Brand
+ * @param  {} state
+ * @param  {String} brand [description]
+ * @return List
  */
-export const isFetching = (state) => {
-  return getFetching(state.entities.fetching)
+export const getByBrand = (state, brand) => {
+  return getEntitiesByParent(state, 'accounts', brand)
 }
