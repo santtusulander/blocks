@@ -40,6 +40,7 @@ import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
+import NumberInput from '../components/number-input'
 import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
@@ -49,6 +50,7 @@ import MultiOptionSelector from '../components/multi-option-selector'
 import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
+import NetworkItem from '../components/network/network-item'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -133,7 +135,8 @@ class Styleguide extends React.Component {
         'link8',
         'link9'
       ]),
-      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
+      numberInputValue: 100
     }
   }
 
@@ -307,6 +310,24 @@ class Styleguide extends React.Component {
         "bits_per_second": 472250782,
         "code": "MYS",
         "total": 81604876012993
+      }
+    ])
+
+    const cityData = Immutable.fromJS([
+      {
+        "name": "daejeon",
+        "percent_change": 0.5567,
+        "percent_total": 0.0864,
+        "historical_total": 1404256487825,
+        "total": 2186010027527,
+        "requests": 8744,
+        "country": "KOR",
+        "region": "30",
+        "lat": 36.3261,
+        "lon": 127.4299,
+        "bits_per_second": 8800367,
+        "average_bits_per_second": 8800362,
+        "average_bytes": 3960163093
       }
     ])
 
@@ -628,6 +649,32 @@ class Styleguide extends React.Component {
 
           <hr />
 
+          <Row>
+
+            <Col xs={6}>
+
+              <ControlLabel>Number Input</ControlLabel>
+              <p>Example min = 0, max = 200</p>
+
+              <FormGroup>
+                <NumberInput
+                  max={200}
+                  min={0}
+                  onChange={val => this.setState({
+                    numberInputValue: val === parseInt(val, 10) ?
+                      val :
+                      val.target.value
+                  })}
+                  value={this.state.numberInputValue} />
+              </FormGroup>
+
+            </Col>
+
+          </Row>
+
+
+          <hr />
+
           <div className="row">
 
             <div className="col-xs-6">
@@ -932,10 +979,22 @@ class Styleguide extends React.Component {
 
           <Mapbox
             geoData={countriesGeoJSON}
+            cityData={cityData}
             countryData={countryData}
             theme={this.props.theme}
             height={600}
             />
+
+
+          <h1 className="page-header">Network</h1>
+
+          <NetworkItem
+            title="Network 1"
+            content="Lorem ipsum dolor sit amet"
+            status="enabled"
+            onSelect={() => null}
+            onEdit={() => null} />
+
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

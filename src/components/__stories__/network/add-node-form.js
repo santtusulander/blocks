@@ -3,10 +3,10 @@ import {createStore, combineReducers} from 'redux'
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux'
 
-import {storiesOf} from '@kadira/storybook'
+import {storiesOf, action} from '@kadira/storybook'
 
 import ThemeWrap from '../theme-wrap.jsx'
-import Details from '../../account-management/account/account.jsx'
+import NetworkAddNodeFormContainer from '../../../containers/network/modals/add-node-modal.jsx'
 
 const reducers = {
   form: formReducer
@@ -15,7 +15,9 @@ const reducers = {
 const reducer = combineReducers(reducers);
 const store = createStore(reducer);
 
-storiesOf('AccountManagement', module)
+let showModal = true;
+
+storiesOf('Network', module)
   .addDecorator((story) => (
     <ThemeWrap>
       <Provider store={store}>
@@ -23,6 +25,6 @@ storiesOf('AccountManagement', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('AccountDetails', () => (
-    <Details />
+  .add('Add Node Form', () => (
+    <NetworkAddNodeFormContainer show={showModal} onSave={action('onSave')} onCancel={action('onCancel')}/>
   ));

@@ -1,6 +1,7 @@
 // Side Panels
 // ===========
 $side-panel-width: rem(636px);
+$side-panel-small-display-margin: rem(12px);
 $side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(108px);
 $side-panel-header-top-padding: rem(30px);
@@ -11,6 +12,7 @@ $dt-side-panel-bg-color: $medium-blue;
 $lt-side-panel-bg-color: $white;
 
 .side-panel.modal-dialog {
+  position: relative;
   float: right;
   width: $side-panel-width;
   margin: 0;
@@ -31,36 +33,48 @@ $lt-side-panel-bg-color: $white;
 
   .modal-content {
     @include sm {
-      margin-left: 12px;
+      margin-left: $side-panel-small-display-margin;
     }
   }
 
   .modal-header {
-    height: $side-panel-header-height;
+    min-height: $side-panel-header-height;
     padding: $side-panel-header-top-padding $side-panel-horizontal-padding 0;
     border-bottom: 2px solid rgba($black, 0.2);
 
     .dark-theme & {
       color: $white;
     }
+
+    .sub-title-two-line {
+      .sub-sub-title {
+        margin-bottom: 5px;
+        opacity: 0.5;
+      }
+    }
   }
 
   .modal-body {
     height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin )});
     padding: 0 $side-panel-horizontal-padding;
-    margin: $side-panel-body-margin 0 0 0;
+    margin: $side-panel-body-margin 0 0;
     overflow: auto;
 
     > form {
       padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
     }
+
+    @include sm {
+      max-width: ($side-panel-width - $side-panel-small-display-margin);
+    }
   }
 
   .modal-footer {
-    width: 100%;
     position: fixed;
+    right: 0;
     bottom: 0;
     left: 0;
+    width: 100%;
 
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
@@ -70,6 +84,40 @@ $lt-side-panel-bg-color: $white;
 
     .light-theme & {
       background: rgba($black, 0.04);
+    }
+
+    @include sm {
+      padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
+      left: $side-panel-small-display-margin;
+    }
+
+    &__text {
+      display: inline-block;
+      float: left;
+      text-align: left;
+      padding: .5rem .5rem .5rem 0;
+    }
+  }
+
+  .side-panel__veil {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    z-index: 10;
+  }
+
+  &.side-panel--dim {
+    .side-panel__veil {
+      display: block;
+    }
+
+    .modal-footer {
+      z-index: 11;
+      background: $dt-side-panel-bg-color;
     }
   }
 }

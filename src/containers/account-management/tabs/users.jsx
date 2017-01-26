@@ -189,7 +189,6 @@ export class AccountManagementAccountUsers extends React.Component {
             ref="emails"
             ErrorComponent={errorTooltip}
             placeholder=" Email"
-            canShowError={false}
             component={FieldFormGroup}/>
         }
       ],
