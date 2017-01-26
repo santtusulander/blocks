@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react'
-
-import { injectIntl } from 'react-intl'
-import { Field} from 'redux-form'
-
-import Select from '../../../select.jsx'
-
-import { getLocationTypeFromBillingMeta } from '../../../../util/services-helpers'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { Field } from 'redux-form'
+import { ControlLabel, FormGroup, Radio } from 'react-bootstrap'
 
 import FieldFormGroup from '../../../form/field-form-group'
 import RegionsField from './regions-field'
 
-import { CHARGE_ALLOCATION_TYPES, REGIONS_TYPES} from '../../../../constants/account-management-options'
+import { REGIONS_TYPES} from '../../../../constants/account-management-options'
+import { getLocationTypeFromBillingMeta } from '../../../../util/services-helpers'
 
 class ChargeNumbersField extends React.Component {
   constructor(props) {
@@ -42,30 +39,45 @@ class ChargeNumbersField extends React.Component {
 
     return (
       <div>
-        <Select
-          value={this.state.locationType}
-          className="input-select"
-          onSelect={val => this.onChangeLocation(val, input)}
-          options={CHARGE_ALLOCATION_TYPES}
-        />
+        <FormGroup>
+          <ControlLabel><FormattedMessage id="portal.account.chargeNumbersForm.charge_allocation.title"/></ControlLabel>
 
-          { this.state.locationType === 'region' &&
-            <Field
-              name="billing_meta.regions"
-              component={RegionsField}
-              iterable={REGIONS_TYPES}
-            />
-          }
+          <Radio
+            value="region"
+            checked={this.state.locationType === 'region'}
+            onChange={e => this.onChangeLocation(e.target.value, input)}
+          >
+            <FormattedMessage id="portal.account.chargeNumbersForm.by_region.title"/>
+          </Radio>
 
-          { this.state.locationType === 'global' &&
-            <Field
-              type="text"
-              name={'billing_meta.charge_number'}
-              component={FieldFormGroup}
-              label={'Global Charge Number'}
-            />
-          }
-      </div>
+          <Radio
+            value="global"
+            checked={this.state.locationType === 'global'}
+            onChange={e => this.onChangeLocation(e.target.value, input)}
+          >
+            <FormattedMessage id="portal.account.chargeNumbersForm.use_global_rate.title"/>
+          </Radio>
+        </FormGroup>
+
+        <hr/>
+
+        { this.state.locationType === 'region' &&
+          <Field
+            name="billing_meta.regions"
+            component={RegionsField}
+            iterable={REGIONS_TYPES}
+          />
+        }
+
+        { this.state.locationType === 'global' &&
+          <Field
+            type="text"
+            name={'billing_meta.charge_number'}
+            component={FieldFormGroup}
+            label={'Global Charge Number'}
+          />
+        }
+    </div>
     )
   }
 }

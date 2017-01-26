@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { ButtonToolbar, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
+import FormFooterButtons from '../../../form/form-footer-buttons'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { reduxForm, Field} from 'redux-form'
 import { fromJS } from 'immutable'
@@ -34,22 +35,23 @@ class AddChargeNumbersForm extends React.Component {
         onSubmit={this.props.handleSubmit(this.onEnable.bind(this))}
       >
         { hasFlowDirection && 
-          <Field
-            name="flow_direction"
-            component={FieldFormGroupCheckboxes}
-            iterable={FLOW_DIRECTION_TYPES}
-            required={false}
-            label={'Flow Directions'}
-          />
+          <div>
+            <Field
+              name="flow_direction"
+              component={FieldFormGroupCheckboxes}
+              iterable={FLOW_DIRECTION_TYPES}
+              required={false}
+              label={'Flow Directions'}
+            />
+            <hr/>
+          </div>
         }
 
         { hasRegionalBilling && 
-          <div>
-            <Field
-              name={'billing_meta'}
-              component={ChargeNumbersField}
-            />
-          </div>
+          <Field
+            name={'billing_meta'}
+            component={ChargeNumbersField}
+          />
         }
 
         { !hasRegionalBilling && 
@@ -61,7 +63,7 @@ class AddChargeNumbersForm extends React.Component {
           />
         }
 
-        <ButtonToolbar className="text-right extra-margin-top">
+        <FormFooterButtons>
            <Button
             id='disable-button'
             bsStyle="primary"
@@ -83,7 +85,7 @@ class AddChargeNumbersForm extends React.Component {
           >
             <FormattedMessage id='portal.common.button.enable' />
           </Button>
-        </ButtonToolbar>
+        </FormFooterButtons>
       </form>
     )
   }
@@ -91,7 +93,7 @@ class AddChargeNumbersForm extends React.Component {
 
 AddChargeNumbersForm.displayName = 'AddChargeNumbersForm'
 AddChargeNumbersForm.propTypes = {
-  //activeServiceItem: PropTypes.instanceOf(Map),
+  activeServiceItem: PropTypes.instanceOf(Map),
   handleSubmit: PropTypes.func,
   hasFlowDirection: PropTypes.bool,
   hasRegionalBilling: PropTypes.bool,

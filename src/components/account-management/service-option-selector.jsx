@@ -7,8 +7,6 @@ import { fromJS, List } from 'immutable'
 import IconHeaderCaret from '../icons/icon-header-caret'
 import IconArrowRight from '../icons/icon-arrow-right'
 
-import './service-option-selector.scss'
-
 class ServiceOptionSelector extends React.Component {
   constructor(props) {
     super(props)
