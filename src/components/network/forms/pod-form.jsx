@@ -191,7 +191,6 @@ PodForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
-  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.string
 }
 
