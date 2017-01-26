@@ -206,8 +206,6 @@ class NetworkAddNodeForm extends React.Component {
   }
 }
 
-export const FORM_NAME = 'networkAddNodeForm'
-
 NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
   initialValues: React.PropTypes.object,
@@ -218,10 +216,8 @@ NetworkAddNodeForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+export const ADD_NODE_FORM_NAME = 'networkAddNodeForm'
 export default reduxForm({
-  form: FORM_NAME,
+  form: ADD_NODE_FORM_NAME,
   validate
 })(injectIntl(NetworkAddNodeForm))
-
-
-
