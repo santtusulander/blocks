@@ -109,7 +109,8 @@ class UserEditForm extends React.Component {
 
   savePasswordOnClick(values) {
     const {
-      onSavePassword
+      onSavePassword,
+      clearCurrentPassword
     } = this.props
 
     const newValues = {
@@ -120,8 +121,7 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          console.log(this.props)
-          this.props.clearCurrentPassword()
+          clearCurrentPassword()
           throw new SubmissionError( {'current_password': response.payload.message})
         } else {
           /* eslint-disable no-unused-vars */
@@ -142,6 +142,9 @@ class UserEditForm extends React.Component {
 
   togglePasswordEditing() {
     //Set field in redux, because changingPassword is needed in validate()
+    if (this.props.changingPassword) {
+      this.props.resetForm()
+    }
     this.props.change('changingPassword', !this.props.changingPassword)
   }
 
