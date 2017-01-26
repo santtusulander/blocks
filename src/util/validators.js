@@ -21,6 +21,13 @@ export function isValidEmail(email) {
  * @returns {*}
  */
 export function isValidIPv4Address(address) {
+
+  const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
+
+  if(splitAddr.length > 1) {
+    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) < 32 )
+  }
+
   return !!address && validator.isIP(address, 4)
 }
 
@@ -30,6 +37,13 @@ export function isValidIPv4Address(address) {
  * @returns {*}
  */
 export function isValidIPv6Address(address) {
+
+  const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
+
+  if(splitAddr.length > 1) {
+    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) < 32 )
+  }
+
   return !!address && validator.isIP(address, 6)
 }
 
@@ -84,7 +98,6 @@ export function isValidRelativePath(path) {
 /**
  * Check if valid host-name
  * @param hostName
- * @param opts
  * @returns {boolean|*}
  */
 export function isValidHostName(hostName) {
@@ -135,14 +148,16 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !!int && !isNaN(int)
+  return !isNaN(int) &&
+         parseInt(Number(int)) == int &&
+         !isNaN(parseInt(int, 10));
 }
 
 /**
  * Check if is valid base64-encoded string (example: c2hhcmVkLXNlY3JldA==)
  * RegEx sourced from http://stackoverflow.com/a/475217/2715
- * @param string
  * @returns {*}
+ * @param str
  */
 export function isBase64(str) {
   return !!str && matchesRegexp(str, /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/)

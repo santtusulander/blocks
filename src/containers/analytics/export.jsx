@@ -83,6 +83,7 @@ AnalyticsExport.propTypes = {
 AnalyticsExport.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
+  contribution: List(),
   fileErrorURLs: List(),
   onOffStats: List(),
   serviceTypes: List(),
@@ -95,11 +96,11 @@ function mapStateToProps(state) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    contribution: state.traffic.get('contribution'),
+    contribution: state.traffic.getIn(['contribution', 'details']),
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     onOffStats: state.traffic.get('onOffNet').get('detail'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
-    trafficByTime: state.traffic.get('byTime'),
+    trafficByTime: state.traffic.getIn(['byTime', 'details']),
     traffic: state.traffic.getIn(['traffic', 0, 'detail']),
     urlMetrics: state.reports.get('urlMetrics'),
     visitorsByTime: state.visitors.get('byTime')

@@ -1,4 +1,9 @@
-import { actionTypes } from './'
+const actionTypes = {
+  REQUEST: 'entities/REQUEST',
+  RECEIVE: 'entities/RECEIVE',
+  REMOVE: 'entities/REMOVE',
+  FAIL: 'entities/FAIL'
+}
 
 export default ({
   api,
@@ -6,6 +11,7 @@ export default ({
   receiveActionTypes = [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
   removeActionTypes = [actionTypes.REQUEST, actionTypes.REMOVE, actionTypes.FAIL]
 }) => {
+  const [ request, , fail ] = receiveActionTypes
 
   const fetchOne = ({ forceReload, ...requestParams }) => {
     return {
@@ -27,7 +33,7 @@ export default ({
           throw new Error('Expected fetchAll to resolve with an array of IDs. ' + typeof data + ' passed instead.')
         }
 
-        dispatch({ type: actionTypes.RECEIVE })
+        dispatch({ type: request })
 
         return data.forEach(id => {
 
@@ -38,7 +44,7 @@ export default ({
       .catch(err => {
         /* eslint-disable no-console */
         console.error(err);
-        dispatch({ type: actionTypes.FAIL })
+        dispatch({ type: fail })
       })
   }
 
