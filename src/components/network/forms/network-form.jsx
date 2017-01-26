@@ -5,6 +5,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
 import { checkForErrors } from '../../../util/helpers'
@@ -30,7 +31,7 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, onCancel, onSave, onDelete }) => {
+const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onCancel, onSave, onDelete }) => {
 
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
@@ -54,13 +55,15 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, onCancel, on
       <FormFooterButtons autoAlign={false}>
         { edit &&
           <ButtonToolbar className="pull-left">
-            <Button
+            <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger"
-              disabled={fetching}
-              onClick={onDelete}>
+              disabled={hasPops}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
               {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>}
-            </Button>
+            </ButtonDisableTooltip>
           </ButtonToolbar>
         }
         <ButtonToolbar className="pull-right">
@@ -88,6 +91,7 @@ NetworkForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   handleSubmit: PropTypes.func,
+  hasPops: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,

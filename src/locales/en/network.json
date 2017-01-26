@@ -29,6 +29,7 @@
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
+  "portal.network.networkForm.delete.tooltip.message": "This Network contains POPs so it can't be deleted.\nPlease delete all the POPs.",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
@@ -104,4 +105,3 @@
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
 }
-
