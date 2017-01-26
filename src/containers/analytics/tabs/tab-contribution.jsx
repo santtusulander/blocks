@@ -158,7 +158,7 @@ function mapStateToProps(state) {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
     activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    contribution: state.traffic.get('contribution'),
+    contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
     currentUser: state.user.get('currentUser')
   }

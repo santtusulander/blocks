@@ -148,7 +148,9 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !!int && !isNaN(int)
+  return !isNaN(int) &&
+         parseInt(Number(int)) == int &&
+         !isNaN(parseInt(int, 10));
 }
 
 /**
