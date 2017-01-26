@@ -1,19 +1,4 @@
-import {getFetching} from '../../fetching/selectors'
-//import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
-//import {flatten} from '../../../../util/helpers'
-//const STATEPART = 'accounts'
-
-export const getByAccount = (state, accountId) => {
-
-  const ids = state.entities.entities.accountGroups.getIn([String(accountId), 'groups'])
-
-  return ids && ids.reduce( (result, id) => {
-    const res = getById(state, id)
-    if (res) return result.concat(res.toJS())
-
-    return result
-  }, [])
-}
+import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
  * Get property by ID
@@ -22,17 +7,15 @@ export const getByAccount = (state, accountId) => {
  * @return {} property
  */
 export const getById = (state, id) => {
-  const prop =  state.entities.entities.groups.get(String(id))
-  if (prop) return prop
-
-  return null
+  return getEntityById(state, 'groups', id)
 }
 
 /**
- * isFetching ?
- * @param  {}  state
- * @return Boolean
+ * Get Accounts By Brand
+ * @param  {} state
+ * @param  {String} brand [description]
+ * @return List
  */
-export const isFetching = (state) => {
-  return getFetching(state.entities.fetching)
+export const getByAccount = (state, account) => {
+  return getEntitiesByParent(state, 'groups', account)
 }

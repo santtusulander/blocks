@@ -1,8 +1,8 @@
 import {Map, fromJS} from 'immutable'
 jest.unmock('../reducers');
-import * as reducers from '../reducers';
+import {receiveEntity, failEntity} from '../reducers.js';
 
-describe('Properties Module', () => {
+describe('Entity Module', () => {
 
   it('should handle receive', () => {
     const initialState = new Map()
@@ -16,21 +16,22 @@ describe('Properties Module', () => {
     };
 
     const action = {
-      payload: {
+      response: {
         entities: {
           properties: normalizedPayload
         }
       }
     };
 
-    const newState = reducers.receive(initialState, action);
+    const newState = receiveEntity('properties')(initialState, action);
+
     expect(newState).toEqual(fromJS(normalizedPayload));
   });
 
   it('should handle fail', () => {
     const initialState = new Map({aaa: 'bbb'})
 
-    const newState = reducers.fail(initialState);
+    const newState = failEntity(initialState);
     expect(newState).toEqual(initialState);
   });
 })
