@@ -2,7 +2,7 @@ import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
 import {Map} from 'immutable'
 
-import {createFetchingReducers} from '../fetching/actions'
+import mapActionsToFetchingReducers from '../fetching/actions'
 
 import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
 
@@ -38,5 +38,5 @@ export default combineReducers({
   accounts,
   groups,
   properties,
-  fetching: createFetchingReducers( actionTypes, 'entities')
+  fetching: mapActionsToFetchingReducers(actionTypes)
 })
