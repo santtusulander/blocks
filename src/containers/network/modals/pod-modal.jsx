@@ -99,7 +99,7 @@ PodFormContainer.propTypes = {
   network: PropTypes.string,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-  podId: PropTypes.number,
+  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.string,
   show: PropTypes.bool
 }
