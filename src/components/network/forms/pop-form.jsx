@@ -134,7 +134,8 @@ NetworkPopForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+export const POP_FORM_NAME = 'networkPopEditForm'
 export default reduxForm({
-  form: 'networkPopEditForm',
+  form: POP_FORM_NAME,
   validate
 })(injectIntl(NetworkPopForm))
