@@ -671,11 +671,12 @@ class Network extends React.Component {
             edit={(podId !== null) ? true : false}
             onSave={this.handlePodSave}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
+            onDelete={() => this.handlePodDelete(podId)}
             show={true}
             {...params}
           />
         }
-
+        
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-form"
@@ -685,7 +686,6 @@ class Network extends React.Component {
             {...params}
           />
         }
-
       </Content>
     )
   }

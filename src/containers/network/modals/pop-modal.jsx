@@ -52,6 +52,7 @@ class PopFormContainer extends Component {
 
     this.onSubmit = this.onSubmit.bind(this)
     this.onDelete = this.onDelete.bind(this)
+    this.checkforPods = this.checkforPods.bind(this)
   }
 
   onSubmit(edit, values) {
@@ -62,6 +63,11 @@ class PopFormContainer extends Component {
   onDelete(popId) {
     // TODO: on delete functionality
     this.props.onDelete(popId)
+  }
+
+  checkforPods() {
+    //TODO: this should check weather the current POP has PODs or not
+    return true
   }
 
   render() {
@@ -94,6 +100,7 @@ class PopFormContainer extends Component {
         <NetworkPopForm
           edit={edit}
           fetching={fetching}
+          hasPods={this.checkforPods()}
           locationId={locationId}
           popId={popId}
           initialValues={initialValues}
