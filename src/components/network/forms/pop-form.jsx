@@ -7,6 +7,7 @@ import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
 
 import FieldFormGroup from '../../form/field-form-group'
+import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import FieldFormGroupSelect from '../../form/field-form-group-select.jsx'
 import FieldFormGroupNumber from '../../form/field-form-group-number.jsx'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -50,7 +51,8 @@ const NetworkPopForm = (props) => {
     popId,
     locationId,
     onDelete,
-    initialValues
+    initialValues,
+    hasPods
   } = props
 
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
@@ -90,14 +92,16 @@ const NetworkPopForm = (props) => {
         <FormFooterButtons autoAlign={false}>
           { edit &&
             <ButtonToolbar className="pull-left">
-              <Button
+              <ButtonDisableTooltip
                 id="delete-btn"
                 className="btn-danger"
-                disabled={submitting || fetching}
-                onClick={onDelete}>
+                disabled={hasPods}
+                onClick={onDelete}
+                tooltipId="tooltip-help"
+                tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
                 {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
                 }
-              </Button>
+              </ButtonDisableTooltip>
             </ButtonToolbar>
           }
           <ButtonToolbar className="pull-right">
@@ -124,6 +128,7 @@ NetworkPopForm.displayName = 'NetworkPopEditForm'
 NetworkPopForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
+  hasPods: PropTypes.bool,
   intl: intlShape,
   locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
