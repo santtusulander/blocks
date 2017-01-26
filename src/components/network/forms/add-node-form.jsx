@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 
 import {
   Button,
@@ -7,7 +6,7 @@ import {
   FormGroup
 } from 'react-bootstrap'
 
-import { Field, formValueSelector, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import FieldFormGroup from '../../form/field-form-group'
@@ -207,10 +206,11 @@ class NetworkAddNodeForm extends React.Component {
   }
 }
 
-const FORM_NAME = 'networkAddNodeForm'
+export const FORM_NAME = 'networkAddNodeForm'
 
 NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
+  initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
@@ -218,32 +218,10 @@ NetworkAddNodeForm.propTypes = {
   ...reduxFormPropTypes
 }
 
-const form = reduxForm({
+export default reduxForm({
   form: FORM_NAME,
   validate
-})(NetworkAddNodeForm)
+})(injectIntl(NetworkAddNodeForm))
 
-const formSelector = formValueSelector(FORM_NAME)
 
-const mapStateToProps = (state) => {
-  const numNodes = formSelector(state, 'numNodes') || 1
-  const nodeRole = formSelector(state, 'node_role') || 'cache'
-  const nodeEnv = formSelector(state, 'node_env') || 'production'
-  const nodeType = formSelector(state, 'node_type')
-  const cloudDriver = formSelector(state, 'cloud_driver')
-  return {
-    numNodes,
-    initialValues: {
-      numNodes,
-      node_role: nodeRole,
-      node_env: nodeEnv,
-      node_type: nodeType,
-      cloud_driver: cloudDriver
-    }
-  }
-}
-const mapDispatchToProps = () => {
-  return {} // @TODO connect to Redux
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(injectIntl(form))
