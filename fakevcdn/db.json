@@ -1,689 +1,169 @@
 {
   "accounts": [
-    {
-      "name": "test1",
-      "provider_type": 1,
-      "services": [
-        {
-          "service_id": 3,
-          "flow_direction": [
-            "ingress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": "999"
-          },
-          "options": [
-            {
-              "option_id": 7,
-              "billing_meta": {
-                "charge_number": "999"
-              }
-            },
-            {
-              "option_id": 8
-            },
-            {
-              "option_id": 9
-            }
-          ]
-        },
-        {
-          "service_id": 2,
-          "flow_direction": [
-            "ingress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": ""
-          },
-          "options": []
-        },
-        {
-          "service_id": 4,
-          "flow_direction": [
-            "midgress",
-            "ingress"
-          ],
-          "billing_meta": {
-            "charge_number": null,
-            "regions": [
-              {
-                "region_code": "us",
-                "charge_number": "777"
-              }
-            ]
-          },
-          "options": [
-            {
-              "option_id": 12,
-              "billing_meta": {
-                "charge_number": "ooo"
-              }
-            }
-          ]
-        },
-        {
-          "service_id": 1,
-          "flow_direction": [
-            "ingress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": ""
-          },
-          "options": [
-            {
-              "option_id": 2
-            },
-            {
-              "option_id": 3
-            },
-            {
-              "option_id": 1,
-              "billing_meta": {
-                "charge_number": "234"
-              }
-            }
-          ]
-        }
-      ],
-      "id": 1
-    },
-    {
-      "name": "test2",
-      "provider_type": 2,
-      "services": [
-        {
-          "service_id": 102,
-          "flow_direction": [
-            "egress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": "null-000"
-          },
-          "options": []
-        }
-      ],
-      "id": 2
-    },
-    {
-      "name": "test3",
-      "provider_type": 2,
-      "services": [
-        {
-          "service_id": 102,
-          "flow_direction": [
-            "midgress",
-            "ingress"
-          ],
-          "billing_meta": {
-            "charge_number": "12345"
-          },
-          "options": []
-        }
-      ],
-      "id": 3
-    },
-    {
-      "services": [
-        {
-          "service_id": 2,
-          "billing_meta": {
-            "regions": [
-              {
-                "region_code": "us",
-                "charge_number": "C-00006"
-              }
-            ]
-          }
-        }
-      ],
-      "provider_type": 1,
-      "id": 4,
-      "name": "test4"
-    },
-    {
-      "services": [
-        {
-          "service_id": 2,
-          "options": [
-            {
-              "option_id": 6
-            },
-            {
-              "option_id": 5
-            }
-          ]
-        }
-      ],
-      "provider_type": 2,
-      "id": 5,
-      "name": "test5"
-    }
+    {"id": 2, "name": "Fake Account 2"},
+    {"id": 3, "name": "Fake Account 3"},
+    {"id": 4, "name": "Fake Account 4"}
   ],
   "groups": [
-    {
-      "services": [
-        {
-          "service_id": 1,
-          "flow_direction": [
-            "egress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": "C-00001"
-          },
-          "options": [
-            {
-              "option_id": 1,
-              "billing_meta": {
-                "charge_number": "C-00002"
-              }
-            },
-            {
-              "option_id": 2,
-              "billing_meta": {
-                "regions": [
-                  {
-                    "region_code": "apac",
-                    "charge_number": "C-00003"
-                  },
-                  {
-                    "region_code": "us",
-                    "charge_number": "C-00004"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "service_id": 2,
-          "billing_meta": {
-            "regions": [
-              {
-                "region_code": "apac",
-                "charge_number": "C-00005"
-              },
-              {
-                "region_code": "us",
-                "charge_number": "C-00006"
-              }
-            ]
-          },
-          "options": []
-        }
-      ],
-      "account_id": 3,
-      "accountId": 3,
-      "id": 1,
-      "name": "gr_test1"
-    },
-    {
-      "services": [
-        {
-          "service_id": 1,
-          "flow_direction": [
-            "egress",
-            "midgress"
-          ],
-          "billing_meta": {
-            "charge_number": "C-00001"
-          },
-          "options": [
-            {
-              "option_id": 1,
-              "billing_meta": {
-                "charge_number": "C-00002"
-              }
-            },
-            {
-              "option_id": 2,
-              "billing_meta": {
-                "regions": [
-                  {
-                    "region_code": "apac",
-                    "charge_number": "C-00003"
-                  },
-                  {
-                    "region_code": "us",
-                    "charge_number": "C-00004"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "service_id": 2,
-          "billing_meta": {
-            "regions": [
-              {
-                "region_code": "apac",
-                "charge_number": "C-00005"
-              },
-              {
-                "region_code": "us",
-                "charge_number": "C-00006"
-              }
-            ]
-          },
-          "options": []
-        }
-      ],
-      "account_id": 5,
-      "accountId": 5,
-      "id": 2,
-      "name": "gr_test2"
-    },
-    {
-      "services": [
-        {
-          "service_id": 2,
-          "billing_meta": {
-            "regions": [
-              {
-                "region_code": "apac",
-                "charge_number": "C-00005"
-              }
-            ]
-          }
-        }
-      ],
-      "account_id": 3,
-      "accountId": 3,
-      "id": 3,
-      "name": "gr_test3"
-    },
-    {
-      "services": [
-        {
-          "service_id": 2,
-          "billing_meta": {
-            "regions": [
-              {
-                "region_code": "us",
-                "charge_number": "C-00006"
-              }
-            ]
-          }
-        }
-      ],
-      "account_id": 5,
-      "accountId": 5,
-      "id": 4,
-      "name": "gr_test4"
-    }
+    {"id": 5, "name": "Fake Account 2 - Group 2", "accountId": 2},
+    {"id": 6, "name": "Fake Account 2 - Group 3", "accountId": 2},
+    {"id": 7, "name": "Fake Account 2 - Group 4", "accountId": 2},
+
+    {"id": 8, "name":  "Fake Account 3 - Group 2", "accountId": 3},
+    {"id": 9, "name":  "Fake Account 3 - Group 3", "accountId": 3},
+    {"id": 10, "name": "Fake Account 3 - Group 4", "accountId": 3},
+
+    {"id": 11, "name": "Fake Account 4 - Group 2", "accountId": 4},
+    {"id": 12, "name": "Fake Account 4 - Group 3", "accountId": 4},
+    {"id": 13, "name": "Fake Account 4 - Group 4", "accountId": 4}
+
   ],
   "published_hosts": [
-    {
-      "hosts": [
-        "www.fake1.com",
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 5
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 5 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 6
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 6 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 7
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 7 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 8
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 8 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 9
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 9 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 10
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 10 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 11
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 11 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 12
-    },
-    {
-      "hosts": [
-        "www.fake1.com",
+    ], "groupId": 12 },
+    { "hosts": [
+       "www.fake1.com",
         "www.fake2.com",
         "www.fake3.com"
-      ],
-      "groupId": 13
-    }
+    ], "groupId": 13 }
   ],
   "host_data": [
-    {
-      "id": 1,
-      "status": 1,
-      "updated": 1455704044,
-      "description": "CNN.com provisioning",
-      "created": 1455704044,
-      "services": [
+    { "id": 1,
+      "status":1,
+      "updated":1455704044,
+      "description":"CNN.com provisioning",
+      "created":1455704044,
+      "services":[
         {
-          "updated": 1455704044,
-          "active_configurations": [
+          "updated":1455704044,
+          "active_configurations": [{"config_id": 1}],
+          "description":"Service description",
+          "end_date":1487240044,
+          "created":1455704044,
+          "object_id":"65883fd7ab4f407faee98dce8d1adfb2",
+          "deployment_mode":"trial",
+          "service_type":"large",
+          "start_date":1455704044,
+          "configurations":[
             {
-              "config_id": 1
-            }
-          ],
-          "description": "Service description",
-          "end_date": 1487240044,
-          "created": 1455704044,
-          "object_id": "65883fd7ab4f407faee98dce8d1adfb2",
-          "deployment_mode": "trial",
-          "service_type": "large",
-          "start_date": 1455704044,
-          "configurations": [
-            {
-              "config_id": 1,
-              "request_policy": {},
-              "config_created": 1455704044,
-              "edge_configuration": {
-                "ingest_order": [
+              "config_id":1,
+              "request_policy":{},
+              "config_created":1455704044,
+              "edge_configuration":{
+                "ingest_order":[
                   "tor",
                   "nyc",
                   "mon"
                 ],
-                "enabled_midgress_ssl": false,
-                "published_name": "cnn.com",
-                "origin_host_port": 80,
-                "host_header": "test",
-                "origin_path_append": "",
-                "enabled_origin_ssl": false,
-                "ssl_certificate_id": "cnn.com",
-                "origin_host_name": "cnn.com",
-                "detected_cdn": ""
+                "enabled_midgress_ssl":false,
+                "published_name":"cnn.com",
+                "origin_host_port":80,
+                "host_header":"test",
+                "origin_path_append":"",
+                "enabled_origin_ssl":false,
+                "ssl_certificate_id":"cnn.com",
+                "origin_host_name":"cnn.com",
+                "detected_cdn":""
               },
-              "response_policy": {},
-              "config_name": "test1",
-              "default_policy": {},
-              "config_updated": 1455704044,
-              "configuration_status": {
-                "deployment_date": 1454918889,
-                "comments": "In progress",
-                "git_tag": "1.0.1",
-                "last_edited_by": "John Doe",
-                "git_id": "4hjn5j34nb4ok443",
-                "deployment_status": 1
+              "response_policy":{},
+              "config_name":"test1",
+              "default_policy":{},
+              "config_updated":1455704044,
+              "configuration_status":{
+                "deployment_date":1454918889,
+                "comments":"In progress",
+                "git_tag":"1.0.1",
+                "last_edited_by":"John Doe",
+                "git_id":"4hjn5j34nb4ok443",
+                "deployment_status":1
               }
             },
             {
-              "config_id": 2,
-              "request_policy": {},
-              "config_created": 1455704044,
-              "edge_configuration": {
-                "ingest_order": [
+              "config_id":2,
+              "request_policy":{},
+              "config_created":1455704044,
+              "edge_configuration":{
+                "ingest_order":[
                   "tor",
                   "mon",
                   "nyc"
                 ],
-                "enabled_midgress_ssl": false,
-                "published_name": "test.cnn.com",
-                "origin_host_port": 80,
-                "host_header": "test",
-                "origin_path_append": "",
-                "enabled_origin_ssl": false,
-                "ssl_certificate_id": "",
-                "origin_host_name": "origin.cnn.com",
-                "detected_cdn": ""
+                "enabled_midgress_ssl":false,
+                "published_name":"test.cnn.com",
+                "origin_host_port":80,
+                "host_header":"test",
+                "origin_path_append":"",
+                "enabled_origin_ssl":false,
+                "ssl_certificate_id":"",
+                "origin_host_name":"origin.cnn.com",
+                "detected_cdn":""
               },
-              "response_policy": {},
-              "config_name": "test1",
+              "response_policy":{},
+              "config_name":"test1",
               "default_policy": {
                 "policy_name": "Test policy",
-                "policy_rules": [
-                  {
-                    "rule_name": "Setting cache control",
-                    "set": {
-                      "cache_control": {
-                        "honor_origin": true,
-                        "check_etag": "weak"
-                      }
+                "policy_rules":
+                  [
+                    {
+                      "rule_name": "Setting cache control",
+                      "set":
+                      {"cache_control":
+                      {"honor_origin": true,
+                        "check_etag": "weak"}}
                     }
-                  }
-                ]
+                  ]
               },
-              "config_updated": 1455704044,
-              "configuration_status": {
-                "deployment_date": 1454918889,
-                "comments": "In progress",
-                "git_tag": "1.0.0-experimental",
-                "last_edited_by": "John Doe",
-                "git_id": "4h2ew4n5j34nb4ok8883",
-                "deployment_status": 1
+              "config_updated":1455704044,
+              "configuration_status":{
+                "deployment_date":1454918889,
+                "comments":"In progress",
+                "git_tag":"1.0.0-experimental",
+                "last_edited_by":"John Doe",
+                "git_id":"4h2ew4n5j34nb4ok8883",
+                "deployment_status":1
               }
             }
           ]
         }
       ]
     }
-  ],
-  "service_info": {
-    "services": [
-      {
-        "name": "VOD Streaming",
-        "options": [
-          {
-            "name": "Token Authentication",
-            "enabled_by_default": false,
-            "id": 8,
-            "requires_charge_number": false,
-            "supports_regional_billing": false
-          },
-          {
-            "name": "Secure Delivery",
-            "enabled_by_default": true,
-            "id": 7,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Content Targeting",
-            "enabled_by_default": false,
-            "id": 9,
-            "requires_charge_number": false,
-            "supports_regional_billing": false
-          }
-        ],
-        "enabled_by_default": false,
-        "id": 3,
-        "requires_charge_number": true,
-        "supports_regional_billing": true
-      },
-      {
-        "name": "UDN Off-Net",
-        "options": [],
-        "enabled_by_default": false,
-        "id": 102,
-        "requires_charge_number": true,
-        "supports_regional_billing": false
-      },
-      {
-        "name": "UDN On-Net",
-        "options": [],
-        "enabled_by_default": false,
-        "id": 101,
-        "requires_charge_number": true,
-        "supports_regional_billing": false
-      },
-      {
-        "name": "Live Streaming",
-        "options": [
-          {
-            "name": "Content Targeting",
-            "enabled_by_default": false,
-            "id": 6,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Token Authentication",
-            "enabled_by_default": false,
-            "id": 5,
-            "requires_charge_number": false,
-            "supports_regional_billing": false
-          },
-          {
-            "name": "Secure Delivery",
-            "enabled_by_default": true,
-            "id": 4,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          }
-        ],
-        "enabled_by_default": false,
-        "id": 2,
-        "requires_charge_number": true,
-        "supports_regional_billing": true
-      },
-      {
-        "name": "Storage",
-        "options": [
-          {
-            "name": "Transcoding",
-            "enabled_by_default": false,
-            "id": 10,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Storage - Ingress",
-            "enabled_by_default": false,
-            "id": 12,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Storage - Egress",
-            "enabled_by_default": false,
-            "id": 11,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          }
-        ],
-        "enabled_by_default": false,
-        "id": 4,
-        "requires_charge_number": true,
-        "supports_regional_billing": true
-      },
-      {
-        "name": "Media Delivery",
-        "options": [
-          {
-            "name": "Token Authentication",
-            "enabled_by_default": false,
-            "id": 2,
-            "requires_charge_number": false,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Secure Delivery",
-            "enabled_by_default": true,
-            "id": 1,
-            "requires_charge_number": true,
-            "supports_regional_billing": true
-          },
-          {
-            "name": "Content Targeting",
-            "enabled_by_default": false,
-            "id": 3,
-            "requires_charge_number": false,
-            "supports_regional_billing": true
-          }
-        ],
-        "enabled_by_default": false,
-        "id": 1,
-        "requires_charge_number": true,
-        "supports_regional_billing": true
-      }
-    ],
-    "provider_types": [
-      {
-        "name": "Content",
-        "services": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "id": 1
-      },
-      {
-        "name": "Service",
-        "services": [
-          101,
-          102
-        ],
-        "id": 2
-      },
-      {
-        "name": "Cloud",
-        "services": [
-          101,
-          102
-        ],
-        "id": 3
-      }
-    ]
-  },
-  "group_data": {
-    "status": 3,
-    "updated": 1483626287,
-    "description": "",
-    "charge_model": 1,
-    "address_lines": [],
-    "charge_id": "1234",
-    "asns": [],
-    "brand_id": "udn",
-    "postal_code": "",
-    "suspended": false,
-    "language_code": "en",
-    "id": 1,
-    "city": "",
-    "name": "Creative Media-group_1",
-    "contacts": [],
-    "country": "",
-    "created": 1474047528,
-    "quotas": []
-  }
+  ]
 }
