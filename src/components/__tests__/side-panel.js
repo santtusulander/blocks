@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { SidePanel } from '../side-panel.jsx'
+import { SidePanelComponent as SidePanel } from '../side-panel.jsx'
 
 jest.unmock('../side-panel.jsx')
 
