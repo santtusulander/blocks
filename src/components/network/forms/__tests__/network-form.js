@@ -20,7 +20,7 @@ describe('NetworkForm', () => {
   let touched = false
 
   beforeEach(() => {
-    subject = () => {
+    subject = (edit = false) => {
       props = {
         onCancel,
         onSave,
@@ -33,7 +33,8 @@ describe('NetworkForm', () => {
         fields: {
           name: { touched, error, value: '' },
           description: { touched, error, value: '' }
-        }
+        },
+        edit: edit
       }
       return shallow(<NetworkForm {...props}/>)
     }
@@ -45,6 +46,11 @@ describe('NetworkForm', () => {
 
   it('should have 2 buttons on Add', () => {
     expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should have 3 buttons on Edit', () => {
+    expect(subject(true).find('Button').length).toBe(2)
+    expect(subject(true).find('ButtonDisableTooltip').length).toBe(1)
   })
 
   it('should render an error message', () => {
