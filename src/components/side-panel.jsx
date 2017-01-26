@@ -4,10 +4,11 @@ import classNames from 'classnames'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-export const SidePanel = ({ children, className, show, subTitle, subSubTitle, title }) => {
+export const SidePanel = ({ children, className, show, subTitle, subSubTitle, title, disabled }) => {
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
+    { 'disabled' : disabled },
     className
   );
 

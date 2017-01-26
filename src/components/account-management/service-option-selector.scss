@@ -1,0 +1,22 @@
+
+.service-option-selector {
+  .flex-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .flex-item {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .tick {
+    flex: 0 0 5rem;
+  }
+
+  .arrow-right {
+    flex: 0 0 5rem;
+  }
+
+}

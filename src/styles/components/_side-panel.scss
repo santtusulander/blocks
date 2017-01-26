@@ -11,6 +11,10 @@ $side-panel-body-margin: rem(36px);
 $dt-side-panel-bg-color: $medium-blue;
 $lt-side-panel-bg-color: $white;
 
+.side-panel.on-top-side-panel.modal-dialog {
+   width: rem(596px);
+}
+
 .side-panel.modal-dialog {
   float: right;
   width: $side-panel-width;

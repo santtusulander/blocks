@@ -6,6 +6,8 @@ import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
+import { fromJS } from 'immutable'
+
 import { getRoute } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'
@@ -29,6 +31,8 @@ import IconCaretDown from '../../components/icons/icon-caret-down'
 import IconEdit from '../../components/icons/icon-edit'
 import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
 
+import AddChargeNumbersModal from './modals/add-charge-numbers-modal'
+
 import Tabs from '../../components/tabs'
 
 import { ACCOUNT_TYPES } from '../../constants/account-management-options'
@@ -44,16 +48,20 @@ import * as PERMISSIONS from '../../constants/permissions.js'
 import { checkForErrors } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
+import { getDefaultService, getDefaultOption } from '../../util/services-helpers'
 
 export class AccountManagement extends Component {
   constructor(props) {
     super(props)
     this.userToDelete = ''
-    this.accountToDelete = null
-    this.accountToUpdate = null
+
     this.state = {
+      accountToDelete: null,
+      accountToUpdate: null,
       groupToDelete: null,
-      groupToUpdate: null
+      groupToUpdate: null,
+      activeServiceItem: Map(),
+      activeServiceItemPath: null
     }
 
     this.notificationTimeout = null
@@ -72,7 +80,14 @@ export class AccountManagement extends Component {
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
+    this.updateAccountServices = this.updateAccountServices.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
+
+    this.showServiceItemForm = this.showServiceItemForm.bind(this)
+    this.getActiveServiceItem = this.getActiveServiceItem.bind(this)
+    this.getActiveServiceItemPath = this.getActiveServiceItemPath.bind(this)
+    this.onChangeServiceItem = this.onChangeServiceItem.bind(this)
+    this.onDisableServiceItem = this.onDisableServiceItem.bind(this)
   }
 
   componentWillMount() {
@@ -122,7 +137,6 @@ export class AccountManagement extends Component {
 
   changeActiveAccount(account) {
     this.setState({ activeAccount: account })
-    //this.props.fetchAccountData(account)
   }
 
   dnsEditOnSave() {
@@ -142,7 +156,7 @@ export class AccountManagement extends Component {
   }
 
   showDeleteAccountModal(account) {
-    this.accountToDelete = account
+    this.setState({ accountToDelete: account })
     this.props.toggleModal(DELETE_ACCOUNT);
   }
 
@@ -237,7 +251,8 @@ export class AccountManagement extends Component {
   }
 
   showAccountForm(account) {
-    this.accountToUpdate = account
+    this.setState({ accountToUpdate: account })
+    
     this.props.toggleModal(ADD_ACCOUNT)
   }
 
@@ -291,6 +306,75 @@ export class AccountManagement extends Component {
     return checkForErrors({ accountName, services }, conditions)
   }
 
+  updateAccountServices(path, values) {
+    const account = this.state.accountToUpdate.setIn(path, values)
+
+    this.setState({ accountToUpdate: account })
+    this.onServiceChange && this.onServiceChange(account.get('services'))
+  }
+
+  getActiveServiceItem(serviceId, optionId) {
+    const services = fromJS(this.state.accountToUpdate.get('services'))
+    const service = services.find(item => item.get('service_id') === serviceId) || getDefaultService(serviceId)
+
+    return optionId ? service.get('options').find(item => item.get('option_id') === optionId) || getDefaultOption(optionId) : service
+  }
+
+  getActiveServiceItemPath(serviceId, optionId) {
+    const services = fromJS(this.state.accountToUpdate.get('services'))
+    let serviceIndex = services.findKey(item => item.get('service_id') === serviceId)
+
+    if (typeof serviceIndex === 'undefined') {
+      serviceIndex = services.size
+    }
+
+    const servicePath = ['services', String(serviceIndex)]
+    let options = null
+    let optionIndex = null
+
+    if (optionId) {
+      options = services.get(serviceIndex).get('options')
+      optionIndex = options.findKey(item => item.get('option_id') === optionId)
+    }
+
+    if (typeof optionIndex === 'undefined') {
+      optionIndex = options.size
+    }
+
+    return optionId ? servicePath.concat(['options', String(optionIndex)]) : servicePath
+  }
+
+  onChangeServiceItem(values) {
+    const path = this.state.activeServiceItemPath || ['services']
+
+    this.updateAccountServices(path, values)
+
+    this.setState({
+      activeServiceItem: Map(),
+      activeServiceItemPath: null
+    })
+  }
+
+  onDisableServiceItem() {
+    const account = this.state.accountToUpdate.deleteIn(this.state.activeServiceItemPath)
+
+    this.setState({
+      accountToUpdate: account,
+      activeServiceItem: Map(),
+      activeServiceItemPath: null
+    })
+    this.onServiceChange && this.onServiceChange(account.get('services'))
+  }
+
+  showServiceItemForm(serviceId, optionId, onChange) {
+    this.setState({
+      activeServiceItem: this.getActiveServiceItem(serviceId, optionId),
+      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId)
+    })
+    // callback to update ServiceOptionSelector field from AccountForm
+    this.onServiceChange = onChange
+  }
+
   render() {
     const {
       params: { brand, account },
@@ -319,7 +403,7 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancelButton: true,
           cancel: () => toggleModal(null),
-          onSubmit: () => onDelete(brand, this.accountToDelete, router)
+          onSubmit: () => onDelete(brand, this.state.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
@@ -442,13 +526,26 @@ export class AccountManagement extends Component {
           Add Account
         */}
         {accountManagementModal === ADD_ACCOUNT &&
-        <AccountForm
-          id="account-form"
-          onSave={this.editAccount}
-          account={this.accountToUpdate}
-          currentUser={this.props.currentUser}
-          onCancel={() => toggleModal(null)}
-          show={true}/>}
+        <div>
+          <AccountForm
+            id="account-form"
+            onSave={this.editAccount}
+            account={this.state.accountToUpdate}
+            currentUser={this.props.currentUser}
+            onCancel={() => toggleModal(null)}
+            showServiceItemForm={this.showServiceItemForm}
+            onChangeServiceItem={this.onChangeServiceItem}
+            disabled={!!this.state.activeServiceItem.size}
+            show={true}/>
+          <AddChargeNumbersModal
+            activeServiceItem={this.state.activeServiceItem}
+            onCancel={() => this.setState({ activeServiceItem: Map(), activeServiceItemPath: null })}
+            onDisable={this.onDisableServiceItem}
+            onSubmit={this.onChangeServiceItem}
+            show={!!this.state.activeServiceItem.size}
+          />
+        </div> 
+        }
 
         { /* Delete Modal */}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}

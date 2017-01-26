@@ -22,11 +22,24 @@ var server = new WebpackDevServer(compiler, {
   //was: true,
   proxy: {
     '/v2/service_info': {
-      target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
+      target: 'http://localhost:8080',
+      secure: false
+    },
+    // '/v2/service_info': {
+    //   target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
+    //   secure: false
+    // },
+    '/v2/brands/udn/accounts': {
+      target: 'http://localhost:8080',
       secure: false
     },
     '/v2': {
       target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
+      secure: false
+    },
+
+    '/VCDN/v2/brands/udn/accounts/*/groups/*/published_hosts': {
+      target: 'http://localhost:8080',
       secure: false
     },
     '/VCDN': {

@@ -1,5 +1,9 @@
 {
-  "/VCDN/v2/udn/accounts": "/accounts",
-  "/VCDN/v2/udn/accounts/:accountId/groups": "/accounts/:accountId/groups",
+  "/v2/service_info": "/service_info",
+  "/v2/brands/udn/accounts": "/accounts",
+  "/v2/brands/udn/groups/:group_id": "/groups/:group_id",
+  "/v2/brands/udn/published_hosts": "/published_hosts",
+
+  "/VCDN/v2/brands/udn/accounts/:accountId/groups": "/accounts/:accountId/groups",
   "/VCDN/v2/udn/accounts/:*/groups/:*/published_hosts": "/published_hosts"
 }
