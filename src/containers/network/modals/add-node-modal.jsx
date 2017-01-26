@@ -59,7 +59,9 @@ class AddNodeFormContainer extends React.Component {
 AddNodeFormContainer.displayName = "NetworkFormContainer"
 
 AddNodeFormContainer.propTypes = {
+  initialValues: PropTypes.object,
   intl: intlShape.isRequired,
+  numNodes: PropTypes.number,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
