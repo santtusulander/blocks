@@ -1,8 +1,20 @@
 $multi-col-item-right-margin: 12px;
 
+.connector-divider {
+  position: absolute;
+  top: 6rem;
+  right: -2px;
+  bottom: 0;
+  display: block;
+  width: 2px;
+  background: $pale-blue;
+  content: '';
+}
+
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
+  overflow-x: visible;
   border-right: 2px solid rgba($black, 0.3);
   flex: none;
 
@@ -16,8 +28,10 @@ $multi-col-item-right-margin: 12px;
   }
 
   .network-entity-list-items {
-    position: relative;
+    position: absolute;
+    left: -2px;
     max-height: calc(100vh - 375px);
+    min-width: calc(100% + 2px);
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -28,6 +42,14 @@ $multi-col-item-right-margin: 12px;
     .list-col {
       min-width: $md-sidebar-width;
       margin-right: $multi-col-item-right-margin;
+
+      &:not(:first-of-type) {
+        .network-item {
+          &::before {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

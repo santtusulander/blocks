@@ -9,8 +9,15 @@ class EntityList extends React.Component {
   constructor(props) {
     super(props)
 
+    this.networkItem = null
+
     this.updateEntities = this.updateEntities.bind(this)
     this.state = this.updateEntities(props.entities)
+    this.connectorScroll = this.connectorScroll.bind(this)
+  }
+
+  componentDidMount() {
+    this.entityListItems.addEventListener('scroll', this.connectorScroll, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,6 +32,46 @@ class EntityList extends React.Component {
     }
 
     return false
+  }
+
+  componentWillUnmount() {
+    this.entityListItems.removeEventListener('scroll', this.connectorScroll, false)
+  }
+
+  connectorScroll() {
+    const childNodes = [...this.entityListItems.childNodes]
+    const active = childNodes.filter(node => node.classList.contains('active'))[0]
+
+    if (this.connector && active) {
+      this.connector.style.top = this.entityListItems.offsetTop + Math.floor(active.offsetHeight / 2) + 2 + 'px'
+      this.connector.style.bottom = this.entityListItems.getBoundingClientRect().top + this.entityListItems.clientHeight - active.getBoundingClientRect().top - Math.floor(active.offsetHeight / 2) + 16 + 'px'
+
+      const topHalfVisibility = active.getBoundingClientRect().top >= this.entityListItems.getBoundingClientRect().top - active.offsetHeight / 2
+      const bottomHalfVisibility = active.getBoundingClientRect().bottom <= this.entityListItems.getBoundingClientRect().bottom + active.offsetHeight / 2
+      const isVisible = topHalfVisibility && bottomHalfVisibility
+
+      if (!isVisible) {
+        this.connector.style.bottom = '15px'
+      }
+
+      if (active.getBoundingClientRect().top < this.entityListItems.getBoundingClientRect().top) {
+        this.connector.style.bottom = this.entityListItems.offsetHeight - Math.floor(active.offsetHeight / 2) + 14 + 'px'
+        this.connector.style.top = active.getBoundingClientRect().top - this.entityListItems.getBoundingClientRect().top + Math.floor(active.offsetHeight / 2) + this.entityListItems.offsetTop - 2 + 'px'
+
+        if (this.connector.offsetTop <= this.entityListItems.offsetTop) {
+          this.connector.style.top = this.entityListItems.offsetTop + 'px'
+        }
+      }
+    }
+  }
+
+  checkIfHasActive() {
+    if (this.entityListItems) {
+      const childNodes = [...this.entityListItems.childNodes]
+      const active = childNodes.filter(node => node.classList.contains('active'))[0]
+      return active
+    }
+
   }
 
   updateEntities(entities) {
@@ -138,13 +185,14 @@ class EntityList extends React.Component {
     })
 
     return (
-      <div ref={(ref) => this.entityList = ref} className="network-entity-list">
+      <div ref={ref => this.entityList = ref} className="network-entity-list">
+        {showEntitiesTable && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
           onAdd={addEntity}
         />
 
-        <div className={entityListClasses}>
+      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
           {showEntitiesTable && this.renderListItems()}
         </div>
       </div>
