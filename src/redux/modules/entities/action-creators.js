@@ -1,4 +1,9 @@
-import { actionTypes } from './'
+const actionTypes = {
+  REQUEST: 'entities/REQUEST',
+  RECEIVE: 'entities/RECEIVE',
+  REMOVE: 'entities/REMOVE',
+  FAIL: 'entities/FAIL'
+}
 
 export default ({
   api,
