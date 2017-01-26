@@ -108,7 +108,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.jsx"
+      "src/**/*.js?(x)"
     ],
     "coveragePathIgnorePatterns": [
       "/__stories__/"
