@@ -33,11 +33,18 @@ class PodFormContainer extends React.Component {
     super(props)
 
     this.onSubmit = this.onSubmit.bind(this)
+    this.checkforNodes = this.checkforNodes.bind(this)
   }
 
   onSubmit(values) {
     const { onSave } = this.props
     return onSave(values)
+  }
+
+  checkforNodes() {
+    //TODO: this should check weather the current POD has Nodes or not
+    // and return a boolean
+    return true
   }
 
   render() {
@@ -53,6 +60,7 @@ class PodFormContainer extends React.Component {
       initialValues,
       show,
       onCancel,
+      onDelete,
       intl,
       invalid} = this.props
 
@@ -68,11 +76,13 @@ class PodFormContainer extends React.Component {
           subTitle={subTitle}
           cancel={onCancel}>
           <PodForm
-            podId={podId}
+            edit={edit}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}
+            hasNodes={this.checkforNodes()}
             onCancel={onCancel}
+            onDelete={onDelete}
             onSubmit={this.onSubmit}
             brand={brand}
             account={account}
@@ -98,8 +108,9 @@ PodFormContainer.propTypes = {
   invalid: PropTypes.bool,
   network: PropTypes.string,
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  podId: PropTypes.number,
+  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.string,
   show: PropTypes.bool
 }
