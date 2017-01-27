@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactMapboxGl, { Popup, ZoomControl } from 'react-mapbox-gl'
-// import Typeahead from 'react-bootstrap-typeahead'
 import Immutable from 'immutable'
+
+// import Typeahead from '../typeahead'
 
 import {
   MAPBOX_LIGHT_THEME,

@@ -10,8 +10,8 @@ const subject = shallow(
   <Tooltip
     iconClass={dataKey => dataKey}
     payload={[
-      { name: 'aa', value: 1000, dataKey: 1 },
-      { name: 'bb', value: 1000, dataKey: 2 }
+      { name: 'aa', value: 1000, dataKey: 1, payload: { formattedDate: '1.2.3012' } },
+      { name: 'bb', value: 1000, dataKey: 2, payload: { formattedDate: '1.2.3012' } }
     ]}/>
 )
 
