@@ -75,7 +75,7 @@ describe('Typeahead', () => {
     expect(addEventListenerMock.mock.calls.length).toBe(1)
   })
 
-    it('should call removeEventListener on blur', () => {
+  it('should call removeEventListener on blur', () => {
     const component = subject()
     const removeEventListenerMock = jest.fn()
     component.instance().handleBlur({
