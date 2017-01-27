@@ -9,8 +9,6 @@ class EntityList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.networkItem = null
-
     this.updateEntities = this.updateEntities.bind(this)
     this.state = this.updateEntities(props.entities)
     this.renderConnectorLine = this.renderConnectorLine.bind(this)
