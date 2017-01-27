@@ -51,7 +51,7 @@ class AccountList extends Component {
     fetchServiceInfo()
   }
 
-  validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) { //TODO services??
+  validateInlineAdd({ name = '', brand = '', provider_type = '', services = List() }) {
     const conditions = {
       name: [
         {

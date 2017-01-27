@@ -334,7 +334,7 @@ export class AccountManagement extends Component {
     const services = fromJS(this.state[entityToUpdate].get('services'))
     const service = services.find(item => item.get('service_id') === serviceId) || getDefaultService(serviceId)
 
-    return optionId ? service.get('options').find(item => item.get('option_id') === optionId) || getDefaultOption(optionId) : service
+    return optionId ? (service.get('options').find(item => item.get('option_id') === optionId) || getDefaultOption(optionId)) : service
   }
 
   getActiveServiceItemPath(serviceId, optionId) {

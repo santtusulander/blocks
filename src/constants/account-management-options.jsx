@@ -41,16 +41,12 @@ export const ROLES_MAPPING = [
   { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
 ]
 
-export const CHARGE_ALLOCATION_TYPES = [
-  { value: 'region', label: 'By region' },
-  { value: 'global', label: 'Use a global rate' }
-]
-
 export const FLOW_DIRECTION_TYPES = [
   { value: 'egress', label: 'Egress' },
   { value: 'midgress', label: 'Midgress' },
   { value: 'ingress', label: 'Ingress' }
 ]
+
 export const REGIONS_TYPES = [
   { value: 'us', label: 'US' },
   { value: 'apac', label: 'APAC/EU' },
