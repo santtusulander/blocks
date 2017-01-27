@@ -1,16 +1,5 @@
 $multi-col-item-right-margin: 12px;
 
-.connector-divider {
-  position: absolute;
-  top: 6rem;
-  right: -2px;
-  bottom: 0;
-  display: block;
-  width: 2px;
-  background: $pale-blue;
-  content: '';
-}
-
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
@@ -18,8 +7,31 @@ $multi-col-item-right-margin: 12px;
   border-right: 2px solid rgba($black, 0.3);
   flex: none;
 
+  &:first-child {
+    .network-item {
+      &::before {
+        display: none;
+      }
+    }
+  }
+
   &:last-child {
     border-right: 0;
+
+    .connector-divider {
+      display: none;
+    }
+  }
+
+  .connector-divider {
+    position: absolute;
+    top: 6rem;
+    right: -2px;
+    bottom: 0;
+    display: block;
+    width: 2px;
+    background: $pale-blue;
+    content: '';
   }
 
   .account-management-header,
