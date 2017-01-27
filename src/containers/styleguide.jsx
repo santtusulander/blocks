@@ -93,6 +93,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import IconFile          from '../components/icons/icon-file'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -1215,7 +1216,11 @@ class Styleguide extends React.Component {
             <br />
             LoadingSpinnerSmall
           </span>
-
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFile />
+            <br />
+            IconFile
+          </span>
         </div>
 
       </div>
