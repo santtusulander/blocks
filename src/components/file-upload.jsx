@@ -35,6 +35,11 @@ class FileUploadArea extends Component {
     let validatedFiles = []
     let rejectedFiles = []
 
+    if (this.state.validFiles.length > 0) {
+      // Don't allow upload additional files
+      return
+    }
+
     this.setState({
       isDropzoneActive: false,
       isValidationInProgress: true
@@ -136,7 +141,7 @@ class FileUploadArea extends Component {
           maxSize={maxSize}
           disableClick={(filesCount > 0) ? true : !uploadModalOnClick}
           className={classNameProp}
-          activeClassName={(filesCount > 0) ? activeClassName : ''}
+          activeClassName={(filesCount > 0) ? '' : activeClassName}
         >
 
           {this.renderFileList(filesCount)}
