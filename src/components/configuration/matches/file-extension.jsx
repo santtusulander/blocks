@@ -1,8 +1,9 @@
 import React from 'react'
 import { Button, ButtonToolbar, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
-import Typeahead from 'react-bootstrap-typeahead'
 import Immutable from 'immutable'
+
+import Typeahead from '../../typeahead'
 
 import {
   FILE_EXTENSION_REGEXP,

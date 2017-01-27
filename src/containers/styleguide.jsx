@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -52,6 +51,7 @@ import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
 import FileUploadArea from '../components/file-upload.jsx'
+import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -384,7 +384,7 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Charts</h1>
           <Row>
             <label>Stacked barchart</label>
-            <SectionContainer className="analysis-contribution">
+            <SectionContainer className="analysis-chart-container">
               {<BarChart
                 chartLabel="Month to Date"
                 chartData={stackedBarChartData}
@@ -399,7 +399,7 @@ class Styleguide extends React.Component {
             <hr />
             <Row>
               <label>Normal barchart</label>
-              <SectionContainer className="analysis-contribution">
+              <SectionContainer className="analysis-chart-container">
                 <BarChart
                   chartLabel="This Week"
                   chartData={singleBarChartData}
