@@ -111,7 +111,8 @@
       "src/**/*.js?(x)"
     ],
     "coveragePathIgnorePatterns": [
-      "/__stories__/"
+      "/__stories__/",
+      "/src/locales/"
     ],
     "testPathDirs": [
       "src",
