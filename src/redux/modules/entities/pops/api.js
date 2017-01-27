@@ -5,7 +5,7 @@ import {Schemas} from '../schemas'
 import { BASE_URL_NORTH } from '../../../util'
 
 const baseUrl = ({ brand, account, group, network }) => {
-  return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/`
+  return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`
 }
 
 /**
