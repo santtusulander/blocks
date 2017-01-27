@@ -49,7 +49,8 @@ describe('NetworkPopForm', () => {
   })
 
   it('should have 3 buttons on Edit', () => {
-    expect(subject(true).find('Button').length).toBe(3)
+    expect(subject(true).find('Button').length).toBe(2)
+    expect(subject(true).find('ButtonDisableTooltip').length).toBe(1)
   })
 
   it('should render an error message', () => {

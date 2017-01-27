@@ -383,7 +383,7 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Charts</h1>
           <Row>
             <label>Stacked barchart</label>
-            <SectionContainer className="analysis-contribution">
+            <SectionContainer className="analysis-chart-container">
               {<BarChart
                 chartLabel="Month to Date"
                 chartData={stackedBarChartData}
@@ -398,7 +398,7 @@ class Styleguide extends React.Component {
             <hr />
             <Row>
               <label>Normal barchart</label>
-              <SectionContainer className="analysis-contribution">
+              <SectionContainer className="analysis-chart-container">
                 <BarChart
                   chartLabel="This Week"
                   chartData={singleBarChartData}
