@@ -26,7 +26,7 @@ import { isValidPhoneNumber, isValidCountryCode } from '../../util/validators'
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
-      <Tooltip placement="top" className="input-tooltip in" id="tooltip-top">
+      <Tooltip positionTop="0" placement="top" className="input-tooltip in" id="tooltip-top">
         {error}
       </Tooltip>
 
