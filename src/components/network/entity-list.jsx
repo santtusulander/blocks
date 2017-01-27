@@ -13,11 +13,11 @@ class EntityList extends React.Component {
 
     this.updateEntities = this.updateEntities.bind(this)
     this.state = this.updateEntities(props.entities)
-    this.connectorScroll = this.connectorScroll.bind(this)
+    this.renderConnectorLine = this.renderConnectorLine.bind(this)
   }
 
   componentDidMount() {
-    this.entityListItems.addEventListener('scroll', this.connectorScroll, false)
+    this.entityListItems.addEventListener('scroll', this.renderConnectorLine, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,44 +34,70 @@ class EntityList extends React.Component {
     return false
   }
 
-  componentWillUnmount() {
-    this.entityListItems.removeEventListener('scroll', this.connectorScroll, false)
+  componentDidUpdate() {
+    this.renderConnectorLine()
   }
 
-  connectorScroll() {
-    const childNodes = [...this.entityListItems.childNodes]
-    const active = childNodes.filter(node => node.classList.contains('active'))[0]
+  componentWillUnmount() {
+    this.entityListItems.removeEventListener('scroll', this.renderConnectorLine, false)
+  }
 
-    if (this.connector && active) {
-      this.connector.style.top = this.entityListItems.offsetTop + Math.floor(active.offsetHeight / 2) + 2 + 'px'
-      this.connector.style.bottom = this.entityListItems.getBoundingClientRect().top + this.entityListItems.clientHeight - active.getBoundingClientRect().top - Math.floor(active.offsetHeight / 2) + 16 + 'px'
+  /**
+   * Renders the blue vertical connecting line on the right side of the entity list. This is
+   * called when the user scrolls the list and when the component is updated in order
+   * to get the correct height calculations.
+   *
+   * @method renderConnectorLine
+   */
+  renderConnectorLine() {
+    // Check if this entity list has an active item
+    if (this.hasActiveItems()) {
+      // We're modifying DOM elements, so we need to get the correct nodes from entity list
+      const childNodes = [...this.entityListItems.childNodes]
+      // DOM Element of the active element
+      const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
+      // Active node height divided to half
+      const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
+      const activeTop = activeChildNode.getBoundingClientRect().top
+      const activeBottom = activeChildNode.getBoundingClientRect().bottom
+      // DOM Element for the vertical connector line
+      const connector = this.connector
+      const connectorStyles = connector.style
+      const entityListItems = this.entityListItems
+      const entityListItemsTop = entityListItems.getBoundingClientRect().top
+      const entityListItemsBottom = entityListItems.getBoundingClientRect().bottom
 
-      const topHalfVisibility = active.getBoundingClientRect().top >= this.entityListItems.getBoundingClientRect().top - active.offsetHeight / 2
-      const bottomHalfVisibility = active.getBoundingClientRect().bottom <= this.entityListItems.getBoundingClientRect().bottom + active.offsetHeight / 2
+      // Checks if the active item is visible in the viewport by half of its height
+      const topHalfVisibility = activeTop >= entityListItemsTop - activeHalfHeight
+      const bottomHalfVisibility = activeBottom <= entityListItemsBottom + activeHalfHeight
       const isVisible = topHalfVisibility && bottomHalfVisibility
 
-      if (!isVisible) {
-        this.connector.style.bottom = '15px'
+      connectorStyles.top = entityListItems.offsetTop + activeHalfHeight + 2 + 'px'
+
+      // If active item is visible by half, we should set the bottom style to be
+      // where the right side tick on the element ends. Otherwise we should set it
+      // to be at the end of the entity list.
+      if (isVisible) {
+        connectorStyles.bottom = entityListItemsTop + this.entityListItems.clientHeight - activeTop - activeHalfHeight + 16 + 'px'
+      } else {
+        // This bottom value is mainly applied when the active item is scrolled down
+        // in the list.
+        connectorStyles.bottom = '15px'
       }
 
-      if (active.getBoundingClientRect().top < this.entityListItems.getBoundingClientRect().top) {
-        this.connector.style.bottom = this.entityListItems.offsetHeight - Math.floor(active.offsetHeight / 2) + 14 + 'px'
-        this.connector.style.top = active.getBoundingClientRect().top - this.entityListItems.getBoundingClientRect().top + Math.floor(active.offsetHeight / 2) + this.entityListItems.offsetTop - 2 + 'px'
+      // If the active item is scrolled to the top, we should switch the top and bottom
+      // calculations so that the vertical connecting line grows accordingly.
+      if (activeTop < entityListItemsTop) {
+        connectorStyles.bottom = entityListItems.offsetHeight - activeHalfHeight + 14 + 'px'
+        connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - 2 + 'px'
 
-        if (this.connector.offsetTop <= this.entityListItems.offsetTop) {
-          this.connector.style.top = this.entityListItems.offsetTop + 'px'
+        // If the element is scrolled up, we should set the connector line top to
+        // be static at the very top of the entity list.
+        if (connector.offsetTop <= entityListItems.offsetTop) {
+          connectorStyles.top = entityListItems.offsetTop + 'px'
         }
       }
     }
-  }
-
-  checkIfHasActive() {
-    if (this.entityListItems) {
-      const childNodes = [...this.entityListItems.childNodes]
-      const active = childNodes.filter(node => node.classList.contains('active'))[0]
-      return active
-    }
-
   }
 
   updateEntities(entities) {
@@ -169,6 +195,19 @@ class EntityList extends React.Component {
     return Immutable.Range(0, list.count(), numOfItems).map(chunkStart => list.slice(chunkStart, chunkStart + numOfItems))
   }
 
+  /**
+   * Checks if any of the entities in the list is selected.
+   *
+   * @method hasActiveItems
+   * @return {Boolean}      Boolean of active item found
+   */
+  hasActiveItems() {
+    const { selectedEntityId } = this.props
+    const entities = this.state.entities
+    const active = entities.filter(entity => selectedEntityId === entity.get('id').toString()).first()
+    return active ? true : false
+  }
+
   render() {
     const {
       addEntity,
@@ -186,7 +225,7 @@ class EntityList extends React.Component {
 
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
-        {showEntitiesTable && <div ref={ref => this.connector = ref} className="connector-divider"/>}
+        {(showEntitiesTable && this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
           onAdd={addEntity}
