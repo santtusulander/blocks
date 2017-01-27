@@ -1,4 +1,5 @@
 /*eslint consistent-return: 0*/
+import { CACHE_REQUEST, CACHE_REQUEST_CLEAR } from '../modules/cache'
 
 const CACHE_EXPIRATION_TIME = 300000
 
@@ -36,7 +37,7 @@ export default function apiMiddleware({ dispatch, getState }) {
     }
 
     if (cacheKey) {
-      dispatch({ type: 'CACHE_REQUEST', payload: { [cacheKey]: Math.floor(Date.now() / 1000) } })
+      dispatch({ type: CACHE_REQUEST, payload: { [cacheKey]: Math.floor(Date.now() / 1000) } })
     }
 
     const [ requestType, successType, failureType ] = types;
@@ -47,7 +48,7 @@ export default function apiMiddleware({ dispatch, getState }) {
       response => dispatch({ ...payload, response, type: successType }),
       error => {
         if (cacheKey) {
-          dispatch({ type: 'CACHE_REQUEST_CLEAR', payload: cacheKey })
+          dispatch({ type: CACHE_REQUEST_CLEAR, payload: cacheKey })
         }
         return dispatch({ ...payload, error, type: failureType })
       }
