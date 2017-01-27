@@ -1,17 +1,17 @@
 import axios from 'axios'
-import {arrayOf, normalize, Schema} from 'normalizr'
+import {/*arrayOf,*/ normalize, schema} from 'normalizr'
 
 import { BASE_URL_AAA }  from '../../util.js'
 
 //import {Schemas} from '../schemas'
 
-const service = new Schema('services')
-const providerType = new Schema('provider_types')
+const service = new schema.Entity('services')
+const providerType = new schema.Entity('provider_types')
 
 const Schemas = {
   serviceInfo: {
-    services: arrayOf(service),
-    provider_types: arrayOf(providerType)
+    services: new schema.Array(service),
+    provider_types: new schema.Array(providerType)
   }
 }
 

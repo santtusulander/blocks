@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { BASE_URL_NORTH, BASE_URL_AAA }  from '../../util.js'
-import {arrayOf, normalize, Schema} from 'normalizr'
+import {arrayOf, normalize, schema} from 'normalizr'
 
-export const propertySchema = new Schema('properties', {idAttribute: 'published_host_id'})
+export const propertySchema = new schema.Entity('properties', {idAttribute: 'published_host_id'})
 
 /**
  * Fetch single host and normalize
