@@ -51,6 +51,7 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
+import FileUploadArea from '../components/file-upload.jsx'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -974,6 +975,18 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
+
+          <h1 className="page-header">Dropzone</h1>
+          <FileUploadArea
+            contentValidation={() => {
+              return true
+            }}
+            onDropCompleted={(validFiles, rejectedFiles) => {
+              // eslint-disable-next-line no-console
+              console.error(rejectedFiles)
+            }}
+            acceptFileTypes={["text/csv"]}
+            uploadModalOnClick={true}/>
 
           <h1 className="page-header">MapBox</h1>
 
