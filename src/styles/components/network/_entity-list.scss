@@ -1,4 +1,6 @@
 $multi-col-item-right-margin: 12px;
+$connector-offset: 2px;
+$entity-list-items-height-offset: 375px;
 
 .network-entity-list {
   position: relative;
@@ -25,11 +27,11 @@ $multi-col-item-right-margin: 12px;
 
   .connector-divider {
     position: absolute;
-    top: 6rem;
-    right: -2px;
+    top: 0;
+    right: -$connector-offset;
     bottom: 0;
     display: block;
-    width: 2px;
+    width: $connector-offset;
     background: $pale-blue;
     content: '';
   }
@@ -40,10 +42,10 @@ $multi-col-item-right-margin: 12px;
   }
 
   .network-entity-list-items {
-    position: absolute;
-    left: -2px;
-    max-height: calc(100vh - 375px);
-    min-width: calc(100% + 2px);
+    position: relative;
+    left: -$connector-offset;
+    max-height: calc(100vh - #{$entity-list-items-height-offset});
+    min-width: calc(100% + #{$connector-offset});
     overflow-x: hidden;
     overflow-y: auto;
 

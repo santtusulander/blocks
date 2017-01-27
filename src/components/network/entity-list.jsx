@@ -58,38 +58,48 @@ class EntityList extends React.Component {
       const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
       // Active node height divided to half
       const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
-      const activeTop = activeChildNode.getBoundingClientRect().top
-      const activeBottom = activeChildNode.getBoundingClientRect().bottom
+      const activeNodeSizes = activeChildNode.getBoundingClientRect()
+      const activeTop = activeNodeSizes.top
+      const activeBottom = activeNodeSizes.bottom
       // DOM Element for the vertical connector line
       const connector = this.connector
       const connectorStyles = connector.style
+
+      // Container, the root element of this component
+      const entityList = this.entityList
+      const entityListSizes = entityList.getBoundingClientRect()
+      const entityListBottom = entityListSizes.bottom
+
+      // The actual entity list
       const entityListItems = this.entityListItems
-      const entityListItemsTop = entityListItems.getBoundingClientRect().top
-      const entityListItemsBottom = entityListItems.getBoundingClientRect().bottom
+      const entityListItemsSizes = entityListItems.getBoundingClientRect()
+      const entityListItemsTop = entityListItemsSizes.top
+      const entityListItemsBottom = entityListItemsSizes.bottom
+      const entityListItemsBottomOffset = entityListBottom - entityListItemsBottom
 
       // Checks if the active item is visible in the viewport by half of its height
       const topHalfVisibility = activeTop >= entityListItemsTop - activeHalfHeight
       const bottomHalfVisibility = activeBottom <= entityListItemsBottom + activeHalfHeight
       const isVisible = topHalfVisibility && bottomHalfVisibility
 
-      connectorStyles.top = entityListItems.offsetTop + activeHalfHeight + 2 + 'px'
+      connectorStyles.top = entityListItems.offsetTop + activeHalfHeight + 'px'
 
       // If active item is visible by half, we should set the bottom style to be
       // where the right side tick on the element ends. Otherwise we should set it
       // to be at the end of the entity list.
       if (isVisible) {
-        connectorStyles.bottom = entityListItemsTop + this.entityListItems.clientHeight - activeTop - activeHalfHeight + 16 + 'px'
+        connectorStyles.bottom = entityListItemsTop + entityListItems.offsetHeight - activeTop - activeHalfHeight + entityListItemsBottomOffset + 'px'
       } else {
         // This bottom value is mainly applied when the active item is scrolled down
         // in the list.
-        connectorStyles.bottom = '15px'
+        connectorStyles.bottom = entityListItemsBottomOffset + 'px'
       }
 
       // If the active item is scrolled to the top, we should switch the top and bottom
       // calculations so that the vertical connecting line grows accordingly.
       if (activeTop < entityListItemsTop) {
-        connectorStyles.bottom = entityListItems.offsetHeight - activeHalfHeight + 14 + 'px'
-        connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - 2 + 'px'
+        connectorStyles.bottom = entityListItems.offsetHeight - activeHalfHeight + 'px'
+        connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - activeChildNode.clientTop + 'px'
 
         // If the element is scrolled up, we should set the connector line top to
         // be static at the very top of the entity list.
@@ -204,8 +214,8 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId } = this.props
     const entities = this.state.entities
-    const active = entities.filter(entity => selectedEntityId === entity.get('id').toString()).first()
-    return active ? true : false
+    const active = entities.some(entity => selectedEntityId === entity.get('id').toString())
+    return active
   }
 
   render() {

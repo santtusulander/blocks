@@ -17,7 +17,7 @@ $network-item-connector-line-offset: rem(32px);
     margin-bottom: 0;
 
     &::before {
-      top: calc(-50% - 16px);
+      top: calc(-50% - #{$network-item-padding-vertical});
       border-top: 0;
       border-bottom: 2px solid $pale-blue;
     }
@@ -39,14 +39,14 @@ $network-item-connector-line-offset: rem(32px);
     left: -$network-item-connector-line-offset;
     display: block;
     width: $page-container-horizontal-padding;
-    height: calc(100% + 16px);
+    height: calc(100% + #{$network-item-padding-vertical});
     border-top: 2px solid $pale-blue;
     border-left: 2px solid $pale-blue;
     content: '';
   }
 
   &::after {
-    top: calc(-50% - 16px);
+    top: calc(-50% - #{$network-item-padding-vertical});
     display: none;
     border-top: 0;
     border-bottom: 2px solid $pale-blue;
@@ -58,9 +58,9 @@ $network-item-connector-line-offset: rem(32px);
     background-repeat: no-repeat;
 
     &.active {
-      border-color: $pale-blue;
       background-color: $black;
       background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
+      border-color: $pale-blue;
 
       &::after {
         right: -$network-item-connector-line-offset;
