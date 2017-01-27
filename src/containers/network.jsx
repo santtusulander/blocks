@@ -17,6 +17,8 @@ import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import EntityList from '../components/network/entity-list'
 
+import podActions from '../redux/modules/entities/pods/actions'
+
 import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_POP,
@@ -676,7 +678,7 @@ class Network extends React.Component {
             {...params}
           />
         }
-        
+
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-form"
@@ -731,7 +733,14 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
-    groupActions: groupActions
+    groupActions: groupActions,
+
+    getallPods: (data) => dispatch(podActions.fetchAll(data)),
+    createPod: (data) => dispatch(podActions.create(data)),
+    updatePod: (data) => dispatch(podActions.update(data)),
+    getPod: (data) => dispatch(podActions.fetchOne(data)),
+    delPod: (data) => dispatch(podActions.remove(data))
+
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))

@@ -34,9 +34,17 @@ const properties =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const pods =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('pods'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   groups,
   properties,
+  pods,
   fetching: mapActionsToFetchingReducers(actionTypes)
 })
