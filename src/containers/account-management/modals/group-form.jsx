@@ -7,19 +7,22 @@ import { Button } from 'react-bootstrap'
 
 import * as hostActionCreators from '../../../redux/modules/host'
 import * as uiActionCreators from '../../../redux/modules/ui'
+import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
 import ModalWindow from '../../../components/modal'
+import { isUdnAdmin } from '../../../redux/modules/user'
 
 import {
-  userIsContentProvider,
-  userIsCloudProvider,
+  accountIsContentProviderType,
   accountIsServiceProviderType
 } from '../../../util/helpers'
 
 import GroupForm from '../../../components/account-management/group-form'
+import { getServiceOptions } from '../../../redux/modules/service-info/selectors'
+
 import '../../../components/account-management/group-form.scss'
 
 class GroupFormContainer extends React.Component {
@@ -39,10 +42,12 @@ class GroupFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId } = this.props
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, fetchServiceInfo } = this.props
+
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
+      fetchServiceInfo()
     }
   }
 
@@ -149,8 +154,7 @@ class GroupFormContainer extends React.Component {
   render() {
     const {
       account,
-      canEditBilling,
-      canSeeBilling,
+      canEditServices,
       groupId,
       hostActions,
       hosts,
@@ -159,8 +163,12 @@ class GroupFormContainer extends React.Component {
       show,
       name,
       onCancel,
+      onChangeServiceItem,
       intl,
-      invalid} = this.props
+      invalid,
+      serviceOptions,
+      showServiceItemForm
+    } = this.props
 
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
@@ -200,8 +208,8 @@ class GroupFormContainer extends React.Component {
           >
           <GroupForm
             accountIsServiceProviderType={accountIsServiceProviderType(account)}
-            canEditBilling={canEditBilling}
-            canSeeBilling={canSeeBilling}
+            accountIsContentProviderType={accountIsContentProviderType(account)}
+            canEditServices={canEditServices}
             groupId={groupId}
             hostActions={hostActions}
             hosts={hosts}
@@ -210,8 +218,11 @@ class GroupFormContainer extends React.Component {
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
             onCancel={onCancel}
+            onChangeServiceItem={onChangeServiceItem}
             onDeleteHost={this.handleDeleteHost}
-            onSubmit={this.onSubmit} />
+            onSubmit={this.onSubmit}
+            serviceOptions={serviceOptions}
+            showServiceItemForm={showServiceItemForm} />
         </SidePanel>
 
       {this.state.hostToDelete &&
@@ -242,8 +253,8 @@ GroupFormContainer.displayName = "GroupFormContainer"
 GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
-  canEditBilling: PropTypes.bool,
-  canSeeBilling: PropTypes.bool,
+  canEditServices: PropTypes.bool,
+  fetchServiceInfo: PropTypes.func,
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
@@ -253,9 +264,12 @@ GroupFormContainer.propTypes = {
   isFetchingHosts: PropTypes.bool,
   name: PropTypes.string,
   onCancel: PropTypes.func,
+  onChangeServiceItem: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
+  serviceOptions: PropTypes.array,
   show: PropTypes.bool,
+  showServiceItemForm: PropTypes.func,
   uiActions: PropTypes.object
 }
 
@@ -265,35 +279,35 @@ GroupFormContainer.defaultProps = {
   hosts: List()
 }
 
-const determineInitialValues = (groupId, activeGroup = Map()) => {
-  let initialValues = {}
-  if (groupId) {
-    const { charge_model, ...rest } = activeGroup.toJS()
-    initialValues = charge_model ? { charge_model, ...rest } : { ...rest }
-  }
-  return initialValues
-}
+function mapStateToProps(state, { groupId }) {
+  const currentUser = state.user.get('currentUser')
+  const canEditServices = isUdnAdmin(currentUser)
+  const activeAccount = state.account.get('activeAccount')
+  const activeGroup = state.group.get('activeGroup')
+  const serviceInfoOptions = getServiceOptions(state, activeAccount.get('provider_type'))
+  //const serviceOptions = serviceInfoOptions
 
-function mapStateToProps({ user, host, group, account, form }, { groupId }) {
-  const currentUser = user.get('currentUser')
-  const canEditBilling = userIsCloudProvider(currentUser)
-  const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
-  return {
-    account: account.get('activeAccount'),
-    activeHost: host.get('activeHost'),
-    canSeeBilling,
-    canEditBilling,
-    hosts: groupId && host.get('allHosts'),
-    initialValues: determineInitialValues(groupId, group.get('activeGroup')),
-    isFetchingHosts: host.get('fetching'),
-    name: group.getIn(['activeGroup', 'name'])
+  const obj = {
+    account: activeAccount,
+    activeHost: state.host.get('activeHost'),
+    canEditServices,
+    hosts: groupId && state.host.get('allHosts'),
+    initialValues: {
+      ...activeGroup.toJS(),
+      services: activeGroup.get('services') || List()
+    },
+    isFetchingHosts: state.host.get('fetching'),
+    name: state.group.getIn(['activeGroup', 'name']),
+    serviceOptions: serviceInfoOptions
   }
+  return obj
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
   }
 }
 

@@ -129,7 +129,8 @@ class AccountForm extends React.Component {
           />
 
           <hr/>
-          {!this.props.account
+
+          { !this.props.account
             ? <Field
                 name="accountType"
                 className="input-select"
@@ -141,22 +142,18 @@ class AccountForm extends React.Component {
                 <ControlLabel>{<FormattedMessage id="portal.account.manage.accountType.title" />}</ControlLabel>
                 <p>{providerTypeLabel}</p>
               </FormGroup>
-          }
+           }
 
-          <hr/>
+           <hr/>
 
-          {/*accountType for cp
-              ? <Field
-                  name="accountServicesIds"
-                  component={FieldFormGroupMultiOptionSelector}
-                  options={serviceOptions}
-                  label={<FormattedMessage id="portal.account.manage.services.title" />}
-                />
-              : <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
-          */}
-
-          {accountType
+           { accountType === 1
             ? <Field
+                name="accountServicesIds"
+                component={FieldFormGroupMultiOptionSelector}
+                options={serviceOptions}
+                label={<FormattedMessage id="portal.account.manage.services.title" />}
+              />
+            : <Field
                 name="accountServices"
                 component={ServiceOptionSelector}
                 showServiceItemForm={this.props.showServiceItemForm}
@@ -164,27 +161,25 @@ class AccountForm extends React.Component {
                 onChangeServiceItem={this.props.onChangeServiceItem}
                 label={<FormattedMessage id="portal.account.manage.services.title" />}
               />
-            : <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
-            }
+           }
 
           <FormFooterButtons>
-              <Button
-                id="cancel-btn"
-                className="btn-secondary"
-                onClick={onCancel}>
-                <FormattedMessage id="portal.button.cancel"/>
-              </Button>
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
 
-              <Button
-                type="submit"
-                bsStyle="primary"
-                disabled={invalid||submitting}>
-                {submitButtonLabel}
-              </Button>
-            </FormFooterButtons>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid||submitting}>
+              {submitButtonLabel}
+            </Button>
+          </FormFooterButtons>
         </form>
       </SidePanel>
-
     )
   }
 }

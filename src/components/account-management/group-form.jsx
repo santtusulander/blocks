@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
@@ -11,6 +10,7 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import ServiceOptionSelector from './service-option-selector'
 
 import {
   checkForErrors
@@ -35,8 +35,7 @@ const validate = ({ name }) => {
 
 const GroupForm = ({
   accountIsServiceProviderType,
-  canEditBilling,
-  canSeeBilling,
+  accountIsContentProviderType,
   groupId,
   handleSubmit,
   hosts,
@@ -44,8 +43,12 @@ const GroupForm = ({
   invalid,
   isFetchingHosts,
   onCancel,
+  onChangeServiceItem,
   onDeleteHost,
-  onSubmit}) => {
+  onSubmit,
+  serviceOptions,
+  showServiceItemForm
+}) => {
 
   return (
     <form
@@ -58,65 +61,53 @@ const GroupForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.account.groupForm.name.label" />}/>
 
-        {canSeeBilling &&
+        <hr/>
+
+        {(accountIsContentProviderType) &&
           <Field
-            name="charge_id"
-            disabled={!canEditBilling}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
-            component={FieldFormGroup}
-            label={intl.formatMessage({id:"portal.account.groupForm.charge_number.label"})}
-            required={false}/>
+            name="services"
+            component={ServiceOptionSelector}
+            showServiceItemForm={showServiceItemForm}
+            options={serviceOptions}
+            onChangeServiceItem={onChangeServiceItem}
+            label={<FormattedMessage id="portal.account.manage.services.title" />}
+          />
         }
 
-        {canSeeBilling &&
-          <Field
-            name="charge_model"
-            disabled={!canEditBilling}
-            numericValues={true}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
-            component={FieldFormGroupSelect}
-            options={[
-              [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
-              [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
-            ]}
-            label={intl.formatMessage({id: "portal.account.groupForm.charge_model.label"})}
-            required={false}/>
-          }
+        <hr/>
 
-          <hr/>
-
-          {(!accountIsServiceProviderType && groupId) &&
-            <div>
-              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-              {isFetchingHosts ? <LoadingSpinner/> :
-                !hosts.isEmpty() ?
-                      <Table striped={true} className="fixed-layout">
-                    <thead>
-                    <tr>
-                      <th>
-                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                      </th>
-                          <th className="one-button-cell" />
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {hosts.map((host, i) => {
-                      return (
-                        <tr key={i}>
-                              <td><TruncatedTitle content={host} /></td>
-                          <td>
-                            <ActionButtons
-                              onDelete={() => onDeleteHost(host)}/>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                    </tbody>
-                  </Table>
-                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
-              }
-            </div>
-          }
+        {(!accountIsServiceProviderType && groupId) &&
+          <div>
+            <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+            {isFetchingHosts ? <LoadingSpinner/> :
+              !hosts.isEmpty() ?
+                    <Table striped={true} className="fixed-layout">
+                  <thead>
+                  <tr>
+                    <th>
+                      <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                    </th>
+                        <th className="one-button-cell" />
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {hosts.map((host, i) => {
+                    return (
+                      <tr key={i}>
+                            <td><TruncatedTitle content={host} /></td>
+                        <td>
+                          <ActionButtons
+                            onDelete={() => onDeleteHost(host)}/>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                  </tbody>
+                </Table>
+              : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+            }
+          </div>
+        }
         <FormFooterButtons>
           <Button
             id="cancel-btn"
@@ -139,9 +130,8 @@ const GroupForm = ({
 GroupForm.displayName = "GroupForm"
 
 GroupForm.propTypes = {
+  accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
-  canEditBilling: PropTypes.bool,
-  canSeeBilling: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
   hosts: PropTypes.instanceOf(List),
@@ -149,8 +139,11 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
   onCancel: PropTypes.func,
+  onChangeServiceItem: PropTypes.func,
   onDeleteHost: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  serviceOptions: PropTypes.array,
+  showServiceItemForm: PropTypes.func
 }
 
 export default reduxForm({

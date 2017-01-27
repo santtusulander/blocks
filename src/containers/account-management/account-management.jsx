@@ -80,14 +80,15 @@ export class AccountManagement extends Component {
     this.showDeleteUserModal = this.showDeleteUserModal.bind(this)
     this.toggleEditGroupModal = this.toggleEditGroupModal.bind(this)
     this.validateAccountDetails = this.validateAccountDetails.bind(this)
-    this.updateAccountServices = this.updateAccountServices.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
 
     this.showServiceItemForm = this.showServiceItemForm.bind(this)
+    this.updateServices = this.updateServices.bind(this)
     this.getActiveServiceItem = this.getActiveServiceItem.bind(this)
     this.getActiveServiceItemPath = this.getActiveServiceItemPath.bind(this)
     this.onChangeServiceItem = this.onChangeServiceItem.bind(this)
     this.onDisableServiceItem = this.onDisableServiceItem.bind(this)
+    this.getEntityToUpdate = this.getEntityToUpdate.bind(this)
   }
 
   componentWillMount() {
@@ -228,7 +229,7 @@ export class AccountManagement extends Component {
       toggleModal()
     } else {
       fetchGroup(brand, account, group.get('id')).then(() => {
-        this.setState({ groupToUpdate: group.get('id') })
+        this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
     }
@@ -306,22 +307,39 @@ export class AccountManagement extends Component {
     return checkForErrors({ accountName, services }, conditions)
   }
 
-  updateAccountServices(path, values) {
-    const account = this.state.accountToUpdate.setIn(path, values)
+  getEntityToUpdate() {
+    let entityToUpdateName = null
 
-    this.setState({ accountToUpdate: account })
-    this.onServiceChange && this.onServiceChange(account.get('services'))
+    if (this.state.accountToUpdate) {
+      entityToUpdateName = 'accountToUpdate'
+    }
+
+    if (this.state.groupToUpdate) {
+      entityToUpdateName = 'groupToUpdate'
+    }
+
+    return entityToUpdateName
+  }
+
+  updateServices(path, values) {
+    const entityToUpdate = this.getEntityToUpdate()
+    const entity = this.state[entityToUpdate].setIn(path, values)
+
+    this.setState({ [entityToUpdate]: entity })
+    this.onServiceChange && this.onServiceChange(entity.get('services'))
   }
 
   getActiveServiceItem(serviceId, optionId) {
-    const services = fromJS(this.state.accountToUpdate.get('services'))
+    const entityToUpdate = this.getEntityToUpdate()
+    const services = fromJS(this.state[entityToUpdate].get('services'))
     const service = services.find(item => item.get('service_id') === serviceId) || getDefaultService(serviceId)
 
     return optionId ? service.get('options').find(item => item.get('option_id') === optionId) || getDefaultOption(optionId) : service
   }
 
   getActiveServiceItemPath(serviceId, optionId) {
-    const services = fromJS(this.state.accountToUpdate.get('services'))
+    const entityToUpdate = this.getEntityToUpdate()
+    const services = fromJS(this.state[entityToUpdate].get('services'))
     let serviceIndex = services.findKey(item => item.get('service_id') === serviceId)
 
     if (typeof serviceIndex === 'undefined') {
@@ -347,7 +365,7 @@ export class AccountManagement extends Component {
   onChangeServiceItem(values) {
     const path = this.state.activeServiceItemPath || ['services']
 
-    this.updateAccountServices(path, values)
+    this.updateServices(path, values)
 
     this.setState({
       activeServiceItem: Map(),
@@ -356,14 +374,15 @@ export class AccountManagement extends Component {
   }
 
   onDisableServiceItem() {
-    const account = this.state.accountToUpdate.deleteIn(this.state.activeServiceItemPath)
+    const entityToUpdate = this.getEntityToUpdate()
+    const entity = this.state[entityToUpdate].deleteIn(this.state.activeServiceItemPath)
 
     this.setState({
-      accountToUpdate: account,
+      [entityToUpdate]: entity,
       activeServiceItem: Map(),
       activeServiceItemPath: null
     })
-    this.onServiceChange && this.onServiceChange(account.get('services'))
+    this.onServiceChange && this.onServiceChange(entity.get('services'))
   }
 
   showServiceItemForm(serviceId, optionId, onChange) {
@@ -568,14 +587,27 @@ export class AccountManagement extends Component {
 
         { /* Edit Group */}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-        <GroupFormContainer
-          id="group-form"
-          params={this.props.params}
-          groupId={this.state.groupToUpdate}
-          onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
-          onCancel={() => this.toggleEditGroupModal()}
-          show={true}
-        />}
+          <div>
+            <GroupFormContainer
+              id="group-form"
+              params={this.props.params}
+              groupId={this.state.groupToUpdate.get('id')}
+              onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
+              onCancel={() => this.toggleEditGroupModal()}
+              showServiceItemForm={this.showServiceItemForm}
+              onChangeServiceItem={this.onChangeServiceItem}
+              disabled={!!this.state.activeServiceItem.size}
+              show={true}
+            />
+            <AddChargeNumbersModal
+              activeServiceItem={this.state.activeServiceItem}
+              onCancel={() => this.setState({ activeServiceItem: Map(), activeServiceItemPath: null })}
+              onDisable={this.onDisableServiceItem}
+              onSubmit={this.onChangeServiceItem}
+              show={!!this.state.activeServiceItem.size}
+            />
+          </div>
+        }
       </Content>
     )
   }
