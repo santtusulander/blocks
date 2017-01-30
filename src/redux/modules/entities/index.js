@@ -34,9 +34,18 @@ const properties =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+
+const networks =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('networks'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   groups,
   properties,
+  networks,
   fetching: mapActionsToFetchingReducers(actionTypes)
 })
