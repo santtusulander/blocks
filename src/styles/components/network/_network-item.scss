@@ -4,6 +4,7 @@
 $network-item-padding-horizontal: 12px;
 $network-item-padding-vertical: 16px;
 $network-item-status-indicator-width: 8px;
+$network-item-connector-line-offset: rem(32px);
 
 .network-item {
   position: relative;
@@ -14,6 +15,41 @@ $network-item-status-indicator-width: 8px;
 
   &:last-child {
     margin-bottom: 0;
+
+    &::before {
+      top: calc(-50% - #{$network-item-padding-vertical});
+      border-top: 0;
+      border-bottom: 2px solid $pale-blue;
+    }
+  }
+
+  &:first-child {
+    &::after {
+      right: -$network-item-connector-line-offset;
+      left: auto;
+      display: none;
+      border-left: 0;
+    }
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: -$network-item-connector-line-offset;
+    display: block;
+    width: $page-container-horizontal-padding;
+    height: calc(100% + #{$network-item-padding-vertical});
+    border-top: 2px solid $pale-blue;
+    border-left: 2px solid $pale-blue;
+    content: '';
+  }
+
+  &::after {
+    top: calc(-50% - #{$network-item-padding-vertical});
+    display: none;
+    border-top: 0;
+    border-bottom: 2px solid $pale-blue;
   }
 
   .dark-theme & {
@@ -24,6 +60,14 @@ $network-item-status-indicator-width: 8px;
     &.active {
       background-color: $black;
       background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
+      border-color: $pale-blue;
+
+      &::after {
+        right: -$network-item-connector-line-offset;
+        left: auto;
+        display: block;
+        border-left: 0;
+      }
     }
 
     &:hover {
