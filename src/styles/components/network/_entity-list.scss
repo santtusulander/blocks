@@ -13,6 +13,10 @@ $multi-col-item-right-margin: 12px;
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
+
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding;
+    }
   }
 
   .network-entity-list-items {
