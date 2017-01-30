@@ -31,6 +31,7 @@ class NetworkFormContainer extends React.Component {
     super(props)
 
     this.onSubmit = this.onSubmit.bind(this)
+    this.checkforPops = this.checkforPops.bind(this)
   }
 
   onSubmit(edit, values) {
@@ -41,6 +42,11 @@ class NetworkFormContainer extends React.Component {
   onDelete(networkId) {
     // TODO: on delete functionality
     this.props.onDelete(networkId)
+  }
+
+  checkforPops() {
+    //TODO: this should check weather the current Network has POPs or not
+    return true
   }
 
   render() {
@@ -57,6 +63,7 @@ class NetworkFormContainer extends React.Component {
             edit={edit}
             fetching={fetching}
             networkId={networkId}
+            hasPops={this.checkforPops()}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}

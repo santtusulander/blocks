@@ -11,9 +11,9 @@ import {
   Button,
   ButtonToolbar,
   Panel } from 'react-bootstrap';
-import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import Typeahead from './typeahead'
 import Select from './select'
 import { isValidEmail, isValidRelativePath } from '../util/validators'
 

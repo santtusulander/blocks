@@ -90,9 +90,4 @@ describe('BarChart', () => {
     ] }).find('Bar')
     expect([chart.first().props().stackId, chart.last().props().stackId]).toEqual([1, 2])
   });
-
-  it('should not set stackId if single bar passed', () => {
-    const chart = subject({ barModels: [{ dataKey: 'a', name: 'a', stackId: 1 }] }).find('Bar')
-    expect(chart.first().props().stackId).not.toBeDefined()
-  });
 })

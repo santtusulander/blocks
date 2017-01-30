@@ -19,7 +19,8 @@
   "portal.network.popEditForm.locationId.label" : "Location ID",
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
-
+  "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
+  
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.networkForm.newNetwork.title": "Add Network",
   "portal.network.networkForm.editNetwork.title": "Edit Network",
@@ -29,6 +30,15 @@
   "portal.network.networkForm.description.validation.error": "Invalid Network description",
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
+  "portal.network.networkForm.delete.tooltip.message": "This Network contains POPs so it can't be deleted.\nPlease delete all the POPs.",
+
+  "portal.network.addNodeForm.title": "Add nodes",
+  "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
+  "portal.network.addNodeForm.howMany.title": "How many?",
+  "portal.network.addNodeForm.role.title": "Role",
+  "portal.network.addNodeForm.environment.title": "Environment",
+  "portal.network.addNodeForm.type.title": "Type",
+  "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
@@ -48,6 +58,7 @@
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
   "portal.network.podForm.name.validation.error": "Invalid Pod name",
   "portal.network.podForm.name.required.error": "POD Name is required",
+  "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
@@ -103,4 +114,3 @@
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
 }
-
