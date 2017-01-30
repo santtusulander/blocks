@@ -1,8 +1,25 @@
 import axios from 'axios'
-import {normalize} from 'normalizr'
+import {normalize, schema} from 'normalizr'
 
-import {Schemas} from '../schemas'
+//import {Schemas} from '../schemas'
 import { BASE_URL_NORTH } from '../../../util'
+
+/* TODO: After FOOTPRINTS are merged, import schema from 'footprints' -module */
+const footprint = new schema.Entity('footprints')
+
+/* TODO: After POD is merged, import schema from 'pod' -module */
+const pod = new schema.Entity('pods', {
+  footprints: [ footprint ]
+}, {
+  idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
+  processStrategy: (value, parent) => {
+    return { ...value, parentId: parent.id}
+  }
+})
+
+const pop = new schema.Entity('pops', {
+  pods: [ pod ]
+})
 
 const baseUrl = ({ brand, account, group, network }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`
@@ -17,7 +34,7 @@ const baseUrl = ({ brand, account, group, network }) => {
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
     .then( ({data}) => {
-      return normalize(data, Schemas.pop)
+      return normalize(data, pop)
     })
 }
 
@@ -30,7 +47,7 @@ export const fetch = ({id, ...params}) => {
 export const fetchAll = ( params ) => {
   return axios.get(baseUrl(params))
     .then( ({data}) => {
-      return normalize(data.data, Schemas.pops)
+      return normalize(data.data, [ pop ])
     })
 }
 
@@ -43,7 +60,7 @@ export const fetchAll = ( params ) => {
 export const create = ({ payload, ...urlParams }) => {
   return axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, Schemas.pop)
+      return normalize(data, pop)
     })
 }
 
@@ -57,7 +74,7 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, Schemas.pop)
+      return normalize(data, pop)
     })
 }
 

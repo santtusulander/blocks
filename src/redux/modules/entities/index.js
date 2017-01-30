@@ -41,29 +41,11 @@ const pops =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const pods =
-    handleActions({
-      [actionTypes.RECEIVE] : receiveEntity('pods'),
-      [actionTypes.REMOVE] : removeEntity,
-      [actionTypes.FAIL] : failEntity
-    }, Map())
-
-const footprints =
-    handleActions({
-      [actionTypes.RECEIVE] : receiveEntity('footprints'),
-      [actionTypes.REMOVE] : removeEntity,
-      [actionTypes.FAIL] : failEntity
-    }, Map())
-
-
-
 //const entities = combineReducers({
 export default combineReducers({
   accounts,
   groups,
   properties,
   pops,
-  pods,
-  footprints,
   fetching: mapActionsToFetchingReducers(actionTypes)
 })
