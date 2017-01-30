@@ -4,22 +4,13 @@ import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
+import { fetchASOverview } from '../../../../util/network-helpers'
+
 import ThemeWrap from '../../theme-wrap'
 import RoutingDaemonForm from '../../../../containers/network/modals/routing-daemon-modal'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
-
-const dummyFetch = (shouldResolve = true) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (!shouldResolve) {
-        return reject({ err: 'Not found' })
-      }
-      return resolve({ payload: Math.random().toString(36).slice(2) })
-    }, 1000)
-  })
-}
 
 storiesOf('SP-Config', module)
   .addDecorator((story) => (
@@ -32,7 +23,7 @@ storiesOf('SP-Config', module)
   .add('RoutingDaemonForm', () => (
     <RoutingDaemonForm
       show={true}
-      fetchBGPName={dummyFetch}
+      fetchBGPName={fetchASOverview}
       onCancel={action('Cancelled')}
       onSave={action('Submitting')}
     />

@@ -17,6 +17,9 @@ const mockRedux = {
       case 'name':
         return "Network Test"
 
+      case 'fetching':
+        return false
+
       default:
         return null
     }
@@ -28,52 +31,45 @@ class NetworkFormContainer extends React.Component {
     super(props)
 
     this.onSubmit = this.onSubmit.bind(this)
+    this.checkforPops = this.checkforPops.bind(this)
   }
 
-  //TODO Fix onSubmit after Redux integration
-  onSubmit(values) {
-    const { networkId, invalid, onSave } = this.props
-    if(!invalid) {
-      if (networkId) {
-        return onSave(
-          networkId,
-          values
-        )
-      } else {
-        return onSave(values)
-      }
-    }
+  onSubmit(edit, values) {
+    // TODO: on submit functionality
+    this.props.onSave(edit, values)
+  }
+
+  onDelete(networkId) {
+    // TODO: on delete functionality
+    this.props.onDelete(networkId)
+  }
+
+  checkforPops() {
+    //TODO: this should check weather the current Network has POPs or not
+    return true
   }
 
   render() {
-    const {
-      account,
-      group,
-      networkId,
-      initialValues,
-      show,
-      name,
-      onCancel,
-      intl,
-      invalid} = this.props
+    const { edit, fetching, account, group, networkId, initialValues, show, name, onCancel, intl, invalid} = this.props
 
-    const title = networkId ? <FormattedMessage id="portal.network.networkForm.editNetwork.title"/> : <FormattedMessage id="portal.network.networkForm.newNetwork.title"/>
-    const subTitle = networkId ? `${account.get('name')} / ${group.get('name')} / ${name}` : `${account.get('name')} / ${group.get('name')}`
+    const title = edit ? <FormattedMessage id="portal.network.networkForm.editNetwork.title"/>
+                       : <FormattedMessage id="portal.network.networkForm.newNetwork.title"/>
+    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${name}`
+                          : `${account.get('name')} / ${group.get('name')}`
     return (
       <div>
-        <SidePanel
-          show={show}
-          title={title}
-          subTitle={subTitle}
-          cancel={onCancel}
-          >
+        <SidePanel show={show} title={title} subTitle={subTitle} cancel={onCancel}>
           <NetworkForm
+            edit={edit}
+            fetching={fetching}
             networkId={networkId}
+            hasPops={this.checkforPops()}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}
-            onCancel={onCancel}
-            onSubmit={this.onSubmit} />
+            onSave={(values) => this.onSubmit(edit, values)}
+            onDelete={(networkId) => this.onDelete(networkId)}
+            onCancel={onCancel} />
         </SidePanel>
       </div>
     )
@@ -84,13 +80,16 @@ NetworkFormContainer.displayName = "NetworkFormContainer"
 
 NetworkFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
+  edit: PropTypes.bool,
+  fetching: PropTypes.bool,
   group: PropTypes.instanceOf(Map).isRequired,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   name: PropTypes.string,
-  networkId: PropTypes.number,
+  networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
 }
@@ -101,14 +100,15 @@ NetworkFormContainer.defaultProps = {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     account: state.account.get('activeAccount'),
     group: state.group.get('activeGroup'),
+    fetching: mockRedux.get('fetching'),
     //name: state.network.getIn(['activeNetwork', 'name']),
     initialValues: {
-      name: mockRedux.get('name'),
-      description: mockRedux.get('description')
+      name: ownProps.edit ? mockRedux.get('name') : '',
+      description: ownProps.edit ? mockRedux.get('description') : ''
     }
   }
 }

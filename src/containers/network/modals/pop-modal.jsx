@@ -5,6 +5,7 @@ import { formValueSelector } from 'redux-form'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
+import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 
 const mockReduxCalls = {
   get: function(cmd) {
@@ -45,12 +46,13 @@ const mockReduxCalls = {
   }
 }
 
-class NetworkPopFormContainer extends Component {
+class PopFormContainer extends Component {
   constructor(props) {
     super(props)
 
     this.onSubmit = this.onSubmit.bind(this)
     this.onDelete = this.onDelete.bind(this)
+    this.checkforPods = this.checkforPods.bind(this)
   }
 
   onSubmit(edit, values) {
@@ -63,9 +65,15 @@ class NetworkPopFormContainer extends Component {
     this.props.onDelete(popId)
   }
 
+  checkforPods() {
+    //TODO: this should check weather the current POP has PODs or not
+    return true
+  }
+
   render() {
-    const { edit, fetching, initialValues, selectedLocationId,
-            selectedPopId, onCancel, groupId, networkId, show } = this.props
+    const { edit, fetching, initialValues, locationId,
+            onCancel, groupId, networkId, popId, show } = this.props
+
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
@@ -92,8 +100,9 @@ class NetworkPopFormContainer extends Component {
         <NetworkPopForm
           edit={edit}
           fetching={fetching}
-          selectedLocationId={selectedLocationId}
-          selectedPopId={selectedPopId}
+          hasPods={this.checkforPods()}
+          locationId={locationId}
+          popId={popId}
           initialValues={initialValues}
           onDelete={(popId) => this.onDelete(popId)}
           onSave={(values) => this.onSubmit(edit, values)}
@@ -105,30 +114,30 @@ class NetworkPopFormContainer extends Component {
   }
 }
 
-NetworkPopFormContainer.displayName = "NetworkPopFormContainer"
-NetworkPopFormContainer.propTypes = {
+PopFormContainer.displayName = "PopFormContainer"
+PopFormContainer.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   initialValues: PropTypes.object,
+  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  selectedLocationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  selectedPopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   show: PropTypes.bool
 }
 
-const formSelector = formValueSelector('networkPopEditForm')
+const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
-  const selectedLocationId = formSelector(state, 'locationId')
-  const selectedPopId = formSelector(state, 'popId')
+  const locationId = formSelector(state, 'locationId')
+  const popId = formSelector(state, 'popId')
 
   const props = {
     fetching: mockReduxCalls.get('fetching'),
-    selectedLocationId: selectedLocationId,
-    selectedPopId: selectedPopId,
+    locationId: locationId,
+    popId: popId,
     initialValues: {
       name: ownProps.edit ? mockReduxCalls.get('name') : '',
       createdDate: ownProps.edit ? mockReduxCalls.get('createdDate') : '',
@@ -142,4 +151,4 @@ const mapStateToProps = (state, ownProps) => {
   return props
 }
 
-export default connect(mapStateToProps)(NetworkPopFormContainer)
+export default connect(mapStateToProps)(PopFormContainer)

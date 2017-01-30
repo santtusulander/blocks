@@ -18,6 +18,7 @@
   "portal.common.error.unauthorized.title": "Unauthorized",
   "portal.common.error.unauthorized.content": "You do not have permission to access information on this page.",
   "portal.common.error.invalid.email.text": "Email address is invalid.",
+  "portal.common.error.field.required.text": "{label} is required.",
   "portal.common.ON.text": "ON",
   "portal.common.OFF.text": "OFF",
   "portal.common.name": "Name",

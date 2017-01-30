@@ -26,7 +26,7 @@ import { isValidPhoneNumber, isValidCountryCode } from '../../util/validators'
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
-      <Tooltip placement="top" className="input-tooltip in" id="tooltip-top">
+      <Tooltip positionTop="0" placement="top" className="input-tooltip in" id="tooltip-top">
         {error}
       </Tooltip>
 
@@ -119,8 +119,11 @@ class UserEditForm extends React.Component {
 
     return onSavePassword(newValues)
       .then((response) => {
-        if (response.error) throw new SubmissionError( {'current_password': response.payload.message})
-        else {
+        if (response.error) {
+          values.current_password = ''
+          this.props.initialize( {...values} )
+          throw new SubmissionError( {'current_password': response.payload.message})
+        } else {
           /* eslint-disable no-unused-vars */
           /* stip unneeded vars from values */
           const {
@@ -139,6 +142,9 @@ class UserEditForm extends React.Component {
 
   togglePasswordEditing() {
     //Set field in redux, because changingPassword is needed in validate()
+    if (this.props.changingPassword) {
+      this.props.resetForm()
+    }
     this.props.change('changingPassword', !this.props.changingPassword)
   }
 
