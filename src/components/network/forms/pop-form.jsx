@@ -83,6 +83,7 @@ const NetworkPopForm = (props) => {
                 name="popId"
                 component={FieldFormGroupNumber}
                 addonBefore={`${locationId}${popId}`}
+                min={0}
                 label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
             : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }

@@ -55,13 +55,7 @@ const placeholderNetworks = Immutable.fromJS([
 const placeholderPops = Immutable.fromJS([
   { id: 'JFK1', name: 'Pod 1 for JFK' },
   { id: 'JFK2', name: 'Pod 2 for JFK' },
-  { id: 'JFK7', name: 'Pod 7 for JFK' },
-  { id: 'SJC1', name: 'Pod 1 for SJC' },
-  { id: 'SJC2', name: 'Pod 2 for SJC' },
-  { id: 'KFC1', name: 'Pod 1 for KFC' },
-  { id: 'KFC2', name: 'Pod 2 for KFC' },
-  { id: 'MCD1', name: 'Pod 1 for MCD' },
-  { id: 'MCD2', name: 'Pod 2 for MCD' }
+  { id: 'JFK7', name: 'Pod 7 for JFK' }
 ])
 
 const placeholderPods = Immutable.fromJS([
@@ -628,6 +622,7 @@ class Network extends React.Component {
             multiColumn={true}
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+
           />
         </PageContainer>
 
