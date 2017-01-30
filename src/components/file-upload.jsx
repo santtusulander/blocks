@@ -19,7 +19,7 @@ class FileUploadArea extends Component {
     }
 
     this.onDrop = this.onDrop.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
+    this.onDelete = this.onDelete.bind(this)
     this.renderFileList = this.renderFileList.bind(this)
     this.isValidFileType = this.isValidFileType.bind(this)
   }
@@ -67,7 +67,7 @@ class FileUploadArea extends Component {
     this.props.onDropCompleted(validatedFiles, rejectedFiles)
   }
 
-  handleDelete(fileName) {
+  onDelete(fileName) {
     let newFiles = []
 
     this.state.validFiles.map((file) => {
@@ -108,7 +108,7 @@ class FileUploadArea extends Component {
                   <span><FormattedMessage id="portal.fileInput.bytes.text" values={{size: file.size}}/></span>
                 </span>
               </div>
-              <div className="delete-file" onClick={() => this.handleDelete(file.name)}>
+              <div className="delete-file" onClick={() => this.onDelete(file.name)}>
                 <IconClose />
               </div>
             </div>)
