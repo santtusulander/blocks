@@ -73,14 +73,17 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      tfa: this.getDefaultTFAMethod(props.initialValues.tfa)
-    }
-
     this.onSubmit = this.onSubmit.bind(this);
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
 
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
+
+  }
+
+  componentDidMount() {
+    this.state = {
+      tfa: this.getDefaultTFAMethod(this.props.initialValues.tfa)
+    }
   }
 
   componentWillUpdate(nextProps) {
