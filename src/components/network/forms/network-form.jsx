@@ -44,7 +44,9 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
         name="name"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.name.placeholder'})}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.common.name" />}/>
+        label={<FormattedMessage id="portal.common.name" />}
+        disabled={edit ? true : false}
+        required={edit ? false : true} />
 
       <Field
         name="description"
