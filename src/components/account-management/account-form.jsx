@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Map }from 'immutable'
+import { Map, List }from 'immutable'
 
 import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
@@ -20,7 +20,7 @@ import {
 
 import { checkForErrors } from '../../util/helpers'
 import { isValidTextField } from '../../util/validators'
-import { getServicesIDs } from '../../util/services-helpers'
+import { getServicesIds, getServicesFromIds } from '../../util/services-helpers'
 
 import ServiceOptionSelector from './service-option-selector'
 
@@ -52,17 +52,17 @@ class AccountForm extends React.Component {
     this.props.fetchServiceInfo()
   }
 
-  onSubmit(values, dispatch, props){
-    const services = props.account.get('services').toJS()
+  onSubmit(values, dispatch, { account, accountType, onSave }){
+    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
     const data = {
       name: values.accountName,
       provider_type: values.accountType,
       services
     }
 
-    const accountId = props.account && props.account.get('id') || null
+    const accountId = account && account.get('id') || null
 
-    return this.props.onSave(values.accountBrand, accountId, data)
+    return onSave(values.accountBrand, accountId, data)
       //TODO: Handle submittion error
       //  .then( (res) => {
       //    if (res)
@@ -130,7 +130,7 @@ class AccountForm extends React.Component {
 
           <hr/>
 
-          { !this.props.account
+          { !accountType
             ? <Field
                 name="accountType"
                 className="input-select"
@@ -142,18 +142,21 @@ class AccountForm extends React.Component {
                 <ControlLabel>{<FormattedMessage id="portal.account.manage.accountType.title" />}</ControlLabel>
                 <p>{providerTypeLabel}</p>
               </FormGroup>
-           }
+          }
 
            <hr/>
 
-           { accountType === 1
-            ? <Field
+           { accountType && accountType === 1 &&
+               <Field
                 name="accountServicesIds"
                 component={FieldFormGroupMultiOptionSelector}
                 options={serviceOptions}
                 label={<FormattedMessage id="portal.account.manage.services.title" />}
               />
-            : <Field
+           }
+
+           { accountType && accountType !== 1 &&
+              <Field
                 name="accountServices"
                 component={ServiceOptionSelector}
                 showServiceItemForm={this.props.showServiceItemForm}
@@ -161,6 +164,10 @@ class AccountForm extends React.Component {
                 onChangeServiceItem={this.props.onChangeServiceItem}
                 label={<FormattedMessage id="portal.account.manage.services.title" />}
               />
+           }
+
+           { !accountType &&
+            <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
            }
 
           <FormFooterButtons>
@@ -180,6 +187,7 @@ class AccountForm extends React.Component {
           </FormFooterButtons>
         </form>
       </SidePanel>
+
     )
   }
 }
@@ -214,8 +222,8 @@ const mapStateToProps = (state, ownProps) => {
       accountBrand: 'udn',
       accountName: ownProps.account && ownProps.account.get('name'),
       accountType: ownProps.account && ownProps.account.get('provider_type'),
-      accountServices: ownProps.account && ownProps.account.get('services'),
-      accountServicesIds: ownProps.account && getServicesIDs(ownProps.account.get('services')).toJS()
+      accountServices: ownProps.account && ownProps.account.get('services') || List(),
+      accountServicesIds: ownProps.account && ownProps.account.get('services') && getServicesIds(ownProps.account.get('services')).toJS() || []
     },
     invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),

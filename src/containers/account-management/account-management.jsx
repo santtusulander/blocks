@@ -323,7 +323,13 @@ export class AccountManagement extends Component {
 
   updateServices(path, values) {
     const entityToUpdate = this.getEntityToUpdate()
-    const entity = this.state[entityToUpdate].setIn(path, values)
+    let entity = this.state[entityToUpdate]
+
+    if (!entity.get('services')) {
+      entity = entity.set('services', List())
+    }
+
+    entity = entity.setIn(path, values)
 
     this.setState({ [entityToUpdate]: entity })
     this.onServiceChange && this.onServiceChange(entity.get('services'))
@@ -331,7 +337,7 @@ export class AccountManagement extends Component {
 
   getActiveServiceItem(serviceId, optionId) {
     const entityToUpdate = this.getEntityToUpdate()
-    const services = fromJS(this.state[entityToUpdate].get('services'))
+    const services = fromJS(this.state[entityToUpdate].get('services')) || List()
     const service = services.find(item => item.get('service_id') === serviceId) || getDefaultService(serviceId)
 
     return optionId ? (service.get('options').find(item => item.get('option_id') === optionId) || getDefaultOption(optionId)) : service
@@ -339,7 +345,7 @@ export class AccountManagement extends Component {
 
   getActiveServiceItemPath(serviceId, optionId) {
     const entityToUpdate = this.getEntityToUpdate()
-    const services = fromJS(this.state[entityToUpdate].get('services'))
+    const services = fromJS(this.state[entityToUpdate].get('services')) || List()
     let serviceIndex = services.findKey(item => item.get('service_id') === serviceId)
 
     if (typeof serviceIndex === 'undefined') {

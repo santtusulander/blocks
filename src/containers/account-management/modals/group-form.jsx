@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap'
 
 import * as hostActionCreators from '../../../redux/modules/host'
 import * as uiActionCreators from '../../../redux/modules/ui'
-import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
+import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-info/actions'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -22,6 +22,7 @@ import {
 
 import GroupForm from '../../../components/account-management/group-form'
 import { getServiceOptions } from '../../../redux/modules/service-info/selectors'
+import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 
 import '../../../components/account-management/group-form.scss'
 
@@ -47,8 +48,9 @@ class GroupFormContainer extends React.Component {
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
-      fetchServiceInfo()
     }
+
+    fetchServiceInfo()
   }
 
   onSubmit(values) {
@@ -284,23 +286,23 @@ function mapStateToProps(state, { groupId }) {
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = state.account.get('activeAccount')
   const activeGroup = state.group.get('activeGroup')
-  const serviceInfoOptions = getServiceOptions(state, activeAccount.get('provider_type'))
-  //const serviceOptions = serviceInfoOptions
+  const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
 
-  const obj = {
+  return {
     account: activeAccount,
     activeHost: state.host.get('activeHost'),
     canEditServices,
     hosts: groupId && state.host.get('allHosts'),
     initialValues: {
-      ...activeGroup.toJS(),
+      ...(activeGroup.toJS() || {}),
       services: activeGroup.get('services') || List()
     },
     isFetchingHosts: state.host.get('fetching'),
     name: state.group.getIn(['activeGroup', 'name']),
-    serviceOptions: serviceInfoOptions
+    serviceOptions: allServiceOptions
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())).toJS() 
+                    : []
   }
-  return obj
 }
 
 function mapDispatchToProps(dispatch) {

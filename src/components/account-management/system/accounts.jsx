@@ -21,7 +21,7 @@ import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-in
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
-import { getServicesIDs } from '../../../util/services-helpers'
+import { getServicesIds } from '../../../util/services-helpers'
 
 import {FormattedMessage} from 'react-intl';
 
@@ -154,7 +154,7 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount(Map())}}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -172,7 +172,7 @@ class AccountList extends Component {
           <tbody>
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
-            const servicesIds = getServicesIDs(account.get('services'))
+            const servicesIds = getServicesIds(account.get('services'))
 
             return (
               <tr key={index}>

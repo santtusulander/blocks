@@ -11,7 +11,7 @@ import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, g
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 import {fetchAccount, startFetching as accountStartFetching, getById as getAccountById, isFetching as accountsFetching} from '../../../redux/modules/account'
 
-import { getServicesIDs } from '../../../util/services-helpers'
+import { getServicesIds } from '../../../util/services-helpers'
 
 class AccountDetails extends React.Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class AccountDetails extends React.Component {
 
   render() {
     const { providerTypes, servicesInfo, account, accountIsFetching } = this.props
-    const servicesIds = account && account.get('services') ? getServicesIDs(account.get('services')) : List()
+    const servicesIds = account && account.get('services') ? getServicesIds(account.get('services')) : List()
 
     return (
       <PageContainer className="account-management-account-details">
