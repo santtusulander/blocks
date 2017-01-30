@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.3.0-b10",
+  "version": "1.3.0-b13",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -108,10 +108,11 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.jsx"
+      "src/**/*.js?(x)"
     ],
     "coveragePathIgnorePatterns": [
-      "/__stories__/"
+      "/__stories__/",
+      "/src/locales/"
     ],
     "testPathDirs": [
       "src",

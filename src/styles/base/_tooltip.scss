@@ -71,6 +71,10 @@
       .dark-theme & {
         border-top-color: rgba($black, 0.8);
       }
+
+      .light-theme & {
+        border-top-color: $white;
+      }
     }
 
     &.input-tooltip {
@@ -87,6 +91,10 @@
 
       .dark-theme & {
         border-bottom-color: rgba($black, 0.8);
+      }
+
+      .light-theme & {
+        border-bottom-color: $white;
       }
     }
 

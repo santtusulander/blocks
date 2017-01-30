@@ -153,6 +153,7 @@ const DnsDomainEditForm = (props) => {
         name="refresh"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'})}
         component={FieldFormGroupNumber}
+        min={0}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.refresh.text" />}
       />
@@ -163,6 +164,7 @@ const DnsDomainEditForm = (props) => {
         name="ttl"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
         component={FieldFormGroupNumber}
+        min={0}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />}
       />
@@ -173,6 +175,7 @@ const DnsDomainEditForm = (props) => {
         name="negative_ttl"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
         component={FieldFormGroupNumber}
+        min={0}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.negativeTtl.text" />}
       />

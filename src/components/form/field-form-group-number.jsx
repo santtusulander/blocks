@@ -13,7 +13,9 @@ const FieldFormGroupNumber = ({
   input,
   label,
   inputRef,
+  max,
   meta,
+  min,
   placeholder,
   required,
   ErrorComponent
@@ -36,6 +38,8 @@ const FieldFormGroupNumber = ({
           {...{ inputRef }}
           className={className}
           disabled={disabled}
+          max={max}
+          min={min}
           placeholder={placeholder} />
 
 
@@ -70,7 +74,9 @@ FieldFormGroupNumber.propTypes = {
   input: PropTypes.object,
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  max: PropTypes.number,
   meta: PropTypes.object,
+  min: PropTypes.number,
   placeholder: PropTypes.string,
   required: PropTypes.bool
 }
