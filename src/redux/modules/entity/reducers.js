@@ -2,8 +2,9 @@ import {fromJS} from 'immutable'
 
 /*Reducers*/
 export const receiveEntity = (key) => (state, action) => {
-  if (action.payload.entities && action.payload.entities[key])
-    return state.mergeDeep( state, fromJS(action.payload.entities[key]) )
+  const { response = {} } = action
+  if (response.entities && response.entities[key])
+    return state.mergeDeep( state, fromJS(response.entities[key]) )
 
   return state
 }
@@ -13,6 +14,6 @@ export const failEntity = (state/*, action*/) => {
 }
 
 export const removeEntity = (state, action) => {
-  const id = action.payload.id
+  const id = String(action.response.id)
   return state.delete(id)
 }

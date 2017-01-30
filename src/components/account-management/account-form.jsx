@@ -52,14 +52,25 @@ class AccountForm extends React.Component {
     this.props.fetchServiceInfo()
   }
 
+  componentWillReceiveProps(nextProps) {
+    // UDNP-2388: below is a hack to handle change of accountType
+    // Since accountServices holds values which were selected for
+    // previosly configured account type, we need to clear them manually.
+
+    if (nextProps.accountType && (!nextProps.account)) {
+      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+        this.props.change('accountServices', [])
+      }
+    }
+  }
+
   onSubmit(values, dispatch, { account, accountType, onSave }){
-    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
     const data = {
       name: values.accountName,
       provider_type: values.accountType,
       services
     }
-
+    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
     const accountId = account && account.get('id') || null
 
     return onSave(values.accountBrand, accountId, data)
@@ -75,7 +86,7 @@ class AccountForm extends React.Component {
     let providerType = ''
     let providerTypeLabel = ''
     const { accountType, providerTypes, serviceOptions, invalid, submitting, disabled,
-            initialValues: { accountBrand }, show, onCancel } = this.props
+            initialValues: { accountBrand }, show, onCancel, dirty } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
@@ -171,20 +182,20 @@ class AccountForm extends React.Component {
            }
 
           <FormFooterButtons>
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
+              <Button
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={onCancel}>
+                <FormattedMessage id="portal.button.cancel"/>
+              </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid||submitting}>
-              {submitButtonLabel}
-            </Button>
-          </FormFooterButtons>
+              <Button
+                type="submit"
+                bsStyle="primary"
+                disabled={invalid||submitting||(!dirty)}>
+                {submitButtonLabel}
+              </Button>
+            </FormFooterButtons>
         </form>
       </SidePanel>
 
