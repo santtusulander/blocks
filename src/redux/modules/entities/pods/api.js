@@ -16,9 +16,9 @@ const pod = new schema.Entity('pods', {
   }
 })
 
-// const pop = new schema.Entity('pops', {
-//   pods: [ pod ]
-// })
+const pop = new schema.Entity('pops', {
+  pods: [ pod ]
+})
 //
 // const pops = [ pop ]
 
@@ -32,7 +32,11 @@ const pod = new schema.Entity('pods', {
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
     .then( ({data}) => {
-      return normalize(data, pod)
+      const wrappedWithparent = {
+        id: params.pop,
+        pods: [data]
+      }
+      return normalize(wrappedWithparent, pop)
     })
 }
 
@@ -45,7 +49,12 @@ export const fetch = ({id, ...params}) => {
 export const fetchAll = ( params ) => {
   return axios.get(baseUrl(params))
     .then( ({data}) => {
-      return normalize(data.data, [ pod ])
+      const wrappedWithparent = {
+        id: params.pop,
+        pods: data.data
+      }
+
+      return normalize(wrappedWithparent, pop)
     })
 }
 
