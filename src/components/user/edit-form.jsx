@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, initialize, change, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, initialize, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -26,7 +26,7 @@ import { isValidPhoneNumber, isValidCountryCode } from '../../util/validators'
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
-      <Tooltip placement="top" className="input-tooltip in" id="tooltip-top">
+      <Tooltip positionTop="0" placement="top" className="input-tooltip in" id="tooltip-top">
         {error}
       </Tooltip>
 
@@ -109,8 +109,7 @@ class UserEditForm extends React.Component {
 
   savePasswordOnClick(values) {
     const {
-      onSavePassword,
-      clearCurrentPassword
+      onSavePassword
     } = this.props
 
     const newValues = {
@@ -121,7 +120,8 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          clearCurrentPassword()
+          values.current_password = ''
+          this.props.initialize( {...values} )
           throw new SubmissionError( {'current_password': response.payload.message})
         } else {
           /* eslint-disable no-unused-vars */
@@ -403,8 +403,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) ),
-    clearCurrentPassword: () => dispatch( change('user-edit-form', 'current_password', '') )
+    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) )
   }
 }
 
