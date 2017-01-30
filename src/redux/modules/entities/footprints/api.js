@@ -7,13 +7,13 @@ const baseURL = ({ brand, account }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/footprints`
 
 const footprintSchema = new schema.Entity('footprints', {}, {
-  processStrategy: (value, parent) => ({ ...value, parentId: parent.id})
+  processStrategy: (value, parent) => ({ ...value, accountId: parent.id})
 })
 
-const accountFootprintSchema = new schema.Entity('accountFootprints', [ footprintSchema ])
+const accountFootprintSchema = new schema.Entity('accountFootprints', { footprints: [ footprintSchema ] })
 
 const normalizeWithParentId = (footprint, parentId) =>
-  normalize({ ...footprint, parentId: parentId }, footprintSchema)
+  normalize({ footprints: [ footprint ], id: parentId }, accountFootprintSchema)
 
 export const fetchAll = (urlParams) =>
   axios.get(baseURL(urlParams))
