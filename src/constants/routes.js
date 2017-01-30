@@ -88,6 +88,7 @@ export default {
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
+  networkAccountV2: '/network-v2/:brand/:account',
   networkGroups: '/network/:brand/:account/groups',
   networkGroupsV2: '/network-v2/:brand/:account/groups',
   networkGroup: '/network-v2/:brand/:account/groups/:group',

@@ -90,8 +90,14 @@ export function getNetworkUrl(linkType, val, params) {
       return getRoute('networkBrand', { brand: val })
     case 'account':
       return getRoute('networkAccount', { ...params, account: val })
+    // TODO: Change this to replace current account route for network when
+    // all the Network changes are done.
+    case 'account-v2':
+      return getRoute('networkAccountV2', { ...params, account: val })
     case 'groups':
       return getRoute('networkGroups', { ...params, account: val })
+    case 'groups-v2':
+      return getRoute('networkGroupsV2', { ...params, account: val ? val : params.account })
     case 'group':
       return getRoute('networkGroup', { ...params, group: val })
     case 'network':

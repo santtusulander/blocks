@@ -220,6 +220,7 @@ export const getRoutes = store => {
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
           </Route>
+          <Route path={routes.networkAccountV2} component={Network}/>
           <Route path={routes.networkGroups} component={Groups}/>
           <Route path={routes.networkGroupsV2} component={Network}/>
           <Route path={routes.networkGroup} component={Network}/>
