@@ -3,6 +3,7 @@ import axios from 'axios'
 import Immutable from 'immutable'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
+import { TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
 const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
@@ -46,6 +47,8 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
   let contributionOpts = Object.assign({}, opts)
   contributionOpts.sp_account = contributionOpts.account
   delete contributionOpts.account
+  // Limit the amount of results for providers
+  contributionOpts.limit = TOP_PROVIDER_LENGTH
 
   // Combine data from many endpoints to serve dashboard
   return Promise.all([
@@ -61,8 +64,6 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
     const cpContributionMap = Immutable.fromJS(cpContribution)
 
     const timeSpanInSeconds = opts.endDate - opts.startDate
-    const connectionsTotal = trafficMap.getIn(['data', 0, 'totals', 'connections', 'total'], null)
-    const connectionsPerSecond = connectionsTotal / timeSpanInSeconds
 
     let bandwidth = []
     let latency = []
@@ -128,8 +129,8 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
           detail: trafficDetails.latency
         },
         connections: {
-          connections: connectionsTotal,
-          connections_per_second: connectionsPerSecond,
+          connections: trafficMap.getIn(['data', 0, 'totals', 'connections', 'total'], null),
+          connections_per_second: trafficMap.getIn(['data', 0, 'totals', 'connections', 'per_second'], null),
           detail: trafficDetails.connections
         },
         cache_hit: {
@@ -137,7 +138,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
           detail: trafficDetails.cacheHit
         },
         countries: countriesMap.getIn(['data', 'countries']),
-        providers: cpContributionMap.getIn(['data'], Immutable.List()).map(provider => {
+        providers: cpContributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
           const bytes = (
             provider.getIn(['http', 'net_off_bytes'], 0) +
             provider.getIn(['http', 'net_on_bytes'], 0) +
@@ -151,10 +152,11 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
             provider.getIn(['https', 'net_on_bps'], 0)
           )
           return {
-            account: provider.getIn(['account']),
+            account: provider.getIn(['account'], null),
             bytes: bytes,
             bits_per_second: bits_per_second,
-            detail: []
+            detail: provider.getIn(['detail'], []),
+            percent_total: provider.getIn(['percent_total'], null)
           }
         }).toJS()
       }
