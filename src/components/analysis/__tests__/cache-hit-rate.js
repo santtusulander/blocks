@@ -9,11 +9,11 @@ const trafficMock = Immutable.fromJS([{
   detail: [
     {
       chit_ratio: 1,
-      timestamp: 2
+      timestamp: new Date()
     },
     {
       chit_ratio: 3,
-      timestamp: 4
+      timestamp: new Date()
     }
   ]
 }])

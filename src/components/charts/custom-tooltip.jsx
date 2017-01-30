@@ -6,11 +6,13 @@ const CustomTooltip = ({ payload = [], iconClass, valueFormatter = formatBytes }
   const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0))
   return (
     <div className="bar-chart-tooltip">
-      {payload.map(({ name, value, dataKey }, i) =>
+
+      {payload.map(({ name, value, dataKey, payload: { formattedDate } }, i) =>
+
         <div key={i} className="tooltip-item">
           <span className="legend-label">
             <span className={`legend-icon ${iconClass(dataKey)}`}>&mdash; </span>
-            {name}
+            {formattedDate || name}
           </span>
           <span className='legend-value'>{valueFormatter(value)}</span>
         </div>

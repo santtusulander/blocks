@@ -1,9 +1,9 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../pop-modal.jsx')
+jest.unmock('../network-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
-import PopFormContainer from '../pop-modal.jsx'
+import NetworkAddNodeFormContainer from '../add-node-modal.jsx'
 
 const intlMaker = () => {
   return {
@@ -11,22 +11,17 @@ const intlMaker = () => {
   }
 }
 
-describe('PopFormContainer', () => {
+describe('NetworkAddNodeFormContainer', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (edit = false) => {
+    subject = () => {
       let props = {
-        onCancel: jest.fn(),
+        closeModal: jest.fn(),
         onSave: jest.fn(),
-        onSubmit: jest.fn(),
         intl: intlMaker(),
-        initialValues: {
-          name: 'udn'
-        },
-        edit: edit
       }
-      return shallow(<PopFormContainer {...props}/>)
+      return shallow(<NetworkAddNodeFormContainer {...props}/>)
     }
   })
 

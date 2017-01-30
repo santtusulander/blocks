@@ -77,7 +77,7 @@ export function fetchListFailure(state) {
 
 export function fetchObjectsSuccess(state, action) {
   return state.merge({
-    purgeObjects: Immutable.fromJS(action.payload.purge_objects),
+    purgeObjects: Immutable.fromJS(action.payload.data),
     fetching: false
   })
 }
