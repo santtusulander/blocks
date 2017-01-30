@@ -97,6 +97,14 @@ $lt-side-panel-bg-color: $white;
       float: left;
       padding: 0.5rem 0.5rem 0.5rem 0;
       text-align: left;
+
+      .dark-theme & {
+        color: $dt-text-color;
+      }
+
+      .light-theme & {
+        color: $white-20;
+      }
     }
   }
 
