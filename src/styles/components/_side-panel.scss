@@ -12,6 +12,7 @@ $dt-side-panel-bg-color: $medium-blue;
 $lt-side-panel-bg-color: $white;
 
 .side-panel.modal-dialog {
+  position: relative;
   float: right;
   width: $side-panel-width;
   margin: 0;
@@ -72,8 +73,8 @@ $lt-side-panel-bg-color: $white;
     position: fixed;
     right: 0;
     bottom: 0;
+    left: 0;
     width: 100%;
-    max-width: $side-panel-width;
 
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
@@ -86,7 +87,37 @@ $lt-side-panel-bg-color: $white;
     }
 
     @include sm {
-      max-width: ($side-panel-width - $side-panel-small-display-margin);
+      padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
+      left: $side-panel-small-display-margin;
+    }
+
+    &__text {
+      display: inline-block;
+      float: left;
+      text-align: left;
+      padding: .5rem .5rem .5rem 0;
+    }
+  }
+
+  .side-panel__veil {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    z-index: 10;
+  }
+
+  &.side-panel--dim {
+    .side-panel__veil {
+      display: block;
+    }
+
+    .modal-footer {
+      z-index: 11;
+      background: $dt-side-panel-bg-color;
     }
   }
 }
