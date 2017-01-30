@@ -119,6 +119,7 @@ $network-item-connector-line-offset: rem(32px);
     top: 50%;
     right: $network-item-padding-vertical;
     display: none;
+    padding: 2px;
     transform: translateY(-50%);
 
     .btn-icon {
