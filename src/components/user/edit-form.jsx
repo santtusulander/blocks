@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, initialize, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, initialize, change, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -17,7 +17,8 @@ import FieldPasswordFields from '../form/field-passwordfields'
 import SaveBar from '../save-bar'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
-         TWO_FA_METHODS_OPTIONS
+         TWO_FA_METHODS_OPTIONS,
+         TWO_FA_DEFAULT_AUTH_METHOD
         } from '../../constants/user.js'
 
 import '../../styles/components/user/_edit-form.scss'
@@ -38,8 +39,6 @@ const validate = (values) => {
     first_name,
     last_name,
     phone,
-    tfa_toggle,
-    tfa,
     current_password,
     new_password,
     validPass
@@ -55,10 +54,6 @@ const validate = (values) => {
 
     if (!last_name) {
       errors.last_name = <FormattedMessage id="portal.user.edit.lastNameRequired.text" />
-    }
-
-    if (tfa_toggle && !tfa) {
-      errors.tfa = <FormattedMessage id="portal.user.edit.tfaMethodRequired.text" />
     }
 
     if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
@@ -78,10 +73,29 @@ class UserEditForm extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      tfa: this.getDefaultTFAMethod(props.initialValues.tfa)
+    }
+
     this.onSubmit = this.onSubmit.bind(this);
     this.savePasswordOnClick = this.savePasswordOnClick.bind(this)
 
     this.togglePasswordEditing = this.togglePasswordEditing.bind(this)
+  }
+
+  componentWillUpdate(nextProps) {
+    this.setTFAMethod(nextProps)
+  }
+
+  getDefaultTFAMethod(string) {
+    return (string.length > 0) ? string : TWO_FA_DEFAULT_AUTH_METHOD
+  }
+
+  setTFAMethod(props) {
+    const { tfa, tfa_toggle } = props
+    if (!tfa_toggle) this.props.changeSelectedTFAMethod('')
+    else
+      if (!(tfa && tfa.length > 0)) this.props.changeSelectedTFAMethod(this.state.tfa)
   }
 
   onSubmit(values){
@@ -104,7 +118,9 @@ class UserEditForm extends React.Component {
     }
 
     return this.props.onSave(data)
-
+      .then((response) => {
+        if(!response.error) this.setState( { tfa: this.getDefaultTFAMethod(response.payload.tfa) } )
+      })
   }
 
   savePasswordOnClick(values) {
@@ -210,7 +226,6 @@ class UserEditForm extends React.Component {
       tfa,
       tfa_toggle
     } = this.props
-
     const showSaveBar = this.props.dirty
 
     return (
@@ -403,7 +418,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) )
+    resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) ),
+    changeSelectedTFAMethod: (method) => dispatch( change('user-edit-form', 'tfa', method) )
   }
 }
 
