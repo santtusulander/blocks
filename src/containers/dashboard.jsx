@@ -173,7 +173,6 @@ export class Dashboard extends React.Component {
 
     const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-      .take(TOP_PROVIDER_LENGTH)
     const topProvidersIDs = topProviders.map(provider => provider.get('account')).toJS()
     const topProvidersAccounts = getAccountByID(accounts, topProvidersIDs)
 
@@ -288,7 +287,6 @@ export class Dashboard extends React.Component {
                 <tbody>
                   {topProviders.map((provider, i) => {
                     const traffic = separateUnit(formatBytes(provider.get('bytes')))
-                    const trafficPercentage = separateUnit(numeral(provider.get('bytes') / trafficBytes).format('0 %'))
                     return (
                       <tr key={i}>
                         <td><b>{topProvidersAccounts[i] ? topProvidersAccounts[i].get('name') : provider.get('account')}</b></td>
@@ -303,8 +301,8 @@ export class Dashboard extends React.Component {
                         <td>
                           <MiniChart
                             kpiRight={true}
-                            kpiValue={trafficPercentage.value}
-                            kpiUnit={trafficPercentage.unit}
+                            kpiValue={numeral(provider.get('percent_total')).format('0')}
+                            kpiUnit="%"
                             dataKey="bytes_percent_total"
                             data={provider.get('detail').toJS()} />
                         </td>
