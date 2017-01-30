@@ -603,6 +603,7 @@ class Network extends React.Component {
             selectEntity={this.handleAccountClick}
             selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
             title="Account"
+            showButtons={false}
           />
 
           <EntityList
