@@ -21,7 +21,7 @@ import {
 } from '../../../util/helpers'
 
 import GroupForm from '../../../components/account-management/group-form'
-import { getServiceOptions } from '../../../redux/modules/service-info/selectors'
+import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 
 import '../../../components/account-management/group-form.scss'
@@ -285,7 +285,7 @@ function mapStateToProps(state, { groupId }) {
   const currentUser = state.user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = state.account.get('activeAccount')
-  const activeGroup = state.group.get('activeGroup')
+  const activeGroup = state.group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
 
   return {
@@ -294,14 +294,15 @@ function mapStateToProps(state, { groupId }) {
     canEditServices,
     hosts: groupId && state.host.get('allHosts'),
     initialValues: {
-      ...(activeGroup.toJS() || {}),
-      services: activeGroup.get('services') || List()
+      ...(groupId ? activeGroup.toJS() : {}),
+      services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: state.host.get('fetching'),
-    name: state.group.getIn(['activeGroup', 'name']),
+    name: groupId ? state.group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())).toJS() 
-                    : []
+                    : [],
+    servicesInfo: getServicesInfo(state)
   }
 }
 

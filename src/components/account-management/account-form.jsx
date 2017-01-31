@@ -65,12 +65,13 @@ class AccountForm extends React.Component {
   }
 
   onSubmit(values, dispatch, { account, accountType, onSave }){
+    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
     const data = {
       name: values.accountName,
       provider_type: values.accountType,
       services
     }
-    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
+
     const accountId = account && account.get('id') || null
 
     return onSave(values.accountBrand, accountId, data)
@@ -141,7 +142,7 @@ class AccountForm extends React.Component {
 
           <hr/>
 
-          { !accountType
+          { !this.props.account.get('id')
             ? <Field
                 name="accountType"
                 className="input-select"
@@ -158,7 +159,7 @@ class AccountForm extends React.Component {
            <hr/>
 
            { accountType && accountType === 1 &&
-               <Field
+              <Field
                 name="accountServicesIds"
                 component={FieldFormGroupMultiOptionSelector}
                 options={serviceOptions}
@@ -227,7 +228,7 @@ const formSelector = formValueSelector('accountForm')
 const mapStateToProps = (state, ownProps) => {
   const accountType = formSelector(state, 'accountType')
 
-  return {
+  const obj = {
     accountType,
     initialValues: {
       accountBrand: 'udn',
@@ -241,6 +242,7 @@ const mapStateToProps = (state, ownProps) => {
     serviceOptions: accountType && getServiceOptions(state, accountType),
     servicesInfo: getServicesInfo(state)
   }
+  return obj
 }
 
 const mapDispatchToProps = (dispatch) => {

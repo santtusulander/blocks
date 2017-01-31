@@ -1,6 +1,6 @@
 import { fromJS, List } from 'immutable'
 
-export function getServicesIds (services) {
+export function getServicesIds (services = List()) {
   const serv = services.toJS()
 
   return fromJS(serv.map(({ service_id, options }) => {
