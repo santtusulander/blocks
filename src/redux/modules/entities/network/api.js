@@ -8,13 +8,12 @@ const baseUrl = ({ brand, account, group }) => {
 }
 
 const networkSchema = new schema.Entity('networks', {
-  //footprints: [ footprint ]
-}, {
-  idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
   processStrategy: (value, parent) => {
     return { ...value, parentId: parent.id}
   }
 })
+
+const groupNetworks = new schema.Entity('groupNetworks', { networks: [ networkSchema ] })
 
 /**
  * Fetch single NETWORK
@@ -25,11 +24,7 @@ const networkSchema = new schema.Entity('networks', {
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
     .then( ({data}) => {
-      const wrappedWithparent = {
-        id: params.group,
-        networks: [data]
-      }
-      return normalize(wrappedWithparent, networkSchema)
+      return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
     })
 }
 
@@ -42,12 +37,7 @@ export const fetch = ({id, ...params}) => {
 export const fetchAll = ( params ) => {
   return axios.get(baseUrl(params))
     .then( ({data}) => {
-      const wrappedWithparent = {
-        id: params.pop,
-        networkds: data.data
-      }
-
-      return normalize(wrappedWithparent, networkSchema)
+      return data
     })
 }
 
