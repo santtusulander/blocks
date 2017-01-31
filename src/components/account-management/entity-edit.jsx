@@ -153,7 +153,12 @@ class EntityEdit extends React.Component {
 
 EntityEdit.displayName = 'EntityEdit'
 EntityEdit.propTypes = {
-
+  currentUser: PropTypes.instanceOf(Map),
+  entityToUpdate: PropTypes.instanceOf(Map),
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func,
+  params: PropTypes.object,
+  type: PropTypes.string
 }
 
 export default injectIntl(EntityEdit)
