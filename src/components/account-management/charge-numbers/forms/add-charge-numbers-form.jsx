@@ -43,7 +43,7 @@ class AddChargeNumbersForm extends React.Component {
               component={FieldFormGroupCheckboxes}
               iterable={FLOW_DIRECTION_TYPES}
               required={false}
-              label={'Flow Directions'}
+              label={<FormattedMessage id="portal.account.chargeNumbersForm.flow_direction.title" />}
             />
             <hr/>
           </div>
@@ -61,7 +61,7 @@ class AddChargeNumbersForm extends React.Component {
             type="text"
             name={'billing_meta.charge_number'}
             component={FieldFormGroup}
-            label={'Global Charge Number'}
+            label={<FormattedMessage id="portal.account.chargeNumbersForm.global_charge_number.title" />}
           />
         }
 

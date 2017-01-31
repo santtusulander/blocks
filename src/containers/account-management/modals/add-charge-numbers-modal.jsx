@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage  } from 'react-intl'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 
@@ -25,13 +25,17 @@ class AddChargeNumbersModal extends React.Component {
                     : getOptionById(servicesInfo, activeServiceItem.get('option_id'))
     }
 
+    const subTitle = isService
+                    ? <FormattedMessage id="portal.account.chargeNumbersForm.service.title"/>
+                    : <FormattedMessage id="portal.account.chargeNumbersForm.option.title"/>
+
     return (
       <div>
         { activeServiceItem.size &&
           <SidePanel
             show={show}
             title={itemDetails.get('name')}
-            subTitle={isService ? 'SERVICE' : 'OPTION'}
+            subTitle={subTitle}
             cancel={onCancel}
             className="on-top-side-panel"
           >

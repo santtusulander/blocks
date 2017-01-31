@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl } from 'react-intl'
-import { Panel, Table } from 'react-bootstrap'
+import { Panel, Table, FormGroup, ControlLabel } from 'react-bootstrap'
 import classNames from 'classnames'
 import { fromJS, List } from 'immutable'
 
@@ -59,11 +59,13 @@ class ServiceOptionSelector extends React.Component {
   }
 
   render() {
-    const { options, input } = this.props
+    const { options, input, label, required } = this.props
     const servicesIds = input.value.map(item => item.get('service_id'))
 
     return (
-      <div className="multi-option-selector service-option-selector">
+      <FormGroup>
+        {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+        <div className="multi-option-selector service-option-selector">
           {options.map((option, i) => {
             const expanded = this.state.openPanels.indexOf(i) >= 0
             const serviceIndex = servicesIds.findKey(fieldOpt => fieldOpt === option.value)
@@ -129,8 +131,8 @@ class ServiceOptionSelector extends React.Component {
               </div>
             )
           })}
-
-      </div>
+        </div>
+      </FormGroup>
     )
   }
 }
@@ -138,8 +140,10 @@ class ServiceOptionSelector extends React.Component {
 ServiceOptionSelector.displayName = 'ServiceOptionSelector'
 ServiceOptionSelector.propTypes = {
   input: PropTypes.object.isRequired,
+  label: PropTypes.object,
   onChangeServiceItem: PropTypes.func,
   options: PropTypes.array,
+  required: PropTypes.bool,
   showServiceItemForm: PropTypes.func
 }
 

@@ -70,7 +70,7 @@ const GroupForm = ({
             showServiceItemForm={showServiceItemForm}
             options={serviceOptions}
             onChangeServiceItem={onChangeServiceItem}
-            label={<FormattedMessage id="portal.account.manage.services.title" />}
+            label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
           />
         }
 

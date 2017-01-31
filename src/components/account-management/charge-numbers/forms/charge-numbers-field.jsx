@@ -78,7 +78,7 @@ class ChargeNumbersField extends React.Component {
             type="text"
             name={'billing_meta.charge_number'}
             component={FieldFormGroup}
-            label={'Global Charge Number'}
+            label={<FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" />}
           />
         }
       </div>

@@ -163,7 +163,8 @@ class AccountForm extends React.Component {
                 name="accountServicesIds"
                 component={FieldFormGroupMultiOptionSelector}
                 options={serviceOptions}
-                label={<FormattedMessage id="portal.account.manage.services.title" />}
+                label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+                required={false}
               />
            }
 
@@ -174,7 +175,8 @@ class AccountForm extends React.Component {
                 showServiceItemForm={this.props.showServiceItemForm}
                 options={serviceOptions}
                 onChangeServiceItem={this.props.onChangeServiceItem}
-                label={<FormattedMessage id="portal.account.manage.services.title" />}
+                label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+                required={false}
               />
            }
 
