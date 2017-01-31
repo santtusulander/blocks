@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, Field, initialize, change, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
+import { reduxForm, Field, initialize, change, blur, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
 
 import { Tooltip, Button, ButtonToolbar,
@@ -81,11 +81,9 @@ class UserEditForm extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    this.setTFAMethod(nextProps)
-  }
-
-  getDefaultTFAMethod(string) {
-    return (string.length > 0) ? string : TWO_FA_DEFAULT_AUTH_METHOD
+    if (nextProps.tfa_toggle !== this.props.tfa_toggle) {
+      this.setTFAMethod(nextProps)
+    }
   }
 
   setTFAMethod(props) {
@@ -135,8 +133,6 @@ class UserEditForm extends React.Component {
     return onSavePassword(newValues)
       .then((response) => {
         if (response.error) {
-          values.current_password = ''
-          this.props.initialize( {...values} )
           throw new SubmissionError( {'current_password': response.payload.message})
         } else {
           /* eslint-disable no-unused-vars */
@@ -158,7 +154,7 @@ class UserEditForm extends React.Component {
   togglePasswordEditing() {
     //Set field in redux, because changingPassword is needed in validate()
     if (this.props.changingPassword) {
-      this.props.resetForm()
+      this.props.clearPasswordRow(this.props.formValues)
     }
     this.props.change('changingPassword', !this.props.changingPassword)
   }
@@ -407,22 +403,29 @@ UserEditForm.propTypes = {
   ...reduxFormPropTypes
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     changingPassword: formValueSelector('user-edit-form')(state, 'changingPassword'),
     tfa_toggle: formValueSelector('user-edit-form')(state, 'tfa_toggle'),
-    tfa: formValueSelector('user-edit-form')(state, 'tfa')
+    tfa: formValueSelector('user-edit-form')(state, 'tfa'),
+    formValues: formValueSelector('user-edit-form')(state, ...Object.keys(ownProps.initialValues))
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     resetForm: () => dispatch( initialize('user-edit-form', ownProps.initialValues) ),
-    changeSelectedTFAMethod: (method) => dispatch( change('user-edit-form', 'tfa', method) )
+    changeSelectedTFAMethod: (method) => dispatch( change('user-edit-form', 'tfa', method) ),
+    clearPasswordRow: (values) => dispatch( initialize('user-edit-form', values) )
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'user-edit-form',
-  validate: validate
+  validate: validate,
+  onSubmitFail: (errors, dispatch) => {
+    if(errors.current_password) {
+      dispatch( blur('user-edit-form', 'current_password', '') )
+    }
+  }
 })(injectIntl(UserEditForm)))
