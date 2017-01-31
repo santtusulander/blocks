@@ -24,7 +24,7 @@ export default ({
     }
   }
 
-  const fetchAllThunk = dispatch => requestParams => {
+  const fetchByIds = dispatch => requestParams => {
     dispatch({ type: request })
     return api.fetchIds(requestParams)
       .then((data) => {
@@ -50,7 +50,12 @@ export default ({
 
   return {
 
-    fetchAllThunk,
+    fetchAllThunk: dispatch => params => {
+      console.warn('fetchAllThunk is deprecated. Use fetchByIds instead.')
+      return fetchByIds(dispatch)(params)
+    },
+
+    fetchByIds,
 
     fetchOne,
 
