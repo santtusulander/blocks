@@ -118,8 +118,8 @@ export function isValidHostName(hostName) {
  * @param text
  * @returns {boolean}
  */
-export function isValidTextField(text) {
-  const textFieldRegexp = new RegExp('^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{3,40}$')
+export function isValidTextField(text, minLen = 3, maxLen = 40) {
+  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLen},${maxLen}}$`)
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
 }
 
