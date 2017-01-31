@@ -89,8 +89,9 @@ const mapDispatchToProps = () => {
     addAction: () => {
       //TODO: method called by add button
     },
-    editAction: (i) => {
+    editAction: () => {
       //TODO: method invoked by edit button on action
+      //it accepts the action id as a parameter 
     }
   }
 }

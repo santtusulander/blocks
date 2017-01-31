@@ -191,6 +191,7 @@ PodForm.displayName = "PodForm"
 PodForm.propTypes = {
   account: PropTypes.string,
   brand: PropTypes.string,
+  discoveryMethodValue: PropTypes.number,
   edit: PropTypes.bool,
   group: PropTypes.string,
   handleSubmit: PropTypes.func,
