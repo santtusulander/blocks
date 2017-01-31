@@ -8,7 +8,7 @@ import { formatDate } from '../../../util/helpers'
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
-import NetworkEditNodeForm, { FORM_NAME } from '../../../components/network/forms/edit-node-form'
+import NetworkEditNodeForm, { FORM_NAME, hasMultipleValues } from '../../../components/network/forms/edit-node-form'
 
 const dateFormat = 'MM/DD/YYYY HH:mm'
 
@@ -156,13 +156,6 @@ EditNodeFormContainer.propTypes = {
 }
 
 const formSelector = formValueSelector(FORM_NAME)
-
-function hasMultipleValues(nodes, field) {
-  const firstValue = nodes[0][field]
-  return nodes.some(node => {
-    return node[field] !== firstValue
-  })
-}
 
 function getNodeValues(nodes) {
   if (!nodes) {

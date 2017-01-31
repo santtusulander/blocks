@@ -30,7 +30,7 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) => {
+const validate = function({ numNodes, node_role, node_env, node_type, cloud_driver }) {
   const conditions = {
     node_role: [
       {
@@ -71,6 +71,16 @@ function getValueLabel(options, value) {
   return null
 }
 
+export function hasMultipleValues(nodes, field) {
+  if (!nodes || nodes.length === 1) {
+    return false
+  }
+  const firstValue = nodes[0][field]
+  return nodes.some(node => {
+    return node[field] !== firstValue
+  })
+}
+
 class NetworkEditNodeForm extends React.Component {
 
   constructor(props) {
@@ -108,14 +118,6 @@ class NetworkEditNodeForm extends React.Component {
     }
     this.setState({
       expandedFields
-    })
-  }
-
-  hasMultipleValues(field) {
-    const { nodes } = this.props
-    const firstValue = nodes[0][field]
-    return nodes.some(node => {
-      return node[field] !== firstValue
     })
   }
 
@@ -166,43 +168,39 @@ class NetworkEditNodeForm extends React.Component {
       let isExpanded = true
       const fieldLabelText = <FormattedMessage id={obj.labelId} />
 
-      if (hasMultipleNodes) {
-        const hasMultipleValues = this.hasMultipleValues(obj.name)
+      if (hasMultipleNodes && hasMultipleValues(nodes, obj.name)) {
+        isExpanded = expandedFields[obj.name] === true
+        helpMessage = <FormattedMessage id="portal.network.editNodeForm.multipleValues.help"/>
 
-        if (hasMultipleValues) {
-          isExpanded = expandedFields[obj.name] === true
-          helpMessage = <FormattedMessage id="portal.network.editNodeForm.multipleValues.help"/>
+        const linkTextId = isExpanded ? 'portal.common.button.cancel' : 'portal.common.button.edit'
+        const helpPopoverId = 'edit-node-form__field-popover-' + obj.name
 
-          const linkTextId = isExpanded ? 'portal.common.button.cancel' : 'portal.common.button.edit'
-          const helpPopoverId = 'edit-node-form__field-popover-' + obj.name
+        const fieldNodeValues = nodes.map((node, nodeIndex) => {
+          const field = node[obj.name]
+          const valueLabel = getValueLabel(obj.options, field)
+          return (<tr key={nodeIndex}><td>{node.id}</td><td>{valueLabel}</td></tr>)
+        })
 
-          const fieldNodeValues = nodes.map((node, nodeIndex) => {
-            const field = node[obj.name]
-            const valueLabel = getValueLabel(obj.options, field)
-            return (<tr key={nodeIndex}><td>{node.id}</td><td>{valueLabel}</td></tr>)
-          })
-
-          fieldToggle = (
-            <div className="edit-node-form__field-toggle">
-              <HelpPopover id={helpPopoverId} buttonText={multipleValuesText} title={fieldLabelText} placement="left">
-                <Table striped={true} condensed={true}>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th><FormattedMessage id="portal.common.value"/></th>
-                    </tr>
-                  </thead>
-                  <tbody>{fieldNodeValues}</tbody>
-                </Table>
-              </HelpPopover>
-              <a className="pull-right" onClick={() => {
-                this.onToggleField(obj.name)
-              }}>
-                <FormattedMessage id={linkTextId}/>
-              </a>
-            </div>
-          )
-        }
+        fieldToggle = (
+          <div className="edit-node-form__field-toggle">
+            <HelpPopover id={helpPopoverId} buttonText={multipleValuesText} title={fieldLabelText} placement="left">
+              <Table striped={true} condensed={true}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th><FormattedMessage id="portal.common.value"/></th>
+                  </tr>
+                </thead>
+                <tbody>{fieldNodeValues}</tbody>
+              </Table>
+            </HelpPopover>
+            <a className="pull-right" onClick={() => {
+              this.onToggleField(obj.name)
+            }}>
+              <FormattedMessage id={linkTextId}/>
+            </a>
+          </div>
+        )
       }
 
       return (
@@ -239,7 +237,7 @@ class NetworkEditNodeForm extends React.Component {
     let nameValues = nodes[0].name
 
     if (hasMultipleNodes) {
-      if (this.hasMultipleValues('id')) {
+      if (hasMultipleValues(nodes, 'id')) {
         const idFieldValues = nodes.map((node, nodeIndex) => {
           return (<tr key={nodeIndex}><td>{node.id}</td></tr>)
         })
@@ -257,7 +255,7 @@ class NetworkEditNodeForm extends React.Component {
           </HelpPopover>
         )
       }
-      if (this.hasMultipleValues('name')) {
+      if (hasMultipleValues(nodes, 'name')) {
         const nameFieldLabel = <FormattedMessage id="portal.common.name"/>
         const nameFieldValues = nodes.map((node, nodeIndex) => {
           return (<tr key={nodeIndex}><td>{node.id}</td><td>{node.name}</td></tr>)
