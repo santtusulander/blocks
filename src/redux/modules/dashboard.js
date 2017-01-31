@@ -74,6 +74,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
     const trafficDetails = trafficMap.getIn(['data', 0, 'detail'], []).reduce((details, detail) => {
       const timestamp = detail.getIn(['timestamp'], null)
       const connectionsTotalDetail = detail.getIn(['connections', 'total'], null)
+      const avg_fbl = detail.getIn(['avg_fbl'], '') || ''
 
       bandwidth.push({
         timestamp: timestamp,
@@ -81,7 +82,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
       })
       latency.push({
         timestamp: timestamp,
-        avg_fbl: Number(detail.getIn(['avg_fbl'], '').split(' ', 1))
+        avg_fbl: Number(avg_fbl.split(' ', 1))
       })
       connections.push({
         timestamp: timestamp,
