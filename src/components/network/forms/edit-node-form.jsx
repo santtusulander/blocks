@@ -9,6 +9,7 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
@@ -149,6 +150,13 @@ class NetworkEditNodeForm extends React.Component {
         component: FieldFormGroupSelect,
         options: NODE_CLOUD_DRIVER_OPTIONS,
         labelId: 'portal.network.addNodeForm.cloudDriver.title'
+      },
+      {
+        name: 'custom_grains',
+        type: 'textarea',
+        className: 'input-textarea',
+        component: FieldFormGroup,
+        labelId: 'portal.network.addNodeForm.grains.title'
       }
     ]
 
@@ -204,6 +212,7 @@ class NetworkEditNodeForm extends React.Component {
           <div className={isExpanded ? 'show' : 'hidden'}>
             <Field
               name={obj.name}
+              type={obj.type}
               className={obj.className}
               component={obj.component}
               options={obj.options}
