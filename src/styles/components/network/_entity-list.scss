@@ -6,8 +6,16 @@ $entity-list-items-height-offset: 375px;
   position: relative;
   min-width: $md-sidebar-width;
   overflow-x: visible;
-  border-right: 2px solid rgba($black, 0.3);
+  border-right: 2px solid;
   flex: none;
+
+  .dark-theme & {
+    border-right-color: rgba($black, 0.3);
+  }
+
+  .light-theme & {
+    border-right-color: rgba($black, 0.2);
+  }
 
   &:first-child {
     .network-item {
