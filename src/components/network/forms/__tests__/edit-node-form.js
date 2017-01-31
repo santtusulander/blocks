@@ -73,21 +73,7 @@ describe('NetworkEditNodeForm', () => {
   })
 
   it('should submit form', () => {
-    subject = subject()
-    subject.setProps({
-      show: true,
-      onSave,
-      onCancel,
-      handleSubmit,
-      intl: intlMaker(),
-      initialValues: {
-        howMany: 4,
-        node_type: 'udn_core',
-        cloud_driver: 'do'
-      },
-      nodes: mockNodes
-    })
-    subject.find('form').simulate('submit')
+    subject().find('form').simulate('submit')
     expect(onSave).toBeCalled();
   })
 })
