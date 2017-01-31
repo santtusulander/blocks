@@ -662,7 +662,7 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
-            podId={params.pod}
+            podId={this.state.podId}
             edit={(podId !== null) ? true : false}
             onSave={this.handlePodSave}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
