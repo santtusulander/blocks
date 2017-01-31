@@ -179,12 +179,3 @@ export function isSafari() {
 export function isValidPhoneNumber(str) {
   return matchesRegexp(str, /^(|\d{7,})$/)
 }
-
-/**
- * Check if valid country code (in phoneNumber)
- * @param  {[type]}  str [description]
- * @return {Boolean}
- */
-export function isValidCountryCode(str) {
-  return matchesRegexp(str, /^(|\d{1,7})$/)
-}
