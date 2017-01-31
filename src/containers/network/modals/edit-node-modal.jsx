@@ -64,17 +64,6 @@ class EditNodeFormContainer extends React.Component {
     const createdText = <FormattedMessage id="portal.common.date.created"/>
     const updatedText = <FormattedMessage id="portal.common.date.updated"/>
 
-    const deleteModalProps = {
-      title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Node'}}/>,
-      content: <FormattedMessage id="portal.network.deleteNodesConfirmation.text" values={{numNodes: nodes.length}}/>,
-      verifyDelete: true,
-      deleteButton: true,
-      cancelButton: true,
-      cancel: () => this.onToggleDeleteModal(false),
-      onSubmit: this.onDelete
-    }
-
-
     const panelTitle = hasMultipleNodes ?
       <FormattedMessage id="portal.network.editNodeForm.title.multiple" values={{numNodes: nodes.length}} /> :
       <FormattedMessage id="portal.network.editNodeForm.title" />
@@ -116,22 +105,37 @@ class EditNodeFormContainer extends React.Component {
       </div>
     )
 
+    const sidePanelProps = {
+      cancel: onCancel,
+      show,
+      subTitle: panelSubTitle,
+      subSubTitle: panelSubTitle2,
+      title: panelTitle
+    }
+
+    const formProps = {
+      intl,
+      initialValues,
+      nodes,
+      onCancel,
+      onDelete: this.onToggleDeleteModal,
+      onSave: this.onSubmit
+    }
+
+    const deleteModalProps = {
+      title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: <FormattedMessage id="portal.network.editNodeForm.node" />}}/>,
+      content: <FormattedMessage id="portal.network.deleteNodesConfirmation.text" values={{numNodes: nodes.length}}/>,
+      verifyDelete: true,
+      deleteButton: true,
+      cancelButton: true,
+      cancel: () => this.onToggleDeleteModal(false),
+      onSubmit: this.onDelete
+    }
+
     return (
-      <div className="add-node-form__container">
-        <SidePanel
-          show={show}
-          title={panelTitle}
-          subTitle={panelSubTitle}
-          subSubTitle={panelSubTitle2}
-          cancel={onCancel}>
-          <NetworkEditNodeForm
-            intl={intl}
-            initialValues={initialValues}
-            nodes={nodes}
-            onSave={this.onSubmit}
-            onCancel={onCancel}
-            onDelete={this.onToggleDeleteModal}
-          />
+      <div className="edit-node-form__container">
+        <SidePanel {...sidePanelProps}>
+          <NetworkEditNodeForm {...formProps}/>
           {showDeleteModal && <ModalWindow {...deleteModalProps}/>}
         </SidePanel>
       </div>
