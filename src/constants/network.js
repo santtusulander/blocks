@@ -32,3 +32,5 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'vw', label: 'VmWare' },
   { value: 'bm', label: 'Bare Metal' }
 ]
+
+export const POD_PROVIDER_WEIGHT_MIN = 0
