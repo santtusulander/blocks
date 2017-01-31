@@ -32,3 +32,8 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'vw', label: 'VmWare' },
   { value: 'bm', label: 'Bare Metal' }
 ]
+
+export const FORMS_NAME_MIN_LEN = 3
+export const FORMS_NAME_MAX_LEN = 40
+export const FORMS_DESCRIPTION_MIN_LEN = 3
+export const FORMS_DESCRIPTION_MAX_LEN = 255
