@@ -37,11 +37,21 @@ export const fetchASOverview = resource => CallRIPEStatDataAPI('as-overview', { 
  * @constructor
  */
 const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
+
+  const ripeInstance = axios.create({
+    baseURL: RIPE_STAT_DATA_API_ENDPOINT
+  })
+
+  ripeInstance.interceptors.request.use(config => {
+    delete config.headers['X-Auth-Token']
+    return config
+  })
+
   // TODO: Should we include the sourceapp-param
   // as described in https://stat.ripe.net/docs/data_api#RulesOfUsage
 
   // const finalParams = Object.assign({}, params, { sourceapp: 'udnportal' })
   const query = qsBuilder(params)
-  return axios.get(`${RIPE_STAT_DATA_API_ENDPOINT}/${dataCallName}/data.${format}${query}`)
+  return ripeInstance.get(`/${dataCallName}/data.${format}${query}`)
     .then(parseResponseData)
 }
