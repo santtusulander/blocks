@@ -1,13 +1,47 @@
 $multi-col-item-right-margin: 12px;
+$connector-offset: 2px;
+$entity-list-items-height-offset: 375px;
 
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
-  border-right: 2px solid rgba($black, 0.3);
+  overflow-x: visible;
+  border-right: 2px solid;
   flex: none;
+
+  .dark-theme & {
+    border-right-color: rgba($black, 0.3);
+  }
+
+  .light-theme & {
+    border-right-color: rgba($black, 0.2);
+  }
+
+  &:first-child {
+    .network-item {
+      &::before {
+        display: none;
+      }
+    }
+  }
 
   &:last-child {
     border-right: 0;
+
+    .connector-divider {
+      display: none;
+    }
+  }
+
+  .connector-divider {
+    position: absolute;
+    top: 0;
+    right: -$connector-offset;
+    bottom: 0;
+    display: block;
+    width: $connector-offset;
+    background: $pale-blue;
+    content: '';
   }
 
   .account-management-header,
@@ -17,7 +51,9 @@ $multi-col-item-right-margin: 12px;
 
   .network-entity-list-items {
     position: relative;
-    max-height: calc(100vh - 375px);
+    left: -$connector-offset;
+    max-height: calc(100vh - #{$entity-list-items-height-offset});
+    min-width: calc(100% + #{$connector-offset});
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -28,6 +64,14 @@ $multi-col-item-right-margin: 12px;
     .list-col {
       min-width: $md-sidebar-width;
       margin-right: $multi-col-item-right-margin;
+
+      &:not(:first-of-type) {
+        .network-item {
+          &::before {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

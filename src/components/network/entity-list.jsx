@@ -11,6 +11,11 @@ class EntityList extends React.Component {
 
     this.updateEntities = this.updateEntities.bind(this)
     this.state = this.updateEntities(props.entities)
+    this.renderConnectorLine = this.renderConnectorLine.bind(this)
+  }
+
+  componentDidMount() {
+    this.entityListItems.addEventListener('scroll', this.renderConnectorLine, false)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,6 +30,82 @@ class EntityList extends React.Component {
     }
 
     return false
+  }
+
+  componentDidUpdate() {
+    this.renderConnectorLine()
+  }
+
+  componentWillUnmount() {
+    this.entityListItems.removeEventListener('scroll', this.renderConnectorLine, false)
+  }
+
+  /**
+   * Renders the blue vertical connecting line on the right side of the entity list. This is
+   * called when the user scrolls the list and when the component is updated in order
+   * to get the correct height calculations.
+   *
+   * @method renderConnectorLine
+   */
+  renderConnectorLine() {
+    // Check if this entity list has an active item
+    if (this.hasActiveItems()) {
+      // We're modifying DOM elements, so we need to get the correct nodes from entity list
+      const childNodes = [...this.entityListItems.childNodes]
+      // DOM Element of the active element
+      const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
+      // Active node height divided to half
+      const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
+      const activeNodeSizes = activeChildNode.getBoundingClientRect()
+      const activeTop = activeNodeSizes.top
+      const activeBottom = activeNodeSizes.bottom
+      // DOM Element for the vertical connector line
+      const connector = this.connector
+      const connectorStyles = connector.style
+
+      // Container, the root element of this component
+      const entityList = this.entityList
+      const entityListSizes = entityList.getBoundingClientRect()
+      const entityListBottom = entityListSizes.bottom
+
+      // The actual entity list
+      const entityListItems = this.entityListItems
+      const entityListItemsSizes = entityListItems.getBoundingClientRect()
+      const entityListItemsTop = entityListItemsSizes.top
+      const entityListItemsBottom = entityListItemsSizes.bottom
+      const entityListItemsBottomOffset = entityListBottom - entityListItemsBottom
+
+      // Checks if the active item is visible in the viewport by half of its height
+      const topHalfVisibility = activeTop >= entityListItemsTop - activeHalfHeight
+      const bottomHalfVisibility = activeBottom <= entityListItemsBottom + activeHalfHeight
+      const isVisible = topHalfVisibility && bottomHalfVisibility
+
+      connectorStyles.top = entityListItems.offsetTop + activeHalfHeight + 'px'
+
+      // If active item is visible by half, we should set the bottom style to be
+      // where the right side tick on the element ends. Otherwise we should set it
+      // to be at the end of the entity list.
+      if (isVisible) {
+        connectorStyles.bottom = entityListItemsTop + entityListItems.offsetHeight - activeTop - activeHalfHeight + entityListItemsBottomOffset + 'px'
+      } else {
+        // This bottom value is mainly applied when the active item is scrolled down
+        // in the list.
+        connectorStyles.bottom = entityListItemsBottomOffset + 'px'
+      }
+
+      // If the active item is scrolled to the top, we should switch the top and bottom
+      // calculations so that the vertical connecting line grows accordingly.
+      if (activeTop < entityListItemsTop) {
+        connectorStyles.bottom = entityListItems.offsetHeight - activeHalfHeight + 'px'
+        connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - activeChildNode.clientTop + 'px'
+
+        // If the element is scrolled up, we should set the connector line top to
+        // be static at the very top of the entity list.
+        if (connector.offsetTop <= entityListItems.offsetTop) {
+          connectorStyles.top = entityListItems.offsetTop + 'px'
+        }
+      }
+    }
   }
 
   updateEntities(entities) {
@@ -122,6 +203,19 @@ class EntityList extends React.Component {
     return Immutable.Range(0, list.count(), numOfItems).map(chunkStart => list.slice(chunkStart, chunkStart + numOfItems))
   }
 
+  /**
+   * Checks if any of the entities in the list is selected.
+   *
+   * @method hasActiveItems
+   * @return {Boolean}      Boolean of active item found
+   */
+  hasActiveItems() {
+    const { selectedEntityId } = this.props
+    const entities = this.state.entities
+    const active = entities.some(entity => selectedEntityId === entity.get('id').toString())
+    return active
+  }
+
   render() {
     const {
       addEntity,
@@ -138,13 +232,14 @@ class EntityList extends React.Component {
     })
 
     return (
-      <div ref={(ref) => this.entityList = ref} className="network-entity-list">
+      <div ref={ref => this.entityList = ref} className="network-entity-list">
+        {(showEntitiesTable && this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
           onAdd={addEntity}
         />
 
-        <div className={entityListClasses}>
+      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
           {showEntitiesTable && this.renderListItems()}
         </div>
       </div>
