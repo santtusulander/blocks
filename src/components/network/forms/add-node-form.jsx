@@ -9,7 +9,7 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import FieldFormGroup from '../../form/field-form-group'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
@@ -156,7 +156,8 @@ class NetworkAddNodeForm extends React.Component {
             <Field
               type="number"
               name="numNodes"
-              component={FieldFormGroup}
+              min={1}
+              component={FieldFormGroupNumber}
               label={<FormattedMessage id="portal.network.addNodeForm.howMany.title" />}
             />
           </FormGroup>

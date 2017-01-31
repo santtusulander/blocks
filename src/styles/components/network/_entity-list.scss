@@ -6,8 +6,16 @@ $entity-list-items-height-offset: 375px;
   position: relative;
   min-width: $md-sidebar-width;
   overflow-x: visible;
-  border-right: 2px solid rgba($black, 0.3);
+  border-right: 2px solid;
   flex: none;
+
+  .dark-theme & {
+    border-right-color: rgba($black, 0.3);
+  }
+
+  .light-theme & {
+    border-right-color: rgba($black, 0.2);
+  }
 
   &:first-child {
     .network-item {
@@ -39,6 +47,10 @@ $entity-list-items-height-offset: 375px;
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
+
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding;
+    }
   }
 
   .network-entity-list-items {
