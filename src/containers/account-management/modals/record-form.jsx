@@ -97,7 +97,6 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
     <SidePanel
       show={true}
       title={title}
-      className="dns-edit-form-sidebar"
       subTitle={subTitle}
       cancel={closeModal}>
       <RecordForm {...recordFormProps}/>
