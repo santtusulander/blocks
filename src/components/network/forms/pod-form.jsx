@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, formValueSelector } from 'redux-form'
+import { connect } from 'react-redux'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -15,6 +16,7 @@ import { isValidTextField } from '../../../util/validators'
 import HelpTooltip from '../../../components/help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import ActionItem from '../action-item'
 
 import './pod-form.scss'
 
@@ -35,10 +37,12 @@ const validate = ({ pod_name }) => {
 const PodForm = ({
   account,
   brand,
+  discoveryMethodValue,
   edit,
   group,
   handleSubmit,
   hasNodes,
+  initialValues,
   intl,
   invalid,
   network,
@@ -130,7 +134,8 @@ const PodForm = ({
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[
-          [1, "BGP"]
+          [1, "BGP"],
+          [2, "Footprints API"]
         ]}
         label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
         required={false}
@@ -141,6 +146,11 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
           </HelpTooltip>
         }/>
+
+      <ActionItem
+        initialValues={initialValues}
+        intl={intl}
+        type={discoveryMethodValue}/>
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
@@ -185,6 +195,7 @@ PodForm.propTypes = {
   group: PropTypes.string,
   handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
+  initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   network: PropTypes.string,
@@ -194,7 +205,18 @@ PodForm.propTypes = {
   pop: PropTypes.string
 }
 
+const selector = formValueSelector('podForm')
+
+const PodFormSelector = connect(
+  state => {
+    const discoveryMethodValue = selector(state, 'discoveryMethod')
+    return {
+      discoveryMethodValue
+    }
+  }
+)(PodForm)
+
 export default reduxForm({
-  form: 'pod-form',
+  form: 'podForm',
   validate
-})(injectIntl(PodForm))
+})(injectIntl(PodFormSelector))
