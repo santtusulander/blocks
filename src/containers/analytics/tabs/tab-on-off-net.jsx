@@ -10,7 +10,6 @@ import AnalysisOnOffNetReport from '../../../components/analysis/on-off-net-repo
 
 import * as trafficActionCreators from '../../../redux/modules/traffic'
 import { buildAnalyticsOpts, changedParamsFiltersQS } from '../../../util/helpers.js'
-import ProviderTypes from '../../../constants/provider-types'
 import { userHasRole } from '../../../util/helpers'
 
 
@@ -60,7 +59,7 @@ class AnalyticsTabOnOffNet extends React.Component {
 
     // Check for Cloud Providers / UDN Admins
     if (userHasRole(currentUser, PROVIDER_TYPES.CLOUD_PROVIDER) &&
-      (!activeAccount || activeAccount.get('provider_type') !== ProviderTypes.SERVICE_PROVIDER)) {
+        (!activeAccount || activeAccount.get('provider_type') !== PROVIDER_TYPES.SERVICE_PROVIDER)) {
       return (
         <div className="text-center">
           <FormattedMessage id="portal.analytics.selectServiceProviderAccount.text" values={{ br: <br/> }}/>
