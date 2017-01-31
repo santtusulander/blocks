@@ -12,6 +12,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
+import ButtonDisableTooltip from '../../button-disable-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
@@ -77,9 +78,8 @@ function getValueLabel(options, value) {
       return option.label
     }
   }
-  return <FormattedMessage id="portal.common.unknown"/>
+  return null
 }
-
 
 class NetworkEditNodeForm extends React.Component {
 
@@ -93,6 +93,7 @@ class NetworkEditNodeForm extends React.Component {
 
     this.onCancel = this.onCancel.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
   onSubmit() {
@@ -102,6 +103,10 @@ class NetworkEditNodeForm extends React.Component {
 
   onCancel() {
     return this.props.onCancel()
+  }
+
+  onDelete() {
+    return this.props.onDelete(true)
   }
 
   onToggleField(field) {
@@ -183,7 +188,7 @@ class NetworkEditNodeForm extends React.Component {
           fieldToggle = (
             <div className="edit-node-form__field-toggle">
               <HelpPopover id={helpPopoverId} buttonText={multipleValuesText} title={fieldLabelText} placement="left">
-                <Table striped condensed>
+                <Table striped={true} condensed={true}>
                   <thead>
                     <tr>
                       <th>ID</th>
@@ -243,7 +248,7 @@ class NetworkEditNodeForm extends React.Component {
 
         idValues = (
           <HelpPopover id="edit-node-form__field-popover-id" buttonText={multipleValuesText} title="ID" placement="left">
-            <Table striped condensed>
+            <Table striped={true} condensed={true}>
               <thead>
               <tr>
                 <th>ID</th>
@@ -262,7 +267,7 @@ class NetworkEditNodeForm extends React.Component {
 
         nameValues = (
           <HelpPopover id="edit-node-form__field-popover-id" buttonText={multipleValuesText} title={nameFieldLabel} placement="left">
-            <Table striped condensed>
+            <Table striped={true} condensed={true}>
               <thead>
               <tr>
                 <th>ID</th>
@@ -298,19 +303,30 @@ class NetworkEditNodeForm extends React.Component {
           </FormGroup>
           {fields}
         </div>
-        <FormFooterButtons>
-          <Button
-            id="edit-node-form__cancel-btn"
-            className="btn-secondary"
-            onClick={this.onCancel}>
-            <FormattedMessage id="portal.common.button.cancel"/>
-          </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid||submitting}>
-            {submitButtonLabel}
-          </Button>
+        <FormFooterButtons autoAlign={false}>
+          <div className="pull-left">
+            <ButtonDisableTooltip
+              tooltipId="edit-node-form__delete-disabled-tooltip"
+              bsStyle="danger"
+              onClick={this.onDelete}
+            >
+              <FormattedMessage id="portal.common.button.delete" />
+            </ButtonDisableTooltip>
+          </div>
+          <div className="pull-right">
+            <Button
+              id="edit-node-form__cancel-btn"
+              className="btn-secondary"
+              onClick={this.onCancel}>
+              <FormattedMessage id="portal.common.button.cancel"/>
+            </Button>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid||submitting}>
+              {submitButtonLabel}
+            </Button>
+          </div>
         </FormFooterButtons>
       </form>
     )
@@ -324,6 +340,7 @@ NetworkEditNodeForm.propTypes = {
   intl: React.PropTypes.object,
   nodes: React.PropTypes.array.isRequired,
   onCancel: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
   show: React.PropTypes.bool,
   ...reduxFormPropTypes

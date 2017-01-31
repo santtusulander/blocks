@@ -6,6 +6,7 @@ import { Table } from 'react-bootstrap'
 import { formatDate } from '../../../util/helpers'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { FORM_NAME } from '../../../components/network/forms/edit-node-form'
 
@@ -16,20 +17,33 @@ class EditNodeFormContainer extends React.Component {
     super(props)
 
     this.state = {
+      showDeleteModal: false,
       hasMultipleNodes: props.nodes && props.nodes.length > 1
     }
 
     this.onSubmit = this.onSubmit.bind(this)
+    this.onDelete = this.onDelete.bind(this)
+    this.onToggleDeleteModal = this.onToggleDeleteModal.bind(this)
   }
 
   onSubmit(values) {
-    // TODO: on submit functionality
+    // @TODO: on submit functionality
     this.props.onSave(values)
+  }
+
+  onDelete() {
+    // @TODO delete functionality
+    const { nodes } = this.props
+    this.props.onDelete(nodes)
+  }
+
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
   }
 
   render() {
     const { show, onCancel, initialValues, intl, nodes } = this.props
-    const { hasMultipleNodes } = this.state
+    const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
       created: [],
@@ -50,6 +64,16 @@ class EditNodeFormContainer extends React.Component {
     const createdText = <FormattedMessage id="portal.common.date.created"/>
     const updatedText = <FormattedMessage id="portal.common.date.updated"/>
 
+    const deleteModalProps = {
+      title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: 'Node'}}/>,
+      content: <FormattedMessage id="portal.network.deleteNodesConfirmation.text" values={{numNodes: nodes.length}}/>,
+      verifyDelete: true,
+      deleteButton: true,
+      cancelButton: true,
+      cancel: () => this.onToggleDeleteModal(false),
+      onSubmit: this.onDelete
+    }
+
 
     const panelTitle = hasMultipleNodes ?
       <FormattedMessage id="portal.network.editNodeForm.title.multiple" values={{numNodes: nodes.length}} /> :
@@ -61,7 +85,7 @@ class EditNodeFormContainer extends React.Component {
           {createdText}:
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-created" buttonText={multipleValuesText} title={createdText} placement="bottom">
-            <Table striped condensed>
+            <Table striped={true} condensed={true}>
               <thead>
                 <tr>
                   <th>ID</th>
@@ -77,7 +101,7 @@ class EditNodeFormContainer extends React.Component {
           {updatedText}:
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-updated" buttonText={multipleValuesText} title={updatedText} placement="bottom">
-            <Table striped condensed>
+            <Table striped={true} condensed={true}>
               <thead>
                 <tr>
                   <th>ID</th>
@@ -106,7 +130,9 @@ class EditNodeFormContainer extends React.Component {
             nodes={nodes}
             onSave={this.onSubmit}
             onCancel={onCancel}
+            onDelete={this.onToggleDeleteModal}
           />
+          {showDeleteModal && <ModalWindow {...deleteModalProps}/>}
         </SidePanel>
       </div>
     )
@@ -120,6 +146,7 @@ EditNodeFormContainer.propTypes = {
   intl: intlShape.isRequired,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
   show: React.PropTypes.bool
 }
@@ -132,7 +159,6 @@ function hasMultipleValues(nodes, field) {
     return node[field] !== firstValue
   })
 }
-
 
 function getNodeValues(nodes) {
   if (!nodes) {
