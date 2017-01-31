@@ -54,7 +54,9 @@ class RegionsField extends React.Component {
     return (
       <div>
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/></ControlLabel>
+          <ControlLabel>
+            <FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>
+          </ControlLabel>
 
             {iterable.map((checkbox, i) => {
               const index = regions.indexOf(checkbox.value)
@@ -70,8 +72,9 @@ class RegionsField extends React.Component {
                   </Checkbox>
 
                   <div className="form-inline region-charge-number">
-                    <FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title"/>
-                    &nbsp;&nbsp;
+                    <ControlLabel>
+                      <FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title"/>
+                    </ControlLabel>
                     <FormControl
                       value={this.state[checkbox.value]}
                       disabled={!hasValue}

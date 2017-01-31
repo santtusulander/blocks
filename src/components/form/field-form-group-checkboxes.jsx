@@ -4,14 +4,27 @@ import {FormGroup, ControlLabel, InputGroup, HelpBlock} from 'react-bootstrap';
 import CheckboxArray from '../checkboxes.jsx'
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupCheckboxes  = ({ addonAfter, input, meta, meta: { touched, error }, disabled,
-  iterable, label, required = true }) => {
+const FieldFormGroupCheckboxes = ({
+  addonAfter,
+  className,
+  input,
+  meta,
+  meta: {
+    touched,
+    error
+  },
+  disabled,
+  iterable,
+  label,
+  required = true
+}) => {
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <InputGroup>
         <CheckboxArray
+          className={className}
           disabled={disabled}
           field={input}
           iterable={iterable}
@@ -39,7 +52,6 @@ FieldFormGroupCheckboxes.propTypes = {
   iterable: PropTypes.array,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   meta: PropTypes.object,
-  options: PropTypes.array,
   required: PropTypes.bool
 }
 

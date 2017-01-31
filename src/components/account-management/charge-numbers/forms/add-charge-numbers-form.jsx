@@ -19,6 +19,8 @@ const validate = () => {
 class AddChargeNumbersForm extends React.Component {
   constructor(props) {
     super(props)
+
+    this.onEnable = this.onEnable.bind(this)
   }
 
   onEnable(data) {
@@ -32,7 +34,7 @@ class AddChargeNumbersForm extends React.Component {
 
     return (
       <form
-        onSubmit={this.props.handleSubmit(this.onEnable.bind(this))}
+        onSubmit={this.props.handleSubmit(this.onEnable)}
       >
         { hasFlowDirection && 
           <div>

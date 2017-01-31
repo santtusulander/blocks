@@ -20,7 +20,9 @@ class AddChargeNumbersModal extends React.Component {
 
     if (activeServiceItem.size) {
       isService = activeServiceItem.has('service_id')
-      itemDetails = isService ? getServiceById(servicesInfo, activeServiceItem.get('service_id')) : getOptionById(servicesInfo, activeServiceItem.get('option_id'))
+      itemDetails = isService 
+                    ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
+                    : getOptionById(servicesInfo, activeServiceItem.get('option_id'))
     }
 
     return (
@@ -63,8 +65,10 @@ AddChargeNumbersModal.propTypes = {
 function mapStateToProps(state, props) {
   return {
     initialValues: {
-      flow_direction: props.activeServiceItem && props.activeServiceItem.get('flow_direction') && props.activeServiceItem.get('flow_direction').toJS(),
-      billing_meta: props.activeServiceItem && props.activeServiceItem.get('billing_meta') && props.activeServiceItem.get('billing_meta').toJS()
+      flow_direction: props.activeServiceItem && props.activeServiceItem.get('flow_direction')
+                      && props.activeServiceItem.get('flow_direction').toJS(),
+      billing_meta: props.activeServiceItem && props.activeServiceItem.get('billing_meta')
+                    && props.activeServiceItem.get('billing_meta').toJS()
     },
     servicesInfo: state.serviceInfo && state.serviceInfo.services
   }

@@ -12,6 +12,8 @@ import { getLocationTypeFromBillingMeta } from '../../../../util/services-helper
 class ChargeNumbersField extends React.Component {
   constructor(props) {
     super(props)
+
+    this.onChangeLocation = this.onChangeLocation.bind(this)
   }
 
   componentWillMount () {
@@ -40,7 +42,9 @@ class ChargeNumbersField extends React.Component {
     return (
       <div>
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.account.chargeNumbersForm.charge_allocation.title"/></ControlLabel>
+          <ControlLabel>
+            <FormattedMessage id="portal.account.chargeNumbersForm.charge_allocation.title"/>
+          </ControlLabel>
 
           <Radio
             value="region"
@@ -77,7 +81,7 @@ class ChargeNumbersField extends React.Component {
             label={'Global Charge Number'}
           />
         }
-    </div>
+      </div>
     )
   }
 }
