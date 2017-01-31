@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../add-node-form.jsx')
+jest.unmock('../edit-node-form.jsx')
 import NetworkEditNodeForm from '../edit-node-form.jsx'
 
 const intlMaker = () => {
@@ -9,6 +9,29 @@ const intlMaker = () => {
     formatMessage: jest.fn()
   }
 }
+
+const mockNodes = [
+  {
+    id: 'abc.def.123.456',
+    name: 'First node',
+    node_role: 'cache',
+    node_env: 'staging',
+    node_type: 'udn_core',
+    cloud_driver: 'do',
+    created: '2016-12-05 12:10:06',
+    updated: '2017-01-16 05:04:03'
+  },
+  {
+    id: 'def.ghj.789.012',
+    name: 'Second node',
+    node_role: 'cache',
+    node_env: 'production',
+    node_type: 'udn_core',
+    cloud_driver: 'ec2',
+    created: '2016-12-05 12:10:06',
+    updated: '2017-01-10 05:04:03'
+  }
+]
 
 describe('NetworkEditNodeForm', () => {
   let subject = null
@@ -25,7 +48,8 @@ describe('NetworkEditNodeForm', () => {
         onSave,
         onCancel,
         handleSubmit,
-        intl: intlMaker()
+        intl: intlMaker(),
+        nodes: mockNodes
       }
 
       return shallow(<NetworkEditNodeForm {...props}/>)
@@ -36,12 +60,16 @@ describe('NetworkEditNodeForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 5 fields', () => {
-    expect(subject().find('Field').length).toBe(5)
+  it('should have 4 fields', () => {
+    expect(subject().find('Field').length).toBe(4)
   })
 
   it('should have 2 buttons', () => {
     expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should have a Delete button', () => {
+    expect(subject().find('ButtonDisableTooltip').length).toBe(1)
   })
 
   it('should submit form', () => {
@@ -56,7 +84,8 @@ describe('NetworkEditNodeForm', () => {
         howMany: 4,
         node_type: 'udn_core',
         cloud_driver: 'do'
-      }
+      },
+      nodes: mockNodes
     })
     subject.find('form').simulate('submit')
     expect(onSave).toBeCalled();
