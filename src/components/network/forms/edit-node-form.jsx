@@ -15,7 +15,6 @@ import HelpPopover from '../../help-popover'
 import ButtonDisableTooltip from '../../button-disable-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
-import { isInt } from '../../../util/validators'
 
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
