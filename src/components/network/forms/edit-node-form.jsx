@@ -32,16 +32,6 @@ const isEmpty = function(value) {
 
 const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) => {
   const conditions = {
-    numNodes: [
-      {
-        condition: isEmpty(numNodes),
-        errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
-      },
-      {
-        condition: isInt(numNodes) === false || numNodes < 1,
-        errorText: <FormattedMessage id="portal.validators.type.number" values={{field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
-      }
-    ],
     node_role: [
       {
         condition: isEmpty(node_role),
