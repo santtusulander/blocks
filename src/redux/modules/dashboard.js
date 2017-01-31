@@ -43,12 +43,14 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
-  // cp-contribution endpoint expects a sp_account param instead of account
   let contributionOpts = Object.assign({}, opts)
+  // cp-contribution endpoint expects a sp_account param instead of account
   contributionOpts.sp_account = contributionOpts.account
+  // Remove account parameter or the query will fail
   delete contributionOpts.account
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH
+  // Show detailed data for providers
   contributionOpts.show_detail = true
 
   // Combine data from many endpoints to serve dashboard
