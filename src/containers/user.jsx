@@ -77,6 +77,7 @@ class User extends React.Component {
       tfa: currentUser.get('tfa'),
       changingPassword: false
     } : {}
+
     return (
       <Content>
         <PageHeader pageSubTitle={getRolesForUser(currentUser, roles)[0][1]}>

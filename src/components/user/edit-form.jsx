@@ -80,12 +80,6 @@ class UserEditForm extends React.Component {
 
   }
 
-  componentDidMount() {
-    this.state = {
-      tfa: this.getDefaultTFAMethod(this.props.initialValues.tfa)
-    }
-  }
-
   componentWillUpdate(nextProps) {
     this.setTFAMethod(nextProps)
   }
@@ -95,10 +89,15 @@ class UserEditForm extends React.Component {
   }
 
   setTFAMethod(props) {
-    const { tfa, tfa_toggle } = props
-    if (!tfa_toggle) this.props.changeSelectedTFAMethod('')
-    else
-      if (!(tfa && tfa.length > 0)) this.props.changeSelectedTFAMethod(this.state.tfa)
+    const { tfa, tfa_toggle, initialValues } = props
+    if (!tfa_toggle) {
+      this.props.changeSelectedTFAMethod('')
+    } else {
+      if (!(tfa && tfa.length > 0)) {
+        const selectedTFA = (initialValues.tfa.length > 0) ? initialValues.tfa : TWO_FA_DEFAULT_AUTH_METHOD
+        this.props.changeSelectedTFAMethod(selectedTFA)
+      }
+    }
   }
 
   onSubmit(values){
@@ -121,9 +120,6 @@ class UserEditForm extends React.Component {
     }
 
     return this.props.onSave(data)
-      .then((response) => {
-        if(!response.error) this.setState( { tfa: this.getDefaultTFAMethod(response.payload.tfa) } )
-      })
   }
 
   savePasswordOnClick(values) {
