@@ -47,6 +47,10 @@ $entity-list-items-height-offset: 375px;
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
+
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding;
+    }
   }
 
   .network-entity-list-items {
