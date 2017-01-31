@@ -39,6 +39,7 @@
   "portal.network.addNodeForm.environment.title": "Environment",
   "portal.network.addNodeForm.type.title": "Type",
   "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
+  "portal.network.addNodeForm.grains.title": "Grains",
 
   "portal.network.editNodeForm.node": "Node",
   "portal.network.editNodeForm.title": "Edit node",
