@@ -11,6 +11,8 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import networkActions from '../redux/modules/entities/network/actions'
+
 import Content from '../components/layout/content'
 import PageContainer from '../components/layout/page-container'
 import PageHeader from '../components/layout/page-header'
@@ -633,6 +635,7 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
             account={activeAccount.get('name')}
+            accountId={params.account}
             groupId={params.group}
             networkId={params.network}
             fetching={fetching}
@@ -671,7 +674,7 @@ class Network extends React.Component {
             {...params}
           />
         }
-        
+
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-form"
@@ -726,7 +729,13 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
-    groupActions: groupActions
+    groupActions: groupActions,
+
+    create: (data) => dispatch(networkActions.create(data)),
+    update: (data) => dispatch(networkActions.update(data)),
+    get: (data) => dispatch(networkActions.fetchOne(data)),
+    getAll: (data) => networkActions.fetchAllThunk(dispatch)(data),
+    del: (data) => dispatch(networkActions.remove(data))
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))

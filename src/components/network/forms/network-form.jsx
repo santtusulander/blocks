@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
@@ -31,15 +31,18 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onCancel, onSave, onDelete }) => {
+const NetworkForm = ({ edit, error, submitting, handleSubmit, intl, invalid, hasPops, onCancel, onSave, onDelete }) => {
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
   return (
     <form
       onSubmit={handleSubmit(onSave)}>
+
+      <p className='error'>{error && error.errors._error}</p>
+
       <Field
         name="name"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.name.placeholder'})}
@@ -64,7 +67,7 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
               onClick={onDelete}
               tooltipId="tooltip-help"
               tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-              {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>}
+              {submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>}
             </ButtonDisableTooltip>
           </ButtonToolbar>
         }
@@ -78,7 +81,7 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || fetching}>
+            disabled={invalid || submitting}>
             {actionButtonTitle}
           </Button>
         </ButtonToolbar>
@@ -98,7 +101,8 @@ NetworkForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSave: PropTypes.func
+  onSave: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
