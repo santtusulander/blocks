@@ -113,14 +113,19 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
           bytes: trafficMap.getIn(['data', 0, 'totals', 'bytes', 'total'], null),
           bytes_net_on: trafficOnOffNetMap.getIn(['data', 'net_on', 'bytes'], null),
           bytes_net_off: trafficOnOffNetMap.getIn(['data', 'net_off', 'bytes'], null),
-          detail: trafficOnOffNet.data.detail.map(detail => {
+          detail: trafficOnOffNetMap.getIn(['data', 'detail'], []).map(detail => {
             return {
-              timestamp: Number(detail.timestamp),
-              bytes: detail.total,
-              bytes_net_on: detail.net_on.bytes,
-              bytes_net_off: detail.net_off.bytes
+              timestamp: Number(detail.getIn(['timestamp'], null)),
+              bytes: detail.getIn(['total'], null),
+              bytes_net_on: detail.getIn(['net_on', 'bytes'], null),
+              bytes_net_off: detail.getIn(['net_off', 'bytes'], null)
             }
-          })
+          }, {
+            timestamp: null,
+            bytes: null,
+            bytes_net_on: null,
+            bytes_net_off: null
+          }).toJS()
         },
         bandwidth: {
           bits_per_second: trafficMap.getIn(['data', 0, 'totals', 'transfer_rates', 'average'], null),
