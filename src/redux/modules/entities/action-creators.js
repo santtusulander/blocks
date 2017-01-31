@@ -11,7 +11,7 @@ export default ({
   receiveActionTypes = [actionTypes.REQUEST, actionTypes.RECEIVE, actionTypes.FAIL],
   removeActionTypes = [actionTypes.REQUEST, actionTypes.REMOVE, actionTypes.FAIL]
 }) => {
-  const [ request, , fail ] = receiveActionTypes
+  const [ request, receive, fail ] = receiveActionTypes
 
   const fetchOne = ({ forceReload, ...requestParams }) => {
     return {
@@ -25,7 +25,7 @@ export default ({
   }
 
   const fetchAllThunk = dispatch => requestParams => {
-    dispatch({ type: actionTypes.REQUEST })
+    dispatch({ type: request })
     return api.fetchAll(requestParams)
       .then(data => {
 
@@ -33,7 +33,7 @@ export default ({
           throw new Error('Expected fetchAll to resolve with an array of IDs. ' + typeof data + ' passed instead.')
         }
 
-        dispatch({ type: request })
+        dispatch({ type: receive })
 
         return data.forEach(id => {
 
