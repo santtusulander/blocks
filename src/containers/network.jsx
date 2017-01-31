@@ -300,8 +300,11 @@ class Network extends React.Component {
   handleAccountClick(accountId) {
     this.determineNextState({
       currentId: accountId,
+      // We need to set the previousId when we're navigating/scrolling backwards
+      // and the only way to navigate back from and hide the groups is to check
+      // if the URL has 'groups' included.
       previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
-      // TODO: Remove -v2 once done with all the Network changes
+      // TODO UDNP-2536: Remove -v2 once done with all the Network changes
       goToRoute: 'groups-v2',
       goBackToRoute: 'account-v2'
     })
@@ -313,7 +316,7 @@ class Network extends React.Component {
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
-      // TODO: Remove -v2 once done with all the Network changes
+      // TODO UDNP-2536: Remove -v2 once done with all the Network changes
       goBackToRoute: 'groups-v2'
     })
   }
@@ -429,7 +432,7 @@ class Network extends React.Component {
   determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
-    // TODO: Remove .split('-v2')[0] once done with all the Network changes
+    // TODO UDNP-2536: Remove .split('-v2')[0] once done with all the Network changes
     const entityId = shouldScrollToPrevious ? this.props.params[goBackToRoute.split('-v2')[0]] : currentId
     const nextEntity = shouldScrollToPrevious ? goBackToRoute : goToRoute
 
