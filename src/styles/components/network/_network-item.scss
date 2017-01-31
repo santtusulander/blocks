@@ -11,7 +11,7 @@ $network-item-connector-line-offset: rem(32px);
   padding: $network-item-padding-horizontal $network-item-padding-vertical;
   margin-bottom: $network-item-padding-horizontal;
   cursor: pointer;
-  border: 2px solid $black;
+  border: 2px solid;
 
   &:last-child {
     margin-bottom: 0;
@@ -52,21 +52,40 @@ $network-item-connector-line-offset: rem(32px);
     border-bottom: 2px solid $pale-blue;
   }
 
+  &.active::after {
+    right: -$network-item-connector-line-offset;
+    left: auto;
+    display: block;
+    border-left: 0;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
   .dark-theme & {
     background-color: rgba($black, 0.5);
     background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.05));
     background-repeat: no-repeat;
+    border-color: $black;
 
     &.active {
       background-color: $black;
       background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
-      border-color: $pale-blue;
 
-      &::after {
-        right: -$network-item-connector-line-offset;
-        left: auto;
-        display: block;
-        border-left: 0;
+      &,
+      &:hover {
+        border-color: $pale-blue;
+      }
+    }
+
+    &.disabled {
+
+      &,
+      &:hover {
+        background-color: rgba($black, 0.25);
+        background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.05));
+        border-color: rgba($black, 0.2);
       }
     }
 
@@ -74,6 +93,34 @@ $network-item-connector-line-offset: rem(32px);
       background-color: $black;
       background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3)), radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
       border-color: rgba($pale-blue, 0.25);
+    }
+  }
+
+  .light-theme & {
+    background-color: $white;
+    border-color: rgba($black, 0.2);
+
+    &.active {
+      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+
+      &,
+      &:hover {
+        border-color: $pale-blue;
+      }
+    }
+
+    &.disabled {
+
+      &,
+      &:hover {
+        background-color: rgba($white, 0.6);
+        background-image: none;
+        border-color: rgba($black, 0.1);
+      }
+    }
+
+    &:hover {
+      background-image: linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.15));
     }
   }
 
@@ -87,6 +134,10 @@ $network-item-connector-line-offset: rem(32px);
 
     .dark-theme & {
       color: rgba($silver-60, 0.5);
+    }
+
+    .light-theme & {
+      color: rgba($black, 0.3);
     }
 
     &::before {
@@ -119,6 +170,7 @@ $network-item-connector-line-offset: rem(32px);
     top: 50%;
     right: $network-item-padding-vertical;
     display: none;
+    padding: 2px;
     transform: translateY(-50%);
 
     .btn-icon {
@@ -174,7 +226,7 @@ $network-item-connector-line-offset: rem(32px);
     }
   }
 
-  &:hover {
+  &:hover:not(.disabled) {
 
     .btn-toolbar {
       display: block;

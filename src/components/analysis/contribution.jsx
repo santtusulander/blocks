@@ -128,7 +128,7 @@ class AnalysisContribution extends React.Component {
       <div>
         <SectionHeader sectionHeaderTitle={this.props.sectionHeaderTitle} />
         <div>
-          <SectionContainer className="analysis-contribution">
+          <SectionContainer className="analysis-contribution analysis-chart-container">
             <div ref="stacksHolder">
               <AnalysisStackedByGroup padding={40}
                 chartLabel={`${this.props.intl.formatMessage({id: 'portal.analytics.contribution.traffic.label'})} ${trafficByDateRangeLabel}`}
