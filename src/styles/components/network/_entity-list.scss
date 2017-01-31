@@ -9,6 +9,18 @@ $entity-list-items-height-offset: 375px;
   border-right: 2px solid;
   flex: none;
 
+  &:nth-child(even) {
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding / 2;
+    }
+  }
+
+  &:last-child {
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding;
+    }
+  }
+
   .dark-theme & {
     border-right-color: rgba($black, 0.3);
   }
@@ -47,10 +59,6 @@ $entity-list-items-height-offset: 375px;
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
-
-    .btn-add-new {
-      margin-right: $page-container-horizontal-padding;
-    }
   }
 
   .network-entity-list-items {
