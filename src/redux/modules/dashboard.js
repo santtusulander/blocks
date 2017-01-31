@@ -49,6 +49,7 @@ export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
   delete contributionOpts.account
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH
+  contributionOpts.show_detail = true
 
   // Combine data from many endpoints to serve dashboard
   return Promise.all([
