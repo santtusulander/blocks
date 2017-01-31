@@ -22,6 +22,26 @@ const mockInitialValues = {
       case 'localAS':
         return 'AS206810'
 
+      case 'members':
+        return [
+          {
+            actionItemElement: 'Item 1',
+            removed: false
+          },
+          {
+            actionItemElement: 'Item 2',
+            removed: false
+          },
+          {
+            actionItemElement: 'Item 3',
+            removed: false
+          },
+          {
+            actionItemElement: 'Item 4',
+            removed: false
+          }
+        ]
+
       default:
         return null
     }
@@ -126,7 +146,8 @@ function mapStateToProps( state, { podId, group }) {
       pod_name: mockInitialValues.get('pod_name'),
       lb_method: mockInitialValues.get('lb_method'),
       pod_type: mockInitialValues.get('pod_type'),
-      localAS: mockInitialValues.get('localAS')
+      localAS: mockInitialValues.get('localAS'),
+      members: mockInitialValues.get('members')
     } : {}
   }
   return props
