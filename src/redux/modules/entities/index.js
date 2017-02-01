@@ -13,12 +13,25 @@ export const actionTypes = {
   FAIL: 'entities/FAIL'
 }
 
+const locations =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('locations'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 const accounts =
   handleActions({
     [actionTypes.RECEIVE] : receiveEntity('accounts'),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
+
+const footprints = handleActions({
+  [actionTypes.RECEIVE] : receiveEntity('footprints'),
+  [actionTypes.REMOVE] : removeEntity,
+  [actionTypes.FAIL] : failEntity
+}, Map())
 
 const groups =
   handleActions({
@@ -46,5 +59,7 @@ export default combineReducers({
   nodes,
   groups,
   properties,
+  locations,
+  footprints,
   fetching: mapActionsToFetchingReducers(actionTypes)
 })
