@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../action-item')
-import ActionItem from '../action-item'
+jest.unmock('../action-items-container')
+import ActionItemsContainer from '../action-items-container'
 
 function intlMaker() {
   return {
@@ -10,16 +10,18 @@ function intlMaker() {
   }
 }
 
-describe('ActionItem', () => {
+describe('ActionItemsContainer', () => {
   let subject, props = null
 
   beforeEach(() => {
     subject = () => {
       props = {
-        availableMembers: ['item 1', 'item 2'],
+        addAction: () => {},
+        availableActions: ['item 1', 'item 2'],
+        editAction: () => {},
         intl: intlMaker()
       }
-      return shallow(<ActionItem {...props}/>)
+      return shallow(<ActionItemsContainer {...props}/>)
     }
   })
 
