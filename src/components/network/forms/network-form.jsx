@@ -11,7 +11,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
-import { FORMS_DESCRIPTION_MIN_LEN, FORMS_DESCRIPTION_MAX_LEN } from '../../../constants/network'
+import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validate = ({ name, description }) => {
   const conditions = {
@@ -20,10 +20,10 @@ const validate = ({ name, description }) => {
       errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
     },
     description: {
-      condition: !isValidTextField(description, FORMS_DESCRIPTION_MIN_LEN, FORMS_DESCRIPTION_MAX_LEN),
+      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
-                                          minValue={FORMS_DESCRIPTION_MIN_LEN}
-                                          maxValue={FORMS_DESCRIPTION_MAX_LEN} />
+                                          minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
     }
   }
   return checkForErrors(

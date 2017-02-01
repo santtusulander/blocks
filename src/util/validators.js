@@ -1,5 +1,7 @@
 import validator from 'validator'
 import { matchesRegexp } from './helpers'
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
 
 /**
  * Global validators
@@ -118,7 +120,7 @@ export function isValidHostName(hostName) {
  * @param text
  * @returns {boolean}
  */
-export function isValidTextField(text, minLen = 3, maxLen = 40) {
+export function isValidTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLen = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
   const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLen},${maxLen}}$`)
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
 }

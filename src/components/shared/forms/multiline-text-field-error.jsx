@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { FORMS_NAME_MIN_LEN, FORMS_NAME_MAX_LEN } from '../../../constants/network'
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../../../constants/common'
 
 const MultilineTextFieldError = ({fieldLabel, minValue, maxValue}) => {
   return (
@@ -27,8 +28,8 @@ MultilineTextFieldError.propTypes = {
 }
 
 MultilineTextFieldError.defaultProps = {
-  maxValue: FORMS_NAME_MAX_LEN,
-  minValue: FORMS_NAME_MIN_LEN
+  maxValue: FORM_TEXT_FIELD_DEFAULT_MAX_LEN,
+  minValue: FORM_TEXT_FIELD_DEFAULT_MIN_LEN
 }
 
 export default MultilineTextFieldError
