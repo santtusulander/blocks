@@ -4,6 +4,14 @@ import { parseResponseData, qsBuilder } from '../redux/util'
 import { MAPBOX_REVERSE_LOOKUP_ENDPOINT } from '../constants/mapbox.js'
 import { RIPE_STAT_DATA_API_ENDPOINT } from '../constants/network'
 
+const ripeInstance = axios.create({
+  baseURL: RIPE_STAT_DATA_API_ENDPOINT
+})
+
+ripeInstance.interceptors.request.use(config => {
+  delete config.headers['X-Auth-Token']
+  return config
+})
 
 /**
  * Helper to make calls to MapBox Reverse-Geocoding API
@@ -42,6 +50,5 @@ const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
 
   // const finalParams = Object.assign({}, params, { sourceapp: 'udnportal' })
   const query = qsBuilder(params)
-  return axios.get(`${RIPE_STAT_DATA_API_ENDPOINT}/${dataCallName}/data.${format}${query}`)
-    .then(parseResponseData)
+  return ripeInstance.get(`/${dataCallName}/data.${format}${query}`).then(parseResponseData)
 }

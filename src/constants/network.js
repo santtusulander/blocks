@@ -33,5 +33,6 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'bm', label: 'Bare Metal' }
 ]
 
+export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999
