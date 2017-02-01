@@ -56,12 +56,20 @@ const properties =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const pops =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('pops'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
   groups,
   iataCodes,
   properties,
+  pops,
   locations,
   footprints,
   fetching: mapActionsToFetchingReducers(actionTypes)
