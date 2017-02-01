@@ -10,8 +10,6 @@ class EntityList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.updateEntities = this.updateEntities.bind(this)
-    this.state = this.updateEntities(props.entities)
     this.renderConnectorLine = this.renderConnectorLine.bind(this)
   }
 
@@ -19,14 +17,12 @@ class EntityList extends React.Component {
     this.entityListItems.addEventListener('scroll', this.renderConnectorLine, false)
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState(this.updateEntities(nextProps.entities))
-  }
-
   shouldComponentUpdate(nextProps) {
     if (!Immutable.is(nextProps.entities, this.props.entities)) {
       return true
     } else if (nextProps.selectedEntityId !== this.props.selectedEntityId) {
+      return true
+    } else if (nextProps.starburstData !== this.props.starburstData) {
       return true
     }
 
@@ -109,23 +105,6 @@ class EntityList extends React.Component {
     }
   }
 
-  updateEntities(entities) {
-    const {
-      entityIdKey,
-      entityNameKey
-    } = this.props
-
-    const newEntities = entities && entities.map(entity => Immutable.Map({
-      id: entity.get(entityIdKey),
-      name: entity.get(entityNameKey)
-    }))
-
-    return {
-      entities: newEntities,
-      showEntitiesTable: newEntities && newEntities.count() > 0
-    }
-  }
-
   /**
    * Does all the rendering calculations for entities and returns a list
    * of elements that will be shown in the container.
@@ -145,12 +124,15 @@ class EntityList extends React.Component {
       multiColumn,
       numOfColumns,
       itemsPerColumn,
-      showAsStarbursts
+      showAsStarbursts,
+      entityIdKey,
+      entityNameKey,
+      starburstData
     } = this.props
 
-    const entities = this.state.entities.map(entity => {
-      const entityId = entity.get('id')
-      const entityName = entity.get('name')
+    const entities = this.props.entities.map(entity => {
+      const entityId = entity.get(entityIdKey)
+      const entityName = entity.get(entityNameKey)
 
       let content = (
         <NetworkItem
@@ -165,12 +147,24 @@ class EntityList extends React.Component {
       )
 
       if (showAsStarbursts) {
+        const dailyTraffic = this.getDailyTraffic(entity)
+        const contentMetrics = this.getMetrics(entity)
+
         content = (
           <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : null}`} key={entityId} onClick={() => selectEntity(entityId)}>
             <ContentItemChart
-              chartWidth="350"
-              barMaxHeight="30"
+              chartWidth={starburstData.chartWidth}
+              barMaxHeight={starburstData.barMaxHeight}
               name={entityName}
+              dailyTraffic={dailyTraffic.get('detail').reverse()}
+              primaryData={contentMetrics.get('traffic')}
+              secondaryData={contentMetrics.get('historical_traffic')}
+              differenceData={contentMetrics.get('historical_variance')}
+              cacheHitRate={contentMetrics.get('avg_cache_hit_rate')}
+              timeToFirstByte={contentMetrics.get('avg_ttfb')}
+              maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
+              minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
+              avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
               />
           </div>
         )
@@ -203,6 +197,18 @@ class EntityList extends React.Component {
     return content
   }
 
+  getMetrics(item) {
+    const { starburstData } = this.props
+    return starburstData.contentMetrics.find(metric => metric.get(starburstData.type) === item.get('id'),
+      null, Immutable.Map({ totalTraffic: 0 }))
+  }
+
+  getDailyTraffic(item) {
+    const { starburstData } = this.props
+    return starburstData.dailyTraffic.find(traffic => traffic.get(starburstData.type) === item.get('id'),
+      null, Immutable.fromJS({ detail: [] }))
+  }
+
   /**
    * Chunks an Immutable.List to a segments based on the number of items
    * for each segment.
@@ -227,9 +233,8 @@ class EntityList extends React.Component {
    * @return {Boolean}      Boolean of active item found
    */
   hasActiveItems() {
-    const { selectedEntityId } = this.props
-    const entities = this.state.entities
-    const active = entities && entities.some(entity => selectedEntityId === entity.get('id').toString())
+    const { selectedEntityId, entityIdKey, entities } = this.props
+    const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
     return active
   }
 
@@ -241,24 +246,20 @@ class EntityList extends React.Component {
       showButtons
     } = this.props
 
-    const {
-      showEntitiesTable
-    } = this.state
-
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
     })
 
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
-        {(showEntitiesTable && this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
+        {(this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
           onAdd={showButtons ? addEntity : null}
         />
 
       <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
-          {showEntitiesTable && this.renderListItems()}
+          {this.renderListItems()}
         </div>
       </div>
     )
@@ -280,13 +281,20 @@ EntityList.propTypes = {
   selectedEntityId: PropTypes.string,
   showAsStarbursts: PropTypes.bool,
   showButtons: PropTypes.bool,
+  starburstData: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name',
-  showButtons: true
+  showButtons: true,
+  starburstData: {
+    dailyTraffic: Immutable.List(),
+    contentMetrics: Immutable.List(),
+    barMaxHeight: '30',
+    chartWidth: '350'
+  }
 }
 
 export default EntityList

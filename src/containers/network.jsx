@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import {
   getNetworkUrl
@@ -10,6 +11,7 @@ import {
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
+import * as metricsActionCreators from '../redux/modules/metrics'
 
 import Content from '../components/layout/content'
 import PageContainer from '../components/layout/page-container'
@@ -29,6 +31,8 @@ import {
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
 } from '../constants/network'
+
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 
 import NetworkFormContainer from './network/modals/network-modal'
 import PopFormContainer from './network/modals/pop-modal'
@@ -607,6 +611,14 @@ class Network extends React.Component {
             selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
             title="Account"
             showButtons={false}
+            showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.accountDailyTraffic,
+              contentMetrics: this.props.accountMetrics,
+              type: CONTENT_ITEMS_TYPES.ACCOUNT,
+              chartWidth: '450',
+              barMaxHeight: '30'
+            }}
           />
 
           <EntityList
@@ -619,6 +631,13 @@ class Network extends React.Component {
             selectedEntityId={`${params.group}`}
             title="Groups"
             showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.groupDailyTraffic,
+              contentMetrics: this.props.groupMetrics,
+              type: CONTENT_ITEMS_TYPES.GROUP,
+              chartWidth: '350',
+              barMaxHeight: '30'
+            }}
           />
 
           <EntityList
@@ -731,9 +750,13 @@ class Network extends React.Component {
 
 Network.displayName = 'Network'
 Network.propTypes = {
+  accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
+  groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   networkModal: PropTypes.string,
@@ -752,7 +775,11 @@ function mapStateToProps(state) {
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
     fetching: state.group.get('fetching'),
-    groups: state.group.get('allGroups')
+    groups: state.group.get('allGroups'),
+    groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
+    groupMetrics: state.metrics.get('groupMetrics'),
+    accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
+    accountMetrics: state.metrics.get('accountMetrics')
   };
 }
 
@@ -761,11 +788,24 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const metricsOpts = {
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
+  }
+  const groupMetricsOpts = Object.assign({
+    account: account
+  }, metricsOpts)
 
   const fetchData = () => {
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
+    metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
+    metricsActions.fetchDailyAccountTraffic(metricsOpts)
+    metricsActions.fetchAccountMetrics(metricsOpts)
+    metricsActions.fetchGroupMetrics(groupMetricsOpts)
+    metricsActions.fetchDailyGroupTraffic(groupMetricsOpts)
   }
   return {
     toggleModal: uiActions.toggleNetworkModal,
