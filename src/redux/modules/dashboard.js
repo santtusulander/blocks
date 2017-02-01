@@ -72,8 +72,8 @@ export const finishFetching = createAction(DASHBOARD_FINISH_FETCH)
 
 // This function is used for combining the data coming from several endpoints into
 // a single object, which get passed to the dashboard container. This was done
-// so that there was no need to do a lot of changes in the container, which used
-// previously the sp-dashboard endpoint and received an ob
+// so that there was no need to do a lot of changes in the container, which
+// previously used sp-dashboard endpoint that did all this aggregation for us
 export function processDashboardData(traffic, trafficOnOffNet, countries, cpContribution) {
   // Creating Immutable objects for easier error handling
   const trafficMap = Immutable.fromJS(traffic)
