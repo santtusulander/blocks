@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { formValueSelector } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
 import { formatDate } from '../../../util/helpers'
@@ -8,7 +7,7 @@ import { formatDate } from '../../../util/helpers'
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
-import NetworkEditNodeForm, { FORM_NAME, FORM_FIELDS, getNodeValues, hasMultipleValues } from '../../../components/network/forms/edit-node-form'
+import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 
 const dateFormat = 'MM/DD/YYYY HH:mm'
 
@@ -42,7 +41,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, initialValues, intl, nodes } = this.props
+    const { show, onCancel, initialValues, intl, nodeValues, nodes } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -116,6 +115,7 @@ class EditNodeFormContainer extends React.Component {
     const formProps = {
       intl,
       initialValues,
+      nodeValues,
       nodes,
       onCancel,
       onDelete: this.onToggleDeleteModal,
@@ -148,6 +148,7 @@ EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 EditNodeFormContainer.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
+  nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
@@ -155,29 +156,19 @@ EditNodeFormContainer.propTypes = {
   show: React.PropTypes.bool
 }
 
-const formSelector = formValueSelector(FORM_NAME)
-
-/**
- * Get initial form values, if form value is not set use node value
- * @param {Object} state
- * @param {Object} nodeValues
- * @returns {Object}
- */
-function getFormValues(state, nodeValues) {
-  const formValues = {}
-  FORM_FIELDS.forEach(field => {
-    formValues[field] = formSelector(state, field) || nodeValues[field]
-  })
-  return formValues
-}
-
 const mapStateToProps = (state, ownProps) => {
   const { nodes } = ownProps
   const nodeValues = getNodeValues(nodes)
-  const initialValues = getFormValues(state, nodeValues)
+
+  const initialValues = {}
+  for (let field in nodeValues) {
+    const value = nodeValues[field]
+    initialValues[field] = value === MULTIPLE_VALUE_INDICATOR ? null : value
+  }
 
   return {
-    initialValues
+    initialValues,
+    nodeValues
   }
 }
 

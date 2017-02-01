@@ -24,6 +24,9 @@ import {
   NODE_TYPE_OPTIONS
 } from '../../../constants/network'
 
+export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
+export const FORM_FIELDS = ['node_role', 'node_env', 'node_type', 'cloud_driver', 'custom_grains']
+
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
 const isEmpty = function(value) {
@@ -32,33 +35,32 @@ const isEmpty = function(value) {
 
 const validate = function(values, props) {
   const { node_role, node_env, node_type, cloud_driver } = values
-  const { nodes } = props
-  const nodeValues = getNodeValues(nodes)
+  const { nodeValues } = props
 
   // Nodes with multiple values have to be ignored as empty value is valid when you don't want to change the field in multiple nodes
 
   const conditions = {
     node_role: [
       {
-        condition: nodeValues.hasOwnProperty('node_role') && nodeValues.node_role !== null && isEmpty(node_role),
+        condition: nodeValues.node_role !== MULTIPLE_VALUE_INDICATOR && isEmpty(node_role),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.role.title" /> }}/>
       }
     ],
     node_env: [
       {
-        condition: nodeValues.hasOwnProperty('node_env') && nodeValues.node_env !== null && isEmpty(node_env),
+        condition: nodeValues.node_env !== MULTIPLE_VALUE_INDICATOR && isEmpty(node_env),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.environment.title" /> }}/>
       }
     ],
     node_type: [
       {
-        condition: nodeValues.hasOwnProperty('node_type') && nodeValues.node_type !== null && isEmpty(node_type),
+        condition: nodeValues.node_type !== MULTIPLE_VALUE_INDICATOR && isEmpty(node_type),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.type.title" /> }}/>
       }
     ],
     cloud_driver: [
       {
-        condition: nodeValues.hasOwnProperty('cloud_driver') && nodeValues.cloud_driver !== null && isEmpty(cloud_driver),
+        condition: nodeValues.cloud_driver !== MULTIPLE_VALUE_INDICATOR && isEmpty(cloud_driver),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" /> }}/>
       }
     ]
@@ -67,7 +69,7 @@ const validate = function(values, props) {
   return checkForErrors(values, conditions)
 }
 
-export const FORM_FIELDS = ['node_role', 'node_env', 'node_type', 'cloud_driver', 'custom_grains']
+
 
 function getValueLabel(options, value) {
   if(!options || !options.length) {
@@ -95,7 +97,7 @@ export function getNodeValues(nodes) {
   const nodeValues = {}
 
   FORM_FIELDS.forEach(field => {
-    nodeValues[field] = !hasMultipleValues(nodes, field) ? nodes[0][field] : null
+    nodeValues[field] = !hasMultipleValues(nodes, field) ? nodes[0][field] : MULTIPLE_VALUE_INDICATOR
   })
   return nodeValues
 }
@@ -124,8 +126,7 @@ class NetworkEditNodeForm extends React.Component {
 
     this.state = {
       expandedFields: {},
-      hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1,
-      nodeValues: getNodeValues(this.props.nodes)
+      hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1
     }
 
     this.onCancel = this.onCancel.bind(this)
@@ -133,9 +134,26 @@ class NetworkEditNodeForm extends React.Component {
     this.onDelete = this.onDelete.bind(this)
   }
 
-  onSubmit() {
-    // @TODO submit data
-    this.props.onSave()
+  onSubmit(formValues) {
+    const { nodeValues, nodes } = this.props
+    const updatedNodeValues = nodes.slice(0)
+
+    for (let field in formValues) {
+      const originalNodeValue = nodeValues[field]
+      const fieldValue = formValues[field]
+      let updatedValue
+      if ((originalNodeValue && fieldValue) || (originalNodeValue === MULTIPLE_VALUE_INDICATOR && fieldValue !== null)) {
+        // Update field in all nodes if nodes had the same field value or nodes had multiple field values and new value was set
+        updatedValue = fieldValue
+      }
+
+      if (updatedValue) {
+        for (let i = 0; i < updatedNodeValues.length; i++) {
+          updatedNodeValues[i][field] = updatedValue
+        }
+      }
+    }
+    this.props.onSave(updatedNodeValues)
   }
 
   onCancel() {
@@ -159,8 +177,9 @@ class NetworkEditNodeForm extends React.Component {
   }
 
   getFields() {
-    const { nodes } = this.props
-    const { hasMultipleNodes, expandedFields, nodeValues } = this.state
+    const { nodes, nodeValues } = this.props
+    const { hasMultipleNodes, expandedFields } = this.state
+
     const fields = [
       {
         name: 'node_role',
@@ -204,7 +223,7 @@ class NetworkEditNodeForm extends React.Component {
       let fieldToggle = null
       let isExpanded = true
       const fieldLabelText = <FormattedMessage id={fieldData.labelId} />
-      const hasMultipleNodeValues = nodeValues.hasOwnProperty(fieldData.name) && nodeValues[fieldData.name] === null
+      const hasMultipleNodeValues = nodeValues[fieldData.name] === MULTIPLE_VALUE_INDICATOR
 
       if (hasMultipleNodes && hasMultipleNodeValues) {
         isExpanded = expandedFields[fieldData.name] === true
