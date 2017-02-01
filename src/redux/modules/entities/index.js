@@ -6,6 +6,8 @@ import mapActionsToFetchingReducers from '../fetching/actions'
 
 import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
 
+import iataCodes from './iata-codes/reducers'
+
 export const actionTypes = {
   REQUEST: 'entities/REQUEST',
   RECEIVE: 'entities/RECEIVE',
@@ -40,6 +42,13 @@ const groups =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const nodes =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('nodes'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 const properties =
   handleActions({
     [actionTypes.RECEIVE] : receiveEntity('properties'),
@@ -49,7 +58,9 @@ const properties =
 
 export default combineReducers({
   accounts,
+  nodes,
   groups,
+  iataCodes,
   properties,
   locations,
   footprints,

@@ -20,6 +20,8 @@ const FieldFormGroupTypeahead = ({
   options,
   placeholder,
   required = true,
+  filterBy,
+  labelKey,
   validation
 }) => {
 
@@ -46,6 +48,8 @@ const FieldFormGroupTypeahead = ({
         allowNew={allowNew}
         className={className}
         disabled={disabled}
+        filterBy={filterBy}
+        labelKey={labelKey}
         emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
@@ -71,9 +75,11 @@ FieldFormGroupTypeahead.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.string,
+  filterBy: PropTypes.oneOfType([ PropTypes.string, PropTypes.func, PropTypes.array ]),
   input: PropTypes.object,
   intl: intlShape.isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  labelKey: PropTypes.string,
   meta: PropTypes.object,
   multiple: PropTypes.bool,
   newSelectionPrefix: PropTypes.string,
