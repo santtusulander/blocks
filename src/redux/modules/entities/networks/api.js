@@ -55,7 +55,9 @@ export const fetchAll = ( params ) => {
 export const create = ({ payload, ...urlParams }) => {
   return axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, networkSchema)
+      return normalize({ id: urlParams.group, networks: [ data ] }, groupNetworks)
+
+      //return normalize(data, networkSchema)
     })
 }
 
@@ -69,7 +71,6 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      //return normalize(data, networkSchema)
       return normalize({ id: baseUrlParams.group, networks: [ data ] }, groupNetworks)
     })
 }
@@ -82,5 +83,7 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => { id })
+    .then( () => {
+      return {id}
+    })
 }
