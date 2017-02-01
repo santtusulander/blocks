@@ -45,7 +45,6 @@ const validate = fields => {
 
 const NetworkPopForm = (props) => {
   const {
-    fetching,
     intl,
     onCancel,
     invalid,
@@ -56,13 +55,12 @@ const NetworkPopForm = (props) => {
     initialValues,
     hasPods,
     dirty
-    //values: { locationId }
 
   } = props
 
   const edit = !!initialValues.id
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
@@ -109,7 +107,9 @@ const NetworkPopForm = (props) => {
                 onClick={onDelete}
                 tooltipId="tooltip-help"
                 tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-                {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+                {
+                  //TODO: delete modal with confirm
+                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
                 }
               </ButtonDisableTooltip>
             </ButtonToolbar>
@@ -125,7 +125,7 @@ const NetworkPopForm = (props) => {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting || fetching || (!dirty)}>
+              disabled={invalid || submitting || (!dirty)}>
               {actionButtonTitle}
             </Button>
           </ButtonToolbar>
@@ -139,12 +139,12 @@ NetworkPopForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
-  intl: intlShape,
   iata: PropTypes.string,
+  intl: intlShape,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.string,
 
   ...reduxFormPropTypes
 }

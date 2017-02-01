@@ -175,13 +175,13 @@ class PopFormContainer extends Component {
 
   checkforPods() {
     //TODO: this should check weather the current POP has PODs or not
-    return true
+    return false
   }
 
   render() {
     const { initialValues,
             iata,
-            onCancel, groupId, networkId } = this.props
+            onCancel, groupId, networkId, popId } = this.props
 
     const edit = !!initialValues.id
 
@@ -212,7 +212,7 @@ class PopFormContainer extends Component {
           hasPods={this.checkforPods()}
           iata={iata}
           initialValues={initialValues}
-          onDelete={(popId) => this.onDelete(popId)}
+          onDelete={() => this.onDelete(popId)}
           onSave={(values) => this.onSave(edit, values)}
           onCancel={() => onCancel()}
         />
