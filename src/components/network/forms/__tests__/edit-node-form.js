@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 
 jest.unmock('../edit-node-form.jsx')
-import NetworkEditNodeForm from '../edit-node-form.jsx'
+import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../edit-node-form.jsx'
 
 const intlMaker = () => {
   return {
@@ -45,13 +45,21 @@ describe('NetworkEditNodeForm', () => {
 
   beforeEach(() => {
     subject = () => {
-      let props = {
+      const nodeValues = getNodeValues(mockNodes)
+      const initialValues = {}
+      for (let field in nodeValues) {
+        const value = nodeValues[field]
+        initialValues[field] = value === MULTIPLE_VALUE_INDICATOR ? null : value
+      }
+      const props = {
         show: true,
         onSave,
         onCancel,
         handleSubmit,
         intl: intlMaker(),
-        nodes: mockNodes
+        initialValues,
+        nodes: mockNodes,
+        nodeValues
       }
 
       return shallow(<NetworkEditNodeForm {...props}/>)
