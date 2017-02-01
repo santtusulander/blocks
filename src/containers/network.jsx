@@ -17,8 +17,6 @@ import PageHeader from '../components/layout/page-header'
 import TruncatedTitle from '../components/truncated-title'
 import EntityList from '../components/network/entity-list'
 
-import popActions from '../redux/modules/entities/pops/actions'
-
 import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_POP,
@@ -729,14 +727,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
-    groupActions: groupActions,
-
-    getall: (data) => dispatch(popActions.fetchAll(data)),
-    create: (data) => dispatch(popActions.create(data)),
-    update: (data) => dispatch(popActions.update(data)),
-    get: (data) => dispatch(popActions.fetchOne(data)),
-    del: (data) => dispatch(popActions.remove(data))
-
+    groupActions: groupActions
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))

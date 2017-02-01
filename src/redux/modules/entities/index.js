@@ -63,7 +63,6 @@ const pops =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-//const entities = combineReducers({
 export default combineReducers({
   accounts,
   nodes,

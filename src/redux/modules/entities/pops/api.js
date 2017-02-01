@@ -1,7 +1,6 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-//import {Schemas} from '../schemas'
 import { BASE_URL_NORTH } from '../../../util'
 
 /* TODO: After FOOTPRINTS are merged, import schema from 'footprints' -module */
@@ -86,5 +85,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => { id })
+    .then(() => { {id} })
 }
