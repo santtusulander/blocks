@@ -2,10 +2,8 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm, Field, initialize, change, blur, propTypes as reduxFormPropTypes, formValueSelector, SubmissionError} from 'redux-form'
 import { Link } from 'react-router'
-
 import { Tooltip, Button, ButtonToolbar,
          Col, ControlLabel, Row} from 'react-bootstrap'
-
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import FieldFormGroup from '../form/field-form-group'
@@ -13,7 +11,6 @@ import FieldFormGroupToggle from '../form/field-form-group-toggle'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldTelephoneInput from '../form/field-telephone-input'
 import FieldPasswordFields from '../form/field-passwordfields'
-
 import SaveBar from '../save-bar'
 
 import { AUTHY_APP_DOWNLOAD_LINK,
@@ -23,7 +20,7 @@ import { AUTHY_APP_DOWNLOAD_LINK,
 
 import '../../styles/components/user/_edit-form.scss'
 
-import { isValidPhoneNumber, isValidCountryCode } from '../../util/validators'
+import { isValidPhoneNumber } from '../../util/validators'
 
 const ErrorTooltip = ({ error, active }) =>
     !active &&
@@ -60,10 +57,10 @@ const validate = (values) => {
       errors.phone = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
     }
 
-    if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
-      errors.phone = <FormattedMessage id="portal.user.edit.phoneCountryCodeInvalid.text" />
+    const fullPhone = phone.phone_country_code + phone.phone_number;
+    if (!isValidPhoneNumber(fullPhone)) {
+      errors.phone = <FormattedMessage id="portal.user.edit.phoneInvalid.text" />
     }
-
   }
 
   return errors;
