@@ -220,7 +220,12 @@ export const getRoutes = store => {
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
           </Route>
+          // TODO UDNP-2563: Change this to replace current account route for network when
+          // all the Network changes are done.
+          <Route path={routes.networkAccountV2} component={Network}/>
           <Route path={routes.networkGroups} component={Groups}/>
+            // TODO UDNP-2563: Change this to replace current groups route for network when
+            // all the Network changes are done.
           <Route path={routes.networkGroupsV2} component={Network}/>
           <Route path={routes.networkGroup} component={Network}/>
           <Route path={routes.networkNetwork} component={Network}/>

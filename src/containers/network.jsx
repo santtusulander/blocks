@@ -132,6 +132,8 @@ class Network extends React.Component {
     this.addEntity = this.addEntity.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
 
+    this.handleAccountClick = this.handleAccountClick.bind(this)
+
     this.handleGroupClick = this.handleGroupClick.bind(this)
     this.handleGroupEdit = this.handleGroupEdit.bind(this)
     this.handleGroupSave = this.handleGroupSave.bind(this)
@@ -164,7 +166,6 @@ class Network extends React.Component {
       pods: Immutable.List(),
       nodes: Immutable.List(),
 
-
       groupId: null,
       networkId: null,
       popId: null,
@@ -173,6 +174,7 @@ class Network extends React.Component {
     }
 
     this.entityList = {
+      accountList: null,
       groupList: null,
       networkList: null,
       popList: null,
@@ -294,13 +296,28 @@ class Network extends React.Component {
     }
   }
 
+  /* ==== Account Handlers ==== */
+  handleAccountClick(accountId) {
+    this.determineNextState({
+      currentId: accountId,
+      // We need to set the previousId when we're navigating/scrolling backwards
+      // and the only way to navigate back from and hide the groups is to check
+      // if the URL has 'groups' included.
+      previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
+      // TODO UDNP-2563: Remove -v2 once done with all the Network changes
+      goToRoute: 'groups-v2',
+      goBackToRoute: 'account-v2'
+    })
+  }
+
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
     this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
-      goBackToRoute: 'account'
+      // TODO UDNP-2563: Remove -v2 once done with all the Network changes
+      goBackToRoute: 'groups-v2'
     })
   }
 
@@ -415,8 +432,10 @@ class Network extends React.Component {
   determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
-    const entityId = shouldScrollToPrevious ? this.props.params[goBackToRoute] : currentId
+    // TODO UDNP-2563: Remove .split('-v2')[0] once done with all the Network changes
+    const entityId = shouldScrollToPrevious ? this.props.params[goBackToRoute.split('-v2')[0]] : currentId
     const nextEntity = shouldScrollToPrevious ? goBackToRoute : goToRoute
+
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
 
     this.props.router.push(url)
@@ -537,6 +556,16 @@ class Network extends React.Component {
     }
   }
 
+  /**
+   * Checks if the url has 'groups' string in it.
+   *
+   * @method hasGroupsInUrl
+   * @return {Boolean}      Boolean of having groups or not in the url
+   */
+  hasGroupsInUrl() {
+    return this.props.location.pathname.includes('groups')
+  }
+
   render() {
     const {
       activeAccount,
@@ -555,6 +584,7 @@ class Network extends React.Component {
       popId,
       podId
     } = this.state
+
     return (
       <Content className="network-content">
 
@@ -568,8 +598,20 @@ class Network extends React.Component {
 
         <PageContainer ref={container => this.container = container} className="network-entities-container">
           <EntityList
+            ref={accounts => this.entityList.accountList = accounts}
+            entities={params.account && Immutable.List([activeAccount])}
+            addEntity={() => null}
+            deleteEntity={() => null}
+            editEntity={() => null}
+            selectEntity={this.handleAccountClick}
+            selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
+            title="Account"
+            showButtons={false}
+          />
+
+          <EntityList
             ref={groups => this.entityList.groupList = groups}
-            entities={params.account && groups}
+            entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
             addEntity={() => null}
             deleteEntity={() => (groupId) => this.handleGroupEdit(groupId)}
             editEntity={() => (groupId) => this.handleGroupEdit(groupId)}
@@ -671,7 +713,7 @@ class Network extends React.Component {
             {...params}
           />
         }
-        
+
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-form"
@@ -692,6 +734,7 @@ Network.propTypes = {
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(Immutable.List),
+  location: PropTypes.object,
   networkModal: PropTypes.string,
   params: PropTypes.object,
   router: PropTypes.object,
