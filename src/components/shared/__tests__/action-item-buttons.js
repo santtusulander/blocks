@@ -1,10 +1,10 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../action-item-member-buttons')
-import ActionItemMemberButtons from '../action-item-member-buttons'
+jest.unmock('../action-item-buttons')
+import ActionItemButtons from '../action-item-buttons'
 
-describe('ActionItemMemberButtons', () => {
+describe('ActionItemButtons', () => {
   let subject, props = null
 
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('ActionItemMemberButtons', () => {
           value: true
         },
       }
-      return shallow(<ActionItemMemberButtons {...props}/>)
+      return shallow(<ActionItemButtons {...props}/>)
     }
   })
 
