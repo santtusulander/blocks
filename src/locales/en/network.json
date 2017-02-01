@@ -20,7 +20,7 @@
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
   "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
-  
+
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.networkForm.newNetwork.title": "Add Network",
   "portal.network.networkForm.editNetwork.title": "Edit Network",
@@ -58,6 +58,12 @@
   "portal.network.podForm.discoveryMethod.help.text": "Discovery Method Help text",
   "portal.network.podForm.name.validation.error": "Invalid Pod name",
   "portal.network.podForm.name.required.error": "POD Name is required",
+  "portal.network.podForm.lb_method.required.error": "LB Method is required",
+  "portal.network.podForm.pod_type.required.error": "POD Type is required",
+  "portal.network.podForm.requestForwardType.required.error": "Request Forward Type is required",
+  "portal.network.podForm.provider_weight.required.error": "Provider Weight is required",
+  "portal.network.podForm.discoveryMethod.required.error": "Discovery Method is required",
+  "portal.network.podForm.localAS.required.error": "Local AS is required",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
