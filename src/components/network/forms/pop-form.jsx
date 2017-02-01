@@ -45,20 +45,22 @@ const validate = fields => {
 
 const NetworkPopForm = (props) => {
   const {
-    edit,
     fetching,
     intl,
     onCancel,
     invalid,
     submitting,
     onSave,
-    popId,
-    locationId,
+    iata,
     onDelete,
     initialValues,
     hasPods,
     dirty
+    //values: { locationId }
+
   } = props
+
+  const edit = !!initialValues.id
 
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
@@ -76,21 +78,22 @@ const NetworkPopForm = (props) => {
         <hr />
 
         <Field
-          name="locationId"
+          name="iata"
           component={FieldFormGroupSelect}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         <hr/>
 
-        {locationId
+        {iata
             ? <Field
-                name="popId"
+                name="locationId"
                 component={FieldFormGroupNumber}
-                addonBefore={`${locationId}${popId}`}
+                addonBefore={`${iata}`}
                 min={POP_ID_MIN}
                 max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
+                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+              />
             : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
@@ -137,7 +140,7 @@ NetworkPopForm.propTypes = {
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
   intl: intlShape,
-  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  iata: PropTypes.string,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,

@@ -1,68 +1,176 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { formValueSelector } from 'redux-form'
+import { formValueSelector, SubmissionError } from 'redux-form'
+
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import networkActions from '../../../redux/modules/entities/networks/actions'
+import popActions from '../../../redux/modules/entities/pops/actions'
+
+import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
+
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 
-const mockReduxCalls = {
-  get: function(cmd) {
-    switch (cmd) {
-      case 'name':
-        return "POP Name"
+const mockLocations = [
+  {
+    value: 'ORD',
+    label: 'ORD, Chicago'
+  }, {
+    value: 'OLD',
+    label: 'OLD, Miami'
+  }, {
+    value: 'MDL',
+    label: 'MDL, Lviv'
+  }]
 
-      case 'location':
-        return [{
-          value: 'ORD',
-          label: 'ORD, Chicago'
-        }, {
-          value: 'OLD',
-          label: 'OLD, Miami'
-        }, {
-          value: 'MDL',
-          label: 'MDL, Lviv'
-        }]
-
-      case 'locationId':
-        return 'MDL'
-
-      case 'popId':
-        return "1"
-
-      case 'createdDate':
-        return "October 13, 2014 11:13:00"
-
-      case 'updatedDate':
-        return "October 13, 2017 11:13:00"
-
-      case 'fetching':
-        return false
-
-      default:
-        return null
-    }
-  }
-}
+// const mockReduxCalls = {
+//   get: function(cmd) {
+//     switch (cmd) {
+//       case 'name':
+//         return "POP Name"
+//
+//       case 'location':
+//         return [{
+//           value: 'ORD',
+//           label: 'ORD, Chicago'
+//         }, {
+//           value: 'OLD',
+//           label: 'OLD, Miami'
+//         }, {
+//           value: 'MDL',
+//           label: 'MDL, Lviv'
+//         }]
+//
+//       case 'locationId':
+//         return 'MDL'
+//
+//       case 'popId':
+//         return "1"
+//
+//       case 'createdDate':
+//         return "October 13, 2014 11:13:00"
+//
+//       case 'updatedDate':
+//         return "October 13, 2017 11:13:00"
+//
+//       case 'fetching':
+//         return false
+//
+//       default:
+//         return null
+//     }
+//   }
+// }
 
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onDelete = this.onDelete.bind(this)
     this.checkforPods = this.checkforPods.bind(this)
   }
 
-  onSubmit(edit, values) {
-    // TODO: on submit functionality
-    this.props.onSave(edit, values)
+
+
+  componentWillMount(){
+    const {brand, accountId,groupId,networkId, popId} = this.props
+
+    //If editing => fetch data from API
+    accountId && this.props.fetchAccount({brand, id: accountId})
+    groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
+
+    //TODO: fetch location by Group
+
   }
 
+  componentWillReceiveProps(nextProps){
+    const {brand, accountId,groupId,networkId} = nextProps
+
+    //If editing => fetch data from API
+    if (this.props.networkId !== networkId) {
+      networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    }
+
+    if (this.props.accountId !== accountId) {
+      accountId && this.props.fetchAccount({brand, id: accountId})
+    }
+
+    if (this.props.groupId !== groupId) {
+      groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    }
+  }
+
+  /**
+   * hander for save
+   */
+  onSave(edit, values) {
+
+    const data = {
+      iata: values.iata,
+      name: values.name,
+      location_id: `${values.locationId}`
+    }
+
+    //add id if create new
+    if (!edit) {
+      data.id = values.name
+    }
+
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      network: this.props.networkId,
+      payload: data
+    }
+
+    if (edit) params.id = this.props.popId
+    const save = edit ? this.props.onUpdate : this.props.onCreate
+
+    return save(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        //Close modal
+        this.props.onCancel();
+      })
+  }
+
+  /**
+   * Handler for Delete
+   */
   onDelete(popId) {
-    // TODO: on delete functionality
-    this.props.onDelete(popId)
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      network: this.props.networkId,
+      id: popId
+    }
+
+    return this.props.onDelete(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        //Close modal
+        this.props.onCancel();
+      })
   }
 
   checkforPods() {
@@ -71,12 +179,15 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const { edit, fetching, initialValues, locationId,
-            onCancel, groupId, networkId, popId, show } = this.props
+    const { initialValues,
+            iata,
+            onCancel, groupId, networkId } = this.props
 
+    const edit = !!initialValues.id
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
+
     const subTitle = (<FormattedMessage id="portal.network.subTitle.context.text"
                                         values={{
                                           groupId: groupId,
@@ -90,7 +201,7 @@ class PopFormContainer extends Component {
 
     return (
       <SidePanel
-        show={show}
+        show={true}
         title={title}
         subTitle={subTitle}
         subSubTitle={subSubTitle}
@@ -98,14 +209,11 @@ class PopFormContainer extends Component {
       >
 
         <NetworkPopForm
-          edit={edit}
-          fetching={fetching}
           hasPods={this.checkforPods()}
-          locationId={locationId}
-          popId={popId}
+          iata={iata}
           initialValues={initialValues}
           onDelete={(popId) => this.onDelete(popId)}
-          onSave={(values) => this.onSubmit(edit, values)}
+          onSave={(values) => this.onSave(edit, values)}
           onCancel={() => onCancel()}
         />
 
@@ -116,39 +224,56 @@ class PopFormContainer extends Component {
 
 PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
-  edit: PropTypes.bool,
-  fetching: PropTypes.bool,
+  accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  brand: PropTypes.string,
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  iata: PropTypes.string,
   initialValues: PropTypes.object,
-  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  onSave: PropTypes.func,
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  show: PropTypes.bool
+  onUpdate: PropTypes.func,
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
-const mapStateToProps = (state, ownProps) => {
-  const locationId = formSelector(state, 'locationId')
-  const popId = formSelector(state, 'popId')
 
-  const props = {
-    fetching: mockReduxCalls.get('fetching'),
-    locationId: locationId,
-    popId: popId,
+const mapStateToProps = (state, ownProps) => {
+  const edit = !!ownProps.popId
+  const pop = ownProps.popId && getPopById(state, ownProps.popId)
+
+  return {
+    account: ownProps.accountId && getAccountById(state, ownProps.accountId),
+    group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
+    pop,
+    iata: formSelector(state, 'iata'),
+
     initialValues: {
-      name: ownProps.edit ? mockReduxCalls.get('name') : '',
-      createdDate: ownProps.edit ? mockReduxCalls.get('createdDate') : '',
-      updatedDate: ownProps.edit ? mockReduxCalls.get('updatedDate') : '',
-      locationOptions: mockReduxCalls.get('location'),
-      locationId: ownProps.edit ? mockReduxCalls.get('locationId') : '',
-      popId: ownProps.edit ? mockReduxCalls.get('popId') : ''
+      id: edit && pop ? pop.get('id') : null,
+      name: edit && pop ? pop.get('name') : '',
+      createdDate: edit && pop ? pop.get('created') : '',
+      updatedDate: edit && pop ? pop.get('updated') : '',
+      locationOptions: mockLocations,
+      iata: edit && pop ? pop.get('iata') : '',
+      locationId: edit && pop ? pop.get('location_id') : ''
     }
   }
 
-  return props
 }
 
-export default connect(mapStateToProps)(PopFormContainer)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
+    onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
+    onDelete: (params) => dispatch( popActions.remove( {...params } )),
+
+    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
+    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
+    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
+    fetchPop: (params) => dispatch( popActions.fetchOne(params) )
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PopFormContainer)
