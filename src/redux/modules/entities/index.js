@@ -57,11 +57,11 @@ const properties =
   }, Map())
 
 const pops =
-handleActions({
-  [actionTypes.RECEIVE] : receiveEntity('properties'),
-  [actionTypes.REMOVE] : removeEntity,
-  [actionTypes.FAIL] : failEntity
-}, Map())
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('pops'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
 
 const networks =
   handleActions({
