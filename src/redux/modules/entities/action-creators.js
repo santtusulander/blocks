@@ -24,12 +24,13 @@ export default ({
     }
   }
 
-  const fetchAllThunk = dispatch => requestParams => {
+  const fetchByIds = dispatch => requestParams => {
     dispatch({ type: request })
-    return api.fetchAll(requestParams)
-      .then(data => {
+    return api.fetchIds(requestParams)
+      .then((data) => {
+
         if (!Array.isArray(data)) {
-          throw new Error('Expected fetchAll to resolve with an array of IDs. ' + typeof data + ' passed instead.')
+          throw new Error('Expected fetchIds to resolve with an array of IDs. ' + typeof data + ' passed instead.')
         }
 
         dispatch({ type: receive })
@@ -49,7 +50,12 @@ export default ({
 
   return {
 
-    fetchAllThunk,
+    fetchAllThunk: dispatch => params => {
+      console.warn('fetchAllThunk is deprecated. Use fetchByIds instead.')
+      return fetchByIds(dispatch)(params)
+    },
+
+    fetchByIds,
 
     fetchOne,
 
