@@ -259,6 +259,7 @@ class NetworkEditNodeForm extends React.Component {
       handleSubmit,
       invalid,
       nodes,
+      pristine,
       submitting
     } = this.props
 
@@ -351,7 +352,7 @@ class NetworkEditNodeForm extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid||submitting}>
+              disabled={pristine||invalid||submitting}>
               {submitButtonLabel}
             </Button>
           </div>
