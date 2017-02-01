@@ -4,28 +4,32 @@ import { Button, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import { checkForErrors } from '../../../util/helpers'
+import { isValidTextField } from '../../../util/validators'
 import { isInt } from '../../../util/validators'
 
 import FieldFormGroup from '../../form/field-form-group'
-import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
-import FieldFormGroupSelect from '../../form/field-form-group-select.jsx'
-import FieldFormGroupNumber from '../../form/field-form-group-number.jsx'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
+import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+
+import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
 const validate = fields => {
   const { name, locationId, popId } = fields
 
   const customConditions = {
     name: {
-      condition: !(name.length > 0),
-      errorText: <FormattedMessage id='portal.network.popEditForm.popName.validation.error.text'/>
+      condition: !isValidTextField(name),
+      errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
     },
     locationId: {
       condition: !locationId,
       errorText: <FormattedMessage id='portal.network.popEditForm.locationId.validation.error.text'/>
     },
     popId: {
-      condition: !(isInt(popId) && (parseInt(popId) >= 0)),
+      condition: !isInt(popId),
       errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
@@ -52,7 +56,8 @@ const NetworkPopForm = (props) => {
     locationId,
     onDelete,
     initialValues,
-    hasPods
+    hasPods,
+    dirty
   } = props
 
   const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
@@ -83,6 +88,8 @@ const NetworkPopForm = (props) => {
                 name="popId"
                 component={FieldFormGroupNumber}
                 addonBefore={`${locationId}${popId}`}
+                min={POP_ID_MIN}
+                max={POP_ID_MAX}
                 label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
             : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
@@ -115,7 +122,7 @@ const NetworkPopForm = (props) => {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting || fetching}>
+              disabled={invalid || submitting || fetching || (!dirty)}>
               {actionButtonTitle}
             </Button>
           </ButtonToolbar>

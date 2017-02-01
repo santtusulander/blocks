@@ -11,6 +11,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
+import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validate = ({ name, description }) => {
   const conditions = {
@@ -19,8 +20,10 @@ const validate = ({ name, description }) => {
       errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
     },
     description: {
-      condition: !isValidTextField(description),
-      errorText: <MultilineTextFieldError fieldLabel="portal.common.description" />
+      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
+      errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
+                                          minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
     }
   }
   return checkForErrors(
@@ -44,7 +47,9 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
         name="name"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.name.placeholder'})}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.common.name" />}/>
+        label={<FormattedMessage id="portal.common.name" />}
+        disabled={edit ? true : false}
+        required={edit ? false : true} />
 
       <Field
         name="description"

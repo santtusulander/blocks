@@ -26,6 +26,19 @@ export const fetch = ({ brand, account, group, id }) => {
 
 export const fetchAll = ({ brand, account, group }) => {
   return axios.get(baseURL(brand, account, group))
+    .then(({ data }) =>
+      data.reduce((object, id) => {
+
+        object.entities.properties[id] = { parentId: group, published_host_id: id }
+
+        return object
+
+      }, { entities: { properties: {} } })
+    )
+}
+
+export const fetchIds = ({ brand, account, group }) => {
+  return axios.get(baseURL(brand, account, group))
     .then(({ data }) => data)
 }
 
