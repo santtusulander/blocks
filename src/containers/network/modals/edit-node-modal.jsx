@@ -8,7 +8,7 @@ import { formatDate } from '../../../util/helpers'
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
-import NetworkEditNodeForm, { FORM_NAME, hasMultipleValues } from '../../../components/network/forms/edit-node-form'
+import NetworkEditNodeForm, { FORM_NAME, FORM_FIELDS, getNodeValues, hasMultipleValues } from '../../../components/network/forms/edit-node-form'
 
 const dateFormat = 'MM/DD/YYYY HH:mm'
 
@@ -18,7 +18,7 @@ class EditNodeFormContainer extends React.Component {
 
     this.state = {
       showDeleteModal: false,
-      hasMultipleNodes: props.nodes && props.nodes.length > 1
+      hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1
     }
 
     this.onSubmit = this.onSubmit.bind(this)
@@ -157,36 +157,27 @@ EditNodeFormContainer.propTypes = {
 
 const formSelector = formValueSelector(FORM_NAME)
 
-function getNodeValues(nodes) {
-  if (!nodes) {
-    return {}
-  } else if (nodes.length === 1) {
-    return nodes[0]
-  }
-
-  const fields = ['node_role', 'node_env', 'node_type', 'cloud_driver']
-  const nodeValues = {}
-  fields.forEach(field => {
-    nodeValues[field] = !hasMultipleValues(nodes, field) ? nodes[0][field] : null
+/**
+ * Get initial form values, if form value is not set use node value
+ * @param {Object} state
+ * @param {Object} nodeValues
+ * @returns {Object}
+ */
+function getFormValues(state, nodeValues) {
+  const formValues = {}
+  FORM_FIELDS.forEach(field => {
+    formValues[field] = formSelector(state, field) || nodeValues[field]
   })
-
-  return nodeValues
+  return formValues
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { nodes } = ownProps
   const nodeValues = getNodeValues(nodes)
-  const nodeRole = formSelector(state, 'node_role') || nodeValues.node_role
-  const nodeEnv = formSelector(state, 'node_env')  || nodeValues.node_env
-  const nodeType = formSelector(state, 'node_type') || nodeValues.node_type
-  const cloudDriver = formSelector(state, 'cloud_driver') || nodeValues.cloud_driver
+  const initialValues = getFormValues(state, nodeValues)
+
   return {
-    initialValues: {
-      node_role: nodeRole,
-      node_env: nodeEnv,
-      node_type: nodeType,
-      cloud_driver: cloudDriver
-    }
+    initialValues
   }
 }
 

@@ -30,47 +30,82 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = function({ numNodes, node_role, node_env, node_type, cloud_driver }) {
+const validate = function(values, props) {
+  const { node_role, node_env, node_type, cloud_driver } = values
+  const { nodes } = props
+  const nodeValues = getNodeValues(nodes)
+
+  // Nodes with multiple values have to be ignored as empty value is valid when you don't want to change the field in multiple nodes
+
   const conditions = {
     node_role: [
       {
-        condition: isEmpty(node_role),
+        condition: nodeValues.hasOwnProperty('node_role') && nodeValues.node_role !== null && isEmpty(node_role),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.role.title" /> }}/>
       }
     ],
     node_env: [
       {
-        condition: isEmpty(node_env),
+        condition: nodeValues.hasOwnProperty('node_env') && nodeValues.node_env !== null && isEmpty(node_env),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.environment.title" /> }}/>
       }
     ],
     node_type: [
       {
-        condition: isEmpty(node_type),
+        condition: nodeValues.hasOwnProperty('node_type') && nodeValues.node_type !== null && isEmpty(node_type),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.type.title" /> }}/>
       }
     ],
     cloud_driver: [
       {
-        condition: isEmpty(cloud_driver),
+        condition: nodeValues.hasOwnProperty('cloud_driver') && nodeValues.cloud_driver !== null && isEmpty(cloud_driver),
         errorText: <FormattedMessage id="portal.validators.required" values={{field: <FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" /> }}/>
       }
     ]
   }
 
-  return checkForErrors({ numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
+  return checkForErrors(values, conditions)
 }
 
+export const FORM_FIELDS = ['node_role', 'node_env', 'node_type', 'cloud_driver', 'custom_grains']
+
 function getValueLabel(options, value) {
+  if(!options || !options.length) {
+    return value;
+  }
   for (let i = 0, len = options.length; i < len; i++) {
     const option = options[i]
     if (option.value === value) {
       return option.label
     }
   }
-  return null
+  return value
 }
 
+/**
+ * Get field values from nodes, if field has multiple values between nodes, indicate this with a null value
+ * @param {Array} nodes
+ * @returns {Object}
+ */
+export function getNodeValues(nodes) {
+  if (!nodes) {
+    return {}
+  }
+
+  const nodeValues = {}
+
+  FORM_FIELDS.forEach(field => {
+    nodeValues[field] = !hasMultipleValues(nodes, field) ? nodes[0][field] : null
+  })
+  return nodeValues
+}
+
+/**
+ * Does the field have multiple values in edited nodes
+ * @param {Array} nodes
+ * @param {String} field
+ * @returns {Boolean}
+ */
 export function hasMultipleValues(nodes, field) {
   if (!nodes || nodes.length === 1) {
     return false
@@ -81,6 +116,7 @@ export function hasMultipleValues(nodes, field) {
   })
 }
 
+
 class NetworkEditNodeForm extends React.Component {
 
   constructor(props) {
@@ -88,7 +124,8 @@ class NetworkEditNodeForm extends React.Component {
 
     this.state = {
       expandedFields: {},
-      hasMultipleNodes: props.nodes && props.nodes.length > 1
+      hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1,
+      nodeValues: getNodeValues(this.props.nodes)
     }
 
     this.onCancel = this.onCancel.bind(this)
@@ -123,7 +160,7 @@ class NetworkEditNodeForm extends React.Component {
 
   getFields() {
     const { nodes } = this.props
-    const { hasMultipleNodes, expandedFields } = this.state
+    const { hasMultipleNodes, expandedFields, nodeValues } = this.state
     const fields = [
       {
         name: 'node_role',
@@ -162,22 +199,23 @@ class NetworkEditNodeForm extends React.Component {
       }
     ]
 
-    return fields.map((obj, idx) => {
+    return fields.map((fieldData, idx) => {
       let helpMessage = null
       let fieldToggle = null
       let isExpanded = true
-      const fieldLabelText = <FormattedMessage id={obj.labelId} />
+      const fieldLabelText = <FormattedMessage id={fieldData.labelId} />
+      const hasMultipleNodeValues = nodeValues.hasOwnProperty(fieldData.name) && nodeValues[fieldData.name] === null
 
-      if (hasMultipleNodes && hasMultipleValues(nodes, obj.name)) {
-        isExpanded = expandedFields[obj.name] === true
+      if (hasMultipleNodes && hasMultipleNodeValues) {
+        isExpanded = expandedFields[fieldData.name] === true
         helpMessage = <FormattedMessage id="portal.network.editNodeForm.multipleValues.help"/>
 
         const linkTextId = isExpanded ? 'portal.common.button.cancel' : 'portal.common.button.edit'
-        const helpPopoverId = 'edit-node-form__field-popover-' + obj.name
+        const helpPopoverId = 'edit-node-form__field-popover-' + fieldData.name
 
         const fieldNodeValues = nodes.map((node, nodeIndex) => {
-          const field = node[obj.name]
-          const valueLabel = getValueLabel(obj.options, field)
+          const field = node[fieldData.name]
+          const valueLabel = getValueLabel(fieldData.options, field)
           return (<tr key={nodeIndex}><td>{node.id}</td><td>{valueLabel}</td></tr>)
         })
 
@@ -195,7 +233,7 @@ class NetworkEditNodeForm extends React.Component {
               </Table>
             </HelpPopover>
             <a className="pull-right" onClick={() => {
-              this.onToggleField(obj.name)
+              this.onToggleField(fieldData.name)
             }}>
               <FormattedMessage id={linkTextId}/>
             </a>
@@ -208,13 +246,7 @@ class NetworkEditNodeForm extends React.Component {
           <label>{fieldLabelText}</label>
           {fieldToggle}
           <div className={isExpanded ? 'show' : 'hidden'}>
-            <Field
-              name={obj.name}
-              type={obj.type}
-              className={obj.className}
-              component={obj.component}
-              options={obj.options}
-            />
+            <Field {...fieldData} />
             {helpMessage && <div className="edit-node-form__field-help">{helpMessage}</div>}
           </div>
         </FormGroup>
