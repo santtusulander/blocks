@@ -570,7 +570,6 @@ class Network extends React.Component {
       networkModal,
       groups,
       params,
-      fetching,
       networks,
       pops
     } = this.props
@@ -578,7 +577,6 @@ class Network extends React.Component {
     const {
       pods,
       nodes,
-      popId,
       podId
     } = this.state
 
@@ -722,12 +720,13 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetchNetworks: PropTypes.func,
-  fetching: PropTypes.bool,
+  fetchPops: PropTypes.func,
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
+  pops: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
   toggleModal: PropTypes.func
 }

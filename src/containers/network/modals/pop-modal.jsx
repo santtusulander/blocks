@@ -30,45 +30,6 @@ const mockLocations = [
     label: 'MDL, Lviv'
   }]
 
-// const mockReduxCalls = {
-//   get: function(cmd) {
-//     switch (cmd) {
-//       case 'name':
-//         return "POP Name"
-//
-//       case 'location':
-//         return [{
-//           value: 'ORD',
-//           label: 'ORD, Chicago'
-//         }, {
-//           value: 'OLD',
-//           label: 'OLD, Miami'
-//         }, {
-//           value: 'MDL',
-//           label: 'MDL, Lviv'
-//         }]
-//
-//       case 'locationId':
-//         return 'MDL'
-//
-//       case 'popId':
-//         return "1"
-//
-//       case 'createdDate':
-//         return "October 13, 2014 11:13:00"
-//
-//       case 'updatedDate':
-//         return "October 13, 2017 11:13:00"
-//
-//       case 'fetching':
-//         return false
-//
-//       default:
-//         return null
-//     }
-//   }
-// }
-
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -226,7 +187,14 @@ PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   brand: PropTypes.string,
+
+  fetchAccount: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchNetwork: PropTypes.func,
+  fetchPop: PropTypes.func,
+
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
   iata: PropTypes.string,
   initialValues: PropTypes.object,
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
