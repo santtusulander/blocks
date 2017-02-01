@@ -726,8 +726,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchData: fetchData,
     groupActions: groupActions,
 
-    //fetch networks from API (fetchAllThunk (fetchByIds) as we don't get list of full objects from API => iterate each id)
-    fetchNetworks: (group) => group && networkActions.fetchAllThunk(dispatch)({brand, account, group})
+    //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group})
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
