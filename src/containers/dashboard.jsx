@@ -5,16 +5,20 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
 import {
-  accountIsServiceProviderType,
+  accountIsContentProviderType,
   formatBitsPerSecond,
   formatBytes,
   formatTime,
   getAccountByID,
   separateUnit,
-  userIsServiceProvider } from '../util/helpers'
+  userIsContentProvider } from '../util/helpers'
 import numeral from 'numeral'
 import DateRanges from '../constants/date-ranges'
 import { TOP_PROVIDER_LENGTH } from '../constants/dashboard'
+import {
+  ACCOUNT_TYPE_SERVICE_PROVIDER,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
+} from '../constants/account-management-options'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -50,6 +54,7 @@ export class Dashboard extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
+    this.renderContent = this.renderContent.bind(this)
   }
 
   componentWillMount() {
@@ -83,14 +88,20 @@ export class Dashboard extends React.Component {
   }
 
   fetchData(params, filters) {
-    let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
-    dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+    if (params.account) {
+      let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
+      const activeAccount = getAccountByID(this.props.accounts, Number(params.account)) || this.props.activeAccount
+      const accountType = (accountIsContentProviderType(activeAccount) || userIsContentProvider(this.props.user))
+        ? ACCOUNT_TYPE_CONTENT_PROVIDER
+        : ACCOUNT_TYPE_SERVICE_PROVIDER
 
-    return Promise.all([
-      this.props.dashboardActions.startFetching(),
-      this.props.accountActions.fetchAccounts(this.props.params.brand),
-      this.props.dashboardActions.fetchDashboard(dashboardOpts)
-    ]).then(this.props.dashboardActions.finishFetching)
+      return Promise.all([
+        this.props.dashboardActions.startFetching(),
+        this.props.accountActions.fetchAccounts(this.props.params.brand),
+        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType)
+      ]).then(this.props.dashboardActions.finishFetching)
+    }
   }
 
   measureContainers() {
@@ -117,34 +128,43 @@ export class Dashboard extends React.Component {
     })
   }
 
-  render() {
-    const { accounts, activeAccount, dashboard, fetching, filterOptions, filters, intl, user, theme } = this.props
-    const showFilters = List(['dateRange'])
+  renderContent() {
+    const { accounts, activeAccount, dashboard, intl, params, user, theme } = this.props
+
+    if (!params.account) {
+      return(
+        <div className="text-center">
+          <FormattedMessage id="portal.dashboard.selectAccount.text" values={{br: <br/>}} />
+        </div>
+      )
+    }
+
+    const isCP = (accountIsContentProviderType(activeAccount) || userIsContentProvider(user))
 
     const trafficDetail = dashboard.getIn(['traffic', 'detail'])
-    const onNetDataset = !trafficDetail ?
+    const trafficDatasetA = !trafficDetail ?
       [] :
       trafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.get('bytes_net_on') || 0,
-          timestamp: datapoint.get('timestamp')
+          bytes: datapoint.bytes_net_on || datapoint.bytes_http || 0,
+          timestamp: datapoint.timestamp
         }
       }).toJS()
-    const offNetDataset = !trafficDetail ?
+    const trafficDatasetB = !trafficDetail ?
       [] :
       trafficDetail.map(datapoint => {
         return {
-          bytes: datapoint.get('bytes_net_off') || 0,
-          timestamp: datapoint.get('timestamp')
+          bytes: datapoint.bytes_net_off ||  datapoint.bytes_https || 0,
+          timestamp: datapoint.timestamp
         }
       }).toJS()
 
     const trafficBytes = dashboard.getIn(['traffic', 'bytes'])
-    const totalOnOffNet = separateUnit(formatBytes(trafficBytes))
-    const totalOnOffNetValue = totalOnOffNet.value
-    const totalOnOffNetUnit = totalOnOffNet.unit
-    const onNetValue = numeral((dashboard.getIn(['traffic', 'bytes_net_on']) / trafficBytes) * 100).format('0,0')
-    const offNetValue = numeral((dashboard.getIn(['traffic', 'bytes_net_off']) / trafficBytes) * 100).format('0,0')
+    const totalTraffic = separateUnit(formatBytes(trafficBytes))
+    const totalTrafficValue = totalTraffic.value
+    const totalTrafficUnit = totalTraffic.unit
+    const trafficDatasetAValue = numeral((dashboard.getIn(['traffic', isCP ? 'http' : 'bytes_net_on']))).format('0,0')
+    const trafficDatasetBValue = numeral((dashboard.getIn(['traffic', isCP ? 'https' : 'bytes_net_off']))).format('0,0')
 
     const averageBandwidth = separateUnit(formatBitsPerSecond(dashboard.getIn(['bandwidth', 'bits_per_second'])))
     const averageBandwidthValue = averageBandwidth.value
@@ -163,9 +183,8 @@ export class Dashboard extends React.Component {
     const averageConnectionsUnit = averageConnections.unit
     const connectionsDetail = !dashboard.size ? [] : dashboard.getIn(['connections', 'detail']).toJS()
 
-    const averageCacheHit = separateUnit(numeral(dashboard.getIn(['cache_hit', 'chit_ratio']) / 100).format('0 %'))
-    const averageCacheHitValue = averageCacheHit.value
-    const averageCacheHitUnit = averageCacheHit.unit
+    const averageCacheHitValue = dashboard.getIn(['cache_hit', 'chit_ratio'], null)
+    const averageCacheHitUnit = '%'
     const cacheHitDetail = !dashboard.size ? [] : dashboard.getIn(['cache_hit', 'detail']).toJS()
 
     const countries = !dashboard.size ? List() : dashboard.get('countries')
@@ -176,15 +195,129 @@ export class Dashboard extends React.Component {
     const topProvidersIDs = topProviders.map(provider => provider.get('account')).toJS()
     const topProvidersAccounts = getAccountByID(accounts, topProvidersIDs)
 
+    const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
+
+    return (
+      <DashboardPanels>
+        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
+          <StackedByTimeSummary
+            dataKey="bytes"
+            totalDatasetValue={totalTrafficValue}
+            totalDatasetUnit={totalTrafficUnit}
+            datasetAArray={trafficDatasetA}
+            datasetALabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpDatasetLabel.text' : 'portal.analytics.onNet.title'})}
+            datasetAUnit="%"
+            datasetAValue={trafficDatasetAValue}
+            datasetBArray={trafficDatasetB}
+            datasetBLabel={intl.formatMessage({id: isCP ? 'portal.analytics.trafficOverview.httpsDatasetLabel.text' : 'portal.analytics.offNet.title'})}
+            datasetBUnit="%"
+            datasetBValue={trafficDatasetBValue}/>
+          <hr />
+          <Row>
+            <Col xs={6}>
+              <MiniChart
+                label={intl.formatMessage({id: 'portal.dashboard.avgBandwidth.title'})}
+                kpiValue={averageBandwidthValue}
+                kpiUnit={averageBandwidthUnit}
+                dataKey="bits_per_second"
+                data={bandwidthDetail} />
+            </Col>
+            <Col xs={6}>
+              <MiniChart
+                label={intl.formatMessage({id: 'portal.dashboard.avgLatency.title'})}
+                kpiValue={averageLatencyValue}
+                kpiUnit={averageLatencyUnit}
+                dataKey="avg_fbl"
+                data={latencyDetail} />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={6}>
+              <MiniChart
+                label={intl.formatMessage({id: 'portal.dashboard.connectionsPerSec.title'})}
+                kpiValue={averageConnectionsValue}
+                kpiUnit={averageConnectionsUnit}
+                dataKey="connections_per_second"
+                data={connectionsDetail} />
+            </Col>
+            <Col xs={6}>
+              <MiniChart
+                label={intl.formatMessage({id: 'portal.dashboard.avgCacheHitRate.title'})}
+                kpiValue={averageCacheHitValue}
+                kpiUnit={averageCacheHitUnit}
+                dataKey="chit_ratio"
+                data={cacheHitDetail} />
+            </Col>
+          </Row>
+        </DashboardPanel>
+        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
+          <div ref="byLocationHolder">
+            <AnalysisByLocation
+              countryData={countries}
+              cityData={this.props.cityData}
+              getCityData={this.getCityData}
+              theme={theme}
+              height={this.state.byLocationWidth / 1.6}
+              dataKey="bits_per_second"
+              dataKeyFormat={countriesAverageBandwidth}
+              mapBounds={this.props.mapBounds}
+              mapboxActions={this.props.mapboxActions}/>
+          </div>
+        </DashboardPanel>
+        <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+          <Table className="table-simple">
+            <thead>
+              <tr>
+                <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
+                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {topProviders.map((provider, i) => {
+                const traffic = separateUnit(formatBytes(provider.get('bytes')))
+                return (
+                  <tr key={i}>
+                    <td><b>{topProvidersAccounts[i] ? topProvidersAccounts[i].get('name') : provider.get('account')}</b></td>
+                    <td>
+                      <MiniChart
+                        kpiRight={true}
+                        kpiValue={traffic.value}
+                        kpiUnit={traffic.unit}
+                        dataKey="bytes"
+                        data={provider.get('detail').toJS()} />
+                    </td>
+                    <td>
+                      <MiniChart
+                        kpiRight={true}
+                        kpiValue={numeral(provider.get('percent_total')).format('0')}
+                        kpiUnit="%"
+                        dataKey="percent_total"
+                        data={provider.get('detail').toJS()} />
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+          {!topProviders.size &&
+            <div className="no-data">
+              <FormattedMessage id="portal.common.no-data.text"/>
+            </div>}
+        </DashboardPanel>
+      </DashboardPanels>
+    )
+  }
+
+  render() {
+    const { activeAccount, fetching, filterOptions, filters, intl, user } = this.props
+    const showFilters = List(['dateRange'])
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
       DateRanges.LAST_MONTH,
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
-
-    const topProviderTitleId = (accountIsServiceProviderType(activeAccount) || userIsServiceProvider(user)) ?
-      'portal.dashboard.topCP.title' : 'portal.dashboard.topSP.title'
 
     return (
       <Content>
@@ -209,114 +342,7 @@ export class Dashboard extends React.Component {
           <LoadingSpinner />
         :
         <PageContainer>
-          <DashboardPanels>
-            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.traffic.title'})}>
-              <StackedByTimeSummary
-                dataKey="bytes"
-                totalDatasetValue={totalOnOffNetValue}
-                totalDatasetUnit={totalOnOffNetUnit}
-                datasetAArray={onNetDataset}
-                datasetALabel={intl.formatMessage({id: 'portal.analytics.onNet.title'})}
-                datasetAUnit="%"
-                datasetAValue={onNetValue}
-                datasetBArray={offNetDataset}
-                datasetBLabel={intl.formatMessage({id: 'portal.analytics.offNet.title'})}
-                datasetBUnit="%"
-                datasetBValue={offNetValue}/>
-              <hr />
-              <Row>
-                <Col xs={6}>
-                  <MiniChart
-                    label={intl.formatMessage({id: 'portal.dashboard.avgBandwidth.title'})}
-                    kpiValue={averageBandwidthValue}
-                    kpiUnit={averageBandwidthUnit}
-                    dataKey="bits_per_second"
-                    data={bandwidthDetail} />
-                </Col>
-                <Col xs={6}>
-                  <MiniChart
-                    label={intl.formatMessage({id: 'portal.dashboard.avgLatency.title'})}
-                    kpiValue={averageLatencyValue}
-                    kpiUnit={averageLatencyUnit}
-                    dataKey="avg_fbl"
-                    data={latencyDetail} />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={6}>
-                  <MiniChart
-                    label={intl.formatMessage({id: 'portal.dashboard.connectionsPerSec.title'})}
-                    kpiValue={averageConnectionsValue}
-                    kpiUnit={averageConnectionsUnit}
-                    dataKey="connections_per_second"
-                    data={connectionsDetail} />
-                </Col>
-                <Col xs={6}>
-                  <MiniChart
-                    label={intl.formatMessage({id: 'portal.dashboard.avgCacheHitRate.title'})}
-                    kpiValue={averageCacheHitValue}
-                    kpiUnit={averageCacheHitUnit}
-                    dataKey="chit_ratio"
-                    data={cacheHitDetail} />
-                </Col>
-              </Row>
-            </DashboardPanel>
-            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
-              <div ref="byLocationHolder">
-                <AnalysisByLocation
-                  countryData={countries}
-                  cityData={this.props.cityData}
-                  getCityData={this.getCityData}
-                  theme={theme}
-                  height={this.state.byLocationWidth / 1.6}
-                  dataKey="bits_per_second"
-                  dataKeyFormat={countriesAverageBandwidth}
-                  mapBounds={this.props.mapBounds}
-                  mapboxActions={this.props.mapboxActions}/>
-              </div>
-            </DashboardPanel>
-            <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
-              <Table className="table-simple">
-                <thead>
-                  <tr>
-                    <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                    <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-                    <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topProviders.map((provider, i) => {
-                    const traffic = separateUnit(formatBytes(provider.get('bytes')))
-                    return (
-                      <tr key={i}>
-                        <td><b>{topProvidersAccounts[i] ? topProvidersAccounts[i].get('name') : provider.get('account')}</b></td>
-                        <td>
-                          <MiniChart
-                            kpiRight={true}
-                            kpiValue={traffic.value}
-                            kpiUnit={traffic.unit}
-                            dataKey="bytes"
-                            data={provider.get('detail').toJS()} />
-                        </td>
-                        <td>
-                          <MiniChart
-                            kpiRight={true}
-                            kpiValue={numeral(provider.get('percent_total')).format('0')}
-                            kpiUnit="%"
-                            dataKey="percent_total"
-                            data={provider.get('detail').toJS()} />
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </Table>
-              {!topProviders.size &&
-                <div className="no-data">
-                  <FormattedMessage id="portal.common.no-data.text"/>
-                </div>}
-            </DashboardPanel>
-          </DashboardPanels>
+          {this.renderContent()}
         </PageContainer>}
       </Content>
     )
@@ -355,7 +381,7 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
-    dashboard: state.dashboard.get('spDashboard'),
+    dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
     filters: state.filters.get('filters'),
