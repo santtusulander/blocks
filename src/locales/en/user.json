@@ -15,7 +15,6 @@
   "portal.user.edit.roleRequired.text": "Role is required",
   "portal.user.edit.emailRequired.text": "Email is required",
   "portal.user.edit.phoneInvalid.text": "Please enter valid phone number",
-  "portal.user.edit.phoneCountryCodeInvalid.text": "Please enter valid phone number country code",
   "portal.user.edit.currentPasswordRequired.text": "Current password is required",
   "portal.user.edit.email.text": "Email",
   "portal.user.edit.firstName.text": "First Name",
