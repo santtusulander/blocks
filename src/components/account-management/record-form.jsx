@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react'
-import { ButtonToolbar, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Field } from 'redux-form'
 
-import FormGroupSelect from '../form/field-form-group-select'
 import Input from '../form/field-form-group'
+import FormGroupSelect from '../form/field-form-group-select'
+import FormFooterButtons from '../form/form-footer-buttons'
+import FieldFormGroupNumber from '../form/field-form-group-number'
 
 import recordTypes from '../../constants/dns-record-types'
-
-import './record-form.scss'
+import { DNS_MIN_TTL, DNS_MAX_TTL } from '../../constants/account-management-options'
 
 const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
   return (
@@ -55,15 +56,17 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
         <Field
           name="ttl"
           key={1}
+          min={DNS_MIN_TTL}
+          max={DNS_MAX_TTL}
           id="ttl-field"
-          labelID="portal.account.recordForm.ttl.label"
           className='input-narrow ttl-value-input'
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.ttl.placeholder'})}
           addonAfter="seconds"
-          component={Input}
+          component={FieldFormGroupNumber}
           label={<FormattedMessage id="portal.account.recordForm.ttl.label" />}/>
       ]}
-      <ButtonToolbar className="text-right extra-margin-top">
+
+      <FormFooterButtons>
         <Button
           id='cancel-button'
           className="btn-outline"
@@ -75,9 +78,12 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
           type='submit'
           disabled={invalid || submitting}
           bsStyle="primary">
-          {submitting ? <FormattedMessage id='portal.common.button.saving' />  : edit ? <FormattedMessage id='portal.common.button.save' /> : <FormattedMessage id='portal.common.button.add' />}
+          {submitting ? <FormattedMessage id='portal.common.button.saving' />
+                      : edit ? <FormattedMessage id='portal.common.button.save' />
+                      : <FormattedMessage id='portal.common.button.add' />}
         </Button>
-      </ButtonToolbar>
+      </FormFooterButtons>
+
     </form>
   )
 }

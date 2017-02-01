@@ -11,14 +11,18 @@ import {
 import {
   checkForErrors
 } from '../../../util/helpers'
+import { fetchASOverview } from '../../../util/network-helpers'
+
 import { isValidTextField } from '../../../util/validators'
 import HelpTooltip from '../../../components/help-tooltip'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
+import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 import './pod-form.scss'
 
-const validate = ({ pod_name }) => {
+const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
   const conditions = {
     pod_name: {
       condition: !isValidTextField(pod_name),
@@ -26,13 +30,41 @@ const validate = ({ pod_name }) => {
     }
   }
   return checkForErrors(
-    { pod_name },
+    {
+      pod_name, localAS, lb_method, pod_type,
+      requestForwardType, provider_weight, discoveryMethod
+    },
     conditions,
-    { pod_name: <FormattedMessage id="portal.network.podForm.name.required.error"/> }
+    {
+      pod_name: <FormattedMessage id="portal.network.podForm.name.required.error"/>,
+      lb_method: <FormattedMessage id="portal.network.podForm.lb_method.required.error"/>,
+      pod_type: <FormattedMessage id="portal.network.podForm.pod_type.required.error"/>,
+      requestForwardType: <FormattedMessage id="portal.network.podForm.requestForwardType.required.error"/>,
+      provider_weight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
+      discoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
+      localAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>
+    }
   )
 }
 
+const asyncValidate = ({ localAS }) => {
+  return fetchASOverview(localAS)
+    .then(({ data: { holder } }) => {
+      if (!holder) {
+        throw {
+          localAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+        }
+      }
+    })
+    .catch(() => {
+      throw {
+        localAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+      }
+    })
+}
+
 const PodForm = ({
+  asyncValidating,
   account,
   brand,
   edit,
@@ -45,7 +77,9 @@ const PodForm = ({
   onCancel,
   onDelete,
   onSubmit,
-  pop}) => {
+  pop,
+  submitting,
+  dirty}) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -70,7 +104,6 @@ const PodForm = ({
           [1, "GSLB"]
         ]}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
-        required={false}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -87,8 +120,7 @@ const PodForm = ({
           [1, "SP Edge"],
           [2, "Core"]
         ]}
-        label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
-        required={false}/>
+        label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
         type="text"
@@ -96,7 +128,6 @@ const PodForm = ({
         id="localAS-field"
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
-        required={false}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -112,16 +143,15 @@ const PodForm = ({
         options={[
           [1, "On-Net"]
         ]}
-        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
-        required={false}/>
+        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
 
       <Field
+        min={POD_PROVIDER_WEIGHT_MIN}
         type="text"
         name="provider_weight"
         id="provider_weight-field"
-        component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />}
-        required={false}/>
+        component={FieldFormGroupNumber}
+        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
 
       <hr/>
 
@@ -133,7 +163,6 @@ const PodForm = ({
           [1, "BGP"]
         ]}
         label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
-        required={false}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -167,7 +196,7 @@ const PodForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid}>
+            disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
             {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
           </Button>
         </ButtonToolbar>
@@ -180,7 +209,9 @@ PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
   account: PropTypes.string,
+  asyncValidating: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.bool ]),
   brand: PropTypes.string,
+  dirty: PropTypes.bool,
   edit: PropTypes.bool,
   group: PropTypes.string,
   handleSubmit: PropTypes.func,
@@ -191,10 +222,14 @@ PodForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
-  pop: PropTypes.string
+  pop: PropTypes.string,
+  submitting: PropTypes.bool
+
 }
 
 export default reduxForm({
   form: 'pod-form',
-  validate
+  validate,
+  asyncValidate,
+  asyncBlurFields: [ 'localAS' ]
 })(injectIntl(PodForm))
