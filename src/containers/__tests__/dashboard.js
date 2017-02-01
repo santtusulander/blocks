@@ -15,7 +15,7 @@ jest.mock('../../util/status-codes', () => {
 
 jest.mock('../../util/helpers', () => {
   return {
-    accountIsServiceProviderType: val => val,
+    accountIsContentProviderType: val => val,
     formatBitsPerSecond: val => val,
     formatBytes: val => val,
     formatTime: val => val,
