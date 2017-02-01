@@ -20,13 +20,14 @@ describe('NetworkPopForm', () => {
   let touched = false
 
   beforeEach(() => {
-    subject = (edit = false) => {
+    subject = (id = null) => {
       props = {
         onCancel,
         onSave,
         handleSubmit: jest.fn(),
         intl: intlMaker(),
         initialValues: {
+          id: id,
           name: 'udn'
         },
         fields: {
@@ -34,7 +35,6 @@ describe('NetworkPopForm', () => {
           locationId: { touched, error, value: [] },
           popId: { touched, error, value: '' }
         },
-        edit: edit
       }
       return shallow(<NetworkPopForm {...props}/>)
     }
@@ -49,8 +49,8 @@ describe('NetworkPopForm', () => {
   })
 
   it('should have 3 buttons on Edit', () => {
-    expect(subject(true).find('Button').length).toBe(2)
-    expect(subject(true).find('ButtonDisableTooltip').length).toBe(1)
+    expect(subject('testId').find('Button').length).toBe(2)
+    expect(subject('testId').find('ButtonDisableTooltip').length).toBe(1)
   })
 
   it('should render an error message', () => {
