@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { formValueSelector } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import SidePanel from '../../../components/side-panel'
@@ -22,7 +23,7 @@ const mockInitialValues = {
       case 'localAS':
         return 'AS206810'
 
-      case 'members':
+      case 'actionItems':
         return [
           {
             actionItemElement: 'Item 1',
@@ -40,6 +41,25 @@ const mockInitialValues = {
             actionItemElement: 'Item 4',
             removed: false
           }
+        ]
+
+      default:
+        return null
+    }
+  }
+}
+//TODO: remove mockData after integrating with redux
+const mockData = {
+  get: function(field) {
+    switch (field) {
+      case 1:
+        return [
+          'routingDaemon 1', 'routingDaemon 2', 'routingDaemon 3'
+        ]
+
+      case 2:
+        return [
+          'footprint 1', 'footprint 2', 'footprint 3'
         ]
 
       default:
@@ -70,7 +90,10 @@ class PodFormContainer extends React.Component {
   render() {
     const {
       account,
+      addAction,
+      availableActions,
       brand,
+      editAction,
       group,
       groupName,
       network,
@@ -82,6 +105,8 @@ class PodFormContainer extends React.Component {
       onCancel,
       onDelete,
       intl,
+      discoveryMethodValue,
+      searchInputValue,
       invalid} = this.props
 
     const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
@@ -96,7 +121,10 @@ class PodFormContainer extends React.Component {
           subTitle={subTitle}
           cancel={onCancel}>
           <PodForm
+            addAction={addAction}
+            availableActions={availableActions}
             edit={edit}
+            editAction={editAction}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}
@@ -108,7 +136,9 @@ class PodFormContainer extends React.Component {
             account={account}
             pop={pop}
             group={group}
-            network={network} />
+            network={network}
+            discoveryMethodValue={discoveryMethodValue}
+            searchInputValue={searchInputValue}/>
         </SidePanel>
       </div>
     )
@@ -119,8 +149,10 @@ PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
   account: PropTypes.string,
+  addAction: PropTypes.func,
   brand: PropTypes.string,
   edit: PropTypes.bool,
+  editAction: PropTypes.func,
   group: PropTypes.string,
   groupName: PropTypes.string,
   initialValues: PropTypes.object,
@@ -136,7 +168,15 @@ PodFormContainer.propTypes = {
 }
 
 function mapStateToProps( state, { podId, group }) {
+  const selector = formValueSelector('podForm')
+
+  const discoveryMethodValue = selector(state, 'discoveryMethod')
+  const searchInputValue = selector(state, 'searchInput')
+
   const props = {
+    discoveryMethodValue,
+    searchInputValue,
+    availableActions: mockData.get(discoveryMethodValue),
     //TODO: replace .get('allGroups') with .get('activeGroup')
     groupName: state.group
       .get('allGroups')
@@ -147,12 +187,24 @@ function mapStateToProps( state, { podId, group }) {
       lb_method: mockInitialValues.get('lb_method'),
       pod_type: mockInitialValues.get('pod_type'),
       localAS: mockInitialValues.get('localAS'),
-      members: mockInitialValues.get('members')
+      actionItems: mockInitialValues.get('actionItems')
     } : {}
   }
   return props
 }
 
-export default connect(mapStateToProps)(
+const mapDispatchToProps = () => {
+  return {
+    addAction: () => {
+      //TODO: method called by add button
+    },
+    editAction: () => {
+      //TODO: method invoked by edit button on action
+      //it accepts the action id as a parameter
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   injectIntl(PodFormContainer)
 )

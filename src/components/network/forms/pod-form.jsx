@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, formValueSelector } from 'redux-form'
-import { connect } from 'react-redux'
+import { reduxForm, Field } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -16,7 +15,7 @@ import { isValidTextField } from '../../../util/validators'
 import HelpTooltip from '../../../components/help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
-import ActionItem from '../action-item'
+import ActionItemsContainer from '../../shared/action-items-container'
 
 import './pod-form.scss'
 
@@ -36,9 +35,12 @@ const validate = ({ pod_name }) => {
 
 const PodForm = ({
   account,
+  addAction,
+  availableActions,
   brand,
   discoveryMethodValue,
   edit,
+  editAction,
   group,
   handleSubmit,
   hasNodes,
@@ -49,7 +51,8 @@ const PodForm = ({
   onCancel,
   onDelete,
   onSubmit,
-  pop}) => {
+  pop,
+  searchInputValue}) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -147,10 +150,14 @@ const PodForm = ({
           </HelpTooltip>
         }/>
 
-      <ActionItem
+      <ActionItemsContainer
+        addAction={addAction}
+        editAction={editAction}
         initialValues={initialValues}
         intl={intl}
-        type={discoveryMethodValue}/>
+        type={discoveryMethodValue}
+        searchInputValue={searchInputValue}
+        availableActions={availableActions} />
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
@@ -190,9 +197,12 @@ PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
   account: PropTypes.string,
+  addAction: PropTypes.func,
+  availableActions: PropTypes.array,
   brand: PropTypes.string,
   discoveryMethodValue: PropTypes.number,
   edit: PropTypes.bool,
+  editAction: PropTypes.func,
   group: PropTypes.string,
   handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
@@ -203,21 +213,11 @@ PodForm.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
-  pop: PropTypes.string
+  pop: PropTypes.string,
+  searchInputValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string])
 }
-
-const selector = formValueSelector('podForm')
-
-const PodFormSelector = connect(
-  state => {
-    const discoveryMethodValue = selector(state, 'discoveryMethod')
-    return {
-      discoveryMethodValue
-    }
-  }
-)(PodForm)
 
 export default reduxForm({
   form: 'podForm',
   validate
-})(injectIntl(PodFormSelector))
+})(injectIntl(PodForm))
