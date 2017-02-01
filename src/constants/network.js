@@ -32,3 +32,6 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'vw', label: 'VmWare' },
   { value: 'bm', label: 'Bare Metal' }
 ]
+
+export const POP_ID_MIN = 1
+export const POP_ID_MAX = 999
