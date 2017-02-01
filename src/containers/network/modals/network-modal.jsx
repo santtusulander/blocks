@@ -168,7 +168,8 @@ NetworkFormContainer.propTypes = {
 
 NetworkFormContainer.defaultProps = {
   account: Map(),
-  group: Map()
+  group: Map(),
+  network: Map()
 }
 
 
