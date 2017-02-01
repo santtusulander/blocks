@@ -37,3 +37,5 @@ export const FORMS_NAME_MIN_LEN = 3
 export const FORMS_NAME_MAX_LEN = 40
 export const FORMS_DESCRIPTION_MIN_LEN = 3
 export const FORMS_DESCRIPTION_MAX_LEN = 255
+export const POP_ID_MIN = 1
+export const POP_ID_MAX = 999
