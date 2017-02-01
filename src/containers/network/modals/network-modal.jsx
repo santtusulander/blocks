@@ -121,6 +121,7 @@ class NetworkFormContainer extends React.Component {
   render() {
     const { account, group, network, initialValues, onCancel} = this.props
 
+    //simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
 
     const title = edit ? <FormattedMessage id="portal.network.networkForm.editNetwork.title"/>

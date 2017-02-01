@@ -698,7 +698,7 @@ Network.defaultProps = {
   groups: Immutable.List()
 }
 
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   return {
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
@@ -710,13 +710,14 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+const mapDispatchToProps = (dispatch, ownProps) => {
   const { brand, account } = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   const fetchData = () => {
+    //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
     groupActions.fetchGroups(brand, account)
