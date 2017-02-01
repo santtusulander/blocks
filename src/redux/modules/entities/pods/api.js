@@ -19,9 +19,6 @@ const pod = new schema.Entity('pods', {
 const pop = new schema.Entity('pops', {
   pods: [ pod ]
 })
-//
-// const pops = [ pop ]
-
 
 /**
  * Fetch single POD
