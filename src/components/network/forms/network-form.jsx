@@ -43,10 +43,16 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
+
   return (
     <form onSubmit={handleSubmit(onSave)}>
 
-      <p className='error'>{error && error.errors._error}</p>
+      { //This block will be shown when SubmissionError has been thrown form async call
+        error &&
+        <p className='has-error'>
+          <span className='help-block'>{error}</span>
+        </p>
+      }
 
       <Field
         name="name"
