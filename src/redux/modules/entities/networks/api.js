@@ -9,7 +9,12 @@ const baseUrl = ({ brand, account, group }) => {
 
 const networkSchema = new schema.Entity('networks', {},{
   processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
+    return {
+      ...value,
+      parentId: parent.id,
+
+      //UI expects name key
+      name: value.id}
   }
 })
 
