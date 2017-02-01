@@ -766,6 +766,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions.startFetching()
     groupActions.fetchGroups(brand, account)
   }
+
   return {
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
