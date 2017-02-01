@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { formValueSelector } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
+import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import SidePanel from '../../../components/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
@@ -18,10 +19,32 @@ class AddNodeContainer extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.onToggleConfirm = this.onToggleConfirm.bind(this)
   }
+// {
+//   "pop_id": "par",
+//   "name": "sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net",
+//   "roles": ["cache"],
+//   "env": "cdx-dev",
+//   "custom_grains": [],
+//   "type": 1,
+//   "id": "sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net",
+//   "pod_id": "pod10"
+// }
 
   onSubmit(values) {
+    const node = {
+      roles: [ values.node_role ],
+      cloud_driver: values.cloud_driver,
+      pod_id: this.props.params.pod,
+      pop_id: this.props.params.pop,
+      env: values.node_env,
+      custom_grains: [],
+      type: values.node_type,
+
+
+    }
+    console.log(values);
     // TODO: on submit functionality
-    this.props.onSave(values)
+    // this.props.onSave(node)
   }
 
   onToggleConfirm(showConfirmation) {
@@ -64,6 +87,7 @@ AddNodeContainer.propTypes = {
   numNodes: PropTypes.number,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  params: PropTypes.object,
   show: PropTypes.bool
 }
 
@@ -87,4 +111,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(AddNodeContainer))
+const mapDispatchToProps = dispatch => ({
+  onSave: node => dispatch(nodeActions.create(node))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNodeContainer))
