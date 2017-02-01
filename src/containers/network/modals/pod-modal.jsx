@@ -150,7 +150,9 @@ PodFormContainer.displayName = "PodFormContainer"
 PodFormContainer.propTypes = {
   account: PropTypes.string,
   addAction: PropTypes.func,
+  availableActions: PropTypes.array,
   brand: PropTypes.string,
+  discoveryMethodValue: PropTypes.number,
   edit: PropTypes.bool,
   editAction: PropTypes.func,
   group: PropTypes.string,
@@ -164,6 +166,7 @@ PodFormContainer.propTypes = {
   onSave: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.string,
+  searchInputValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   show: PropTypes.bool
 }
 
