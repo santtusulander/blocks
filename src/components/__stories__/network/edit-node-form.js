@@ -25,6 +25,7 @@ const mockNodes = [
     node_env: 'staging',
     node_type: 'udn_core',
     cloud_driver: 'do',
+    custom_grains: 'test 1',
     created: '2016-12-05 12:10:06',
     updated: '2017-01-16 05:04:03'
   },
@@ -35,6 +36,7 @@ const mockNodes = [
     node_env: 'production',
     node_type: 'udn_core',
     cloud_driver: 'ec2',
+    custom_grains: 'test 2',
     created: '2016-12-05 12:10:06',
     updated: '2017-01-10 05:04:03'
   }
