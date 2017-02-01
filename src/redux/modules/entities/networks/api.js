@@ -34,6 +34,19 @@ export const fetch = ({id, ...params}) => {
 }
 
 /**
+* Fetch list of NETWORK Ids 
+* @param  {[type]} brand   [description]
+* @param  {[type]} account [description]
+* @return {[type]}         [description]
+*/
+export const fetchIds = ( params ) => {
+  return axios.get(baseUrl(params))
+   .then( ({data}) => {
+     return data
+   })
+}
+
+/**
  * Fetch list of NETWORKs
  * @param  {[type]} brand   [description]
  * @param  {[type]} account [description]
@@ -42,7 +55,7 @@ export const fetch = ({id, ...params}) => {
 export const fetchAll = ( params ) => {
   return axios.get(baseUrl(params))
     .then( ({data}) => {
-      return data
+      return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
     })
 }
 
