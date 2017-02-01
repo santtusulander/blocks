@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -51,6 +50,7 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
+import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -313,6 +313,24 @@ class Styleguide extends React.Component {
       }
     ])
 
+    const cityData = Immutable.fromJS([
+      {
+        "name": "daejeon",
+        "percent_change": 0.5567,
+        "percent_total": 0.0864,
+        "historical_total": 1404256487825,
+        "total": 2186010027527,
+        "requests": 8744,
+        "country": "KOR",
+        "region": "30",
+        "lat": 36.3261,
+        "lon": 127.4299,
+        "bits_per_second": 8800367,
+        "average_bits_per_second": 8800362,
+        "average_bytes": 3960163093
+      }
+    ])
+
     let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
     let totalDatasetValue = totalDatasetValueOutput.value
     let totalDatasetUnit = totalDatasetValueOutput.unit
@@ -365,7 +383,7 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Charts</h1>
           <Row>
             <label>Stacked barchart</label>
-            <SectionContainer className="analysis-contribution">
+            <SectionContainer className="analysis-chart-container">
               {<BarChart
                 chartLabel="Month to Date"
                 chartData={stackedBarChartData}
@@ -380,7 +398,7 @@ class Styleguide extends React.Component {
             <hr />
             <Row>
               <label>Normal barchart</label>
-              <SectionContainer className="analysis-contribution">
+              <SectionContainer className="analysis-chart-container">
                 <BarChart
                   chartLabel="This Week"
                   chartData={singleBarChartData}
@@ -961,6 +979,7 @@ class Styleguide extends React.Component {
 
           <Mapbox
             geoData={countriesGeoJSON}
+            cityData={cityData}
             countryData={countryData}
             theme={this.props.theme}
             height={600}

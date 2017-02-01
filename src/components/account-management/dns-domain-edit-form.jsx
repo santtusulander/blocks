@@ -3,7 +3,6 @@ import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
-import './dns-domain-edit-form.scss'
 import { checkForErrors } from '../../util/helpers'
 import {
   isValidFQDN,
@@ -15,6 +14,7 @@ import {
 import FieldFormGroup from '../form/field-form-group'
 import FormFooterButtons from '../form/form-footer-buttons'
 import FieldFormGroupNumber from '../form/field-form-group-number.jsx'
+import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_REFRESH } from '../../constants/account-management-options'
 
 const validate = fields => {
   // TODO: name_server validation
@@ -30,9 +30,9 @@ const validate = fields => {
   // an EXTERNAL server (not defined in this zone) it MUST be a FQDN
   // and end with a '.' (dot), for example, ns1.example.net.
   const { ttl, negative_ttl, email_addr, name, name_server, refresh } = fields
-  const maxTtl = "2147483647";
-  const minTtl = "0";
-  const minRefresh = "0";
+  const maxTtl = '' + DNS_MAX_TTL
+  const minTtl = '' + DNS_MIN_TTL
+  const minRefresh = '' + DNS_MIN_REFRESH
 
   const customConditions = {
     name_server: {
@@ -153,6 +153,7 @@ const DnsDomainEditForm = (props) => {
         name="refresh"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.refresh.text'})}
         component={FieldFormGroupNumber}
+        min={DNS_MIN_REFRESH}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.refresh.text" />}
       />
@@ -163,6 +164,8 @@ const DnsDomainEditForm = (props) => {
         name="ttl"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.ttlPlaceholder.text'})}
         component={FieldFormGroupNumber}
+        min={DNS_MIN_TTL}
+        max={DNS_MAX_TTL}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.ttl.text" />}
       />
@@ -173,6 +176,8 @@ const DnsDomainEditForm = (props) => {
         name="negative_ttl"
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.negativeTtlPlaceholder.text'})}
         component={FieldFormGroupNumber}
+        min={DNS_MIN_TTL}
+        max={DNS_MAX_TTL}
         addonAfter={<FormattedMessage id="portal.units.seconds"/>}
         label={<FormattedMessage id="portal.accountManagement.dns.form.negativeTtl.text" />}
       />

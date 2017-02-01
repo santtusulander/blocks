@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage } from 'react-intl'
 
 import country_list from '../../../constants/country-list'
+import Typeahead from '../../../components/typeahead'
 import { WILDCARD_REGEXP } from '../../../util/policy-config'
 
 class ContentTargeting extends React.Component {
