@@ -69,7 +69,8 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, networkSchema)
+      //return normalize(data, networkSchema)
+      return normalize({ id: baseUrlParams.group, networks: [ data ] }, groupNetworks)
     })
 }
 
