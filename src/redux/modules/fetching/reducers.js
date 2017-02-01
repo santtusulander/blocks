@@ -7,5 +7,5 @@ export const set = (state) => {
 }
 
 export const clear = (state) => {
-  return state - 1
+  return state <= 0 ? 0 : state - 1
 }
