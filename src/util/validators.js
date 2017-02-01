@@ -181,3 +181,21 @@ export function isSafari() {
 export function isValidPhoneNumber(str) {
   return matchesRegexp(str, /^(|\d{7,})$/)
 }
+
+/**
+ * Check if valid latitude
+ * @param  float
+ * @return {Boolean}
+ */
+export function isValidLatitude(str) {
+  return str >= -90 && str <= 90
+}
+
+/**
+ * Check if valid longtitude
+ * @param  float
+ * @return {Boolean}
+ */
+export function isValidLongtitude(str) {
+  return str >= -180 && str <= 180
+}

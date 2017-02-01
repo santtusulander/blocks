@@ -109,6 +109,13 @@
   "portal.network.locationForm.cloudProvider.required.error": "Cloud Provider is required",
   "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required",
 
+  "portal.network.locationForm.name.invalid.error": "Location name is invalid",
+  "portal.network.locationForm.iataCode.invalid.error": "IATA is invalid",
+  "portal.network.locationForm.latitude.invalid.error": "Latitude is invalid",
+  "portal.network.locationForm.longtitude.invalid.error": "Latitude is invalid",
+  "portal.network.locationForm.cloudProviderRegion.invalid.error": "Cloud Provider Region is invalid",
+  "portal.network.locationForm.cloudProviderLocationId.invalid.error": "Cloud Provider ID is invalid",
+
   "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",

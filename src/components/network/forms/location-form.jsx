@@ -9,17 +9,80 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
+import { isValidLatitude, isValidLongtitude } from '../../../util/validators.js'
+
 import './styles/location-form.scss'
 
 const validate = fields => {
-  const customConditions = {};
+  const customConditions = {
+    name: [
+      {
+        condition: fields.name.length < 3 || fields.name.length > 40,
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.name.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    iataCode: [
+      {
+        condition: fields.iataCode.length !== 3,
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.iataCode.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    latitude: [
+      {
+        condition: ! isValidLatitude(fields.latitude),
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.latitude.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    longtitude: [
+      {
+        condition: ! isValidLongtitude(fields.longtitude),
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.longtitude.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    cloudProviderRegion: [
+      {
+        condition: fields.cloudProviderRegion.length < 2 || fields.cloudProviderRegion.length > 40,
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.cloudProviderRegion.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    cloudProviderLocationId: [
+      {
+        condition: fields.cloudProviderLocationId < 2 || fields.cloudProviderLocationId >40,
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.invalid.error' />
+          </div>
+        )
+      }
+    ]
+  }
 
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.locationForm.name.required.error'/>,
     iataCode: <FormattedMessage id='portal.network.locationForm.iataCode.required.error'/>,
     latitude: <FormattedMessage id='portal.network.locationForm.latitude.required.error'/>,
     longitude: <FormattedMessage id='portal.network.locationForm.longitude.required.error'/>,
-    cloudProvider: <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
+    cloudName: <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
     cloudProviderLocationId: <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
   };
 
