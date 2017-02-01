@@ -7,7 +7,7 @@ const baseUrl = ({ brand, account, group }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks`
 }
 
-const networkSchema = new schema.Entity('networks', {
+const networkSchema = new schema.Entity('networks', {},{
   processStrategy: (value, parent) => {
     return { ...value, parentId: parent.id}
   }
