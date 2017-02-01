@@ -2,6 +2,11 @@ $multi-col-item-right-margin: 12px;
 $connector-offset: 2px;
 $entity-list-items-height-offset: 375px;
 
+$network-item-padding-horizontal: 12px;
+$network-item-padding-vertical: 16px;
+$network-item-status-indicator-width: 8px;
+$network-item-connector-line-offset: rem(32px);
+
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
@@ -18,7 +23,8 @@ $entity-list-items-height-offset: 375px;
   }
 
   &:first-child {
-    .network-item {
+    .network-item,
+    .entity-list-item {
       &::before {
         display: none;
       }
@@ -70,12 +76,75 @@ $entity-list-items-height-offset: 375px;
       margin-right: $multi-col-item-right-margin;
 
       &:not(:first-of-type) {
-        .network-item {
+        .network-item,
+        .entity-list-item {
           &::before {
             display: none;
           }
         }
       }
+    }
+  }
+
+  .entity-list-item {
+    position: relative;
+    display: block;
+
+    .content-item-chart {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+
+    &.active {
+      .content-item-chart {
+        opacity: 1;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+
+      &::before {
+        top: calc(-50% - #{$network-item-padding-vertical});
+        border-top: 0;
+        border-bottom: 2px solid $pale-blue;
+      }
+    }
+
+    &:first-child {
+      &::after {
+        right: -$network-item-connector-line-offset;
+        left: auto;
+        display: none;
+        border-left: 0;
+      }
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: -$network-item-connector-line-offset;
+      display: block;
+      width: $page-container-horizontal-padding;
+      height: calc(100% + #{$network-item-padding-vertical});
+      border-top: 2px solid $pale-blue;
+      border-left: 2px solid $pale-blue;
+      content: '';
+    }
+
+    &::after {
+      top: calc(-50% - #{$network-item-padding-vertical});
+      display: none;
+      border-top: 0;
+      border-bottom: 2px solid $pale-blue;
+    }
+
+    &.active::after {
+      right: -$network-item-connector-line-offset;
+      left: auto;
+      display: block;
+      border-left: 0;
     }
   }
 }

@@ -4,6 +4,7 @@ import classNames from 'classnames'
 
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
+import ContentItemChart from '../content/content-item-chart'
 
 class EntityList extends React.Component {
   constructor(props) {
@@ -143,13 +144,15 @@ class EntityList extends React.Component {
       selectedEntityId,
       multiColumn,
       numOfColumns,
-      itemsPerColumn
+      itemsPerColumn,
+      showAsStarbursts
     } = this.props
 
     const entities = this.state.entities.map(entity => {
       const entityId = entity.get('id')
       const entityName = entity.get('name')
-      return (
+
+      let content = (
         <NetworkItem
           key={entityId}
           onEdit={() => editEntity(entityId)}
@@ -160,6 +163,20 @@ class EntityList extends React.Component {
           status="enabled"
           />
       )
+
+      if (showAsStarbursts) {
+        content = (
+          <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : null}`} key={entityId} onClick={() => selectEntity(entityId)}>
+            <ContentItemChart
+              chartWidth="350"
+              barMaxHeight="30"
+              name={entityName}
+              />
+          </div>
+        )
+      }
+
+      return content
     })
 
     let content = entities
@@ -260,6 +277,7 @@ EntityList.propTypes = {
   numOfColumns: PropTypes.number,
   selectEntity: PropTypes.func,
   selectedEntityId: PropTypes.string,
+  showAsStarbursts: PropTypes.bool,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {

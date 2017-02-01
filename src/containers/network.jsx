@@ -576,6 +576,7 @@ class Network extends React.Component {
             selectEntity={this.handleGroupClick}
             selectedEntityId={`${params.group}`}
             title="Groups"
+            showAsStarbursts={true}
           />
 
           <EntityList
@@ -671,7 +672,7 @@ class Network extends React.Component {
             {...params}
           />
         }
-        
+
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-form"
