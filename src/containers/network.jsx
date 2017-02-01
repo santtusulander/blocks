@@ -11,7 +11,8 @@ import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 
-import networkActions from '../redux/modules/entities/network/actions'
+import networkActions from '../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../redux/modules/entities/networks/selectors'
 
 import Content from '../components/layout/content'
 import PageContainer from '../components/layout/page-container'
@@ -141,8 +142,6 @@ class Network extends React.Component {
 
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handleNetworkEdit = this.handleNetworkEdit.bind(this)
-    this.handleNetworkSave = this.handleNetworkSave.bind(this)
-    this.handleNetworkDelete = this.handleNetworkDelete.bind(this)
 
     this.handlePopClick = this.handlePopClick.bind(this)
     this.handlePopEdit = this.handlePopEdit.bind(this)
@@ -185,6 +184,8 @@ class Network extends React.Component {
 
   componentWillMount() {
     this.props.fetchData()
+
+    this.props.fetchNetworks( this.props.params.group)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -204,6 +205,10 @@ class Network extends React.Component {
 
     if (pod) {
       this.setState({ nodes: placeholderNodes })
+    }
+
+    if (this.props.params.group !== group) {
+      this.props.fetchNetworks( group )
     }
   }
 
@@ -332,14 +337,6 @@ class Network extends React.Component {
   handleNetworkEdit(networkId) {
     this.setState({networkId: networkId})
     this.props.toggleModal(ADD_EDIT_NETWORK)
-  }
-
-  handleNetworkSave() {
-    // TODO
-  }
-
-  handleNetworkDelete() {
-    // TODO
   }
 
   /* ==== POP Handlers ==== */
@@ -545,15 +542,14 @@ class Network extends React.Component {
       networkModal,
       groups,
       params,
-      fetching
+      fetching,
+      networks
     } = this.props
 
     const {
-      networks,
       pops,
       pods,
       nodes,
-      networkId,
       popId,
       podId
     } = this.state
@@ -634,16 +630,11 @@ class Network extends React.Component {
 
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
-            account={activeAccount.get('name')}
             accountId={params.account}
+            brand={params.brand}
             groupId={params.group}
-            networkId={params.network}
-            fetching={fetching}
-            onDelete={this.handleNetworkDelete}
-            onSave={this.handleNetworkSave}
+            networkId={this.state.networkId}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
-            show={true}
-            edit={(networkId !== null) ? true : false}
           />
         }
 
@@ -696,6 +687,7 @@ Network.propTypes = {
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(Immutable.List),
   networkModal: PropTypes.string,
+  networks: PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
   router: PropTypes.object,
   toggleModal: PropTypes.func
@@ -706,8 +698,11 @@ Network.defaultProps = {
   groups: Immutable.List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
+    //select networks by Group from redux
+    networks: getNetworksByGroup(state, ownProps.params.group),
+
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
     fetching: state.group.get('fetching'),
@@ -731,11 +726,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchData: fetchData,
     groupActions: groupActions,
 
-    create: (data) => dispatch(networkActions.create(data)),
-    update: (data) => dispatch(networkActions.update(data)),
-    get: (data) => dispatch(networkActions.fetchOne(data)),
-    getAll: (data) => networkActions.fetchAllThunk(dispatch)(data),
-    del: (data) => dispatch(networkActions.remove(data))
+    //fetch networks from API (fetchAllThunk (fetchByIds) as we don't get list of full objects from API => iterate each id)
+    fetchNetworks: (group) => group && networkActions.fetchAllThunk(dispatch)({brand, account, group})
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
