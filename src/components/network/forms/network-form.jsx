@@ -31,15 +31,17 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ edit, error, submitting, handleSubmit, intl, invalid, hasPops, onCancel, onSave, onDelete }) => {
+const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete }) => {
+
+  //simple way to check if editing -> no need to pass 'edit' - prop
+  const edit = !!initialValues.name
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form
-      onSubmit={handleSubmit(onSave)}>
+    <form onSubmit={handleSubmit(onSave)}>
 
       <p className='error'>{error && error.errors._error}</p>
 
@@ -64,10 +66,15 @@ const NetworkForm = ({ edit, error, submitting, handleSubmit, intl, invalid, has
               id="delete-btn"
               className="btn-danger"
               disabled={hasPops}
-              onClick={onDelete}
+              onClick={() => onDelete(initialValues.name)}
               tooltipId="tooltip-help"
               tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-              {submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>}
+              {
+                //Commented out: as submitting is also true when 'saving'.
+                //Should show DELETE -modal and ask for confirmation
+                //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
+              }
+              <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           </ButtonToolbar>
         }
