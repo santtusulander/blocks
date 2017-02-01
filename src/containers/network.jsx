@@ -684,6 +684,7 @@ Network.displayName = 'Network'
 Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchNetworks: PropTypes.func,
   fetching: PropTypes.bool,
   groups: PropTypes.instanceOf(Immutable.List),
   networkModal: PropTypes.string,
