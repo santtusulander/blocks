@@ -5,14 +5,9 @@ import { FormattedMessage } from 'react-intl'
 import IconAdd from '../icons/icon-add.jsx'
 import ActionItems from './action-items'
 
-import { DISCOVERY_METHOD_TYPE } from '../../constants/network'
-
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
 
-const ActionItemsContainer = ({ addAction, availableActions, editAction, intl, type, searchInputValue }) => {
-  const label = DISCOVERY_METHOD_TYPE
-    .filter(elm => elm.get('key') === type)
-    .getIn([0, 'label'])
+const ActionItemsContainer = ({ addAction, availableActions, editAction, intl, type, label, searchInputValue }) => {
   return (
     type ? <div className="action-item">
       <div className="action-item-header">
@@ -21,6 +16,7 @@ const ActionItemsContainer = ({ addAction, availableActions, editAction, intl, t
             id="portal.common.add.label.text"
             values={{label: label}} />
         </label>
+        <labe>{label}</labe>
         <Button bsStyle="primary" className="btn-icon btn-success pull-right"
           onClick={addAction}
           disabled={false}>
@@ -66,6 +62,7 @@ ActionItemsContainer.propTypes = {
   availableActions: PropTypes.array,
   editAction: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
+  label: PropTypes.string,
   searchInputValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   type: PropTypes.number
 }

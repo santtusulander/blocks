@@ -20,7 +20,7 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import ActionItemsContainer from '../../shared/action-items-container'
 
-import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+import { DISCOVERY_METHOD_TYPE, POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 import './pod-form.scss'
 
 const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
@@ -87,6 +87,10 @@ const PodForm = ({
   searchInputValue,
   submitting,
   dirty}) => {
+
+  const actionItemslabel = DISCOVERY_METHOD_TYPE
+    .filter(elm => elm.get('key') === discoveryMethodValue)
+    .getIn([0, 'label'])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -181,12 +185,13 @@ const PodForm = ({
 
       <ActionItemsContainer
         addAction={addAction}
+        availableActions={availableActions}
         editAction={editAction}
         initialValues={initialValues}
         intl={intl}
-        type={discoveryMethodValue}
+        label={actionItemslabel}
         searchInputValue={searchInputValue}
-        availableActions={availableActions} />
+        type={discoveryMethodValue} />
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
