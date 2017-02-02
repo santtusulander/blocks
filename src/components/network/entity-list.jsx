@@ -24,6 +24,8 @@ class EntityList extends React.Component {
       return true
     } else if (nextProps.starburstData !== this.props.starburstData) {
       return true
+    } else if (nextProps.nextEntityList) {
+      return true
     }
 
     return false
