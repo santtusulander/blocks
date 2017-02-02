@@ -37,25 +37,23 @@ class PopFormContainer extends Component {
     this.checkforPods = this.checkforPods.bind(this)
   }
 
-
-
   componentWillMount(){
-    const {brand, accountId,groupId,networkId, popId} = this.props
+    const {brand, accountId, groupId, networkId, popId} = this.props
 
-    //If editing => fetch data from API
+    // If editing => fetch data from API
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
 
-    //TODO: fetch location by Group
+    // TODO: fetch location by Group
 
   }
 
   componentWillReceiveProps(nextProps){
-    const {brand, accountId,groupId,networkId} = nextProps
+    const {brand, accountId, groupId, networkId} = nextProps
 
-    //If editing => fetch data from API
+    // If editing => fetch data from API
     if (this.props.networkId !== networkId) {
       networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     }
@@ -80,11 +78,10 @@ class PopFormContainer extends Component {
       location_id: `${values.locationId}`
     }
 
-    //add id if create new
+    // add id if create new
     if (!edit) {
       data.id = values.name
     }
-
 
     const params = {
       brand: 'udn',
@@ -140,9 +137,14 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const { initialValues,
-            iata,
-            onCancel, groupId, networkId, popId } = this.props
+    const {
+      initialValues,
+      iata,
+      onCancel,
+      groupId,
+      networkId,
+      popId
+    } = this.props
 
     const edit = !!initialValues.id
 
@@ -228,7 +230,6 @@ const mapStateToProps = (state, ownProps) => {
       locationId: edit && pop ? pop.get('location_id') : ''
     }
   }
-
 }
 
 const mapDispatchToProps = (dispatch) => {
