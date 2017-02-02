@@ -114,7 +114,7 @@ class EntityList extends React.Component {
       entityNameKey
     } = this.props
 
-    const newEntities = entities.map(entity => Immutable.Map({
+    const newEntities = entities && entities.map(entity => Immutable.Map({
       id: entity.get(entityIdKey),
       name: entity.get(entityNameKey)
     }))
@@ -212,7 +212,7 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId } = this.props
     const entities = this.state.entities
-    const active = entities.some(entity => selectedEntityId === entity.get('id').toString())
+    const active = entities && entities.some(entity => selectedEntityId === entity.get('id').toString())
     return active
   }
 
@@ -220,7 +220,8 @@ class EntityList extends React.Component {
     const {
       addEntity,
       title,
-      multiColumn
+      multiColumn,
+      showButtons
     } = this.props
 
     const {
@@ -236,7 +237,7 @@ class EntityList extends React.Component {
         {(showEntitiesTable && this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
-          onAdd={addEntity}
+          onAdd={showButtons ? addEntity : null}
         />
 
       <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
@@ -260,12 +261,14 @@ EntityList.propTypes = {
   numOfColumns: PropTypes.number,
   selectEntity: PropTypes.func,
   selectedEntityId: PropTypes.string,
+  showButtons: PropTypes.bool,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {
   entities: Immutable.List(),
   entityIdKey: 'id',
-  entityNameKey: 'name'
+  entityNameKey: 'name',
+  showButtons: true
 }
 
 export default EntityList
