@@ -7,6 +7,11 @@ import { bindActionCreators } from 'redux'
 import {
   getNetworkUrl
 } from '../util/routes.js'
+
+import nodeActions from '../redux/modules/entities/nodes/actions'
+
+import { getByPod } from '../redux/modules/entities/nodes/selectors'
+
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
@@ -151,7 +156,6 @@ class Network extends React.Component {
     if (pop) {
       this.setState({ pods: placeholderPods })
     }
-
   }
 
   componentDidUpdate(prevProps) {
