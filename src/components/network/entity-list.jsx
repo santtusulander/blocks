@@ -154,7 +154,7 @@ class EntityList extends React.Component {
           key={entityId}
           onEdit={() => editEntity(entityId)}
           title={entityName}
-          active={selectedEntityId === entityId.toString()}
+          active={selectedEntityId == entityId}
           onSelect={() => selectEntity(entityId)}
           onDelet={() => deleteEntity(entityId)}
           status="enabled"
@@ -212,7 +212,8 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId } = this.props
     const entities = this.state.entities
-    const active = entities && entities.some(entity => selectedEntityId === entity.get('id').toString())
+
+    const active = entities && entities.some(entity => selectedEntityId == entity.get('id'))
     return active
   }
 
