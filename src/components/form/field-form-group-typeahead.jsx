@@ -22,6 +22,7 @@ const FieldFormGroupTypeahead = ({
   required = true,
   filterBy,
   labelKey,
+  onChange,
   validation
 }) => {
 
@@ -53,7 +54,7 @@ const FieldFormGroupTypeahead = ({
         emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
-        onChange={e => input.onChange(e)}
+        onChange={onChange ? (selected) => onChange(selected) : e => input.onChange(e)}
         options={options}
         placeholder={placeholder}
         renderToken={renderToken}
@@ -83,6 +84,7 @@ FieldFormGroupTypeahead.propTypes = {
   meta: PropTypes.object,
   multiple: PropTypes.bool,
   newSelectionPrefix: PropTypes.string,
+  onChange: PropTypes.func,
   options: PropTypes.array,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
