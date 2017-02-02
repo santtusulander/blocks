@@ -88,6 +88,7 @@ $entity-list-item-connector-line-offset: rem(32px);
   .entity-list-item {
     position: relative;
     display: block;
+    width: calc(100% + #{$connector-offset});
     margin-left: $connector-offset;
 
     .content-item-chart {
@@ -134,9 +135,7 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
 
     &.active::after {
-      top: 50%;
-      right: calc(-#{$entity-list-item-connector-line-offset} - #{$connector-offset});
-      left: auto;
+      left: calc(100% - #{$connector-offset});
       display: block;
       width: calc(#{$page-container-horizontal-padding} + #{$connector-offset});
       height: 2px;

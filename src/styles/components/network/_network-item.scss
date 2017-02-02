@@ -5,6 +5,7 @@ $network-item-padding-horizontal: 12px;
 $network-item-padding-vertical: 16px;
 $network-item-status-indicator-width: 8px;
 $network-item-connector-line-offset: rem(32px);
+$connector-offset: 2px;
 
 .network-item {
   position: relative;
@@ -22,6 +23,10 @@ $network-item-connector-line-offset: rem(32px);
 
     &::before {
       height: calc(100% + #{$entity-list-item-padding-vertical});
+    }
+
+    &.active::after {
+      left: calc(100% + #{$connector-offset});
     }
   }
 
