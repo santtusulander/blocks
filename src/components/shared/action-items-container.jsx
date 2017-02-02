@@ -12,11 +12,8 @@ const ActionItemsContainer = ({ addAction, availableActions, editAction, intl, t
     type ? <div className="action-item">
       <div className="action-item-header">
         <label className="action-item-title">
-          <FormattedMessage
-            id="portal.common.add.label.text"
-            values={{label: label}} />
+          {label}
         </label>
-        <labe>{label}</labe>
         <Button bsStyle="primary" className="btn-icon btn-success pull-right"
           onClick={addAction}
           disabled={false}>

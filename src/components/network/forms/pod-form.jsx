@@ -189,7 +189,9 @@ const PodForm = ({
         editAction={editAction}
         initialValues={initialValues}
         intl={intl}
-        label={actionItemslabel}
+        label={<FormattedMessage
+                id="portal.common.add.label.text"
+                values={{label: actionItemslabel}} />}
         searchInputValue={searchInputValue}
         type={discoveryMethodValue} />
 
