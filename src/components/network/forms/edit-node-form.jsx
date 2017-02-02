@@ -251,7 +251,7 @@ class NetworkEditNodeForm extends React.Component {
                 <tbody>{fieldNodeValues}</tbody>
               </Table>
             </HelpPopover>
-            <a className="pull-right" onClick={() => {
+            <a className="edit-node-form__field-toggle-link pull-right" onClick={() => {
               this.onToggleField(fieldData.name)
             }}>
               <FormattedMessage id={linkTextId}/>

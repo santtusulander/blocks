@@ -19,5 +19,9 @@
       font-size: rem(12px);
       font-style: italic;
     }
+
+    &__field-toggle-link {
+      cursor: pointer;
+    }
   }
 }
