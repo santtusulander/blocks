@@ -19,15 +19,16 @@ jest.mock('../../util/helpers', () => {
     formatBitsPerSecond: val => val,
     formatBytes: val => val,
     formatTime: val => val,
-    getAccountByID: val => val,
     separateUnit: val => ({ value: val }),
-    buildFetchOpts: val => ({ dashboardOpts: val })
+    buildFetchOpts: val => ({ dashboardOpts: val }),
+    buildAnalyticsOptsForContribution: val => val
   }
 })
 
-function accountActionsMaker() {
+function filterActionsMaker() {
   return {
-    fetchAccounts: jest.fn()
+    fetchContentProvidersWithTrafficForSP: jest.fn(),
+    fetchServiceProvidersWithTrafficForCP: jest.fn()
   }
 }
 
@@ -95,10 +96,10 @@ describe('Dashboard', () => {
   beforeEach(() => {
     subject = () => {
       props = {
-        accountActions: accountActionsMaker(),
-        accounts: Immutable.fromJS([1]),
         dashboard: fakeDashboard,
         dashboardActions: dashboardActionsMaker(),
+        filterActions: filterActionsMaker(),
+        filterOptions: Immutable.fromJS([{serviceProviders: 1}]),
         filtersActions: filtersActionsMaker(),
         intl: intlMaker(),
         params: fakeParams,

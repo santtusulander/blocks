@@ -9,7 +9,6 @@ import {
   formatBitsPerSecond,
   formatBytes,
   formatTime,
-  getAccountByID,
   separateUnit,
   userIsContentProvider } from '../util/helpers'
 import numeral from 'numeral'
@@ -20,8 +19,8 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../constants/account-management-options'
 
-import * as accountActionCreators from '../redux/modules/account'
 import * as dashboardActionCreators from '../redux/modules/dashboard'
+import * as filterActionCreators from '../redux/modules/filters'
 import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
@@ -38,7 +37,7 @@ import PageHeader from '../components/layout/page-header'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import TruncatedTitle from '../components/truncated-title'
 
-import { buildFetchOpts } from '../util/helpers.js'
+import { buildAnalyticsOptsForContribution, buildFetchOpts } from '../util/helpers.js'
 import { getCitiesWithinBounds } from '../util/mapbox-helpers'
 
 export class Dashboard extends React.Component {
@@ -71,7 +70,11 @@ export class Dashboard extends React.Component {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
-    if (prevParams !== params || this.props.filters !== nextProps.filters) {
+    if (this.props.activeAccount !== nextProps.activeAccount) {
+      this.props.filterActions.resetContributionFilters()
+    }
+
+    if ((prevParams !== params || this.props.filters !== nextProps.filters) && nextProps.activeAccount.size !== 0) {
       this.fetchData(nextProps.params, nextProps.filters)
     }
     // TODO: remove this timeout as part of UDNP-1426
@@ -82,6 +85,7 @@ export class Dashboard extends React.Component {
   }
 
   componentWillUnmount() {
+    this.props.filterActions.resetContributionFilters()
     window.removeEventListener('resize', this.measureContainers)
     // TODO: remove this timeout as part of UDNP-1426
     clearTimeout(this.measureContainersTimeout)
@@ -91,15 +95,19 @@ export class Dashboard extends React.Component {
     if (params.account) {
       let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-      const activeAccount = getAccountByID(this.props.accounts, Number(params.account)) || this.props.activeAccount
-      const accountType = (accountIsContentProviderType(activeAccount) || userIsContentProvider(this.props.user))
+      const accountType = (accountIsContentProviderType(this.props.activeAccount) || userIsContentProvider(this.props.user))
         ? ACCOUNT_TYPE_CONTENT_PROVIDER
         : ACCOUNT_TYPE_SERVICE_PROVIDER
+      const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
+
+      const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
+        ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
+        : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
       return Promise.all([
         this.props.dashboardActions.startFetching(),
-        this.props.accountActions.fetchAccounts(this.props.params.brand),
-        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType)
+        this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
+        fetchProviders
       ]).then(this.props.dashboardActions.finishFetching)
     }
   }
@@ -129,7 +137,7 @@ export class Dashboard extends React.Component {
   }
 
   renderContent() {
-    const { accounts, activeAccount, dashboard, intl, params, user, theme } = this.props
+    const { activeAccount, dashboard, filterOptions, intl, params, user, theme } = this.props
 
     if (!params.account) {
       return(
@@ -192,8 +200,7 @@ export class Dashboard extends React.Component {
 
     const topProviders = !dashboard.size ? List() : dashboard.get('providers')
       .sortBy(provider => provider.get('bytes'), (a, b) => a < b)
-    const topProvidersIDs = topProviders.map(provider => provider.get('account')).toJS()
-    const topProvidersAccounts = getAccountByID(accounts, topProvidersIDs)
+    const topProvidersAccounts = filterOptions.getIn([isCP ? 'serviceProviders' : 'contentProviders'], List())
 
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
 
@@ -278,7 +285,7 @@ export class Dashboard extends React.Component {
                 const traffic = separateUnit(formatBytes(provider.get('bytes')))
                 return (
                   <tr key={i}>
-                    <td><b>{topProvidersAccounts[i] ? topProvidersAccounts[i].get('name') : provider.get('account')}</b></td>
+                    <td><b>{topProvidersAccounts.filter(item => item.get('id') === provider.get('account')).getIn([0, 'name'], provider.get('account'))}</b></td>
                     <td>
                       <MiniChart
                         kpiRight={true}
@@ -351,13 +358,12 @@ export class Dashboard extends React.Component {
 
 Dashboard.displayName = 'Dashboard'
 Dashboard.propTypes = {
-  accountActions: PropTypes.object,
-  accounts: PropTypes.object,
   activeAccount: PropTypes.instanceOf(Map),
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
   fetching: PropTypes.bool,
+  filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
@@ -379,7 +385,6 @@ Dashboard.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    accounts: state.account.get('allAccounts'),
     activeAccount: state.account.get('activeAccount'),
     dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),
@@ -394,8 +399,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
+    filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
     mapboxActions: bindActionCreators(mapboxActionCreators, dispatch),
     trafficActions: bindActionCreators(trafficActionCreators, dispatch)
