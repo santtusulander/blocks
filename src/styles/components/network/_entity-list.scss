@@ -2,10 +2,10 @@ $multi-col-item-right-margin: 12px;
 $connector-offset: 2px;
 $entity-list-items-height-offset: 375px;
 
-$network-item-padding-horizontal: 12px;
-$network-item-padding-vertical: 16px;
-$network-item-status-indicator-width: 8px;
-$network-item-connector-line-offset: rem(32px);
+$entity-list-item-padding-horizontal: 12px;
+$entity-list-item-padding-vertical: 16px;
+$entity-list-item-status-indicator-width: 8px;
+$entity-list-item-connector-line-offset: rem(32px);
 
 .network-entity-list {
   position: relative;
@@ -23,7 +23,7 @@ $network-item-connector-line-offset: rem(32px);
   }
 
   &:first-child {
-    .network-item,
+    .entity-list-item,
     .entity-list-item {
       &::before {
         display: none;
@@ -62,10 +62,10 @@ $network-item-connector-line-offset: rem(32px);
   .network-entity-list-items {
     position: relative;
     left: -$connector-offset;
-    max-height: calc(100vh - #{$entity-list-items-height-offset});
-    min-width: calc(100% + #{$connector-offset});
-    overflow-x: hidden;
-    overflow-y: auto;
+    // max-height: calc(100vh - #{$entity-list-items-height-offset});
+    // min-width: calc(100% + #{$connector-offset});
+    // overflow-x: hidden;
+    // overflow-y: auto;
 
     &.multi-column {
       display: flex;
@@ -76,7 +76,6 @@ $network-item-connector-line-offset: rem(32px);
       margin-right: $multi-col-item-right-margin;
 
       &:not(:first-of-type) {
-        .network-item,
         .entity-list-item {
           &::before {
             display: none;
@@ -89,6 +88,7 @@ $network-item-connector-line-offset: rem(32px);
   .entity-list-item {
     position: relative;
     display: block;
+    margin-left: $connector-offset;
 
     .content-item-chart {
       opacity: 0.5;
@@ -105,7 +105,7 @@ $network-item-connector-line-offset: rem(32px);
       margin-bottom: 0;
 
       &::before {
-        top: calc(-50% - #{$network-item-padding-vertical});
+        top: -50%;
         border-top: 0;
         border-bottom: 2px solid $pale-blue;
       }
@@ -113,7 +113,7 @@ $network-item-connector-line-offset: rem(32px);
 
     &:first-child {
       &::after {
-        right: -$network-item-connector-line-offset;
+        right: -$entity-list-item-connector-line-offset;
         left: auto;
         display: none;
         border-left: 0;
@@ -124,26 +124,28 @@ $network-item-connector-line-offset: rem(32px);
     &::after {
       position: absolute;
       top: 50%;
-      left: -$network-item-connector-line-offset;
+      left: -$entity-list-item-connector-line-offset;
       display: block;
       width: $page-container-horizontal-padding;
-      height: calc(100% + #{$network-item-padding-vertical});
+      height: calc(100% + #{$entity-list-item-padding-vertical});
       border-top: 2px solid $pale-blue;
       border-left: 2px solid $pale-blue;
       content: '';
     }
 
     &::after {
-      top: calc(-50% - #{$network-item-padding-vertical});
       display: none;
       border-top: 0;
       border-bottom: 2px solid $pale-blue;
     }
 
     &.active::after {
-      right: -$network-item-connector-line-offset;
+      top: 50%;
+      right: calc(-#{$entity-list-item-connector-line-offset} - #{$connector-offset});
       left: auto;
       display: block;
+      width: calc(#{$page-container-horizontal-padding} + #{$connector-offset});
+      height: 2px;
       border-left: 0;
     }
   }

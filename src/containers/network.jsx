@@ -619,6 +619,7 @@ class Network extends React.Component {
               chartWidth: '450',
               barMaxHeight: '30'
             }}
+            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
           />
 
           <EntityList
@@ -638,6 +639,7 @@ class Network extends React.Component {
               chartWidth: '350',
               barMaxHeight: '30'
             }}
+            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
           />
 
           <EntityList
@@ -649,6 +651,7 @@ class Network extends React.Component {
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
             title="Networks"
+            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
 
           <EntityList
@@ -660,6 +663,7 @@ class Network extends React.Component {
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
             title="Pops"
+            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
 
           <EntityList
@@ -671,6 +675,7 @@ class Network extends React.Component {
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
             title="Pods"
+            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
 
           <EntityList

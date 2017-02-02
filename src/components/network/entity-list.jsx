@@ -49,9 +49,12 @@ class EntityList extends React.Component {
     if (this.hasActiveItems()) {
       // We're modifying DOM elements, so we need to get the correct nodes from entity list
       const childNodes = [...this.entityListItems.childNodes]
+      const { nextEntityList } = this.props
+      const nextListChildNodes = [...nextEntityList.childNodes]
       // DOM Element of the active element
       const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
       // Active node height divided to half
+      const firstOfNextListHeight = Math.floor(nextListChildNodes[0].offsetHeight / 2)
       const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
       const activeNodeSizes = activeChildNode.getBoundingClientRect()
       const activeTop = activeNodeSizes.top
@@ -77,7 +80,7 @@ class EntityList extends React.Component {
       const bottomHalfVisibility = activeBottom <= entityListItemsBottom + activeHalfHeight
       const isVisible = topHalfVisibility && bottomHalfVisibility
 
-      connectorStyles.top = entityListItems.offsetTop + activeHalfHeight + 'px'
+      connectorStyles.top = entityListItems.offsetTop + firstOfNextListHeight + 'px'
 
       // If active item is visible by half, we should set the bottom style to be
       // where the right side tick on the element ends. Otherwise we should set it
@@ -93,7 +96,7 @@ class EntityList extends React.Component {
       // If the active item is scrolled to the top, we should switch the top and bottom
       // calculations so that the vertical connecting line grows accordingly.
       if (activeTop < entityListItemsTop) {
-        connectorStyles.bottom = entityListItems.offsetHeight - activeHalfHeight + 'px'
+        connectorStyles.bottom = entityListItems.offsetHeight - firstOfNextListHeight + 'px'
         connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - activeChildNode.clientTop + 'px'
 
         // If the element is scrolled up, we should set the connector line top to
@@ -143,6 +146,7 @@ class EntityList extends React.Component {
           onSelect={() => selectEntity(entityId)}
           onDelet={() => deleteEntity(entityId)}
           status="enabled"
+          extraClassName="entity-list-item"
           />
       )
 
@@ -151,7 +155,7 @@ class EntityList extends React.Component {
         const contentMetrics = this.getMetrics(entity)
 
         content = (
-          <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : null}`} key={entityId} onClick={() => selectEntity(entityId)}>
+          <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : ''}`} key={entityId} onClick={() => selectEntity(entityId)}>
             <ContentItemChart
               chartWidth={starburstData.chartWidth}
               barMaxHeight={starburstData.barMaxHeight}
@@ -276,6 +280,7 @@ EntityList.propTypes = {
   entityNameKey: PropTypes.string,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
+  nextEntityList: PropTypes.object,
   numOfColumns: PropTypes.number,
   selectEntity: PropTypes.func,
   selectedEntityId: PropTypes.string,

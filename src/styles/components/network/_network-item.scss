@@ -13,50 +13,16 @@ $network-item-connector-line-offset: rem(32px);
   cursor: pointer;
   border: 2px solid;
 
-  &:last-child {
-    margin-bottom: 0;
+  &.entity-list-item {
+    margin-left: 0;
 
-    &::before {
-      top: calc(-50% - #{$network-item-padding-vertical});
-      border-top: 0;
-      border-bottom: 2px solid $pale-blue;
+    &:last-child {
+      margin-bottom: 0;
+
+      &::before {
+        top: calc(-#{$entity-list-item-padding-horizontal} - #{$connector-offset} - 50%);
+      }
     }
-  }
-
-  &:first-child {
-    &::after {
-      right: -$network-item-connector-line-offset;
-      left: auto;
-      display: none;
-      border-left: 0;
-    }
-  }
-
-  &::before,
-  &::after {
-    position: absolute;
-    top: 50%;
-    left: -$network-item-connector-line-offset;
-    display: block;
-    width: $page-container-horizontal-padding;
-    height: calc(100% + #{$network-item-padding-vertical});
-    border-top: 2px solid $pale-blue;
-    border-left: 2px solid $pale-blue;
-    content: '';
-  }
-
-  &::after {
-    top: calc(-50% - #{$network-item-padding-vertical});
-    display: none;
-    border-top: 0;
-    border-bottom: 2px solid $pale-blue;
-  }
-
-  &.active::after {
-    right: -$network-item-connector-line-offset;
-    left: auto;
-    display: block;
-    border-left: 0;
   }
 
   &.disabled {
