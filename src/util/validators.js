@@ -191,15 +191,6 @@ export function isValidPhoneNumber(str) {
 }
 
 /**
- * Check if valid country code (in phoneNumber)
- * @param  {[type]}  str [description]
- * @return {Boolean}
- */
-export function isValidCountryCode(str) {
-  return matchesRegexp(str, /^(|\d{1,7})$/)
-}
-
-/**
  * Check if valid ASN(Autonomous System Number )
  * @param  {[type]}  str [description]
  * @return {Boolean}
