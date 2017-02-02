@@ -20,7 +20,7 @@
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
   "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
-  
+
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.networkForm.newNetwork.title": "Add Network",
   "portal.network.networkForm.editNetwork.title": "Edit Network",
@@ -75,7 +75,12 @@
   "portal.network.footprintForm.csvfile.title.text" : "CSV File",
   "portal.network.footprintForm.name.invalid.text": "Footprint name is invalid",
   "portal.network.footprintForm.description.invalid.text": "Footprint description is invalid",
-  "portal.network.footprintForm.field.required.text": "{field} is required",
+  "portal.network.footprintForm.name.required.text": "Footprint name is required",
+  "portal.network.footprintForm.description.required.text": "Footprint description is required",
+  "portal.network.footprintForm.CIRD.required.text": "At least one valid IPV4 CIDR is required",
+  "portal.network.footprintForm.CIRD.invalid.text": "You should remove all invalid IPV4 CIDR items",
+  "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
+  "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",

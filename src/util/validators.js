@@ -1,7 +1,15 @@
 import validator from 'validator'
 import { matchesRegexp } from './helpers'
+
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
+
+import { ASN_MIN,
+         ASN_MAX,
+         ASN_RESERVED,
+         ASN_RESERVED_RANGE_START,
+         ASN_RESERVED_RANGE_END } from '../constants/network'
+
 
 /**
  * Global validators
@@ -27,7 +35,7 @@ export function isValidIPv4Address(address) {
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
   if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) < 32 )
+    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) <= 32 )
   }
 
   return !!address && validator.isIP(address, 4)
@@ -43,7 +51,7 @@ export function isValidIPv6Address(address) {
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
   if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) < 32 )
+    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) <= 32 )
   }
 
   return !!address && validator.isIP(address, 6)
@@ -189,4 +197,24 @@ export function isValidPhoneNumber(str) {
  */
 export function isValidCountryCode(str) {
   return matchesRegexp(str, /^(|\d{1,7})$/)
+}
+
+/**
+ * Check if valid ASN(Autonomous System Number )
+ * @param  {[type]}  str [description]
+ * @return {Boolean}
+ */
+export function isValidASN(asn) {
+
+  if (!matchesRegexp(asn, /^[0-9]+$/)) return
+  let isValid = false
+
+  if (asn >= ASN_MIN && asn <= ASN_MAX) {
+    isValid = true
+    if (asn == ASN_RESERVED || (asn >= ASN_RESERVED_RANGE_START && asn <= ASN_RESERVED_RANGE_END)) {
+      isValid = false
+    }
+  }
+
+  return isValid
 }

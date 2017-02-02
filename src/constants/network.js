@@ -35,3 +35,9 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
 
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999
+
+export const ASN_MIN = 1
+export const ASN_MAX = 4199999999
+export const ASN_RESERVED = 23456
+export const ASN_RESERVED_RANGE_START = 64496
+export const ASN_RESERVED_RANGE_END = 131071
