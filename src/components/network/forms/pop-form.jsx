@@ -123,6 +123,7 @@ const NetworkPopForm = (props) => {
               </ButtonDisableTooltip>
             </ButtonToolbar>
           }
+
           <ButtonToolbar className="pull-right">
             <Button
               id="cancel-btn"
