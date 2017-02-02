@@ -4,6 +4,17 @@ export const NETWORK_WINDOW_OFFSET = 10
 export const NETWORK_NUMBER_OF_NODE_COLUMNS = 4
 export const NETWORK_NODES_PER_COLUMN = 8
 
+export const LOCATION_NAME_MIN_LENGTH = 3
+export const LOCATION_NAME_MAX_LENGTH = 40
+
+export const IATA_FIXED_LENGTH = 3
+
+export const CLOUD_PROVIDER_REGION_MIN_LENGTH = 2
+export const CLOUD_PROVIDER_REGION_MAX_LENGTH = 40
+
+export const CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH = 2
+export const CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH = 40
+
 export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
 
 export const NODE_TYPE_OPTIONS = [
