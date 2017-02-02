@@ -54,7 +54,7 @@ class EntityList extends React.Component {
       // DOM Element of the active element
       const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
       // Active node height divided to half
-      const firstOfNextListHeight = Math.floor(nextListChildNodes[0].offsetHeight / 2)
+      const firstOfNextListHeight = nextListChildNodes[0] ? Math.floor(nextListChildNodes[0].offsetHeight / 2) : 0
       const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
       const activeNodeSizes = activeChildNode.getBoundingClientRect()
       const activeTop = activeNodeSizes.top
