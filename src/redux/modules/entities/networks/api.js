@@ -34,7 +34,7 @@ export const fetch = ({id, ...params}) => {
 }
 
 /**
-* Fetch list of NETWORK Ids 
+* Fetch list of NETWORK Ids
 * @param  {[type]} brand   [description]
 * @param  {[type]} account [description]
 * @return {[type]}         [description]
@@ -96,7 +96,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then( () => {
-      return {id}
-    })
+    .then(() => ({ id }))
 }
