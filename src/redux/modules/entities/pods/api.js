@@ -85,7 +85,13 @@ export const fetchAll = ( params ) => {
 export const create = ({ payload, ...urlParams }) => {
   return axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pod)
+
+      const wrappedWithparent = {
+        id: urlParams.pop,
+        pods: [data]
+      }
+
+      return normalize(wrappedWithparent, pop)
     })
 }
 
@@ -99,7 +105,13 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pod)
+
+      const wrappedWithparent = {
+        id: baseUrlParams.pop,
+        pods: [data]
+      }
+
+      return normalize(wrappedWithparent, pop)
     })
 }
 
@@ -111,5 +123,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => ( {id} ))
+    .then(() => ( { id: `${baseUrlParams.pop}-${id}` } ))
 }
