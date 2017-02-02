@@ -110,18 +110,7 @@ $entity-list-item-connector-line-offset: rem(32px);
       margin-bottom: 0;
 
       &::before {
-        top: -50%;
-        border-top: 0;
-        border-bottom: 2px solid $pale-blue;
-      }
-    }
-
-    &:first-child {
-      &::after {
-        right: -$entity-list-item-connector-line-offset;
-        left: auto;
-        display: none;
-        border-left: 0;
+        border-left-width: 0;
       }
     }
 
@@ -132,7 +121,7 @@ $entity-list-item-connector-line-offset: rem(32px);
       left: -$entity-list-item-connector-line-offset;
       display: block;
       width: $page-container-horizontal-padding;
-      height: calc(100% + #{$entity-list-item-padding-vertical});
+      height: 100%;
       border-top: 2px solid $pale-blue;
       border-left: 2px solid $pale-blue;
       content: '';

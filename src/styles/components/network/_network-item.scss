@@ -18,10 +18,10 @@ $network-item-connector-line-offset: rem(32px);
 
     &:last-child {
       margin-bottom: 0;
+    }
 
-      &::before {
-        top: calc(-#{$entity-list-item-padding-horizontal} - #{$connector-offset} - 50%);
-      }
+    &::before {
+      height: calc(100% + #{$entity-list-item-padding-vertical});
     }
   }
 
