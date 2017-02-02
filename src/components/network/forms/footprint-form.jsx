@@ -19,25 +19,25 @@ const validateTypeaheadToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
-const validate = ({ footPrintName, footPrintDescription, UDNType }) => {
+const validate = ({ name, description, UDNType }) => {
   const conditions = {
-    footPrintName: {
-      condition: !isValidTextField(footPrintName),
+    name: {
+      condition: !isValidTextField(name),
       errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text"/>
     },
-    footPrintDescription: {
-      condition: !isValidTextField(footPrintDescription),
+    description: {
+      condition: !isValidTextField(description),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.description"/>
     }
   }
 
   return checkForErrors(
-    { footPrintName, footPrintDescription, UDNType },
+    { name, description, UDNType },
     conditions,
     {
-      footPrintName: <FormattedMessage values={{ field: 'Footprint Name' }}
+      name: <FormattedMessage values={{ field: 'Footprint Name' }}
                                        id="portal.network.footprintForm.field.required.text"/>,
-      footPrintDescription: <FormattedMessage values={{ field: 'Footprint Description' }}
+      description: <FormattedMessage values={{ field: 'Footprint Description' }}
                                               id="portal.network.footprintForm.field.required.text"/>
     }
   )
@@ -109,14 +109,14 @@ class FootprintForm extends React.Component {
           <FormGroup>
             <Field
               type="text"
-              name="footPrintName"
+              name="name"
               placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
             />
 
             <Field
-              name="footPrintDescription"
+              name="description"
               type="text"
               placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
               component={FieldFormGroup}
@@ -125,10 +125,11 @@ class FootprintForm extends React.Component {
           </FormGroup>
 
           <FormGroup>
-            <ControlLabel>{<FormattedMessage
-              id="portal.network.footprintForm.dataType.title.text"/>}</ControlLabel>
+            <ControlLabel>
+              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>
+            </ControlLabel>
             <Field
-              name="dataType"
+              name="data_type"
               type="radio"
               value="ipv4cidr"
               component={FieldRadio}
@@ -137,7 +138,7 @@ class FootprintForm extends React.Component {
 
             <Field
               type="radio"
-              name="dataType"
+              name="data_type"
               value="asnlist"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
@@ -156,7 +157,7 @@ class FootprintForm extends React.Component {
           </FormGroup>
 
           <Field
-            name="UDNTypeList"
+            name="udn_type"
             className="input-select"
             component={FieldFormGroupSelect}
             options={udnTypeOptions}
@@ -234,7 +235,7 @@ const mapStateToProps = (state) => {
     initialValues: {
       addFootprintMethod: 'manual',
       value: [],
-      dataType: 'ipv4cidr'
+      data_type: 'ipv4cidr'
     }
   }
 }
