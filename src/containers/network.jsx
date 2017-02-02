@@ -159,8 +159,8 @@ class Network extends React.Component {
 
     this.handlePodClick = this.handlePodClick.bind(this)
     this.handlePodEdit = this.handlePodEdit.bind(this)
-    this.handlePodSave = this.handlePodSave.bind(this)
-    this.handlePodDelete = this.handlePodDelete.bind(this)
+    // this.handlePodSave = this.handlePodSave.bind(this)
+    // this.handlePodDelete = this.handlePodDelete.bind(this)
 
     this.handleNodeEdit = this.handleNodeEdit.bind(this)
     this.handleNodeSave = this.handleNodeSave.bind(this)
@@ -396,14 +396,6 @@ class Network extends React.Component {
   handlePodEdit(podId) {
     this.setState({podId: podId})
     this.props.toggleModal(ADD_EDIT_POD)
-  }
-
-  handlePodSave() {
-    // TODO
-  }
-
-  handlePodDelete() {
-    // TODO
   }
 
   /* ==== Node Handlers ==== */
@@ -644,6 +636,8 @@ class Network extends React.Component {
 
           <EntityList
             ref={pods => this.entityList.podList = pods}
+            entityNameKey='UIName'
+            entityIdKey='UIId'
             addEntity={() => this.addEntity(ADD_EDIT_POD)}
             deleteEntity={() => () => null}
             editEntity={this.handlePodEdit}
@@ -696,13 +690,13 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
-            podId={params.pod}
-            edit={(podId !== null) ? true : false}
-            onSave={this.handlePodSave}
+            accountId={params.account}
+            brand={params.brand}
+            groupId={params.group}
+            networkId={params.network}
+            popId={params.pop}
+            podId={this.state.podId}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
-            onDelete={() => this.handlePodDelete(podId)}
-            show={true}
-            {...params}
           />
         }
 
