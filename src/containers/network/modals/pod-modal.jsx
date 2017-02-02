@@ -46,11 +46,8 @@ class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
     this.checkforNodes = this.checkforNodes.bind(this)
   }
-
-
 
   componentWillMount(){
     const {brand, accountId,groupId,networkId, popId, podId} = this.props
@@ -64,9 +61,74 @@ class PodFormContainer extends React.Component {
     //TODO: fetch location by Group
 
   }
-  onSubmit(values) {
-    const { onSave } = this.props
-    return onSave(values)
+
+  /**
+   * hander for save
+   */
+  onSave(edit, values) {
+
+    console.log('save POD', values)
+
+    // const data = {
+    //   iata: values.iata,
+    //   name: values.name,
+    //   location_id: `${values.locationId}`
+    // }
+    //
+    // //add id if create new
+    // if (!edit) {
+    //   data.id = values.name
+    // }
+    //
+    //
+    // const params = {
+    //   brand: 'udn',
+    //   account: this.props.accountId,
+    //   group: this.props.groupId,
+    //   network: this.props.networkId,
+    //   pop: this.props.popId,
+    //   payload: data
+    // }
+    //
+    // if (edit) params.id = values.pod_name
+    //
+    // const save = edit ? this.props.onUpdate : this.props.onCreate
+    //
+    // return save(params)
+    //   .then( (resp) => {
+    //     if (resp.error) {
+    //       // Throw error => will be shown inside form
+    //       throw new SubmissionError({'_error': resp.error.data.message})
+    //     }
+    //
+    //     //Close modal
+    //     this.props.onCancel();
+    //   })
+  }
+
+  /**
+   * Handler for Delete
+   */
+  onDelete(popId) {
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      network: this.props.networkId,
+      id: popId
+    }
+
+    return this.props.onDelete(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        //Close modal
+        this.props.onCancel();
+      })
   }
 
   checkforNodes() {
@@ -83,18 +145,17 @@ class PodFormContainer extends React.Component {
       network,
       pop,
       pod,
-      //podId,
       initialValues,
       onCancel,
       onDelete
     } = this.props
-console.log(initialValues);
+
     const edit = !!initialValues.pod_name
 
     const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
 
-    const subTitle = 'subtitle' //`${group.get('name')} / ${network.get('name')} / ${pop.get('name')} / ${edit ? ' / ' + podId : ''}`
+    const subTitle = `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} ${edit ? ' / ' + initialValues.pod_name : ''}`
 
     return (
       <div>
@@ -104,21 +165,14 @@ console.log(initialValues);
           title={title}
           subTitle={subTitle}
           cancel={onCancel}
-          >
+        >
 
           <PodForm
             initialValues={initialValues}
             hasNodes={this.checkforNodes()}
             onCancel={onCancel}
             onDelete={onDelete}
-            onSubmit={this.onSubmit}
-
-            // brand={brand}
-            // account={account}
-            // group={group}
-            // network={network}
-            // pop={pop}
-
+            onSave={(values) => this.onSave(edit, values)}
           />
 
         </SidePanel>
@@ -133,7 +187,6 @@ PodFormContainer.propTypes = {
   initialValues: PropTypes.object,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSave: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
@@ -146,7 +199,7 @@ PodFormContainer.defaultProps = {
 }
 
 const mapStateToProps = ( state, ownProps) => {
-  const edit = !!ownProps.podId
+  //const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
 
@@ -154,7 +207,7 @@ const mapStateToProps = ( state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
-    pop,//: ownProps.popId && getPopById(state, ownProps.popId),
+    pop,
     pod,
 
     initialValues: {

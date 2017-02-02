@@ -66,18 +66,18 @@ const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, 
   )
 }
 
-const asyncValidate = ({ localAS }) => {
-  return fetchASOverview(localAS)
+const asyncValidate = ({ UILocalAS }) => {
+  return fetchASOverview(UILocalAS)
     .then(({ data: { holder } }) => {
       if (!holder) {
         throw {
-          UIlocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+          UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
         }
       }
     })
     .catch(() => {
       throw {
-        UIlocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+        UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
       }
     })
 }
@@ -91,14 +91,14 @@ const PodForm = ({
   initialValues,
   onCancel,
   onDelete,
-  onSubmit,
+  onSave,
   submitting,
   dirty}) => {
 
   const edit = !!initialValues.pod_name
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSave)}>
       <Field
         type="text"
         name="pod_name"
@@ -135,7 +135,7 @@ const PodForm = ({
 
       <Field
         type="text"
-        name="UILocalAs"
+        name="UILocalAS"
         id="localAS-field"
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
@@ -215,21 +215,25 @@ const PodForm = ({
 PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
-  asyncValidating: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.bool ]),
-  dirty: PropTypes.bool,
-  handleSubmit: PropTypes.func,
+//  dirty: PropTypes.bool,
+//  handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
   intl: intlShape.isRequired,
   network: PropTypes.string,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSubmit: PropTypes.func,
-  ...reduxFormPropTypes
+  onSave: PropTypes.func,
+  ...reduxFormPropTypes,
+  /* needs to overrider reduxFormPropTypes */
+  asyncValidating: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ]).isRequired
 }
 
 export default reduxForm({
   form: 'pod-form',
   validate,
   asyncValidate,
-  asyncBlurFields: [ 'UILocalAs' ]
+  asyncBlurFields: [ 'UILocalAS' ]
 })(injectIntl(PodForm))
