@@ -23,7 +23,7 @@ const pod = new schema.Entity('pods', {
       UIId: value.pod_name,
       UICloudLookUpId: cloud_lookup_id,
       UILbMethod: lb_method,
-      UILocalAs: local_as,
+      UILocalAS: local_as,
       UIRequestFwdType: request_fwd_type,
       UIProviderWeight: provider_weight,
       UIDiscoveryMethod: footprints && footprints.length > 0 ? 'footprints' : 'BGP',
