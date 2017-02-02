@@ -67,7 +67,9 @@ const asyncValidate = ({ localAS }) => {
 const PodForm = ({
   asyncValidating,
   account,
-  addAction,
+  addNewAction,
+  addAvailableAction,
+  addedActionItems,
   availableActions,
   brand,
   discoveryMethodValue,
@@ -84,7 +86,6 @@ const PodForm = ({
   onDelete,
   onSubmit,
   pop,
-  searchInputValue,
   submitting,
   dirty}) => {
 
@@ -183,17 +184,17 @@ const PodForm = ({
           </HelpTooltip>
         }/>
 
-      <ActionItemsContainer
-        addAction={addAction}
+     {discoveryMethodValue && <ActionItemsContainer
+        addedActionItems={addedActionItems}
+        addAvailableAction={addAvailableAction}
+        addNewAction={addNewAction}
         availableActions={availableActions}
+        disableMultipleItems={discoveryMethodValue === 1 ? true : false}
         editAction={editAction}
         initialValues={initialValues}
         intl={intl}
-        label={<FormattedMessage
-                id="portal.common.add.label.text"
-                values={{label: actionItemslabel}} />}
-        searchInputValue={searchInputValue}
-        type={discoveryMethodValue} />
+        label={intl.formatMessage({id:"portal.common.add.label.text"},{label: actionItemslabel})}
+        />}
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
@@ -233,7 +234,9 @@ PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
   account: PropTypes.string,
-  addAction: PropTypes.func,
+  addAvailableAction: PropTypes.func,
+  addNewAction: PropTypes.func,
+  addedActionItems: PropTypes.array,
   asyncValidating: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.bool ]),
   availableActions: PropTypes.array,
   brand: PropTypes.string,
@@ -252,7 +255,6 @@ PodForm.propTypes = {
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
   pop: PropTypes.string,
-  searchInputValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   submitting: PropTypes.bool
 }
 

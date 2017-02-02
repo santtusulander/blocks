@@ -1,49 +1,34 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ActionItem from './action-item'
 
 import { Field } from 'redux-form'
 
-class ActionItems extends Component {
-  componentWillReceiveProps(nextProps) {
-    if(Array.isArray(nextProps.searchInputValue) && nextProps.searchInputValue.length) {
-      nextProps.fields.getAll() ?
-        nextProps.fields.getAll().filter((field) => field.actionItemElement === nextProps.searchInputValue[0]).length === 0
-        && this.props.fields.push({actionItemElement: nextProps.searchInputValue[0], removed: false}) :
-        this.props.fields.push({actionItemElement: nextProps.searchInputValue[0], removed: false})
+const ActionItems = ({ disableUndo, editAction, fields }) =>
+ (<div>
+    {fields.map((member, i, fields) => (
+      <Field
+        key={i}
+        label={fields.get(i).actionItemName}
+        className="secondary pull-right"
+        name={`${member}.removed`}
+        required={false}
+        component={ActionItem}
+        props={{
+          onRemove: disableUndo ? () => fields.remove(i) : null,
+          editAction: () => editAction(i)
+        }}/>)
+      )
     }
-  }
-
-  render() {
-    const { editAction, fields } = this.props
-
-    return (
-      <div>
-        {fields.map((member, i, fields) => (
-            <Field
-              key={i}
-              label={fields.get(i).actionItemElement}
-              className="secondary pull-right"
-              name={`${member}.removed`}
-              required={false}
-              component={ActionItem}
-              props={{
-                editAction: () => editAction(i)
-              }}/>
-            )
-          )
-        }
-      </div>
-    )
-  }
-}
+  </div>
+)
 
 ActionItems.displayName = 'ActionItems'
 
 ActionItems.defaultProps = {
-  availableActions: [],
   searchInputValue: []
 }
 ActionItems.propTypes = {
+  disableUndo: PropTypes.bool,
   editAction: PropTypes.func,
   fields: PropTypes.object
 }

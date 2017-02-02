@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import ActionButtons from '../action-buttons'
 import { Button } from 'react-bootstrap'
 
-const ActionItem = ({ input: { value, onChange },label, editAction }) => {
+const ActionItem = ({ input: { value, onChange },label, editAction, onRemove }) => {
   return (
     <div className={classnames('action', {removed: value})}>
       <div className="action-name">{`${label}`}</div>
@@ -15,8 +15,7 @@ const ActionItem = ({ input: { value, onChange },label, editAction }) => {
         <ActionButtons
           className="secondary pull-right"
           onEdit={editAction}
-          onRemove={() => onChange(!value)}
-          removeDisabled={false} />}
+          onRemove={onRemove ? onRemove : () => onChange(!value)} />}
     </div>
   )
 }
@@ -26,7 +25,8 @@ ActionItem.displayName = 'ActionItem'
 ActionItem.propTypes = {
   editAction: PropTypes.func,
   input: PropTypes.object,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  onRemove: PropTypes.func
 }
 
 export default ActionItem
