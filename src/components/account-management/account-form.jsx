@@ -185,20 +185,20 @@ class AccountForm extends React.Component {
            }
 
           <FormFooterButtons>
-              <Button
-                id="cancel-btn"
-                className="btn-secondary"
-                onClick={onCancel}>
-                <FormattedMessage id="portal.button.cancel"/>
-              </Button>
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
 
-              <Button
-                type="submit"
-                bsStyle="primary"
-                disabled={invalid||submitting||(!dirty)}>
-                {submitButtonLabel}
-              </Button>
-            </FormFooterButtons>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid||submitting||(!dirty)}>
+              {submitButtonLabel}
+            </Button>
+          </FormFooterButtons>
         </form>
       </SidePanel>
 
@@ -230,7 +230,7 @@ const formSelector = formValueSelector('accountForm')
 const mapStateToProps = (state, ownProps) => {
   const accountType = formSelector(state, 'accountType')
 
-  const obj = {
+  return {
     accountType,
     initialValues: {
       accountBrand: 'udn',
@@ -244,7 +244,6 @@ const mapStateToProps = (state, ownProps) => {
     serviceOptions: accountType && getServiceOptions(state, accountType),
     servicesInfo: getServicesInfo(state)
   }
-  return obj
 }
 
 const mapDispatchToProps = (dispatch) => {

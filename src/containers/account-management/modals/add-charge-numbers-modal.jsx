@@ -17,9 +17,11 @@ class AddChargeNumbersModal extends React.Component {
     const { activeServiceItem, onSubmit, onDisable, onCancel, servicesInfo, show, initialValues } = this.props
     let itemDetails = Map()
     let isService = null
+    let isMediaDeliveryService = null
 
     if (activeServiceItem.size) {
       isService = activeServiceItem.has('service_id')
+      isMediaDeliveryService = isService && activeServiceItem.get('service_id') === 1
       itemDetails = isService 
                     ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
                     : getOptionById(servicesInfo, activeServiceItem.get('option_id'))
@@ -42,7 +44,7 @@ class AddChargeNumbersModal extends React.Component {
             <ChargeNumbersForm 
               initialValues={initialValues}
               activeServiceItem={activeServiceItem}
-              hasFlowDirection={isService}
+              hasFlowDirection={isMediaDeliveryService}
               hasRegionalBilling={itemDetails.get('supports_regional_billing')}
               onCancel={onCancel}
               onDisable={onDisable}

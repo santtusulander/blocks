@@ -4,8 +4,9 @@ import { Panel, Table, FormGroup, ControlLabel } from 'react-bootstrap'
 import classNames from 'classnames'
 import { fromJS, List } from 'immutable'
 
-import IconHeaderCaret from '../icons/icon-header-caret'
-import IconArrowRight from '../icons/icon-arrow-right'
+import IconCheck from '../icons/icon-check'
+import IconChevronRight from '../icons/icon-chevron-right'
+import IconChevronRightBold from '../icons/icon-chevron-right-bold'
 
 class ServiceOptionSelector extends React.Component {
   constructor(props) {
@@ -18,9 +19,10 @@ class ServiceOptionSelector extends React.Component {
     this.changeOptionValue = this.changeOptionValue.bind(this)
     this.handleOptionClick = this.handleOptionClick.bind(this)
     this.togglePanel = this.togglePanel.bind(this)
+    this.renderFlexRowItem = this.renderFlexRowItem.bind(this)
   }
 
-  changeOptionValue(serviceId, optionId, hasValue, serviceIndex, optionIndex) {
+  changeOptionValue (serviceId, optionId, hasValue, serviceIndex, optionIndex) {
     const { input } = this.props
     const copy = input.value.toJS()
     const options = copy[serviceIndex].options
@@ -32,7 +34,6 @@ class ServiceOptionSelector extends React.Component {
     }
     input.onChange(fromJS(copy))
     this.props.onChangeServiceItem(fromJS(copy))
-    //this.setState({options: copy})
   }
 
   handleOptionClick (option, serviceId, optionId, optionValue, serviceIndex, optionIndex, callback) {
@@ -47,15 +48,45 @@ class ServiceOptionSelector extends React.Component {
     }
   }
 
-  togglePanel(index) {
+  togglePanel (index) {
     let openPanels = this.state.openPanels
-
-    if (openPanels.indexOf(index) === -1) {
+    const panelIndex = openPanels.indexOf(index)
+    if ( panelIndex === -1) {
       openPanels.push(index)
     } else {
-      openPanels.splice(index, 1)
+      openPanels.splice(panelIndex, 1)
     }
     this.setState({ openPanels })
+  }
+
+  renderFlexRowItem (isEnabled, itemInfo, regions, isService, index, onChangeCallback) {
+    return (
+      <div
+        className={classNames(
+          {'multi-option-header': isService},
+          'flex-row',
+          {'active': isEnabled && isService},
+          {'enabled': isEnabled}
+        )}
+        onClick={() => isService && this.togglePanel(index)}
+      >
+        <div className="flex-item tick">{isEnabled ? <IconCheck /> : ''}</div>
+        <div className="flex-item name">{itemInfo.label}</div>
+        <div className="flex-item">{regions && regions.size ? `${regions.size} regions` : ''}</div>
+        <div className="flex-item">{isEnabled ? 'ENABLED' : 'disabled'}</div>
+        <div className="flex-item arrow-right">
+          {itemInfo.requires_charge_number
+            ? <a
+                className="btn btn-icon btn-transparent"
+                onClick={(e) => {e.stopPropagation(); this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback)}}
+              >
+                {isEnabled ? <IconChevronRightBold /> : <IconChevronRight />}
+              </a>
+            : ''
+          }
+        </div>
+      </div>
+    )
   }
 
   render() {
@@ -70,32 +101,17 @@ class ServiceOptionSelector extends React.Component {
             const expanded = this.state.openPanels.indexOf(i) >= 0
             const serviceIndex = servicesIds.findKey(fieldOpt => fieldOpt === option.value)
             const optionValue = serviceIndex >= 0
+            const serviceRegions = (optionValue && option.requires_charge_number)
+                                   ? input.value.get(serviceIndex).get('billing_meta').get('regions')
+                                   : List()
 
             return (
-              <div key={`option-${i}`} className="multi-option-panel">
-                <div
-                  className={classNames(
-                    'multi-option-header',
-                    'flex-row',
-                    {'active': optionValue}
-                  )}
-                  onClick={() => this.togglePanel(i)}
-                >
-                  <div className="flex-item tick">{optionValue ? <IconHeaderCaret /> : ''}</div>
-                  <div className="flex-item">{option.label}</div>
-                  <div className="flex-item">{optionValue ? 'ENABLED' : 'disabled'}</div>
-                  <div className="flex-item arrow-right">
-                    {option.requires_charge_number
-                      ? <a
-                          className="btn btn-icon btn-transparent"
-                          onClick={() => this.props.showServiceItemForm(option.value, null, input.onChange)}
-                        >
-                          <IconArrowRight />
-                        </a>
-                      : ''
-                    }
-                  </div>
-                </div>
+              <div
+                key={`option-${i}`}
+                className="multi-option-panel"
+              >
+                {this.renderFlexRowItem(optionValue, option, serviceRegions, true, i, input.onChange)}
+
                 <Panel collapsible={true} expanded={expanded}>
                   <Table striped={true} className="table-simple">
                     <tbody>
@@ -104,24 +120,18 @@ class ServiceOptionSelector extends React.Component {
                         const subOptionsIds = options.map(item => item.get('option_id'))
                         const subOptionIndex = subOptionsIds ? subOptionsIds.indexOf(subOption.value) : -1
                         const subOptionValue = subOptionIndex >= 0
+                        const optionRegions = (subOptionValue && subOption.requires_charge_number)
+                                              ? options.get(subOptionIndex).get('billing_meta').get('regions')
+                                              : List()
 
                         return (
                           <tr
                             key={`option-${i}-${j}`}
                             onClick={() => this.handleOptionClick(subOption, option.value, subOption.value, subOptionValue, serviceIndex, subOptionIndex, input.onChange)}
                           >
-                            <td className="flex-row">
-                              <div className="flex-item tick">{subOptionValue ? <IconHeaderCaret /> : ''}</div>
-                              <div className="flex-item">{subOption.label}</div>
-                              <div className="flex-item">{subOptionValue ? 'ENABLED' : 'disabled'}</div>
-                              <div className="flex-item arrow-right">
-                                {subOption.requires_charge_number
-                                  ? <IconArrowRight />
-                                  : ''
-                                }
-                              </div>
+                            <td>
+                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange )}
                             </td>
-
                           </tr>
                         )
                       })}

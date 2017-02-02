@@ -1,20 +1,15 @@
 import React, { PropTypes } from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, ButtonToolbar } from 'react-bootstrap'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { reduxForm, Field} from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
 import { fromJS } from 'immutable'
 
 import FieldFormGroup from '../../../form/field-form-group'
 import FieldFormGroupCheckboxes from '../../../form/field-form-group-checkboxes'
-
 import ChargeNumbersField from './charge-numbers-field'
 
 import { FLOW_DIRECTION_TYPES } from '../../../../constants/account-management-options'
-
-const validate = () => {
-  return true
-}
 
 class AddChargeNumbersForm extends React.Component {
   constructor(props) {
@@ -24,9 +19,10 @@ class AddChargeNumbersForm extends React.Component {
   }
 
   onEnable(data) {
-    const value = this.props.activeServiceItem.mergeDeep(fromJS(data))
+    const activeServiceItem = this.props.activeServiceItem.toJS()
+    const mergedItem = Object.assign({}, activeServiceItem, data)
 
-    this.props.onSubmit(value)
+    this.props.onSubmit(fromJS(mergedItem))
   }
 
   render() {
@@ -51,7 +47,7 @@ class AddChargeNumbersForm extends React.Component {
 
         { hasRegionalBilling && 
           <Field
-            name={'billing_meta'}
+            name="billing_meta"
             component={ChargeNumbersField}
           />
         }
@@ -59,34 +55,40 @@ class AddChargeNumbersForm extends React.Component {
         { !hasRegionalBilling && 
           <Field
             type="text"
-            name={'billing_meta.charge_number'}
+            name="billing_meta.charge_number"
             component={FieldFormGroup}
+            required={false}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.global_charge_number.title" />}
           />
         }
 
-        <FormFooterButtons>
-           <Button
-            id='disable-button'
-            bsStyle="primary"
-            onClick={onDisable}
-          >
-            <FormattedMessage id='portal.common.button.disable' />
-          </Button>
-          <Button
-            id='cancel-button'
-            className="btn-outline"
-            onClick={onCancel}
-          >
-            <FormattedMessage id='portal.common.button.cancel' />
-          </Button>
-          <Button
-            id='submit-button'
-            type='submit'
-            bsStyle="primary"
-          >
-            <FormattedMessage id='portal.common.button.enable' />
-          </Button>
+        <FormFooterButtons autoAlign={false}>
+          <ButtonToolbar className="pull-left">
+            <Button
+              id='disable-button'
+              bsStyle="danger"
+              onClick={onDisable}
+            >
+              <FormattedMessage id='portal.common.button.disable' />
+            </Button>
+          </ButtonToolbar>
+
+          <ButtonToolbar className="pull-right">
+            <Button
+              id='cancel-button'
+              className="btn-outline"
+              onClick={onCancel}
+            >
+              <FormattedMessage id='portal.common.button.cancel' />
+            </Button>
+            <Button
+              id='submit-button'
+              type='submit'
+              bsStyle="primary"
+            >
+              <FormattedMessage id='portal.common.button.enable' />
+            </Button>
+          </ButtonToolbar>
         </FormFooterButtons>
       </form>
     )
@@ -105,6 +107,5 @@ AddChargeNumbersForm.propTypes = {
 }
 
 export default reduxForm({
-  form: 'AddChargeNumbersForm',
-  validate
+  form: 'AddChargeNumbersForm'
 })(injectIntl(AddChargeNumbersForm))

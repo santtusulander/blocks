@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { FormControl, FormGroup, ControlLabel } from 'react-bootstrap'
+import { FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap'
 import Checkbox from '../../../checkbox'
 
 class RegionsField extends React.Component {
@@ -12,91 +12,86 @@ class RegionsField extends React.Component {
   }
 
   componentWillMount() {
-    const { iterable, input } = this.props
+    const { iterable, fields } = this.props
+    const values = fields.getAll()
 
     iterable.forEach(checkbox => {
-      const region = input.value.find(item => item.region_code === checkbox.value)
+      const region = values.find(item => item.region_code === checkbox.value)
       this.setState({[checkbox.value]: region ? region.charge_number : ''})
     })
   }
 
   handleChangeRegion (option, hasValue, index, e) {
-    const { input } = this.props
-    const copy = [...input.value]
+    const { fields } = this.props
 
     if (!hasValue && e.target.checked) {
-      input.onChange(copy.concat({region_code: option.value, charge_number: ''}))
+      fields.insert(index, {region_code: option.value, charge_number: ''})
     } else if (!e.target.checked) {
-      copy.splice(index, 1)
-      input.onChange(copy)
+      fields.remove(index)
+
       this.setState({[option.value]: ''})
     }
   }
 
-  handleChangeChargeNumber (region, value) {
-    const { input } = this.props
-    const copy = [...input.value]
+  handleChangeChargeNumber (region_code, charge_number, index) {
+    const { fields } = this.props
 
-    copy.forEach(item => {
-      if (item.region_code === region) {
-        item.charge_number = value
-      }
-    })
+    fields.remove(index)
+    fields.insert(index, {region_code, charge_number})
 
-    input.onChange(copy)
-    this.setState({[region]: value})
+    this.setState({[region_code]: charge_number})
   }
 
   render() {
-    const { iterable, input } = this.props
-    const regions = input.value.map(item => item.region_code)
+    const { iterable, fields, label, required = true } = this.props
+    const values = fields.getAll()
+    const regions = values.map(item => item.region_code)
 
     return (
-      <div>
-        <FormGroup>
-          <ControlLabel>
-            <FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>
-          </ControlLabel>
+      <FormGroup>
+        {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+        {iterable.map((checkbox, i) => {
+          const index = regions.indexOf(checkbox.value)
+          const hasValue = index >= 0
 
-            {iterable.map((checkbox, i) => {
-              const index = regions.indexOf(checkbox.value)
-              const hasValue = index >= 0
-
-              return (
-                <div key={i}>
-                  <Checkbox
-                    checked={hasValue}
-                    onChange={e => this.handleChangeRegion(checkbox, hasValue, index, e)}
-                  >
-                    <span>{checkbox.label}</span>
-                  </Checkbox>
-
-                  <div className="form-inline region-charge-number">
-                    <ControlLabel>
-                      <FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title"/>
-                    </ControlLabel>
+          return (
+            <div key={i}>
+              <br/>
+              <FormGroup>
+                <Checkbox
+                  checked={hasValue}
+                  onChange={e => this.handleChangeRegion(checkbox, hasValue, index, e)}
+                >
+                  <span>{checkbox.label}</span>
+                </Checkbox>
+                <FormGroup>
+                  <InputGroup>
+                    <InputGroup.Addon><FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" /></InputGroup.Addon>
                     <FormControl
                       value={this.state[checkbox.value]}
                       disabled={!hasValue}
                       type='text'
-                      onChange={e => this.handleChangeChargeNumber(checkbox.value, e.target.value)}
-                      bsSize="small"
+                      onChange={e => this.handleChangeChargeNumber(checkbox.value, e.target.value, index)}
                     />
-                  </div>
-                </div>
-              )
-            })
-          }
-        </FormGroup>
-      </div>
+                  </InputGroup>
+                </FormGroup>
+              </FormGroup>
+            </div>
+          )
+        })
+      }
+    </FormGroup>
     )
   }
 }
+
 RegionsField.displayName = 'RegionsField'
 
 RegionsField.propTypes = {
-  input: PropTypes.object,
-  iterable: PropTypes.array
+  fields: PropTypes.object,
+  iterable: PropTypes.array,
+  label: PropTypes.object,
+  required: PropTypes.bool
 }
 
 export default injectIntl(RegionsField)

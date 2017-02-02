@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Field } from 'redux-form'
+import { Field, FieldArray } from 'redux-form'
 import { ControlLabel, FormGroup, Radio } from 'react-bootstrap'
 
 import FieldFormGroup from '../../../form/field-form-group'
@@ -25,15 +25,19 @@ class ChargeNumbersField extends React.Component {
   onChangeLocation (locationType, input) {
     this.setState({locationType});
 
+    const copy = {...input.value}
+
     if (locationType === 'region') {
-      input.value.charge_number = null
-      input.value.regions = []
+      delete copy.charge_number
+      copy.regions = []
     }
 
     if (locationType === 'global') {
-      input.value.regions = null
-      input.value.charge_number = ''
+      delete copy.regions
+      copy.charge_number = ''
     }
+
+    input.onChange(copy)
   }
 
   render() {
@@ -66,19 +70,22 @@ class ChargeNumbersField extends React.Component {
         <hr/>
 
         { this.state.locationType === 'region' &&
-          <Field
+          <FieldArray
             name="billing_meta.regions"
             component={RegionsField}
             iterable={REGIONS_TYPES}
+            label={<FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>}
+            required={false}
           />
         }
 
         { this.state.locationType === 'global' &&
           <Field
             type="text"
-            name={'billing_meta.charge_number'}
+            name="billing_meta.charge_number"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" />}
+            required={false}
           />
         }
       </div>

@@ -157,6 +157,7 @@ class GroupFormContainer extends React.Component {
     const {
       account,
       canEditServices,
+      disabled,
       groupId,
       hostActions,
       hosts,
@@ -204,6 +205,7 @@ class GroupFormContainer extends React.Component {
       <div>
         <SidePanel
           show={show}
+          disabled={disabled}
           title={title}
           subTitle={subTitle}
           cancel={onCancel}
@@ -256,6 +258,7 @@ GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
   canEditServices: PropTypes.bool,
+  disabled: PropTypes.bool,
   fetchServiceInfo: PropTypes.func,
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
@@ -300,7 +303,7 @@ function mapStateToProps(state, { groupId }) {
     isFetchingHosts: state.host.get('fetching'),
     name: groupId ? state.group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
-                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())).toJS() 
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
                     : [],
     servicesInfo: getServicesInfo(state)
   }

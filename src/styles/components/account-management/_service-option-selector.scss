@@ -4,11 +4,20 @@
     align-items: center;
     display: flex;
     flex-direction: row;
+    font-weight: 100;
+
+    &.enabled {
+      font-weight: 600;
+    }
   }
 
   .flex-item {
     flex-grow: 1;
     flex-basis: 0;
+  }
+
+  .name {
+    flex: 3;
   }
 
   .tick {

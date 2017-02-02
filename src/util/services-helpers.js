@@ -35,14 +35,21 @@ export function getOptionById (serviceInfo, id) {
 }
 
 export function getDefaultService (service_id) {
-  return fromJS({
+  const defaultObj = {
     service_id,
     flow_direction: [],
     billing_meta: {
       charge_number: ''
     },
     options: []
-  })
+  }
+  
+  //flow_direction related only for media delivery service
+  if (service_id === 1) {
+    delete defaultObj.flow_direction
+  }
+
+  return fromJS(defaultObj)
 }
 
 export function getDefaultOption (option_id) {
@@ -55,13 +62,22 @@ export function getDefaultOption (option_id) {
 }
 
 export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, groupServices) {
-  const serviceIds = getServicesIds(accountServices).mergeDeep(getServicesIds(groupServices))
+  const accountServiceIds = getServicesIds(accountServices)
+  const groupServiceIds = getServicesIds(groupServices)
 
-  return serviceIds.map(service => {
-    const serviceInfoItem = serviceOptionsInfo.find(item => item.value === service.get('id'))
-    return {
-      ...serviceInfoItem,
-      options: serviceInfoItem.options.filter(option => service.get('options').contains(option.value))
+  return serviceOptionsInfo.reduce((acc, service) => {
+    const accountItem = accountServiceIds.find(item => service.value === item.get('id'))
+    const groupItem = groupServiceIds.find(item => service.value === item.get('id'))
+
+    if (accountItem || groupItem) {
+      const accountOptions = accountItem ? accountItem.get('options') : List()
+      const groupOptions = groupItem ? groupItem.get('options') : List()
+      const allOptions = accountOptions.merge(groupOptions)
+      acc.push( {
+        ...service,
+        options: service.options.filter(option => allOptions.contains(option.value))
+      })
     }
-  })
+    return acc
+  }, [])
 }
