@@ -42,29 +42,6 @@ import PopFormContainer from './network/modals/pop-modal'
 import PodFormContainer from './network/modals/pod-modal'
 import AddNodeContainer from './network/modals/add-node-modal'
 
-// const placeholderNetworks = Immutable.fromJS([
-//   { id: 1, name: 'Network 1' },
-//   { id: 2, name: 'Network 2' },
-//   { id: 3, name: 'Network 3' },
-//   { id: 4, name: 'Network 4' },
-//   { id: 5, name: 'Network 5' },
-//   { id: 6, name: 'Network 6' },
-//   { id: 7, name: 'Network 7' },
-//   { id: 8, name: 'Network 8' },
-//   { id: 9, name: 'Network 9' },
-//   { id: 10, name: 'Network 10' },
-//   { id: 11, name: 'Network 11' },
-//   { id: 12, name: 'Network 12' },
-//   { id: 13, name: 'Network 13' },
-//   { id: 14, name: 'Network 14' }
-// ])
-
-// const placeholderPops = Immutable.fromJS([
-//   { id: 'JFK1', name: 'Pod 1 for JFK' },
-//   { id: 'JFK2', name: 'Pod 2 for JFK' },
-//   { id: 'JFK7', name: 'Pod 7 for JFK' }
-// ])
-
 const placeholderPods = Immutable.fromJS([
   { id: 1, name: 'Pod 1' },
   { id: 2, name: 'Pod 2' },
@@ -151,8 +128,6 @@ class Network extends React.Component {
 
     this.handlePopClick = this.handlePopClick.bind(this)
     this.handlePopEdit = this.handlePopEdit.bind(this)
-    // this.handlePopSave = this.handlePopSave.bind(this)
-    // this.handlePopDelete = this.handlePopDelete.bind(this)
 
     this.handlePodClick = this.handlePodClick.bind(this)
     this.handlePodEdit = this.handlePodEdit.bind(this)
@@ -201,12 +176,10 @@ class Network extends React.Component {
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
-      //this.setState({ networks: placeholderNetworks })
     }
 
     if (network !== this.props.params.network) {
       this.props.fetchPops( network )
-      //this.setState({ pops: placeholderPops })
     }
 
     if (pop) {
