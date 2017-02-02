@@ -17,6 +17,9 @@ import { getByGroup as getNetworksByGroup } from '../redux/modules/entities/netw
 import popActions from '../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../redux/modules/entities/pops/selectors'
 
+import podActions from '../redux/modules/entities/pods/actions'
+import { getByPop as getPodsByPop } from '../redux/modules/entities/pods/selectors'
+
 
 import Content from '../components/layout/content'
 import PageContainer from '../components/layout/page-container'
@@ -193,6 +196,7 @@ class Network extends React.Component {
 
     this.props.fetchNetworks( this.props.params.group )
     this.props.fetchPops( this.props.params.network )
+    this.props.fetchPods( this.props.params.pop )
   }
 
   componentWillReceiveProps(nextProps) {
@@ -209,7 +213,8 @@ class Network extends React.Component {
     }
 
     if (pop) {
-      this.setState({ pods: placeholderPods })
+      this.props.fetchPods( pop )
+      //this.setState({ pods: placeholderPods })
     }
 
     if (pod) {
@@ -571,11 +576,11 @@ class Network extends React.Component {
       groups,
       params,
       networks,
-      pops
+      pops,
+      pods
     } = this.props
 
     const {
-      pods,
       nodes,
       podId
     } = this.state
@@ -741,6 +746,7 @@ const mapStateToProps = (state, ownProps) => {
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, ownProps.params.network),
+    pods: getPodsByPop(state, ownProps.params.pop),
 
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
@@ -750,7 +756,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { brand, account, group } = ownProps.params
+  const { brand, account, group, network } = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -769,7 +775,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
-    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
+    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) ),
+    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop} ) )
   }
 }
 

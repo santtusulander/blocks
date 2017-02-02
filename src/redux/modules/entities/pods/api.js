@@ -12,7 +12,11 @@ const pod = new schema.Entity('pods', {
 }, {
   idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
   processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
+    return {
+      ...value,
+      parentId: parent.id,
+      name: value.pod_name
+    }
   }
 })
 
