@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import ActionButtons from '../action-buttons'
 import { Button } from 'react-bootstrap'
 
-const ActionItemButtons = ({ input: { value, onChange },label, editAction }) => {
+const ActionItem = ({ input: { value, onChange },label, editAction }) => {
   return (
     <div className={classnames('action', {removed: value})}>
       <div className="action-name">{`${label}`}</div>
@@ -21,12 +21,12 @@ const ActionItemButtons = ({ input: { value, onChange },label, editAction }) => 
   )
 }
 
-ActionItemButtons.displayName = 'ActionItemButtons'
+ActionItem.displayName = 'ActionItem'
 
-ActionItemButtons.propTypes = {
+ActionItem.propTypes = {
   editAction: PropTypes.func,
   input: PropTypes.object,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 
-export default ActionItemButtons
+export default ActionItem

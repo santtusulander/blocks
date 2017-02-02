@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ActionItemButtons from './action-item-buttons'
+import ActionItem from './action-item'
 
 import { Field } from 'redux-form'
 
@@ -25,7 +25,7 @@ class ActionItems extends Component {
               className="secondary pull-right"
               name={`${member}.removed`}
               required={false}
-              component={ActionItemButtons}
+              component={ActionItem}
               props={{
                 editAction: () => editAction(i)
               }}/>
