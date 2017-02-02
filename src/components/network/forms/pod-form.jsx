@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -22,6 +22,25 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 import './pod-form.scss'
 
+const LBMETHOD_OPTIONS = [
+  {value: 'gslb', label: 'GSLB'}
+]
+
+const POD_TYPE_OPTIONS = [
+  {value: 'core', label: 'Core'},
+  {value: 'sp_edge', label: 'SP Edge'}
+]
+
+const REQUEST_FWD_TYPE_OPTIONS = [
+  {value: 'gslb_referral', label: 'GSLB Referral'}
+]
+
+const DISCOVERY_METHOD_OPTIONS = [
+  {value: 'BGP', label: 'BGP'},
+  {value: 'footprints', label: 'Footprints'}
+]
+
+
 const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
   const conditions = {
     pod_name: {
@@ -42,7 +61,7 @@ const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, 
       requestForwardType: <FormattedMessage id="portal.network.podForm.requestForwardType.required.error"/>,
       provider_weight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
       discoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
-      localAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>
+      local_as: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>
     }
   )
 }
@@ -52,34 +71,31 @@ const asyncValidate = ({ localAS }) => {
     .then(({ data: { holder } }) => {
       if (!holder) {
         throw {
-          localAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+          UIlocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
         }
       }
     })
     .catch(() => {
       throw {
-        localAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+        UIlocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
       }
     })
 }
 
 const PodForm = ({
   asyncValidating,
-  account,
-  brand,
-  edit,
-  group,
   handleSubmit,
   hasNodes,
   intl,
   invalid,
-  network,
+  initialValues,
   onCancel,
   onDelete,
   onSubmit,
-  pop,
   submitting,
   dirty}) => {
+
+  const edit = !!initialValues.pod_name
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,16 +109,14 @@ const PodForm = ({
 
       <div className="form-group">
         <label>Cloud Lookup ID</label>
-        <div className="sub-title">{`${brand}+${account}+${group}+${network}+${pop}`}</div>
+        <div className="sub-title">{initialValues.UICloudLookUpId}</div>
       </div>
 
       <Field
-        name="lb_method"
-        numericValues={true}
+        name="UILbMethod"
+        //numericValues={true}
         component={FieldFormGroupSelect}
-        options={[
-          [1, "GSLB"]
-        ]}
+        options={LBMETHOD_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
         addonAfter={
           <HelpTooltip
@@ -114,17 +128,14 @@ const PodForm = ({
 
       <Field
         name="pod_type"
-        numericValues={true}
+        //numericValues={true}
         component={FieldFormGroupSelect}
-        options={[
-          [1, "SP Edge"],
-          [2, "Core"]
-        ]}
+        options={POD_TYPE_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
         type="text"
-        name="localAS"
+        name="UILocalAs"
         id="localAS-field"
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
@@ -137,18 +148,16 @@ const PodForm = ({
         }/>
 
       <Field
-        name="requestForwardType"
-        numericValues={true}
+        name="UIRequestFwdType"
+        //numericValues={true}
         component={FieldFormGroupSelect}
-        options={[
-          [1, "On-Net"]
-        ]}
+        options={REQUEST_FWD_TYPE_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
 
       <Field
         min={POD_PROVIDER_WEIGHT_MIN}
         type="text"
-        name="provider_weight"
+        name="UIProviderWeight"
         id="provider_weight-field"
         component={FieldFormGroupNumber}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
@@ -156,12 +165,10 @@ const PodForm = ({
       <hr/>
 
       <Field
-        name="discoveryMethod"
-        numericValues={true}
+        name="UIDiscoveryMethod"
+        //numericValues={true}
         component={FieldFormGroupSelect}
-        options={[
-          [1, "BGP"]
-        ]}
+        options={DISCOVERY_METHOD_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
         addonAfter={
           <HelpTooltip
@@ -208,28 +215,21 @@ const PodForm = ({
 PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
-  account: PropTypes.string,
   asyncValidating: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.bool ]),
-  brand: PropTypes.string,
   dirty: PropTypes.bool,
-  edit: PropTypes.bool,
-  group: PropTypes.string,
   handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
   intl: intlShape.isRequired,
-  invalid: PropTypes.bool,
   network: PropTypes.string,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
-  pop: PropTypes.string,
-  submitting: PropTypes.bool
-
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
   form: 'pod-form',
   validate,
   asyncValidate,
-  asyncBlurFields: [ 'localAS' ]
+  asyncBlurFields: [ 'UILocalAs' ]
 })(injectIntl(PodForm))

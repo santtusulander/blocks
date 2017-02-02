@@ -1,6 +1,20 @@
 import React, { PropTypes } from 'react'
+import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import networkActions from '../../../redux/modules/entities/networks/actions'
+import popActions from '../../../redux/modules/entities/pops/actions'
+import podActions from '../../../redux/modules/entities/pods/actions'
+
+import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
+import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
+
 
 import SidePanel from '../../../components/side-panel'
 
@@ -36,6 +50,20 @@ class PodFormContainer extends React.Component {
     this.checkforNodes = this.checkforNodes.bind(this)
   }
 
+
+
+  componentWillMount(){
+    const {brand, accountId,groupId,networkId, popId, podId} = this.props
+
+    //If editing => fetch data from API
+    accountId && this.props.fetchAccount({brand, id: accountId})
+    groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
+    podId && this.props.fetchPod({brand, account: accountId, group: groupId, network: networkId, pop: popId, id: podId})
+    //TODO: fetch location by Group
+
+  }
   onSubmit(values) {
     const { onSave } = this.props
     return onSave(values)
@@ -44,7 +72,7 @@ class PodFormContainer extends React.Component {
   checkforNodes() {
     //TODO: this should check weather the current POD has Nodes or not
     // and return a boolean
-    return true
+    return false
   }
 
   render() {
@@ -52,43 +80,47 @@ class PodFormContainer extends React.Component {
       account,
       brand,
       group,
-      groupName,
       network,
       pop,
-      podId,
-      edit,
+      pod,
+      //podId,
       initialValues,
-      show,
       onCancel,
-      onDelete,
-      intl,
-      invalid} = this.props
+      onDelete
+    } = this.props
+console.log(initialValues);
+    const edit = !!initialValues.pod_name
 
     const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
-    const subTitle = `${groupName} / ${network} / ${pop}${edit ? ' / ' + podId : ''}`
+
+    const subTitle = 'subtitle' //`${group.get('name')} / ${network.get('name')} / ${pop.get('name')} / ${edit ? ' / ' + podId : ''}`
+
     return (
       <div>
         <SidePanel
+          show={true}
           className="pod-form-sidebar"
-          show={show}
           title={title}
           subTitle={subTitle}
-          cancel={onCancel}>
+          cancel={onCancel}
+          >
+
           <PodForm
-            edit={edit}
             initialValues={initialValues}
-            intl={intl}
-            invalid={invalid}
             hasNodes={this.checkforNodes()}
             onCancel={onCancel}
             onDelete={onDelete}
             onSubmit={this.onSubmit}
-            brand={brand}
-            account={account}
-            pop={pop}
-            group={group}
-            network={network} />
+
+            // brand={brand}
+            // account={account}
+            // group={group}
+            // network={network}
+            // pop={pop}
+
+          />
+
         </SidePanel>
       </div>
     )
@@ -98,40 +130,59 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
-  account: PropTypes.string,
-  brand: PropTypes.string,
-  edit: PropTypes.bool,
-  group: PropTypes.string,
-  groupName: PropTypes.string,
   initialValues: PropTypes.object,
-  intl: intlShape.isRequired,
-  invalid: PropTypes.bool,
-  network: PropTypes.string,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pop: PropTypes.string,
-  show: PropTypes.bool
+  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
-function mapStateToProps( state, { podId, group }) {
-  const props = {
-    //TODO: replace .get('allGroups') with .get('activeGroup')
-    groupName: state.group
-      .get('allGroups')
-      .filter((groupElements) => groupElements.get('id') == group)
-      .getIn([0, 'name']),
-    initialValues: podId ? {
-      pod_name: mockInitialValues.get('pod_name'),
-      lb_method: mockInitialValues.get('lb_method'),
-      pod_type: mockInitialValues.get('pod_type'),
-      localAS: mockInitialValues.get('localAS')
-    } : {}
+PodFormContainer.defaultProps = {
+  account: Map(),
+  group: Map(),
+  network: Map(),
+  pop: Map(),
+  pod: Map()
+}
+
+const mapStateToProps = ( state, ownProps) => {
+  const edit = !!ownProps.podId
+  const pop = ownProps.popId && getPopById(state, ownProps.popId)
+  const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
+
+  return {
+    account: ownProps.accountId && getAccountById(state, ownProps.accountId),
+    group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
+    pop,//: ownProps.popId && getPopById(state, ownProps.popId),
+    pod,
+
+    initialValues: {
+      ...pod.toJS()
+
+      // id: edit && pod ? pod.get('id') : null,
+      // pod_name: edit && pod ? pod.get('pod_name') : null,
+      // lb_method: edit && pod ? pod.get('lb_method') : null,
+      // pod_type: edit && pod ? pod.get('pod_type') : null,
+      // local_as: edit && pod ? pod.get('local_as') : null
+    }
   }
-  return props
 }
 
-export default connect(mapStateToProps)(
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
+    onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
+    onDelete: (params) => dispatch( popActions.remove( {...params } )),
+
+    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
+    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
+    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
+    fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
+    fetchPod: (params) => dispatch( podActions.fetchOne(params) )
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   injectIntl(PodFormContainer)
 )
