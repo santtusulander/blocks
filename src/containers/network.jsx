@@ -3,13 +3,16 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import {
+  getAnalyticsUrl,
   getNetworkUrl
 } from '../util/routes.js'
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
+import * as metricsActionCreators from '../redux/modules/metrics'
 
 import networkActions from '../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../redux/modules/entities/networks/selectors'
@@ -36,6 +39,8 @@ import {
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
 } from '../constants/network'
+
+import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 
 import NetworkFormContainer from './network/modals/network-modal'
 import PopFormContainer from './network/modals/pop-modal'
@@ -286,7 +291,7 @@ class Network extends React.Component {
 
   /* ==== Account Handlers ==== */
   handleAccountClick(accountId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: accountId,
       // We need to set the previousId when we're navigating/scrolling backwards
       // and the only way to navigate back from and hide the groups is to check
@@ -294,18 +299,20 @@ class Network extends React.Component {
       previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
       goToRoute: 'groups-v2',
-      goBackToRoute: 'account-v2'
+      goBackToRoute: 'account-v2',
+      returnUrl: true
     })
   }
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
-      goBackToRoute: 'groups-v2'
+      goBackToRoute: 'groups-v2',
+      returnUrl: true
     })
   }
 
@@ -401,7 +408,7 @@ class Network extends React.Component {
    * @param  {string}           goBackToRoute Name of a level where we should go back to
    * @return {boolean}                        Boolean to determine scrolling direction
    */
-  determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
+  determineNextState({ currentId, previousId, goToRoute, goBackToRoute, returnUrl } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
     // TODO UDNP-2563: Remove .split('-v2')[0] once done with all the Network changes
@@ -410,7 +417,11 @@ class Network extends React.Component {
 
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
 
-    this.props.router.push(url)
+    if (!returnUrl) {
+      return this.props.router.push(url)
+    }
+
+    return url
   }
 
   /**
@@ -576,6 +587,17 @@ class Network extends React.Component {
             selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
             title="Account"
             showButtons={false}
+            showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.accountDailyTraffic,
+              contentMetrics: this.props.accountMetrics,
+              type: CONTENT_ITEMS_TYPES.ACCOUNT,
+              chartWidth: '450',
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl
+            }}
+            params={params}
+            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
           />
 
           <EntityList
@@ -587,6 +609,17 @@ class Network extends React.Component {
             selectEntity={this.handleGroupClick}
             selectedEntityId={`${params.group}`}
             title="Groups"
+            showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.groupDailyTraffic,
+              contentMetrics: this.props.groupMetrics,
+              type: CONTENT_ITEMS_TYPES.GROUP,
+              chartWidth: '350',
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl
+            }}
+            params={params}
+            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
           />
 
           <EntityList
@@ -598,6 +631,7 @@ class Network extends React.Component {
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
             title="Networks"
+            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
 
           <EntityList
@@ -609,6 +643,7 @@ class Network extends React.Component {
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
             title="Pops"
+            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
 
           <EntityList
@@ -620,6 +655,7 @@ class Network extends React.Component {
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
             title="Pods"
+            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
 
           <EntityList
@@ -691,10 +727,14 @@ class Network extends React.Component {
 
 Network.displayName = 'Network'
 Network.propTypes = {
+  accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchPops: PropTypes.func,
+  groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   networkModal: PropTypes.string,
@@ -719,7 +759,11 @@ const mapStateToProps = (state, ownProps) => {
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
     fetching: state.group.get('fetching'),
-    groups: state.group.get('allGroups')
+    groups: state.group.get('allGroups'),
+    groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
+    groupMetrics: state.metrics.get('groupMetrics'),
+    accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
+    accountMetrics: state.metrics.get('accountMetrics')
   };
 }
 
@@ -728,12 +772,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const metricsOpts = {
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
+  }
+  const groupMetricsOpts = Object.assign({
+    account: account
+  }, metricsOpts)
 
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
+    metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
+    metricsActions.fetchDailyAccountTraffic(metricsOpts)
+    metricsActions.fetchAccountMetrics(metricsOpts)
+    metricsActions.fetchGroupMetrics(groupMetricsOpts)
+    metricsActions.fetchDailyGroupTraffic(groupMetricsOpts)
   }
 
   return {
