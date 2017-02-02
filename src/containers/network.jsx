@@ -189,10 +189,11 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
+    const { group, network } = this.props.params
     this.props.fetchData()
 
-    this.props.fetchNetworks( this.props.params.group )
-    this.props.fetchPops( this.props.params.network )
+    this.props.fetchNetworks(group)
+    this.props.fetchPops(network)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -616,7 +617,7 @@ class Network extends React.Component {
           />
 
           <EntityList
-            ref={networks => this.entityList.networkList = networks}
+            ref={networkListRef => this.entityList.networkList = networkListRef}
             entities={params.group && networks}
             addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
             deleteEntity={() => () => null}
