@@ -3,29 +3,25 @@ import {normalize, schema} from 'normalizr'
 
 import { BASE_URL_NORTH } from '../../../util'
 
-/* TODO: After FOOTPRINTS are merged, import schema from 'footprints' -module */
-const footprint = new schema.Entity('footprints')
+const baseUrl = ({ brand, account, group }) => {
+  return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks`
+}
 
-/* TODO: After POD is merged, import schema from 'pod' -module */
-const pod = new schema.Entity('pods', {
-  footprints: [ footprint ]
-}, {
-  idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
+const networkSchema = new schema.Entity('networks', {},{
   processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
+    return {
+      ...value,
+      parentId: parent.id,
+
+      //UI expects name key
+      name: value.id}
   }
 })
 
-const pop = new schema.Entity('pops', {
-  pods: [ pod ]
-})
-
-const baseUrl = ({ brand, account, group, network }) => {
-  return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`
-}
+const groupNetworks = new schema.Entity('groupNetworks', { networks: [ networkSchema ] })
 
 /**
- * Fetch single pop
+ * Fetch single NETWORK
  * @param  {[type]} brand   [description]
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
@@ -33,12 +29,25 @@ const baseUrl = ({ brand, account, group, network }) => {
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
     .then( ({data}) => {
-      return normalize(data, pop)
+      return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
     })
 }
 
 /**
- * Fetch list of POPs
+* Fetch list of NETWORK Ids
+* @param  {[type]} brand   [description]
+* @param  {[type]} account [description]
+* @return {[type]}         [description]
+*/
+export const fetchIds = ( params ) => {
+  return axios.get(baseUrl(params))
+   .then( ({data}) => {
+     return data
+   })
+}
+
+/**
+ * Fetch list of NETWORKs
  * @param  {[type]} brand   [description]
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
@@ -46,12 +55,12 @@ export const fetch = ({id, ...params}) => {
 export const fetchAll = ( params ) => {
   return axios.get(baseUrl(params))
     .then( ({data}) => {
-      return normalize(data.data, [ pop ])
+      return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
     })
 }
 
 /**
- * Create a POP
+ * Create a NETWORK
  * @param  {[type]} brand   [description]
  * @param  {[type]} account [description]
  * @return {[type]} norm   [description]
@@ -59,12 +68,14 @@ export const fetchAll = ( params ) => {
 export const create = ({ payload, ...urlParams }) => {
   return axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pop)
+      return normalize({ id: urlParams.group, networks: [ data ] }, groupNetworks)
+
+      //return normalize(data, networkSchema)
     })
 }
 
 /**
- * Update a POP
+ * Update a NETWORK
  * @param  {[type]} id            [description]
  * @param  {[type]} payload       [description]
  * @param  {[type]} baseUrlParams [description]
@@ -73,12 +84,12 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pop)
+      return normalize({ id: baseUrlParams.group, networks: [ data ] }, groupNetworks)
     })
 }
 
 /**
- * Remove a POP
+ * Remove a NETWORK
  * @param  {[type]} id            [description]
  * @param  {[type]} baseUrlParams [description]
  * @return {[type]}               [description]
