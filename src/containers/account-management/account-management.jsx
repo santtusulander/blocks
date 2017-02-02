@@ -6,8 +6,6 @@ import { withRouter, Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
-import { fromJS } from 'immutable'
-
 import { getRoute } from '../../util/routes'
 
 import * as accountActionCreators from '../../redux/modules/account'

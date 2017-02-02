@@ -1,5 +1,3 @@
-import { List, fromJS } from 'immutable'
-
 /**
  * Get list of servives
  * @param  {} redux state state
