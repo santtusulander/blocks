@@ -16,9 +16,16 @@ class FootprintFormContainer extends React.Component {
   }
 
   onSubmit(values) {
-    const { onSubmit } = this.props
+    const { onSave } = this.props
 
-    onSubmit(values)
+    const finalValues = Object.assign({}, values, {
+      value: values.value.map(item => item.label),
+      location: 'fin' // TODO: add from location form
+    })
+
+    delete finalValues.addFootprintMethod
+
+    onSave(finalValues)
   }
 
   render() {
@@ -67,7 +74,7 @@ FootprintFormContainer.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSubmit: PropTypes.func,
+  onSave: PropTypes.func,
   show: PropTypes.bool
 }
 
