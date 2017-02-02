@@ -2,16 +2,19 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
+import { List } from 'immutable'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
+import podActions from '../../../redux/modules/entities/pods/actions'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
+import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 
 
 import SidePanel from '../../../components/side-panel'
@@ -33,8 +36,6 @@ const mockLocations = [
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
-
-    this.checkforPods = this.checkforPods.bind(this)
   }
 
   componentWillMount(){
@@ -45,6 +46,7 @@ class PopFormContainer extends Component {
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
+    popId && this.props.fetchPods({brand, account: accountId, group: groupId, network: networkId, pop: popId})
 
     // TODO: fetch location by Group
 
@@ -131,9 +133,8 @@ class PopFormContainer extends Component {
       })
   }
 
-  checkforPods() {
-    //TODO: this should check weather the current POP has PODs or not
-    return false
+  hasChildren(edit) {
+    return !(edit ? this.props.pods.size : false)
   }
 
   render() {
@@ -172,7 +173,7 @@ class PopFormContainer extends Component {
       >
 
         <NetworkPopForm
-          hasPods={this.checkforPods()}
+          hasPods={this.hasChildren(edit)}
           iata={iata}
           initialValues={initialValues}
           onDelete={() => this.onDelete(popId)}
@@ -193,6 +194,7 @@ PopFormContainer.propTypes = {
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
+  fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
 
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -204,6 +206,7 @@ PopFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
+  pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
@@ -212,12 +215,14 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
+  const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     pop,
+    pods,
     iata: formSelector(state, 'iata'),
 
     initialValues: {
@@ -241,7 +246,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPop: (params) => dispatch( popActions.fetchOne(params) )
+    fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
+    fetchPods: (params) => dispatch( podActions.fetchAll(params) )
   }
 }
 
