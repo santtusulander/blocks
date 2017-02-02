@@ -85,6 +85,7 @@
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.name.label": "Location Name",
   "portal.network.locationForm.name.placeholder": "Enter Location Name",
   "portal.network.locationForm.iataCode.label": "IATA Code",
   "portal.network.locationForm.iataCode.placeholder": "Enter IATA Code",

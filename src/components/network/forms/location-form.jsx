@@ -4,12 +4,13 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
+import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import { isValidLatitude, isValidLongtitude } from '../../../util/validators.js'
+import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
 
 import './styles/location-form.scss'
 
@@ -17,11 +18,12 @@ const validate = fields => {
   const customConditions = {
     name: [
       {
-        condition: fields.name.length < 3 || fields.name.length > 40,
+        condition: !isValidTextField(fields.name, 3, 40),
         errorText: (
-          <div>
-            <FormattedMessage id='portal.network.locationForm.name.invalid.error' />
-          </div>
+          <MultilineTextFieldError
+            fieldLabel={'portal.network.locationForm.name.label'}
+            minValue={3}
+            maxValue={40}/>
         )
       }
     ],
