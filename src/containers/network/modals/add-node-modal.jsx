@@ -38,12 +38,12 @@ class AddNodeContainer extends React.Component {
       pop_id: this.props.params.pop,
       env: values.node_env,
       custom_grains: [],
-      type: values.node_type
-
+      type: values.node_type,
+      name: 'sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net',
+      id: 'sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net'
     }
-    console.log(values);
-    // TODO: on submit functionality
-    // this.props.onSave(node)
+
+    return this.props.onSave(node)
   }
 
   onToggleConfirm(showConfirmation) {
@@ -92,7 +92,7 @@ AddNodeContainer.propTypes = {
 
 const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 
-const mapStateToProps = (state, { params: { pop } }) => {
+const mapStateToProps = (state) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const nodeRole = formSelector(state, 'node_role') || 'cache'
   const nodeEnv = formSelector(state, 'node_env') || 'production'
@@ -101,7 +101,6 @@ const mapStateToProps = (state, { params: { pop } }) => {
 
   return {
     numNodes,
-    popLocation: pop => 'soc01', //TODO Once the pop redux gets merged, replace with pop selector
     initialValues: {
       numNodes,
       node_role: nodeRole,
@@ -112,8 +111,8 @@ const mapStateToProps = (state, { params: { pop } }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onSave: node => dispatch(nodeActions.create(node))
+const mapDispatchToProps = (dispatch, { params }) => ({
+  onSave: node => dispatch(nodeActions.create({ ...params, payload: node }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNodeContainer))
