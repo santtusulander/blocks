@@ -5,6 +5,8 @@ import { injectIntl } from 'react-intl'
 import SidePanel from '../../../components/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
 
+import { FOOTPRINT_UDN_TYPES } from '../../../constants/network'
+
 class FootprintFormContainer extends React.Component {
 
   constructor(props) {
@@ -28,8 +30,7 @@ class FootprintFormContainer extends React.Component {
       intl,
       onCancel,
       onDelete,
-      show,
-      udnTypeOptions
+      show
     } = this.props
 
     const formTitle = editing
@@ -47,7 +48,7 @@ class FootprintFormContainer extends React.Component {
           fetching={fetching}
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
-          udnTypeOptions={udnTypeOptions}
+          udnTypeOptions={FOOTPRINT_UDN_TYPES}
           onCancel={onCancel}
           onDelete={onDelete}
           onSubmit={this.onSubmit}
@@ -67,8 +68,7 @@ FootprintFormContainer.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSubmit: PropTypes.func,
-  show: PropTypes.bool,
-  udnTypeOptions: PropTypes.array
+  show: PropTypes.bool
 }
 
 const mapStateToProps = () => {
