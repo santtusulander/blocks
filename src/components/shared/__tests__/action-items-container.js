@@ -16,7 +16,8 @@ describe('ActionItemsContainer', () => {
   beforeEach(() => {
     subject = () => {
       props = {
-        addAction: () => {},
+        addAvailableAction: () => {},
+        addNewAction: () => {},
         availableActions: ['item 1', 'item 2'],
         editAction: () => {},
         intl: intlMaker()
