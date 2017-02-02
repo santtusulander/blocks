@@ -329,12 +329,18 @@ class Network extends React.Component {
 
   /* ==== POD Handlers ==== */
   handlePodClick(podId) {
-    this.determineNextState({
-      currentId: podId,
-      previousId: this.props.params.pod,
-      goToRoute: 'pod',
-      goBackToRoute: 'pop'
-    })
+    const { brand, account, group, network, pop } = this.props.params
+
+    this.props.fetchNodes({ brand, account, group, network, pop, pod: podId })
+      .then(() => {
+
+        this.determineNextState({
+          currentId: podId,
+          previousId: this.props.params.pod,
+          goToRoute: 'pod',
+          goBackToRoute: 'pop'
+        })
+      })
   }
 
   handlePodEdit(podId) {
