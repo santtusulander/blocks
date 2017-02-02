@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
+
+import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -19,28 +21,6 @@ import { getById as getPodById } from '../../../redux/modules/entities/pods/sele
 import SidePanel from '../../../components/side-panel'
 
 import PodForm from '../../../components/network/forms/pod-form'
-
-//TODO Remove mockInitialValues after Redux integration
-const mockInitialValues = {
-  get: function(field) {
-    switch (field) {
-      case 'pod_name':
-        return 'pod1'
-
-      case 'lb_method':
-        return 1
-
-      case 'pod_type':
-        return 2
-
-      case 'localAS':
-        return 'AS206810'
-
-      default:
-        return null
-    }
-  }
-}
 
 class PodFormContainer extends React.Component {
   constructor(props) {
@@ -67,56 +47,72 @@ class PodFormContainer extends React.Component {
    */
   onSave(edit, values) {
 
-    console.log('save POD', values)
+    const data = {
+      pod_name: values.UIName,
+      pod_type: values.pod_type,
+    }
 
-    // const data = {
-    //   iata: values.iata,
-    //   name: values.name,
-    //   location_id: `${values.locationId}`
-    // }
-    //
-    // //add id if create new
-    // if (!edit) {
-    //   data.id = values.name
-    // }
-    //
-    //
-    // const params = {
-    //   brand: 'udn',
-    //   account: this.props.accountId,
-    //   group: this.props.groupId,
-    //   network: this.props.networkId,
-    //   pop: this.props.popId,
-    //   payload: data
-    // }
-    //
-    // if (edit) params.id = values.pod_name
-    //
-    // const save = edit ? this.props.onUpdate : this.props.onCreate
-    //
-    // return save(params)
-    //   .then( (resp) => {
-    //     if (resp.error) {
-    //       // Throw error => will be shown inside form
-    //       throw new SubmissionError({'_error': resp.error.data.message})
-    //     }
-    //
-    //     //Close modal
-    //     this.props.onCancel();
-    //   })
-  }
+    const service ={
+      cloud_lookup_id: values.UICloudLookUpId,
+      lb_method: values.UILbMethod,
+      local_as: parseInt(values.UILocalAS),
+      request_fwd_type: values.UIRequestFwdType,
+      provider_weight: values.UIProviderWeight
+    }
 
-  /**
-   * Handler for Delete
-   */
-  onDelete(popId) {
+    if (values.UIDiscoveryMethod === 'BGP') {
+      service.sp_bgp_router_ip = values.UIBGP.sp_bgp_router_ip
+      service.sp_bgp_router_as = values.UIBGP.sp_bgp_router_as
+      service.sp_bgp_router_password = values.UIBGP.sp_bgp_router_password
+
+      data.footprints = []
+    } else {
+      // service.sp_bgp_router_ip = ''
+      // service.sp_bgp_router_as = 0
+      // service.sp_bgp_router_password = 0
+
+      //TODO: assemple footprints array
+      data.footprints = []
+    }
+
+    data.services = [ service ]
 
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
       network: this.props.networkId,
-      id: popId
+      pop: this.props.popId,
+      payload: data
+    }
+
+    if (edit) params.id = values.pod_name
+
+    const save = edit ? this.props.onUpdate : this.props.onCreate
+
+    return save(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        //Close modal
+        this.props.onCancel();
+      })
+  }
+
+  /**
+   * Handler for Delete
+   */
+  onDelete(podId) {
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      network: this.props.networkId,
+      pop: this.props.popId,
+      id: podId
     }
 
     return this.props.onDelete(params)
@@ -144,7 +140,7 @@ class PodFormContainer extends React.Component {
       group,
       network,
       pop,
-      pod,
+      podId,
       initialValues,
       onCancel,
       onDelete
@@ -171,7 +167,7 @@ class PodFormContainer extends React.Component {
             initialValues={initialValues}
             hasNodes={this.checkforNodes()}
             onCancel={onCancel}
-            onDelete={onDelete}
+            onDelete={() => this.onDelete(podId)}
             onSave={(values) => this.onSave(edit, values)}
           />
 
@@ -199,9 +195,11 @@ PodFormContainer.defaultProps = {
 }
 
 const mapStateToProps = ( state, ownProps) => {
-  //const edit = !!ownProps.podId
+  const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
+
+  const initialValues = edit && pod ? { ...pod.toJS() } : {}
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -210,23 +208,25 @@ const mapStateToProps = ( state, ownProps) => {
     pop,
     pod,
 
-    initialValues: {
-      ...pod.toJS()
+    initialValues
 
-      // id: edit && pod ? pod.get('id') : null,
-      // pod_name: edit && pod ? pod.get('pod_name') : null,
-      // lb_method: edit && pod ? pod.get('lb_method') : null,
-      // pod_type: edit && pod ? pod.get('pod_type') : null,
-      // local_as: edit && pod ? pod.get('local_as') : null
-    }
+    // initialValues: {
+    //   ...pod.toJS()
+    //
+    //   // id: edit && pod ? pod.get('id') : null,
+    //   // pod_name: edit && pod ? pod.get('pod_name') : null,
+    //   // lb_method: edit && pod ? pod.get('lb_method') : null,
+    //   // pod_type: edit && pod ? pod.get('pod_type') : null,
+    //   // local_as: edit && pod ? pod.get('local_as') : null
+    // }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( popActions.remove( {...params } )),
+    onCreate: (params, data) => dispatch( podActions.create( {...params, data } )),
+    onUpdate: (params, data) => dispatch( podActions.update( {...params, data } )),
+    onDelete: (params) => dispatch( podActions.remove( {...params } )),
 
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
@@ -237,5 +237,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  injectIntl(PodFormContainer)
+  PodFormContainer
 )

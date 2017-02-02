@@ -101,7 +101,7 @@ const PodForm = ({
     <form onSubmit={handleSubmit(onSave)}>
       <Field
         type="text"
-        name="pod_name"
+        name="UIName"
         id="pod_name-field"
         placeholder={intl.formatMessage({id: 'portal.network.podForm.name.text'})}
         component={FieldFormGroup}

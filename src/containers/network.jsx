@@ -637,7 +637,7 @@ class Network extends React.Component {
           <EntityList
             ref={pods => this.entityList.podList = pods}
             entityNameKey='UIName'
-            entityIdKey='UIId'
+            entityIdKey='pod_name'
             addEntity={() => this.addEntity(ADD_EDIT_POD)}
             deleteEntity={() => () => null}
             editEntity={this.handlePodEdit}
