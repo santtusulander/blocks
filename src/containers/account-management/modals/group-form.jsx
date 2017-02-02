@@ -160,7 +160,8 @@ class GroupFormContainer extends React.Component {
       name,
       onCancel,
       intl,
-      invalid} = this.props
+      invalid,
+      isInNetwork} = this.props
 
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
@@ -209,6 +210,7 @@ class GroupFormContainer extends React.Component {
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
+            isInNetwork={isInNetwork}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit} />
@@ -251,6 +253,7 @@ GroupFormContainer.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isInNetwork: PropTypes.bool,
   name: PropTypes.string,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -274,18 +277,20 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
   return initialValues
 }
 
-function mapStateToProps({ user, host, group, account, form }, { groupId }) {
+function mapStateToProps({ user, host, group, account, form }, ownProps) {
   const currentUser = user.get('currentUser')
-  const canEditBilling = userIsCloudProvider(currentUser)
-  const canSeeBilling = userIsContentProvider(currentUser) || canEditBilling
+  const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
+  const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
+  const isInNetwork = ownProps.hasOwnProperty('isInNetwork') ? ownProps.isInNetwork : false
   return {
     account: account.get('activeAccount'),
     activeHost: host.get('activeHost'),
     canSeeBilling,
     canEditBilling,
-    hosts: groupId && host.get('allHosts'),
-    initialValues: determineInitialValues(groupId, group.get('activeGroup')),
+    hosts: ownProps.groupId && host.get('allHosts'),
+    initialValues: determineInitialValues(ownProps.groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
+    isInNetwork,
     name: group.getIn(['activeGroup', 'name'])
   }
 }

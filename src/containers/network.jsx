@@ -683,8 +683,11 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_GROUP &&
           <GroupFormContainer
             params={this.props.params}
+            canEditBilling={false}
+            canSeeBilling={false}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
             show={true}
+            isInNetwork={true}
           />
         }
 
