@@ -63,17 +63,14 @@ class FootprintForm extends React.Component {
 
   render() {
     const {
-      ASNOptions,
       addManual,
-      CIDROptions,
-      dataType,
       editing,
       fetching,
+      handleSubmit,
       intl,
       invalid,
       onCancel,
       onDelete,
-      handleSubmit,
       submitting,
       udnTypeOptions
     } = this.props
@@ -133,7 +130,7 @@ class FootprintForm extends React.Component {
             <Field
               name="dataType"
               type="radio"
-              value="cidr"
+              value="ipv4cidr"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
             />
@@ -141,31 +138,21 @@ class FootprintForm extends React.Component {
             <Field
               type="radio"
               name="dataType"
-              value="asn"
+              value="asnlist"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
             />
 
-            { dataType === 'cidr' &&
             <Field
-              required={false}
-              name="cidr"
+              required={true}
+              name="value"
               allowNew={true}
               component={FieldFormGroupTypeahead}
               multiple={true}
-              options={CIDROptions}
-              validation={validateTypeaheadToken}/>
-            }
+              options={[]}
+              validation={validateTypeaheadToken}
+            />
 
-            { dataType !== 'cidr' &&
-            <Field
-              name="asn"
-              allowNew={true}
-              component={FieldFormGroupTypeahead}
-              multiple={true}
-              options={ASNOptions}
-              validation={validateTypeaheadToken}/>
-            }
           </FormGroup>
 
           <Field
@@ -246,9 +233,8 @@ const mapStateToProps = (state) => {
     selector,
     initialValues: {
       addFootprintMethod: 'manual',
-      asn: [],
-      cidr: [],
-      dataType: 'cidr'
+      value: [],
+      dataType: 'ipv4cidr'
     }
   }
 }
