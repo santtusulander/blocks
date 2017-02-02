@@ -28,7 +28,7 @@ AccountManagementHeader.propTypes = {
   children: PropTypes.array,
   creationPermission: PropTypes.string,
   onAdd: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 
 export default AccountManagementHeader
