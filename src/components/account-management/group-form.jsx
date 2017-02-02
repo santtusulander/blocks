@@ -5,8 +5,10 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { Button, Table } from 'react-bootstrap'
+import { Button, Table, FormGroup } from 'react-bootstrap'
 
+import IconAdd from '../icons/icon-add'
+import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
@@ -43,6 +45,7 @@ const GroupForm = ({
   intl,
   invalid,
   isFetchingHosts,
+  isInNetwork,
   onCancel,
   onDeleteHost,
   onSubmit}) => {
@@ -84,6 +87,17 @@ const GroupForm = ({
           }
 
           <hr/>
+
+          {isInNetwork &&
+            <div>
+              <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
+              <FormGroup className="pull-right">
+                <UDNButton bsStyle="success" icon={true} addNew={true} onClick={() => {console.log('a')}}>
+                  <IconAdd/>
+                </UDNButton>
+              </FormGroup>
+            </div>
+          }
 
           {(!accountIsServiceProviderType && groupId) &&
             <div>
@@ -148,6 +162,7 @@ GroupForm.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isInNetwork: PropTypes.bool,
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onSubmit: PropTypes.func
