@@ -93,6 +93,10 @@ $entity-list-item-connector-line-offset: rem(32px);
     .content-item-chart {
       opacity: 0.5;
       transform: scale(1);
+
+      .btn-toolbar {
+        text-align: center;
+      }
     }
 
     &.active {

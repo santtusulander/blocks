@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import {
+  getAnalyticsUrl,
   getNetworkUrl
 } from '../util/routes.js'
 import * as accountActionCreators from '../redux/modules/account'
@@ -302,7 +303,7 @@ class Network extends React.Component {
 
   /* ==== Account Handlers ==== */
   handleAccountClick(accountId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: accountId,
       // We need to set the previousId when we're navigating/scrolling backwards
       // and the only way to navigate back from and hide the groups is to check
@@ -310,18 +311,20 @@ class Network extends React.Component {
       previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
       goToRoute: 'groups-v2',
-      goBackToRoute: 'account-v2'
+      goBackToRoute: 'account-v2',
+      returnUrl: true
     })
   }
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
-      goBackToRoute: 'groups-v2'
+      goBackToRoute: 'groups-v2',
+      returnUrl: true
     })
   }
 
@@ -433,7 +436,7 @@ class Network extends React.Component {
    * @param  {string}           goBackToRoute Name of a level where we should go back to
    * @return {boolean}                        Boolean to determine scrolling direction
    */
-  determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
+  determineNextState({ currentId, previousId, goToRoute, goBackToRoute, returnUrl } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
     // TODO UDNP-2563: Remove .split('-v2')[0] once done with all the Network changes
@@ -442,7 +445,11 @@ class Network extends React.Component {
 
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
 
-    this.props.router.push(url)
+    if (!returnUrl) {
+      return this.props.router.push(url)
+    }
+
+    return url
   }
 
   /**
@@ -617,8 +624,10 @@ class Network extends React.Component {
               contentMetrics: this.props.accountMetrics,
               type: CONTENT_ITEMS_TYPES.ACCOUNT,
               chartWidth: '450',
-              barMaxHeight: '30'
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl
             }}
+            params={params}
             nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
           />
 
@@ -637,8 +646,10 @@ class Network extends React.Component {
               contentMetrics: this.props.groupMetrics,
               type: CONTENT_ITEMS_TYPES.GROUP,
               chartWidth: '350',
-              barMaxHeight: '30'
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl
             }}
+            params={params}
             nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
           />
 

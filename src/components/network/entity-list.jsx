@@ -130,86 +130,111 @@ class EntityList extends React.Component {
       showAsStarbursts,
       entityIdKey,
       entityNameKey,
-      starburstData
+      starburstData,
+      params,
+      entities
     } = this.props
 
-    const entities = this.props.entities.map(entity => {
-      const entityId = entity.get(entityIdKey)
-      const entityName = entity.get(entityNameKey)
+    if (entities.size && entities.first().get(entityIdKey)) {
+      const entityList = entities.map(entity => {
+        const entityId = entity.get(entityIdKey)
+        const entityName = entity.get(entityNameKey)
 
-      let content = (
-        <NetworkItem
-          key={entityId}
-          onEdit={() => editEntity(entityId)}
-          title={entityName}
-          active={selectedEntityId === entityId.toString()}
-          onSelect={() => selectEntity(entityId)}
-          onDelet={() => deleteEntity(entityId)}
-          status="enabled"
-          extraClassName="entity-list-item"
-          />
-      )
-
-      if (showAsStarbursts) {
-        const dailyTraffic = this.getDailyTraffic(entity)
-        const contentMetrics = this.getMetrics(entity)
-
-        content = (
-          <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : ''}`} key={entityId} onClick={() => selectEntity(entityId)}>
-            <ContentItemChart
-              chartWidth={starburstData.chartWidth}
-              barMaxHeight={starburstData.barMaxHeight}
-              name={entityName}
-              dailyTraffic={dailyTraffic.get('detail').reverse()}
-              primaryData={contentMetrics.get('traffic')}
-              secondaryData={contentMetrics.get('historical_traffic')}
-              differenceData={contentMetrics.get('historical_variance')}
-              cacheHitRate={contentMetrics.get('avg_cache_hit_rate')}
-              timeToFirstByte={contentMetrics.get('avg_ttfb')}
-              maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
-              minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
-              avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
-              />
-          </div>
+        let content = (
+          <NetworkItem
+            key={entityId}
+            onEdit={() => editEntity(entityId)}
+            title={entityName}
+            active={selectedEntityId === entityId.toString()}
+            onSelect={() => selectEntity(entityId)}
+            onDelet={() => deleteEntity(entityId)}
+            status="enabled"
+            extraClassName="entity-list-item"
+            />
         )
-      }
 
-      return content
-    })
+        if (showAsStarbursts) {
+          const dailyTraffic = this.getDailyTraffic(entity)
+          const contentMetrics = this.getMetrics(entity)
+          const link = selectEntity(entityId)
 
-    let content = entities
-
-    // If the entity column should be a multi-column, we should render
-    // additional wrappers divs in order to make separate columns for the
-    // items.
-    if (multiColumn) {
-      // First we chunk our list of elements into segments based on how many
-      // items we want to show per column and then render the wrapping divs
-      // accordingly.
-      content = this.chunkIntoSegments(entities, itemsPerColumn).map((col, i) => {
-        // We only want to show the specified amount of columns.
-        if (i < numOfColumns) {
-          return (
-            <div key={i} className="list-col">
-              {col.map(entity => entity)}
+          content = (
+            <div className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : ''}`} key={entityId}>
+              <ContentItemChart
+                chartWidth={starburstData.chartWidth}
+                barMaxHeight={starburstData.barMaxHeight}
+                name={entityName}
+                dailyTraffic={dailyTraffic.get('detail').reverse()}
+                primaryData={contentMetrics.get('traffic')}
+                secondaryData={contentMetrics.get('historical_traffic')}
+                differenceData={contentMetrics.get('historical_variance')}
+                cacheHitRate={contentMetrics.get('avg_cache_hit_rate')}
+                timeToFirstByte={contentMetrics.get('avg_ttfb')}
+                maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
+                minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
+                avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
+                isAllowedToConfigure={true}
+                showSlices={true}
+                linkTo={link}
+                showAnalyticsLink={true}
+                onConfiguration={editEntity(entityId)}
+                analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
+                />
             </div>
           )
         }
-      })
-    }
 
-    return content
+        return content
+      })
+
+      let content = entityList
+
+      // If the entity column should be a multi-column, we should render
+      // additional wrappers divs in order to make separate columns for the
+      // items.
+      if (multiColumn) {
+        // First we chunk our list of elements into segments based on how many
+        // items we want to show per column and then render the wrapping divs
+        // accordingly.
+        content = this.chunkIntoSegments(entities, itemsPerColumn).map((col, i) => {
+          // We only want to show the specified amount of columns.
+          if (i < numOfColumns) {
+            return (
+              <div key={i} className="list-col">
+                {col.map(entity => entity)}
+              </div>
+            )
+          }
+        })
+      }
+
+      return content
+    }
   }
 
+  /**
+   * Get metric data for a specific entity. Only used when showing a starburst.
+   *
+   * @method getMetrics
+   * @param  {Immutable.Map}   item Entity to look data for
+   * @return {Immutable.Map}        Found data for entity
+   */
   getMetrics(item) {
-    const { starburstData } = this.props
-    return starburstData.contentMetrics.find(metric => metric.get(starburstData.type) === item.get('id'),
+    const { starburstData, entityIdKey } = this.props
+    return starburstData.contentMetrics.find(metric => metric.get(starburstData.type) === item.get(entityIdKey),
       null, Immutable.Map({ totalTraffic: 0 }))
   }
 
+  /**
+   * Get daily traffic data for a specific entity. Only used when showing a starburst.
+   *
+   * @method getDailyTraffic
+   * @param  {Immutable.Map}        item Entity to look data for
+   * @return {Immutable.Map}        Found data for entity
+   */
   getDailyTraffic(item) {
-    const { starburstData } = this.props
-    return starburstData.dailyTraffic.find(traffic => traffic.get(starburstData.type) === item.get('id'),
+    const { starburstData, entityIdKey } = this.props
+    return starburstData.dailyTraffic.find(traffic => traffic.get(starburstData.type) === item.get(entityIdKey),
       null, Immutable.fromJS({ detail: [] }))
   }
 
@@ -238,8 +263,10 @@ class EntityList extends React.Component {
    */
   hasActiveItems() {
     const { selectedEntityId, entityIdKey, entities } = this.props
-    const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
-    return active
+    if (entities.size && entities.first().get(entityIdKey)) {
+      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
+      return active
+    }
   }
 
   render() {
@@ -282,6 +309,7 @@ EntityList.propTypes = {
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
   numOfColumns: PropTypes.number,
+  params: PropTypes.object,
   selectEntity: PropTypes.func,
   selectedEntityId: PropTypes.string,
   showAsStarbursts: PropTypes.bool,
