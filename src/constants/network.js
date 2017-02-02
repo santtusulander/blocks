@@ -36,3 +36,7 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999
+export const ROUTING_DEAMON_PASSWORD_MIN_LEN = 1
+export const ROUTING_DEAMON_PASSWORD_MAX_LEN = 64
+export const ROUTING_DEAMON_BGP_NAME_MIN_LEN = 1
+export const ROUTING_DEAMON_BGP_NAME_MAX_LEN = 255
