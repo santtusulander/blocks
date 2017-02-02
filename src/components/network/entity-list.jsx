@@ -157,15 +157,15 @@ class EntityList extends React.Component {
           const dailyTraffic = this.getDailyTraffic(entity)
           const contentMetrics = this.getMetrics(entity)
           const link = selectEntity(entityId)
-
-          // We always want accounts to be full opactiy
-          const contentItemChartStyleOverride = starburstData.type === 'account' ? {opacity: 1} : {}
+          const contentItemClasses = classNames('entity-list-item', {
+            'active': selectedEntityId === entityId.toString(),
+            'is-account': starburstData.type === 'account'
+          })
 
           content = (
             <div
-              className={`entity-list-item ${selectedEntityId === entityId.toString() ? 'active' : ''}`}
-              key={entityId}
-              style={contentItemChartStyleOverride}>
+              className={contentItemClasses}
+              key={entityId}>
 
               <ContentItemChart
                 chartWidth={starburstData.chartWidth}
