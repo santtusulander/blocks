@@ -46,7 +46,7 @@ export function getDefaultService (service_id) {
   }
   
   //flow_direction related only for media delivery service
-  if (service_id === 1) {
+  if (service_id !== 1) {
     delete defaultObj.flow_direction
   }
 

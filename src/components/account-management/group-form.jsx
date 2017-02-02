@@ -64,17 +64,18 @@ const GroupForm = ({
         <hr/>
 
         {(accountIsContentProviderType) &&
-          <Field
-            name="services"
-            component={ServiceOptionSelector}
-            showServiceItemForm={showServiceItemForm}
-            options={serviceOptions}
-            onChangeServiceItem={onChangeServiceItem}
-            label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
-          />
+          <div>
+            <Field
+              name="services"
+              component={ServiceOptionSelector}
+              showServiceItemForm={showServiceItemForm}
+              options={serviceOptions}
+              onChangeServiceItem={onChangeServiceItem}
+              label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+            />
+            <hr/>
+          </div>
         }
-
-        <hr/>
 
         {(!accountIsServiceProviderType && groupId) &&
           <div>
