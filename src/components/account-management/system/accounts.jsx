@@ -154,7 +154,7 @@ class AccountList extends Component {
               value={this.state.search}
               onChange={({ target: { value } }) => this.setState({ search: value })} />
           </FormGroup>
-          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount(Map())}}>
+          <Button bsStyle="success" className="btn-icon" onClick={() => {this.props.editAccount()}}>
             <IconAdd/>
           </Button>
         </SectionHeader>
@@ -172,7 +172,7 @@ class AccountList extends Component {
           <tbody>
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
-            const servicesIds = getServicesIds(account.get('services'))
+            const servicesIds = getServicesIds(account.get('services')) || List()
 
             return (
               <tr key={index}>

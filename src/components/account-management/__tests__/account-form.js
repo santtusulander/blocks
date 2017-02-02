@@ -38,7 +38,7 @@ describe('AccountForm', () => {
           accountName: { touched, error, value: '' },
           accountBrand: { touched, error, value: '' },
           accountType: { touched, error, value: '' },
-          services: { touched, error, value: [] },
+          accountServices: { touched, error, value: [] },
         }
       }
       return shallow(<AccountForm {...props}/>)
@@ -82,7 +82,7 @@ describe('Connected AccountForm', () => {
         accountName: '',
         accountBrand: '',
         accountType: '',
-        services: ''
+        servicesInfo: ''
       }
     }
   })

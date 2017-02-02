@@ -56,3 +56,6 @@ export const REGIONS_TYPES = [
 export const DNS_MIN_REFRESH = 0
 export const DNS_MIN_TTL = 0
 export const DNS_MAX_TTL = 2147483647
+
+export const REGION_LOCATION_TYPE = 'region'
+export const GLOBAL_LOCATION_TYPE = 'global'

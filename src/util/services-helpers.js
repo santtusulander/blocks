@@ -3,10 +3,10 @@ import { fromJS, List } from 'immutable'
 export function getServicesIds (services = List()) {
   const serv = services.toJS()
 
-  return fromJS(serv.map(({ service_id, options }) => {
+  return fromJS(serv.map(({ service_id, options = [] }) => {
     return {
       id: service_id,
-      options: options ? options.map(({option_id}) => option_id) : []
+      options: options.map(({option_id}) => option_id)
     }
   }))
 }
@@ -72,7 +72,7 @@ export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, 
     if (accountItem || groupItem) {
       const accountOptions = accountItem ? accountItem.get('options') : List()
       const groupOptions = groupItem ? groupItem.get('options') : List()
-      const allOptions = accountOptions.merge(groupOptions)
+      const allOptions = accountOptions.concat(groupOptions)
       acc.push( {
         ...service,
         options: service.options.filter(option => allOptions.contains(option.value))

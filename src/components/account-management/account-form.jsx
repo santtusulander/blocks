@@ -15,7 +15,8 @@ import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 import {getProviderTypeOptions, getServiceOptions, getServicesInfo} from '../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
 import {
-  BRAND_OPTIONS
+  BRAND_OPTIONS,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
@@ -158,7 +159,7 @@ class AccountForm extends React.Component {
 
            <hr/>
 
-           { accountType && accountType === 1 &&
+           { accountType && accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
               <Field
                 name="accountServicesIds"
                 component={FieldFormGroupMultiOptionSelector}
@@ -168,7 +169,7 @@ class AccountForm extends React.Component {
               />
            }
 
-           { accountType && accountType !== 1 &&
+           { accountType && accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER &&
               <Field
                 name="accountServices"
                 component={ServiceOptionSelector}
@@ -222,6 +223,7 @@ AccountForm.propTypes = {
 }
 
 AccountForm.defaultProps = {
+  account: Map(),
   serviceOptions: []
 }
 

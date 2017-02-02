@@ -6,7 +6,11 @@ import { ControlLabel, FormGroup, Radio } from 'react-bootstrap'
 import FieldFormGroup from '../../../form/field-form-group'
 import RegionsField from './regions-field'
 
-import { REGIONS_TYPES} from '../../../../constants/account-management-options'
+import { 
+  REGIONS_TYPES,
+  REGION_LOCATION_TYPE,
+  GLOBAL_LOCATION_TYPE
+} from '../../../../constants/account-management-options'
 import { getLocationTypeFromBillingMeta } from '../../../../util/services-helpers'
 
 class ChargeNumbersField extends React.Component {
@@ -27,12 +31,12 @@ class ChargeNumbersField extends React.Component {
 
     const copy = {...input.value}
 
-    if (locationType === 'region') {
+    if (locationType === REGION_LOCATION_TYPE) {
       delete copy.charge_number
       copy.regions = []
     }
 
-    if (locationType === 'global') {
+    if (locationType === GLOBAL_LOCATION_TYPE) {
       delete copy.regions
       copy.charge_number = ''
     }
@@ -52,7 +56,7 @@ class ChargeNumbersField extends React.Component {
 
           <Radio
             value="region"
-            checked={this.state.locationType === 'region'}
+            checked={this.state.locationType === REGION_LOCATION_TYPE}
             onChange={e => this.onChangeLocation(e.target.value, input)}
           >
             <FormattedMessage id="portal.account.chargeNumbersForm.by_region.title"/>
@@ -60,7 +64,7 @@ class ChargeNumbersField extends React.Component {
 
           <Radio
             value="global"
-            checked={this.state.locationType === 'global'}
+            checked={this.state.locationType === GLOBAL_LOCATION_TYPE}
             onChange={e => this.onChangeLocation(e.target.value, input)}
           >
             <FormattedMessage id="portal.account.chargeNumbersForm.use_global_rate.title"/>
@@ -69,7 +73,7 @@ class ChargeNumbersField extends React.Component {
 
         <hr/>
 
-        { this.state.locationType === 'region' &&
+        { this.state.locationType === REGION_LOCATION_TYPE &&
           <FieldArray
             name="billing_meta.regions"
             component={RegionsField}
@@ -79,7 +83,7 @@ class ChargeNumbersField extends React.Component {
           />
         }
 
-        { this.state.locationType === 'global' &&
+        { this.state.locationType === GLOBAL_LOCATION_TYPE &&
           <Field
             type="text"
             name="billing_meta.charge_number"

@@ -9,6 +9,7 @@ class RegionsField extends React.Component {
 
     this.handleChangeRegion = this.handleChangeRegion.bind(this)
     this.handleChangeChargeNumber = this.handleChangeChargeNumber.bind(this)
+    this.renderRegionItem = this.renderRegionItem.bind(this)
   }
 
   componentWillMount() {
@@ -42,45 +43,47 @@ class RegionsField extends React.Component {
     this.setState({[region_code]: charge_number})
   }
 
+  renderRegionItem (regions, item, i) {
+    const index = regions.indexOf(item.value)
+    const hasValue = index >= 0
+
+    return (
+      <div key={i}>
+        <br/>
+        <FormGroup>
+          <Checkbox
+            checked={hasValue}
+            onChange={e => this.handleChangeRegion(item, hasValue, index, e)}
+          >
+            <span>{item.label}</span>
+          </Checkbox>
+          <FormGroup>
+            <InputGroup>
+              <InputGroup.Addon><FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" /></InputGroup.Addon>
+              <FormControl
+                value={this.state[item.value]}
+                disabled={!hasValue}
+                type='text'
+                onChange={e => this.handleChangeChargeNumber(item.value, e.target.value, index)}
+              />
+            </InputGroup>
+          </FormGroup>
+        </FormGroup>
+      </div>
+    )
+  }
+
   render() {
     const { iterable, fields, label, required = true } = this.props
-    const values = fields.getAll()
-    const regions = values.map(item => item.region_code)
+    const regions = fields.getAll().map(item => item.region_code)
 
     return (
       <FormGroup>
         {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
-        {iterable.map((checkbox, i) => {
-          const index = regions.indexOf(checkbox.value)
-          const hasValue = index >= 0
-
-          return (
-            <div key={i}>
-              <br/>
-              <FormGroup>
-                <Checkbox
-                  checked={hasValue}
-                  onChange={e => this.handleChangeRegion(checkbox, hasValue, index, e)}
-                >
-                  <span>{checkbox.label}</span>
-                </Checkbox>
-                <FormGroup>
-                  <InputGroup>
-                    <InputGroup.Addon><FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" /></InputGroup.Addon>
-                    <FormControl
-                      value={this.state[checkbox.value]}
-                      disabled={!hasValue}
-                      type='text'
-                      onChange={e => this.handleChangeChargeNumber(checkbox.value, e.target.value, index)}
-                    />
-                  </InputGroup>
-                </FormGroup>
-              </FormGroup>
-            </div>
-          )
-        })
-      }
-    </FormGroup>
+        {iterable.map((item, i) => {
+          return this.renderRegionItem(regions, item, i)
+        })}
+      </FormGroup>
     )
   }
 }

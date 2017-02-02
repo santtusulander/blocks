@@ -21,7 +21,8 @@ function hostActionsMaker() {
 
 const props = {
   hostActions: hostActionsMaker(),
-  params: { brand: 'foo', account: 'bar' }
+  params: { brand: 'foo', account: 'bar' },
+  fetchServiceInfo: jest.fn()
 }
 
 const subject = shallow(
