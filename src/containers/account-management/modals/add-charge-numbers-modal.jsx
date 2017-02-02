@@ -57,6 +57,10 @@ class AddChargeNumbersModal extends React.Component {
   }
 }
 
+AddChargeNumbersModal.defaultProps = {
+  activeServiceItem: Map()
+}
+
 AddChargeNumbersModal.displayName = 'AddChargeNumbersModal'
 AddChargeNumbersModal.propTypes = {
   activeServiceItem: PropTypes.instanceOf(Map), 

@@ -78,7 +78,12 @@ class ServiceOptionSelector extends React.Component {
           {itemInfo.requires_charge_number
             ? <a
                 className="btn btn-icon btn-transparent"
-                onClick={(e) => {e.stopPropagation(); this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback)}}
+                onClick={(e) => {
+                  if (isService) {
+                    e.stopPropagation()
+                    this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback)
+                  }
+                }}
               >
                 {isEnabled ? <IconChevronRightBold /> : <IconChevronRight />}
               </a>

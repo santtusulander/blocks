@@ -91,7 +91,7 @@ class EntityEdit extends React.Component {
     const entity = this.state.entityToUpdate.deleteIn(this.state.activeServiceItemPath)
 
     this.setState({
-      accountToUpdate: entity,
+      entityToUpdate: entity,
       activeServiceItem: Map(),
       activeServiceItemPath: null
     })

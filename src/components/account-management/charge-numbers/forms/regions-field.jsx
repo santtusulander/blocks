@@ -75,7 +75,8 @@ class RegionsField extends React.Component {
 
   render() {
     const { iterable, fields, label, required = true } = this.props
-    const regions = fields.getAll().map(item => item.region_code)
+    const allFields = fields.getAll() || []
+    const regions = allFields.map(item => item.region_code)
 
     return (
       <FormGroup>
@@ -86,6 +87,10 @@ class RegionsField extends React.Component {
       </FormGroup>
     )
   }
+}
+
+RegionsField.defaultProps = {
+  iterable: []
 }
 
 RegionsField.displayName = 'RegionsField'

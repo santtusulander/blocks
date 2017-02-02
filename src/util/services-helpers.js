@@ -1,4 +1,5 @@
 import { fromJS, List } from 'immutable'
+import { REGION_LOCATION_TYPE, GLOBAL_LOCATION_TYPE } from '../constants/account-management-options'
 
 export function getServicesIds (services = List()) {
   const serv = services.toJS()
@@ -12,20 +13,20 @@ export function getServicesIds (services = List()) {
 }
 
 export function getServicesFromIds (servicesIds = []) {
-  return servicesIds.map(({ id, options }) => {
+  return servicesIds.map(({ id, options = [] }) => {
     return {
       service_id: id,
-      options: options ? options.map((option_id) => ({ option_id })) : []
+      options: options.map((option_id) => ({ option_id }))
     }
   })
 }
 
 export function getLocationTypeFromBillingMeta (meta) {
-  return meta.regions && meta.regions.length ? 'region' : 'global'
+  return meta.regions && meta.regions.length ? REGION_LOCATION_TYPE : GLOBAL_LOCATION_TYPE
 }
 
 export function getServiceById (serviceInfo, id) {
-  return serviceInfo ? serviceInfo.get(String(id)) : new Map()
+  return serviceInfo ? serviceInfo.get(String(id)) : Map()
 }
 
 export function getOptionById (serviceInfo, id) {
