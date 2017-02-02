@@ -19,6 +19,7 @@ import EntityList from '../components/network/entity-list'
 
 import {
   ADD_EDIT_NETWORK,
+  ADD_EDIT_GROUP,
   ADD_EDIT_POP,
   ADD_EDIT_POD,
   ADD_NODE
@@ -31,6 +32,7 @@ import {
 } from '../constants/network'
 
 import NetworkFormContainer from './network/modals/network-modal'
+import GroupFormContainer from '../containers/account-management/modals/group-form'
 import PopFormContainer from './network/modals/pop-modal'
 import PodFormContainer from './network/modals/pod-modal'
 import AddNodeContainer from './network/modals/add-node-modal'
@@ -243,6 +245,11 @@ class Network extends React.Component {
   addEntity(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_GROUP:
+        this.setState({groupId: null})
+        this.props.toggleModal(ADD_EDIT_GROUP)
+        break;
+
       case ADD_EDIT_NETWORK:
         this.setState({networkId: null})
         this.props.toggleModal(ADD_EDIT_NETWORK)
@@ -270,6 +277,11 @@ class Network extends React.Component {
 
   handleCancel(entityModal) {
     switch (entityModal) {
+
+      case ADD_EDIT_GROUP:
+        this.props.toggleModal(null)
+        this.setState({groupId: null})
+        break;
 
       case ADD_EDIT_NETWORK:
         this.props.toggleModal(null)
@@ -612,7 +624,7 @@ class Network extends React.Component {
           <EntityList
             ref={groups => this.entityList.groupList = groups}
             entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
-            addEntity={() => null}
+            addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
             deleteEntity={() => (groupId) => this.handleGroupEdit(groupId)}
             editEntity={() => (groupId) => this.handleGroupEdit(groupId)}
             selectEntity={this.handleGroupClick}
@@ -668,9 +680,13 @@ class Network extends React.Component {
           />
         </PageContainer>
 
-        {/* MODALS
-            TODO: Add/edit Group
-        */}
+        {networkModal === ADD_EDIT_GROUP &&
+          <GroupFormContainer
+            params={this.props.params}
+            onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
+            show={true}
+          />
+        }
 
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
