@@ -32,20 +32,19 @@ class NetworkFormContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const { accountId, groupId, networkId } = this.props
-    const { nextBrand, nextAccountId, nextGroupId, nextNetworkId } = nextProps
+    const { brand, accountId, groupId, networkId } = nextProps
 
     // If editing => fetch data from API
-    if (networkId !== nextNetworkId) {
-      nextNetworkId && this.props.fetchNetwork({nextBrand, account: nextAccountId, group: nextGroupId, id: nextNetworkId})
+    if (this.props.networkId !== networkId) {
+      networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     }
 
-    if (accountId !== nextAccountId) {
-      nextAccountId && this.props.fetchAccount({nextBrand, id: nextAccountId})
+    if (this.props.accountId !== accountId) {
+      accountId && this.props.fetchAccount({brand, id: accountId})
     }
 
-    if (groupId !== nextGroupId) {
-      nextGroupId && this.props.fetchGroup({nextBrand, account: nextAccountId, id: nextGroupId})
+    if (this.props.groupId !== groupId) {
+      groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     }
 
   }

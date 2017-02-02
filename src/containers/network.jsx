@@ -192,27 +192,26 @@ class Network extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group } = this.props.params
-    const { nextGroup, nextNetwork, nextPop, nextPod } = nextProps.params
+    const { group, network, pop, pod } = nextProps.params
 
-    if (nextGroup) {
+    if (group) {
       this.setState({ networks: placeholderNetworks })
     }
 
-    if (nextNetwork) {
+    if (network) {
       this.setState({ pops: placeholderPops })
     }
 
-    if (nextPop) {
+    if (pop) {
       this.setState({ pods: placeholderPods })
     }
 
-    if (nextPod) {
+    if (pod) {
       this.setState({ nodes: placeholderNodes })
     }
 
-    if (group !== nextGroup) {
-      this.props.fetchNetworks( nextGroup )
+    if (this.props.params.group !== group) {
+      this.props.fetchNetworks( group )
     }
   }
 
