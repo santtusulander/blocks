@@ -22,9 +22,9 @@ class NetworkFormContainer extends React.Component {
   }
 
   componentWillMount(){
-    const {brand, accountId,groupId,networkId} = this.props
+    const { brand, accountId, groupId, networkId } = this.props
 
-    //If editing => fetch data from API
+    // If editing => fetch data from API
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
@@ -32,19 +32,20 @@ class NetworkFormContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const {brand, accountId,groupId,networkId} = nextProps
+    const { accountId, groupId, networkId } = this.props
+    const { nextBrand, nextAccountId, nextGroupId, nextNetworkId } = nextProps
 
-    //If editing => fetch data from API
-    if (this.props.networkId !== networkId) {
-      networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    // If editing => fetch data from API
+    if (networkId !== nextNetworkId) {
+      nextNetworkId && this.props.fetchNetwork({nextBrand, account: nextAccountId, group: nextGroupId, id: nextNetworkId})
     }
 
-    if (this.props.accountId !== accountId) {
-      accountId && this.props.fetchAccount({brand, id: accountId})
+    if (accountId !== nextAccountId) {
+      nextAccountId && this.props.fetchAccount({nextBrand, id: nextAccountId})
     }
 
-    if (this.props.groupId !== groupId) {
-      groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    if (groupId !== nextGroupId) {
+      nextGroupId && this.props.fetchGroup({nextBrand, account: nextAccountId, id: nextGroupId})
     }
 
   }
@@ -58,11 +59,10 @@ class NetworkFormContainer extends React.Component {
       description: values.description
     }
 
-    //add id if create new
+    // add id if create new
     if (!edit) {
       data.id = values.name
     }
-
 
     const params = {
       brand: 'udn',
@@ -81,7 +81,7 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
-        //Close modal
+        // Close modal
         this.props.onCancel();
       })
   }
@@ -105,7 +105,7 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
-        //Close modal
+        // Close modal
         this.props.onCancel();
       })
   }
@@ -114,14 +114,14 @@ class NetworkFormContainer extends React.Component {
    * Used to check if current element has children (and can be deleted)
    */
   hasChildren() {
-    //TODO: this should check weather the current Network has POPs or not
+    // TODO: this should check weather the current Network has POPs or not
     return false
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel} = this.props
+    const { account, group, network, initialValues, onCancel } = this.props
 
-    //simple way to check if editing -> no need to pass 'edit' - prop
+    // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
 
     const title = edit ? <FormattedMessage id="portal.network.networkForm.editNetwork.title"/>

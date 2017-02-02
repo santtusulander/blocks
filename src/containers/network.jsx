@@ -185,32 +185,34 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
+    const { group } = this.props.params
     this.props.fetchData()
 
-    this.props.fetchNetworks( this.props.params.group)
+    this.props.fetchNetworks(group)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop, pod } = nextProps.params
+    const { group } = this.props.params
+    const { nextGroup, nextNetwork, nextPop, nextPod } = nextProps.params
 
-    if (group) {
+    if (nextGroup) {
       this.setState({ networks: placeholderNetworks })
     }
 
-    if (network) {
+    if (nextNetwork) {
       this.setState({ pops: placeholderPops })
     }
 
-    if (pop) {
+    if (nextPop) {
       this.setState({ pods: placeholderPods })
     }
 
-    if (pod) {
+    if (nextPod) {
       this.setState({ nodes: placeholderNodes })
     }
 
-    if (this.props.params.group !== group) {
-      this.props.fetchNetworks( group )
+    if (group !== nextGroup) {
+      this.props.fetchNetworks( nextGroup )
     }
   }
 
@@ -619,7 +621,7 @@ class Network extends React.Component {
           />
 
           <EntityList
-            ref={networks => this.entityList.networkList = networks}
+            ref={networkListRef => this.entityList.networkList = networkListRef}
             entities={params.group && networks}
             addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
             deleteEntity={() => () => null}
