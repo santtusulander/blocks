@@ -2,15 +2,17 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { SubmissionError } from 'redux-form'
-import { Map } from 'immutable'
+import { List, Map } from 'immutable'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
+import popActions from '../../../redux/modules/entities/pops/actions'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkForm from '../../../components/network/forms/network-form'
@@ -28,6 +30,7 @@ class NetworkFormContainer extends React.Component {
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    networkId && this.props.fetchPops({brand, account: accountId, group: groupId, network: networkId})
 
   }
 
@@ -112,9 +115,8 @@ class NetworkFormContainer extends React.Component {
   /**
    * Used to check if current element has children (and can be deleted)
    */
-  hasChildren() {
-    // TODO: this should check weather the current Network has POPs or not
-    return false
+  hasChildren(edit) {
+    return !!(edit ? this.props.pops.size : false)
   }
 
   render() {
@@ -133,7 +135,7 @@ class NetworkFormContainer extends React.Component {
       <div>
         <SidePanel show={true} title={title} subTitle={subTitle} cancel={onCancel}>
           <NetworkForm
-            hasPops={this.hasChildren()}
+            hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
             onSave={(values) => this.onSave(edit, values)}
             onDelete={(networkId) => this.onDelete(networkId)}
@@ -154,6 +156,7 @@ NetworkFormContainer.propTypes = {
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
+  fetchPops: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
@@ -162,7 +165,8 @@ NetworkFormContainer.propTypes = {
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
+  pops: PropTypes.instanceOf(List)
 }
 
 NetworkFormContainer.defaultProps = {
@@ -174,12 +178,14 @@ NetworkFormContainer.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
+  const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
   const edit = !!ownProps.networkId
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network,
+    pops,
 
     initialValues: {
       name: edit && network ? network.get('name') : '',
@@ -196,7 +202,8 @@ const mapDispatchToProps = (dispatch) => {
 
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) )
+    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
+    fetchPops: (params) => dispatch( popActions.fetchAll(params) )
 
   }
 }
