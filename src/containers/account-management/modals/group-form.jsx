@@ -13,6 +13,8 @@ import SidePanel from '../../../components/side-panel'
 import TruncatedTitle from '../../../components/truncated-title'
 import ModalWindow from '../../../components/modal'
 
+import NetworkLocationFormContainer from '../../network/modals/location-modal'
+
 import {
   userIsContentProvider,
   userIsCloudProvider,
@@ -29,13 +31,16 @@ class GroupFormContainer extends React.Component {
     this.state = {
       hostToDelete: null,
       usersToAdd: List(),
-      usersToDelete: List()
+      usersToDelete: List(),
+      showLocationForm: false
     }
 
     this.notificationTimeout = null
 
     this.onSubmit = this.onSubmit.bind(this)
     this.handleDeleteHost = this.handleDeleteHost.bind(this)
+    this.showLocationForm = this.showLocationForm.bind(this)
+    this.hideLocationForm = this.hideLocationForm.bind(this)
   }
 
   componentWillMount() {
@@ -62,6 +67,14 @@ class GroupFormContainer extends React.Component {
         return onSave(values, this.state.usersToAdd)
       }
     }
+  }
+
+  showLocationForm() {
+    this.setState({ showLocationForm: true })
+  }
+
+  hideLocationForm() {
+    this.setState({ showLocationForm: false })
   }
 
   // deleteMember(userEmail) {
@@ -211,6 +224,7 @@ class GroupFormContainer extends React.Component {
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
             isInNetwork={isInNetwork}
+            onAddLocation={this.showLocationForm}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit} />
@@ -234,6 +248,12 @@ class GroupFormContainer extends React.Component {
           cancel={() => this.setState({ hostToDelete: null })}
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
+
+      <NetworkLocationFormContainer
+        onCancel={this.hideLocationForm}
+        show={this.state.showLocationForm}
+      />
+
       </div>
     )
   }

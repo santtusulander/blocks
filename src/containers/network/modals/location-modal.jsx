@@ -35,7 +35,8 @@ class NetworkLocationFormContainer extends Component {
       addressFetching,
       onCancel,
       invalid,
-      initialValues
+      initialValues,
+      show
     } = this.props;
 
     const title = edit
@@ -45,7 +46,7 @@ class NetworkLocationFormContainer extends Component {
     return (
       <div>
         <SidePanel
-          show={true}
+          show={show}
           title={title}
           cancel={() => onCancel()}
         >
@@ -78,7 +79,8 @@ NetworkLocationFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  show: PropTypes.bool
 };
 
 const cloudProvidersOptions = {

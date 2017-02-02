@@ -5,7 +5,7 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { Button, Table, FormGroup } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
 import UDNButton from '../button'
@@ -46,6 +46,7 @@ const GroupForm = ({
   invalid,
   isFetchingHosts,
   isInNetwork,
+  onAddLocation,
   onCancel,
   onDeleteHost,
   onSubmit}) => {
@@ -91,11 +92,9 @@ const GroupForm = ({
           {isInNetwork &&
             <div>
               <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
-              <FormGroup className="pull-right">
-                <UDNButton bsStyle="success" icon={true} addNew={true} onClick={() => {console.log('a')}}>
-                  <IconAdd/>
-                </UDNButton>
-              </FormGroup>
+              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={onAddLocation}>
+                <IconAdd/>
+              </UDNButton>
             </div>
           }
 
@@ -163,6 +162,7 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
   isInNetwork: PropTypes.bool,
+  onAddLocation: PropTypes.func,
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onSubmit: PropTypes.func
