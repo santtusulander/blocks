@@ -38,8 +38,7 @@ class AddNodeContainer extends React.Component {
       pop_id: this.props.params.pop,
       env: values.node_env,
       custom_grains: [],
-      type: values.node_type,
-
+      type: values.node_type
 
     }
     console.log(values);
@@ -93,14 +92,16 @@ AddNodeContainer.propTypes = {
 
 const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { params: { pop } }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const nodeRole = formSelector(state, 'node_role') || 'cache'
   const nodeEnv = formSelector(state, 'node_env') || 'production'
   const nodeType = formSelector(state, 'node_type')
   const cloudDriver = formSelector(state, 'cloud_driver')
+
   return {
     numNodes,
+    popLocation: pop => 'soc01', //TODO Once the pop redux gets merged, replace with pop selector
     initialValues: {
       numNodes,
       node_role: nodeRole,
