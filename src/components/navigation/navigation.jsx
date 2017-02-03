@@ -26,9 +26,7 @@ import {
 } from '../../constants/permissions'
 
 import {
-  accountIsContentProviderType,
   accountIsServiceProviderType,
-  userIsContentProvider,
   userIsServiceProvider
 } from '../../util/helpers'
 
@@ -58,7 +56,6 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   }
 
   const isSP = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
-  const isCP = userIsContentProvider(currentUser) || accountIsContentProviderType(activeAccount)
 
   return (
     <nav className='navigation-sidebar text-sm'>
@@ -85,14 +82,12 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
           </li>
         }
 
-        {(isSP || isCP) &&
-          <li>
-            <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
-              <IconDashboard />
-              <span>Dashboard</span>
-            </Link>
-          </li>
-        }
+        <li>
+          <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
+            <IconDashboard />
+            <span>Dashboard</span>
+          </Link>
+        </li>
 
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>

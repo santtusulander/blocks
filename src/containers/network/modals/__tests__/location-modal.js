@@ -17,6 +17,7 @@ describe('NetworkLocationFormContainer', () => {
   beforeEach(() => {
     subject = (editMode = false) => {
       let props = {
+        fetchIataCodes: jest.fn(),
         onCancel: jest.fn(),
         onSave: jest.fn(),
         onSubmit: jest.fn(),

@@ -14,7 +14,7 @@ const FieldFormGroupTypeahead = ({
   input,
   intl,
   label,
-  meta, meta: { touched, error },
+  meta, meta: { dirty, error },
   multiple = false,
   newSelectionPrefix,
   options,
@@ -41,7 +41,7 @@ const FieldFormGroupTypeahead = ({
     )
   }
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+    <FormGroup className={classNames({'has-error': error && dirty})} controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <Typeahead
@@ -54,13 +54,15 @@ const FieldFormGroupTypeahead = ({
         emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
-        onChange={onChange ? (selected) => onChange(selected) : e => input.onChange(e)}
-        options={options}
         placeholder={placeholder}
+        onChange={onChange ? (selected) => onChange(selected) : e => input.onChange(e)}
+        onBlur={() => input.onBlur(input.value)}
+        options={options}
+        selected={Array.isArray(input.value) ? input.value : [input.value]}
         renderToken={renderToken}
       />
 
-      {error && touched &&
+    {error &&
       <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>

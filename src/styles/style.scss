@@ -90,6 +90,7 @@
 @import 'components/typeahead';
 @import 'components/truncated-title';
 @import 'components/map';
+@import 'components/file-upload';
 // Support
 @import 'components/support/ticket-form';
 @import 'components/support/ticket-modal';
@@ -134,6 +135,7 @@
 // SP Dashboard
 @import 'components/stacked-by-time-summary';
 // Network
+@import 'components/network/add-node-form';
 @import 'components/network/entities-container';
 @import 'components/network/entity-list';
 @import 'components/network/network-item';
