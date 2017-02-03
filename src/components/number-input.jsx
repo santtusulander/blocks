@@ -15,7 +15,7 @@ const NumberInput = (props) => {
       newValue = Number(value) + enteredValue
     } else {
       if (enteredValue === '') {
-        newValue = 0
+        newValue = ''
       } else if (enteredValue == parseInt(enteredValue, 10)) {
         newValue = Number(enteredValue)
       } else {
@@ -23,9 +23,9 @@ const NumberInput = (props) => {
       }
     }
 
-    if (newValue < min) {
+    if (newValue && newValue < min) {
       return onChange(min)
-    } else if (newValue > max) {
+    } else if (newValue && newValue > max) {
       return onChange(max)
     } else {
       return onChange(newValue)

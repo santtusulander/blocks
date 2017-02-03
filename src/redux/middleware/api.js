@@ -33,7 +33,7 @@ export default function apiMiddleware({ dispatch, getState }) {
     }
 
     if (!forceReload && getState().cache[cacheKey] > CACHE_EXPIRATION_TIME) {
-      return;
+      return Promise.resolve();
     }
 
     if (cacheKey) {

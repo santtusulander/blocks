@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
@@ -11,6 +11,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
+import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validate = ({ name, description }) => {
   const conditions = {
@@ -19,8 +20,10 @@ const validate = ({ name, description }) => {
       errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
     },
     description: {
-      condition: !isValidTextField(description),
-      errorText: <MultilineTextFieldError fieldLabel="portal.common.description" />
+      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
+      errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
+                                          minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
     }
   }
   return checkForErrors(
@@ -31,15 +34,26 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onCancel, onSave, onDelete }) => {
+const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete }) => {
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
+  //simple way to check if editing -> no need to pass 'edit' - prop
+  const edit = !!initialValues.name
+
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
+
   return (
-    <form
-      onSubmit={handleSubmit(onSave)}>
+    <form onSubmit={handleSubmit(onSave)}>
+
+      { //This block will be shown when SubmissionError has been thrown form async call
+        error &&
+        <p className='has-error'>
+          <span className='help-block'>{error}</span>
+        </p>
+      }
+
       <Field
         name="name"
         placeholder={intl.formatMessage({id: 'portal.network.networkForm.name.placeholder'})}
@@ -61,10 +75,15 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
               id="delete-btn"
               className="btn-danger"
               disabled={hasPops}
-              onClick={onDelete}
+              onClick={() => onDelete(initialValues.name)}
               tooltipId="tooltip-help"
               tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-              {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>}
+              {
+                //Commented out: as submitting is also true when 'saving'.
+                //Should show DELETE -modal and ask for confirmation
+                //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
+              }
+              <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           </ButtonToolbar>
         }
@@ -78,7 +97,7 @@ const NetworkForm = ({ edit, fetching, handleSubmit, intl, invalid, hasPops, onC
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || fetching}>
+            disabled={invalid || submitting}>
             {actionButtonTitle}
           </Button>
         </ButtonToolbar>
@@ -98,7 +117,8 @@ NetworkForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSave: PropTypes.func
+  onSave: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
