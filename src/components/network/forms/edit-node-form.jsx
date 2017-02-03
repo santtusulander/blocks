@@ -9,8 +9,8 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import FieldFormGroup from '../../form/field-form-group'
 import DefaultErrorBlock from '../../form/default-error-block'
+import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
@@ -284,7 +284,8 @@ class NetworkEditNodeForm extends React.Component {
       invalid,
       nodes,
       pristine,
-      submitting
+      submitting,
+      error
     } = this.props
 
     const { hasMultipleNodes } = this.state

@@ -149,8 +149,7 @@ class EditNodeFormContainer extends React.Component {
       cancelButton: true,
       cancel: () => this.onToggleDeleteModal(false),
       onSubmit: () => {
-        return this.props.onDelete(this.props.nodeIds).catch(error => {
-          console.log(error);
+        return this.props.onDelete(this.props.nodes).catch(error => {
           throw error
         })
       }
@@ -207,16 +206,17 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, { params, nodeIds, onCancel }) => {
+const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
-  const updateNode = node => dispatch(nodeActions.update({ ...params, id: 32231321321, payload: node }))
+  /* eslint-disable no-unused-vars*/
+  const updateNode = ({ reduxId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
     .then(({ error }) => {
       if (error) {
         return Promise.reject(new SubmissionError({ _error: error.data.message }))
       }
     })
 
-  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id: 234332432 }))
+  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
     .then(({ error }) => {
       if (error) {
         return Promise.reject(new SubmissionError({ _error: error.data.message }))
@@ -236,10 +236,10 @@ const mapDispatchToProps = (dispatch, { params, nodeIds, onCancel }) => {
       ).then(() => onCancel())
     },
 
-    onDelete: () => {
+    onDelete: nodes => {
       return Promise.all(
-        nodeIds.map(
-          id => deleteNode(id)
+        nodes.map(
+          ({ id }) => deleteNode(id)
         )
       ).then(() => onCancel())
     }
