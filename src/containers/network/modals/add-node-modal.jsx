@@ -82,10 +82,6 @@ class AddNodeContainer extends React.Component {
   }
 
   onSubmit(values) {
-<<<<<<< HEAD
-    // TODO: on submit functionality
-    this.props.onSave(values)
-=======
     const node = {
       roles: [ values.node_role ],
       cloud_driver: values.cloud_driver,
@@ -99,7 +95,6 @@ class AddNodeContainer extends React.Component {
     }
 
     return this.props.onSave(node)
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   }
 
   onToggleConfirm(showConfirmation) {
@@ -143,13 +138,9 @@ AddNodeContainer.propTypes = {
   numNodes: PropTypes.number,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
-<<<<<<< HEAD
-  show: PropTypes.bool
-=======
   params: PropTypes.object,
   show: PropTypes.bool,
   subtitle: PropTypes.string
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
 }
 
 const mapStateToProps = (state, { params }) => {
@@ -157,14 +148,9 @@ const mapStateToProps = (state, { params }) => {
   const nameCode = formSelector(state, 'nameCode') || 0
   const nodeEnv = formSelector(state, 'node_env') || 'production'
   const nodeType = formSelector(state, 'node_type')
-<<<<<<< HEAD
-
-  const nodeNameData = buildNodeNameData(nameCode, nodeEnv, nodeType)
-=======
 
   const nodeNameData = buildNodeNameData(nameCode, nodeEnv, nodeType, params)
 
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   return {
     subtitle: getSubtitle(state, params),
     numNodes,
@@ -178,9 +164,6 @@ const mapStateToProps = (state, { params }) => {
   }
 }
 
-<<<<<<< HEAD
-export default connect(mapStateToProps)(injectIntl(AddNodeContainer))
-=======
 const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 
   onSave: node => {
@@ -196,4 +179,3 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNodeContainer))
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
