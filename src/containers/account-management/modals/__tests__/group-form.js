@@ -19,10 +19,19 @@ function hostActionsMaker() {
    }
 }
 
+function uiActionsMaker() {
+  return {
+    showInfoDialog: jest.fn(),
+    hideInfoDialog: jest.fn(),
+    changeNotification: jest.fn()
+  }
+}
+
 const props = {
   hostActions: hostActionsMaker(),
-  params: { brand: 'foo', account: 'bar' },
-  fetchLocations: jest.fn()
+  fetchLocations: jest.fn(),
+  uiActions: uiActionsMaker(),
+  params: { brand: 'foo', account: 'bar', group: '123' }
 }
 
 const subject = shallow(
