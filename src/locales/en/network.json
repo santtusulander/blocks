@@ -39,6 +39,7 @@
   "portal.network.addNodeForm.environment.title": "Environment",
   "portal.network.addNodeForm.type.title": "Type",
   "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
+  "portal.network.addNodeForm.grains.title": "Grains",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
@@ -81,7 +82,12 @@
   "portal.network.footprintForm.csvfile.title.text" : "CSV File",
   "portal.network.footprintForm.name.invalid.text": "Footprint name is invalid",
   "portal.network.footprintForm.description.invalid.text": "Footprint description is invalid",
-  "portal.network.footprintForm.field.required.text": "{field} is required",
+  "portal.network.footprintForm.name.required.text": "Footprint name is required",
+  "portal.network.footprintForm.description.required.text": "Footprint description is required",
+  "portal.network.footprintForm.CIRD.required.text": "At least one valid IPV4 CIDR is required",
+  "portal.network.footprintForm.CIRD.invalid.text": "You should remove all invalid IPV4 CIDR items",
+  "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
+  "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
@@ -118,5 +124,7 @@
   "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
   "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
-  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required"
+  "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text": "BGP AS Number is required",
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address"
 }

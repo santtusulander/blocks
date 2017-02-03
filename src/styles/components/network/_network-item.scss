@@ -5,6 +5,7 @@ $network-item-padding-horizontal: 12px;
 $network-item-padding-vertical: 16px;
 $network-item-status-indicator-width: 8px;
 $network-item-connector-line-offset: rem(32px);
+$connector-offset: 2px;
 
 .network-item {
   position: relative;
@@ -13,50 +14,20 @@ $network-item-connector-line-offset: rem(32px);
   cursor: pointer;
   border: 2px solid;
 
-  &:last-child {
-    margin-bottom: 0;
+  &.entity-list-item {
+    margin-left: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &::before {
-      top: calc(-50% - #{$network-item-padding-vertical});
-      border-top: 0;
-      border-bottom: 2px solid $pale-blue;
+      height: calc(100% + #{$entity-list-item-padding-vertical});
     }
-  }
 
-  &:first-child {
-    &::after {
-      right: -$network-item-connector-line-offset;
-      left: auto;
-      display: none;
-      border-left: 0;
+    &.active::after {
+      left: calc(100% + #{$connector-offset});
     }
-  }
-
-  &::before,
-  &::after {
-    position: absolute;
-    top: 50%;
-    left: -$network-item-connector-line-offset;
-    display: block;
-    width: $page-container-horizontal-padding;
-    height: calc(100% + #{$network-item-padding-vertical});
-    border-top: 2px solid $pale-blue;
-    border-left: 2px solid $pale-blue;
-    content: '';
-  }
-
-  &::after {
-    top: calc(-50% - #{$network-item-padding-vertical});
-    display: none;
-    border-top: 0;
-    border-bottom: 2px solid $pale-blue;
-  }
-
-  &.active::after {
-    right: -$network-item-connector-line-offset;
-    left: auto;
-    display: block;
-    border-left: 0;
   }
 
   &.disabled {
