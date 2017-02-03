@@ -715,15 +715,18 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account } = ownProps.params
+  const { brand, account, pod } = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+
+  const fetchNodes = () => dispatch(nodeActions.fetchAll(nodesUrlParams))
 
   const fetchData = () => {
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
     groupActions.fetchGroups(brand, account)
+    pod && fetchNodes()
   }
 
   return {

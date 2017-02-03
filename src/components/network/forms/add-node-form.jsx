@@ -87,7 +87,7 @@ class NetworkAddNodeForm extends React.Component {
       this.toggleAddConfirm(true)
       return
     }
-    this.props.onSave(values)
+    return this.props.onSave(values)
   }
 
   onCancel(){

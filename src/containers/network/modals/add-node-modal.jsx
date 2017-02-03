@@ -19,16 +19,6 @@ class AddNodeContainer extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
     this.onToggleConfirm = this.onToggleConfirm.bind(this)
   }
-// {
-//   "pop_id": "par",
-//   "name": "sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net",
-//   "roles": ["cache"],
-//   "env": "cdx-dev",
-//   "custom_grains": [],
-//   "type": 1,
-//   "id": "sp-edge10.sfo.cdx-dev.unifieddeliverynetwork.net",
-//   "pod_id": "pod10"
-// }
 
   onSubmit(values) {
     const node = {
@@ -111,8 +101,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, { params }) => ({
-  onSave: node => dispatch(nodeActions.create({ ...params, payload: node }))
+const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
+  onSave: node => dispatch(nodeActions.create({ ...params, payload: node })).then(() => onCancel())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNodeContainer))
