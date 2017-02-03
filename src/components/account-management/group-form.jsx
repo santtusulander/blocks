@@ -96,20 +96,21 @@ const GroupForm = ({
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
-              <ul>
-              {
-                locations.map((location, index) =>
-                  <li
-                    key={index}
-                    onClick={() => onShowLocation(location.get('id'))}>
-                    {`{${location.get('id')}}
-                    ${location.get('lat')}\n
-                    ${location.get('city_name') || 'no-name'}
-                    for
-                    ${location.get('group_id')}`}
-                  </li>)
-              }
-              </ul>
+              <Table striped={true} className="fixed-layout">
+                <tbody>
+                {locations.map((location, index) => {
+                  return (
+                    <tr key={index}>
+                      <td><TruncatedTitle content={location.get('cityName')} /></td>
+                      <td className="one-button-cell">
+                        <ActionButtons
+                          onEdit={() => onShowLocation(location.get('id'))}/>
+                      </td>
+                    </tr>
+                  )
+                })}
+                </tbody>
+              </Table>
             </div>
           }
 
@@ -118,13 +119,13 @@ const GroupForm = ({
               <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
               {isFetchingHosts ? <LoadingSpinner/> :
                 !hosts.isEmpty() ?
-                      <Table striped={true} className="fixed-layout">
+                  <Table striped={true} className="fixed-layout">
                     <thead>
                     <tr>
                       <th>
                         <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
                       </th>
-                          <th className="one-button-cell" />
+                      <th className="one-button-cell" />
                     </tr>
                     </thead>
                     <tbody>

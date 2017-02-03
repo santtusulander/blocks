@@ -25,6 +25,7 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onSubmit(edit, values) {
+    console.log(values)
     const { brand, account, group } = this.props.params
 
     const data = {

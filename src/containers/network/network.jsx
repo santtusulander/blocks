@@ -342,6 +342,7 @@ class Network extends React.Component {
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
+    // this.props.groups.set('activeGroup', this.props.groups.getIn([]))
     return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
@@ -353,10 +354,8 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
-    if (String(groupId) === String(this.props.params.group)) {
-      this.setState({groupId: groupId})
-      this.props.toggleModal(ADD_EDIT_GROUP)
-    }
+    this.setState({groupId: groupId})
+    this.props.toggleModal(ADD_EDIT_GROUP)
     // TODO: this.props.toggleModal(ADD_EDIT_GROUP)
   }
 

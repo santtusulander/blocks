@@ -330,7 +330,7 @@ const  mapStateToProps = (state, ownProps) => {
     hosts: ownProps.groupId && host.get('allHosts'),
     initialValues: determineInitialValues(ownProps.groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    locations: canSeeLocations && getLocationsByGroup(state, ownProps.params.group) || List(),
+    locations: canSeeLocations && getLocationsByGroup(state, ownProps.groupId) || List(),
     name: group.getIn(['activeGroup', 'name'])
   }
 }
