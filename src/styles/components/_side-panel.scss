@@ -3,7 +3,7 @@
 $side-panel-width: rem(636px);
 $side-panel-small-display-margin: rem(12px);
 $side-panel-horizontal-padding: rem(42px);
-$side-panel-header-height: rem(108px);
+$side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
 $side-panel-footer-height: rem(84px);
 $side-panel-footer-vertical-padding: rem(24px);
@@ -32,6 +32,7 @@ $lt-side-panel-bg-color: $white;
   }
 
   .modal-content {
+    height: 100%;
     @include sm {
       margin-left: $side-panel-small-display-margin;
     }
@@ -55,14 +56,10 @@ $lt-side-panel-bg-color: $white;
   }
 
   .modal-body {
-    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin )});
+    height: calc(100vh - #{$side-panel-header-height + (2 * $side-panel-body-margin) + $side-panel-footer-height});
     padding: 0 $side-panel-horizontal-padding;
-    margin: $side-panel-body-margin 0 0;
+    margin: $side-panel-body-margin 0 #{$side-panel-footer-height + $side-panel-body-margin};
     overflow: auto;
-
-    > form {
-      padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
-    }
 
     @include sm {
       max-width: ($side-panel-width - $side-panel-small-display-margin);
@@ -73,8 +70,10 @@ $lt-side-panel-bg-color: $white;
     position: fixed;
     right: 0;
     bottom: 0;
-    left: 0;
+    // TODO: UDNP-2181 - Abstract z-index values to variables
+    z-index: 11;
     width: 100%;
+    max-width: $side-panel-width;
 
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
@@ -87,27 +86,34 @@ $lt-side-panel-bg-color: $white;
     }
 
     @include sm {
-      padding-right: ($side-panel-horizontal-padding + $side-panel-small-display-margin);
-      left: $side-panel-small-display-margin;
+      max-width: ($side-panel-width - $side-panel-small-display-margin);
     }
 
     &__text {
       display: inline-block;
       float: left;
+      padding: 0.5rem 0.5rem 0.5rem 0;
       text-align: left;
-      padding: .5rem .5rem .5rem 0;
+
+      .dark-theme & {
+        color: $dt-text-color;
+      }
+
+      .light-theme & {
+        color: $white-20;
+      }
     }
   }
 
   .side-panel__veil {
-    display: none;
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
+    z-index: 10;
+    display: none;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, .5);
-    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
   }
 
   &.side-panel--dim {
@@ -116,8 +122,13 @@ $lt-side-panel-bg-color: $white;
     }
 
     .modal-footer {
+      // TODO: UDNP-2181 - Abstract z-index values to variables
       z-index: 11;
       background: $dt-side-panel-bg-color;
+
+      @include sm {
+        max-width: ($side-panel-width - $side-panel-small-display-margin);
+      }
     }
   }
 }

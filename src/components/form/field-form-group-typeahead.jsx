@@ -14,11 +14,13 @@ const FieldFormGroupTypeahead = ({
   input,
   intl,
   label,
-  meta, meta: { touched, error },
+  meta, meta: { dirty, error },
   multiple = false,
   newSelectionPrefix,
   options,
   required = true,
+  filterBy,
+  labelKey,
   validation
 }) => {
 
@@ -38,7 +40,7 @@ const FieldFormGroupTypeahead = ({
   }
 
   return (
-    <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+    <FormGroup className={classNames({'has-error': error && dirty})} controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <Typeahead
@@ -46,15 +48,19 @@ const FieldFormGroupTypeahead = ({
         allowNew={allowNew}
         className={className}
         disabled={disabled}
+        filterBy={filterBy}
+        labelKey={labelKey}
         emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
         onChange={e => input.onChange(e)}
+        onBlur={() => input.onBlur(input.value)}
         options={options}
+        selected={input.value}
         renderToken={renderToken}
       />
 
-      {error && touched &&
+    {error &&
       <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
@@ -70,9 +76,11 @@ FieldFormGroupTypeahead.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   emptyLabel: PropTypes.string,
+  filterBy: PropTypes.oneOfType([ PropTypes.string, PropTypes.func, PropTypes.array ]),
   input: PropTypes.object,
   intl: intlShape.isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  labelKey: PropTypes.string,
   meta: PropTypes.object,
   multiple: PropTypes.bool,
   newSelectionPrefix: PropTypes.string,

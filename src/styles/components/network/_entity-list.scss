@@ -2,15 +2,29 @@ $multi-col-item-right-margin: 12px;
 $connector-offset: 2px;
 $entity-list-items-height-offset: 375px;
 
+$entity-list-item-padding-horizontal: 12px;
+$entity-list-item-padding-vertical: 16px;
+$entity-list-item-status-indicator-width: 8px;
+$entity-list-item-connector-line-offset: rem(32px);
+
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
   overflow-x: visible;
-  border-right: 2px solid rgba($black, 0.3);
+  border-right: 2px solid;
   flex: none;
 
+  .dark-theme & {
+    border-right-color: rgba($black, 0.3);
+  }
+
+  .light-theme & {
+    border-right-color: rgba($black, 0.2);
+  }
+
   &:first-child {
-    .network-item {
+    .entity-list-item,
+    .entity-list-item {
       &::before {
         display: none;
       }
@@ -39,15 +53,19 @@ $entity-list-items-height-offset: 375px;
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
+
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding;
+    }
   }
 
   .network-entity-list-items {
     position: relative;
     left: -$connector-offset;
-    max-height: calc(100vh - #{$entity-list-items-height-offset});
-    min-width: calc(100% + #{$connector-offset});
-    overflow-x: hidden;
-    overflow-y: auto;
+    // max-height: calc(100vh - #{$entity-list-items-height-offset});
+    // min-width: calc(100% + #{$connector-offset});
+    // overflow-x: hidden;
+    // overflow-y: auto;
 
     &.multi-column {
       display: flex;
@@ -58,12 +76,70 @@ $entity-list-items-height-offset: 375px;
       margin-right: $multi-col-item-right-margin;
 
       &:not(:first-of-type) {
-        .network-item {
+        .entity-list-item {
           &::before {
             display: none;
           }
         }
       }
+    }
+  }
+
+  .entity-list-item {
+    position: relative;
+    display: block;
+    width: calc(100% + #{$connector-offset});
+    margin-left: $connector-offset;
+
+    .content-item-chart {
+      opacity: 0.65;
+      transform: scale(1);
+
+      .btn-toolbar {
+        text-align: center;
+      }
+    }
+
+    &.active,
+    &.is-account {
+      .content-item-chart {
+        opacity: 1;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+
+      &::before {
+        border-left-width: 0;
+      }
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: -$entity-list-item-connector-line-offset;
+      display: block;
+      width: $page-container-horizontal-padding;
+      height: 100%;
+      border-top: 2px solid $pale-blue;
+      border-left: 2px solid $pale-blue;
+      content: '';
+    }
+
+    &::after {
+      display: none;
+      border-top: 0;
+      border-bottom: 2px solid $pale-blue;
+    }
+
+    &.active::after {
+      left: calc(100% - #{$connector-offset});
+      display: block;
+      width: calc(#{$page-container-horizontal-padding} + #{$connector-offset});
+      height: 2px;
+      border-left: 0;
     }
   }
 }
