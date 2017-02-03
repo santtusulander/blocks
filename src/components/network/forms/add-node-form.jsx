@@ -95,9 +95,12 @@ class NetworkAddNodeForm extends React.Component {
     const finalValues = {...values}
     finalValues.node_name = nodeNameData.name
     return this.props.onSave(finalValues)
+      .catch(error => {
+        throw error
+      })
   }
 
-  onCancel(){
+  onCancel() {
     return this.props.onCancel()
   }
 

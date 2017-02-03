@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { formValueSelector } from 'redux-form'
+import { formValueSelector, SubmissionError } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 // Use this when the network container has the new entities groups
@@ -165,7 +165,17 @@ const mapStateToProps = (state, { params }) => {
 }
 
 const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
-  onSave: node => dispatch(nodeActions.create({ ...params, payload: node })).then(() => onCancel())
+
+  onSave: node => {
+
+    return dispatch(nodeActions.create({ ...params, payload: node }))
+      .then(({ error }) => {
+        if (error) {
+          return Promise.reject(new SubmissionError({ _error: error.data.message }))
+        }
+        onCancel()
+      })
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNodeContainer))

@@ -69,9 +69,6 @@ const placeholderPods = Immutable.fromJS([
   { id: 11, name: 'Pod 11' }
 ])
 
-// This can be replaced with real URL params once we get API integrations to all the other network entities
-const nodesUrlParams = { brand: 'udn', account: '238', group: '339', network: 'Test%202', pop: 'Pop-pop', pod: 'pod1' }
-
 class Network extends React.Component {
   constructor(props) {
     super(props)
@@ -708,8 +705,8 @@ class Network extends React.Component {
 
         {networkModal === ADD_NODE &&
           <AddNodeContainer
-            id="node-form"
-            params={nodesUrlParams}
+            id="add-node-form"
+            params={params}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
