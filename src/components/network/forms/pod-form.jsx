@@ -1,12 +1,15 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { List } from 'immutable'
+import { connect } from 'react-redux'
+import { formValueSelector, reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {
   Button,
-  ButtonToolbar
+  ButtonToolbar,
+  FormGroup
 } from 'react-bootstrap'
 import {
   checkForErrors
@@ -20,29 +23,31 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
+import UDNButton from '../../button'
+import IconAdd from '../../icons/icon-add'
 
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
-import { isValidIPv4Address, isValidASN } from '../../../util/validators'
+import { isValidIPv4Address } from '../../../util/validators'
 
 import './pod-form.scss'
 
 const LBMETHOD_OPTIONS = [
-  {value: 'gslb', label: 'GSLB'}
+  { value: 'gslb', label: 'GSLB' }
 ]
 
 const POD_TYPE_OPTIONS = [
-  {value: 'core', label: 'Core'},
-  {value: 'sp_edge', label: 'SP Edge'}
+  { value: 'core', label: 'Core' },
+  { value: 'sp_edge', label: 'SP Edge' }
 ]
 
 const REQUEST_FWD_TYPE_OPTIONS = [
-  {value: 'gslb_referral', label: 'GSLB Referral'}
+  { value: 'gslb_referral', label: 'GSLB Referral' }
 ]
 
 const DISCOVERY_METHOD_OPTIONS = [
-  {value: 'BGP', label: 'BGP'},
-  {value: 'footprints', label: 'Footprints'}
+  { value: 'BGP', label: 'BGP' },
+  { value: 'footprints', label: 'Footprints' }
 ]
 
 
@@ -50,7 +55,7 @@ const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, 
   const conditions = {
     pod_name: {
       condition: !isValidTextField(pod_name),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label"/>
     }
   }
   return checkForErrors(
@@ -87,34 +92,30 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
-const validateCIDRToken = (item) => {
+const validateIpListToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
-const validateASNToken = (item) => {
-  return item.label && isValidASN(item.label)
-}
-
-
 const PodForm = ({
   asyncValidating,
+  dirty,
+  discoveryMethod,
+  footprints,
   handleSubmit,
   hasNodes,
+  initialValues,
   intl,
   invalid,
-  initialValues,
+  onAddFootprintModal,
   onCancel,
   onDelete,
+  onDeleteFootprint,
+  onEditFootprint,
   onSave,
-  submitting,
-  dirty,
-
-  onAddFootprintModal
-
-  }) => {
+  submitting
+}) => {
 
   const edit = !!initialValues.pod_name
-  //const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
   return (
     <form onSubmit={handleSubmit(onSave)}>
@@ -122,9 +123,9 @@ const PodForm = ({
         type="text"
         name="UIName"
         id="pod_name-field"
-        placeholder={intl.formatMessage({id: 'portal.network.podForm.name.text'})}
+        placeholder={intl.formatMessage({ id: 'portal.network.podForm.name.text' })}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.name.label" />}/>
+        label={<FormattedMessage id="portal.network.podForm.name.label"/>}/>
 
       <div className="form-group">
         <label>Cloud Lookup ID</label>
@@ -136,12 +137,12 @@ const PodForm = ({
         //numericValues={true}
         component={FieldFormGroupSelect}
         options={LBMETHOD_OPTIONS}
-        label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
+        label={intl.formatMessage({ id: "portal.network.podForm.lbMethod.label" })}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
             title={<FormattedMessage id="portal.network.podForm.discoveryMethod.help.label"/>}>
-            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text"/>
           </HelpTooltip>
         }/>
 
@@ -150,19 +151,19 @@ const PodForm = ({
         //numericValues={true}
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS}
-        label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
+        label={intl.formatMessage({ id: "portal.network.podForm.type.label" })}/>
 
       <Field
         type="text"
         name="UILocalAS"
         id="localAS-field"
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
+        label={<FormattedMessage id="portal.network.podForm.localAS.label"/>}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
             title={<FormattedMessage id="portal.network.podForm.localAS.help.label"/>}>
-            <FormattedMessage id="portal.network.podForm.localAS.help.text" />
+            <FormattedMessage id="portal.network.podForm.localAS.help.text"/>
           </HelpTooltip>
         }/>
 
@@ -171,7 +172,7 @@ const PodForm = ({
         //numericValues={true}
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS}
-        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
+        label={intl.formatMessage({ id: "portal.network.podForm.requestForwardType.label" })}/>
 
       <Field
         min={POD_PROVIDER_WEIGHT_MIN}
@@ -179,7 +180,7 @@ const PodForm = ({
         name="UIProviderWeight"
         id="provider_weight-field"
         component={FieldFormGroupNumber}
-        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
+        label={<FormattedMessage id="portal.network.podForm.providerWeight.label"/>}/>
 
       <Field
         required={true}
@@ -188,43 +189,64 @@ const PodForm = ({
         component={FieldFormGroupTypeahead}
         multiple={true}
         options={[]}
-        validation={validateCIDRToken}
-        label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
+        validation={validateIpListToken}
+        label={<FormattedMessage id="portal.network.podForm.ipList.label"/>}
       />
 
       <hr/>
 
       <Field
-        name="UIDiscoveryMethod"
-        //numericValues={true}
+        name="discoveryMethod"
+        disabled={!footprints.isEmpty()}
+        numericValues={true}
         component={FieldFormGroupSelect}
-        options={DISCOVERY_METHOD_OPTIONS}
-        label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
+        options={[
+          [1, intl.formatMessage({ id: 'portal.network.podForm.discoveryMethod.bgp.text' })],
+          [2, intl.formatMessage({ id: 'portal.network.podForm.discoveryMethod.footprintApi.text' })]
+        ]}
+        label={intl.formatMessage({ id: "portal.network.podForm.discoveryMethod.label" })}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
             title={<FormattedMessage id="portal.network.podForm.discoveryMethod.help.label"/>}>
-            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text"/>
           </HelpTooltip>
         }/>
 
-      <button onClick={() => onAddFootprintModal()}>add footprint</button>
-
-
+      {discoveryMethod && discoveryMethod === 2 &&
+      <FormGroup className="footprint-section">
+        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onAddFootprintModal}>
+            <IconAdd/>
+          </UDNButton>
+        </label>
+        {!footprints.isEmpty() &&
+        <div className="footprint-keys">
+          {footprints.map((item, key) =>
+            <div key={key}>
+              {/*TODO: Add action item*/}
+              <p>{item.get('footPrintName')} <span onClick={onEditFootprint}>edit</span> <span
+                onClick={onDeleteFootprint}>del</span></p>
+            </div>
+          )}
+        </div>
+        }
+      </FormGroup>
+      }
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
-          <ButtonToolbar className="pull-left">
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger"
-              disabled={hasNodes}
-              onClick={onDelete}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
-              <FormattedMessage id="portal.button.delete"/>
-            </ButtonDisableTooltip>
-          </ButtonToolbar>
+        <ButtonToolbar className="pull-left">
+          <ButtonDisableTooltip
+            id="delete-btn"
+            className="btn-danger"
+            disabled={hasNodes}
+            onClick={onDelete}
+            tooltipId="tooltip-help"
+            tooltipMessage={{ text: intl.formatMessage({ id: "portal.network.podForm.delete.tooltip.message" }) }}>
+            <FormattedMessage id="portal.button.delete"/>
+          </ButtonDisableTooltip>
+        </ButtonToolbar>
         }
         <ButtonToolbar className="pull-right">
           <Button
@@ -238,7 +260,7 @@ const PodForm = ({
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
-            {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            {edit ? <FormattedMessage id='portal.button.save'/> : <FormattedMessage id='portal.button.add'/>}
           </Button>
         </ButtonToolbar>
       </FormFooterButtons>
@@ -265,9 +287,23 @@ PodForm.propTypes = {
   ]).isRequired
 }
 
-export default reduxForm({
+const form = reduxForm({
   form: 'pod-form',
   validate,
   asyncValidate,
-  asyncBlurFields: [ 'UILocalAS' ]
-})(injectIntl(PodForm))
+  asyncBlurFields: ['UILocalAS']
+})(PodForm)
+
+const mapStateToProps = (state, ownProps) => {
+  const selector = formValueSelector('pod-form')
+  const discoveryMethod = selector(state, 'discoveryMethod')
+
+  return {
+    discoveryMethod,
+    initialValues: Object.assign({}, ownProps.initialValues, {
+      discoveryMethod: !ownProps.footprints.isEmpty() ? 2 : ownProps.discoveryMethod
+    })
+  }
+}
+
+export default connect(mapStateToProps)(injectIntl(form))

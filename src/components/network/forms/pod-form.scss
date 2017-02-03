@@ -1,4 +1,5 @@
 @import '../../../styles/components/modal-form-panel';
+@import '../../../styles/base/buttons';
 
 $input-height: 36px;
 
@@ -31,9 +32,21 @@ $input-height: 36px;
         border-radius: 50%;
 
       }
-
     }
 
+    &.footprint-section {
+      margin: $bar-height 0;
+
+      label {
+        display: block;
+        line-height: $bar-height;
+        margin: $form-group-padding 0;
+      }
+
+      .btn-add-new {
+        float: right;
+      }
+    }
   }
 
   .number-input-group {
