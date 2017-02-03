@@ -93,7 +93,11 @@ const PodForm = ({
   onDelete,
   onSave,
   submitting,
-  dirty}) => {
+  dirty,
+
+  onAddFootprintModal
+
+  }) => {
 
   const edit = !!initialValues.pod_name
 
@@ -177,6 +181,10 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
           </HelpTooltip>
         }/>
+
+      <button onClick={() => onAddFootprintModal()}>add footprint</button>
+
+
 
       <FormFooterButtons autoAlign={false}>
         {edit &&

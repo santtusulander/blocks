@@ -21,12 +21,21 @@ import { getById as getPodById } from '../../../redux/modules/entities/pods/sele
 import SidePanel from '../../../components/side-panel'
 
 import PodForm from '../../../components/network/forms/pod-form'
+import FootprintFormContainer from './footprint-modal'
 
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
     this.checkforNodes = this.checkforNodes.bind(this)
+    this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
+    this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
+
+    this.state = {
+      showFootprintModal: false,
+      //footprints: fromJS(dummyFootprints),
+      initialValues: Map()
+    }
   }
 
   componentWillMount(){
@@ -133,6 +142,14 @@ class PodFormContainer extends React.Component {
     return false
   }
 
+  onAddFootprintModal() {
+    this.setState({ showFootprintModal: true })
+  }
+
+  onCancelFootprintModal() {
+      this.setState({ showFootprintModal: false, initialValues: Map() })
+  }
+
   render() {
     const {
       account,
@@ -169,9 +186,27 @@ class PodFormContainer extends React.Component {
             onCancel={onCancel}
             onDelete={() => this.onDelete(podId)}
             onSave={(values) => this.onSave(edit, values)}
+
+            onAddFootprintModal={this.onAddFootprintModal}
+
           />
 
         </SidePanel>
+
+
+        {this.state.showFootprintModal &&
+          <FootprintFormContainer
+            show={true}
+            editing={!this.state.initialValues.isEmpty()}
+            initialValues={this.state.initialValues}
+            // ASNOptions={dummyASNOptions}
+            // CIDROptions={dummyCIDROptions}
+            // udnTypeOptions={dummyUDNTypeOptions}
+            onCancel={this.onCancelFootprintModal}
+            onSubmit={this.onSubmitFootprintModal}
+          />
+        }
+
       </div>
     )
   }
