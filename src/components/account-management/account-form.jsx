@@ -12,8 +12,8 @@ import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
-import {getProviderTypeOptions, getServiceOptions, getServicesInfo} from '../../redux/modules/service-info/selectors'
-import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
+import { getProviderTypeOptions, getServiceOptions } from '../../redux/modules/service-info/selectors'
+import { fetchAll as serviceInfofetchAll } from '../../redux/modules/service-info/actions'
 import {
   BRAND_OPTIONS,
   ACCOUNT_TYPE_CONTENT_PROVIDER
@@ -66,7 +66,10 @@ class AccountForm extends React.Component {
   }
 
   onSubmit(values, dispatch, { account, accountType, onSave }){
-    const services = accountType !== 1 ? values.accountServices.toJS() : getServicesFromIds(values.accountServicesIds)
+    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER 
+                     ? values.accountServices.toJS()
+                     : getServicesFromIds(values.accountServicesIds)
+
     const data = {
       name: values.accountName,
       provider_type: values.accountType,
@@ -243,8 +246,7 @@ const mapStateToProps = (state, ownProps) => {
     },
     invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),
-    serviceOptions: accountType && getServiceOptions(state, accountType),
-    servicesInfo: getServicesInfo(state)
+    serviceOptions: accountType && getServiceOptions(state, accountType)
   }
 }
 
