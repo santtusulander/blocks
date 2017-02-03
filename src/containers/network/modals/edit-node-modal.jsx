@@ -4,6 +4,9 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
 import { formatDate } from '../../../util/helpers'
 
+import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
+import nodeActions from '../../../redux/modules/entities/nodes/actions'
+
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
@@ -20,20 +23,7 @@ class EditNodeFormContainer extends React.Component {
       hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1
     }
 
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onDelete = this.onDelete.bind(this)
     this.onToggleDeleteModal = this.onToggleDeleteModal.bind(this)
-  }
-
-  onSubmit(values) {
-    // @TODO: on submit functionality
-    this.props.onSave(values)
-  }
-
-  onDelete() {
-    // @TODO delete functionality
-    const { nodes } = this.props
-    this.props.onDelete(nodes)
   }
 
   onToggleDeleteModal(showDeleteModal) {
@@ -41,7 +31,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, initialValues, intl, nodeValues, nodes } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -119,7 +109,7 @@ class EditNodeFormContainer extends React.Component {
       nodes,
       onCancel,
       onDelete: this.onToggleDeleteModal,
-      onSave: this.onSubmit
+      onSave
     }
 
     const deleteModalProps = {
@@ -129,7 +119,7 @@ class EditNodeFormContainer extends React.Component {
       deleteButton: true,
       cancelButton: true,
       cancel: () => this.onToggleDeleteModal(false),
-      onSubmit: this.onDelete
+      onSubmit: () => this.props.onDelete(this.props.nodeIds)
     }
 
     return (
@@ -156,8 +146,15 @@ EditNodeFormContainer.propTypes = {
   show: React.PropTypes.bool
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { nodes } = ownProps
+const mapStateToProps = (state, { nodeIds }) => {
+  const nodes = nodeIds.map(id => {
+
+    const nodeValues = getNodeById(state)(id) || { roles: [] }
+
+    nodeValues.roles = nodeValues.roles[0]
+
+    return nodeValues
+  })
   const nodeValues = getNodeValues(nodes)
 
   const initialValues = {}
@@ -167,9 +164,38 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
+    nodes,
     initialValues,
     nodeValues
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(EditNodeFormContainer))
+const mapDispatchToProps = (dispatch, { params, nodeIds, onCancel }) => {
+
+  const updateNode = node => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
+  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
+
+  return {
+
+    onSave: nodes => {
+      return Promise.all(
+        nodes.map(
+          node => {
+            node.roles = [ node.roles ]
+            return updateNode(node)
+          }
+        )
+      ).then(() => onCancel())
+    },
+
+    onDelete: () => {
+      return Promise.all(
+        nodeIds.map(
+          id => deleteNode(id)
+        )
+      ).then(() => onCancel())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(EditNodeFormContainer))
