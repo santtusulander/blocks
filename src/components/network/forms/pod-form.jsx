@@ -202,7 +202,7 @@ const PodForm = ({
             <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger"
-              disabled={false}
+              disabled={hasNodes}
               onClick={onDelete}
               tooltipId="tooltip-help"
               tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
