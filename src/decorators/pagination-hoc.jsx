@@ -36,6 +36,11 @@ export default function withPagination(WrappedComponent) {
 
   /** @class WithPagination */
   class WithPagination extends Component {
+
+    /**
+     * Composed display name
+     * @return {string}
+     */
     static get displayName() {
       return `WithPagination${WrappedComponent['displayName'] || WrappedComponent['name']} || Component`;
     }
@@ -51,7 +56,7 @@ export default function withPagination(WrappedComponent) {
     }
 
     /**
-     * @readonly payload formatters Map.
+     * @readonly Payload formatters Map.
      * @type {Immutable.Map.<string, payloadFormatter>}
      */
     static get formatters() {
@@ -64,8 +69,7 @@ export default function withPagination(WrappedComponent) {
     }
 
     /**
-     * Payload validators Map.
-     * @protected
+     * @readonly Payload validators Map.
      * @type {Immutable.Map.<actionType, payloadValidator>} - Map
      */
     static get validators() {
@@ -112,20 +116,18 @@ export default function withPagination(WrappedComponent) {
     }
 
     /**
-     *
-     * @param actions
-     * @param validators
-     * @return {function(*, *=)}
+     * Initialize decorator function to provide action payload validation and payload proxy to actionCreators.
+     * @param {Object} actions - actionCreators
+     * @param {Immutable.Map.<actionType, payloadValidator>} validators
+     * @return {function(*, *=): function(...[*])}
      */
     static initSubscriptionFactory(actions, validators) {
-      return (subscriber, actionType) => {
-        return (...args) => {
-          const payload = subscriber(...args);
+      return (subscription, actionType) => (...args) => {
+        const payload = subscription(...args);
 
-          return validators.has(actionType) ?
-            validators.get(actionType)(payload) && actions[actionType](payload) :
-            actions[actionType](payload);
-        }
+        return validators.has(actionType) ?
+          validators.get(actionType)(payload) && actions[actionType](payload) :
+          actions[actionType](payload);
       }
     }
 
@@ -163,8 +165,6 @@ export default function withPagination(WrappedComponent) {
       this.filterSubscription = makeSubscription(this.filterSubscription.bind(this), SET_FILTERING);
       this.resetPaginationState = makeSubscription(() => null, INVALIDATE);
     }
-
-
 
     /**
      * Using lifecycle hook to notify pagination subscribers if queryParams changed
