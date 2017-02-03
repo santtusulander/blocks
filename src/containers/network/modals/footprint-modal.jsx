@@ -8,7 +8,7 @@ import { getById } from '../../../redux/modules/entities/footprints/selectors'
 import SidePanel from '../../../components/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
 
-import { FOOTPRINT_UDN_TYPES } from '../../../constants/network'
+import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
 
 const normalizeValueToAPI = (value) => value.map(item => item.label)
 const normalizeValueFromAPI = (value) => value.map(item => ({ id: item, label: item }))
@@ -105,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
   const defaultValues = {
     addFootprintMethod: 'manual',
     value: [],
-    data_type: 'ipv4cidr'
+    data_type: FOOTPRINT_DEFAULT_DATA_TYPE
   }
 
   const initialValues = editing && footprint ?
