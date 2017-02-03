@@ -7,6 +7,7 @@ const baseUrl = ({ brand, account, group }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/locations`
 
 const locationSchema = new schema.Entity('locations', {}, {
+  // idAttribute: (value, parent) => { return `${parent.id}-${value.id}`},
   processStrategy: (value, parent) => {
     return {
       parentId: parent.id,

@@ -186,6 +186,7 @@ GroupForm.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,

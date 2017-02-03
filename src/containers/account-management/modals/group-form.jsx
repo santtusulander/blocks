@@ -293,6 +293,7 @@ GroupFormContainer.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   onCancel: PropTypes.func,
@@ -319,21 +320,22 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
 
 const  mapStateToProps = (state, ownProps) => {
   const { user, host, group, account, entities } = state
+  const groupId = ownProps.params.group
   const currentUser = user.get('currentUser')
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
-  const canSeeLocations = ownProps.groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
+  const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
   return {
     account: account.get('activeAccount'),
     activeHost: host.get('activeHost'),
     canEditBilling,
     canSeeBilling,
     canSeeLocations,
-    hosts: ownProps.groupId && host.get('allHosts'),
-    initialValues: determineInitialValues(ownProps.groupId, group.get('activeGroup')),
+    hosts: groupId && host.get('allHosts'),
+    initialValues: determineInitialValues(groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    isFetchingLocations: entities.fetching,
-    locations: canSeeLocations && getLocationsByGroup(state, ownProps.groupId) || List(),
+    isFetchingLocations: entities.fetching ? true : false,
+    locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: group.getIn(['activeGroup', 'name'])
   }
 }

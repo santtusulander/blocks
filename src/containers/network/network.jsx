@@ -342,7 +342,6 @@ class Network extends React.Component {
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
-    // this.props.groups.set('activeGroup', this.props.groups.getIn([]))
     return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
@@ -354,9 +353,9 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
+    if (String(groupId) !== String(this.props.params.group)) return
     this.setState({groupId: groupId})
     this.props.toggleModal(ADD_EDIT_GROUP)
-    // TODO: this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
   handleGroupSave() {
@@ -647,7 +646,7 @@ class Network extends React.Component {
             addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
             deleteEntity={this.handleGroupEdit}
             editEntity={this.handleGroupEdit}
-            selectEntity={this.handleGroupClick}
+            selectEntity={(groupId) => this.handleGroupClick(groupId)}
             selectedEntityId={`${params.group}`}
             title="Groups"
             showAsStarbursts={true}
