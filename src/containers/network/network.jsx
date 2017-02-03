@@ -665,6 +665,7 @@ class Network extends React.Component {
             title="Networks"
             nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
             creationPermission={PERMISSIONS.CREATE_NETWORK}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
           />
 
           <EntityList
@@ -679,6 +680,7 @@ class Network extends React.Component {
             title="Pops"
             nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
             creationPermission={PERMISSIONS.CREATE_POP}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
           />
 
           <EntityList
@@ -693,6 +695,7 @@ class Network extends React.Component {
             title="Pods"
             nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
             creationPermission={PERMISSIONS.CREATE_POD}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
           />
 
           <EntityList
@@ -708,6 +711,7 @@ class Network extends React.Component {
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
             creationPermission={PERMISSIONS.CREATE_NODE}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
           />
         </PageContainer>
 
