@@ -17,7 +17,7 @@ import {
   ADD_NODE,
   EDIT_NODE,
   ADD_EDIT_ACCOUNT
-} from '../constants/network-modals.js'
+} from '../../constants/network-modals.js'
 
 import {
   NETWORK_SCROLL_AMOUNT,
@@ -36,8 +36,8 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 import networkActions from '../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
 
-import nodeActions from '../redux/modules/entities/nodes/actions'
-import { getByPod } from '../redux/modules/entities/nodes/selectors'
+import nodeActions from '../../redux/modules/entities/nodes/actions'
+import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
@@ -52,6 +52,7 @@ import NetworkFormContainer from './modals/network-modal'
 import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
 import AddNodeContainer from './modals/add-node-modal'
+import EditNodeContainer from './modals/edit-node-modal'
 import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
@@ -539,8 +540,6 @@ class Network extends React.Component {
 
     const {
       pods,
-      networkId,
-      popId,
       podId
     } = this.state
 
@@ -641,7 +640,7 @@ class Network extends React.Component {
 
           <EntityList
             ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && this.props.getNodes(nodesUrlParams.pod)}
+            entities={params.pod && this.props.getNodes(params.pod)}
             addEntity={() => this.addEntity(ADD_NODE)}
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
@@ -712,7 +711,7 @@ class Network extends React.Component {
           <EditNodeContainer
             id="node-edit-form"
             nodeIds={this.state.nodeId}
-            params={nodesUrlParams}
+            params={params}
             onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
           />
@@ -731,7 +730,6 @@ Network.propTypes = {
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetchNodes: PropTypes.func,
-  fetching: PropTypes.bool,
   getNodes: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchPops: PropTypes.func,
@@ -773,7 +771,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { brand, account, group } = ownProps.params
+  const { brand, account, group, pod } = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -787,6 +785,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     list_children: false
   }, metricsOpts)
 
+  const fetchNodes = params => dispatch(nodeActions.fetchAll(params))
+
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
@@ -797,10 +797,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
+    pod && fetchNodes(ownProps.params)
   }
 
   return {
-    fetchNodes: () => dispatch(nodeActions.fetchAll(nodesUrlParams)),
+    fetchNodes,
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
     groupActions: groupActions,
