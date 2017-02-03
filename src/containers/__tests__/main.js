@@ -205,4 +205,12 @@ describe('Main', () => {
     expect(userActions.destroyStore.mock.calls.length).toBe(1)
     expect(userActions.setLogin.mock.calls.length).toBe(1)
   });
+
+  it('should set roles and currentUser in getChildContext()', () => {
+    const testUser = fromJS({ a: 'b' })
+    const testRoles = fromJS(['b'])
+
+    const wrapper = subject(null, true, testUser, testRoles)
+    expect(wrapper.instance().getChildContext()).toEqual({roles: testRoles, currentUser: testUser})
+  })
 })

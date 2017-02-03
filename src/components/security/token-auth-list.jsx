@@ -31,7 +31,7 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
                 <td>{rule.schema}</td>
                 <td>**********</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
-                <td className="nowrap-column">
+                <td className="nowrap-column action-buttons primary">
                     <Link
                       to={routeTo('edit')}
                       className='btn btn-icon'>

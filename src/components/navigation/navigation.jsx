@@ -2,8 +2,8 @@ import React from 'react'
 import { Link, withRouter } from 'react-router'
 import Immutable from 'immutable'
 
-import { getRoute } from '../../util/routes'
 import {
+  getRoute,
   getAccountManagementUrlFromParams,
   getAnalyticsUrlFromParams,
   getContentUrlFromParams,
@@ -12,9 +12,9 @@ import {
   getServicesUrlFromParams,
   getSupportUrlFromParams,
   getSecurityUrlFromParams
-} from '../../util/routes.js'
-import IsAllowed from '../is-allowed'
+} from '../../util/routes'
 
+import IsAllowed from '../is-allowed'
 
 import {
   VIEW_ACCOUNT_SECTION,
@@ -28,7 +28,7 @@ import {
 import {
   accountIsServiceProviderType,
   userIsServiceProvider
-} from '../../util/helpers.js'
+} from '../../util/helpers'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
@@ -82,14 +82,12 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
           </li>
         }
 
-        {isSP &&
-          <li>
-            <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
-              <IconDashboard />
-              <span>Dashboard</span>
-            </Link>
-          </li>
-        }
+        <li>
+          <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
+            <IconDashboard />
+            <span>Dashboard</span>
+          </Link>
+        </li>
 
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>

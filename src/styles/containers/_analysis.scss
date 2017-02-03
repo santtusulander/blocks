@@ -11,6 +11,64 @@
   }
 }
 
+.analysis-chart-container {
+  position: relative;
+  height: 35vw;
+
+  .line-0 {
+
+    .dark-theme &,
+    .light-theme & {
+      &,
+      & .recharts-bar-rectangle {
+        color: $link-blue !important;
+        fill: $link-blue !important;
+        stroke: $link-blue !important;
+      }
+    }
+  }
+
+  .line-1 {
+
+    .dark-theme &,
+    .light-theme & {
+      &,
+      & .recharts-bar-rectangle {
+        color: $pale-blue !important;
+        fill: $pale-blue !important;
+        stroke: $pale-blue !important;
+      }
+    }
+  }
+
+  .line-2 {
+
+    .dark-theme &,
+    .light-theme & {
+      &,
+      & .recharts-bar-rectangle {
+        color: $orange !important;
+        fill: $orange !important;
+        stroke: $orange !important;
+      }
+    }
+  }
+
+  .line-3 {
+
+    .dark-theme &,
+    .light-theme & {
+      &,
+      & .recharts-bar-rectangle {
+        color: $yellow !important;
+        fill: $yellow !important;
+        stroke: $yellow !important;
+      }
+    }
+  }
+
+}
+
 .analysis-container {
   padding-top: calc(#{$bar-height} + #{$bar-height}) !important;
 

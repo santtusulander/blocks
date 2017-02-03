@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
 import { List, Map } from 'immutable'
+import { injectIntl } from 'react-intl'
 
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as securityActionCreators from '../../../redux/modules/security'
@@ -21,6 +22,16 @@ import {
 } from '../../../constants/account-management-modals.js'
 
 class TabSslCertificate extends Component {
+  constructor(props) {
+    super(props)
+
+    this.onDelete = this.onDelete.bind(this)
+    this.fetchData = this.fetchData.bind(this)
+    this.showNotification = this.showNotification.bind(this)
+
+    this.notificationTimeout = null
+  }
+
   componentWillMount() {
     this.fetchData(this.props)
   }
@@ -37,6 +48,30 @@ class TabSslCertificate extends Component {
     securityActions.fetchSSLCertificates(brand, Number(account), Number(group))
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
+  }
+
+  onDelete(toDelete) {
+    const {securityActions, toggleModal} = this.props
+
+    toggleModal(null)
+
+    return securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
+      .then((res) => {
+        if (res.error) {
+          this.showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.security.ssl.updateFailed.text'},
+                                {reason: res.payload.data.message}))
+        } else {
+          this.showNotification(<FormattedMessage id="portal.security.ssl.sslIsRemoved.text" />)
+        }
+        securityActions.resetCertificateToEdit()
+      })
+  }
+
   render(){
     const {
       activeAccount,
@@ -46,7 +81,6 @@ class TabSslCertificate extends Component {
       groups,
       isFetching,
       toggleModal,
-      onDelete,
       securityActions: { toggleActiveCertificates, fetchSSLCertificate },
       sslCertificates,
       toDelete
@@ -59,6 +93,7 @@ class TabSslCertificate extends Component {
 
     const certificateFormProps = {
       title: modalTitle,
+      showNotification: this.showNotification,
       activeAccount,
       fetchAccount,
       toggleModal
@@ -99,7 +134,7 @@ class TabSslCertificate extends Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => toggleModal(null)}
-            submit={() => onDelete(toDelete)}
+            onSubmit={() => this.onDelete(toDelete)}
             invalid={true}
             verifyDelete={true}>
             <p>
@@ -118,10 +153,11 @@ TabSslCertificate.propTypes = {
   activeAccount: PropTypes.instanceOf(Map),
   activeCertificates: PropTypes.instanceOf(List),
   activeModal: PropTypes.string,
+  changeNotification: PropTypes.func,
   fetchAccount: PropTypes.func,
   groups: PropTypes.instanceOf(List),
+  intl: React.PropTypes.object,
   isFetching: PropTypes.bool,
-  onDelete: PropTypes.func,
   params: PropTypes.object,
   securityActions: PropTypes.object,
   sslCertificates: PropTypes.instanceOf(List),
@@ -149,20 +185,14 @@ function mapDispatchToProps(dispatch) {
   const securityActions = bindActionCreators(securityActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const toggleModal = uiActions.toggleAccountManagementModal
+  const changeNotification = uiActions.changeNotification
 
-  function onDelete(toDelete) {
-    toggleModal(null)
-    return securityActions.deleteSSLCertificate('udn', toDelete.get('account'), toDelete.get('group'), toDelete.get('cn'))
-      .then(() => {
-        securityActions.resetCertificateToEdit()
-      })
-  }
   return {
     fetchAccount,
-    onDelete,
     securityActions,
-    toggleModal
+    toggleModal,
+    changeNotification
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabSslCertificate)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(TabSslCertificate))

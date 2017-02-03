@@ -1,36 +1,90 @@
 import React from 'react'
-import { Checkbox, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel, FormGroup, Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import Immutable from 'immutable'
 
-import Select from '../../select'
+import Typeahead from '../../typeahead'
 
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import {
+  FILE_EXTENSION_REGEXP,
+  FILE_EXTENSION_CASE_START,
+  FILE_EXTENSION_CASE_END
+} from '../../../util/policy-config'
 
 class FileExtension extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+
+    this.handleExtensionsChange = this.handleExtensionsChange.bind(this)
+    this.saveChanges = this.saveChanges.bind(this)
+
+    const extensions = this.extensionsFromMatchCase(props.match)
 
     this.state = {
-      activeFilter: 'matches'
+      extensions,
+      isValid: this.validate(extensions)
+    }
+  }
+
+  extensionsFromMatchCase(match) {
+    const matchCase = match.getIn(['cases', 0, 0])
+    const rawExtensionList = matchCase.match(FILE_EXTENSION_REGEXP)[1];
+
+    if (rawExtensionList) {
+      return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
+    } else {
+      return []
+    }
+  }
+
+  matchCaseFromExtensions(extensions) {
+    const rawExtensions = extensions.map(extension => extension.label)
+    return FILE_EXTENSION_CASE_START + rawExtensions.join('|') + FILE_EXTENSION_CASE_END
+  }
+
+  handleExtensionsChange() {
+    return extensions => {
+      this.setState({
+        extensions,
+        isValid: this.validate(extensions)
+      })
+    }
+  }
+
+  validate(extensions) {
+    if (!extensions || !(extensions instanceof Array)) {
+      return false
     }
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-  }
-  handleChange(path) {
-    return e => {
-      this.props.changeValue(path, e.target.value)
+    if (extensions.length === 0) {
+      return false
     }
-  }
-  handleSelectChange(path) {
-    return value => {
-      this.setState({
-        activeFilter: value
-      })
-      this.props.changeValue(path, value)
+
+    // extensions should not include the . at the beginning, this is included in the regex
+    const invalidInput = extensions.filter(extension => extension.label.substring(0, 1) === '.')
+
+    if (invalidInput.length > 0) {
+      return false
     }
+
+    return true
   }
+
+  saveChanges() {
+    const matchCase = this.matchCaseFromExtensions(this.state.extensions)
+    let newMatch = this.props.match
+    newMatch = newMatch.setIn(['cases', 0, 0], matchCase)
+
+    this.props.changeValue(this.props.path, newMatch)
+    this.props.close()
+  }
+
   render() {
+    const {
+      extensions,
+      isValid
+    } = this.state
+
     return (
       <div>
         <Modal.Header>
@@ -43,33 +97,23 @@ class FileExtension extends React.Component {
             <ControlLabel>
               <FormattedMessage id="portal.policy.edit.fileExtension.fileExtension.text" />
             </ControlLabel>
-            <FormControl
-              componentClass="textarea"
-              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.fileExtension.fileExtension.placeholder'})}
-              value={this.props.match.get('cases').get(0).get(0)}
-              onChange={this.handleChange(
-                this.props.path.concat(['cases', 0, 0])
-              )}/>
+            <Typeahead
+              allowNew={true}
+              multiple={true}
+              onChange={this.handleExtensionsChange()}
+              options={[]}
+              selected={extensions}
+            />
           </FormGroup>
 
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="portal.policy.edit.fileExtension.ignoreCase.text" />
-            </ControlLabel>
-            <Checkbox
-              onChange={this.handleChange(
-                ['edge_configuration', 'cache_rule', 'matches', 'file_extension_ignore_case']
-              )}/>
-          </FormGroup>
-
-          <Select className="input-select"
-            onSelect={this.handleSelectChange(
-              ['edge_configuration', 'cache_rule', 'matches', 'file_extension']
-            )}
-            value={this.state.activeFilter}
-            options={[
-              ['matches', <FormattedMessage id="portal.policy.edit.fileExtension.matches.text"/>],
-              ['does_not_match', <FormattedMessage id="portal.policy.edit.fileExtension.doesntMatch.text"/>]]}/>
+          <ButtonToolbar className="text-right">
+            <Button className="btn-secondary" onClick={this.props.close}>
+              <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
+            </Button>
+            <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
+              <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
+            </Button>
+          </ButtonToolbar>
 
         </Modal.Body>
       </div>
@@ -80,9 +124,9 @@ class FileExtension extends React.Component {
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
   changeValue: React.PropTypes.func,
-  intl: intlShape.isRequired,
+  close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),
-  path: React.PropTypes.array
+  path: React.PropTypes.instanceOf(Immutable.List)
 }
 
-module.exports = injectIntl(FileExtension)
+module.exports = FileExtension
