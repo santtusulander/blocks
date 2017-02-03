@@ -36,6 +36,13 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'vw', label: 'VmWare' },
   { value: 'bm', label: 'Bare Metal' }
 ]
+export const FOOTPRINT_UDN_TYPES = [
+  { value: 'billing_asn', label: 'Billing ASN' },
+  { value: 'on_net', label: 'On Net' },
+  { value: 'off_net', label: 'Off Net' }
+]
+
+export const FOOTPRINT_DEFAULT_DATA_TYPE = 'ipv4cidr'
 
 export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
   { key: 1, label: 'BGP Routing Daemons'},

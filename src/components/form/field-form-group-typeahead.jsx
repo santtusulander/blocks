@@ -30,7 +30,7 @@ const FieldFormGroupTypeahead = ({
   /* eslint-disable react/display-name */
   const renderToken = (token, onRemove, key) => {
 
-    // Add validation classes to rendered tokens id custom validation rule is defined
+    // Add validation classes to rendered tokens if custom validation rule is defined
     const validationClass = (validation) ? validation(token) ? 'valid' : 'invalid' : 'valid'
 
     return (

@@ -25,30 +25,32 @@ const validateASNToken = (item) => {
   return item.label && isValidASN(item.label)
 }
 
-const validate = ({ footPrintName, footPrintDescription, dataType, cidr, asn, UDNType }) => {
+const validate = ({ name, description, data_type, value, udn_type }) => {
+
+  const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
+
   const conditions = {
-    footPrintName: {
-      condition: !isValidTextField(footPrintName),
+    name: {
+      condition: !isValidTextField(name),
       errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text"/>
     },
-    footPrintDescription: {
-      condition: !isValidTextField(footPrintDescription, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
+    description: {
+      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
                                           minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
-                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN}/>
     }
   }
 
-  if (dataType === 'cidr' && cidr.length > 0) {
+  if (data_type === 'ipv4cidr' && value.length > 0) {
     let hasInvalidCIDRItems = false
-    cidr.forEach((cidrItem) => {
+    value.forEach((cidrItem) => {
       if (!validateCIDRToken(cidrItem)) {
         hasInvalidCIDRItems = true
-        return
       }
     })
 
-    conditions.cidr = [
+    conditions.value = [
       {
         condition: hasInvalidCIDRItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.CIRD.invalid.text"/>
@@ -56,16 +58,15 @@ const validate = ({ footPrintName, footPrintDescription, dataType, cidr, asn, UD
     ]
   }
 
-  if (dataType === 'asn' && asn.length > 0) {
+  if (data_type === 'asnlist' && value.length > 0) {
     let hasInvalidASNItems = false
-    asn.forEach((asnItem) => {
+    value.forEach((asnItem) => {
       if (!validateASNToken(asnItem)) {
         hasInvalidASNItems = true
-        return
       }
     })
 
-    conditions.asn = [
+    conditions.value = [
       {
         condition: hasInvalidASNItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
@@ -74,13 +75,12 @@ const validate = ({ footPrintName, footPrintDescription, dataType, cidr, asn, UD
   }
 
   return checkForErrors(
-    { footPrintName, footPrintDescription, dataType, cidr, asn, UDNType },
+    { name, description, data_type, value, udn_type },
     conditions,
     {
-      footPrintName: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
-      footPrintDescription: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
-      cidr: <FormattedMessage id="portal.network.footprintForm.CIRD.required.text"/>,
-      asn: <FormattedMessage id="portal.network.footprintForm.ASN.required.text"/>
+      name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
+      description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
+      value: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
 }
@@ -105,17 +105,15 @@ class FootprintForm extends React.Component {
 
   render() {
     const {
-      ASNOptions,
       addManual,
-      CIDROptions,
       dataType,
       editing,
       fetching,
+      handleSubmit,
       intl,
       invalid,
       onCancel,
       onDelete,
-      handleSubmit,
       submitting,
       udnTypeOptions
     } = this.props
@@ -123,6 +121,8 @@ class FootprintForm extends React.Component {
     const submitButtonLabel = editing
       ? <FormattedMessage id="portal.button.save"/>
       : <FormattedMessage id="portal.button.add"/>
+
+    const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -153,14 +153,14 @@ class FootprintForm extends React.Component {
           <FormGroup>
             <Field
               type="text"
-              name="footPrintName"
+              name="name"
               placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
             />
 
             <Field
-              name="footPrintDescription"
+              name="description"
               type="text"
               placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
               component={FieldFormGroup}
@@ -169,47 +169,41 @@ class FootprintForm extends React.Component {
           </FormGroup>
 
           <FormGroup>
-            <ControlLabel>{<FormattedMessage
-              id="portal.network.footprintForm.dataType.title.text"/>}*</ControlLabel>
+
+            <ControlLabel>
+              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
+            </ControlLabel>
+
             <Field
-              name="dataType"
+              name="data_type"
               type="radio"
-              value="cidr"
+              value="ipv4cidr"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
             />
 
             <Field
               type="radio"
-              name="dataType"
-              value="asn"
+              name="data_type"
+              value="asnlist"
               component={FieldRadio}
               label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
             />
 
-            { dataType === 'cidr' &&
             <Field
-              name="cidr"
+              required={true}
+              name="value"
               allowNew={true}
               component={FieldFormGroupTypeahead}
               multiple={true}
-              options={CIDROptions}
-              validation={validateCIDRToken}/>
-            }
+              options={[]}
+              validation={typeaheadValidationMethod}
+            />
 
-            { dataType === 'asn' &&
-            <Field
-              name="asn"
-              allowNew={true}
-              component={FieldFormGroupTypeahead}
-              multiple={true}
-              options={ASNOptions}
-              validation={validateASNToken}/>
-            }
           </FormGroup>
 
           <Field
-            name="UDNType"
+            name="udn_type"
             className="input-select"
             component={FieldFormGroupSelect}
             options={udnTypeOptions}
@@ -278,18 +272,12 @@ const selector = formValueSelector('footprintForm')
 
 const mapStateToProps = (state) => {
   const addManual = selector(state, 'addFootprintMethod')
-  const dataType = selector(state, 'dataType')
+  const dataType = selector(state, 'data_type')
 
   return {
     addManual,
     dataType,
-    selector,
-    initialValues: {
-      addFootprintMethod: 'manual',
-      asn: [],
-      cidr: [],
-      dataType: 'cidr'
-    }
+    selector
   }
 }
 
