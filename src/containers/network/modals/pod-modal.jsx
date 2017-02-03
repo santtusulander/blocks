@@ -2,9 +2,12 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { formValueSelector, arrayPush } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { bindActionCreators } from 'redux'
+
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import SidePanel from '../../../components/side-panel'
-
+import ModalWindow from '../../../components/modal'
 import PodForm from '../../../components/network/forms/pod-form'
 
 //TODO Remove mockInitialValues after Redux integration
@@ -81,6 +84,7 @@ class PodFormContainer extends React.Component {
       addedActionItems,
       availableActions,
       brand,
+      confirmationModalToggled,
       editAction,
       group,
       groupName,
@@ -94,7 +98,8 @@ class PodFormContainer extends React.Component {
       onDelete,
       intl,
       discoveryMethodValue,
-      invalid} = this.props
+      invalid,
+      toggleDeleteConfirmationModal} = this.props
 
     const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
@@ -119,7 +124,7 @@ class PodFormContainer extends React.Component {
             invalid={invalid}
             hasNodes={this.checkforNodes()}
             onCancel={onCancel}
-            onDelete={onDelete}
+            onDelete={() => toggleDeleteConfirmationModal(true)}
             onSubmit={this.onSubmit}
             brand={brand}
             account={account}
@@ -128,6 +133,24 @@ class PodFormContainer extends React.Component {
             network={network}
             discoveryMethodValue={discoveryMethodValue}/>
         </SidePanel>
+
+        {edit && confirmationModalToggled &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => toggleDeleteConfirmationModal(false)}
+            onSubmit={()=>{
+              toggleDeleteConfirmationModal(false)
+              onDelete()
+              onCancel()
+            }}>
+            <p>
+             <FormattedMessage id="portal.network.podForm.deletePod.confirmation.text"/>
+            </p>
+          </ModalWindow>}
+
       </div>
     )
   }
@@ -142,6 +165,7 @@ PodFormContainer.propTypes = {
   addedActionItems: PropTypes.array,
   availableActions: PropTypes.array,
   brand: PropTypes.string,
+  confirmationModalToggled: PropTypes.bool,
   discoveryMethodValue: PropTypes.number,
   edit: PropTypes.bool,
   editAction: PropTypes.func,
@@ -156,7 +180,8 @@ PodFormContainer.propTypes = {
   onSave: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.string,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  toggleDeleteConfirmationModal: PropTypes.func
 }
 
 function mapStateToProps( state, { podId, group }) {
@@ -174,6 +199,8 @@ function mapStateToProps( state, { podId, group }) {
       .get('allGroups')
       .filter((groupElements) => groupElements.get('id') == group)
       .getIn([0, 'name']),
+    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
+
     initialValues: podId ? {
       pod_name: mockInitialValues.get('pod_name'),
       lb_method: mockInitialValues.get('lb_method'),
@@ -186,6 +213,7 @@ function mapStateToProps( state, { podId, group }) {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   return {
     addNewAction: () => {
       //TODO: method called by add button
@@ -200,7 +228,8 @@ const mapDispatchToProps = (dispatch) => {
     editAction: () => {
       //TODO: method invoked by edit button on action
       //it accepts the action id as a parameter
-    }
+    },
+    toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal
   }
 }
 
