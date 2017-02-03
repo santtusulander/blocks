@@ -39,13 +39,14 @@ const GroupForm = ({
   accountIsServiceProviderType,
   canEditBilling,
   canSeeBilling,
+  canSeeLocations,
   groupId,
   handleSubmit,
   hosts,
   intl,
   invalid,
   isFetchingHosts,
-  isInNetwork,
+  locations,
   onAddLocation,
   onCancel,
   onDeleteHost,
@@ -89,12 +90,22 @@ const GroupForm = ({
 
           <hr/>
 
-          {isInNetwork &&
+          {canSeeLocations &&
             <div>
               <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={onAddLocation}>
                 <IconAdd/>
               </UDNButton>
+              <ul>
+              {
+                locations.map((location, index) =>
+                  <li key={index}>
+                    {`${location.get('city_name') || 'no-name'}
+                    for
+                    ${location.get('group_id')}`}
+                  </li>)
+              }
+              </ul>
             </div>
           }
 
@@ -155,13 +166,14 @@ GroupForm.propTypes = {
   accountIsServiceProviderType: PropTypes.bool.isRequired,
   canEditBilling: PropTypes.bool,
   canSeeBilling: PropTypes.bool,
-  groupId: PropTypes.number,
+  canSeeLocations: PropTypes.bool,
+  groupId: PropTypes.string,
   handleSubmit: PropTypes.func,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isInNetwork: PropTypes.bool,
+  locations: PropTypes.instanceOf(List),
   onAddLocation: PropTypes.func,
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,

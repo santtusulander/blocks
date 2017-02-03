@@ -31,8 +31,9 @@ const NetworkLocationForm = (props) => {
     addressFetching,
     cloudProvidersOptions,
     cloudProvidersIdOptions,
-    edit,
-    fetching,
+    error,
+    submitting,
+    initialValues,
     intl,
     invalid,
     onCancel,
@@ -40,11 +41,25 @@ const NetworkLocationForm = (props) => {
     handleSubmit
   } = props;
 
+  const edit = !!initialValues.name
+
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
+                              edit ? <FormattedMessage id="portal.button.save"/> :
+                              <FormattedMessage id="portal.button.add"/>
+
   return (
     <form
       className="location-form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
     >
+
+    {
+      error &&
+      <p className='has-error'>
+        <span className='help-block'>{error}</span>
+      </p>
+    }
+
       <Row>
         <Col md={7}>
           <Field
@@ -150,8 +165,8 @@ const NetworkLocationForm = (props) => {
           <ButtonToolbar className="pull-left">
             <Button
               className="btn-danger"
-              disabled={fetching}
-              onClick={onDelete}
+              disabled={submitting}
+              onClick={() => onDelete(initialValues.name)}
             >
               <FormattedMessage id="portal.button.delete"/>
             </Button>
@@ -167,12 +182,9 @@ const NetworkLocationForm = (props) => {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || fetching}
+            disabled={invalid || submitting}
           >
-            {edit
-              ? <FormattedMessage id='portal.button.save' />
-              : <FormattedMessage id='portal.button.add' />
-            }
+            {actionButtonTitle}
           </Button>
         </ButtonToolbar>
       </FormFooterButtons>

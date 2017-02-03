@@ -1,9 +1,9 @@
-import { normalize, schema } from 'normalizr'
 import axios from 'axios'
+import { normalize, schema } from 'normalizr'
 
 import { BASE_URL_NORTH } from '../../../util'
 
-const baseURL = ({ brand, account, group }) =>
+const baseUrl = ({ brand, account, group }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/locations`
 
 const locationSchema = new schema.Entity('locations')
@@ -11,26 +11,37 @@ const locationSchema = new schema.Entity('locations')
 /**
  * This endpoint also supports pagination. Extracting only object data for now.
  */
-export const fetchAll = (urlParams) =>
-  axios.get(baseURL(urlParams))
+export const fetch = ({ id, ...params }) =>
+  axios.get(`${baseUrl(params)}/${id}`)
     .then(({ data }) => {
-      return normalize(data.data, [ locationSchema ])
+      return normalize({ id: params.group, locations: [ data ] }, locationSchema)
     })
 
-export const fetch = ({ id, ...baseUrlParams }) =>
-  axios.get(`${baseURL(baseUrlParams)}/${id}`)
+export const fetchIds = ( params ) => {
+  return axios.get(baseUrl(params))
+  .then( ({data}) => {
+    return data
+  })
+}
+
+export const fetchAll = ( params ) =>
+  axios.get(baseUrl(params))
     .then(({ data }) => {
-      return normalize(data, locationSchema)
+      return normalize({ id: params.group, locations: [ data ] }, locationSchema)
     })
 
 export const create = ({ payload, ...urlParams }) =>
-  axios.post(baseURL(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({ data }) => normalize(data, locationSchema))
+  axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
+    .then(({ data }) => {
+      return normalize({ id: urlParams.group, locations: [ data ]}, locationSchema)
+    })
 
 export const update = ({ id, payload, ...baseUrlParams }) =>
-  axios.put(`${baseURL(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({ data }) => normalize(data, locationSchema))
+  axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
+    .then(({ data }) => {
+      return normalize({ id: baseUrlParams.group, locations: [ data ] }, locationSchema)
+    })
 
 export const remove = ({ id, ...baseUrlParams }) =>
-  axios.delete(`${baseURL(baseUrlParams)}/${id}`)
+  axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
     .then(() => ({ id }))

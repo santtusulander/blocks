@@ -8,6 +8,9 @@ import { Button } from 'react-bootstrap'
 import * as hostActionCreators from '../../../redux/modules/host'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import locationActions from '../../../redux/modules/entities/locations/actions'
+import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -18,7 +21,8 @@ import NetworkLocationFormContainer from '../../network/modals/location-modal'
 import {
   userIsContentProvider,
   userIsCloudProvider,
-  accountIsServiceProviderType
+  accountIsServiceProviderType,
+  userIsServiceProvider
 } from '../../../util/helpers'
 
 import GroupForm from '../../../components/account-management/group-form'
@@ -44,10 +48,14 @@ class GroupFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId } = this.props
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, canSeeLocations } = this.props
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
+    }
+
+    if (groupId && canSeeLocations) {
+      this.props.fetchLocations(groupId)
     }
   }
 
@@ -164,6 +172,7 @@ class GroupFormContainer extends React.Component {
       account,
       canEditBilling,
       canSeeBilling,
+      canSeeLocations,
       groupId,
       hostActions,
       hosts,
@@ -174,7 +183,7 @@ class GroupFormContainer extends React.Component {
       onCancel,
       intl,
       invalid,
-      isInNetwork} = this.props
+      locations} = this.props
 
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
@@ -216,6 +225,8 @@ class GroupFormContainer extends React.Component {
             accountIsServiceProviderType={accountIsServiceProviderType(account)}
             canEditBilling={canEditBilling}
             canSeeBilling={canSeeBilling}
+            canSeeLocations={canSeeLocations}
+            locations={locations}
             groupId={groupId}
             hostActions={hostActions}
             hosts={hosts}
@@ -223,7 +234,6 @@ class GroupFormContainer extends React.Component {
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
-            isInNetwork={isInNetwork}
             onAddLocation={this.showLocationForm}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
@@ -249,10 +259,13 @@ class GroupFormContainer extends React.Component {
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
 
-      <NetworkLocationFormContainer
-        onCancel={this.hideLocationForm}
-        show={this.state.showLocationForm}
-      />
+      {canSeeLocations &&
+        <NetworkLocationFormContainer
+          params={this.props.params}
+          onCancel={this.hideLocationForm}
+          show={this.state.showLocationForm}
+        />
+      }
 
       </div>
     )
@@ -266,14 +279,16 @@ GroupFormContainer.propTypes = {
   activeHost: PropTypes.instanceOf(Map),
   canEditBilling: PropTypes.bool,
   canSeeBilling: PropTypes.bool,
-  groupId: PropTypes.number,
+  canSeeLocations: PropTypes.bool,
+  fetchLocations: PropTypes.func,
+  groupId: PropTypes.string,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isInNetwork: PropTypes.bool,
+  locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -297,26 +312,29 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
   return initialValues
 }
 
-function mapStateToProps({ user, host, group, account, form }, ownProps) {
+const  mapStateToProps = (state, ownProps) => {
+  const { user, host, group, account } = state
   const currentUser = user.get('currentUser')
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
-  const isInNetwork = ownProps.hasOwnProperty('isInNetwork') ? ownProps.isInNetwork : false
+  const canSeeLocations = ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
   return {
     account: account.get('activeAccount'),
     activeHost: host.get('activeHost'),
-    canSeeBilling,
     canEditBilling,
+    canSeeBilling,
+    canSeeLocations,
     hosts: ownProps.groupId && host.get('allHosts'),
     initialValues: determineInitialValues(ownProps.groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    isInNetwork,
+    locations: canSeeLocations && getLocationsByGroup(state, ownProps.params.group).getIn(['0', 'locations', '0', 'data']) || List(),
     name: group.getIn(['activeGroup', 'name'])
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    fetchLocations: (group) => group && dispatch( locationActions.fetchAll(ownProps.params) ),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
