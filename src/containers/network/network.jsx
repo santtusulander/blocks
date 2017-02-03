@@ -621,11 +621,11 @@ class Network extends React.Component {
               type: CONTENT_ITEMS_TYPES.ACCOUNT,
               chartWidth: '450',
               barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+              analyticsURLBuilder: getAnalyticsUrl
             }}
             params={params}
             nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
           />
 
           <EntityList
@@ -645,12 +645,12 @@ class Network extends React.Component {
               type: CONTENT_ITEMS_TYPES.GROUP,
               chartWidth: '350',
               barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+              analyticsURLBuilder: getAnalyticsUrl
             }}
             params={params}
             nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
             creationPermission={PERMISSIONS.CREATE_GROUP}
+            isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
           />
 
           <EntityList
