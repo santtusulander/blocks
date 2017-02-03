@@ -12,33 +12,74 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
-import { isValidTextField, isValidIPv4Address } from '../../../util/validators'
+import { isValidTextField, isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
-const validateTypeaheadToken = (item) => {
+import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
+
+const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
-const validate = ({ name, description, UDNType }) => {
+const validateASNToken = (item) => {
+  return item.label && isValidASN(item.label)
+}
+
+const validate = ({ name, description, data_type, value, udn_type }) => {
+
   const conditions = {
     name: {
       condition: !isValidTextField(name),
       errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text"/>
     },
     description: {
-      condition: !isValidTextField(description),
-      errorText: <MultilineTextFieldError fieldLabel="portal.common.description"/>
+      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
+      errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
+                                          minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
     }
   }
 
+  if (data_type === 'ipv4cidr' && value.length > 0) {
+    let hasInvalidCIDRItems = false
+    value.forEach((cidrItem) => {
+      if (!validateCIDRToken(cidrItem)) {
+        hasInvalidCIDRItems = true
+      }
+    })
+
+    conditions.value = [
+      {
+        condition: hasInvalidCIDRItems,
+        errorText: <FormattedMessage id="portal.network.footprintForm.CIRD.invalid.text"/>
+      }
+    ]
+  }
+
+  if (data_type === 'asnlist' && value.length > 0) {
+    let hasInvalidASNItems = false
+    value.forEach((asnItem) => {
+      if (!validateASNToken(asnItem)) {
+        hasInvalidASNItems = true
+      }
+    })
+
+    conditions.value = [
+      {
+        condition: hasInvalidASNItems,
+        errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
+      }
+    ]
+  }
+
   return checkForErrors(
-    { name, description, UDNType },
+    { name, description, data_type, value, udn_type },
     conditions,
     {
-      name: <FormattedMessage values={{ field: 'Footprint Name' }}
-                                       id="portal.network.footprintForm.field.required.text"/>,
-      description: <FormattedMessage values={{ field: 'Footprint Description' }}
-                                              id="portal.network.footprintForm.field.required.text"/>
+      name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
+      description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
+      value: <FormattedMessage id="portal.network.footprintForm.CIRD.required.text"/>,
+      asn: <FormattedMessage id="portal.network.footprintForm.ASN.required.text"/>
     }
   )
 }
@@ -64,6 +105,7 @@ class FootprintForm extends React.Component {
   render() {
     const {
       addManual,
+      dataType,
       editing,
       fetching,
       handleSubmit,
@@ -79,6 +121,7 @@ class FootprintForm extends React.Component {
       ? <FormattedMessage id="portal.button.save"/>
       : <FormattedMessage id="portal.button.add"/>
 
+    const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -125,9 +168,11 @@ class FootprintForm extends React.Component {
           </FormGroup>
 
           <FormGroup>
+
             <ControlLabel>
-              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>
+              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
             </ControlLabel>
+
             <Field
               name="data_type"
               type="radio"
@@ -151,7 +196,7 @@ class FootprintForm extends React.Component {
               component={FieldFormGroupTypeahead}
               multiple={true}
               options={[]}
-              validation={validateTypeaheadToken}
+              validation={typeaheadValidationMethod}
             />
 
           </FormGroup>

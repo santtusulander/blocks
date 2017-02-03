@@ -45,27 +45,36 @@ const validate = fields => {
 
 const NetworkPopForm = (props) => {
   const {
-    edit,
-    fetching,
     intl,
+    error,
     onCancel,
     invalid,
     submitting,
     onSave,
-    popId,
-    locationId,
+    iata,
     onDelete,
     initialValues,
     hasPods,
     dirty
+
   } = props
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
+  const edit = !!initialValues.id
+
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
   return (
       <form onSubmit={props.handleSubmit(onSave)}>
+
+        { //This block will be shown when SubmissionError has been thrown form async call
+          error &&
+          <p className='has-error'>
+            <span className='help-block'>{error}</span>
+          </p>
+        }
+
         <Field
           type="text"
           name="name"
@@ -76,21 +85,22 @@ const NetworkPopForm = (props) => {
         <hr />
 
         <Field
-          name="locationId"
+          name="iata"
           component={FieldFormGroupSelect}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         <hr/>
 
-        {locationId
+        {iata
             ? <Field
-                name="popId"
+                name="locationId"
                 component={FieldFormGroupNumber}
-                addonBefore={`${locationId}${popId}`}
+                addonBefore={`${iata}`}
                 min={POP_ID_MIN}
                 max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
+                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+              />
             : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
@@ -106,11 +116,14 @@ const NetworkPopForm = (props) => {
                 onClick={onDelete}
                 tooltipId="tooltip-help"
                 tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-                {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+                {
+                  //TODO: delete modal with confirm
+                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
                 }
               </ButtonDisableTooltip>
             </ButtonToolbar>
           }
+
           <ButtonToolbar className="pull-right">
             <Button
               id="cancel-btn"
@@ -122,7 +135,7 @@ const NetworkPopForm = (props) => {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting || fetching || (!dirty)}>
+              disabled={invalid || submitting || (!dirty)}>
               {actionButtonTitle}
             </Button>
           </ButtonToolbar>
@@ -136,12 +149,12 @@ NetworkPopForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
+  iata: PropTypes.string,
   intl: intlShape,
-  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.string,
 
   ...reduxFormPropTypes
 }

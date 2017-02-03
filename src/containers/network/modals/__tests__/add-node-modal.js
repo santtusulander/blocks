@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../network-modal.jsx')
+jest.unmock('../add-node-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
 import NetworkAddNodeFormContainer from '../add-node-modal.jsx'
 
