@@ -179,6 +179,7 @@ class GroupFormContainer extends React.Component {
       hosts,
       initialValues,
       isFetchingHosts,
+      isFetchingLocations,
       show,
       name,
       onCancel,
@@ -235,6 +236,7 @@ class GroupFormContainer extends React.Component {
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
+            isFetchingLocations={isFetchingLocations}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
@@ -316,7 +318,7 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, host, group, account } = state
+  const { user, host, group, account, entities } = state
   const currentUser = user.get('currentUser')
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
@@ -330,6 +332,7 @@ const  mapStateToProps = (state, ownProps) => {
     hosts: ownProps.groupId && host.get('allHosts'),
     initialValues: determineInitialValues(ownProps.groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
+    isFetchingLocations: entities.fetching,
     locations: canSeeLocations && getLocationsByGroup(state, ownProps.groupId) || List(),
     name: group.getIn(['activeGroup', 'name'])
   }

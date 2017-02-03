@@ -25,7 +25,7 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onSubmit(edit, values) {
-    console.log(values)
+
     const { brand, account, group } = this.props.params
 
     const data = {
@@ -38,7 +38,7 @@ class NetworkLocationFormContainer extends Component {
       cloud_location_id: values.cloudProviderLocationId,
       country_code: values.countryCode || '',
       state: values.state || '',
-      city_name: values.cityName || '',
+      city_name: values.iataCode[0].city || '',
       iata_code: values.iataCode[0].iata,
       street: values.street || '',
       postalcode: values.postalCode || '',

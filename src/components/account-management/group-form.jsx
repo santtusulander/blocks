@@ -46,6 +46,7 @@ const GroupForm = ({
   intl,
   invalid,
   isFetchingHosts,
+  isFetchingLocations,
   locations,
   onCancel,
   onDeleteHost,
@@ -96,21 +97,28 @@ const GroupForm = ({
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
-              <Table striped={true} className="fixed-layout">
-                <tbody>
-                {locations.map((location, index) => {
-                  return (
-                    <tr key={index}>
-                      <td><TruncatedTitle content={location.get('cityName')} /></td>
-                      <td className="one-button-cell">
-                        <ActionButtons
-                          onEdit={() => onShowLocation(location.get('id'))}/>
-                      </td>
-                    </tr>
-                  )
-                })}
-                </tbody>
-              </Table>
+              {isFetchingLocations ? <LoadingSpinner/> :
+                !locations.isEmpty() ?
+                  <Table striped={true} className="fixed-layout">
+                    <tbody>
+                    {locations.map((location, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                              <h5><strong>{location.get('cityName')}</strong></h5>
+                              <div className="text-sm">{location.get('iataCode')}</div>
+                          </td>
+                          <td className="one-button-cell">
+                            <ActionButtons
+                              onEdit={() => onShowLocation(location.get('id'))}/>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </Table>
+                : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
+              }
             </div>
           }
 
