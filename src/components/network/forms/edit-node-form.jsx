@@ -25,7 +25,7 @@ import {
 } from '../../../constants/network'
 
 export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
-export const FORM_FIELDS = ['node_role', 'node_env', 'node_type', 'cloud_driver', 'custom_grains']
+export const FORM_FIELDS = ['roles', 'env', 'type', 'cloud_driver', 'custom_grains']
 
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
@@ -33,7 +33,7 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = function(values, props) {
+const validate = function({ custom_grains, ...values }, props) {
   const { node_role, node_env, node_type, cloud_driver } = values
   const { nodeValues } = props
 
@@ -153,7 +153,7 @@ class NetworkEditNodeForm extends React.Component {
         }
       }
     }
-    this.props.onSave(updatedNodeValues)
+    return this.props.onSave(updatedNodeValues)
   }
 
   onCancel() {
@@ -182,21 +182,21 @@ class NetworkEditNodeForm extends React.Component {
 
     const fields = [
       {
-        name: 'node_role',
+        name: 'roles',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_ROLE_OPTIONS,
         labelId: 'portal.network.addNodeForm.role.title'
       },
       {
-        name: 'node_env',
+        name: 'env',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_ENVIRONMENT_OPTIONS,
         labelId: 'portal.network.addNodeForm.environment.title'
       },
       {
-        name: 'node_type',
+        name: 'type',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_TYPE_OPTIONS,
