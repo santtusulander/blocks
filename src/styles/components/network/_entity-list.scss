@@ -19,13 +19,7 @@ $entity-list-item-connector-line-offset: rem(32px);
       margin-right: $page-container-horizontal-padding / 2;
     }
   }
-
-  &:last-child {
-    .btn-add-new {
-      margin-right: $page-container-horizontal-padding;
-    }
-  }
-
+  
   .dark-theme & {
     border-right-color: rgba($black, 0.3);
   }
