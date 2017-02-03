@@ -70,6 +70,13 @@ const pods =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const networks =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('networks'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
@@ -77,6 +84,7 @@ export default combineReducers({
   iataCodes,
   properties,
   pops,
+  networks,
   pods,
   locations,
   footprints,

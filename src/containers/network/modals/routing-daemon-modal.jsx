@@ -22,7 +22,6 @@ class RoutingDaemonFormContainer extends React.Component {
   render() {
     const {
       editing,
-      fetchBGPName,
       intl,
       onCancel,
       show
@@ -37,7 +36,6 @@ class RoutingDaemonFormContainer extends React.Component {
         cancel={onCancel}
       >
       <RoutingDaemonForm
-        fetchBGPName={fetchBGPName}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
       />
@@ -49,7 +47,6 @@ class RoutingDaemonFormContainer extends React.Component {
 RoutingDaemonFormContainer.displayName = 'RoutingDaemonFormContainer'
 RoutingDaemonFormContainer.propTypes = {
   editing: PropTypes.bool,
-  fetchBGPName: PropTypes.func,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
