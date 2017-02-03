@@ -50,6 +50,7 @@ SidePanelComponent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   dim: PropTypes.bool,
+  overlapping: PropTypes.bool,
   show: PropTypes.bool,
   subSubTitle: PropTypes.oneOfType([
     React.PropTypes.string,

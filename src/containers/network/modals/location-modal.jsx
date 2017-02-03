@@ -142,7 +142,6 @@ NetworkLocationFormContainer.propTypes = {
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
   fetchIataCodes: PropTypes.func,
-  groupId: PropTypes.number,
   iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
