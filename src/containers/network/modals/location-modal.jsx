@@ -34,7 +34,7 @@ class NetworkLocationFormContainer extends Component {
       country_code: values.countryCode || '',
       state: values.state || '',
       city_name: values.cityName || '',
-      iata_code: values.iataCode,
+      iata_code: values.iataCode[0].iata,
       street: values.street || '',
       postalcode: values.postalCode || '',
       lat: parseFloat(values.latitude),

@@ -171,7 +171,7 @@ GroupForm.propTypes = {
   canEditBilling: PropTypes.bool,
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
-  groupId: PropTypes.string,
+  groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,

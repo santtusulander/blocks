@@ -284,7 +284,7 @@ GroupFormContainer.propTypes = {
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
-  groupId: PropTypes.Number,
+  groupId: PropTypes.number,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
   initialValues: PropTypes.object,
@@ -320,7 +320,7 @@ const  mapStateToProps = (state, ownProps) => {
   const currentUser = user.get('currentUser')
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
-  const canSeeLocations = ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
+  const canSeeLocations = ownProps.groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
   return {
     account: account.get('activeAccount'),
     activeHost: host.get('activeHost'),

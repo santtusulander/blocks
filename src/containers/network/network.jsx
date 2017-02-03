@@ -353,7 +353,10 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
-    this.setState({groupId: groupId})
+    if (String(groupId) === String(this.props.params.group)) {
+      this.setState({groupId: groupId})
+      this.props.toggleModal(ADD_EDIT_GROUP)
+    }
     // TODO: this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
@@ -717,8 +720,10 @@ class Network extends React.Component {
           <GroupFormContainer
             account={activeAccount.get('name')}
             params={this.props.params}
+            groupId={this.state.groupId}
             canEditBilling={false}
             canSeeBilling={false}
+            canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
             show={true}
           />
