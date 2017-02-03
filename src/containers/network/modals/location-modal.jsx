@@ -17,12 +17,10 @@ class NetworkLocationFormContainer extends Component {
     this.onDelete = this.onDelete.bind(this)
   }
 
-  //TODO: Implement onSubmit
-  onSubmit(values) {
+  onSubmit(edit, values) {
     const { brand, account, group } = this.props.params
 
     const data = {
-      id: values.name,
       brand_id: brand,
       account_id: Number(account),
       group_id: Number(group),
@@ -46,7 +44,16 @@ class NetworkLocationFormContainer extends Component {
       account: account,
       payload: data
     }
-    return this.props.onCreate(params)
+
+    if (edit) {
+      params.id = values.name
+    } else {
+      data.id = values.name
+    }
+
+    const save = edit ? this.props.onUpdate : this.props.onCreate
+
+    return save(params)
       .then( (resp) => {
         if (resp.error) {
           throw new SubmissionError({'_error': resp.error.data.message})
@@ -56,14 +63,27 @@ class NetworkLocationFormContainer extends Component {
       })
   }
 
-  //TODO: Implement onDelete
-  onDelete(id) {
-    return id;
+  onDelete(locationId) {
+    const { brand, account, group } = this.props.params
+
+    const params = {
+      brand: brand,
+      group: group,
+      account: account,
+      id: locationId
+    }
+    return this.props.onDelete(params)
+      .then( (resp) => {
+        if (resp.error) {
+          throw new SubmissionError({_error: resp.error.data.message})
+        }
+
+        this.props.onCancel()
+      })
   }
 
   render() {
     const {
-      edit,
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
@@ -73,6 +93,8 @@ class NetworkLocationFormContainer extends Component {
       initialValues,
       show
     } = this.props;
+
+    const edit = !!initialValues.name
 
     const title = edit
       ? <FormattedMessage id="portal.network.locationForm.editLocation.title"/>
@@ -84,6 +106,7 @@ class NetworkLocationFormContainer extends Component {
           show={show}
           title={title}
           cancel={() => onCancel()}
+          overlapping={true}
         >
           <LocationForm
             initialValues={initialValues}
@@ -94,7 +117,7 @@ class NetworkLocationFormContainer extends Component {
             invalid={invalid}
             onCancel={onCancel}
             onDelete={this.onDelete}
-            onSubmit={this.onSubmit}
+            onSubmit={(values) => this.onSubmit(edit, values)}
           />
         </SidePanel>
       </div>
@@ -107,12 +130,13 @@ NetworkLocationFormContainer.propTypes = {
   addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
-  edit: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
+  onDelete: PropTypes.func,
+  onUpdate: PropTypes.func,
   params: PropTypes.object,
   show: PropTypes.bool
 };
@@ -152,7 +176,7 @@ const reduxStoreMock = {
   "cloud_location_id": "bkk",
   "country_code": "th",
   "city_name": "Bangkok",
-  "id": "bkk",
+  "id": "first",
   "cloud_provider": "sl",
   "lat": 13.75,
   "cloud_name": "Bare Metal",
@@ -168,7 +192,7 @@ const reduxStoreMock = {
   "cloud_region": "AP"
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
   cloudProvidersOptions: cloudProvidersOptions.get(),
   cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
 
@@ -191,7 +215,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( locationActions.create( {...params, data } ) )
+    onCreate: (params, data) => dispatch( locationActions.create( {...params, data } ) ),
+    onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
+    onUpdate: (params, data) => dispatch( locationActions.update( {...params, data } ) )
   }
 }
 

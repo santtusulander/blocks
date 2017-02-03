@@ -100,7 +100,9 @@ const GroupForm = ({
               {
                 locations.map((location, index) =>
                   <li key={index}>
-                    {`${location.get('city_name') || 'no-name'}
+                    {`{${location.get('id')}}
+                    ${location.get('lat')}\n
+                    ${location.get('city_name') || 'no-name'}
                     for
                     ${location.get('group_id')}`}
                   </li>)
