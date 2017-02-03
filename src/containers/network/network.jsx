@@ -10,14 +10,14 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
-import networkActions from '../redux/modules/entities/networks/actions'
-import { getByGroup as getNetworksByGroup } from '../redux/modules/entities/networks/selectors'
+import networkActions from '../../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
 
-import popActions from '../redux/modules/entities/pops/actions'
-import { getByNetwork as getPopsByNetwork } from '../redux/modules/entities/pops/selectors'
+import popActions from '../../redux/modules/entities/pops/actions'
+import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
-import podActions from '../redux/modules/entities/pods/actions'
-import { getByPop as getPodsByPop } from '../redux/modules/entities/pods/selectors'
+import podActions from '../../redux/modules/entities/pods/actions'
+import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
@@ -37,7 +37,7 @@ import checkPermissions from '../../util/permissions'
 import {
   getAnalyticsUrl,
   getNetworkUrl
-} from '../util/routes.js'
+} from '../../util/routes.js'
 
 import {
   ADD_EDIT_NETWORK,
@@ -164,12 +164,12 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
-    const { group, network } = this.props.params
+    const { group, network, pop, pod } = this.props.params
     this.props.fetchData()
 
-    this.props.fetchNetworks( this.props.params.group )
-    this.props.fetchPops( this.props.params.network )
-    this.props.fetchPods( this.props.params.pop )
+    this.props.fetchNetworks( group )
+    this.props.fetchPops( network )
+    this.props.fetchPods( pop )
   }
 
   componentWillReceiveProps(nextProps) {
@@ -761,6 +761,7 @@ Network.propTypes = {
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
+  pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
@@ -825,11 +826,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchData: fetchData,
     groupActions: groupActions,
     accountActions: accountActions,
-    
+
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
-    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) ),
-    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop} ) )
+    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
+    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) )
   }
 }
 
