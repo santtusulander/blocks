@@ -650,6 +650,7 @@ class Network extends React.Component {
             }}
             params={params}
             nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+            creationPermission={PERMISSIONS.CREATE_GROUP}
           />
 
           <EntityList
@@ -663,6 +664,7 @@ class Network extends React.Component {
             disableButtons={params.group ? false : true}
             title="Networks"
             nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+            creationPermission={PERMISSIONS.CREATE_NETWORK}
           />
 
           <EntityList
@@ -676,6 +678,7 @@ class Network extends React.Component {
             disableButtons={params.network ? false : true}
             title="Pops"
             nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+            creationPermission={PERMISSIONS.CREATE_POP}
           />
 
           <EntityList
@@ -689,6 +692,7 @@ class Network extends React.Component {
             disableButtons={params.pop ? false : true}
             title="Pods"
             nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+            creationPermission={PERMISSIONS.CREATE_POD}
           />
 
           <EntityList
@@ -703,7 +707,7 @@ class Network extends React.Component {
             multiColumn={true}
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
-
+            creationPermission={PERMISSIONS.CREATE_NODE}
           />
         </PageContainer>
 
