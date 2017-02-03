@@ -10,8 +10,6 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import './styles/location-form.scss'
-
 const validate = fields => {
   const customConditions = {};
 
