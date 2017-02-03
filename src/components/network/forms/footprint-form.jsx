@@ -270,19 +270,14 @@ const form = reduxForm({
 
 const selector = formValueSelector('footprintForm')
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const addManual = selector(state, 'addFootprintMethod')
   const dataType = selector(state, 'data_type')
 
   return {
     addManual,
     dataType,
-    selector,
-    initialValues: {
-      addFootprintMethod: 'manual',
-      value: [],
-      data_type: 'ipv4cidr'
-    }
+    selector
   }
 }
 
