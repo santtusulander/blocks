@@ -542,8 +542,7 @@ textarea {
       }
 
       + .btn {
-        top: auto;
-        bottom: 0;
+        top: $number-input-btn-width;
         border-top: 1px solid;
 
         .dark-theme & {
