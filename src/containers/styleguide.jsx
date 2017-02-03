@@ -661,7 +661,7 @@ class Styleguide extends React.Component {
                   max={200}
                   min={0}
                   onChange={val => this.setState({
-                    numberInputValue: val === parseInt(val, 10) ?
+                    numberInputValue: val === parseInt(val, 10) || !val ?
                       val :
                       val.target.value
                   })}
