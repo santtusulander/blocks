@@ -27,6 +27,8 @@ const validateASNToken = (item) => {
 
 const validate = ({ name, description, data_type, value, udn_type }) => {
 
+  const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
+
   const conditions = {
     name: {
       condition: !isValidTextField(name),
@@ -36,7 +38,7 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
       condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
                                           minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
-                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN} />
+                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN}/>
     }
   }
 
@@ -78,8 +80,7 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
     {
       name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
       description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
-      value: <FormattedMessage id="portal.network.footprintForm.CIRD.required.text"/>,
-      asn: <FormattedMessage id="portal.network.footprintForm.ASN.required.text"/>
+      value: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
 }
