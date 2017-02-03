@@ -700,7 +700,7 @@ class Network extends React.Component {
         {networkModal === ADD_NODE &&
           <AddNodeContainer
             id="node-add-form"
-            params={nodesUrlParams}
+            params={params}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}

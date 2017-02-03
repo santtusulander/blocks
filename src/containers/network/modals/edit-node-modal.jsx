@@ -2,10 +2,17 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
-import { formatDate } from '../../../util/helpers'
+import { formatUnixTimestamp } from '../../../util/helpers'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
+
+// Use this when the network container has the new entities groups
+// import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+
+import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
+import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
+import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -13,6 +20,28 @@ import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 
 const dateFormat = 'MM/DD/YYYY HH:mm'
+
+/**
+ * build a subtitle for the modal using URL params
+ * @param  {[type]} state  [description]
+ * @param  {[type]} params [description]
+ * @return {[type]}        [description]
+ */
+const getSubtitle = (state, params) => {
+
+  const pop = getPopById(state, params.pop)
+
+  // const group = getGroupById(state, params.group)
+  const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
+  const network = getNetworkById(state, params.network)
+
+  //TODO This is fragile. In the future, have the same helper method construct the Id
+  //that will be used to create it in the first place.
+  const pod = getPodById(state, `${params.pop}-${params.pod}`)
+
+  return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
+}
+
 
 class EditNodeFormContainer extends React.Component {
   constructor(props) {
@@ -31,7 +60,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -43,7 +72,7 @@ class EditNodeFormContainer extends React.Component {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (let dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatDate(node[dateProp], dateFormat)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], dateFormat)}</td></tr>)
         }
       }
     }
@@ -56,7 +85,6 @@ class EditNodeFormContainer extends React.Component {
     const panelTitle = hasMultipleNodes ?
       <FormattedMessage id="portal.network.editNodeForm.title.multiple" values={{numNodes: nodes.length}} /> :
       <FormattedMessage id="portal.network.editNodeForm.title" />
-    const panelSubTitle = ['Group X', 'Network Y', 'POP 1 - Chicago', 'POD2'].join(' / ') // @TODO add real values when redux connected
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
@@ -73,7 +101,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatDate(firstNode.created, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, dateFormat)}</span>}
         </span>
         <span className="edit-node__dates edit-node__dates--updated">
           {updatedText}:
@@ -89,7 +117,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatDate(firstNode.updated, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, dateFormat)}</span>}
         </span>
       </div>
     )
@@ -97,7 +125,7 @@ class EditNodeFormContainer extends React.Component {
     const sidePanelProps = {
       cancel: onCancel,
       show,
-      subTitle: panelSubTitle,
+      subTitle,
       subSubTitle: panelSubTitle2,
       title: panelTitle
     }
@@ -146,7 +174,7 @@ EditNodeFormContainer.propTypes = {
   show: React.PropTypes.bool
 }
 
-const mapStateToProps = (state, { nodeIds }) => {
+const mapStateToProps = (state, { nodeIds, params }) => {
   const nodes = nodeIds.map(id => {
 
     const nodeValues = getNodeById(state)(id) || { roles: [] }
@@ -164,6 +192,7 @@ const mapStateToProps = (state, { nodeIds }) => {
   }
 
   return {
+    subTitle: getSubtitle(state, params),
     nodes,
     initialValues,
     nodeValues
