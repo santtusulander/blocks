@@ -4,8 +4,6 @@ import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import { fetchASOverview } from '../../../../util/network-helpers'
-
 import ThemeWrap from '../../theme-wrap'
 import RoutingDaemonForm from '../../../../containers/network/modals/routing-daemon-modal'
 
@@ -23,7 +21,6 @@ storiesOf('SP-Config', module)
   .add('RoutingDaemonForm', () => (
     <RoutingDaemonForm
       show={true}
-      fetchBGPName={fetchASOverview}
       onCancel={action('Cancelled')}
       onSave={action('Submitting')}
     />
