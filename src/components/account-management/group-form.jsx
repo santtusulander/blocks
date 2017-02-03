@@ -47,9 +47,9 @@ const GroupForm = ({
   invalid,
   isFetchingHosts,
   locations,
-  onAddLocation,
   onCancel,
   onDeleteHost,
+  onShowLocation,
   onSubmit}) => {
 
   return (
@@ -93,13 +93,15 @@ const GroupForm = ({
           {canSeeLocations &&
             <div>
               <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
-              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={onAddLocation}>
+              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
               <ul>
               {
                 locations.map((location, index) =>
-                  <li key={index}>
+                  <li
+                    key={index}
+                    onClick={() => onShowLocation(location.get('id'))}>
                     {`{${location.get('id')}}
                     ${location.get('lat')}\n
                     ${location.get('city_name') || 'no-name'}
@@ -176,9 +178,9 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
-  onAddLocation: PropTypes.func,
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,
+  onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func
 }
 

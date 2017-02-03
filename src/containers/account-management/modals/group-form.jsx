@@ -36,7 +36,8 @@ class GroupFormContainer extends React.Component {
       hostToDelete: null,
       usersToAdd: List(),
       usersToDelete: List(),
-      showLocationForm: false
+      visibleLocationForm: false,
+      selectedLocationId: null
     }
 
     this.notificationTimeout = null
@@ -77,12 +78,12 @@ class GroupFormContainer extends React.Component {
     }
   }
 
-  showLocationForm() {
-    this.setState({ showLocationForm: true })
+  showLocationForm(id) {
+    this.setState({ selectedLocationId: id, visibleLocationForm: true })
   }
 
   hideLocationForm() {
-    this.setState({ showLocationForm: false })
+    this.setState({ selectedLocationId: null, visibleLocationForm: false })
   }
 
   // deleteMember(userEmail) {
@@ -234,10 +235,11 @@ class GroupFormContainer extends React.Component {
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
-            onAddLocation={this.showLocationForm}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
-            onSubmit={this.onSubmit} />
+            onSubmit={this.onSubmit}
+            onShowLocation={this.showLocationForm}
+            />
         </SidePanel>
 
       {this.state.hostToDelete &&
@@ -263,7 +265,8 @@ class GroupFormContainer extends React.Component {
         <NetworkLocationFormContainer
           params={this.props.params}
           onCancel={this.hideLocationForm}
-          show={this.state.showLocationForm}
+          show={this.state.visibleLocationForm}
+          locationId={this.state.selectedLocationId}
         />
       }
 

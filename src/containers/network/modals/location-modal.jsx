@@ -133,6 +133,7 @@ NetworkLocationFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  locationId: PropTypes.string,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -192,26 +193,16 @@ const reduxStoreMock = {
   "cloud_region": "AP"
 };
 
-const mapStateToProps = () => ({
-  cloudProvidersOptions: cloudProvidersOptions.get(),
-  cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
-
-  initialValues: {
-    name: reduxStoreMock.get('id'),
-    iataCode: reduxStoreMock.get('iata_code'),
-    latitude: reduxStoreMock.get('lat'),
-    longitude: reduxStoreMock.get('lon'),
-    cloudName: reduxStoreMock.get('cloud_name'),
-    cloudProvider: reduxStoreMock.get('cloud_provider'),
-    cloudRegion: reduxStoreMock.get('cloud_region'),
-    cloudProviderLocationId: reduxStoreMock.get('cloud_location_id'),
-    countryCode: reduxStoreMock.get('country_code'),
-    state: reduxStoreMock.get('state'),
-    cityName: reduxStoreMock.get('city_name'),
-    street: reduxStoreMock.get('street'),
-    postalCode: reduxStoreMock.get('postalcode')
+const mapStateToProps = (state, ownProps) => {
+  if (ownProps.locationId !== null) {
+    const locationInfo = getLocationById(state, ownProps.locationId)
   }
-});
+  return {
+    cloudProvidersOptions: cloudProvidersOptions.get(),
+    cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
+    initialValues: {}
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
