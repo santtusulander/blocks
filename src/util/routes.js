@@ -67,6 +67,15 @@ export function getAnalyticsUrl(linkType, val, params) {
   }
 }
 
+export function getDashboardUrl(linkType, val, params) {
+  switch(linkType) {
+    case 'brand':
+      return getRoute('dashboardBrand', { brand: val })
+    case 'account':
+      return getRoute('dashboardAccount', { ...params, account: val })
+  }
+}
+
 export function getContentUrl(linkType, val, params) {
   switch(linkType) {
     case 'brand':

@@ -44,3 +44,5 @@ export const ROLES_MAPPING = [
 export const DNS_MIN_REFRESH = 0
 export const DNS_MIN_TTL = 0
 export const DNS_MAX_TTL = 2147483647
+export const DNS_MIN_PRIO = 0
+export const DNS_MAX_PRIO = 999
