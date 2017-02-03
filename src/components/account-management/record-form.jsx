@@ -9,7 +9,7 @@ import FormFooterButtons from '../form/form-footer-buttons'
 import FieldFormGroupNumber from '../form/field-form-group-number'
 
 import recordTypes from '../../constants/dns-record-types'
-import { DNS_MIN_TTL, DNS_MAX_TTL } from '../../constants/account-management-options'
+import { DNS_MIN_TTL, DNS_MAX_TTL, DNS_MIN_PRIO, DNS_MAX_PRIO } from '../../constants/account-management-options'
 
 const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, invalid, shouldShowField, intl }) => {
   return (
@@ -44,11 +44,13 @@ const RecordForm = ({ submitting, domain, edit, onSubmit, cancel, handleSubmit, 
         <Field
           name="prio"
           id="prio-field"
-          disabled={edit}
+          min={DNS_MIN_PRIO}
+          max={DNS_MAX_PRIO}
           required={false}
+          disabled={edit}
           className='input-narrow priority-input'
           placeholder={intl.formatMessage({ id: 'portal.account.recordForm.prio.placeholder'})}
-          component={Input}
+          component={FieldFormGroupNumber}
           label={<FormattedMessage id="portal.account.recordForm.prio.label" />}/>
       }
       {shouldShowField('ttl') && [
