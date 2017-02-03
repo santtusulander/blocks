@@ -180,7 +180,7 @@ class Network extends React.Component {
     this.props.fetchData()
 
     this.props.fetchNetworks(group)
-    this.props.fetchPops(network)
+    this.props.fetchPops(network, group)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -191,7 +191,7 @@ class Network extends React.Component {
     }
 
     if (network !== this.props.params.network) {
-      this.props.fetchPops( network )
+      this.props.fetchPops( network, group )
     }
 
     if (pop) {
@@ -812,7 +812,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { brand, account, group } = ownProps.params
+  const { brand, account } = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -845,7 +845,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     accountActions: accountActions,
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
-    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
+    fetchPops: (network, group) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
   }
 }
 
