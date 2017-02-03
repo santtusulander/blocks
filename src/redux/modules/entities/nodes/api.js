@@ -6,7 +6,7 @@ import { BASE_URL_NORTH } from '../../../util'
 const baseURL = ({ brand, account, group, network, pop, pod }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${pop}/pods/${pod}/nodes`
 
-const nodeSchema = new schema.Entity('nodes')
+const nodeSchema = new schema.Entity('nodes', {}, { idAttribute: ({ pop_id, pod_id, id }) => `${pop_id}-${pod_id}-${id}` })
 
 /**
  * This endpoint supports pagination. Extract only data objects for now.

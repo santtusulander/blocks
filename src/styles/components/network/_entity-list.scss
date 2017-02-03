@@ -14,6 +14,12 @@ $entity-list-item-connector-line-offset: rem(32px);
   border-right: 2px solid;
   flex: none;
 
+  &:last-child {
+    .btn-add-new {
+      margin-right: $page-container-horizontal-padding / 2;
+    }
+  }
+
   .dark-theme & {
     border-right-color: rgba($black, 0.3);
   }
@@ -53,10 +59,6 @@ $entity-list-item-connector-line-offset: rem(32px);
   .account-management-header,
   .network-entity-list-items {
     padding: 0 $page-container-horizontal-padding;
-
-    .btn-add-new {
-      margin-right: $page-container-horizontal-padding;
-    }
   }
 
   .network-entity-list-items {

@@ -33,6 +33,9 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+import nodeActions from '../../redux/modules/entities/nodes/actions'
+import { getByPod } from '../../redux/modules/entities/nodes/selectors'
+
 import networkActions from '../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
 
@@ -70,9 +73,6 @@ const placeholderPods = Immutable.fromJS([
   { id: 10, name: 'Pod 10' },
   { id: 11, name: 'Pod 11' }
 ])
-
-// This can be replaced with real URL params once we get API integrations to all the other network entities
-const nodesUrlParams = { brand: 'udn', account: '238', group: '339', network: 'Test%202', pop: 'Pop-pop', pod: 'pod1' }
 
 class Network extends React.Component {
   constructor(props) {
@@ -587,6 +587,7 @@ class Network extends React.Component {
             editEntity={this.handleGroupEdit}
             selectEntity={this.handleGroupClick}
             selectedEntityId={`${params.group}`}
+            disableButtons={this.hasGroupsInUrl() ? false : true}
             title="Groups"
             showAsStarbursts={true}
             starburstData={{
@@ -610,6 +611,7 @@ class Network extends React.Component {
             editEntity={this.handleNetworkEdit}
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
+            disableButtons={params.group ? false : true}
             title="Networks"
             nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
@@ -622,6 +624,7 @@ class Network extends React.Component {
             editEntity={this.handlePopEdit}
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
+            disableButtons={params.network ? false : true}
             title="Pops"
             nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
@@ -634,6 +637,7 @@ class Network extends React.Component {
             entities={params.pop && pods}
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
+            disableButtons={params.pop ? false : true}
             title="Pods"
             nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
@@ -645,12 +649,14 @@ class Network extends React.Component {
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
             selectEntity={() => null}
+            disableButtons={params.pod ? false : true}
             title="Nodes"
             multiColumn={true}
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
           />
+
         </PageContainer>
 
         {networkModal === ADD_EDIT_ACCOUNT &&
@@ -699,12 +705,17 @@ class Network extends React.Component {
 
         {networkModal === ADD_NODE &&
           <AddNodeContainer
+<<<<<<< HEAD
             id="node-add-form"
+=======
+            id="add-node-form"
+>>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
             params={params}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
           />
+<<<<<<< HEAD
         }
 
         {networkModal === EDIT_NODE &&
@@ -716,6 +727,9 @@ class Network extends React.Component {
             show={true}
           />
         }
+=======
+      }
+>>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
       </Content>
     )
   }
@@ -729,10 +743,15 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+<<<<<<< HEAD
   fetchNodes: PropTypes.func,
   getNodes: PropTypes.func,
+=======
+>>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   fetchNetworks: PropTypes.func,
+  fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
+  getNodes: PropTypes.func,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
@@ -770,8 +789,15 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
+<<<<<<< HEAD
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { brand, account, group, pod } = ownProps.params
+=======
+
+function mapDispatchToProps(dispatch, ownProps) {
+  const { brand, account, group, pod } = ownProps.params
+
+>>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -797,6 +823,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
     pod && fetchNodes(ownProps.params)
   }
 

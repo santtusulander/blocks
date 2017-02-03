@@ -11,6 +11,7 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
+import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
@@ -94,10 +95,14 @@ class NetworkAddNodeForm extends React.Component {
 
     const finalValues = {...values}
     finalValues.node_name = nodeNameData.name
-    this.props.onSave(finalValues)
+    return this.props.onSave(finalValues)
+      .catch(error => {
+        this.toggleAddConfirm(false)
+        throw error
+      })
   }
 
-  onCancel(){
+  onCancel() {
     return this.props.onCancel()
   }
 
@@ -152,15 +157,15 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, nodeNameData } = this.props
+    const { handleSubmit, nodeNameData, error } = this.props
     const footerButtons = this.getFooterButtons()
     const nodeNameProps = nodeNameData.props
 
     return (
       <form className="add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
-          <span className='submit-error'>{this.props.error}</span>
-          <Row>
+          {error && <DefaultErrorBlock error={error}/>}
+          {/* <Row>
             <Col sm={3}>
               <Field
                 type="number"
@@ -170,7 +175,7 @@ class NetworkAddNodeForm extends React.Component {
                 label={<FormattedMessage id="portal.network.addNodeForm.howMany.title" />}
               />
             </Col>
-          </Row>
+          </Row> */}
 
           <FormGroup>
             <label><FormattedMessage id="portal.common.name" /></label>
