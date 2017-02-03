@@ -2,6 +2,9 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
+import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
+import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
+
 import SidePanel from '../../../components/side-panel'
 import LocationForm from '../../../components/network/forms/location-form'
 
@@ -11,6 +14,10 @@ class NetworkLocationFormContainer extends Component {
 
     this.onSubmit = this.onSubmit.bind(this)
     this.onDelete = this.onDelete.bind(this)
+  }
+
+  componentWillMount() {
+    this.props.fetchIataCodes()
   }
 
   //TODO: Implement onSubmit
@@ -34,6 +41,7 @@ class NetworkLocationFormContainer extends Component {
       fetching,
       addressFetching,
       onCancel,
+      iataCodes,
       invalid,
       initialValues
     } = this.props;
@@ -51,6 +59,7 @@ class NetworkLocationFormContainer extends Component {
         >
           <LocationForm
             edit={edit}
+            iataCodes={iataCodes}
             initialValues={initialValues}
             cloudProvidersOptions={cloudProvidersOptions}
             cloudProvidersIdOptions={cloudProvidersIdOptions}
@@ -74,7 +83,9 @@ NetworkLocationFormContainer.propTypes = {
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.bool,
+  fetchIataCodes: PropTypes.func,
   fetching: PropTypes.bool,
+  iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
@@ -135,16 +146,23 @@ const reduxStoreMock = {
   "cloud_region": "AP"
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state) => ({
   cloudProvidersOptions: cloudProvidersOptions.get(),
   cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
+  iataCodes: getIataCodes(state),
 
   initialValues: {
     groupId: reduxStoreMock.get('group_id'),
     accountId: reduxStoreMock.get('account_id'),
     brandId: reduxStoreMock.get('brand_id'),
     name: reduxStoreMock.get('id'),
-    iataCode: reduxStoreMock.get('iata_code'),
+    iataCode: [
+      {
+        iata: reduxStoreMock.get('iata_code').toUpperCase(),
+        city: reduxStoreMock.get('city_name'),
+        country: ''
+      }
+    ],
     latitude: reduxStoreMock.get('lat'),
     longitude: reduxStoreMock.get('lon'),
     cloudName: reduxStoreMock.get('cloud_name'),
@@ -157,6 +175,10 @@ const mapStateToProps = () => ({
     street: reduxStoreMock.get('street'),
     postalCode: reduxStoreMock.get('postalcode')
   }
-});
+})
 
-export default connect(mapStateToProps)(injectIntl((NetworkLocationFormContainer)))
+const mapDispatchToProps = dispatch => ({
+  fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({}))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))
