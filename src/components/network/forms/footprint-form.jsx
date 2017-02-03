@@ -272,7 +272,7 @@ const selector = formValueSelector('footprintForm')
 
 const mapStateToProps = (state) => {
   const addManual = selector(state, 'addFootprintMethod')
-  const dataType = selector(state, 'dataType')
+  const dataType = selector(state, 'data_type')
 
   return {
     addManual,
