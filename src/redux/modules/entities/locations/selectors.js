@@ -24,5 +24,5 @@ export const getById = (state, id) => {
 * @return List
 */
 export const getByGroup = (state, groupId) => {
-  return getEntitiesByParent(state, 'locations', groupId, 'id')
+  return getEntitiesByParent(state, 'locations', groupId)
 }

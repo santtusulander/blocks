@@ -25,15 +25,15 @@ class NetworkLocationFormContainer extends Component {
       account_id: Number(account),
       group_id: Number(group),
       cloud_name: values.cloudName,
-      cloud_provider: values.cloudProvider,
-      cloud_region: values.cloudRegion,
+      cloud_provider: values.cloudProvider || '',
+      cloud_region: values.cloudRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
-      country_code: values.countryCode,
-      state: values.state,
-      city_name: values.cityName,
+      country_code: values.countryCode || '',
+      state: values.state || '',
+      city_name: values.cityName || '',
       iata_code: values.iataCode,
-      street: values.street,
-      postalcode: values.postalCode,
+      street: values.street || '',
+      postalcode: values.postalCode || '',
       lat: parseFloat(values.latitude),
       lon: parseFloat(values.longitude)
     }
@@ -194,13 +194,15 @@ const reduxStoreMock = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  let initialValues = {}
   if (ownProps.locationId !== null) {
-    const locationInfo = getLocationById(state, ownProps.locationId)
+    initialValues = getLocationById(state, ownProps.locationId).toJS()
   }
+  console.log(initialValues)
   return {
     cloudProvidersOptions: cloudProvidersOptions.get(),
     cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
-    initialValues: {}
+    initialValues
   }
 }
 
