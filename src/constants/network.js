@@ -42,6 +42,8 @@ export const FOOTPRINT_UDN_TYPES = [
   { value: 'off_net', label: 'Off Net' }
 ]
 
+export const FOOTPRINT_DEFAULT_DATA_TYPE = 'ipv4cidr'
+
 export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
   { key: 1, label: 'BGP Routing Daemons'},
   { key: 2, label: 'Footprints'}
