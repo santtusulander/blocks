@@ -66,6 +66,7 @@
   "portal.network.podForm.discoveryMethod.required.error": "Discovery Method is required",
   "portal.network.podForm.localAS.required.error": "Local AS is required",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
+  "portal.network.podForm.ipList.label": "IP List",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",

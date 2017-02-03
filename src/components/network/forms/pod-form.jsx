@@ -18,8 +18,13 @@ import HelpTooltip from '../../../components/help-tooltip'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
+
 
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+
+import { isValidIPv4Address, isValidASN } from '../../../util/validators'
+
 import './pod-form.scss'
 
 const LBMETHOD_OPTIONS = [
@@ -82,6 +87,15 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
+const validateCIDRToken = (item) => {
+  return item.label && isValidIPv4Address(item.label)
+}
+
+const validateASNToken = (item) => {
+  return item.label && isValidASN(item.label)
+}
+
+
 const PodForm = ({
   asyncValidating,
   handleSubmit,
@@ -100,6 +114,7 @@ const PodForm = ({
   }) => {
 
   const edit = !!initialValues.pod_name
+  //const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
   return (
     <form onSubmit={handleSubmit(onSave)}>
@@ -165,6 +180,17 @@ const PodForm = ({
         id="provider_weight-field"
         component={FieldFormGroupNumber}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
+
+      <Field
+        required={true}
+        name="value"
+        allowNew={true}
+        component={FieldFormGroupTypeahead}
+        multiple={true}
+        options={[]}
+        validation={validateCIDRToken}
+        label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
+      />
 
       <hr/>
 

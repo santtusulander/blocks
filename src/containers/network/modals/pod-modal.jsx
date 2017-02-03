@@ -58,7 +58,7 @@ class PodFormContainer extends React.Component {
 
     const data = {
       pod_name: values.UIName,
-      pod_type: values.pod_type,
+      pod_type: values.pod_type
     }
 
     const service ={
