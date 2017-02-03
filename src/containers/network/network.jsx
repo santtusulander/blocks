@@ -45,6 +45,7 @@ import PageHeader from '../../components/layout/page-header'
 import TruncatedTitle from '../../components/truncated-title'
 import EntityList from '../../components/network/entity-list'
 
+import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import NetworkFormContainer from './modals/network-modal'
 import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
@@ -243,7 +244,6 @@ class Network extends React.Component {
 
   addEntity(entityModal) {
     switch (entityModal) {
-
 
       case ADD_EDIT_GROUP:
         this.setState({groupId: null})

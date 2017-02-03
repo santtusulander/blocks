@@ -140,9 +140,7 @@ NetworkLocationFormContainer.propTypes = {
   addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
-  edit: PropTypes.bool,
   fetchIataCodes: PropTypes.func,
-  fetching: PropTypes.bool,
   iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
@@ -197,12 +195,13 @@ const mapStateToProps = (state, ownProps) => {
       ...values,
       iataCode: [
         {
-          iata: values['iata_code'].toUpperCase(),
-          city: values['city_name'],
+          iata: values.iataCode ? values.iataCode.toUpperCase() : '',
+          city: values.cityName || '',
           country: ''
         }
-      ],
+      ]
     }
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
