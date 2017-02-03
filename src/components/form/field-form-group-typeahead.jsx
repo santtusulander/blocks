@@ -18,9 +18,11 @@ const FieldFormGroupTypeahead = ({
   multiple = false,
   newSelectionPrefix,
   options,
+  placeholder,
   required = true,
   filterBy,
   labelKey,
+  onChange,
   validation
 }) => {
 
@@ -28,7 +30,7 @@ const FieldFormGroupTypeahead = ({
   /* eslint-disable react/display-name */
   const renderToken = (token, onRemove, key) => {
 
-    // Add validation classes to rendered tokens id custom validation rule is defined
+    // Add validation classes to rendered tokens if custom validation rule is defined
     const validationClass = (validation) ? validation(token) ? 'valid' : 'invalid' : 'valid'
 
     return (
@@ -38,7 +40,6 @@ const FieldFormGroupTypeahead = ({
       </div>
     )
   }
-
   return (
     <FormGroup className={classNames({'has-error': error && dirty})} controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
@@ -53,10 +54,11 @@ const FieldFormGroupTypeahead = ({
         emptyLabel={emptyLabel ? emptyLabel : intl.formatMessage({ id: 'portal.common.typeahead.emptyLabel' })}
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
-        onChange={e => input.onChange(e)}
+        placeholder={placeholder}
+        onChange={onChange ? (selected) => onChange(selected) : e => input.onChange(e)}
         onBlur={() => input.onBlur(input.value)}
         options={options}
-        selected={input.value}
+        selected={Array.isArray(input.value) ? input.value : [input.value]}
         renderToken={renderToken}
       />
 
@@ -84,7 +86,9 @@ FieldFormGroupTypeahead.propTypes = {
   meta: PropTypes.object,
   multiple: PropTypes.bool,
   newSelectionPrefix: PropTypes.string,
+  onChange: PropTypes.func,
   options: PropTypes.array,
+  placeholder: PropTypes.string,
   required: PropTypes.bool,
   validation: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
 }
