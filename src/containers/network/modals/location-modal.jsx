@@ -20,6 +20,10 @@ class NetworkLocationFormContainer extends Component {
     this.onDelete = this.onDelete.bind(this)
   }
 
+  componentWillMount() {
+    this.props.fetchIataCodes()
+  }
+
   onSubmit(edit, values) {
     const { brand, account, group } = this.props.params
 
@@ -64,10 +68,6 @@ class NetworkLocationFormContainer extends Component {
 
         this.props.onCancel()
       })
-  }
-
-  componentWillMount() {
-    this.props.fetchIataCodes()
   }
 
   onDelete(locationId) {
