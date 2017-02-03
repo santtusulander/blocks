@@ -4,6 +4,8 @@ export const NETWORK_WINDOW_OFFSET = 10
 export const NETWORK_NUMBER_OF_NODE_COLUMNS = 4
 export const NETWORK_NODES_PER_COLUMN = 8
 
+export const NETWORK_DOMAIN_NAME = 'unifieddeliverynetwork.net'
+
 export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
 
 export const NODE_TYPE_OPTIONS = [
@@ -12,10 +14,10 @@ export const NODE_TYPE_OPTIONS = [
 ]
 
 export const NODE_ENVIRONMENT_OPTIONS = [
-  { value: 'dev', label: 'Development' },
-  { value: 'test', label: 'Testing' },
-  { value: 'staging', label: 'Staging' },
-  { value: 'production', label: 'Production' }
+  { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
+  { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
+  { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
+  { value: 'production', cacheValue: 'cdx-prod', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [

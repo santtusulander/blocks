@@ -54,7 +54,9 @@ const FieldFormGroupTypeahead = ({
         multiple={multiple}
         newSelectionPrefix={newSelectionPrefix ? newSelectionPrefix : intl.formatMessage({ id: 'portal.common.typeahead.newSelectionPrefix' })}
         onChange={e => input.onChange(e)}
+        onBlur={() => input.onBlur(input.value)}
         options={options}
+        selected={input.value}
         renderToken={renderToken}
       />
 
