@@ -134,7 +134,8 @@ class EntityList extends React.Component {
       entityNameKey,
       starburstData,
       params,
-      entities
+      entities,
+      isAllowedToConfigure
     } = this.props
 
     if (entities.size && entities.first().get(entityIdKey)) {
@@ -152,6 +153,7 @@ class EntityList extends React.Component {
             onDelet={() => deleteEntity(entityId)}
             status="enabled"
             extraClassName="entity-list-item"
+            isAllowedToConfigure={isAllowedToConfigure}
             />
         )
 
@@ -321,6 +323,7 @@ EntityList.propTypes = {
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
   entityNameKey: PropTypes.string,
+  isAllowedToConfigure: PropTypes.bool,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
@@ -338,6 +341,7 @@ EntityList.defaultProps = {
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name',
+  isAllowedToConfigure: false,
   showButtons: true,
   starburstData: {
     dailyTraffic: Immutable.List(),
