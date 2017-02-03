@@ -120,7 +120,6 @@ class EntityEdit extends React.Component {
           onCancel={onCancel}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
-          onChangeServiceItem={this.onChangeServiceItem}
           disabled={!!this.state.activeServiceItem.size}
           show={true}
         />
@@ -133,7 +132,6 @@ class EntityEdit extends React.Component {
           onCancel={onCancel}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
-          onChangeServiceItem={this.onChangeServiceItem}
           disabled={!!this.state.activeServiceItem.size}
           show={true}
         />

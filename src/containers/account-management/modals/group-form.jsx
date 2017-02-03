@@ -166,7 +166,6 @@ class GroupFormContainer extends React.Component {
       show,
       name,
       onCancel,
-      onChangeServiceItem,
       intl,
       invalid,
       serviceOptions,
@@ -222,7 +221,6 @@ class GroupFormContainer extends React.Component {
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
             onCancel={onCancel}
-            onChangeServiceItem={onChangeServiceItem}
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             serviceOptions={serviceOptions}
@@ -269,7 +267,6 @@ GroupFormContainer.propTypes = {
   isFetchingHosts: PropTypes.bool,
   name: PropTypes.string,
   onCancel: PropTypes.func,
-  onChangeServiceItem: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
   serviceOptions: PropTypes.array,

@@ -43,7 +43,6 @@ const GroupForm = ({
   invalid,
   isFetchingHosts,
   onCancel,
-  onChangeServiceItem,
   onDeleteHost,
   onSubmit,
   serviceOptions,
@@ -70,7 +69,6 @@ const GroupForm = ({
               component={ServiceOptionSelector}
               showServiceItemForm={showServiceItemForm}
               options={serviceOptions}
-              onChangeServiceItem={onChangeServiceItem}
               label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
             />
             <hr/>
@@ -140,7 +138,6 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
   onCancel: PropTypes.func,
-  onChangeServiceItem: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onSubmit: PropTypes.func,
   serviceOptions: PropTypes.array,

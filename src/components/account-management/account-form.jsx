@@ -178,7 +178,6 @@ class AccountForm extends React.Component {
                 component={ServiceOptionSelector}
                 showServiceItemForm={this.props.showServiceItemForm}
                 options={serviceOptions}
-                onChangeServiceItem={this.props.onChangeServiceItem}
                 label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
                 required={false}
               />
