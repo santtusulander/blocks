@@ -643,7 +643,7 @@ class Network extends React.Component {
 
           <EntityList
             ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && this.props.getNodes(nodesUrlParams.pod)}
+            entities={params.pod && this.props.getNodes(params.pod)}
             addEntity={() => this.addEntity(ADD_NODE)}
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
@@ -781,7 +781,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     list_children: false
   }, metricsOpts)
 
-  const fetchNodes = () => dispatch(nodeActions.fetchAll(nodesUrlParams))
+  const fetchNodes = params => dispatch(nodeActions.fetchAll(params))
 
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
@@ -794,11 +794,11 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
 
-    pod && fetchNodes()
+    pod && fetchNodes(ownProps.params)
   }
 
   return {
-    fetchNodes: () => dispatch(nodeActions.fetchAll(nodesUrlParams)),
+    fetchNodes,
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
     groupActions: groupActions,
