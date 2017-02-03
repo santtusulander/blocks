@@ -3,11 +3,13 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { SubmissionError } from 'redux-form'
 import { List, Map } from 'immutable'
+import { bindActionCreators } from 'redux'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -15,12 +17,14 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
 class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
+    this.networkId = null
   }
 
   componentWillMount(){
@@ -91,13 +95,13 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(networkId) {
-
+  onDelete(){
+    const {toggleDeleteConfirmationModal} = this.props
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: networkId
+      id: this.networkId
     }
 
     return this.props.onDelete(params)
@@ -106,7 +110,7 @@ class NetworkFormContainer extends React.Component {
           // Throw error => will be shown inside form
           throw new SubmissionError({'_error': resp.error.data.message})
         }
-
+        toggleDeleteConfirmationModal(false)
         // Close modal
         this.props.onCancel();
       })
@@ -120,8 +124,7 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel } = this.props
-
+    const { account, group, network, initialValues, onCancel, confirmationModalToggled, toggleDeleteConfirmationModal} = this.props
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
 
@@ -138,10 +141,30 @@ class NetworkFormContainer extends React.Component {
             hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={(networkId) => this.onDelete(networkId)}
+            onDelete={(networkId) => {
+              this.networkId = networkId
+              toggleDeleteConfirmationModal(true)
+            }
+            }
             onCancel={onCancel}
           />
         </SidePanel>
+
+        {edit && confirmationModalToggled &&
+          <ModalWindow
+            title="Delete network?"
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => toggleDeleteConfirmationModal(false)}
+            onSubmit={() => this.onDelete()}>
+            <h3>
+              {this.userToDelete}<br/>
+            </h3>
+            <p>
+             <FormattedMessage id="portal.user.delete.disclaimer.text"/>
+            </p>
+          </ModalWindow>}
       </div>
     )
   }
@@ -153,6 +176,7 @@ NetworkFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountId: PropTypes.string,
   brand: PropTypes.string,
+  confirmationModalToggled: PropTypes.bool,
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
@@ -166,7 +190,8 @@ NetworkFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
-  pops: PropTypes.instanceOf(List)
+  pops: PropTypes.instanceOf(List),
+  toggleDeleteConfirmationModal: PropTypes.func
 }
 
 NetworkFormContainer.defaultProps = {
@@ -181,12 +206,13 @@ const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
   const edit = !!ownProps.networkId
-
+  
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network,
     pops,
+    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
 
     initialValues: {
       name: edit && network ? network.get('name') : '',
@@ -196,6 +222,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   return {
     onCreate: (params, data) => dispatch( networkActions.create( {...params, data } )),
     onUpdate: (params, data) => dispatch( networkActions.update( {...params, data } )),
@@ -204,8 +231,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPops: (params) => dispatch( popActions.fetchAll(params) )
-
+    fetchPops: (params) => dispatch( popActions.fetchAll(params) ),
+    toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal
   }
 }
 
