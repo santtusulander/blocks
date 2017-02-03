@@ -116,7 +116,7 @@ PurgeHistoryReport.propTypes = {
   onFilterChange: PropTypes.func,
   onSortingChange: PropTypes.func,
   sort_by: PropTypes.string,
-  sort_order: PropTypes.string
+  sort_order: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default injectIntl(PurgeHistoryReport)
