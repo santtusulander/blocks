@@ -14,12 +14,12 @@ $entity-list-item-connector-line-offset: rem(32px);
   border-right: 2px solid;
   flex: none;
 
-  &:nth-child(even) {
+  &:last-child {
     .btn-add-new {
       margin-right: $page-container-horizontal-padding / 2;
     }
   }
-  
+
   .dark-theme & {
     border-right-color: rgba($black, 0.3);
   }
