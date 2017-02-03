@@ -84,8 +84,12 @@ FootprintFormContainer.displayName = 'FootprintFormContainer'
 FootprintFormContainer.propTypes = {
   ASNOptions: PropTypes.array,
   CIDROptions: PropTypes.array,
+  account: PropTypes.string,
+  brand: PropTypes.string,
   editing: PropTypes.bool,
+  fetchFootprint: PropTypes.func,
   fetching: PropTypes.bool,
+  footprintId: PropTypes.number,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
