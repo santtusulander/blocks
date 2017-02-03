@@ -645,7 +645,7 @@ class Network extends React.Component {
               chartWidth: '350',
               barMaxHeight: '30',
               analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
             }}
             params={params}
             nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
