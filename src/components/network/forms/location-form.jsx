@@ -5,6 +5,7 @@ import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 import FieldFormGroup from '../../form/field-form-group'
+import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
@@ -33,6 +34,7 @@ const NetworkLocationForm = (props) => {
     cloudProvidersIdOptions,
     edit,
     fetching,
+    iataCodes,
     intl,
     invalid,
     onCancel,
@@ -60,9 +62,11 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="iataCode"
-            type="text"
+            options={iataCodes}
+            filterBy={['iata', 'city', 'country']}
+            labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
-            component={FieldFormGroup}
+            component={FieldFormGroupTypeahead}
             label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}
           />
         </Col>

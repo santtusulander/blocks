@@ -1,21 +1,21 @@
 import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
- * Get POP by ID
+ * Get Network by ID
  * @param  {} state from redux
  * @param  String id of the item
  * @return {} property
  */
 export const getById = (state, id) => {
-  return getEntityById(state, 'pops', id)
+  return getEntityById(state, 'networks', id)
 }
 
 /**
- * Get POPs By Network
+ * Get Networks By Group
  * @param  {} state
- * @param  {String} networkId [description]
+ * @param  {String} brand [description]
  * @return List
  */
-export const getByNetwork = (state, networkId) => {
-  return getEntitiesByParent(state, 'pops', networkId, 'network_id')
+export const getByGroup = (state, groupId) => {
+  return getEntitiesByParent(state, 'networks', groupId)
 }

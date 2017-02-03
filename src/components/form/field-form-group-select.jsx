@@ -8,25 +8,24 @@ const FieldFormGroupSelect  = ({ addonAfter, input, options, numericValues, clas
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
-
       <InputGroup>
         <Select
           {...input}
           numericValues={numericValues}
           disabled={disabled}
           className={className}
-          onSelect={e => input.onChange(e)}
+          onSelect={e => {input.onChange(e)}}
+          onTouch={e => input.onBlur(e)}
           options={options}
         />
-
-          { addonAfter &&
-            <InputGroup.Addon>
-              {addonAfter}
-            </InputGroup.Addon>
-          }
-        </InputGroup>
+        { addonAfter &&
+        <InputGroup.Addon>
+          {addonAfter}
+        </InputGroup.Addon>
+        }
+      </InputGroup>
       {error && touched &&
-        <HelpBlock className='error-msg'>{error}</HelpBlock>
+      <HelpBlock className="error-msg">{error}</HelpBlock>
       }
     </FormGroup>
   );
