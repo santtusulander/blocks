@@ -649,6 +649,7 @@ class Network extends React.Component {
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
             selectEntity={() => null}
+            entityIdKey="reduxId"
             disableButtons={params.pod ? false : true}
             title="Nodes"
             multiColumn={true}
