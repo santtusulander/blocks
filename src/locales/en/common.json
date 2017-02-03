@@ -25,7 +25,7 @@
   "portal.common.description": "Description",
   "portal.common.invalid": "Invalid",
   "portal.common.textFieldMultilineValidation.line1.text": "Requirements:",
-  "portal.common.textFieldMultilineValidation.line2.text": "minimum of 3 and maximum of 40 characters",
+  "portal.common.textFieldMultilineValidation.line2.text": "minimum of {minValue} and maximum of {maxValue} characters",
   "portal.common.textFieldMultilineValidation.line3.text": "allowed special characters: _ . , - & ( ) [ ]",
 
   "portal.common.statusCode.100": "Continue",
