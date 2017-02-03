@@ -85,7 +85,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => {
-      return {id}
-    })
+    .then(() => ({ id }))
 }

@@ -63,16 +63,16 @@ const pops =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const networks =
+const pods =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('networks'),
+    [actionTypes.RECEIVE] : receiveEntity('pods'),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const pods =
+const networks =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('pods'),
+    [actionTypes.RECEIVE] : receiveEntity('networks'),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
