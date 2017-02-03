@@ -282,6 +282,7 @@ class EntityList extends React.Component {
   render() {
     const {
       addEntity,
+      creationPermission,
       disableButtons,
       title,
       multiColumn,
@@ -297,6 +298,7 @@ class EntityList extends React.Component {
         {(this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
+          creationPermission={creationPermission}
           onAdd={showButtons ? addEntity : null}
           disableButtons={disableButtons}
         />
@@ -312,6 +314,7 @@ class EntityList extends React.Component {
 EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
+  creationPermission: PropTypes.string,
   deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
