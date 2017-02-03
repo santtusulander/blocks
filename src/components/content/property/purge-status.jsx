@@ -48,6 +48,7 @@ const PurgeHistoryReport = (props) => {
           <FormGroup>
             <InputGroup>
               <FormControl
+                style={{marginLeft: 0}}
                 className="search-input"
                 placeholder="Search"
                 onChange={({ target: { value }}) => onFilterChange(filter_by, value)}

@@ -7,7 +7,11 @@ import paginationSelectors from '../redux/modules/pagination/pagination-selector
 import paginationActionCreators from '../redux/modules/pagination/actions'
 import { SET_ACTIVE_PAGE, SET_TOTAL, SET_SORTING, SET_FILTERING, INVALIDATE } from '../redux/modules/pagination/actionTypes'
 
-
+/**
+ * Decorate component with pagination functionality.
+ * @param {React.Component} WrappedComponent - component to decorate
+ * @return {WrappedComponent}
+ */
 export default function withPagination(WrappedComponent) {
   /** @typedef {string} actionType - type of action */
 
@@ -32,13 +36,15 @@ export default function withPagination(WrappedComponent) {
 
   /** @class WithPagination */
   class WithPagination extends Component {
+    static get displayName() {
+      return `WithPagination${WrappedComponent['displayName'] || WrappedComponent['name']} || Component`;
+    }
 
     /**
      * Get pages count to render pagination component or hide if count = 0.
      * @param {number} total - data length
      * @param {number} pageSize - items per page
      * @returns {number}
-     * @static
      */
     static getPaginationItemsCount(total, pageSize = 1) {
       return total > pageSize ? Math.ceil(total/pageSize) : 0;
@@ -302,7 +308,6 @@ export default function withPagination(WrappedComponent) {
     }
   }
 
-  WithPagination.displayName = 'WithPagination';
   WithPagination.defaultProps = {
     activePage: 1,
     page_size: 5,
@@ -313,7 +318,7 @@ export default function withPagination(WrappedComponent) {
     sort_by: null,
     filter_by: null,
     filter_value: ''
-  }
+  };
 
   WithPagination.propTypes = {
     activePage: PropTypes.number,
