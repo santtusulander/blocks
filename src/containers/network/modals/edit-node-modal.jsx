@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
 import { formatUnixTimestamp } from '../../../util/helpers'
+import { SubmissionError } from 'redux-form'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
@@ -147,7 +148,12 @@ class EditNodeFormContainer extends React.Component {
       deleteButton: true,
       cancelButton: true,
       cancel: () => this.onToggleDeleteModal(false),
-      onSubmit: () => this.props.onDelete(this.props.nodeIds)
+      onSubmit: () => {
+        return this.props.onDelete(this.props.nodeIds).catch(error => {
+          console.log(error);
+          throw error
+        })
+      }
     }
 
     return (
@@ -166,12 +172,14 @@ EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 EditNodeFormContainer.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
+  nodeIds: React.PropTypes.array,
   nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  show: React.PropTypes.bool
+  show: React.PropTypes.bool,
+  subTitle: React.PropTypes.string
 }
 
 const mapStateToProps = (state, { nodeIds, params }) => {
@@ -201,8 +209,19 @@ const mapStateToProps = (state, { nodeIds, params }) => {
 
 const mapDispatchToProps = (dispatch, { params, nodeIds, onCancel }) => {
 
-  const updateNode = node => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
-  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
+  const updateNode = node => dispatch(nodeActions.update({ ...params, id: 32231321321, payload: node }))
+    .then(({ error }) => {
+      if (error) {
+        return Promise.reject(new SubmissionError({ _error: error.data.message }))
+      }
+    })
+
+  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id: 234332432 }))
+    .then(({ error }) => {
+      if (error) {
+        return Promise.reject(new SubmissionError({ _error: error.data.message }))
+      }
+    })
 
   return {
 

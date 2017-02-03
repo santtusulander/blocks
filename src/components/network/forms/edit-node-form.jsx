@@ -10,6 +10,7 @@ import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldFormGroup from '../../form/field-form-group'
+import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
@@ -154,6 +155,9 @@ class NetworkEditNodeForm extends React.Component {
       }
     }
     return this.props.onSave(updatedNodeValues)
+      .catch(error => {
+        throw error
+      })
   }
 
   onCancel() {
@@ -212,6 +216,7 @@ class NetworkEditNodeForm extends React.Component {
       {
         name: 'custom_grains',
         type: 'textarea',
+        disabled: true,
         className: 'input-textarea',
         component: FieldFormGroup,
         labelId: 'portal.network.addNodeForm.grains.title'
@@ -338,7 +343,7 @@ class NetworkEditNodeForm extends React.Component {
     return (
       <form className="edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
-          <span className='submit-error'>{this.props.error}</span>
+          {error && <DefaultErrorBlock error={error}/>}
           <FormGroup>
             <label>ID</label>
             <div className="input-group">{idValues}</div>
@@ -398,5 +403,3 @@ export default reduxForm({
   form: FORM_NAME,
   validate
 })(injectIntl(NetworkEditNodeForm))
-
-
