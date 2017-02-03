@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap'
 const ActionItem = ({ input: { value, onChange },label, editAction, onRemove }) => {
   return (
     <div className={classnames('action', {removed: value})}>
-      <div className="action-name">{`${label}`}</div>
+      <div className="action-name">{label}</div>
       {value ?
         <Button bsStyle="link" onClick={() => onChange(!value)} className="btn-undo pull-right">
           <FormattedMessage id="portal.common.button.undo" />

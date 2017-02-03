@@ -23,7 +23,7 @@ const ActionItemsContainer = ({ addedActionItems, addAvailableAction, addNewActi
       <div>
         {!disableMultipleItems && <Field
           allowNew={false}
-          className="search-input-group"
+          className="action-item-search search-input-group"
           component={FieldFormGroupTypeahead}
           disabled={availableActions.length === 0}
           intl={intl}
@@ -56,7 +56,7 @@ ActionItemsContainer.defaultProps = {
 }
 
 ActionItemsContainer.propTypes = {
-  addAvailableAction: PropTypes.func.isRequired,
+  addAvailableAction: PropTypes.func,
   addNewAction: PropTypes.func.isRequired,
   addedActionItems: PropTypes.array,
   availableActions: PropTypes.array,
