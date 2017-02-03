@@ -813,11 +813,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
+    account: account,
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
-  const groupMetricsOpts = Object.assign({
-    account: account
+  const accountMetricsOpts = Object.assign({
+    list_children: false
   }, metricsOpts)
 
   const fetchData = () => {
@@ -826,10 +827,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     groupActions.startFetching()
     metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
-    metricsActions.fetchDailyAccountTraffic(metricsOpts)
-    metricsActions.fetchAccountMetrics(metricsOpts)
-    metricsActions.fetchGroupMetrics(groupMetricsOpts)
-    metricsActions.fetchDailyGroupTraffic(groupMetricsOpts)
+    metricsActions.fetchDailyAccountTraffic(accountMetricsOpts)
+    metricsActions.fetchAccountMetrics(accountMetricsOpts)
+    metricsActions.fetchGroupMetrics(metricsOpts)
+    metricsActions.fetchDailyGroupTraffic(metricsOpts)
   }
 
   return {
