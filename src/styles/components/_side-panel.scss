@@ -33,6 +33,7 @@ $side-panel-overlap-offset: rem(15px);
   }
 
   .modal-content {
+    height: 100%;
     @include sm {
       margin-left: $side-panel-small-display-margin;
     }
@@ -56,14 +57,10 @@ $side-panel-overlap-offset: rem(15px);
   }
 
   .modal-body {
-    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin )});
+    height: calc(100vh - #{$side-panel-header-height + (2 * $side-panel-body-margin) + $side-panel-footer-height});
     padding: 0 $side-panel-horizontal-padding;
-    margin: $side-panel-body-margin 0 0;
+    margin: $side-panel-body-margin 0 #{$side-panel-footer-height + $side-panel-body-margin};
     overflow: auto;
-
-    > form {
-      padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
-    }
 
     @include sm {
       max-width: ($side-panel-width - $side-panel-small-display-margin);

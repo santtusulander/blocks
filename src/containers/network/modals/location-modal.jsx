@@ -6,6 +6,9 @@ import { SubmissionError } from 'redux-form'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getById as getLocationById } from '../../../redux/modules/entities/locations/selectors'
 
+import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
+import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
+
 import SidePanel from '../../../components/side-panel'
 import LocationForm from '../../../components/network/forms/location-form'
 
@@ -63,6 +66,10 @@ class NetworkLocationFormContainer extends Component {
       })
   }
 
+  componentWillMount() {
+    this.props.fetchIataCodes()
+  }
+
   onDelete(locationId) {
     const { brand, account, group } = this.props.params
 
@@ -89,6 +96,7 @@ class NetworkLocationFormContainer extends Component {
       cloudProvidersIdOptions,
       addressFetching,
       onCancel,
+      iataCodes,
       invalid,
       initialValues,
       show
@@ -109,6 +117,8 @@ class NetworkLocationFormContainer extends Component {
           overlapping={true}
         >
           <LocationForm
+            edit={edit}
+            iataCodes={iataCodes}
             initialValues={initialValues}
             cloudProvidersOptions={cloudProvidersOptions}
             cloudProvidersIdOptions={cloudProvidersIdOptions}
@@ -130,6 +140,10 @@ NetworkLocationFormContainer.propTypes = {
   addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.bool,
+  fetchIataCodes: PropTypes.func,
+  fetching: PropTypes.bool,
+  iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
@@ -169,25 +183,33 @@ const cloudProvidersIdOptions = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  let initialValues = {}
+  let values = {}
   if (ownProps.locationId !== null) {
     const locationInfo = getLocationById(state, ownProps.locationId)
-    if (locationInfo) initialValues = locationInfo.toJS()
+    if (locationInfo) values = locationInfo.toJS()
   }
 
   return {
     cloudProvidersOptions: cloudProvidersOptions.get(),
     cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
-    initialValues
-  }
+    iataCodes: getIataCodes(state),
+    initialValues: {
+      ...values,
+      iataCode: [
+        {
+          iata: values['iata_code'].toUpperCase(),
+          city: values['city_name'],
+          country: ''
+        }
+      ],
+    }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onCreate: (params, data) => dispatch( locationActions.create( {...params, data } ) ),
-    onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
-    onUpdate: (params, data) => dispatch( locationActions.update( {...params, data } ) )
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
+  onCreate: (params, data) => dispatch( locationActions.create( {...params, data } ) ),
+  onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
+  onUpdate: (params, data) => dispatch( locationActions.update( {...params, data } ) )
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))
