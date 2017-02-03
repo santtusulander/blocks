@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { List, Map } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
 import {
@@ -18,6 +19,8 @@ import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../constants/account-management-options'
+import { getDashboardUrl } from '../util/routes'
+import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
 import * as filterActionCreators from '../redux/modules/filters'
@@ -25,11 +28,14 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
+import IconCaretDown from '../components/icons/icon-caret-down'
+import IsAllowed from '../components/is-allowed'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import MiniChart from '../components/mini-chart'
 import PageContainer from '../components/layout/page-container'
@@ -53,7 +59,6 @@ export class Dashboard extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
-    this.renderContent = this.renderContent.bind(this)
   }
 
   componentWillMount() {
@@ -73,9 +78,8 @@ export class Dashboard extends React.Component {
     if (this.props.activeAccount !== nextProps.activeAccount) {
       this.props.filterActions.resetContributionFilters()
     }
-
-    if ((prevParams !== params || this.props.filters !== nextProps.filters) && nextProps.activeAccount.size !== 0) {
-      this.fetchData(nextProps.params, nextProps.filters)
+    if ((prevParams !== params || this.props.filters !== nextProps.filters || this.props.activeAccount !== nextProps.activeAccount) && nextProps.activeAccount.size !== 0) {
+      this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
     // TODO: remove this timeout as part of UDNP-1426
     if (this.measureContainersTimeout) {
@@ -91,11 +95,11 @@ export class Dashboard extends React.Component {
     clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(params, filters) {
+  fetchData(params, filters, activeAccount) {
     if (params.account) {
       let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
-      const accountType = (accountIsContentProviderType(this.props.activeAccount) || userIsContentProvider(this.props.user))
+      const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
         ? ACCOUNT_TYPE_CONTENT_PROVIDER
         : ACCOUNT_TYPE_SERVICE_PROVIDER
       const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
@@ -137,9 +141,9 @@ export class Dashboard extends React.Component {
   }
 
   renderContent() {
-    const { activeAccount, dashboard, filterOptions, intl, params, user, theme } = this.props
+    const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
 
-    if (!params.account) {
+    if (!activeAccount.size) {
       return(
         <div className="text-center">
           <FormattedMessage id="portal.dashboard.selectAccount.text" values={{br: <br/>}} />
@@ -317,7 +321,7 @@ export class Dashboard extends React.Component {
   }
 
   render() {
-    const { activeAccount, fetching, filterOptions, filters, intl, user } = this.props
+    const { activeAccount, fetching, filterOptions, filters, intl, params, router, user } = this.props
     const showFilters = List(['dateRange'])
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -329,22 +333,41 @@ export class Dashboard extends React.Component {
     return (
       <Content>
         <PageHeader pageSubTitle="Dashboard">
-          <h1>
-            <TruncatedTitle
-              content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
-              tooltipPlacement="bottom"
-              className="account-management-title"/>
-          </h1>
+          <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+            <AccountSelector
+              as="dashboard"
+              params={params}
+              topBarTexts={{ brand: 'UDN Admin' }}
+              topBarAction={() => router.push(getDashboardUrl('brand', 'udn', {}))}
+              onSelect={(...params) => router.push(getDashboardUrl(...params))}
+              drillable={false}
+              restrictedTo="account">
+              <div className="btn btn-link dropdown-toggle header-toggle">
+                <h1>
+                  <TruncatedTitle
+                    content={activeAccount.get('name') || intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})}
+                    tooltipPlacement="bottom"
+                    className="account-property-title"/>
+                </h1>
+                <IconCaretDown />
+              </div>
+            </AccountSelector>
+          </IsAllowed>
+          <IsAllowed not={true} to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
+            <h1>{activeAccount.get('name') || <FormattedMessage id="portal.accountManagement.noActiveAccount.text"/>}</h1>
+          </IsAllowed>
         </PageHeader>
-        <AnalyticsFilters
-          activeAccountProviderType={activeAccount && activeAccount.get('provider_type')}
-          currentUser={user}
-          dateRanges={dateRanges}
-          onFilterChange={this.onFilterChange}
-          filters={filters}
-          filterOptions={filterOptions}
-          showFilters={showFilters}
-        />
+        {activeAccount.size ?
+          <AnalyticsFilters
+            activeAccountProviderType={activeAccount && activeAccount.get('provider_type')}
+            currentUser={user}
+            dateRanges={dateRanges}
+            onFilterChange={this.onFilterChange}
+            filters={filters}
+            filterOptions={filterOptions}
+            showFilters={showFilters}
+          />
+        : null}
         {fetching ?
           <LoadingSpinner />
         :
@@ -371,6 +394,7 @@ Dashboard.propTypes = {
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
   params: PropTypes.object,
+  router: PropTypes.object,
   theme: PropTypes.string,
   trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)
@@ -407,4 +431,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Dashboard))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectIntl(Dashboard)))
