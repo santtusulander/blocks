@@ -153,9 +153,7 @@ class PopFormContainer extends Component {
       ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
       : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
 
-    const subTitle = edit
-      ? `${group.get('name')} / ${network.get('name')} / ${initialValues.name}`
-      : `${group.get('name')} / ${network.get('name')}`
+    let subTitle = (group && network) && `${group.get('name')} / ${network.get('name')} ${edit ? `/ ${initialValues.name}` : ''}`
 
     const subSubTitle = edit
       ? (<FormattedMessage
