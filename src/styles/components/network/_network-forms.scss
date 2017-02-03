@@ -1,0 +1,124 @@
+@import '../../base/colors';
+
+
+//SP Footprint Form
+//=================
+.sp-footprint-form {
+
+  .typeahead-form-group {
+    margin-right: 0;
+  }
+
+  .form-group {
+    .control-label {
+      margin-bottom: 10px;
+    }
+  }
+
+  .radio {
+    margin-bottom: 10px;
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}
+
+.token {
+  &__valid {
+    background-color: $green !important;
+  }
+
+  &__invalid {
+    background-color: $red !important;
+  }
+}
+
+.sp-pop-form,
+.sp-pod-form {
+  .btn-group {
+    display: block;
+  }
+}
+
+// SP POP form-group
+//==================
+.sp-pop-form {
+  .number-input-group {
+    width: 75px;
+    margin: 0 0 0 20px;
+  }
+}
+
+// SP POD Form
+//============
+$input-height: 36px;
+
+#tooltip-help {
+  z-index: 1070;
+}
+
+.sp-pod-form {
+
+  .dropdown-select,
+  .form-control {
+    width: 300px;
+    height: $input-height;
+    margin-right: auto;
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .number-input {
+    width: 281px;
+  }
+}
+
+// SP Add None Form
+//=================
+.sp-add-node-form {
+
+  &__highlight-name {
+    font-weight: bold;
+    color: $pale-blue;
+  }
+}
+
+// SP Routing Daemon Form
+// =====================
+.routing-daemon__form {
+  .input-group-addon {
+    .dark-theme & {
+      padding: 0;
+      background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
+    }
+  }
+}
+
+//SP Location form
+//================
+.location-form {
+  .form-group {
+    .dropdown-select {
+      min-width: 100%;
+    }
+  }
+}

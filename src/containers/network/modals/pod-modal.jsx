@@ -102,7 +102,6 @@ class PodFormContainer extends React.Component {
     return (
       <div>
         <SidePanel
-          className="pod-form-sidebar"
           show={show}
           title={title}
           subTitle={subTitle}

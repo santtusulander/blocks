@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar, FormGroup, ControlLabel } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldRadio from '../../form/field-radio'
@@ -125,12 +125,11 @@ class FootprintForm extends React.Component {
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-footprint-form" onSubmit={handleSubmit(this.onSubmit)}>
           <span className='submit-error'>
           {this.props.error}
           </span>
 
-        <FormGroup>
           <Field
             name="addFootprintMethod"
             type="radio"
@@ -146,61 +145,54 @@ class FootprintForm extends React.Component {
             component={FieldRadio}
             label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
           />
-        </FormGroup>
 
         { addManual === 'manual' &&
         <div>
-          <FormGroup>
-            <Field
-              type="text"
-              name="name"
-              placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
-            />
+          <Field
+            type="text"
+            name="name"
+            placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
+          />
 
-            <Field
-              name="description"
-              type="text"
-              placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
-            />
-          </FormGroup>
+          <Field
+            name="description"
+            type="text"
+            placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
+          />
 
-          <FormGroup>
+          <ControlLabel>
+            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
+          </ControlLabel>
 
-            <ControlLabel>
-              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
-            </ControlLabel>
+          <Field
+            name="data_type"
+            type="radio"
+            value="ipv4cidr"
+            component={FieldRadio}
+            label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
+          />
 
-            <Field
-              name="data_type"
-              type="radio"
-              value="ipv4cidr"
-              component={FieldRadio}
-              label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
-            />
+          <Field
+            type="radio"
+            name="data_type"
+            value="asnlist"
+            component={FieldRadio}
+            label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
+          />
 
-            <Field
-              type="radio"
-              name="data_type"
-              value="asnlist"
-              component={FieldRadio}
-              label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
-            />
-
-            <Field
-              required={true}
-              name="value"
-              allowNew={true}
-              component={FieldFormGroupTypeahead}
-              multiple={true}
-              options={[]}
-              validation={typeaheadValidationMethod}
-            />
-
-          </FormGroup>
+          <Field
+            required={true}
+            name="value"
+            allowNew={true}
+            component={FieldFormGroupTypeahead}
+            multiple={true}
+            options={[]}
+            validation={typeaheadValidationMethod}
+          />
 
           <Field
             name="udn_type"

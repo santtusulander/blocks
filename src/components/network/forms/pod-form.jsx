@@ -21,7 +21,7 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 import ActionItemsContainer from '../../shared/action-items-container'
 
 import { DISCOVERY_METHOD_TYPE, POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
-import './pod-form.scss'
+
 
 const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
   const conditions = {
@@ -94,7 +94,7 @@ const PodForm = ({
     .getIn([0, 'label'])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="sp-pod-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="pod_name"
