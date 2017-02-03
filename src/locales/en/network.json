@@ -15,6 +15,9 @@
   "portal.network.popEditForm.popId.validation.error.text": "POP ID is invalid",
   "portal.network.popEditForm.popId.validation.required.text": "POP ID is required",
   "portal.network.popEditForm.popId.selectLocation.text": "Please, select Location ID first.",
+  "portal.network.popEditForm.deletePop.title": "Delete Pops?",
+  "portal.network.popEditForm.deletePop.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This pop will be removed from UDN immediately.",
+
 
   "portal.network.popEditForm.locationId.label" : "Location ID",
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
@@ -24,6 +27,7 @@
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.networkForm.newNetwork.title": "Add Network",
   "portal.network.networkForm.editNetwork.title": "Edit Network",
+  "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
   "portal.network.networkForm.description.placeholder": "Enter Network Description",
   "portal.network.networkForm.name.validation.error": "Invalid Network name",
@@ -31,6 +35,9 @@
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
   "portal.network.networkForm.delete.tooltip.message": "This Network contains POPs so it can't be deleted.\nPlease delete all the POPs.",
+  "portal.network.networkForm.deleteNetwork.title": "Delete network?",
+  "portal.network.networkForm.deleteNetwork.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This network will be removed from UDN immediately.",
+
 
   "portal.network.addNodeForm.title": "Add nodes",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",

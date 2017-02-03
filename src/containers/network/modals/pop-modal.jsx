@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 import { List } from 'immutable'
+import { bindActionCreators } from 'redux'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -18,6 +20,7 @@ import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/s
 
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 
@@ -127,7 +130,7 @@ class PopFormContainer extends Component {
           // Throw error => will be shown inside form
           throw new SubmissionError({'_error': resp.error.data.message})
         }
-
+        this.props.toggleDeleteConfirmationModal(false)
         //Close modal
         this.props.onCancel();
       })
@@ -144,8 +147,11 @@ class PopFormContainer extends Component {
       onCancel,
       groupId,
       networkId,
-      popId
+      popId,
+      confirmationModalToggled,
+      toggleDeleteConfirmationModal
     } = this.props
+    console.log(confirmationModalToggled);
 
     const edit = !!initialValues.id
 
@@ -164,24 +170,39 @@ class PopFormContainer extends Component {
                                                   }} />) : ''
 
     return (
-      <SidePanel
-        show={true}
-        title={title}
-        subTitle={subTitle}
-        subSubTitle={subSubTitle}
-        cancel={() => onCancel()}
-      >
+      <div>
+        <SidePanel
+          show={true}
+          title={title}
+          subTitle={subTitle}
+          subSubTitle={subSubTitle}
+          cancel={() => onCancel()}
+        >
 
-        <NetworkPopForm
-          hasPods={this.hasChildren(edit)}
-          iata={iata}
-          initialValues={initialValues}
-          onDelete={() => this.onDelete(popId)}
-          onSave={(values) => this.onSave(edit, values)}
-          onCancel={() => onCancel()}
-        />
+          <NetworkPopForm
+            hasPods={this.hasChildren(edit)}
+            iata={iata}
+            initialValues={initialValues}
+            onDelete={() => toggleDeleteConfirmationModal(true)}
+            onSave={(values) => this.onSave(edit, values)}
+            onCancel={() => onCancel()}
+          />
 
-      </SidePanel>
+        </SidePanel>
+
+        {edit && confirmationModalToggled &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.network.popEditForm.deletePop.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => toggleDeleteConfirmationModal(false)}
+            onSubmit={() => this.onDelete(popId)}>
+            <p>
+             <FormattedMessage id="portal.network.popEditForm.deletePop.confirmation.text"/>
+            </p>
+          </ModalWindow>}
+      </div>
     )
   }
 }
@@ -190,6 +211,7 @@ PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   brand: PropTypes.string,
+  confirmationModalToggled: PropTypes.bool,
 
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -207,7 +229,8 @@ PopFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  toggleDeleteConfirmationModal: PropTypes.func
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
@@ -224,6 +247,7 @@ const mapStateToProps = (state, ownProps) => {
     pop,
     pods,
     iata: formSelector(state, 'iata'),
+    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
 
     initialValues: {
       id: edit && pop ? pop.get('id') : null,
@@ -238,6 +262,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   return {
     onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
     onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
@@ -247,7 +272,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
-    fetchPods: (params) => dispatch( podActions.fetchAll(params) )
+    fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
+    toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal
   }
 }
 

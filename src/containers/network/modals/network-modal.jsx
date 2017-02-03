@@ -152,17 +152,14 @@ class NetworkFormContainer extends React.Component {
 
         {edit && confirmationModalToggled &&
           <ModalWindow
-            title="Delete network?"
+            title={<FormattedMessage id="portal.network.networkForm.deleteNetwork.title"/>}
             verifyDelete={true}
             cancelButton={true}
             deleteButton={true}
             cancel={() => toggleDeleteConfirmationModal(false)}
             onSubmit={() => this.onDelete()}>
-            <h3>
-              {this.userToDelete}<br/>
-            </h3>
             <p>
-             <FormattedMessage id="portal.user.delete.disclaimer.text"/>
+             <FormattedMessage id="portal.network.networkForm.deleteNetwork.confirmation.text"/>
             </p>
           </ModalWindow>}
       </div>
@@ -206,7 +203,7 @@ const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
   const edit = !!ownProps.networkId
-  
+
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
