@@ -26,7 +26,8 @@ import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_POP,
   ADD_EDIT_POD,
-  ADD_NODE
+  ADD_NODE,
+  EDIT_NODE
 } from '../constants/network-modals.js'
 
 import {
@@ -39,6 +40,7 @@ import NetworkFormContainer from './network/modals/network-modal'
 import PopFormContainer from './network/modals/pop-modal'
 import PodFormContainer from './network/modals/pod-modal'
 import AddNodeContainer from './network/modals/add-node-modal'
+import EditNodeContainer from './network/modals/edit-node-modal'
 
 const placeholderNetworks = Immutable.fromJS([
   { id: 1, name: 'Network 1' },
@@ -110,8 +112,6 @@ class Network extends React.Component {
     this.handlePodDelete = this.handlePodDelete.bind(this)
 
     this.handleNodeEdit = this.handleNodeEdit.bind(this)
-    this.handleNodeSave = this.handleNodeSave.bind(this)
-    this.handleNodeDelete = this.handleNodeDelete.bind(this)
 
     this.scrollToEntity = this.scrollToEntity.bind(this)
 
@@ -242,6 +242,11 @@ class Network extends React.Component {
         this.setState({nodeId: null})
         break;
 
+      case EDIT_NODE:
+        this.props.toggleModal(null)
+        this.setState({nodeId: null})
+        break;
+
       default:
         break;
     }
@@ -362,16 +367,8 @@ class Network extends React.Component {
 
   /* ==== Node Handlers ==== */
   handleNodeEdit(nodeId) {
-    this.setState({nodeId: nodeId})
-    //TODO: this.props.toggleModal(EDIT_NODE)
-  }
-
-  handleNodeSave() {
-    // TODO
-  }
-
-  handleNodeDelete() {
-    // TODO
+    this.setState({ nodeId: [ nodeId ] })
+    this.props.toggleModal(EDIT_NODE)
   }
 
   /**
@@ -672,10 +669,20 @@ class Network extends React.Component {
 
         {networkModal === ADD_NODE &&
           <AddNodeContainer
-            id="node-form"
+            id="node-add-form"
             params={nodesUrlParams}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
+            show={true}
+          />
+        }
+
+        {networkModal === EDIT_NODE &&
+          <EditNodeContainer
+            id="node-edit-form"
+            nodeIds={this.state.nodeId}
+            params={nodesUrlParams}
+            onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
           />
         }
