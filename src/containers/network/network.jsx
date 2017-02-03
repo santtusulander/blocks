@@ -39,9 +39,6 @@ import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 import networkActions from '../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
 
-import nodeActions from '../../redux/modules/entities/nodes/actions'
-import { getByPod } from '../../redux/modules/entities/nodes/selectors'
-
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
@@ -705,31 +702,23 @@ class Network extends React.Component {
 
         {networkModal === ADD_NODE &&
           <AddNodeContainer
-<<<<<<< HEAD
-            id="node-add-form"
-=======
             id="add-node-form"
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
             params={params}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
           />
-<<<<<<< HEAD
         }
 
         {networkModal === EDIT_NODE &&
           <EditNodeContainer
-            id="node-edit-form"
+            id="edit-node-form"
             nodeIds={this.state.nodeId}
             params={params}
             onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
           />
         }
-=======
-      }
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
       </Content>
     )
   }
@@ -743,11 +732,6 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
-<<<<<<< HEAD
-  fetchNodes: PropTypes.func,
-  getNodes: PropTypes.func,
-=======
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
@@ -789,15 +773,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
-<<<<<<< HEAD
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { brand, account, group, pod } = ownProps.params
-=======
 
 function mapDispatchToProps(dispatch, ownProps) {
   const { brand, account, group, pod } = ownProps.params
 
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -823,10 +802,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
-<<<<<<< HEAD
-=======
 
->>>>>>> 73d58f89969ce0945c1f9b39ac915984aff5b612
     pod && fetchNodes(ownProps.params)
   }
 
