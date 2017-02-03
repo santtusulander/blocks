@@ -10,13 +10,14 @@ import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
+import footprintActions from '../../../redux/modules/entities/footprints/actions'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
-
+import { getById as getFootprintById } from '../../../redux/modules/entities/footprints/selectors'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -39,7 +40,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount(){
-    const {brand, accountId,groupId,networkId, popId, podId} = this.props
+    const { brand, accountId, groupId, networkId, popId, podId } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({brand, id: accountId})
@@ -199,9 +200,6 @@ class PodFormContainer extends React.Component {
             show={true}
             editing={!this.state.initialValues.isEmpty()}
             initialValues={this.state.initialValues}
-            // ASNOptions={dummyASNOptions}
-            // CIDROptions={dummyCIDROptions}
-            // udnTypeOptions={dummyUDNTypeOptions}
             onCancel={this.onCancelFootprintModal}
             onSubmit={this.onSubmitFootprintModal}
           />
@@ -244,16 +242,6 @@ const mapStateToProps = ( state, ownProps) => {
     pod,
 
     initialValues
-
-    // initialValues: {
-    //   ...pod.toJS()
-    //
-    //   // id: edit && pod ? pod.get('id') : null,
-    //   // pod_name: edit && pod ? pod.get('pod_name') : null,
-    //   // lb_method: edit && pod ? pod.get('lb_method') : null,
-    //   // pod_type: edit && pod ? pod.get('pod_type') : null,
-    //   // local_as: edit && pod ? pod.get('local_as') : null
-    // }
   }
 }
 
@@ -263,11 +251,16 @@ const mapDispatchToProps = (dispatch) => {
     onUpdate: (params, data) => dispatch( podActions.update( {...params, data } )),
     onDelete: (params) => dispatch( podActions.remove( {...params } )),
 
+    onCreateFootprint: (params, data) => dispatch( footprintActions.create({ ...params, data }) ),
+    onUpdateFootprint: (params, data) => dispatch( footprintActions.update({ ...params, data }) ),
+    onDeleteFootprint: (params) => dispatch( footprintActions.remove({ ...params }) ),
+
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
-    fetchPod: (params) => dispatch( podActions.fetchOne(params) )
+    fetchPod: (params) => dispatch( podActions.fetchOne(params) ),
+    fetchFootprints: (params) => dispatch( footprintActions.fetchAll(params) )
   }
 }
 
