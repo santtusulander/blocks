@@ -3,65 +3,57 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import {
+  getAnalyticsUrl,
   getNetworkUrl
-} from '../util/routes.js'
-
-import nodeActions from '../redux/modules/entities/nodes/actions'
-
-import { getByPod } from '../redux/modules/entities/nodes/selectors'
-
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as uiActionCreators from '../redux/modules/ui'
-
-import Content from '../components/layout/content'
-import PageContainer from '../components/layout/page-container'
-import PageHeader from '../components/layout/page-header'
-import TruncatedTitle from '../components/truncated-title'
-import EntityList from '../components/network/entity-list'
+} from '../../util/routes.js'
 
 import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_POP,
   ADD_EDIT_POD,
-  ADD_NODE
-} from '../constants/network-modals.js'
+  ADD_NODE,
+  ADD_EDIT_ACCOUNT
+} from '../../constants/network-modals.js'
 
 import {
   NETWORK_SCROLL_AMOUNT,
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
-} from '../constants/network'
+} from '../../constants/network'
 
-import NetworkFormContainer from './network/modals/network-modal'
-import PopFormContainer from './network/modals/pop-modal'
-import PodFormContainer from './network/modals/pod-modal'
-import AddNodeContainer from './network/modals/add-node-modal'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import * as PERMISSIONS from '../../constants/permissions'
 
-const placeholderNetworks = Immutable.fromJS([
-  { id: 1, name: 'Network 1' },
-  { id: 2, name: 'Network 2' },
-  { id: 3, name: 'Network 3' },
-  { id: 4, name: 'Network 4' },
-  { id: 5, name: 'Network 5' },
-  { id: 6, name: 'Network 6' },
-  { id: 7, name: 'Network 7' },
-  { id: 8, name: 'Network 8' },
-  { id: 9, name: 'Network 9' },
-  { id: 10, name: 'Network 10' },
-  { id: 11, name: 'Network 11' },
-  { id: 12, name: 'Network 12' },
-  { id: 13, name: 'Network 13' },
-  { id: 14, name: 'Network 14' }
-])
+import * as accountActionCreators from '../../redux/modules/account'
+import * as groupActionCreators from '../../redux/modules/group'
+import * as uiActionCreators from '../../redux/modules/ui'
+import * as metricsActionCreators from '../../redux/modules/metrics'
 
-const placeholderPops = Immutable.fromJS([
-  { id: 'JFK1', name: 'Pod 1 for JFK' },
-  { id: 'JFK2', name: 'Pod 2 for JFK' },
-  { id: 'JFK7', name: 'Pod 7 for JFK' }
-])
+import nodeActions from '../../redux/modules/entities/nodes/actions'
+import { getByPod } from '../../redux/modules/entities/nodes/selectors'
+
+import networkActions from '../../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
+
+import popActions from '../../redux/modules/entities/pops/actions'
+import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
+
+import Content from '../../components/layout/content'
+import PageContainer from '../../components/layout/page-container'
+import PageHeader from '../../components/layout/page-header'
+import TruncatedTitle from '../../components/truncated-title'
+import EntityList from '../../components/network/entity-list'
+
+import NetworkFormContainer from './modals/network-modal'
+import PopFormContainer from './modals/pop-modal'
+import PodFormContainer from './modals/pod-modal'
+import AddNodeContainer from './modals/add-node-modal'
+import AccountForm from '../../components/account-management/account-form'
+
+import checkPermissions from '../../util/permissions'
 
 const placeholderPods = Immutable.fromJS([
   { id: 1, name: 'Pod 1' },
@@ -88,6 +80,8 @@ class Network extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
 
     this.handleAccountClick = this.handleAccountClick.bind(this)
+    this.handleAccountEdit = this.handleAccountEdit.bind(this)
+    this.handleAccountSave = this.handleAccountSave.bind(this)
 
     this.handleGroupClick = this.handleGroupClick.bind(this)
     this.handleGroupEdit = this.handleGroupEdit.bind(this)
@@ -96,13 +90,9 @@ class Network extends React.Component {
 
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handleNetworkEdit = this.handleNetworkEdit.bind(this)
-    this.handleNetworkSave = this.handleNetworkSave.bind(this)
-    this.handleNetworkDelete = this.handleNetworkDelete.bind(this)
 
     this.handlePopClick = this.handlePopClick.bind(this)
     this.handlePopEdit = this.handlePopEdit.bind(this)
-    this.handlePopSave = this.handlePopSave.bind(this)
-    this.handlePopDelete = this.handlePopDelete.bind(this)
 
     this.handlePodClick = this.handlePodClick.bind(this)
     this.handlePodEdit = this.handlePodEdit.bind(this)
@@ -139,22 +129,30 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
+    const { group, network } = this.props.params
     this.props.fetchData()
+
+    this.props.fetchNetworks(group)
+    this.props.fetchPops(network)
   }
 
   componentWillReceiveProps(nextProps) {
     const { group, network, pop } = nextProps.params
 
-    if (group) {
-      this.setState({ networks: placeholderNetworks })
+    if (group !== this.props.params.group) {
+      this.props.fetchNetworks( group )
     }
 
-    if (network) {
-      this.setState({ pops: placeholderPops })
+    if (network !== this.props.params.network) {
+      this.props.fetchPops( network )
     }
 
     if (pop) {
       this.setState({ pods: placeholderPods })
+    }
+
+    if (this.props.params.group !== group) {
+      this.props.fetchNetworks( group )
     }
   }
 
@@ -194,6 +192,11 @@ class Network extends React.Component {
   addEntity(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_ACCOUNT:
+        this.setState({groupId: null})
+        this.props.toggleModal(ADD_EDIT_ACCOUNT)
+        break;
+
       case ADD_EDIT_NETWORK:
         this.setState({networkId: null})
         this.props.toggleModal(ADD_EDIT_NETWORK)
@@ -222,6 +225,10 @@ class Network extends React.Component {
   handleCancel(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_ACCOUNT:
+        this.props.toggleModal(null)
+        break;
+
       case ADD_EDIT_NETWORK:
         this.props.toggleModal(null)
         this.setState({networkId: null})
@@ -249,7 +256,7 @@ class Network extends React.Component {
 
   /* ==== Account Handlers ==== */
   handleAccountClick(accountId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: accountId,
       // We need to set the previousId when we're navigating/scrolling backwards
       // and the only way to navigate back from and hide the groups is to check
@@ -257,18 +264,29 @@ class Network extends React.Component {
       previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
       goToRoute: 'groups-v2',
-      goBackToRoute: 'account-v2'
+      goBackToRoute: 'account-v2',
+      returnUrl: true
     })
+  }
+
+  handleAccountEdit() {
+    this.props.toggleModal(ADD_EDIT_ACCOUNT)
+  }
+
+  handleAccountSave(brandId, accountId, data) {
+    this.props.accountActions.updateAccount(brandId, accountId, data)
+      .then(() => this.handleCancel(ADD_EDIT_ACCOUNT))
   }
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
-    this.determineNextState({
+    return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
       // TODO UDNP-2563: Remove -v2 once done with all the Network changes
-      goBackToRoute: 'groups-v2'
+      goBackToRoute: 'groups-v2',
+      returnUrl: true
     })
   }
 
@@ -300,14 +318,6 @@ class Network extends React.Component {
     this.props.toggleModal(ADD_EDIT_NETWORK)
   }
 
-  handleNetworkSave() {
-    // TODO
-  }
-
-  handleNetworkDelete() {
-    // TODO
-  }
-
   /* ==== POP Handlers ==== */
   handlePopClick(popId) {
     this.determineNextState({
@@ -321,14 +331,6 @@ class Network extends React.Component {
   handlePopEdit(popId) {
     this.setState({popId: popId})
     this.props.toggleModal(ADD_EDIT_POP)
-  }
-
-  handlePopSave() {
-    // TODO
-  }
-
-  handlePopDelete() {
-    // TODO
   }
 
   /* ==== POD Handlers ==== */
@@ -386,7 +388,7 @@ class Network extends React.Component {
    * @param  {string}           goBackToRoute Name of a level where we should go back to
    * @return {boolean}                        Boolean to determine scrolling direction
    */
-  determineNextState({ currentId, previousId, goToRoute, goBackToRoute } = {}) {
+  determineNextState({ currentId, previousId, goToRoute, goBackToRoute, returnUrl } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
     // TODO UDNP-2563: Remove .split('-v2')[0] once done with all the Network changes
@@ -395,7 +397,11 @@ class Network extends React.Component {
 
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
 
-    this.props.router.push(url)
+    if (!returnUrl) {
+      return this.props.router.push(url)
+    }
+
+    return url
   }
 
   /**
@@ -529,15 +535,14 @@ class Network extends React.Component {
       networkModal,
       groups,
       params,
-      fetching
+      networks,
+      pops,
+      currentUser,
+      roles
     } = this.props
 
     const {
-      networks,
-      pops,
       pods,
-      networkId,
-      popId,
       podId
     } = this.state
 
@@ -558,26 +563,50 @@ class Network extends React.Component {
             entities={params.account && Immutable.List([activeAccount])}
             addEntity={() => null}
             deleteEntity={() => null}
-            editEntity={() => null}
+            editEntity={this.handleAccountEdit}
             selectEntity={this.handleAccountClick}
             selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
             title="Account"
             showButtons={false}
+            showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.accountDailyTraffic,
+              contentMetrics: this.props.accountMetrics,
+              type: CONTENT_ITEMS_TYPES.ACCOUNT,
+              chartWidth: '450',
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl,
+              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+            }}
+            params={params}
+            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
           />
 
           <EntityList
             ref={groups => this.entityList.groupList = groups}
             entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
             addEntity={() => null}
-            deleteEntity={() => (groupId) => this.handleGroupEdit(groupId)}
-            editEntity={() => (groupId) => this.handleGroupEdit(groupId)}
+            deleteEntity={this.handleGroupEdit}
+            editEntity={this.handleGroupEdit}
             selectEntity={this.handleGroupClick}
             selectedEntityId={`${params.group}`}
             title="Groups"
+            showAsStarbursts={true}
+            starburstData={{
+              dailyTraffic: this.props.groupDailyTraffic,
+              contentMetrics: this.props.groupMetrics,
+              type: CONTENT_ITEMS_TYPES.GROUP,
+              chartWidth: '350',
+              barMaxHeight: '30',
+              analyticsURLBuilder: getAnalyticsUrl,
+              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+            }}
+            params={params}
+            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
           />
 
           <EntityList
-            ref={networks => this.entityList.networkList = networks}
+            ref={networkListRef => this.entityList.networkList = networkListRef}
             entities={params.group && networks}
             addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
             deleteEntity={() => () => null}
@@ -585,6 +614,7 @@ class Network extends React.Component {
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
             title="Networks"
+            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
 
           <EntityList
@@ -596,6 +626,7 @@ class Network extends React.Component {
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
             title="Pops"
+            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
 
           <EntityList
@@ -607,6 +638,7 @@ class Network extends React.Component {
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
             title="Pods"
+            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
 
           <EntityList
@@ -622,38 +654,37 @@ class Network extends React.Component {
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
           />
+
         </PageContainer>
 
-        {/* MODALS
-            TODO: Add/edit Group
-        */}
+        {networkModal === ADD_EDIT_ACCOUNT &&
+          <AccountForm
+            id="account-form"
+            onSave={this.handleAccountSave}
+            account={activeAccount}
+            onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
+            show={true}
+          />
+        }
 
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
-            account={activeAccount.get('name')}
+            accountId={params.account}
+            brand={params.brand}
             groupId={params.group}
-            networkId={params.network}
-            fetching={fetching}
-            onDelete={this.handleNetworkDelete}
-            onSave={this.handleNetworkSave}
+            networkId={this.state.networkId}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
-            show={true}
-            edit={(networkId !== null) ? true : false}
           />
         }
 
         {networkModal === ADD_EDIT_POP &&
           <PopFormContainer
-            account={activeAccount.get('name')}
+            accountId={params.account}
+            brand={params.brand}
             groupId={params.group}
             networkId={params.network}
-            popId={params.pop}
-            fetching={fetching}
-            onDelete={this.handlePopDelete}
-            onSave={this.handlePopSave}
+            popId={this.state.popId}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
-            show={true}
-            edit={(popId !== null) ? true : false}
           />
         }
 
@@ -678,7 +709,7 @@ class Network extends React.Component {
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
           />
-        }
+      }
       </Content>
     )
   }
@@ -686,15 +717,25 @@ class Network extends React.Component {
 
 Network.displayName = 'Network'
 Network.propTypes = {
+  accountActions: React.PropTypes.object,
+  accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
+  currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
-  fetching: PropTypes.bool,
+  fetchPops: PropTypes.func,
   getNodes: PropTypes.func,
+  groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
   location: PropTypes.object,
   networkModal: PropTypes.string,
+  networks: PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
+  pops: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
   toggleModal: PropTypes.func
 }
@@ -704,28 +745,55 @@ Network.defaultProps = {
   groups: Immutable.List()
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state, ownProps) => {
   return {
     getNodes: getByPod(state),
+    //select networks by Group from redux
+    networks: getNetworksByGroup(state, ownProps.params.group),
+    pops: getPopsByNetwork(state, ownProps.params.network),
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
     fetching: state.group.get('fetching'),
-    groups: state.group.get('allGroups')
+    groups: state.group.get('allGroups'),
+    groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
+    groupMetrics: state.metrics.get('groupMetrics'),
+    accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
+    accountMetrics: state.metrics.get('accountMetrics'),
+    roles: state.roles.get('roles'),
+    currentUser: state.user.get('currentUser')
   };
 }
 
+
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, pod } = ownProps.params
+  const { brand, account, group, pod } = ownProps.params
+
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
+  const metricsOpts = {
+    account: account,
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+    endDate: moment.utc().endOf('day').format('X')
+  }
+  const accountMetricsOpts = Object.assign({
+    list_children: false
+  }, metricsOpts)
 
   const fetchNodes = () => dispatch(nodeActions.fetchAll(nodesUrlParams))
 
   const fetchData = () => {
+    //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
     groupActions.startFetching()
+    metricsActions.startGroupFetching()
     groupActions.fetchGroups(brand, account)
+    metricsActions.fetchDailyAccountTraffic(accountMetricsOpts)
+    metricsActions.fetchAccountMetrics(accountMetricsOpts)
+    metricsActions.fetchGroupMetrics(metricsOpts)
+    metricsActions.fetchDailyGroupTraffic(metricsOpts)
+
     pod && fetchNodes()
   }
 
@@ -733,7 +801,12 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchNodes: () => dispatch(nodeActions.fetchAll(nodesUrlParams)),
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
-    groupActions: groupActions
-  };
+    groupActions: groupActions,
+    accountActions: accountActions,
+    //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
+    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
+  }
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
