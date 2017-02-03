@@ -10,9 +10,15 @@ $height-of-the-header: #{$header-total-height} - #{$page-header-height} - #{$pag
 .network-entities-container {
   display: flex;
   width: 100%;
+  max-height: calc(100vh - #{$height-of-the-header});
   min-height: calc(100vh - #{$height-of-the-header});
   padding: $page-container-vertical-padding 0;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   flex: 1 0 auto;
+
+  .network-entities-wrapper {
+    display: flex;
+    height: 100%;
+  }
 }

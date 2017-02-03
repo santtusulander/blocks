@@ -604,107 +604,109 @@ class Network extends React.Component {
         </PageHeader>
 
         <PageContainer ref={container => this.container = container} className="network-entities-container">
-          <EntityList
-            ref={accounts => this.entityList.accountList = accounts}
-            entities={params.account && Immutable.List([activeAccount])}
-            addEntity={() => null}
-            deleteEntity={() => null}
-            editEntity={this.handleAccountEdit}
-            selectEntity={this.handleAccountClick}
-            selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
-            title="Account"
-            showButtons={false}
-            showAsStarbursts={true}
-            starburstData={{
-              dailyTraffic: this.props.accountDailyTraffic,
-              contentMetrics: this.props.accountMetrics,
-              type: CONTENT_ITEMS_TYPES.ACCOUNT,
-              chartWidth: '450',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
-            }}
-            params={params}
-            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-          />
+          <div className="network-entities-wrapper">
+            <EntityList
+              ref={accounts => this.entityList.accountList = accounts}
+              entities={params.account && Immutable.List([activeAccount])}
+              addEntity={() => null}
+              deleteEntity={() => null}
+              editEntity={this.handleAccountEdit}
+              selectEntity={this.handleAccountClick}
+              selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
+              title="Account"
+              showButtons={false}
+              showAsStarbursts={true}
+              starburstData={{
+                dailyTraffic: this.props.accountDailyTraffic,
+                contentMetrics: this.props.accountMetrics,
+                type: CONTENT_ITEMS_TYPES.ACCOUNT,
+                chartWidth: '450',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+              }}
+              params={params}
+              nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+            />
 
-          <EntityList
-            ref={groups => this.entityList.groupList = groups}
-            entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
-            addEntity={() => null}
-            deleteEntity={this.handleGroupEdit}
-            editEntity={this.handleGroupEdit}
-            selectEntity={this.handleGroupClick}
-            selectedEntityId={`${params.group}`}
-            disableButtons={this.hasGroupsInUrl() ? false : true}
-            title="Groups"
-            showAsStarbursts={true}
-            starburstData={{
-              dailyTraffic: this.props.groupDailyTraffic,
-              contentMetrics: this.props.groupMetrics,
-              type: CONTENT_ITEMS_TYPES.GROUP,
-              chartWidth: '350',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
-            }}
-            params={params}
-            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
-          />
+            <EntityList
+              ref={groups => this.entityList.groupList = groups}
+              entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
+              addEntity={() => null}
+              deleteEntity={this.handleGroupEdit}
+              editEntity={this.handleGroupEdit}
+              selectEntity={this.handleGroupClick}
+              selectedEntityId={`${params.group}`}
+              disableButtons={this.hasGroupsInUrl() ? false : true}
+              title="Groups"
+              showAsStarbursts={true}
+              starburstData={{
+                dailyTraffic: this.props.groupDailyTraffic,
+                contentMetrics: this.props.groupMetrics,
+                type: CONTENT_ITEMS_TYPES.GROUP,
+                chartWidth: '350',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+              }}
+              params={params}
+              nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+            />
 
-          <EntityList
-            ref={networkListRef => this.entityList.networkList = networkListRef}
-            entities={params.group && networks}
-            addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNetworkEdit}
-            selectEntity={this.handleNetworkClick}
-            selectedEntityId={`${params.network}`}
-            disableButtons={params.group ? false : true}
-            title="Networks"
-            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
-          />
+            <EntityList
+              ref={networkListRef => this.entityList.networkList = networkListRef}
+              entities={params.group && networks}
+              addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNetworkEdit}
+              selectEntity={this.handleNetworkClick}
+              selectedEntityId={`${params.network}`}
+              disableButtons={params.group ? false : true}
+              title="Networks"
+              nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+            />
 
-          <EntityList
-            ref={pops => this.entityList.popList = pops}
-            entities={params.network && pops}
-            addEntity={() => this.addEntity(ADD_EDIT_POP)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePopEdit}
-            selectEntity={this.handlePopClick}
-            selectedEntityId={`${params.pop}`}
-            disableButtons={params.network ? false : true}
-            title="Pops"
-            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
-          />
+            <EntityList
+              ref={pops => this.entityList.popList = pops}
+              entities={params.network && pops}
+              addEntity={() => this.addEntity(ADD_EDIT_POP)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePopEdit}
+              selectEntity={this.handlePopClick}
+              selectedEntityId={`${params.pop}`}
+              disableButtons={params.network ? false : true}
+              title="Pops"
+              nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+            />
 
-          <EntityList
-            ref={pods => this.entityList.podList = pods}
-            addEntity={() => this.addEntity(ADD_EDIT_POD)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePodEdit}
-            entities={params.pop && pods}
-            selectEntity={this.handlePodClick}
-            selectedEntityId={`${params.pod}`}
-            disableButtons={params.pop ? false : true}
-            title="Pods"
-            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
-          />
+            <EntityList
+              ref={pods => this.entityList.podList = pods}
+              addEntity={() => this.addEntity(ADD_EDIT_POD)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePodEdit}
+              entities={params.pop && pods}
+              selectEntity={this.handlePodClick}
+              selectedEntityId={`${params.pod}`}
+              disableButtons={params.pop ? false : true}
+              title="Pods"
+              nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+            />
 
-          <EntityList
-            ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && nodes}
-            addEntity={() => this.addEntity(ADD_NODE)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNodeEdit}
-            selectEntity={() => null}
-            disableButtons={params.pod ? false : true}
-            title="Nodes"
-            multiColumn={true}
-            numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
-            itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+            <EntityList
+              ref={nodes => this.entityList.nodeList = nodes}
+              entities={params.pod && nodes}
+              addEntity={() => this.addEntity(ADD_NODE)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNodeEdit}
+              selectEntity={() => null}
+              disableButtons={params.pod ? false : true}
+              title="Nodes"
+              multiColumn={true}
+              numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
+              itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
-          />
+            />
+          </div>
         </PageContainer>
 
         {networkModal === ADD_EDIT_ACCOUNT &&
