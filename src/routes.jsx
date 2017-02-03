@@ -44,7 +44,7 @@ import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
-import Network from './containers/network'
+import Network from './containers/network/network'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'

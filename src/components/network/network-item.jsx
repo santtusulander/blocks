@@ -5,7 +5,7 @@ import classNames from 'classnames'
 
 import IconConfiguration from '../icons/icon-configuration'
 
-const NetworkItem = ({ active, content, onEdit, onSelect, status, title }) => {
+const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName }) => {
 
   const handleEdit = e => {
     e.preventDefault()
@@ -23,7 +23,8 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title }) => {
     <div
       className={classNames(
         'network-item',
-        {'active': active}
+        {'active': active},
+        extraClassName
       )}
       onClick={handleSelect}>
 
@@ -54,6 +55,7 @@ NetworkItem.displayName = 'NetworkItem'
 NetworkItem.propTypes = {
   active: PropTypes.bool,
   content: PropTypes.string,
+  extraClassName: PropTypes.string,
   onEdit: PropTypes.func,
   onSelect: PropTypes.func,
   status: PropTypes.string,
