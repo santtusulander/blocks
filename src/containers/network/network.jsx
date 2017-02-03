@@ -8,44 +8,44 @@ import moment from 'moment'
 import {
   getAnalyticsUrl,
   getNetworkUrl
-} from '../util/routes.js'
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as uiActionCreators from '../redux/modules/ui'
-import * as metricsActionCreators from '../redux/modules/metrics'
-
-import networkActions from '../redux/modules/entities/networks/actions'
-import { getByGroup as getNetworksByGroup } from '../redux/modules/entities/networks/selectors'
-
-import popActions from '../redux/modules/entities/pops/actions'
-import { getByNetwork as getPopsByNetwork } from '../redux/modules/entities/pops/selectors'
-
-
-import Content from '../components/layout/content'
-import PageContainer from '../components/layout/page-container'
-import PageHeader from '../components/layout/page-header'
-import TruncatedTitle from '../components/truncated-title'
-import EntityList from '../components/network/entity-list'
+} from '../../util/routes.js'
 
 import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_POP,
   ADD_EDIT_POD,
   ADD_NODE
-} from '../constants/network-modals.js'
+} from '../../constants/network-modals.js'
 
 import {
   NETWORK_SCROLL_AMOUNT,
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
-} from '../constants/network'
+} from '../../constants/network'
 
-import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
-import NetworkFormContainer from './network/modals/network-modal'
-import PopFormContainer from './network/modals/pop-modal'
-import PodFormContainer from './network/modals/pod-modal'
-import AddNodeContainer from './network/modals/add-node-modal'
+import * as accountActionCreators from '../../redux/modules/account'
+import * as groupActionCreators from '../../redux/modules/group'
+import * as uiActionCreators from '../../redux/modules/ui'
+import * as metricsActionCreators from '../../redux/modules/metrics'
+
+import networkActions from '../../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
+
+import popActions from '../../redux/modules/entities/pops/actions'
+import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
+
+import Content from '../../components/layout/content'
+import PageContainer from '../../components/layout/page-container'
+import PageHeader from '../../components/layout/page-header'
+import TruncatedTitle from '../../components/truncated-title'
+import EntityList from '../../components/network/entity-list'
+
+import NetworkFormContainer from './modals/network-modal'
+import PopFormContainer from './modals/pop-modal'
+import PodFormContainer from './modals/pod-modal'
+import AddNodeContainer from './modals/add-node-modal'
 
 const placeholderPods = Immutable.fromJS([
   { id: 1, name: 'Pod 1' },
