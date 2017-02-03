@@ -133,7 +133,6 @@ NetworkLocationFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
-  locationId: PropTypes.string,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -169,36 +168,13 @@ const cloudProvidersIdOptions = {
   }
 };
 
-const reduxStoreMock = {
-  get(field) { return this[field] },
-
-  "postalcode": "Unknown",
-  "street": "Unknown",
-  "cloud_location_id": "bkk",
-  "country_code": "th",
-  "city_name": "Bangkok",
-  "id": "first",
-  "cloud_provider": "sl",
-  "lat": 13.75,
-  "cloud_name": "Bare Metal",
-  "lon": 100.5167,
-  "iata_code": "bkk",
-  "state": "Unknown",
-  "boundingbox": [
-    13.75,
-    13.7501,
-    100.5167,
-    100.5167
-  ],
-  "cloud_region": "AP"
-};
-
 const mapStateToProps = (state, ownProps) => {
   let initialValues = {}
   if (ownProps.locationId !== null) {
-    initialValues = getLocationById(state, ownProps.locationId).toJS()
+    const locationInfo = getLocationById(state, ownProps.locationId)
+    if (locationInfo) initialValues = locationInfo.toJS()
   }
-  console.log(initialValues)
+
   return {
     cloudProvidersOptions: cloudProvidersOptions.get(),
     cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
