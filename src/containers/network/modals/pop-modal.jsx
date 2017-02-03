@@ -2,7 +2,8 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
+import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -15,7 +16,6 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
-
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
@@ -142,26 +142,30 @@ class PopFormContainer extends Component {
       initialValues,
       iata,
       onCancel,
-      groupId,
-      networkId,
+      group,
+      network,
       popId
     } = this.props
 
     const edit = !!initialValues.id
 
-    const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
-                       : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
+    const title = edit
+      ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
+      : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
 
-    const subTitle = (<FormattedMessage id="portal.network.subTitle.context.text"
-                                        values={{
-                                          groupId: groupId,
-                                          networkId: networkId
-                                        }} />)
-    const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
-                                                  values={{
-                                                    createdDate: initialValues.createdDate,
-                                                    updatedDate: initialValues.updatedDate
-                                                  }} />) : ''
+    const subTitle = edit
+      ? `${group.get('name')} / ${network.get('name')} / ${initialValues.name}`
+      : `${group.get('name')} / ${network.get('name')}`
+
+    const subSubTitle = edit
+      ? (<FormattedMessage
+          id="portal.network.subTitle.date.text"
+          values={{
+            createdDate: moment.unix(initialValues.createdDate).format('MMM, D YYYY h:m a'),
+            updatedDate: moment.unix(initialValues.updatedDate).format('MMM, D YYYY h:m a')
+          }}
+        />)
+      : ''
 
     return (
       <SidePanel
@@ -190,17 +194,16 @@ PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   brand: PropTypes.string,
-
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
-
+  group: PropTypes.instanceOf(Map),
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
   iata: PropTypes.string,
   initialValues: PropTypes.object,
+  network: PropTypes.instanceOf(Map),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
