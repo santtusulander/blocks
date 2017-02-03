@@ -284,7 +284,7 @@ GroupFormContainer.propTypes = {
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
-  groupId: PropTypes.string,
+  groupId: PropTypes.Number,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
   initialValues: PropTypes.object,
