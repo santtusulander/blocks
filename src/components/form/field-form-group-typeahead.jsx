@@ -58,7 +58,7 @@ const FieldFormGroupTypeahead = ({
         onChange={onChange ? (selected) => onChange(selected) : e => input.onChange(e)}
         onBlur={() => input.onBlur(input.value)}
         options={options}
-        selected={Array.isArray(input.value) ? input.value : [input.value]}
+        selected={input.value ? Array.isArray(input.value) ? input.value : [input.value] : []}
         renderToken={renderToken}
       />
 
