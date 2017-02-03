@@ -27,20 +27,13 @@ export const getFilterBy = ({ pagination }) => pagination.get('filter_by');
 
 export const getFilterValue = ({ pagination }) => pagination.get('filter_value');
 
-/**
- * @param state
- * @returns {Object} pagination - pagination params
- */
-export default (state) => (
-  {
-    pagingQueryParams: {
-      offset: getOffset(state),
-      page_size: getPageSize(state),
-      sort_by: getSortBy(state),
-      sort_order: getSortOrder(state),
-      filter_by: getFilterBy(state),
-      filter_value: getFilterValue(state)
-    },
-    pagingTotal: getTotal(state)
-  }
-)
+export default (state) => ({
+  offset: getOffset(state),
+  page_size: getPageSize(state),
+  sort_by: getSortBy(state),
+  sort_order: getSortOrder(state),
+  filter_by: getFilterBy(state),
+  filter_value: getFilterValue(state),
+  total: getTotal(state),
+  activePage: getActivePage(state)
+})
