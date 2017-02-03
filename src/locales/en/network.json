@@ -40,7 +40,6 @@
   "portal.network.addNodeForm.type.title": "Type",
   "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
   "portal.network.addNodeForm.grains.title": "Grains",
-<<<<<<< HEAD
 
   "portal.network.editNodeForm.node": "Node",
   "portal.network.editNodeForm.title": "Edit node",
@@ -48,8 +47,6 @@
   "portal.network.editNodeForm.multipleValues": "Multiple values",
   "portal.network.editNodeForm.multipleValues.help": "Changing fields with multiple values will set the same value for all current edited nodes.",
   "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes, plural, one {# node} other {# nodes}}?",
-=======
->>>>>>> 9e45d6b49c0fe143e0e6ca0356cc77619cd472b1
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
