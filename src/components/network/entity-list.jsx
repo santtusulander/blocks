@@ -183,11 +183,11 @@ class EntityList extends React.Component {
                 maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
                 minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
                 avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
-                isAllowedToConfigure={true}
+                isAllowedToConfigure={starburstData.isAllowedToConfigure}
                 showSlices={true}
                 linkTo={link}
                 showAnalyticsLink={true}
-                onConfiguration={editEntity(entityId)}
+                onConfiguration={() => editEntity(entityId)}
                 analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
                 />
             </div>
