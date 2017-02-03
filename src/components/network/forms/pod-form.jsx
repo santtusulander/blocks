@@ -18,8 +18,9 @@ import HelpTooltip from '../../../components/help-tooltip'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import ActionItemsContainer from '../../shared/action-items-container'
 
-import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+import { DISCOVERY_METHOD_TYPE, POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 import './pod-form.scss'
 
 const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
@@ -66,11 +67,18 @@ const asyncValidate = ({ localAS }) => {
 const PodForm = ({
   asyncValidating,
   account,
+  addNewAction,
+  addAvailableAction,
+  addedActionItems,
+  availableActions,
   brand,
+  discoveryMethodValue,
   edit,
+  editAction,
   group,
   handleSubmit,
   hasNodes,
+  initialValues,
   intl,
   invalid,
   network,
@@ -80,6 +88,10 @@ const PodForm = ({
   pop,
   submitting,
   dirty}) => {
+
+  const actionItemslabel = DISCOVERY_METHOD_TYPE
+    .filter(elm => elm.get('key') === discoveryMethodValue)
+    .getIn([0, 'label'])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -160,7 +172,8 @@ const PodForm = ({
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[
-          [1, "BGP"]
+          [1, "BGP"],
+          [2, "Footprints API"]
         ]}
         label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
         addonAfter={
@@ -170,6 +183,18 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
           </HelpTooltip>
         }/>
+
+     {discoveryMethodValue && <ActionItemsContainer
+        addedActionItems={addedActionItems}
+        addAvailableAction={addAvailableAction}
+        addNewAction={addNewAction}
+        availableActions={availableActions}
+        disableMultipleItems={discoveryMethodValue === 1 ? true : false}
+        editAction={editAction}
+        initialValues={initialValues}
+        intl={intl}
+        label={intl.formatMessage({id:"portal.common.add.label.text"},{label: actionItemslabel})}
+        />}
 
       <FormFooterButtons autoAlign={false}>
         {edit &&
@@ -209,13 +234,20 @@ PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
   account: PropTypes.string,
+  addAvailableAction: PropTypes.func,
+  addNewAction: PropTypes.func,
+  addedActionItems: PropTypes.array,
   asyncValidating: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.bool ]),
+  availableActions: PropTypes.array,
   brand: PropTypes.string,
   dirty: PropTypes.bool,
+  discoveryMethodValue: PropTypes.number,
   edit: PropTypes.bool,
+  editAction: PropTypes.func,
   group: PropTypes.string,
   handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
+  initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   network: PropTypes.string,
@@ -224,11 +256,10 @@ PodForm.propTypes = {
   onSubmit: PropTypes.func,
   pop: PropTypes.string,
   submitting: PropTypes.bool
-
 }
 
 export default reduxForm({
-  form: 'pod-form',
+  form: 'podForm',
   validate,
   asyncValidate,
   asyncBlurFields: [ 'localAS' ]

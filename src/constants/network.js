@@ -1,3 +1,5 @@
+import Immutable from 'immutable'
+
 export const NETWORK_SCROLL_AMOUNT = 25
 export const NETWORK_WINDOW_OFFSET = 10
 
@@ -34,17 +36,16 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 'vw', label: 'VmWare' },
   { value: 'bm', label: 'Bare Metal' }
 ]
-
 export const FOOTPRINT_UDN_TYPES = [
   { value: 'billing_asn', label: 'Billing ASN' },
   { value: 'on_net', label: 'On Net' },
   { value: 'off_net', label: 'Off Net' }
 ]
 
-export const FOOTPRINT_DATA_TYPES = [
-  { value: 'ipv4cidr', label: 'Billing ASN' },
-  { value: 'asnlist', label: 'On Net' }
-]
+export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
+  { key: 1, label: 'BGP Routing Daemons'},
+  { key: 2, label: 'Footprints'}
+])
 
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POP_ID_MIN = 1
