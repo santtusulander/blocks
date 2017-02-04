@@ -56,14 +56,18 @@ class PodFormContainer extends React.Component {
     groupId && this.props.fetchGroup({ brand, account: accountId, id: groupId })
     networkId && this.props.fetchNetwork({ brand, account: accountId, group: groupId, id: networkId })
     popId && this.props.fetchPop({ brand, account: accountId, group: groupId, network: networkId, id: popId })
-    podId && this.props.fetchPod({
-      brand,
-      account: accountId,
-      group: groupId,
-      network: networkId,
-      pop: popId,
-      id: podId
-    })
+
+    // Pod is embeded in POP
+    // podId && this.props.fetchPod({
+    //   brand,
+    //   account: accountId,
+    //   group: groupId,
+    //   network: networkId,
+    //   pop: popId,
+    //   id: podId
+    // })
+
+    this.props.fetchFootprints({ brand, account: accountId })
 
   }
 
@@ -201,7 +205,8 @@ class PodFormContainer extends React.Component {
       UIFootprints,
       UIDiscoveryMethod,
       pop,
-
+      podId,
+      
       group,
       //account,
       network,
@@ -266,13 +271,13 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
-  account: PropTypes.instanceOf(Map),
+  //account: PropTypes.instanceOf(Map),
   group: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  pod: PropTypes.instanceOf(Map),
+  //pod: PropTypes.instanceOf(Map),
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   pop: PropTypes.instanceOf(Map)
 }

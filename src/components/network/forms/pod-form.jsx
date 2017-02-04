@@ -27,16 +27,6 @@ import { isValidIPv4Address } from '../../../util/validators'
 
 import './pod-form.scss'
 
-/* mock date - remove */
-const footprints = [
-  {id: 1, label: 'FP 1'},
-  {id: 2, label: 'FP 2'},
-  {id: 3, label: 'FP 3'},
-  {id: 4, label: 'FP 4'},
-  {id: 5, label: 'FP 5'},
-  {id: 6, label: 'FP 6'}
-]
-
 const LBMETHOD_OPTIONS = [
   {value: 'gslb', label: 'GSLB'}
 ]
@@ -161,6 +151,7 @@ const PodForm = ({
   onEditFootprintModal,
 
   dispatch,
+  footprints,
   UIFootprints,
   UIDiscoveryMethod
 
@@ -175,7 +166,10 @@ const PodForm = ({
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
-  const discoveryMethodChangeAllowed = showFootprints && UIFootprints.filter( fp => fp.removed === false).length === 0
+  const hasFootprints = UIFootprints.length === 0 || UIFootprints.filter( fp => fp.removed === false).length === 0
+
+  //change of method is allowed is no footprints assigned
+  const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
