@@ -183,11 +183,11 @@ class EntityList extends React.Component {
                 maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
                 minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
                 avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
-                isAllowedToConfigure={true}
+                isAllowedToConfigure={starburstData.isAllowedToConfigure}
                 showSlices={true}
                 linkTo={link}
                 showAnalyticsLink={true}
-                onConfiguration={editEntity(entityId)}
+                onConfiguration={() => editEntity(entityId)}
                 analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
                 />
             </div>
@@ -282,6 +282,7 @@ class EntityList extends React.Component {
   render() {
     const {
       addEntity,
+      disableButtons,
       title,
       multiColumn,
       showButtons
@@ -297,6 +298,7 @@ class EntityList extends React.Component {
         <AccountManagementHeader
           title={title}
           onAdd={showButtons ? addEntity : null}
+          disableButtons={disableButtons}
         />
 
       <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
@@ -311,6 +313,7 @@ EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   deleteEntity: PropTypes.func.isRequired,
+  disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
@@ -328,6 +331,7 @@ EntityList.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {
+  disableButtons: false,
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name',

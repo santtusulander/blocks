@@ -3,6 +3,7 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../add-node-form.jsx')
 import NetworkAddNodeForm from '../add-node-form.jsx'
+import { NETWORK_DOMAIN_NAME } from '../../../../constants/network'
 
 const intlMaker = () => {
   return {
@@ -21,12 +22,21 @@ describe('NetworkAddNodeForm', () => {
 
   beforeEach(() => {
     subject = () => {
-      let props = {
+      const props = {
         onSave,
         onCancel,
         onToggleConfirm,
         handleSubmit,
-        intl: intlMaker()
+        intl: intlMaker(),
+        nodeNameData: {
+          name: `udn_core1.pod1.cdx-dev.${NETWORK_DOMAIN_NAME}`,
+          props: {
+            nodeType: 'udn_core',
+            cacheEnv: 'cdx-dev',
+            location: 'pod1',
+            domain: NETWORK_DOMAIN_NAME
+          }
+        }
       }
 
       return shallow(<NetworkAddNodeForm {...props}/>)
@@ -37,8 +47,8 @@ describe('NetworkAddNodeForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 5 fields', () => {
-    expect(subject().find('Field').length).toBe(5)
+  it('should have 6 fields', () => {
+    expect(subject().find('Field').length).toBe(6)
   })
 
   it('should have 2 buttons', () => {

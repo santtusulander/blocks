@@ -13,7 +13,7 @@ export const AccountManagementHeader = props =>
     {props.children}
     {props.onAdd &&
     <IsAllowed to={props.creationPermission}>
-      <UDNButton bsStyle="success" icon={true} addNew={true} onClick={props.onAdd}>
+      <UDNButton bsStyle="success" icon={true} addNew={true} onClick={props.onAdd} disabled={props.disableButtons}>
         <IconAdd/>
       </UDNButton>
     </IsAllowed>}
@@ -21,12 +21,14 @@ export const AccountManagementHeader = props =>
 
 AccountManagementHeader.displayName = "AccountManagementHeader"
 AccountManagementHeader.defaultProps = {
-  creationPermission: ALLOW_ALWAYS
+  creationPermission: ALLOW_ALWAYS,
+  disableButtons: false
 }
 
 AccountManagementHeader.propTypes = {
   children: PropTypes.array,
   creationPermission: PropTypes.string,
+  disableButtons: PropTypes.bool,
   onAdd: PropTypes.func,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }

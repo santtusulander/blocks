@@ -17,9 +17,13 @@ describe('NetworkLocationFormContainer', () => {
   beforeEach(() => {
     subject = (editMode = false) => {
       let props = {
+        fetchIataCodes: jest.fn(),
         onCancel: jest.fn(),
         onSave: jest.fn(),
         onSubmit: jest.fn(),
+        onCreate: jest.fn(),
+        onDelete: jest.fn(),
+        onUpdate: jest.fn(),
         intl: intlMaker(),
         initialValues: {
           groupId: 40038

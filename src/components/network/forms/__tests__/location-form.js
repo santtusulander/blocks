@@ -21,20 +21,18 @@ describe('NetworkLocationForm', () => {
 
   beforeEach(() => {
     subject = (edit = false) => {
+      const initialValues = edit ? {name: 'udn'} : {}
       props = {
         onCancel,
         onSave,
         handleSubmit: jest.fn(),
         intl: intlMaker(),
-        initialValues: {
-          name: 'udn'
-        },
+        initialValues,
         fields: {
           name: { touched, error, value: '' },
           latitude: { touched, error, value: '' },
           cloudProviderLocationId: { touched, error, value: '' }
-        },
-        edit
+        }
       }
       return shallow(<NetworkLocationForm {...props}/>)
     }
