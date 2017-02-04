@@ -63,29 +63,6 @@ import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
 
-
-import {
-  getAnalyticsUrl,
-  getNetworkUrl
-} from '../../util/routes.js'
-
-import {
-  ADD_EDIT_NETWORK,
-  ADD_EDIT_POP,
-  ADD_EDIT_POD,
-  ADD_NODE,
-  ADD_EDIT_ACCOUNT
-} from '../../constants/network-modals.js'
-
-import {
-  NETWORK_SCROLL_AMOUNT,
-  NETWORK_NUMBER_OF_NODE_COLUMNS,
-  NETWORK_NODES_PER_COLUMN
-} from '../../constants/network'
-
-import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
-import * as PERMISSIONS from '../../constants/permissions'
-
 class Network extends React.Component {
   constructor(props) {
     super(props)
@@ -550,12 +527,6 @@ class Network extends React.Component {
       roles
     } = this.props
 
-    const {
-      nodes,
-      pods,
-      podId
-    } = this.state
-
     return (
       <Content className="network-content">
 
@@ -810,8 +781,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, group, pod } = ownProps.params
-  
+  const { brand, account, group, network, pod } = ownProps.params
+
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
