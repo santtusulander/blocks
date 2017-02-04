@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
 import { Map } from 'immutable'
 import { injectIntl } from 'react-intl'
+
+import footprintActions from '../../../redux/modules/entities/footprints/actions'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 
@@ -20,6 +23,52 @@ class FootprintFormContainer extends React.Component {
 
     this.onSubmit = this.onSubmit.bind(this)
   }
+
+  /**
+   * Handle footprint save / update
+   * @param values
+   */
+  onSaveFootprint(values) {
+
+    const { footprintId } = this.state
+    const save = footprintId ? this.props.onUpdateFootprint : this.props.onCreateFootprint
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      payload: values
+    }
+
+    if (footprintId) {
+      params.id = footprintId
+    }
+
+    return save(params)
+      .then(res => {
+        if (res.error) {
+          throw new SubmissionError({ '_error': res.error.data.message })
+        }
+        return this.handleFootprintSaveResponse(res)
+      })
+  }
+
+  onDeleteFootprint(id) {
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      id
+    }
+
+    return this.props.onDeleteFootprint(params)
+      .then(res => {
+        if (res.error) {
+          throw new SubmissionError({ '_error': res.error.data.message })
+        }
+        return this.handleFootprintSaveResponse(res)
+      })
+  }
+
 
   onSubmit(values) {
     const { onSave, location } = this.props
@@ -95,6 +144,15 @@ FootprintFormContainer.propTypes = {
   show: PropTypes.bool
 }
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
+    onUpdate: (params, data) => dispatch(footprintActions.update({ ...params, data })),
+    onDelete: (params) => dispatch(footprintActions.remove({ ...params }))
+  }
+
+
+}
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
@@ -122,4 +180,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(FootprintFormContainer))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(FootprintFormContainer))

@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
-import { Map, fromJS } from 'immutable'
-import { connect } from 'react-redux'
-import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
 
-import { FormattedMessage /*, injectIntl, intlShape */ } from 'react-intl'
+import { Map } from 'immutable'
+import { connect } from 'react-redux'
+import { /*formValueSelector,*/ SubmissionError, formValueSelector } from 'redux-form'
+
+import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -17,9 +18,7 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
-import {
-  getById as getFootprintById
-} from '../../../redux/modules/entities/footprints/selectors'
+import { getByAccount as getFootprintByAccount} from '../../../redux/modules/entities/footprints/selectors'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -31,12 +30,16 @@ class PodFormContainer extends React.Component {
     super(props)
 
     this.checkforNodes = this.checkforNodes.bind(this)
+
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
-    this.onSaveFootprint = this.onSaveFootprint.bind(this)
-    this.onDeleteFootprint = this.onDeleteFootprint.bind(this)
+
     this.onEditFootprint = this.onEditFootprint.bind(this)
     this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
+
+    this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
+    this.onEditFootprintModal = this.onEditFootprintModal.bind(this)
+    this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
 
     this.state = {
       showFootprintModal: false,
@@ -60,57 +63,12 @@ class PodFormContainer extends React.Component {
       pop: popId,
       id: podId
     })
-    //TODO: fetch location by Group
+
   }
 
   componentWillReceiveProps(nextProps) {
     const { brand, accountId } = nextProps
     this.props.fetchFootprints({ brand, account: accountId })
-  }
-
-  /**
-   * Handle footprint save / update
-   * @param values
-   */
-  onSaveFootprint(values) {
-
-    const { footprintId } = this.state
-    const save = footprintId ? this.props.onUpdateFootprint : this.props.onCreateFootprint
-
-    const params = {
-      brand: 'udn',
-      account: this.props.accountId,
-      payload: values
-    }
-
-    if (footprintId) {
-      params.id = footprintId
-    }
-
-    return save(params)
-      .then(res => {
-        if (res.error) {
-          throw new SubmissionError({ '_error': res.error.data.message })
-        }
-        return this.handleFootprintSaveResponse(res)
-      })
-  }
-
-  onDeleteFootprint(id) {
-
-    const params = {
-      brand: 'udn',
-      account: this.props.accountId,
-      id
-    }
-
-    return this.props.onDeleteFootprint(params)
-      .then(res => {
-        if (res.error) {
-          throw new SubmissionError({ '_error': res.error.data.message })
-        }
-        return this.handleFootprintSaveResponse(res)
-      })
   }
 
   onEditFootprint(footprintId) {
@@ -120,6 +78,7 @@ class PodFormContainer extends React.Component {
   handleFootprintSaveResponse(res) {
     this.hideFootprintModal()
     // TODO: do something with the response
+    // dispatch(arrayPush)
   }
 
   showFootprintModal() {
@@ -159,8 +118,8 @@ class PodFormContainer extends React.Component {
       // service.sp_bgp_router_as = 0
       // service.sp_bgp_router_password = 0
 
-      //TODO: assemple footprints array
-      data.footprints = []
+      //TODO: assemple footprints array properly
+      data.footprints = values.UIFootprints.map( fp => fp.id )
     }
 
     data.services = [service]
@@ -221,6 +180,19 @@ class PodFormContainer extends React.Component {
     return false
   }
 
+  onAddFootprintModal() {
+    this.setState({ showFootprintModal: true })
+  }
+
+  onEditFootprintModal(id){
+    console.log('onFootprintEdit', id);
+    this.setState({ showFootprintModal: true })
+  }
+
+  onCancelFootprintModal() {
+      this.setState({ showFootprintModal: false })
+  }
+
   render() {
     const {
       fetching,
@@ -229,11 +201,16 @@ class PodFormContainer extends React.Component {
       initialValues,
       network,
       onCancel,
-      podId,
-      pop,
+      initialValues,
+      onCancel,
+      onDelete,
+      UIFootprints,
+      UIDiscoveryMethod
+
     } = this.props
 
     const edit = !!initialValues.pod_name
+
     const title = edit ? <FormattedMessage id="portal.network.podForm.editPod.title"/> :
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
 
@@ -248,6 +225,7 @@ class PodFormContainer extends React.Component {
           subTitle={subTitle}
           cancel={onCancel}
         >
+
           <PodForm
             footprints={footprints}
             hasNodes={this.checkforNodes()}
@@ -258,7 +236,15 @@ class PodFormContainer extends React.Component {
             onEditFootprint={this.onEditFootprint}
             onSave={(values) => this.onSave(edit, values)}
             onShowFootprintModal={this.showFootprintModal}
+
+            onAddFootprintModal={this.onAddFootprintModal}
+            onEditFootprintModal={this.onEditFootprintModal}
+
+            UIFootprints={UIFootprints}
+            UIDiscoveryMethod={UIDiscoveryMethod}
+
           />
+
         </SidePanel>
 
         {this.state.showFootprintModal &&
@@ -288,7 +274,10 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   pod: PropTypes.instanceOf(Map),
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pop: PropTypes.instanceOf(Map)
+  pop: PropTypes.instanceOf(Map),
+  initialValues: PropTypes.object,
+  onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
 }
 
 PodFormContainer.defaultProps = {
@@ -300,6 +289,13 @@ PodFormContainer.defaultProps = {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  pod: Map(),
+  UIFootprints: []
+
+  const selector = formValueSelector('pod-form')
+  const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
+  const UIFootprints = selector(state, 'UIFootprints')
+
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
@@ -313,6 +309,10 @@ const mapStateToProps = (state, ownProps) => {
     footprints: pod.get('footprints').map(id => getFootprintById(state)(id)),
     pop,
     pod,
+
+    UIFootprints,
+    UIDiscoveryMethod,
+
     initialValues
   }
 }
@@ -323,16 +323,13 @@ const mapDispatchToProps = (dispatch) => {
     onUpdate: (params, data) => dispatch(podActions.update({ ...params, data })),
     onDelete: (params) => dispatch(podActions.remove({ ...params })),
 
-    onCreateFootprint: (params, data) => dispatch(footprintActions.create({ ...params, data })),
-    onUpdateFootprint: (params, data) => dispatch(footprintActions.update({ ...params, data })),
-    onDeleteFootprint: (params) => dispatch(footprintActions.remove({ ...params })),
-
     fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
     fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
     fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
     fetchPop: (params) => dispatch(popActions.fetchOne(params)),
     fetchPod: (params) => dispatch(podActions.fetchOne(params)),
     fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params))
+
   }
 }
 

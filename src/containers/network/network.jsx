@@ -781,7 +781,11 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
+<<<<<<< HEAD
   const { brand, account, group, network, pod } = ownProps.params
+=======
+  const { brand, account, group, network, pop, pod } = ownProps.params
+>>>>>>> feature/UDNP-2542-integrate-POD-footprints
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
