@@ -33,6 +33,9 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+import nodeActions from '../../redux/modules/entities/nodes/actions'
+import { getByPod } from '../../redux/modules/entities/nodes/selectors'
+
 import networkActions from '../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
 
@@ -66,59 +69,6 @@ const placeholderPods = Immutable.fromJS([
   { id: 9, name: 'Pod 9' },
   { id: 10, name: 'Pod 10' },
   { id: 11, name: 'Pod 11' }
-])
-
-const placeholderNodes = Immutable.fromJS([
-  { id: 'cache-1.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-2.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-1.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-1.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-12.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-23.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-14.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-15.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-17.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-17.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-26.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-13.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-1435.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-1435.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-1134.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-4562.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-8761.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-1345.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-124.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-156.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-28.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-113.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-1444.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-165.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-1987.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-2123.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-156867.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-145.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-31.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-15.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-62.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-187.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-198.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-3121.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-451.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-20890.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-135467.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-19000.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-11111.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-4444.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-276888.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-199000.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-13422.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-1690.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' },
-  { id: 'cache-36781.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 1' },
-  { id: 'cache-2789078.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 2' },
-  { id: 'gslb-123234.jfk.cdx-dev.unifieddeliverynetwork.net', name: 'Node 3' },
-  { id: 'cache-6786781.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 4' },
-  { id: 'slsb-17878.sjc.cdx-dev.unifieddeliverynetwork.net', name: 'Node 5' }
 ])
 
 class Network extends React.Component {
@@ -186,7 +136,7 @@ class Network extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop, pod } = nextProps.params
+    const { group, network, pop } = nextProps.params
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
@@ -198,10 +148,6 @@ class Network extends React.Component {
 
     if (pop) {
       this.setState({ pods: placeholderPods })
-    }
-
-    if (pod) {
-      this.setState({ nodes: placeholderNodes })
     }
 
     if (this.props.params.group !== group) {
@@ -398,12 +344,18 @@ class Network extends React.Component {
 
   /* ==== POD Handlers ==== */
   handlePodClick(podId) {
-    this.determineNextState({
-      currentId: podId,
-      previousId: this.props.params.pod,
-      goToRoute: 'pod',
-      goBackToRoute: 'pop'
-    })
+    const { brand, account, group, network, pop } = this.props.params
+
+    this.props.fetchNodes({ brand, account, group, network, pop, pod: podId })
+      .then(() => {
+
+        this.determineNextState({
+          currentId: podId,
+          previousId: this.props.params.pod,
+          goToRoute: 'pod',
+          goBackToRoute: 'pop'
+        })
+      })
   }
 
   handlePodEdit(podId) {
@@ -600,7 +552,6 @@ class Network extends React.Component {
 
     const {
       pods,
-      nodes,
       podId
     } = this.state
 
@@ -705,11 +656,12 @@ class Network extends React.Component {
 
           <EntityList
             ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && nodes}
+            entities={params.pod && this.props.getNodes(params.pod)}
             addEntity={() => this.addEntity(ADD_NODE)}
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
             selectEntity={() => null}
+            entityIdKey="reduxId"
             disableButtons={params.pod ? false : true}
             title="Nodes"
             multiColumn={true}
@@ -717,6 +669,7 @@ class Network extends React.Component {
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
           />
+
         </PageContainer>
 
         {networkModal === ADD_EDIT_GROUP &&
@@ -778,13 +731,13 @@ class Network extends React.Component {
 
         {networkModal === ADD_NODE &&
           <AddNodeContainer
-            id="node-form"
+            id="add-node-form"
+            params={params}
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
-            {...params}
           />
-        }
+      }
       </Content>
     )
   }
@@ -799,7 +752,9 @@ Network.propTypes = {
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetchNetworks: PropTypes.func,
+  fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
+  getNodes: PropTypes.func,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
@@ -820,6 +775,7 @@ Network.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    getNodes: getByPod(state),
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, ownProps.params.network),
@@ -836,8 +792,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { brand, account, group } = ownProps.params
+
+function mapDispatchToProps(dispatch, ownProps) {
+  const { brand, account, group, pod } = ownProps.params
+
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
@@ -851,6 +809,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     list_children: false
   }, metricsOpts)
 
+  const fetchNodes = params => dispatch(nodeActions.fetchAll(params))
+
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
@@ -861,9 +821,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
+
+    pod && fetchNodes(ownProps.params)
   }
 
   return {
+    fetchNodes,
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
     groupActions: groupActions,

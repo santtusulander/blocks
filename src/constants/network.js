@@ -45,12 +45,14 @@ export const NODE_ROLE_OPTIONS = [
 ]
 
 export const NODE_CLOUD_DRIVER_OPTIONS = [
-  { value: 'ec2', label: 'AWS' },
-  { value: 'do', label: 'Digital Ocean' },
-  { value: 'sl', label: 'SoftLayer' },
-  { value: 'os', label: 'OpenStack' },
-  { value: 'vw', label: 'VmWare' },
-  { value: 'bm', label: 'Bare Metal' }
+  { value: 1, label: 'Amazon EC2' },
+  { value: 2, label: 'Digital Ocean' },
+  { value: 3, label: 'SoftLayer' },
+  { value: 4, label: 'OpenStack' },
+  { value: 5, label: 'VMWare' },
+  { value: 6, label: 'Bare Metal' },
+  { value: 7, label: 'LXC' },
+  { value: 8, label: 'Docker' }
 ]
 export const FOOTPRINT_UDN_TYPES = [
   { value: 'billing_asn', label: 'Billing ASN' },
