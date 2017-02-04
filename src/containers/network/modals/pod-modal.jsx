@@ -206,9 +206,9 @@ class PodFormContainer extends React.Component {
       UIDiscoveryMethod,
       pop,
       podId,
-      
+
       group,
-      //account,
+      account,
       network,
       footprints
 
@@ -235,11 +235,13 @@ class PodFormContainer extends React.Component {
             footprints={footprints}
             hasNodes={this.checkforNodes()}
             initialValues={initialValues}
-            onCancel={onCancel}
+
+            onSave={(values) => this.onSave(edit, values)}
             onDelete={() => this.onDelete(podId)}
+            onCancel={onCancel}
+
             onDeleteFootprint={this.onDeleteFootprint}
             onEditFootprint={this.onEditFootprint}
-            onSave={(values) => this.onSave(edit, values)}
             onShowFootprintModal={this.showFootprintModal}
 
             onAddFootprintModal={this.onAddFootprintModal}
@@ -254,6 +256,7 @@ class PodFormContainer extends React.Component {
 
         {this.state.showFootprintModal &&
         <FootprintFormContainer
+          accountId={this.props.accountId}
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
@@ -271,7 +274,8 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
-  //account: PropTypes.instanceOf(Map),
+  account: PropTypes.instanceOf(Map),
+  accountId: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
@@ -307,8 +311,8 @@ const mapStateToProps = (state, ownProps) => {
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
-    footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId),
-    UIfootprints: pod && pod.get('footprints').map(id => getFootprintById(state)(id)),
+    footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
+    UIfootprints: pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS(),
     pop,
     pod,
 

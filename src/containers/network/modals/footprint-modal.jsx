@@ -21,26 +21,34 @@ class FootprintFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onSave = this.onSave.bind(this)
   }
 
   /**
    * Handle footprint save / update
    * @param values
    */
-  onSaveFootprint(values) {
+  onSave(edit, values) {
 
-    const { footprintId } = this.state
-    const save = footprintId ? this.props.onUpdateFootprint : this.props.onCreateFootprint
+      const finalValues = Object.assign({}, values, {
+        value: normalizeValueToAPI(values.value),
+        location: this.props.location
+      })
+
+      // Prevent API from nagging from unknown field
+      delete finalValues.addFootprintMethod
+
+
+    const save = edit ? this.props.onUpdate : this.props.onCreate
 
     const params = {
       brand: 'udn',
       account: this.props.accountId,
-      payload: values
+      payload: finalValues
     }
 
-    if (footprintId) {
-      params.id = footprintId
+    if (edit) {
+      params.id = values.name
     }
 
     return save(params)
@@ -70,25 +78,24 @@ class FootprintFormContainer extends React.Component {
   }
 
 
-  onSubmit(values) {
-    const { onSave, location } = this.props
-
-    const finalValues = Object.assign({}, values, {
-      value: normalizeValueToAPI(values.value),
-      location
-    })
-
-    // Prevent API from nagging from unknown field
-    delete finalValues.addFootprintMethod
-
-    onSave(finalValues)
-  }
+  // onSubmit(values) {
+  //   const { onSave, location } = this.props
+  //
+  //   const finalValues = Object.assign({}, values, {
+  //     value: normalizeValueToAPI(values.value),
+  //     location
+  //   })
+  //
+  //   // Prevent API from nagging from unknown field
+  //   delete finalValues.addFootprintMethod
+  //
+  //   onSave(finalValues)
+  // }
 
   render() {
     const {
       ASNOptions,
       CIDROptions,
-      editing,
       fetching,
       footprint,
       initialValues,
@@ -98,7 +105,9 @@ class FootprintFormContainer extends React.Component {
       show
     } = this.props
 
-    const formTitle = editing
+    const edit = !!initialValues.pod_name
+
+    const formTitle = edit
       ? 'portal.network.footprintForm.title.edit.text'
       : 'portal.network.footprintForm.title.add.text'
 
@@ -110,16 +119,18 @@ class FootprintFormContainer extends React.Component {
       >
         <FootprintForm
           initialValues={initialValues}
-          editing={editing}
+          editing={edit}
           footprintId={footprint && !footprint.isEmpty() && footprint.get('id')}
           fetching={fetching}
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
           udnTypeOptions={FOOTPRINT_UDN_TYPES}
+
+          onSave={(values) => this.onSave(edit, values)}
+          //TODO: onDelete={() => this.onDelete(/*OfootPrintId)*/}
           onCancel={onCancel}
-          onDelete={onDelete}
-          onSubmit={this.onSubmit}
         />
+
       </SidePanel>
     )
   }
@@ -132,7 +143,6 @@ FootprintFormContainer.defaultProps = {
 FootprintFormContainer.propTypes = {
   ASNOptions: PropTypes.array,
   CIDROptions: PropTypes.array,
-  editing: PropTypes.bool,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,

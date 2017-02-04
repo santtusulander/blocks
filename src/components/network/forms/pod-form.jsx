@@ -93,7 +93,7 @@ const validateCIDRToken = (item) => {
 /*eslint-disable react/no-multi-comp */
 const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } }) => (
   <li>
-    <label>{input.value.label}</label>
+    <label>{input.value.name}</label>
 
 
     <Button onClick={() => onEdit(input.value.id)}>Edit</Button>
@@ -166,7 +166,7 @@ const PodForm = ({
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
-  const hasFootprints = UIFootprints.length === 0 || UIFootprints.filter( fp => fp.removed === false).length === 0
+  const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp.removed === false).length > 0
 
   //change of method is allowed is no footprints assigned
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints
@@ -274,6 +274,7 @@ const PodForm = ({
         <Field
           className="action-item-search search-input-group"
           component={FieldFormGroupTypeahead}
+          labelKey='name'
           disabled={availableFootprints.length === 0}
           name="footprintSearch"
           options={availableFootprints}

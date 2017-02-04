@@ -89,11 +89,6 @@ class FootprintForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
-  }
-
-  onSubmit(values) {
-    this.props.onSubmit(values)
   }
 
   renderDropZone() {
@@ -114,6 +109,7 @@ class FootprintForm extends React.Component {
       intl,
       invalid,
       onCancel,
+      onSave,
       onDelete,
       submitting,
       udnTypeOptions
@@ -126,7 +122,7 @@ class FootprintForm extends React.Component {
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
+      <form onSubmit={handleSubmit(onSave)}>
           <span className='submit-error'>
           {this.props.error}
           </span>
