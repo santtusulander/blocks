@@ -1,12 +1,22 @@
 import { normalize, schema } from 'normalizr'
 import axios from 'axios'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
 const baseURL = ({ brand, account, group, network, pop, pod }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${pop}/pods/${pod}/nodes`
 
-const nodeSchema = new schema.Entity('nodes')
+const nodeSchema = new schema.Entity(
+  'nodes',
+  {},
+  {
+    idAttribute: ({ pop_id, pod_id, id }) => buildReduxId(pop_id, pod_id, id),
+    processStrategy: ({ pop_id, pod_id, id, ...rest }) => ({
+      reduxId : buildReduxId(pop_id, pod_id, id),
+      pop_id, pod_id, id, ...rest
+    })
+  }
+)
 
 /**
  * This endpoint supports pagination. Extract only data objects for now.
@@ -31,6 +41,6 @@ export const update = ({ id, payload, ...baseUrlParams }) =>
   axios.put(`${baseURL(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => normalize(data, nodeSchema))
 
-export const remove = ({ id, ...baseUrlParams }) =>
-  axios.delete(`${baseURL(baseUrlParams)}/${id}`)
-    .then(() => ({ id }))
+export const remove = ({ id, ...params }) =>
+  axios.delete(`${baseURL(params)}/${id}`)
+    .then(() => ({ id: buildReduxId(params.pop, params.pod, id) }))
