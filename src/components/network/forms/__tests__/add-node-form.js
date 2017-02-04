@@ -47,8 +47,8 @@ describe('NetworkAddNodeForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 7 fields', () => {
-    expect(subject().find('Field').length).toBe(7)
+  it('should have 6 fields', () => {
+    expect(subject().find('Field').length).toBe(6)
   })
 
   it('should have 2 buttons', () => {
