@@ -15,7 +15,8 @@ const ActionItem = ({ input: { value, onChange },label, editAction, onRemove }) 
         <ActionButtons
           className="secondary pull-right"
           onEdit={editAction}
-          onRemove={onRemove ? onRemove : () => onChange(!value)} />}
+          onRemove={onRemove ? onRemove : () => onChange(!value)}
+          showConfirmation={onRemove ? true: false} />}
     </div>
   )
 }

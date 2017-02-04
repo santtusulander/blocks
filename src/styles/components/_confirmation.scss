@@ -34,5 +34,9 @@
     @include md {
       margin-left: $md-btn-height / 2;
     }
+
+    .btn-danger {
+      background-color: $btn-danger-background !important;
+    }
   }
 }
