@@ -1,6 +1,10 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
+import { SubmissionError } from 'redux-form'
+
+import locationActions from '../../../redux/modules/entities/locations/actions'
+import { getById as getLocationById } from '../../../redux/modules/entities/locations/selectors'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
@@ -20,31 +24,84 @@ class NetworkLocationFormContainer extends Component {
     this.props.fetchIataCodes()
   }
 
-  //TODO: Implement onSubmit
-  onSubmit(values) {
-    const { brandId, accountId, groupId } = this.props.initialValues;
+  onSubmit(edit, values) {
+    const { brand, account, group } = this.props.params
+    const data = {
+      brand_id: brand,
+      account_id: Number(account),
+      group_id: Number(group),
+      cloud_name: values.cloudName,
+      cloud_provider: values.cloudProvider || '',
+      cloud_region: values.cloudRegion || '',
+      cloud_location_id: values.cloudProviderLocationId,
+      country_code: values.countryCode || '',
+      state: values.state || '',
+      city_name: values.iataCode[0].city || '',
+      iata_code: values.iataCode[0].iata,
+      street: values.street || '',
+      postalcode: values.postalCode || '',
+      lat: parseFloat(values.latitude),
+      lon: parseFloat(values.longitude)
+    }
 
-    return {values, ...{ brandId, accountId, groupId }};
+    const params = {
+      brand: brand,
+      group: group,
+      account: account,
+      payload: data
+    }
+
+    if (edit) {
+      params.id = values.name
+    } else {
+      data.id = values.name
+    }
+
+    const save = edit ? this.props.onUpdate : this.props.onCreate
+
+    return save(params)
+      .then( (resp) => {
+        if (resp.error) {
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        this.props.onCancel()
+      })
   }
 
-  //TODO: Implement onDelete
-  onDelete(id) {
-    return id;
+  onDelete(locationId) {
+    const { brand, account, group } = this.props.params
+
+    const params = {
+      brand: brand,
+      group: group,
+      account: account,
+      id: locationId
+    }
+    return this.props.onDelete(params)
+      .then( (resp) => {
+        if (resp.error) {
+          throw new SubmissionError({_error: resp.error.data.message})
+        }
+
+        this.props.onCancel()
+      })
   }
 
   render() {
     const {
-      edit,
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
-      fetching,
       addressFetching,
       onCancel,
       iataCodes,
       invalid,
-      initialValues
+      initialValues,
+      show
     } = this.props;
+
+    const edit = !!initialValues.name
 
     const title = edit
       ? <FormattedMessage id="portal.network.locationForm.editLocation.title"/>
@@ -53,9 +110,10 @@ class NetworkLocationFormContainer extends Component {
     return (
       <div>
         <SidePanel
-          show={true}
+          show={show}
           title={title}
           cancel={() => onCancel()}
+          overlapping={true}
         >
           <LocationForm
             edit={edit}
@@ -63,13 +121,12 @@ class NetworkLocationFormContainer extends Component {
             initialValues={initialValues}
             cloudProvidersOptions={cloudProvidersOptions}
             cloudProvidersIdOptions={cloudProvidersIdOptions}
-            fetching={fetching}
             addressFetching={addressFetching}
             intl={intl}
             invalid={invalid}
             onCancel={onCancel}
             onDelete={this.onDelete}
-            onSubmit={this.onSubmit}
+            onSubmit={(values) => this.onSubmit(edit, values)}
           />
         </SidePanel>
       </div>
@@ -82,14 +139,17 @@ NetworkLocationFormContainer.propTypes = {
   addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
-  edit: PropTypes.bool,
   fetchIataCodes: PropTypes.func,
-  fetching: PropTypes.bool,
   iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
+  onDelete: PropTypes.func,
+  onUpdate: PropTypes.func,
+  params: PropTypes.object,
+  show: PropTypes.bool
 };
 
 const cloudProvidersOptions = {
@@ -119,66 +179,35 @@ const cloudProvidersIdOptions = {
   }
 };
 
-const reduxStoreMock = {
-  get(field) { return this[field] },
-
-  "account_id": 40032,
-  "postalcode": "Unknown",
-  "brand_id": "udn",
-  "street": "Unknown",
-  "cloud_location_id": "bkk",
-  "country_code": "th",
-  "city_name": "Bangkok",
-  "id": "bkk",
-  "cloud_provider": "sl",
-  "lat": 13.75,
-  "cloud_name": "Bare Metal",
-  "lon": 100.5167,
-  "iata_code": "bkk",
-  "state": "Unknown",
-  "boundingbox": [
-    13.75,
-    13.7501,
-    100.5167,
-    100.5167
-  ],
-  "group_id": 40038,
-  "cloud_region": "AP"
-};
-
-const mapStateToProps = (state) => ({
-  cloudProvidersOptions: cloudProvidersOptions.get(),
-  cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
-  iataCodes: getIataCodes(state),
-
-  initialValues: {
-    groupId: reduxStoreMock.get('group_id'),
-    accountId: reduxStoreMock.get('account_id'),
-    brandId: reduxStoreMock.get('brand_id'),
-    name: reduxStoreMock.get('id'),
-    iataCode: [
-      {
-        iata: reduxStoreMock.get('iata_code').toUpperCase(),
-        city: reduxStoreMock.get('city_name'),
-        country: ''
-      }
-    ],
-    latitude: reduxStoreMock.get('lat'),
-    longitude: reduxStoreMock.get('lon'),
-    cloudName: reduxStoreMock.get('cloud_name'),
-    cloudProvider: reduxStoreMock.get('cloud_provider'),
-    cloudRegion: reduxStoreMock.get('cloud_region'),
-    cloudProviderLocationId: reduxStoreMock.get('cloud_location_id'),
-    countryCode: reduxStoreMock.get('country_code'),
-    state: reduxStoreMock.get('state'),
-    cityName: reduxStoreMock.get('city_name'),
-    street: reduxStoreMock.get('street'),
-    postalCode: reduxStoreMock.get('postalcode')
+const mapStateToProps = (state, ownProps) => {
+  let values = {}
+  if (ownProps.locationId !== null) {
+    const locationInfo = getLocationById(state)(ownProps.locationId)
+    if (locationInfo) values = locationInfo.toJS()
   }
-})
+
+  return {
+    cloudProvidersOptions: cloudProvidersOptions.get(),
+    cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
+    iataCodes: getIataCodes(state),
+    initialValues: {
+      ...values,
+      iataCode: [
+        {
+          iata: values.iataCode ? values.iataCode.toUpperCase() : '',
+          city: values.cityName || '',
+          country: ''
+        }
+      ]
+    }
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
-  fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({}))
+  fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
+  onCreate: (params) => dispatch( locationActions.create( {...params } ) ),
+  onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
+  onUpdate: (params) => dispatch( locationActions.update( {...params } ) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))

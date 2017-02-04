@@ -10,6 +10,7 @@ $side-panel-footer-vertical-padding: rem(24px);
 $side-panel-body-margin: rem(36px);
 $dt-side-panel-bg-color: $medium-blue;
 $lt-side-panel-bg-color: $white;
+$side-panel-overlap-offset: rem(15px);
 
 .side-panel.modal-dialog {
   position: relative;
@@ -130,5 +131,10 @@ $lt-side-panel-bg-color: $white;
         max-width: ($side-panel-width - $side-panel-small-display-margin);
       }
     }
+  }
+
+  &.side-panel--overlapping {
+    right: -($side-panel-overlap-offset);
+    box-shadow: 0 0 50px 0 rgba($black, 0.4);
   }
 }
