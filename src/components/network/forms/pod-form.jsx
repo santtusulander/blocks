@@ -106,7 +106,7 @@ const PodForm = ({
   initialValues,
   intl,
   invalid,
-  onAddFootprintModal,
+  onShowFootprintModal,
   onCancel,
   onDelete,
   onDeleteFootprint,
@@ -212,11 +212,10 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text"/>
           </HelpTooltip>
         }/>
-
       {discoveryMethod && discoveryMethod === 2 &&
       <FormGroup className="footprint-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onAddFootprintModal}>
+          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
         </label>
@@ -225,8 +224,8 @@ const PodForm = ({
           {footprints.map((item, key) =>
             <div key={key}>
               {/*TODO: Add action item*/}
-              <p>{item.get('footPrintName')} <span onClick={onEditFootprint}>edit</span> <span
-                onClick={onDeleteFootprint}>del</span></p>
+              <p>{item.get('name')}: <span onClick={() => onEditFootprint(item.get('id'))}>edit</span> | <span onClick={() => onDeleteFootprint(item.get('id'))}>del</span>
+              </p>
             </div>
           )}
         </div>
