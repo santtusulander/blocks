@@ -29,6 +29,7 @@ class PodFormContainer extends React.Component {
 
     this.checkforNodes = this.checkforNodes.bind(this)
     this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
+    this.onEditFootprintModal = this.onEditFootprintModal.bind(this)
     this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
 
     this.state = {
@@ -146,6 +147,10 @@ class PodFormContainer extends React.Component {
     this.setState({ showFootprintModal: true })
   }
 
+  onEditFootprintModal(id){
+    console.log('onFootprintEdit', id);
+  }
+
   onCancelFootprintModal() {
       this.setState({ showFootprintModal: false, initialValues: Map() })
   }
@@ -188,6 +193,7 @@ class PodFormContainer extends React.Component {
             onSave={(values) => this.onSave(edit, values)}
 
             onAddFootprintModal={this.onAddFootprintModal}
+            onEditFootprintModal={this.onEditFootprintModal}
 
           />
 

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { reduxForm, Field, FieldArray, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -11,19 +11,19 @@ import {
 import {
   checkForErrors
 } from '../../../util/helpers'
-import { fetchASOverview } from '../../../util/network-helpers'
 
+import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField } from '../../../util/validators'
+
 import HelpTooltip from '../../../components/help-tooltip'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
-
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
-import { isValidIPv4Address, isValidASN } from '../../../util/validators'
+import { isValidIPv4Address } from '../../../util/validators'
 
 import './pod-form.scss'
 
@@ -44,7 +44,6 @@ const DISCOVERY_METHOD_OPTIONS = [
   {value: 'BGP', label: 'BGP'},
   {value: 'footprints', label: 'Footprints'}
 ]
-
 
 const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
   const conditions = {
@@ -91,9 +90,48 @@ const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
-const validateASNToken = (item) => {
-  return item.label && isValidASN(item.label)
-}
+/*eslint-disable react/no-multi-comp */
+const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } }) => (
+  <li>
+    <label>{input.value.label}</label>
+
+
+    <Button onClick={() => onEdit(input.value.id)}>Edit</Button>
+
+
+    <Button
+      bsStyle="link"
+      onClick={() => {
+        const newVal = {...input.value, removed: !input.value.removed}
+        input.onChange( newVal )
+      }}
+      className="btn-undo pull-right"
+    >
+
+      { input.value.removed
+        ? <FormattedMessage id="portal.common.button.undo" />
+        : <FormattedMessage id="portal.common.button.remove" />
+      }
+
+    </Button>
+  </li>
+)
+
+const renderFootprints = ({fields, onEdit, meta: {error} }) => (
+  <ul>
+    {
+      fields.map(( footprint, index) => (
+        <Field
+          key={index}
+          name={`${footprint}`}
+          type="text"
+          component={renderFootprint}
+          onEdit={onEdit}
+        />
+      ))
+    }
+  </ul>
+)
 
 
 const PodForm = ({
@@ -109,8 +147,8 @@ const PodForm = ({
   submitting,
   dirty,
 
-  onAddFootprintModal
-
+  onAddFootprintModal,
+  onEditFootprintModal
   }) => {
 
   const edit = !!initialValues.pod_name
@@ -199,7 +237,7 @@ const PodForm = ({
         //numericValues={true}
         component={FieldFormGroupSelect}
         options={DISCOVERY_METHOD_OPTIONS}
-        label={intl.formatMessage({id: "portal.network.podForm.discoveryMethod.label"})}
+        label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -207,6 +245,14 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
           </HelpTooltip>
         }/>
+
+      <FieldArray
+        name="UIFootprints"
+        component={renderFootprints}
+        props={{
+          onEdit: onEditFootprintModal
+        }}
+      />
 
       <button onClick={() => onAddFootprintModal()}>add footprint</button>
 
@@ -258,7 +304,7 @@ PodForm.propTypes = {
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
   ...reduxFormPropTypes,
-  /* needs to overrider reduxFormPropTypes */
+  /* needs to override reduxFormPropTypes - BUG in redux-form */
   asyncValidating: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool

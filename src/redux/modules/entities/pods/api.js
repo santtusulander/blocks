@@ -27,6 +27,7 @@ const pod = new schema.Entity('pods', {
       UIRequestFwdType: request_fwd_type,
       UIProviderWeight: provider_weight,
       UIDiscoveryMethod: footprints && footprints.length > 0 ? 'footprints' : 'BGP',
+      UIFootprints: [{label: 'test FP', id: 'test', removed: false}, {label: 'test FP 2', id: 'test-2', removed: false}],
       UIBGP: {
         sp_bgp_router_as,
         sp_bgp_router_ip,
