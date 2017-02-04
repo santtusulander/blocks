@@ -88,15 +88,9 @@ export default {
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
-  // TODO UDNP-2563: Change this to replace current account route for network when
-  // all the Network changes are done.
-  networkAccountV2: '/network-v2/:brand/:account',
   networkGroups: '/network/:brand/:account/groups',
-  // TODO UDNP-2563: Change this to replace current groups route for network when
-  // all the Network changes are done.
-  networkGroupsV2: '/network-v2/:brand/:account/groups',
-  networkGroup: '/network-v2/:brand/:account/groups/:group',
-  networkNetwork: '/network-v2/:brand/:account/groups/:group/:network',
-  networkPop: '/network-v2/:brand/:account/groups/:group/:network/:pop',
-  networkPod: '/network-v2/:brand/:account/groups/:group/:network/:pop/:pod'
+  networkGroup: '/network/:brand/:account/groups/:group',
+  networkNetwork: '/network/:brand/:account/groups/:group/:network',
+  networkPop: '/network/:brand/:account/groups/:group/:network/:pop',
+  networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }

@@ -77,7 +77,7 @@ FieldFormGroupTypeahead.propTypes = {
   allowNew: PropTypes.bool,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  emptyLabel: PropTypes.string,
+  emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   filterBy: PropTypes.oneOfType([ PropTypes.string, PropTypes.func, PropTypes.array ]),
   input: PropTypes.object,
   intl: intlShape.isRequired,

@@ -274,7 +274,7 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId, entityIdKey, entities } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
-      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
+      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey))
       return active
     }
   }
@@ -282,6 +282,7 @@ class EntityList extends React.Component {
   render() {
     const {
       addEntity,
+      disableButtons,
       title,
       multiColumn,
       showButtons
@@ -297,6 +298,7 @@ class EntityList extends React.Component {
         <AccountManagementHeader
           title={title}
           onAdd={showButtons ? addEntity : null}
+          disableButtons={disableButtons}
         />
 
       <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
@@ -311,6 +313,7 @@ EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   deleteEntity: PropTypes.func.isRequired,
+  disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
@@ -328,6 +331,7 @@ EntityList.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {
+  disableButtons: false,
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name',
