@@ -1,36 +1,72 @@
-import { normalize, schema } from 'normalizr'
 import axios from 'axios'
+import { normalize, schema } from 'normalizr'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
-const baseURL = ({ brand, account, group }) =>
+const baseUrl = ({ brand, account, group }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/locations`
 
-const locationSchema = new schema.Entity('locations')
+const locationSchema = new schema.Entity(
+  'locations',
+  {},
+  {
+    idAttribute: (({ account_id, group_id, id }) => buildReduxId(account_id, group_id, id)),
+    processStrategy: value => ({
+      name: value.id,
+      reduxId: buildReduxId(value.account_id, value.group_id, value.id),
+      brandId: value.brand_id,
+      accountId: value.account_id,
+      groupId: value.group_id,
+      cloudName: value.cloud_name,
+      cloudProvider: value.cloud_provider,
+      cloudRegion: value.cloud_region,
+      cloudProviderLocationId: value.cloud_location_id,
+      countryCode: value.country_code,
+      state: value.state,
+      cityName: value.city_name,
+      iataCode: value.iata_code,
+      street: value.street,
+      postalCode: value.postalcode,
+      latitude: value.lat,
+      longitude: value.lon
+    })
+  }
+)
 
 /**
  * This endpoint also supports pagination. Extracting only object data for now.
  */
-export const fetchAll = (urlParams) =>
-  axios.get(baseURL(urlParams))
-    .then(({ data }) => {
-      return normalize(data.data, [ locationSchema ])
-    })
-
-export const fetch = ({ id, ...baseUrlParams }) =>
-  axios.get(`${baseURL(baseUrlParams)}/${id}`)
+export const fetch = ({ id, ...params }) =>
+  axios.get(`${baseUrl(params)}/${id}`)
     .then(({ data }) => {
       return normalize(data, locationSchema)
     })
 
+export const fetchIds = ( params ) => {
+  return axios.get(baseUrl(params))
+  .then( ({data}) => {
+    return data
+  })
+}
+
+export const fetchAll = ( params ) =>
+  axios.get(baseUrl(params))
+    .then(({ data }) => {
+      return normalize(data.data, [ locationSchema ])
+    })
+
 export const create = ({ payload, ...urlParams }) =>
-  axios.post(baseURL(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({ data }) => normalize(data, locationSchema))
+  axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
+    .then(({ data }) => {
+      return normalize(data, locationSchema)
+    })
 
 export const update = ({ id, payload, ...baseUrlParams }) =>
-  axios.put(`${baseURL(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
-    .then(({ data }) => normalize(data, locationSchema))
+  axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
+    .then(({ data }) => {
+      return normalize(data, locationSchema)
+    })
 
-export const remove = ({ id, ...baseUrlParams }) =>
-  axios.delete(`${baseURL(baseUrlParams)}/${id}`)
-    .then(() => ({ id }))
+export const remove = ({ id, ...params }) =>
+  axios.delete(`${baseUrl(params)}/${id}`)
+    .then(() => ({ id: buildReduxId(params.account, params.group, id) }))
