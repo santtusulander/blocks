@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Map } from 'immutable'
 import { injectIntl } from 'react-intl'
 
-import footprintActions from '../../../redux/modules/entities/footprints/actions'
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 
 import SidePanel from '../../../components/side-panel'
@@ -21,18 +21,12 @@ class FootprintFormContainer extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  componentWillMount() {
-    const { brand, account, footprintId, fetchFootprint } = this.props
-    footprintId && fetchFootprint({ brand, account, id: footprintId })
-
-  }
-
   onSubmit(values) {
-    const { onSave } = this.props
+    const { onSave, location } = this.props
 
     const finalValues = Object.assign({}, values, {
       value: normalizeValueToAPI(values.value),
-      location: 'fin' // TODO: add from location form
+      location
     })
 
     // Prevent API from nagging from unknown field
@@ -47,6 +41,7 @@ class FootprintFormContainer extends React.Component {
       CIDROptions,
       editing,
       fetching,
+      footprint,
       initialValues,
       intl,
       onCancel,
@@ -67,6 +62,7 @@ class FootprintFormContainer extends React.Component {
         <FootprintForm
           initialValues={initialValues}
           editing={editing}
+          footprintId={footprint && !footprint.isEmpty() && footprint.get('id')}
           fetching={fetching}
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
@@ -81,17 +77,18 @@ class FootprintFormContainer extends React.Component {
 }
 
 FootprintFormContainer.displayName = 'FootprintFormContainer'
+FootprintFormContainer.defaultProps = {
+  footprint: Map()
+}
 FootprintFormContainer.propTypes = {
   ASNOptions: PropTypes.array,
   CIDROptions: PropTypes.array,
-  account: PropTypes.string,
-  brand: PropTypes.string,
   editing: PropTypes.bool,
-  fetchFootprint: PropTypes.func,
   fetching: PropTypes.bool,
-  footprintId: PropTypes.number,
+  footprint: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,
   intl: PropTypes.object,
+  location: PropTypes.string,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -125,10 +122,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchFootprint: (params) => dispatch(footprintActions.fetchOne(params))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(FootprintFormContainer))
+export default connect(mapStateToProps)(injectIntl(FootprintFormContainer))
