@@ -33,7 +33,7 @@ $side-panel-overlap-offset: rem(15px);
   }
 
   .modal-content {
-    height: 100%;
+    height: 100vh;
     @include sm {
       margin-left: $side-panel-small-display-margin;
     }

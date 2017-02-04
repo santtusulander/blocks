@@ -648,6 +648,7 @@ class Network extends React.Component {
             editEntity={this.handleGroupEdit}
             selectEntity={(groupId) => this.handleGroupClick(groupId)}
             selectedEntityId={`${params.group}`}
+            disableButtons={this.hasGroupsInUrl() ? false : true}
             title="Groups"
             showAsStarbursts={true}
             starburstData={{
@@ -671,6 +672,7 @@ class Network extends React.Component {
             editEntity={this.handleNetworkEdit}
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
+            disableButtons={params.group ? false : true}
             title="Networks"
             nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
@@ -683,6 +685,7 @@ class Network extends React.Component {
             editEntity={this.handlePopEdit}
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
+            disableButtons={params.network ? false : true}
             title="Pops"
             nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
@@ -695,6 +698,7 @@ class Network extends React.Component {
             entities={params.pop && pods}
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
+            disableButtons={params.pop ? false : true}
             title="Pods"
             nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
@@ -706,6 +710,7 @@ class Network extends React.Component {
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
             selectEntity={() => null}
+            disableButtons={params.pod ? false : true}
             title="Nodes"
             multiColumn={true}
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
