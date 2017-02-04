@@ -34,8 +34,8 @@ class PodFormContainer extends React.Component {
     this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
     this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
     this.onSaveFootprint = this.onSaveFootprint.bind(this)
-    this.onEditFootprint = this.onEditFootprint.bind(this)
     this.onDeleteFootprint = this.onDeleteFootprint.bind(this)
+    this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
 
     this.state = {
       showFootprintModal: false,
@@ -68,6 +68,10 @@ class PodFormContainer extends React.Component {
     this.props.fetchFootprints({ brand, account: accountId })
   }
 
+  /**
+   * Handle footprint save
+   * @param values
+   */
   onSaveFootprint(values) {
 
     const params = {
@@ -78,16 +82,20 @@ class PodFormContainer extends React.Component {
 
     this.props.onCreateFootprint(params)
       .then(res => {
-        console.log(res);
+        if (res.error) {
+          // TODO: Do something with error
+          return console.log(res);
+        }
+        return this.handleFootprintSaveResponse(res)
       })
-  }
-
-  onEditFootprint() {
-
   }
 
   onDeleteFootprint() {
 
+  }
+
+  handleFootprintSaveResponse(res) {
+    // TODO: do something with the response
   }
 
   /**
