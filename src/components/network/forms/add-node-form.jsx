@@ -232,6 +232,7 @@ class NetworkAddNodeForm extends React.Component {
           <Field
             name="custom_grains"
             type="textarea"
+            disabled={true}
             className="input-textarea"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.addNodeForm.grains.title" />}
