@@ -786,7 +786,6 @@ const mapStateToProps = (state, ownProps) => {
     pops: getPopsByNetwork(state, ownProps.params.network),
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
-    fetching: state.group.get('fetching'),
     groups: state.group.get('allGroups'),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
     groupMetrics: state.metrics.get('groupMetrics'),

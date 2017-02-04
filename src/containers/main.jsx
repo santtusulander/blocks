@@ -80,8 +80,6 @@ export class Main extends React.Component {
     }
   }
   logOut() {
-    this.props.userActions.setLogin(false)
-
     this.props.userActions.logOut()
       .then(() => {
         // Log out, destroy store, and redirect to login page
