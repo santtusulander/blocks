@@ -24,18 +24,11 @@ import {LOCATION_NAME_MIN_LENGTH,
 
 import './styles/location-form.scss'
 
-const validate = ({
-  name = '',
-  iataCode,
-  latitude = '',
-  longtitude = '',
-  cloudProviderRegion,
-  cloudProviderLocationId = '' }) => {
-
+const validate = fields => {
   const customConditions = {
     name: [
       {
-        condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
+        condition: !isValidTextField(fields.name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel={'portal.network.locationForm.name.label'}
@@ -46,7 +39,7 @@ const validate = ({
     ],
     iataCode: [
       {
-        condition: iataCode.length !== IATA_FIXED_LENGTH,
+        condition: fields.iataCode.length !== IATA_FIXED_LENGTH,
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.iataCode.invalid.error' />
@@ -56,7 +49,7 @@ const validate = ({
     ],
     latitude: [
       {
-        condition: ! isValidLatitude(latitude),
+        condition: ! isValidLatitude(fields.latitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.latitude.invalid.error' />
@@ -66,7 +59,7 @@ const validate = ({
     ],
     longtitude: [
       {
-        condition: ! isValidLongtitude(longtitude),
+        condition: ! isValidLongtitude(fields.longtitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.longtitude.invalid.error' />
@@ -74,9 +67,20 @@ const validate = ({
         )
       }
     ],
+    cloudProviderRegion: [
+      {
+        condition: !isValidTextField(fields.cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH),
+        errorText: (
+          <MultilineTextFieldError
+            fieldLabel={'portal.network.locationForm.name.label'}
+            minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
+            maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
+        )
+      }
+    ],
     cloudProviderLocationId: [
       {
-        condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
+        condition: !isValidTextField(fields.cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel={'portal.network.locationForm.name.label'}
@@ -96,23 +100,7 @@ const validate = ({
     cloudProviderLocationId: <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
   };
 
-  const errors = checkForErrors(
-    { name, iataCode, latitude, longtitude, cloudProviderLocationId },
-    customConditions,
-    requiredTexts
-  );
-
-  if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
-    errors.cloudProviderRegion = (
-      <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.name.label'}
-        minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
-        maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
-    )
-  }
-
-  return errors
-
+  return checkForErrors(fields, customConditions, requiredTexts);
 }
 
 const NetworkLocationForm = (props) => {
