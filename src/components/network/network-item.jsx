@@ -59,7 +59,7 @@ NetworkItem.propTypes = {
   onEdit: PropTypes.func,
   onSelect: PropTypes.func,
   status: PropTypes.string,
-  title: PropTypes.string
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 
 export default NetworkItem

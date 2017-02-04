@@ -8,7 +8,11 @@ import { ASN_MIN,
          ASN_MAX,
          ASN_RESERVED,
          ASN_RESERVED_RANGE_START,
-         ASN_RESERVED_RANGE_END } from '../constants/network'
+         ASN_RESERVED_RANGE_END,
+         MIN_LATITUDE,
+         MAX_LATITUDE,
+         MIN_LONGTITUDE,
+         MAX_LONGTITUDE } from '../constants/network'
 
 
 /**
@@ -190,8 +194,8 @@ export function isValidPhoneNumber(str) {
   return matchesRegexp(str, /^(|\d{7,})$/)
 }
 
-/**
- * Check if valid ASN(Autonomous System Number )
+
+ /* Check if valid ASN(Autonomous System Number )
  * @param  {[type]}  str [description]
  * @return {Boolean}
  */
@@ -208,4 +212,22 @@ export function isValidASN(asn) {
   }
 
   return isValid
+}
+
+/**
+ * Check if valid latitude
+ * @param  float
+ * @return {Boolean}
+ */
+export function isValidLatitude(str) {
+  return str >= MIN_LATITUDE && str <= MAX_LATITUDE
+}
+
+/**
+ * Check if valid longtitude
+ * @param  float
+ * @return {Boolean}
+ */
+export function isValidLongtitude(str) {
+  return str >= MIN_LONGTITUDE && str <= MAX_LONGTITUDE
 }

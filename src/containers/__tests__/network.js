@@ -32,8 +32,6 @@ const subject = () => {
 describe('Network', () => {
   it('URLs should end in "groups" so that navigating and horizontal scrolling work', () => {
     expect(routeConstants.networkGroups).toMatch(/groups$/)
-    // TODO UDNP-2563: This V2 can be removed after all the changes for Network are done.
-    expect(routeConstants.networkGroupsV2).toMatch(/groups$/)
   })
 
   it('should exist', () => {
