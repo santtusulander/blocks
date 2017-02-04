@@ -8,6 +8,8 @@ import { SubmissionError } from 'redux-form'
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 
+import { buildReduxId } from '../../../redux/util'
+
 // Use this when the network container has the new entities groups
 // import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 
@@ -36,9 +38,7 @@ const getSubtitle = (state, params) => {
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
   const network = getNetworkById(state, params.network)
 
-  //TODO This is fragile. In the future, have the same helper method construct the Id
-  //that will be used to create it in the first place.
-  const pod = getPodById(state, `${params.pop}-${params.pod}`)
+  const pod = getPodById(state, buildReduxId(params.pop, params.pod))
 
   return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
 }
@@ -171,7 +171,6 @@ EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 EditNodeFormContainer.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
-  nodeIds: React.PropTypes.array,
   nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,
