@@ -109,7 +109,8 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: values.UIProviderWeight
+      provider_weight: values.UIProviderWeight,
+      ip_list: values.UIIpList.map( ip => ip.label )
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
@@ -305,6 +306,7 @@ const mapStateToProps = (state, ownProps) => {
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
   const initialValues = edit && pod ? { ...pod.toJS() } : {}
+  const UIFootprints = pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS()
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -312,7 +314,6 @@ const mapStateToProps = (state, ownProps) => {
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
-    UIfootprints: pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS(),
     pop,
     pod,
 

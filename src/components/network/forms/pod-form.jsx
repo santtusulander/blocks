@@ -241,7 +241,7 @@ const PodForm = ({
 
       <Field
         required={true}
-        name="value"
+        name="UIIpList"
         allowNew={true}
         component={FieldFormGroupTypeahead}
         multiple={true}
@@ -265,9 +265,8 @@ const PodForm = ({
             title={<FormattedMessage id="portal.network.podForm.discoveryMethod.help.label"/>}>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
           </HelpTooltip>
-        }/>
-
-
+        }
+      />
 
       {showFootprints && <div>
         {/* Footprints autocomplete */}
