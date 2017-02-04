@@ -25,9 +25,7 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onSubmit(edit, values) {
-
     const { brand, account, group } = this.props.params
-
     const data = {
       brand_id: brand,
       account_id: Number(account),
@@ -184,7 +182,7 @@ const cloudProvidersIdOptions = {
 const mapStateToProps = (state, ownProps) => {
   let values = {}
   if (ownProps.locationId !== null) {
-    const locationInfo = getLocationById(state, ownProps.locationId)
+    const locationInfo = getLocationById(state)(ownProps.locationId)
     if (locationInfo) values = locationInfo.toJS()
   }
 
@@ -207,9 +205,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
-  onCreate: (params, data) => dispatch( locationActions.create( {...params, data } ) ),
+  onCreate: (params) => dispatch( locationActions.create( {...params } ) ),
   onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
-  onUpdate: (params, data) => dispatch( locationActions.update( {...params, data } ) )
+  onUpdate: (params) => dispatch( locationActions.update( {...params } ) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))

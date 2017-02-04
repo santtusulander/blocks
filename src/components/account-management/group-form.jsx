@@ -110,7 +110,7 @@ const GroupForm = ({
                           </td>
                           <td className="one-button-cell">
                             <ActionButtons
-                              onEdit={() => onShowLocation(location.get('id'))}/>
+                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
                           </td>
                         </tr>
                       )

@@ -66,6 +66,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="name"
+            disabled={edit}
             type="text"
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
