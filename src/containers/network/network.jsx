@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
 import {
@@ -275,9 +276,8 @@ class Network extends React.Component {
       // and the only way to navigate back from and hide the groups is to check
       // if the URL has 'groups' included.
       previousId: this.hasGroupsInUrl() ? this.props.params.account : null,
-      // TODO UDNP-2563: Remove -v2 once done with all the Network changes
-      goToRoute: 'groups-v2',
-      goBackToRoute: 'account-v2',
+      goToRoute: 'groups',
+      goBackToRoute: 'account',
       returnUrl: true
     })
   }
@@ -297,8 +297,7 @@ class Network extends React.Component {
       currentId: groupId,
       previousId: this.props.params.group,
       goToRoute: 'group',
-      // TODO UDNP-2563: Remove -v2 once done with all the Network changes
-      goBackToRoute: 'groups-v2',
+      goBackToRoute: 'groups',
       returnUrl: true
     })
   }
@@ -397,8 +396,7 @@ class Network extends React.Component {
   determineNextState({ currentId, previousId, goToRoute, goBackToRoute, returnUrl } = {}) {
     // Transform IDs to strings as they can be numbers, too.
     const shouldScrollToPrevious = previousId && currentId.toString() === previousId.toString()
-    // TODO UDNP-2563: Remove .split('-v2')[0] once done with all the Network changes
-    const entityId = shouldScrollToPrevious ? this.props.params[goBackToRoute.split('-v2')[0]] : currentId
+    const entityId = shouldScrollToPrevious ? this.props.params[goBackToRoute] : currentId
     const nextEntity = shouldScrollToPrevious ? goBackToRoute : goToRoute
 
     const url = getNetworkUrl(nextEntity, entityId, this.props.params)
@@ -572,7 +570,7 @@ class Network extends React.Component {
             editEntity={this.handleAccountEdit}
             selectEntity={this.handleAccountClick}
             selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
-            title="Account"
+            title={<FormattedMessage id='portal.network.account.title'/>}
             showButtons={false}
             showAsStarbursts={true}
             starburstData={{
@@ -596,8 +594,8 @@ class Network extends React.Component {
             editEntity={this.handleGroupEdit}
             selectEntity={(groupId) => this.handleGroupClick(groupId)}
             selectedEntityId={`${params.group}`}
+            title={<FormattedMessage id='portal.network.groups.title'/>}
             disableButtons={this.hasGroupsInUrl() ? false : true}
-            title="Groups"
             showAsStarbursts={true}
             starburstData={{
               dailyTraffic: this.props.groupDailyTraffic,
@@ -620,8 +618,8 @@ class Network extends React.Component {
             editEntity={this.handleNetworkEdit}
             selectEntity={this.handleNetworkClick}
             selectedEntityId={`${params.network}`}
+            title={<FormattedMessage id='portal.network.networks.title'/>}
             disableButtons={params.group ? false : true}
-            title="Networks"
             nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
           />
 
@@ -633,8 +631,8 @@ class Network extends React.Component {
             editEntity={this.handlePopEdit}
             selectEntity={this.handlePopClick}
             selectedEntityId={`${params.pop}`}
+            title={<FormattedMessage id='portal.network.pops.title'/>}
             disableButtons={params.network ? false : true}
-            title="Pops"
             nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
           />
 
@@ -646,8 +644,8 @@ class Network extends React.Component {
             entities={params.pop && pods}
             selectEntity={this.handlePodClick}
             selectedEntityId={`${params.pod}`}
+            title={<FormattedMessage id='portal.network.pods.title'/>}
             disableButtons={params.pop ? false : true}
-            title="Pods"
             nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
           />
 
@@ -658,9 +656,9 @@ class Network extends React.Component {
             deleteEntity={() => () => null}
             editEntity={this.handleNodeEdit}
             selectEntity={() => null}
+            title={<FormattedMessage id='portal.network.nodes.title'/>}
             entityIdKey="reduxId"
             disableButtons={params.pod ? false : true}
-            title="Nodes"
             multiColumn={true}
             numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
             itemsPerColumn={NETWORK_NODES_PER_COLUMN}
@@ -788,7 +786,6 @@ const mapStateToProps = (state, ownProps) => {
     pops: getPopsByNetwork(state, ownProps.params.network),
     networkModal: state.ui.get('networkModal'),
     activeAccount: state.account.get('activeAccount'),
-    fetching: state.group.get('fetching'),
     groups: state.group.get('allGroups'),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
     groupMetrics: state.metrics.get('groupMetrics'),

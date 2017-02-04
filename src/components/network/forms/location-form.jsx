@@ -15,7 +15,6 @@ import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../u
 
 import {LOCATION_NAME_MIN_LENGTH,
         LOCATION_NAME_MAX_LENGTH,
-        IATA_FIXED_LENGTH,
         CLOUD_PROVIDER_REGION_MIN_LENGTH,
         CLOUD_PROVIDER_REGION_MAX_LENGTH,
         CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
@@ -24,11 +23,17 @@ import {LOCATION_NAME_MIN_LENGTH,
 
 import './styles/location-form.scss'
 
-const validate = fields => {
+const validate = ({
+  name = '',
+  iataCode,
+  latitude = '',
+  longtitude = '',
+  cloudProviderRegion,
+  cloudProviderLocationId = '' }) => {
   const customConditions = {
     name: [
       {
-        condition: !isValidTextField(fields.name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
+        condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel={'portal.network.locationForm.name.label'}
@@ -37,19 +42,9 @@ const validate = fields => {
         )
       }
     ],
-    iataCode: [
-      {
-        condition: fields.iataCode.length !== IATA_FIXED_LENGTH,
-        errorText: (
-          <div>
-            <FormattedMessage id='portal.network.locationForm.iataCode.invalid.error' />
-          </div>
-        )
-      }
-    ],
     latitude: [
       {
-        condition: ! isValidLatitude(fields.latitude),
+        condition: ! isValidLatitude(latitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.latitude.invalid.error' />
@@ -59,7 +54,7 @@ const validate = fields => {
     ],
     longtitude: [
       {
-        condition: ! isValidLongtitude(fields.longtitude),
+        condition: ! isValidLongtitude(longtitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.longtitude.invalid.error' />
@@ -67,20 +62,9 @@ const validate = fields => {
         )
       }
     ],
-    cloudProviderRegion: [
-      {
-        condition: !isValidTextField(fields.cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH),
-        errorText: (
-          <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
-            minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
-            maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
-        )
-      }
-    ],
     cloudProviderLocationId: [
       {
-        condition: !isValidTextField(fields.cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
+        condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
             fieldLabel={'portal.network.locationForm.name.label'}
@@ -100,7 +84,23 @@ const validate = fields => {
     cloudProviderLocationId: <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
   };
 
-  return checkForErrors(fields, customConditions, requiredTexts);
+  const errors = checkForErrors(
+    { name, iataCode, latitude, longtitude, cloudProviderLocationId },
+    customConditions,
+    requiredTexts
+  );
+
+  if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
+    errors.cloudProviderRegion = (
+      <MultilineTextFieldError
+        fieldLabel={'portal.network.locationForm.name.label'}
+        minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
+        maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
+    )
+  }
+
+  return errors
+
 }
 
 const NetworkLocationForm = (props) => {
@@ -155,6 +155,7 @@ const NetworkLocationForm = (props) => {
           <Field
             name="iataCode"
             options={iataCodes}
+            emptyLabel={<FormattedMessage id="portal.analytics.dropdownMenu.noResults" />}
             filterBy={['iata', 'city', 'country']}
             labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
