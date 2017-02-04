@@ -68,7 +68,7 @@ class FootprintFormContainer extends React.Component {
       id
     }
 
-    return this.props.onDeleteFootprint(params)
+    return this.props.onDelete(params)
       .then(res => {
         if (res.error) {
           throw new SubmissionError({ '_error': res.error.data.message })
@@ -76,21 +76,6 @@ class FootprintFormContainer extends React.Component {
         return this.handleFootprintSaveResponse(res)
       })
   }
-
-
-  // onSubmit(values) {
-  //   const { onSave, location } = this.props
-  //
-  //   const finalValues = Object.assign({}, values, {
-  //     value: normalizeValueToAPI(values.value),
-  //     location
-  //   })
-  //
-  //   // Prevent API from nagging from unknown field
-  //   delete finalValues.addFootprintMethod
-  //
-  //   onSave(finalValues)
-  // }
 
   render() {
     const {
@@ -100,9 +85,7 @@ class FootprintFormContainer extends React.Component {
       footprint,
       initialValues,
       intl,
-      onCancel,
-      onDelete,
-      show
+      onCancel
     } = this.props
 
     const edit = !!initialValues.pod_name
@@ -113,7 +96,7 @@ class FootprintFormContainer extends React.Component {
 
     return (
       <SidePanel
-        show={show}
+        show={true}
         title={intl.formatMessage({ id: formTitle })}
         cancel={onCancel}
       >
@@ -148,13 +131,10 @@ FootprintFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
-  onCancel: PropTypes.func,
-  onDelete: PropTypes.func,
-  onSave: PropTypes.func,
-  show: PropTypes.bool
+  onCancel: PropTypes.func
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
     onUpdate: (params, data) => dispatch(footprintActions.update({ ...params, data })),
@@ -184,7 +164,6 @@ const mapStateToProps = (state, ownProps) => {
   initialValues.value = normalizeValueFromAPI(initialValues.value)
 
   return {
-    editing,
     footprint,
     initialValues
   }
