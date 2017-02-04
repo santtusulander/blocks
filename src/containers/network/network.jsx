@@ -125,7 +125,7 @@ class Network extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop } = nextProps.params
+    const { group, network, pop, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
@@ -137,7 +137,10 @@ class Network extends React.Component {
 
     if (pop) {
       this.props.fetchPods( pop )
-      //this.setState({ pods: placeholderPods })
+    }
+
+    if (pod) {
+      this.props.fetchNodes( nextProps.params )
     }
 
     if (this.props.params.group !== group) {
@@ -337,18 +340,12 @@ class Network extends React.Component {
 
   /* ==== POD Handlers ==== */
   handlePodClick(podId) {
-    const { brand, account, group, network, pop } = this.props.params
-
-    this.props.fetchNodes({ brand, account, group, network, pop, pod: podId })
-      .then(() => {
-
-        this.determineNextState({
-          currentId: podId,
-          previousId: this.props.params.pod,
-          goToRoute: 'pod',
-          goBackToRoute: 'pop'
-        })
-      })
+    this.determineNextState({
+      currentId: podId,
+      previousId: this.props.params.pod,
+      goToRoute: 'pod',
+      goBackToRoute: 'pop'
+    })
   }
 
   handlePodEdit(podId) {
@@ -781,11 +778,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-<<<<<<< HEAD
-  const { brand, account, group, network, pod } = ownProps.params
-=======
   const { brand, account, group, network, pop, pod } = ownProps.params
->>>>>>> feature/UDNP-2542-integrate-POD-footprints
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -800,8 +793,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     list_children: false
   }, metricsOpts)
 
-  const fetchNodes = params => dispatch(nodeActions.fetchAll(params))
-
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
@@ -812,12 +803,9 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
-
-    pod && fetchNodes(ownProps.params)
   }
 
   return {
-    fetchNodes,
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
     groupActions: groupActions,
@@ -826,7 +814,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
-    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) )
+    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
+    fetchNodes: (params) => pod && dispatch(nodeActions.fetchAll(params))
   }
 }
 

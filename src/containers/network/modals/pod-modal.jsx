@@ -18,7 +18,8 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
-import { getByAccount as getFootprintByAccount} from '../../../redux/modules/entities/footprints/selectors'
+import { getById as getFootprintById} from '../../../redux/modules/entities/footprints/selectors'
+import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -190,22 +191,21 @@ class PodFormContainer extends React.Component {
   }
 
   onCancelFootprintModal() {
-      this.setState({ showFootprintModal: false })
+    this.setState({ showFootprintModal: false })
   }
 
   render() {
     const {
-      fetching,
-      footprints,
-      group,
-      initialValues,
-      network,
-      onCancel,
       initialValues,
       onCancel,
-      onDelete,
       UIFootprints,
-      UIDiscoveryMethod
+      UIDiscoveryMethod,
+      pop,
+
+      group,
+      //account,
+      network,
+      footprints
 
     } = this.props
 
@@ -274,10 +274,7 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   pod: PropTypes.instanceOf(Map),
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pop: PropTypes.instanceOf(Map),
-  initialValues: PropTypes.object,
-  onCancel: PropTypes.func,
-  onDelete: PropTypes.func,
+  pop: PropTypes.instanceOf(Map)
 }
 
 PodFormContainer.defaultProps = {
@@ -285,12 +282,11 @@ PodFormContainer.defaultProps = {
   group: Map(),
   network: Map(),
   pop: Map(),
-  pod: Map()
+  pod: Map(),
+  UIFootprints: []
 }
 
 const mapStateToProps = (state, ownProps) => {
-  pod: Map(),
-  UIFootprints: []
 
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
@@ -306,7 +302,8 @@ const mapStateToProps = (state, ownProps) => {
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
-    footprints: pod.get('footprints').map(id => getFootprintById(state)(id)),
+    footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId),
+    UIfootprints: pod && pod.get('footprints').map(id => getFootprintById(state)(id)),
     pop,
     pod,
 

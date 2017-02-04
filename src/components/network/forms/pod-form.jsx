@@ -55,7 +55,7 @@ const DISCOVERY_METHOD_OPTIONS = [
   {value: 'footprints', label: 'Footprints'}
 ]
 
-// const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
+const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
 //   const conditions = {
 //     pod_name: {
 //       condition: !isValidTextField(pod_name),
@@ -78,7 +78,7 @@ const DISCOVERY_METHOD_OPTIONS = [
 //       local_as: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>
 //     }
 //   )
-// }
+}
 
 const asyncValidate = ({ UILocalAS }) => {
   return fetchASOverview(UILocalAS)
