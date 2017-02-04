@@ -151,7 +151,6 @@ class PopFormContainer extends Component {
       confirmationModalToggled,
       toggleDeleteConfirmationModal
     } = this.props
-    console.log(confirmationModalToggled);
 
     const edit = !!initialValues.id
 
