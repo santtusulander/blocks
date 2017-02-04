@@ -1,4 +1,11 @@
 {
+  "portal.network.account.title": "Account",
+  "portal.network.groups.title": "Groups",
+  "portal.network.networks.title": "Networks",
+  "portal.network.pops.title": "Pops",
+  "portal.network.pods.title": "Pods",
+  "portal.network.nodes.title": "Nodes",
+
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
   "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",

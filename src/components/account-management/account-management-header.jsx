@@ -30,7 +30,7 @@ AccountManagementHeader.propTypes = {
   creationPermission: PropTypes.string,
   disableButtons: PropTypes.bool,
   onAdd: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 
 export default AccountManagementHeader
