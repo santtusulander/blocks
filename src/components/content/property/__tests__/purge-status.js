@@ -51,9 +51,4 @@ describe('PurgeHistoryReport', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('shows loading spinner', () => {
-    const component = subject()
-    component.setProps({ fetching: true })
-    expect(component.find('LoadingSpinner').length).toBe(1)
-  })
 })

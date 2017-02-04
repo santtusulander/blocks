@@ -12,6 +12,7 @@ import {
 
 import {
   ADD_EDIT_NETWORK,
+  ADD_EDIT_GROUP,
   ADD_EDIT_POP,
   ADD_EDIT_POD,
   ADD_NODE,
@@ -44,6 +45,7 @@ import PageHeader from '../../components/layout/page-header'
 import TruncatedTitle from '../../components/truncated-title'
 import EntityList from '../../components/network/entity-list'
 
+import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import NetworkFormContainer from './modals/network-modal'
 import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
@@ -243,6 +245,11 @@ class Network extends React.Component {
   addEntity(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_GROUP:
+        this.setState({groupId: null})
+        this.props.toggleModal(ADD_EDIT_GROUP)
+        break;
+
       case ADD_EDIT_ACCOUNT:
         this.setState({groupId: null})
         this.props.toggleModal(ADD_EDIT_ACCOUNT)
@@ -275,6 +282,10 @@ class Network extends React.Component {
 
   handleCancel(entityModal) {
     switch (entityModal) {
+
+      case ADD_EDIT_GROUP:
+        this.props.toggleModal(null)
+        this.setState({groupId: null})
 
       case ADD_EDIT_ACCOUNT:
         this.props.toggleModal(null)
@@ -342,8 +353,9 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
+    if (String(groupId) !== String(this.props.params.group)) return
     this.setState({groupId: groupId})
-    // TODO: this.props.toggleModal(ADD_EDIT_GROUP)
+    this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
   handleGroupSave() {
@@ -631,10 +643,10 @@ class Network extends React.Component {
           <EntityList
             ref={groups => this.entityList.groupList = groups}
             entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
-            addEntity={() => null}
+            addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
             deleteEntity={this.handleGroupEdit}
             editEntity={this.handleGroupEdit}
-            selectEntity={this.handleGroupClick}
+            selectEntity={(groupId) => this.handleGroupClick(groupId)}
             selectedEntityId={`${params.group}`}
             disableButtons={this.hasGroupsInUrl() ? false : true}
             title="Groups"
@@ -706,6 +718,19 @@ class Network extends React.Component {
 
           />
         </PageContainer>
+
+        {networkModal === ADD_EDIT_GROUP &&
+          <GroupFormContainer
+            account={activeAccount.get('name')}
+            params={this.props.params}
+            groupId={this.state.groupId}
+            canEditBilling={false}
+            canSeeBilling={false}
+            canSeeLocations={true}
+            onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
+            show={true}
+          />
+        }
 
         {networkModal === ADD_EDIT_ACCOUNT &&
           <AccountForm
