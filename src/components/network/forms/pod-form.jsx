@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, FieldArray, propTypes as reduxFormPropTypes } from 'redux-form'
+import { reduxForm, Field, FieldArray, arrayPush, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -26,6 +26,16 @@ import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 import { isValidIPv4Address } from '../../../util/validators'
 
 import './pod-form.scss'
+
+/* mock date - remove */
+const footprints = [
+  {id: 1, label: 'FP 1'},
+  {id: 2, label: 'FP 2'},
+  {id: 3, label: 'FP 3'},
+  {id: 4, label: 'FP 4'},
+  {id: 5, label: 'FP 5'},
+  {id: 6, label: 'FP 6'}
+]
 
 const LBMETHOD_OPTIONS = [
   {value: 'gslb', label: 'GSLB'}
@@ -148,11 +158,27 @@ const PodForm = ({
   dirty,
 
   onAddFootprintModal,
-  onEditFootprintModal
+  onEditFootprintModal,
+
+  dispatch,
+  UIFootprints,
+  UIDiscoveryMethod
+
   }) => {
 
   const edit = !!initialValues.pod_name
   //const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
+
+  /*eslint-disable no-unused-vars */
+  const addFootprint = ([footprint, ...rest]) => {
+    if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+  }
+
+  const showFootprints = (UIDiscoveryMethod === 'footprints')
+  const discoveryMethodChangeAllowed = showFootprints && UIFootprints.filter( fp => fp.removed === false).length === 0
+
+  //Filter out footprints that have been added to UIFootprints
+  const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
 
   return (
     <form onSubmit={handleSubmit(onSave)}>
@@ -236,6 +262,7 @@ const PodForm = ({
         name="UIDiscoveryMethod"
         //numericValues={true}
         component={FieldFormGroupSelect}
+        disabled={!discoveryMethodChangeAllowed}
         options={DISCOVERY_METHOD_OPTIONS}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
@@ -246,17 +273,37 @@ const PodForm = ({
           </HelpTooltip>
         }/>
 
-      <FieldArray
-        name="UIFootprints"
-        component={renderFootprints}
-        props={{
-          onEdit: onEditFootprintModal
-        }}
-      />
-
-      <button onClick={() => onAddFootprintModal()}>add footprint</button>
 
 
+      {showFootprints && <div>
+        {/* Footprints autocomplete */}
+        <Field
+          className="action-item-search search-input-group"
+          component={FieldFormGroupTypeahead}
+          disabled={availableFootprints.length === 0}
+          name="footprintSearch"
+          options={availableFootprints}
+          required={false}
+          multiple={false}
+          allowNew={false}
+          props={{
+            onChange: (fp) => addFootprint(fp)
+          }}
+        />
+
+        {/* Footprints list */}
+        <FieldArray
+          name="UIFootprints"
+          component={renderFootprints}
+          props={{
+            onEdit: onEditFootprintModal
+          }}
+        />
+
+        <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
+        <Button onClick={() => addFootprint({id: 'new-id', label: 'new label', removed: false})}>push footprint</Button>
+      </div>
+      }
 
       <FormFooterButtons autoAlign={false}>
         {edit &&

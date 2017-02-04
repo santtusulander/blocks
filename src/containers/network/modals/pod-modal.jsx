@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
+import { /*formValueSelector,*/ SubmissionError, formValueSelector } from 'redux-form'
 
 import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
 
@@ -81,8 +81,8 @@ class PodFormContainer extends React.Component {
       // service.sp_bgp_router_as = 0
       // service.sp_bgp_router_password = 0
 
-      //TODO: assemple footprints array
-      data.footprints = []
+      //TODO: assemple footprints array properly
+      data.footprints = values.UIFootprints.map( fp => fp.id )
     }
 
     data.services = [ service ]
@@ -165,7 +165,10 @@ class PodFormContainer extends React.Component {
       podId,
       initialValues,
       onCancel,
-      onDelete
+      onDelete,
+      UIFootprints,
+      UIDiscoveryMethod
+
     } = this.props
 
     const edit = !!initialValues.pod_name
@@ -194,6 +197,9 @@ class PodFormContainer extends React.Component {
 
             onAddFootprintModal={this.onAddFootprintModal}
             onEditFootprintModal={this.onEditFootprintModal}
+
+            UIFootprints={UIFootprints}
+            UIDiscoveryMethod={UIDiscoveryMethod}
 
           />
 
@@ -232,10 +238,16 @@ PodFormContainer.defaultProps = {
   group: Map(),
   network: Map(),
   pop: Map(),
-  pod: Map()
+  pod: Map(),
+  UIFootprints: []
 }
 
 const mapStateToProps = ( state, ownProps) => {
+
+  const selector = formValueSelector('pod-form')
+  const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
+  const UIFootprints = selector(state, 'UIFootprints')
+
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
@@ -248,6 +260,8 @@ const mapStateToProps = ( state, ownProps) => {
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     pop,
     pod,
+    UIFootprints,
+    UIDiscoveryMethod,
 
     initialValues
 
