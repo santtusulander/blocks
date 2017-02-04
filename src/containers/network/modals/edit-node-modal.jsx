@@ -2,7 +2,20 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
-import { formatDate } from '../../../util/helpers'
+import { formatUnixTimestamp } from '../../../util/helpers'
+import { SubmissionError } from 'redux-form'
+
+import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
+import nodeActions from '../../../redux/modules/entities/nodes/actions'
+
+import { buildReduxId } from '../../../redux/util'
+
+// Use this when the network container has the new entities groups
+// import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+
+import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
+import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
+import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -10,6 +23,26 @@ import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 
 const dateFormat = 'MM/DD/YYYY HH:mm'
+
+/**
+ * build a subtitle for the modal using URL params
+ * @param  {[type]} state  [description]
+ * @param  {[type]} params [description]
+ * @return {[type]}        [description]
+ */
+const getSubtitle = (state, params) => {
+
+  const pop = getPopById(state, params.pop)
+
+  // const group = getGroupById(state, params.group)
+  const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
+  const network = getNetworkById(state, params.network)
+
+  const pod = getPodById(state, buildReduxId(params.pop, params.pod))
+
+  return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
+}
+
 
 class EditNodeFormContainer extends React.Component {
   constructor(props) {
@@ -20,20 +53,7 @@ class EditNodeFormContainer extends React.Component {
       hasMultipleNodes: this.props.nodes && this.props.nodes.length > 1
     }
 
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onDelete = this.onDelete.bind(this)
     this.onToggleDeleteModal = this.onToggleDeleteModal.bind(this)
-  }
-
-  onSubmit(values) {
-    // @TODO: on submit functionality
-    this.props.onSave(values)
-  }
-
-  onDelete() {
-    // @TODO delete functionality
-    const { nodes } = this.props
-    this.props.onDelete(nodes)
   }
 
   onToggleDeleteModal(showDeleteModal) {
@@ -41,7 +61,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, initialValues, intl, nodeValues, nodes } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -53,7 +73,7 @@ class EditNodeFormContainer extends React.Component {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (let dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatDate(node[dateProp], dateFormat)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], dateFormat)}</td></tr>)
         }
       }
     }
@@ -66,7 +86,6 @@ class EditNodeFormContainer extends React.Component {
     const panelTitle = hasMultipleNodes ?
       <FormattedMessage id="portal.network.editNodeForm.title.multiple" values={{numNodes: nodes.length}} /> :
       <FormattedMessage id="portal.network.editNodeForm.title" />
-    const panelSubTitle = ['Group X', 'Network Y', 'POP 1 - Chicago', 'POD2'].join(' / ') // @TODO add real values when redux connected
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
@@ -83,7 +102,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatDate(firstNode.created, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, dateFormat)}</span>}
         </span>
         <span className="edit-node__dates edit-node__dates--updated">
           {updatedText}:
@@ -99,7 +118,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatDate(firstNode.updated, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, dateFormat)}</span>}
         </span>
       </div>
     )
@@ -107,7 +126,7 @@ class EditNodeFormContainer extends React.Component {
     const sidePanelProps = {
       cancel: onCancel,
       show,
-      subTitle: panelSubTitle,
+      subTitle,
       subSubTitle: panelSubTitle2,
       title: panelTitle
     }
@@ -119,7 +138,7 @@ class EditNodeFormContainer extends React.Component {
       nodes,
       onCancel,
       onDelete: this.onToggleDeleteModal,
-      onSave: this.onSubmit
+      onSave
     }
 
     const deleteModalProps = {
@@ -129,7 +148,11 @@ class EditNodeFormContainer extends React.Component {
       deleteButton: true,
       cancelButton: true,
       cancel: () => this.onToggleDeleteModal(false),
-      onSubmit: this.onDelete
+      onSubmit: () => {
+        return this.props.onDelete(this.props.nodes).catch(error => {
+          throw error
+        })
+      }
     }
 
     return (
@@ -153,11 +176,19 @@ EditNodeFormContainer.propTypes = {
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
-  show: React.PropTypes.bool
+  show: React.PropTypes.bool,
+  subTitle: React.PropTypes.string
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { nodes } = ownProps
+const mapStateToProps = (state, { nodeIds, params }) => {
+  const nodes = nodeIds.map(id => {
+
+    const nodeValues = getNodeById(state)(id) || { roles: [] }
+
+    nodeValues.roles = nodeValues.roles[0]
+
+    return nodeValues
+  })
   const nodeValues = getNodeValues(nodes)
 
   const initialValues = {}
@@ -167,9 +198,51 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return {
+    subTitle: getSubtitle(state, params),
+    nodes,
     initialValues,
     nodeValues
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(EditNodeFormContainer))
+const mapDispatchToProps = (dispatch, { params, onCancel }) => {
+
+  /* eslint-disable no-unused-vars*/
+  const updateNode = ({ reduxId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
+    .then(({ error }) => {
+      if (error) {
+        return Promise.reject(new SubmissionError({ _error: error.data.message }))
+      }
+    })
+
+  const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
+    .then(({ error }) => {
+      if (error) {
+        return Promise.reject(new SubmissionError({ _error: error.data.message }))
+      }
+    })
+
+  return {
+
+    onSave: nodes => {
+      return Promise.all(
+        nodes.map(
+          node => {
+            node.roles = [ node.roles ]
+            return updateNode(node)
+          }
+        )
+      ).then(() => onCancel())
+    },
+
+    onDelete: nodes => {
+      return Promise.all(
+        nodes.map(
+          ({ id }) => deleteNode(id)
+        )
+      ).then(() => onCancel())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(EditNodeFormContainer))

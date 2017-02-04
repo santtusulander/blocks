@@ -5,4 +5,7 @@ export const getByAccount = state => accountId => entitySelectors.getEntitiesByP
 export const getByGroup = state => groupId => entitySelectors.getEntitiesByParent(state, 'nodes', groupId, 'group_id')
 export const getByPod = state => podId => entitySelectors.getEntitiesByParent(state, 'nodes', podId, 'pod_id')
 
-export const getById = state => id => entitySelectors.getEntityById(state, 'nodes', id)
+export const getById = state => id => {
+  const node = entitySelectors.getEntityById(state, 'nodes', id)
+  return node && node.toJS()
+}

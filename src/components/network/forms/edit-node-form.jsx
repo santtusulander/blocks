@@ -9,6 +9,7 @@ import {
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -25,7 +26,7 @@ import {
 } from '../../../constants/network'
 
 export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
-export const FORM_FIELDS = ['node_role', 'node_env', 'node_type', 'cloud_driver', 'custom_grains']
+export const FORM_FIELDS = ['roles', 'env', 'type', 'cloud_driver', 'custom_grains']
 
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
@@ -33,7 +34,7 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = function(values, props) {
+const validate = function({ custom_grains, ...values }, props) {
   const { node_role, node_env, node_type, cloud_driver } = values
   const { nodeValues } = props
 
@@ -153,7 +154,10 @@ class NetworkEditNodeForm extends React.Component {
         }
       }
     }
-    this.props.onSave(updatedNodeValues)
+    return this.props.onSave(updatedNodeValues)
+      .catch(error => {
+        throw error
+      })
   }
 
   onCancel() {
@@ -182,21 +186,21 @@ class NetworkEditNodeForm extends React.Component {
 
     const fields = [
       {
-        name: 'node_role',
+        name: 'roles',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_ROLE_OPTIONS,
         labelId: 'portal.network.addNodeForm.role.title'
       },
       {
-        name: 'node_env',
+        name: 'env',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_ENVIRONMENT_OPTIONS,
         labelId: 'portal.network.addNodeForm.environment.title'
       },
       {
-        name: 'node_type',
+        name: 'type',
         className: 'input-select',
         component: FieldFormGroupSelect,
         options: NODE_TYPE_OPTIONS,
@@ -212,6 +216,7 @@ class NetworkEditNodeForm extends React.Component {
       {
         name: 'custom_grains',
         type: 'textarea',
+        disabled: true,
         className: 'input-textarea',
         component: FieldFormGroup,
         labelId: 'portal.network.addNodeForm.grains.title'
@@ -279,7 +284,8 @@ class NetworkEditNodeForm extends React.Component {
       invalid,
       nodes,
       pristine,
-      submitting
+      submitting,
+      error
     } = this.props
 
     const { hasMultipleNodes } = this.state
@@ -338,7 +344,7 @@ class NetworkEditNodeForm extends React.Component {
     return (
       <form className="edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
-          <span className='submit-error'>{this.props.error}</span>
+          {error && <DefaultErrorBlock error={error}/>}
           <FormGroup>
             <label>ID</label>
             <div className="input-group">{idValues}</div>
@@ -398,5 +404,3 @@ export default reduxForm({
   form: FORM_NAME,
   validate
 })(injectIntl(NetworkEditNodeForm))
-
-

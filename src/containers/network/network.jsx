@@ -16,6 +16,7 @@ import {
   ADD_EDIT_POP,
   ADD_EDIT_POD,
   ADD_NODE,
+  EDIT_NODE,
   ADD_EDIT_ACCOUNT
 } from '../../constants/network-modals.js'
 
@@ -53,6 +54,7 @@ import NetworkFormContainer from './modals/network-modal'
 import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
 import AddNodeContainer from './modals/add-node-modal'
+import EditNodeContainer from './modals/edit-node-modal'
 import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
@@ -99,8 +101,6 @@ class Network extends React.Component {
     this.handlePodDelete = this.handlePodDelete.bind(this)
 
     this.handleNodeEdit = this.handleNodeEdit.bind(this)
-    this.handleNodeSave = this.handleNodeSave.bind(this)
-    this.handleNodeDelete = this.handleNodeDelete.bind(this)
 
     this.scrollToEntity = this.scrollToEntity.bind(this)
 
@@ -257,6 +257,11 @@ class Network extends React.Component {
         this.setState({nodeId: null})
         break;
 
+      case EDIT_NODE:
+        this.props.toggleModal(null)
+        this.setState({nodeId: null})
+        break;
+
       default:
         break;
     }
@@ -373,16 +378,8 @@ class Network extends React.Component {
 
   /* ==== Node Handlers ==== */
   handleNodeEdit(nodeId) {
-    this.setState({nodeId: nodeId})
-    //TODO: this.props.toggleModal(EDIT_NODE)
-  }
-
-  handleNodeSave() {
-    // TODO
-  }
-
-  handleNodeDelete() {
-    // TODO
+    this.setState({ nodeId: [ nodeId ] })
+    this.props.toggleModal(EDIT_NODE)
   }
 
   /**
@@ -737,7 +734,17 @@ class Network extends React.Component {
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
           />
-      }
+        }
+
+        {networkModal === EDIT_NODE &&
+          <EditNodeContainer
+            id="edit-node-form"
+            nodeIds={this.state.nodeId}
+            params={params}
+            onCancel={() => this.handleCancel(EDIT_NODE)}
+            show={true}
+          />
+        }
       </Content>
     )
   }
