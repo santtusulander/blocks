@@ -67,7 +67,7 @@ export class Main extends React.Component {
 
   //update account if account prop changed (in url) or clear active if there is no account in route
   componentWillReceiveProps(nextProps){
-    const { user, accounts, location, params: { account } } = this.props;
+    const { user, accounts, location, params: { account } } = this.props
     const nextCurrentUser = nextProps.user.get('currentUser')
     const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
     const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
