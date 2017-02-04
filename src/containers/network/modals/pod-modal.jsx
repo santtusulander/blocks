@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
 
@@ -31,16 +31,16 @@ class PodFormContainer extends React.Component {
     super(props)
 
     this.checkforNodes = this.checkforNodes.bind(this)
-    this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
-    this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
+    this.showFootprintModal = this.showFootprintModal.bind(this)
+    this.hideFootprintModal = this.hideFootprintModal.bind(this)
     this.onSaveFootprint = this.onSaveFootprint.bind(this)
     this.onDeleteFootprint = this.onDeleteFootprint.bind(this)
+    this.onEditFootprint = this.onEditFootprint.bind(this)
     this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
 
     this.state = {
       showFootprintModal: false,
-      //footprints: fromJS(dummyFootprints),
-      initialValues: Map()
+      footprintId: null
     }
   }
 
@@ -69,10 +69,13 @@ class PodFormContainer extends React.Component {
   }
 
   /**
-   * Handle footprint save
+   * Handle footprint save / update
    * @param values
    */
   onSaveFootprint(values) {
+
+    const { footprintId } = this.state
+    const save = footprintId ? this.props.onUpdateFootprint : this.props.onCreateFootprint
 
     const params = {
       brand: 'udn',
@@ -80,22 +83,51 @@ class PodFormContainer extends React.Component {
       payload: values
     }
 
-    this.props.onCreateFootprint(params)
+    if (footprintId) {
+      params.id = footprintId
+    }
+
+    return save(params)
       .then(res => {
         if (res.error) {
-          // TODO: Do something with error
-          return console.log(res);
+          throw new SubmissionError({ '_error': res.error.data.message })
         }
         return this.handleFootprintSaveResponse(res)
       })
   }
 
-  onDeleteFootprint() {
+  onDeleteFootprint(id) {
 
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      id
+    }
+
+    return this.props.onDeleteFootprint(params)
+      .then(res => {
+        if (res.error) {
+          throw new SubmissionError({ '_error': res.error.data.message })
+        }
+        return this.handleFootprintSaveResponse(res)
+      })
+  }
+
+  onEditFootprint(footprintId) {
+    this.setState({ footprintId, showFootprintModal: true })
   }
 
   handleFootprintSaveResponse(res) {
+    this.hideFootprintModal()
     // TODO: do something with the response
+  }
+
+  showFootprintModal() {
+    this.setState({ showFootprintModal: true })
+  }
+
+  hideFootprintModal() {
+    this.setState({ showFootprintModal: false, footprintId: null })
   }
 
   /**
@@ -189,25 +221,14 @@ class PodFormContainer extends React.Component {
     return false
   }
 
-  onAddFootprintModal() {
-    this.setState({ showFootprintModal: true })
-  }
-
-  onCancelFootprintModal() {
-    this.setState({ showFootprintModal: false, initialValues: Map() })
-  }
-
   render() {
     const {
-      account,
-      brand,
       fetching,
       footprints,
       group,
       initialValues,
       network,
       onCancel,
-      onDelete,
       podId,
       pop,
     } = this.props
@@ -220,7 +241,6 @@ class PodFormContainer extends React.Component {
 
     return (
       <div>
-        {!fetching &&
         <SidePanel
           show={true}
           className="pod-form-sidebar"
@@ -230,24 +250,25 @@ class PodFormContainer extends React.Component {
         >
           <PodForm
             footprints={footprints}
-            onEditFootprintKey={this.onEditFootprint}
-            onDeleteFootprintKey={this.onDeleteFootprint}
             hasNodes={this.checkforNodes()}
             initialValues={initialValues}
-            onAddFootprintModal={this.onAddFootprintModal}
             onCancel={onCancel}
             onDelete={() => this.onDelete(podId)}
+            onDeleteFootprint={this.onDeleteFootprint}
+            onEditFootprint={this.onEditFootprint}
             onSave={(values) => this.onSave(edit, values)}
+            onShowFootprintModal={this.showFootprintModal}
           />
         </SidePanel>
-        }
 
-        {this.state.showFootprintModal && !fetching &&
+        {this.state.showFootprintModal &&
         <FootprintFormContainer
-          show={true}
-          editing={!this.state.initialValues.isEmpty()}
-          onCancel={this.onCancelFootprintModal}
+          footprintId={this.state.footprintId}
+          location={pop.get('iata').toLowerCase()}
+          onCancel={this.hideFootprintModal}
+          onDelete={this.onDeleteFootprint}
           onSave={this.onSaveFootprint}
+          show={true}
         />
         }
 
@@ -259,10 +280,15 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
+  account: PropTypes.instanceOf(Map),
+  group: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,
+  network: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  pod: PropTypes.instanceOf(Map),
+  podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  pop: PropTypes.instanceOf(Map)
 }
 
 PodFormContainer.defaultProps = {
