@@ -19,6 +19,11 @@ import Footer from '../components/footer'
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
+import {
+  ENTRY_ROUTE_ROOT,
+  ENTRY_ROUTE_DEFAULT,
+  ENTRY_ROUTE_SERVICE_PROVIDER
+} from '../constants/routes.js'
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 import { userIsServiceProvider } from '../util/helpers'
@@ -64,7 +69,7 @@ export class Main extends React.Component {
   componentWillReceiveProps(nextProps){
     const { user, accounts, location, params: { account } } = this.props;
     const nextCurrentUser = nextProps.user.get('currentUser')
-    const isAccessingRootRoute = location.pathname === '/'
+    const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
     const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
     const currentUserExists = !!nextCurrentUser.size
     const accountChanged = account !== nextProps.params.account
@@ -75,7 +80,7 @@ export class Main extends React.Component {
     }
 
     if (currentUserChanged && currentUserExists && isAccessingRootRoute) {
-      let entryPath = userIsServiceProvider(nextCurrentUser) ? '/network' : '/content'
+      const entryPath = userIsServiceProvider(nextCurrentUser) ? ENTRY_ROUTE_SERVICE_PROVIDER : ENTRY_ROUTE_DEFAULT
       this.props.router.push(entryPath)
     }
   }

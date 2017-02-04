@@ -1,4 +1,6 @@
-export default {
+const ROUTES = {
+  root: '/',
+
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',
   analyticsAccount: '/analysis/:brand/:account',
@@ -94,3 +96,9 @@ export default {
   networkPop: '/network/:brand/:account/groups/:group/:network/:pop',
   networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }
+
+export const ENTRY_ROUTE_SERVICE_PROVIDER = ROUTES.network;
+export const ENTRY_ROUTE_DEFAULT = ROUTES.content;
+export const ENTRY_ROUTE_ROOT = ROUTES.root;
+
+export default ROUTES

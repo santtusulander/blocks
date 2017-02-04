@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
-import routes from './constants/routes'
+import routes, { ENTRY_ROUTE_ROOT } from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
@@ -138,7 +138,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotLoggedIn',
   predicate: (user) => user.get('loggedIn') === false,
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.query.redirect || '/'
+    const redirectPath = ownProps.location.query.redirect || ENTRY_ROUTE_ROOT
 
     return redirectPath
 
@@ -148,7 +148,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
 
 export const getRoutes = store => {
   return (
-    <Route path="/">
+    <Route path={routes.root}>
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
       {/*
