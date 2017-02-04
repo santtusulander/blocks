@@ -11,8 +11,6 @@ export const NETWORK_DOMAIN_NAME = 'unifieddeliverynetwork.net'
 export const LOCATION_NAME_MIN_LENGTH = 3
 export const LOCATION_NAME_MAX_LENGTH = 40
 
-export const IATA_FIXED_LENGTH = 3
-
 export const CLOUD_PROVIDER_REGION_MIN_LENGTH = 2
 export const CLOUD_PROVIDER_REGION_MAX_LENGTH = 40
 
