@@ -109,6 +109,7 @@ class FootprintForm extends React.Component {
       dataType,
       editing,
       fetching,
+      footprintId,
       handleSubmit,
       intl,
       invalid,
@@ -213,7 +214,7 @@ class FootprintForm extends React.Component {
               id="delete-btn"
               className="btn-danger"
               disabled={submitting || fetching}
-              onClick={onDelete}>
+              onClick={() => onDelete(footprintId)}>
               {
                 fetching
                   ? <FormattedMessage id="portal.button.deleting"/>
@@ -232,7 +233,7 @@ class FootprintForm extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting}>
+            disabled={invalid || submitting || fetching}>
             {submitButtonLabel}
           </Button>
         </FormFooterButtons>
