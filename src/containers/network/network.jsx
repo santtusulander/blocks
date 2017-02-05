@@ -193,6 +193,7 @@ class Network extends React.Component {
     switch (entityModal) {
 
       case ADD_EDIT_GROUP:
+        this.props.groupActions.changeActiveGroup(Immutable.Map())
         this.setState({groupId: null})
         this.props.toggleModal(ADD_EDIT_GROUP)
         break;
@@ -304,8 +305,11 @@ class Network extends React.Component {
 
   handleGroupEdit(groupId) {
     if (String(groupId) !== String(this.props.params.group)) return
-    this.setState({groupId: groupId})
-    this.props.toggleModal(ADD_EDIT_GROUP)
+    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    fetchGroup(brand, account, groupId).then(() => {
+      this.setState({groupId: groupId})
+      toggleModal(ADD_EDIT_GROUP)
+    })
   }
 
   handleGroupSave() {
@@ -760,6 +764,7 @@ Network.propTypes = {
   fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
   getNodes: PropTypes.func,
+  groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
