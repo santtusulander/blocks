@@ -25,6 +25,7 @@ import SidePanel from '../../../components/side-panel'
 
 import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
+import RoutingDaemonFormContainer from './routing-daemon-modal'
 
 class PodFormContainer extends React.Component {
   constructor(props) {
@@ -35,6 +36,10 @@ class PodFormContainer extends React.Component {
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
 
+    this.showRoutingDaemonModal = this.showRoutingDaemonModal.bind(this)
+    this.hideRoutingDaemonModal = this.hideRoutingDaemonModal.bind(this)
+
+
     this.onEditFootprint = this.onEditFootprint.bind(this)
     this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
 
@@ -44,6 +49,7 @@ class PodFormContainer extends React.Component {
 
     this.state = {
       showFootprintModal: false,
+      showRoutingDaemonModal: false,
       footprintId: null
     }
   }
@@ -93,6 +99,15 @@ class PodFormContainer extends React.Component {
   hideFootprintModal() {
     this.setState({ showFootprintModal: false, footprintId: null })
   }
+
+  showRoutingDaemonModal() {
+    this.setState({ showRoutingDaemonModal: true })
+  }
+
+  hideRoutingDaemonModal() {
+    this.setState({ showRoutingDaemonModal: false})
+  }
+
 
   /**
    * hander for save
@@ -248,6 +263,8 @@ class PodFormContainer extends React.Component {
             onAddFootprintModal={this.onAddFootprintModal}
             onEditFootprintModal={this.onEditFootprintModal}
 
+            onShowRoutingDaemonModal={this.showRoutingDaemonModal}
+
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
@@ -261,6 +278,18 @@ class PodFormContainer extends React.Component {
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
+          onDelete={this.onDeleteFootprint}
+          onSave={this.onSaveFootprint}
+          show={true}
+        />
+        }
+
+        {this.state.showRoutingDaemonModal &&
+        <RoutingDaemonFormContainer
+          accountId={this.props.accountId}
+          footprintId={this.state.footprintId}
+          location={pop.get('iata').toLowerCase()}
+          onCancel={this.hideRoutinDaemonModal}
           onDelete={this.onDeleteFootprint}
           onSave={this.onSaveFootprint}
           show={true}
@@ -306,7 +335,7 @@ const mapStateToProps = (state, ownProps) => {
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
   const initialValues = edit && pod ? { ...pod.toJS() } : {}
-  const UIFootprints = pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS()
+  //const UIFootprints = pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS()
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),

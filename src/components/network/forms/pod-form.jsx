@@ -150,6 +150,8 @@ const PodForm = ({
   onAddFootprintModal,
   onEditFootprintModal,
 
+  onShowRoutingDaemonModal,
+
   dispatch,
   footprints,
   UIFootprints,
@@ -294,6 +296,7 @@ const PodForm = ({
           }}
         />
 
+      <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>
         <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
         <Button onClick={() => addFootprint({id: 'new-id', label: 'new label', removed: false})}>push footprint</Button>
       </div>

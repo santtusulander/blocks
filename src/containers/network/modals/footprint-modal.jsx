@@ -30,13 +30,13 @@ class FootprintFormContainer extends React.Component {
    */
   onSave(edit, values) {
 
-      const finalValues = Object.assign({}, values, {
-        value: normalizeValueToAPI(values.value),
-        location: this.props.location
-      })
+    const finalValues = Object.assign({}, values, {
+      value: normalizeValueToAPI(values.value),
+      location: this.props.location
+    })
 
-      // Prevent API from nagging from unknown field
-      delete finalValues.addFootprintMethod
+    // Prevent API from nagging from unknown field
+    delete finalValues.addFootprintMethod
 
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
