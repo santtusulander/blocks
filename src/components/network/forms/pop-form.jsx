@@ -85,23 +85,25 @@ const NetworkPopForm = (props) => {
         <hr />
 
         <Field
-          name="iata"
+          name="locationId"
           component={FieldFormGroupSelect}
+          disabled={edit}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         <hr/>
 
         {iata
-            ? <Field
-                name="locationId"
-                component={FieldFormGroupNumber}
-                addonBefore={`${iata}`}
-                min={POP_ID_MIN}
-                max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
-              />
-            : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
+          ? <Field
+              name="id"
+              component={FieldFormGroupNumber}
+              disabled={edit}
+              addonBefore={`${iata}`}
+              min={POP_ID_MIN}
+              max={POP_ID_MAX}
+              label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+            />
+          : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
         <hr/>
