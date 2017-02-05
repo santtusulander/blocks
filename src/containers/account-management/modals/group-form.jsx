@@ -196,6 +196,7 @@ class GroupFormContainer extends React.Component {
       show,
       name,
       onCancel,
+      onDelete,
       intl,
       invalid,
       locations} = this.props
@@ -251,6 +252,7 @@ class GroupFormContainer extends React.Component {
             isFetchingHosts={isFetchingHosts}
             isFetchingLocations={isFetchingLocations}
             onCancel={onCancel}
+            onDelete={onDelete}
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             onShowLocation={this.showLocationForm}
@@ -310,6 +312,7 @@ GroupFormContainer.propTypes = {
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
   show: PropTypes.bool,

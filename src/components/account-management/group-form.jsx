@@ -5,7 +5,7 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { Button, Table } from 'react-bootstrap'
+import { ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
 import UDNButton from '../button'
@@ -49,6 +49,7 @@ const GroupForm = ({
   isFetchingLocations,
   locations,
   onCancel,
+  onDelete,
   onDeleteHost,
   onShowLocation,
   onSubmit}) => {
@@ -154,20 +155,34 @@ const GroupForm = ({
               }
             </div>
           }
-        <FormFooterButtons>
-          <Button
-            id="cancel-btn"
-            className="btn-secondary"
-            onClick={onCancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
+        <FormFooterButtons autoAlign={false}>
+          { groupId &&
+            <ButtonToolbar className="pull-left">
+              <Button
+                className="btn-danger"
+                // disabled={submitting}
+                onClick={() => onDelete(groupId)}
+              >
+                <FormattedMessage id="portal.button.delete"/>
+              </Button>
+            </ButtonToolbar>
+          }
+          <ButtonToolbar className="pull-right">
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-          </Button>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid}>
+            {/*disabled={invalid || submitting}*/}
+              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            </Button>
+          </ButtonToolbar>
         </FormFooterButtons>
     </form>
   )
@@ -189,6 +204,7 @@ GroupForm.propTypes = {
   isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func

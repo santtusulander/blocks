@@ -368,8 +368,22 @@ class Network extends React.Component {
     }
   }
 
-  handleGroupDelete() {
-    // TODO
+  handleGroupDelete(groupId) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      groupId
+    ).then(response => {
+      this.props.toggleModal(null)
+      this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+      response.error &&
+        this.props.uiActions.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          okButton: true,
+          cancel: () => this.props.uiActions.hideInfoDialog()
+        })
+    })
   }
 
   /* ==== Network Handlers ==== */
@@ -738,7 +752,8 @@ class Network extends React.Component {
             canSeeBilling={false}
             canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
-            onSave={(id, data, addUsers, deleteUsers) => this.handleGroupSave(id, data, addUsers, deleteUsers)}
+            onDelete={(groupId) => this.handleGroupDelete(groupId)}
+            onSave={(edit, payload) => this.handleGroupSave(edit, payload)}
             show={true}
           />
         }
