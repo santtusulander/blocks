@@ -151,9 +151,6 @@ class Network extends React.Component {
       this.setState({ pods: placeholderPods })
     }
 
-    if (this.props.params.group !== group) {
-      this.props.fetchNetworks( group )
-    }
   }
 
   componentDidUpdate(prevProps) {
