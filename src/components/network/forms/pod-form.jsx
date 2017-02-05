@@ -147,7 +147,7 @@ const PodForm = ({
   submitting,
   dirty,
 
-  onAddFootprintModal,
+  onShowFootprintModal,
   onEditFootprintModal,
 
   onShowRoutingDaemonModal,
@@ -297,11 +297,11 @@ const PodForm = ({
             }}
           />
 
-          <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
+          <Button onClick={() => onShowFootprintModal()}>add footprint</Button>
         </div>
       : <div>
         {/* BGP */}
-        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>        
+        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>
       </div>
       }
 
