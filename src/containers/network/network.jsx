@@ -299,6 +299,9 @@ class Network extends React.Component {
 
   /* ==== Group Handlers ==== */
   handleGroupClick(groupId) {
+    // return console.log(groupId)
+    // const { groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    // return fetchGroup(brand, account, groupId).then(() => {
     return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
@@ -306,14 +309,15 @@ class Network extends React.Component {
       goBackToRoute: 'groups',
       returnUrl: true
     })
+    // })
   }
 
   handleGroupEdit(groupId) {
     if (String(groupId) !== String(this.props.params.group)) return
-    const { toggleModal, groupActions: { fetchGroup }, params: { account, brand } } = this.props
-    fetchGroup(brand, account, groupId).then(() => {
+    const { groupActions: { fetchGroup }, params: { account, brand } } = this.props
+    return fetchGroup(brand, account, groupId).then(() => {
       this.setState({groupId: groupId})
-      toggleModal(ADD_EDIT_GROUP)
+      this.props.toggleModal(ADD_EDIT_GROUP)
     })
   }
 

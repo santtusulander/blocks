@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
@@ -52,7 +52,8 @@ const GroupForm = ({
   onDelete,
   onDeleteHost,
   onShowLocation,
-  onSubmit}) => {
+  onSubmit,
+  submitting}) => {
 
   return (
     <form
@@ -160,7 +161,7 @@ const GroupForm = ({
             <ButtonToolbar className="pull-left">
               <Button
                 className="btn-danger"
-                // disabled={submitting}
+                disabled={submitting}
                 onClick={() => onDelete(groupId)}
               >
                 <FormattedMessage id="portal.button.delete"/>
@@ -178,8 +179,7 @@ const GroupForm = ({
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid}>
-            {/*disabled={invalid || submitting}*/}
+              disabled={invalid || submitting}>
               {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
             </Button>
           </ButtonToolbar>
@@ -207,7 +207,8 @@ GroupForm.propTypes = {
   onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({
