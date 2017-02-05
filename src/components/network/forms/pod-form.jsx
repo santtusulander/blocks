@@ -120,7 +120,7 @@ const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } 
 const renderFootprints = ({fields, onEdit, meta: {error} }) => (
   <ul>
     {
-      fields.map(( footprint, index) => (
+      fields.map(( footprint, index) =>
         <Field
           key={index}
           name={`${footprint}`}
@@ -128,7 +128,7 @@ const renderFootprints = ({fields, onEdit, meta: {error} }) => (
           component={renderFootprint}
           onEdit={onEdit}
         />
-      ))
+      )
     }
   </ul>
 )
@@ -168,7 +168,7 @@ const PodForm = ({
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
-  const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp.removed === false).length > 0
+  const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp && !fp.removed || fp && fp.removed === false).length > 0
 
   //change of method is allowed is no footprints assigned
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints
@@ -241,7 +241,7 @@ const PodForm = ({
         component={FieldFormGroupNumber}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
 
-      <Field
+      {/* IpList MIGHT not needed <Field
         required={true}
         name="UIIpList"
         allowNew={true}
@@ -250,7 +250,7 @@ const PodForm = ({
         options={[]}
         validation={validateCIDRToken}
         label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
-      />
+      />*/}
 
       <hr/>
 
@@ -296,9 +296,8 @@ const PodForm = ({
           }}
         />
 
-      <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>
+        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>
         <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
-        <Button onClick={() => addFootprint({id: 'new-id', label: 'new label', removed: false})}>push footprint</Button>
       </div>
       }
 

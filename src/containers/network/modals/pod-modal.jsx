@@ -79,7 +79,9 @@ class PodFormContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { brand, accountId } = nextProps
-    this.props.fetchFootprints({ brand, account: accountId })
+
+    if (this.props.accountId !== nextProps.accountId)
+      this.props.fetchFootprints({ brand, account: accountId })
   }
 
   onEditFootprint(footprintId) {
@@ -124,8 +126,9 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: values.UIProviderWeight,
-      ip_list: values.UIIpList.map( ip => ip.label )
+      provider_weight: values.UIProviderWeight
+      //TODO:find out if Ip List is needed
+      //ip_list: values.UIIpList.map( ip => ip.label )
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
@@ -139,8 +142,8 @@ class PodFormContainer extends React.Component {
       // service.sp_bgp_router_as = 0
       // service.sp_bgp_router_password = 0
 
-      //TODO: assemple footprints array properly
-      data.footprints = values.UIFootprints.map( fp => fp.id )
+      //Get footprint IDs
+      data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
     }
 
     data.services = [service]
@@ -286,9 +289,6 @@ class PodFormContainer extends React.Component {
 
         {this.state.showRoutingDaemonModal &&
         <RoutingDaemonFormContainer
-          accountId={this.props.accountId}
-          footprintId={this.state.footprintId}
-          location={pop.get('iata').toLowerCase()}
           onCancel={this.hideRoutingDaemonModal}
           onDelete={this.onDeleteFootprint}
           onSave={this.onSaveFootprint}
@@ -335,7 +335,17 @@ const mapStateToProps = (state, ownProps) => {
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
   const initialValues = edit && pod ? { ...pod.toJS() } : {}
-  //const UIFootprints = pod && pod.get('footprints').map(id => getFootprintById(state)(id)).toJS()
+
+  const inititalUIFootprints = edit && /*formFootprints && formFootprints.length > 0
+    ? formFootprints
+    : */
+    initialValues
+      && initialValues.footprints
+      && initialValues.footprints.map(id => {
+        const fp = getFootprintById(state)(id)
+        return fp.toJS()
+      })
+  initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),

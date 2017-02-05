@@ -36,6 +36,7 @@ class RoutingDaemonFormContainer extends React.Component {
         cancel={onCancel}
       >
       <RoutingDaemonForm
+        edititng={editing}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
       />
