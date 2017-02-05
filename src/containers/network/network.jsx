@@ -12,6 +12,10 @@ import {
 } from '../../util/routes.js'
 
 import {
+  accountIsServiceProviderType
+} from '../../util/helpers'
+
+import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_GROUP,
   ADD_EDIT_POP,
@@ -298,24 +302,33 @@ class Network extends React.Component {
   }
 
   /* ==== Group Handlers ==== */
-  handleGroupClick(groupId) {
-    // return console.log(groupId)
-    // const { groupActions: { fetchGroup }, params: { account, brand } } = this.props
-    // return fetchGroup(brand, account, groupId).then(() => {
-    return this.determineNextState({
-      currentId: groupId,
-      previousId: this.props.params.group,
-      goToRoute: 'group',
-      goBackToRoute: 'groups',
-      returnUrl: true
-    })
-    // })
+  handleGroupClick(groupId, isForGeneratingLink) {
+    if (isForGeneratingLink) {
+      return this.determineNextState({
+        currentId: groupId,
+        previousId: this.props.params.group,
+        goToRoute: 'group',
+        goBackToRoute: 'groups',
+        returnUrl: true
+      })
+    } else {
+      const { groupActions: { fetchGroup }, params: { account, brand, group } } = this.props
+      fetchGroup(brand, account, groupId).then(() => {
+        this.determineNextState({
+          currentId: groupId,
+          previousId: group,
+          goToRoute: 'group',
+          goBackToRoute: 'groups',
+          returnUrl: true
+        })
+      })
+    }
   }
 
   handleGroupEdit(groupId) {
     if (String(groupId) !== String(this.props.params.group)) return
     const { groupActions: { fetchGroup }, params: { account, brand } } = this.props
-    return fetchGroup(brand, account, groupId).then(() => {
+    fetchGroup(brand, account, groupId).then(() => {
       this.setState({groupId: groupId})
       this.props.toggleModal(ADD_EDIT_GROUP)
     })
@@ -670,9 +683,9 @@ class Network extends React.Component {
             ref={groups => this.entityList.groupList = groups}
             entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
             addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-            deleteEntity={() => () => null}
+            deleteEntity={() => null}
             editEntity={this.handleGroupEdit}
-            selectEntity={(groupId) => this.handleGroupClick(groupId)}
+            selectEntity={this.handleGroupClick}
             selectedEntityId={`${params.group}`}
             title={<FormattedMessage id='portal.network.groups.title'/>}
             disableButtons={this.hasGroupsInUrl() ? false : true}
@@ -754,7 +767,7 @@ class Network extends React.Component {
             groupId={this.state.groupId}
             canEditBilling={false}
             canSeeBilling={false}
-            canSeeLocations={true}
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
             onDelete={(groupId) => this.handleGroupDelete(groupId)}
             onSave={(edit, payload) => this.handleGroupSave(edit, payload)}

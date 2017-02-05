@@ -8,6 +8,10 @@ import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
 
+import {
+  accountIsServiceProviderType
+} from '../../util/helpers'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -478,6 +482,7 @@ export class AccountManagement extends Component {
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
+          canSeeLocations={accountIsServiceProviderType(this.props.params.account)}
         />}
       </Content>
     )

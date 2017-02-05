@@ -136,7 +136,6 @@ class EntityList extends React.Component {
       params,
       entities
     } = this.props
-
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
@@ -148,7 +147,7 @@ class EntityList extends React.Component {
             onEdit={() => editEntity(entityId)}
             title={entityName}
             active={selectedEntityId === entityId.toString()}
-            onSelect={() => selectEntity(entityId)}
+            onSelect={() => selectEntity(entityId, false)}
             onDelet={() => deleteEntity(entityId)}
             status="enabled"
             extraClassName="entity-list-item"
@@ -158,7 +157,7 @@ class EntityList extends React.Component {
         if (showAsStarbursts) {
           const dailyTraffic = this.getDailyTraffic(entity)
           const contentMetrics = this.getMetrics(entity)
-          const link = selectEntity(entityId)
+          const link = selectEntity(entityId, true)
           const contentItemClasses = classNames('entity-list-item', {
             'active': selectedEntityId === entityId.toString(),
             'is-account': starburstData.type === 'account'
@@ -187,6 +186,7 @@ class EntityList extends React.Component {
                 showSlices={true}
                 linkTo={link}
                 showAnalyticsLink={true}
+                onClick={() => selectEntity(entityId, false)}
                 onConfiguration={() => editEntity(entityId)}
                 analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
                 />
