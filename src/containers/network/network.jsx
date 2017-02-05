@@ -33,6 +33,7 @@ import * as PERMISSIONS from '../../constants/permissions'
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
+import * as userActionCreators from '../../redux/modules/user'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
@@ -77,6 +78,9 @@ const placeholderPods = Immutable.fromJS([
 class Network extends React.Component {
   constructor(props) {
     super(props)
+
+    this.notificationTimeout = null
+    this.showNotification = this.showNotification.bind(this)
 
     this.addEntity = this.addEntity.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
@@ -312,8 +316,43 @@ class Network extends React.Component {
     })
   }
 
-  handleGroupSave() {
-    // TODO
+  // handleGroupSave(data) {
+  //   console.log(data)
+  //   return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
+  //     .then(action => {
+  //       this.handleCancel(ADD_EDIT_GROUP)
+  //       return action.payload
+  //     })
+  // }
+
+  handleGroupSave(groupId, data, addUsers, deleteUsers) {
+    const groupIdsByEmail = email => this.props.users
+      .find(user => user.get('email') === email)
+      .get('group_id')
+    const addUserActions = addUsers.map(email => {
+      return this.props.userActions.updateUser(email, {
+        group_id: groupIdsByEmail(email).push(groupId).toJS()
+      })
+    })
+    const deleteUserActions = deleteUsers.map(email => {
+      return this.props.userActions.updateUser(email, {
+        group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+      })
+    })
+    return Promise.all([
+      this.props.groupActions.updateGroup(
+        'udn',
+        this.props.activeAccount.get('id'),
+        groupId,
+        data
+      ),
+      ...addUserActions,
+      ...deleteUserActions
+    ])
+      .then(() => {
+        this.props.toggleModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
+      })
   }
 
   handleGroupDelete() {
@@ -332,7 +371,7 @@ class Network extends React.Component {
 
   handleNetworkEdit(networkId) {
     this.setState({networkId: networkId})
-    this.props.toggleModal(ADD_EDIT_NETWORK)
+    this.handleCancel(ADD_EDIT_NETWORK)
   }
 
   /* ==== POP Handlers ==== */
@@ -383,6 +422,12 @@ class Network extends React.Component {
   handleNodeEdit(nodeId) {
     this.setState({ nodeId: [ nodeId ] })
     this.props.toggleModal(EDIT_NODE)
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   /**
@@ -594,7 +639,7 @@ class Network extends React.Component {
             ref={groups => this.entityList.groupList = groups}
             entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
             addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-            deleteEntity={this.handleGroupEdit}
+            deleteEntity={() => () => null}
             editEntity={this.handleGroupEdit}
             selectEntity={(groupId) => this.handleGroupClick(groupId)}
             selectedEntityId={`${params.group}`}
@@ -680,6 +725,7 @@ class Network extends React.Component {
             canSeeBilling={false}
             canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
+            onSave={(id, data, addUsers, deleteUsers) => this.handleGroupSave(id, data, addUsers, deleteUsers)}
             show={true}
           />
         }
@@ -775,12 +821,16 @@ Network.propTypes = {
   pops: PropTypes.instanceOf(Immutable.List),
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uiActions: PropTypes.object,
+  userActions: PropTypes.object,
+  users: PropTypes.instanceOf(Immutable.List)
 }
 
 Network.defaultProps = {
   activeAccount: Immutable.Map(),
-  groups: Immutable.List()
+  groups: Immutable.List(),
+  users: Immutable.List()
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -797,6 +847,7 @@ const mapStateToProps = (state, ownProps) => {
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
+    users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser')
   };
 }
@@ -808,6 +859,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+  const userActions = bindActionCreators(userActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
@@ -840,6 +892,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchData: fetchData,
     groupActions: groupActions,
     accountActions: accountActions,
+    uiActions: uiActions,
+    userActions: userActions,
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
