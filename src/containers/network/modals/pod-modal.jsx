@@ -110,7 +110,6 @@ class PodFormContainer extends React.Component {
 
   }
 
-
   showFootprintModal() {
     this.setState({ showFootprintModal: true })
   }
@@ -226,8 +225,7 @@ class PodFormContainer extends React.Component {
   }
 
   onEditFootprintModal(id){
-    console.log('onFootprintEdit', id);
-    this.setState({ showFootprintModal: true })
+    this.onEditFootprint(id)
   }
 
   onCancelFootprintModal() {
