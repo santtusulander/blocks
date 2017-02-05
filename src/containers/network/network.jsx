@@ -326,34 +326,46 @@ class Network extends React.Component {
   //     })
   // }
 
-  handleGroupSave(groupId, data, addUsers, deleteUsers) {
-    const groupIdsByEmail = email => this.props.users
-      .find(user => user.get('email') === email)
-      .get('group_id')
-    const addUserActions = addUsers.map(email => {
-      return this.props.userActions.updateUser(email, {
-        group_id: groupIdsByEmail(email).push(groupId).toJS()
+  handleGroupSave(edit, payload) {
+    if (edit) {
+      const { groupId, values, addUsers, deleteUsers } = payload
+
+      const groupIdsByEmail = email => this.props.users
+        .find(user => user.get('email') === email)
+        .get('group_id')
+      const addUserActions = addUsers.map(email => {
+        return this.props.userActions.updateUser(email, {
+          group_id: groupIdsByEmail(email).push(groupId).toJS()
+        })
       })
-    })
-    const deleteUserActions = deleteUsers.map(email => {
-      return this.props.userActions.updateUser(email, {
-        group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+      const deleteUserActions = deleteUsers.map(email => {
+        return this.props.userActions.updateUser(email, {
+          group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+        })
       })
-    })
-    return Promise.all([
-      this.props.groupActions.updateGroup(
-        'udn',
-        this.props.activeAccount.get('id'),
-        groupId,
-        data
-      ),
-      ...addUserActions,
-      ...deleteUserActions
-    ])
-      .then(() => {
-        this.props.toggleModal(null)
-        this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
-      })
+      return Promise.all([
+        this.props.groupActions.updateGroup(
+          'udn',
+          this.props.activeAccount.get('id'),
+          groupId,
+          values
+        ),
+        ...addUserActions,
+        ...deleteUserActions
+      ])
+        .then(() => {
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
+        })
+    } else {
+      return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload)
+        .then(action => {
+          // this.props.hostActions.clearFetchedHosts()
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.groupCreated.text"/>)
+          return action.payload
+        })
+    }
   }
 
   handleGroupDelete() {

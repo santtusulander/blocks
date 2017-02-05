@@ -65,15 +65,28 @@ class GroupFormContainer extends React.Component {
     if(!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
+      // if (groupId) {
+      //   return onSave(
+      //     groupId,
+      //     values,
+      //     this.state.usersToAdd,
+      //     this.state.usersToDelete
+      //   )
+      // } else {
+      //   return onSave(values, this.state.usersToAdd)
+      // }
       if (groupId) {
         return onSave(
-          groupId,
-          values,
-          this.state.usersToAdd,
-          this.state.usersToDelete
+          true,
+          {
+            values,
+            groupId,
+            addUsers: this.state.usersToAdd,
+            deleteUsers: this.state.usersToDelete
+          }
         )
       } else {
-        return onSave(values, this.state.usersToAdd)
+        return onSave(false, values)
       }
     }
   }
