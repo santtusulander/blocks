@@ -39,7 +39,6 @@ class PodFormContainer extends React.Component {
     this.showRoutingDaemonModal = this.showRoutingDaemonModal.bind(this)
     this.hideRoutingDaemonModal = this.hideRoutingDaemonModal.bind(this)
 
-
     this.onEditFootprint = this.onEditFootprint.bind(this)
     this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
 
@@ -95,7 +94,6 @@ class PodFormContainer extends React.Component {
     //if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
 
   }
-
 
   showFootprintModal() {
     this.setState({ showFootprintModal: true })
@@ -212,8 +210,7 @@ class PodFormContainer extends React.Component {
   }
 
   onEditFootprintModal(id){
-    console.log('onFootprintEdit', id);
-    this.setState({ showFootprintModal: true })
+    this.onEditFootprint(id)
   }
 
   onCancelFootprintModal() {

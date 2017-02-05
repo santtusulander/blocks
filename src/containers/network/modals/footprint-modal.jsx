@@ -22,10 +22,12 @@ class FootprintFormContainer extends React.Component {
     super(props)
 
     this.onSave = this.onSave.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
   /**
    * Handle footprint save / update
+   * @param edit
    * @param values
    */
   onSave(edit, values) {
@@ -35,8 +37,9 @@ class FootprintFormContainer extends React.Component {
       location: this.props.location
     })
 
-    // Prevent API from nagging from unknown field
+    // Prevent API from nagging from unknown fields
     delete finalValues.addFootprintMethod
+    delete finalValues.accountId
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
@@ -47,7 +50,7 @@ class FootprintFormContainer extends React.Component {
     }
 
     if (edit) {
-      params.id = values.name
+      params.id = values.id
     }
 
     return save(params)
@@ -60,7 +63,7 @@ class FootprintFormContainer extends React.Component {
       })
   }
 
-  onDeleteFootprint(id) {
+  onDelete(id) {
 
     const params = {
       brand: 'udn',
@@ -88,7 +91,7 @@ class FootprintFormContainer extends React.Component {
       onCancel
     } = this.props
 
-    const edit = !!initialValues.pod_name
+    const edit = !!footprint && !footprint.isEmpty()
 
     const formTitle = edit
       ? 'portal.network.footprintForm.title.edit.text'
@@ -110,7 +113,7 @@ class FootprintFormContainer extends React.Component {
           udnTypeOptions={FOOTPRINT_UDN_TYPES}
 
           onSave={(values) => this.onSave(edit, values)}
-          //TODO: onDelete={() => this.onDelete(/*OfootPrintId)*/}
+          onDelete={this.onDelete}
           onCancel={onCancel}
         />
 
