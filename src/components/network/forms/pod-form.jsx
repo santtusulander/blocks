@@ -6,7 +6,9 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {
   Button,
-  ButtonToolbar
+  ButtonToolbar,
+  Row,
+  Col
 } from 'react-bootstrap'
 import {
   checkForErrors
@@ -24,6 +26,11 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
 import { isValidIPv4Address } from '../../../util/validators'
+
+import UDNButton from '../../button'
+import IconAdd from '../../icons/icon-add'
+import IconEdit from '../../icons/icon-edit'
+import IconClose from '../../icons/icon-close'
 
 import './pod-form.scss'
 
@@ -90,35 +97,8 @@ const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
-/*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } }) => (
-  <li>
-    <label>{input.value.name}</label>
-
-
-    <Button onClick={() => onEdit(input.value.id)}>Edit</Button>
-
-
-    <Button
-      bsStyle="link"
-      onClick={() => {
-        const newVal = {...input.value, removed: !input.value.removed}
-        input.onChange( newVal )
-      }}
-      className="btn-undo pull-right"
-    >
-
-      { input.value.removed
-        ? <FormattedMessage id="portal.common.button.undo" />
-        : <FormattedMessage id="portal.common.button.remove" />
-      }
-
-    </Button>
-  </li>
-)
-
-const renderFootprints = ({fields, onEdit, meta: {error} }) => (
-  <ul>
+const renderFootprints = ({ fields, onEdit, meta: { error } }) => (
+  <ul className="footprints">
     {
       fields.map(( footprint, index) =>
         <Field
@@ -133,6 +113,40 @@ const renderFootprints = ({fields, onEdit, meta: {error} }) => (
   </ul>
 )
 
+/*eslint-disable react/no-multi-comp */
+const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } }) => (
+  <li>
+    <Row>
+      <Col xs={8}>
+        <span>{input.value.name}</span>
+      </Col>
+
+      <Col xs={4} className="action-buttons">
+        <Button
+          className="btn btn-icon edit-button"
+          onClick={() => onEdit(input.value.id)}>
+          <IconEdit/>
+        </Button>
+
+        <Button
+          bsStyle="link"
+          className="btn btn-icon delete-button btn-undo"
+          onClick={() => {
+            const newVal = { ...input.value, removed: !input.value.removed }
+            input.onChange(newVal)
+          }}
+        >
+
+          { input.value.removed
+            ? <FormattedMessage id="portal.common.button.undo"/>
+            : <IconClose/>
+          }
+
+        </Button>
+      </Col>
+    </Row>
+  </li>
+)
 
 const PodForm = ({
   asyncValidating,
@@ -271,7 +285,12 @@ const PodForm = ({
       />
 
     {showFootprints
-        ? <div>
+        ? <div className="form-group discovery-section">
+        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onAddFootprintModal}>
+            <IconAdd/>
+          </UDNButton>
+        </label>
           {/* Footprints autocomplete */}
           <Field
             className="action-item-search search-input-group"
@@ -296,12 +315,14 @@ const PodForm = ({
               onEdit: onEditFootprintModal
             }}
           />
-
-          <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
         </div>
-      : <div>
+      : <div className="form-group discovery-section">
         {/* BGP */}
-        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>        
+        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowRoutingDaemonModal}>
+            <IconAdd/>
+          </UDNButton>
+        </label>
       </div>
       }
 
