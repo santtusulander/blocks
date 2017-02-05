@@ -90,9 +90,12 @@ class PodFormContainer extends React.Component {
 
   handleFootprintSaveResponse(res) {
     this.hideFootprintModal()
-    // TODO: do something with the response
-    // dispatch(arrayPush)
+    console.log(res)
+
+    //if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+
   }
+
 
   showFootprintModal() {
     this.setState({ showFootprintModal: true })
@@ -284,6 +287,8 @@ class PodFormContainer extends React.Component {
           onDelete={this.onDeleteFootprint}
           onSave={this.onSaveFootprint}
           show={true}
+
+          handleFootprintSaveResponse={this.handleFootprintSaveResponse}
         />
         }
 

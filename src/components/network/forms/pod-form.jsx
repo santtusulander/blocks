@@ -270,34 +270,38 @@ const PodForm = ({
         }
       />
 
-      {showFootprints && <div>
-        {/* Footprints autocomplete */}
-        <Field
-          className="action-item-search search-input-group"
-          component={FieldFormGroupTypeahead}
-          labelKey='name'
-          disabled={availableFootprints.length === 0}
-          name="footprintSearch"
-          options={availableFootprints}
-          required={false}
-          multiple={false}
-          allowNew={false}
-          props={{
-            onChange: (fp) => addFootprint(fp)
-          }}
-        />
+    {showFootprints
+        ? <div>
+          {/* Footprints autocomplete */}
+          <Field
+            className="action-item-search search-input-group"
+            component={FieldFormGroupTypeahead}
+            labelKey='name'
+            disabled={availableFootprints.length === 0}
+            name="footprintSearch"
+            options={availableFootprints}
+            required={false}
+            multiple={false}
+            allowNew={false}
+            props={{
+              onChange: (fp) => addFootprint(fp)
+            }}
+          />
 
-        {/* Footprints list */}
-        <FieldArray
-          name="UIFootprints"
-          component={renderFootprints}
-          props={{
-            onEdit: onEditFootprintModal
-          }}
-        />
+          {/* Footprints list */}
+          <FieldArray
+            name="UIFootprints"
+            component={renderFootprints}
+            props={{
+              onEdit: onEditFootprintModal
+            }}
+          />
 
-        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>
-        <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
+          <Button onClick={() => onAddFootprintModal()}>add footprint</Button>
+        </div>
+      : <div>
+        {/* BGP */}
+        <Button onClick={() => onShowRoutingDaemonModal()}>add BGP</Button>        
       </div>
       }
 

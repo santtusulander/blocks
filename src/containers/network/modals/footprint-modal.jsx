@@ -38,7 +38,6 @@ class FootprintFormContainer extends React.Component {
     // Prevent API from nagging from unknown field
     delete finalValues.addFootprintMethod
 
-
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     const params = {
@@ -56,7 +55,8 @@ class FootprintFormContainer extends React.Component {
         if (res.error) {
           throw new SubmissionError({ '_error': res.error.data.message })
         }
-        return this.handleFootprintSaveResponse(res)
+
+        return this.props.handleFootprintSaveResponse(finalValues)
       })
   }
 
@@ -73,7 +73,7 @@ class FootprintFormContainer extends React.Component {
         if (res.error) {
           throw new SubmissionError({ '_error': res.error.data.message })
         }
-        return this.handleFootprintSaveResponse(res)
+        return this.props.handleFootprintSaveResponse(res)
       })
   }
 
@@ -128,6 +128,7 @@ FootprintFormContainer.propTypes = {
   CIDROptions: PropTypes.array,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
+  handleFootprintSaveResponse: PropTypes.func,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
