@@ -21,6 +21,7 @@ import {
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 
+import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
@@ -69,14 +70,14 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      iata: values.iata,
+      iata: this.props.iata,
       name: values.name,
       location_id: `${values.locationId}`
     }
 
     // add id if create new
     if (!edit) {
-      data.id = values.name
+      data.id = this.props.iata + values.id
     }
 
     const params = {
@@ -212,6 +213,8 @@ const mapStateToProps = (state, ownProps) => {
   const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
+  const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
+  const selectedLocation = getLocationById(state, selectedLocationId)
   const locationOptions = locations.map(location => ({
     value: location.get('name'),
     label: location.get('iataCode') + (location.get('cityName') ? `, ${location.get('cityName')}` : '')
@@ -223,7 +226,7 @@ const mapStateToProps = (state, ownProps) => {
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     pop,
     pods,
-    iata: formSelector(state, 'iata'),
+    iata: selectedLocation ? selectedLocation.get('iataCode') : '',
 
     initialValues: {
       id: edit && pop ? pop.get('id') : null,
