@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react'
 
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { /*formValueSelector,*/ SubmissionError, formValueSelector } from 'redux-form'
-
+import { SubmissionError, formValueSelector, arrayPush, change } from 'redux-form'
 import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
@@ -33,19 +32,21 @@ class PodFormContainer extends React.Component {
 
     this.checkforNodes = this.checkforNodes.bind(this)
 
+    // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
 
+    // BGP
     this.showRoutingDaemonModal = this.showRoutingDaemonModal.bind(this)
     this.hideRoutingDaemonModal = this.hideRoutingDaemonModal.bind(this)
 
+    // this.onEditFootprint = this.onEditFootprint.bind(this)
+    // this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
+    // this.onEditFootprintModal = this.onEditFootprintModal.bind(this)
+    // this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
 
-    this.onEditFootprint = this.onEditFootprint.bind(this)
-    this.handleFootprintSaveResponse = this.handleFootprintSaveResponse.bind(this)
-
-    this.onAddFootprintModal = this.onAddFootprintModal.bind(this)
-    this.onEditFootprintModal = this.onEditFootprintModal.bind(this)
-    this.onCancelFootprintModal = this.onCancelFootprintModal.bind(this)
+    this.addFootprintToPod = this.addFootprintToPod.bind(this)
+    this.saveBGP = this.saveBGP.bind(this)
 
     this.state = {
       showFootprintModal: false,
@@ -84,15 +85,28 @@ class PodFormContainer extends React.Component {
       this.props.fetchFootprints({ brand, account: accountId })
   }
 
-  onEditFootprint(footprintId) {
-    this.setState({ footprintId, showFootprintModal: true })
+  // onEditFootprint(footprintId) {
+  //   this.setState({ footprintId, showFootprintModal: true })
+  // }
+
+  addFootprintToPod(footprint) {
+    const {pushFormVal} = this.props
+
+    this.hideFootprintModal()
+
+    if (footprint) (pushFormVal('UIFootprints', footprint))
+
+    console.log('addFootprintToPod', footprint);
   }
 
-  handleFootprintSaveResponse(res) {
-    this.hideFootprintModal()
-    console.log(res)
+  saveBGP(values) {
+    const { setFormVal } = this.props
+    this.hideRoutingDaemonModal()
 
-    //if (footprint) dispatch(arrayPush('pod-form', 'UIFootprints', footprint))
+    const {bgp_router_ip, bgp_as_number, bgp_password} = values
+    if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
+    if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
+    if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
 
   }
 
@@ -135,9 +149,9 @@ class PodFormContainer extends React.Component {
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
-      service.sp_bgp_router_ip = values.UIBGP.sp_bgp_router_ip
-      service.sp_bgp_router_as = values.UIBGP.sp_bgp_router_as
-      service.sp_bgp_router_password = values.UIBGP.sp_bgp_router_password
+      service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
+      service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as)
+      service.sp_bgp_router_password = values.UIp_bgp_router_password
 
       data.footprints = []
     } else {
@@ -262,12 +276,12 @@ class PodFormContainer extends React.Component {
             onDelete={() => this.onDelete(podId)}
             onCancel={onCancel}
 
-            onDeleteFootprint={this.onDeleteFootprint}
-            onEditFootprint={this.onEditFootprint}
+            // onDeleteFootprint={this.onDeleteFootprint}
+            // onEditFootprint={this.onEditFootprint}
             onShowFootprintModal={this.showFootprintModal}
 
-            onAddFootprintModal={this.onAddFootprintModal}
-            onEditFootprintModal={this.onEditFootprintModal}
+            // onAddFootprintModal={this.onAddFootprintModal}
+            // onEditFootprintModal={this.onEditFootprintModal}
 
             onShowRoutingDaemonModal={this.showRoutingDaemonModal}
 
@@ -288,15 +302,14 @@ class PodFormContainer extends React.Component {
           onSave={this.onSaveFootprint}
           show={true}
 
-          handleFootprintSaveResponse={this.handleFootprintSaveResponse}
+          addFootprintToPod={this.addFootprintToPod}
         />
         }
 
         {this.state.showRoutingDaemonModal &&
         <RoutingDaemonFormContainer
           onCancel={this.hideRoutingDaemonModal}
-          onDelete={this.onDeleteFootprint}
-          onSave={this.onSaveFootprint}
+          onSave={this.saveBGP}
           show={true}
         />
         }
@@ -379,8 +392,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
     fetchPop: (params) => dispatch(popActions.fetchOne(params)),
     fetchPod: (params) => dispatch(podActions.fetchOne(params)),
-    fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params))
+    fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params)),
 
+    pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
+    setFormVal: (field, val) => dispatch(change('pod-form', field, val))
   }
 }
 
