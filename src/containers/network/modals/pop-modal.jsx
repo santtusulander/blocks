@@ -229,7 +229,7 @@ const mapStateToProps = (state, ownProps) => {
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',
 
     initialValues: {
-      id: edit && pop ? pop.get('id') : null,
+      id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,
       name: edit && pop ? pop.get('name') : '',
       createdDate: edit && pop ? pop.get('created') : '',
       updatedDate: edit && pop ? pop.get('updated') : '',
