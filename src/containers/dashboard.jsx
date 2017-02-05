@@ -303,7 +303,7 @@ export class Dashboard extends React.Component {
                         kpiRight={true}
                         kpiValue={numeral(provider.get('percent_total')).format('0')}
                         kpiUnit="%"
-                        dataKey="percent_total"
+                        dataKey="percent_of_timestamp"
                         data={provider.get('detail').toJS()} />
                     </td>
                   </tr>
