@@ -6,6 +6,7 @@ import { List } from 'immutable'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
+import locationActions from '../../../redux/modules/entities/locations/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
@@ -13,25 +14,19 @@ import podActions from '../../../redux/modules/entities/pods/actions'
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import {
+  getByGroup as getLocationsByGroup,
+  getById as getLocationById
+} from '../../../redux/modules/entities/locations/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 
+import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 
-const mockLocations = [
-  {
-    value: 'ORD',
-    label: 'ORD, Chicago'
-  }, {
-    value: 'OLD',
-    label: 'OLD, Miami'
-  }, {
-    value: 'MDL',
-    label: 'MDL, Lviv'
-  }]
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -44,11 +39,11 @@ class PopFormContainer extends Component {
     // If editing => fetch data from API
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    groupId && this.props.fetchLocations({brand, account: accountId, group: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
     popId && this.props.fetchPods({brand, account: accountId, group: groupId, network: networkId, pop: popId})
 
-    // TODO: fetch location by Group
 
   }
 
@@ -75,14 +70,14 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      iata: values.iata,
-      name: values.name,
-      location_id: `${values.locationId}`
+      name: values.name
     }
 
     // add id if create new
     if (!edit) {
-      data.id = values.name
+      data.id = this.props.iata + values.id
+      data.iata = this.props.iata
+      data.location_id = `${values.locationId}`
     }
 
     const params = {
@@ -193,6 +188,7 @@ PopFormContainer.propTypes = {
 
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
+  fetchLocations: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
@@ -214,8 +210,15 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+  const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
+  const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
+  const selectedLocation = getLocationById(state, selectedLocationId)
+  const locationOptions = locations.map(location => ({
+    value: location.get('name'),
+    label: location.get('iataCode') + (location.get('cityName') ? `, ${location.get('cityName')}` : '')
+  })).toJS()
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -223,14 +226,14 @@ const mapStateToProps = (state, ownProps) => {
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     pop,
     pods,
-    iata: formSelector(state, 'iata'),
+    iata: selectedLocation ? selectedLocation.get('iataCode') : '',
 
     initialValues: {
-      id: edit && pop ? pop.get('id') : null,
+      id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,
       name: edit && pop ? pop.get('name') : '',
       createdDate: edit && pop ? pop.get('created') : '',
       updatedDate: edit && pop ? pop.get('updated') : '',
-      locationOptions: mockLocations,
+      locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
       locationId: edit && pop ? pop.get('location_id') : ''
     }
@@ -247,7 +250,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
-    fetchPods: (params) => dispatch( podActions.fetchAll(params) )
+    fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
+    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) )
   }
 }
 

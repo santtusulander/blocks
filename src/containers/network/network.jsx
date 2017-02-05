@@ -36,6 +36,8 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import * as userActionCreators from '../../redux/modules/user'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+import locationActions from '../../redux/modules/entities/locations/actions'
+
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 
@@ -136,6 +138,7 @@ class Network extends React.Component {
     const { group, network } = this.props.params
     this.props.fetchData()
 
+    this.props.fetchLocations(group)
     this.props.fetchNetworks(group)
     this.props.fetchPops(network)
   }
@@ -145,6 +148,7 @@ class Network extends React.Component {
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
+      this.props.fetchLocations( group )
     }
 
     if (network !== this.props.params.network) {
@@ -155,9 +159,6 @@ class Network extends React.Component {
       this.setState({ pods: placeholderPods })
     }
 
-    if (this.props.params.group !== group) {
-      this.props.fetchNetworks( group )
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -806,6 +807,7 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
   fetchPops: PropTypes.func,
@@ -895,6 +897,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     uiActions: uiActions,
     userActions: userActions,
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
+    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
   }
