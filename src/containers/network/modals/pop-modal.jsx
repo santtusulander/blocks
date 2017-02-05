@@ -70,14 +70,14 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      iata: this.props.iata,
-      name: values.name,
-      location_id: `${values.locationId}`
+      name: values.name
     }
 
     // add id if create new
     if (!edit) {
       data.id = this.props.iata + values.id
+      data.iata = this.props.iata
+      data.location_id = `${values.locationId}`
     }
 
     const params = {
