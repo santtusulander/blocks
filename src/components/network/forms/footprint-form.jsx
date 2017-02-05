@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar, FormGroup, ControlLabel } from 'react-bootstrap'
+import { Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldRadio from '../../form/field-radio'
