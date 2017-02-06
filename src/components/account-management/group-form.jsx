@@ -157,12 +157,12 @@ const GroupForm = ({
             </div>
           }
         <FormFooterButtons autoAlign={false}>
-          { groupId &&
+          { (groupId && onDelete) &&
             <ButtonToolbar className="pull-left">
               <Button
                 className="btn-danger"
                 disabled={submitting}
-                onClick={() => onDelete(groupId)}
+                onClick={onDelete}
               >
                 <FormattedMessage id="portal.button.delete"/>
               </Button>

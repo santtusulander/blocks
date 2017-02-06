@@ -479,7 +479,8 @@ export class AccountManagement extends Component {
           id="group-form"
           params={this.props.params}
           groupId={this.state.groupToUpdate}
-          onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
+          onSave={({groupId, data, addUsers, deleteUsers}) => this.editGroupInActiveAccount(groupId, data, addUsers, deleteUsers)}
+          // onDelete={(group) => this.showDeleteGroupModal(group)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
           canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}

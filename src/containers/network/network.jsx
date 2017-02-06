@@ -312,26 +312,24 @@ class Network extends React.Component {
         returnUrl: true
       })
     } else {
-      const { groupActions: { fetchGroup }, params: { account, brand, group } } = this.props
-      fetchGroup(brand, account, groupId).then(() => {
-        this.determineNextState({
-          currentId: groupId,
-          previousId: group,
-          goToRoute: 'group',
-          goBackToRoute: 'groups',
-          returnUrl: true
-        })
+      const { groupActions: { changeActiveGroup } } = this.props
+      changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
+      this.determineNextState({
+        currentId: groupId,
+        previousId: this.props.params.group,
+        goToRoute: 'group',
+        goBackToRoute: 'groups',
+        returnUrl: true
       })
     }
   }
 
   handleGroupEdit(groupId) {
     if (String(groupId) !== String(this.props.params.group)) return
-    const { groupActions: { fetchGroup }, params: { account, brand } } = this.props
-    fetchGroup(brand, account, groupId).then(() => {
-      this.setState({groupId: groupId})
-      this.props.toggleModal(ADD_EDIT_GROUP)
-    })
+    const { groupActions: { changeActiveGroup } } = this.props
+    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
+    this.setState({groupId: groupId})
+    this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
   // handleGroupSave(data) {
@@ -343,39 +341,25 @@ class Network extends React.Component {
   //     })
   // }
 
-  handleGroupSave(edit, payload) {
+  handleGroupSave(payload) {
+    const { edit } = payload
     if (edit) {
-      const { groupId, values, addUsers, deleteUsers } = payload
+      const { groupId, data } = payload
 
-      const groupIdsByEmail = email => this.props.users
-        .find(user => user.get('email') === email)
-        .get('group_id')
-      const addUserActions = addUsers.map(email => {
-        return this.props.userActions.updateUser(email, {
-          group_id: groupIdsByEmail(email).push(groupId).toJS()
-        })
-      })
-      const deleteUserActions = deleteUsers.map(email => {
-        return this.props.userActions.updateUser(email, {
-          group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
-        })
-      })
       return Promise.all([
         this.props.groupActions.updateGroup(
           'udn',
           this.props.activeAccount.get('id'),
           groupId,
-          values
-        ),
-        ...addUserActions,
-        ...deleteUserActions
+          data
+        )
       ])
         .then(() => {
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
         })
     } else {
-      return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload)
+      return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload.data)
         .then(action => {
           // this.props.hostActions.clearFetchedHosts()
           this.props.toggleModal(null)
@@ -385,11 +369,11 @@ class Network extends React.Component {
     }
   }
 
-  handleGroupDelete(groupId) {
+  handleGroupDelete(group) {
     return this.props.groupActions.deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
-      groupId
+      group.get('id')
     ).then(response => {
       this.props.toggleModal(null)
       this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
@@ -769,8 +753,8 @@ class Network extends React.Component {
             canSeeBilling={false}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
-            onDelete={(groupId) => this.handleGroupDelete(groupId)}
-            onSave={(edit, payload) => this.handleGroupSave(edit, payload)}
+            // onDelete={(groupId) => this.handleGroupDelete(groupId)}
+            onSave={this.handleGroupSave}
             show={true}
           />
         }
