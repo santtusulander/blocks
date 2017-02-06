@@ -37,7 +37,6 @@ import * as PERMISSIONS from '../../constants/permissions'
 import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
-import * as userActionCreators from '../../redux/modules/user'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
 import locationActions from '../../redux/modules/entities/locations/actions'
@@ -852,9 +851,7 @@ Network.propTypes = {
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
   toggleModal: PropTypes.func,
-  uiActions: PropTypes.object,
-  userActions: PropTypes.object,
-  users: PropTypes.instanceOf(Immutable.List)
+  uiActions: PropTypes.object
 }
 
 Network.defaultProps = {
@@ -889,7 +886,6 @@ function mapDispatchToProps(dispatch, ownProps) {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  const userActions = bindActionCreators(userActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
@@ -923,7 +919,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: groupActions,
     accountActions: accountActions,
     uiActions: uiActions,
-    userActions: userActions,
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
