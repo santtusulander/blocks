@@ -35,6 +35,8 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+import locationActions from '../../redux/modules/entities/locations/actions'
+
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 
@@ -116,12 +118,16 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
-    const { group, network, pop, pod } = this.props.params
+    const { group, network, pop } = this.props.params
     this.props.fetchData()
 
     this.props.fetchNetworks( group )
     this.props.fetchPops( network )
     this.props.fetchPods( pop )
+    this.props.fetchLocations(group)
+    this.props.fetchNetworks(group)
+    this.props.fetchPops(network)
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -129,6 +135,7 @@ class Network extends React.Component {
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
+      this.props.fetchLocations( group )
     }
 
     if (network !== this.props.params.network) {
@@ -143,9 +150,6 @@ class Network extends React.Component {
       this.props.fetchNodes( nextProps.params )
     }
 
-    if (this.props.params.group !== group) {
-      this.props.fetchNetworks( group )
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -732,8 +736,10 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
+  fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
   getNodes: PropTypes.func,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
@@ -766,7 +772,6 @@ const mapStateToProps = (state, ownProps) => {
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
     activeAccount: state.account.get('activeAccount'),
-    fetching: state.group.get('fetching'),
     groups: state.group.get('allGroups'),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
     groupMetrics: state.metrics.get('groupMetrics'),
@@ -778,7 +783,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, group, network, pop, pod } = ownProps.params
+  const { brand, account, group, network /*, pop, pod */} = ownProps.params
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -811,11 +816,12 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: groupActions,
     accountActions: accountActions,
 
+    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
     fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
-    fetchNodes: (params) => pod && dispatch(nodeActions.fetchAll(params))
+    fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
 

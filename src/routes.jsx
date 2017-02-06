@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
-import routes from './constants/routes'
+import routes, { ENTRY_ROUTE_ROOT } from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
@@ -138,7 +138,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotLoggedIn',
   predicate: (user) => user.get('loggedIn') === false,
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.query.redirect || '/content'
+    const redirectPath = ownProps.location.query.redirect || ENTRY_ROUTE_ROOT
 
     return redirectPath
 
@@ -148,7 +148,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
 
 export const getRoutes = store => {
   return (
-    <Route path="/">
+    <Route path={routes.root}>
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
       {/*
@@ -161,8 +161,8 @@ export const getRoutes = store => {
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
       { /* Routes below are protected by login*/}
+      <IndexRoute component={UserIsLoggedIn(Main)} />
       <Route component={UserIsLoggedIn(Main)}>
-        <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
