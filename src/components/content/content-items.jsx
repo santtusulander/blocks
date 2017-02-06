@@ -429,6 +429,7 @@ class ContentItems extends React.Component {
             <GroupFormContainer
               id="group-form"
               params={this.props.params}
+              canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
