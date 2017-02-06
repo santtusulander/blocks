@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { /*formValueSelector,*/ SubmissionError } from 'redux-form'
+import { SubmissionError } from 'redux-form'
 import { Map } from 'immutable'
 import { injectIntl } from 'react-intl'
 
@@ -132,13 +132,17 @@ FootprintFormContainer.defaultProps = {
 FootprintFormContainer.propTypes = {
   ASNOptions: PropTypes.array,
   CIDROptions: PropTypes.array,
+  accountId: PropTypes.number,
+  addFootprintToPod: PropTypes.func,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
-  addFootprintToPod: PropTypes.func,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
+  onDelete: PropTypes.func,
+  onUpdate: PropTypes.func
 }
 
 const mapDispatchToProps = (dispatch) => {
