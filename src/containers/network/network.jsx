@@ -12,10 +12,6 @@ import {
 } from '../../util/routes.js'
 
 import {
-  accountIsServiceProviderType
-} from '../../util/helpers'
-
-import {
   ADD_EDIT_NETWORK,
   ADD_EDIT_GROUP,
   ADD_EDIT_POP,
@@ -98,6 +94,7 @@ class Network extends React.Component {
     this.handleGroupEdit = this.handleGroupEdit.bind(this)
     this.handleGroupSave = this.handleGroupSave.bind(this)
     this.handleGroupDelete = this.handleGroupDelete.bind(this)
+    this.determineNextGroupState = this.determineNextGroupState.bind(this)
 
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handleNetworkEdit = this.handleNetworkEdit.bind(this)
@@ -301,26 +298,20 @@ class Network extends React.Component {
   }
 
   /* ==== Group Handlers ==== */
-  handleGroupClick(groupId, isForGeneratingLink) {
-    if (isForGeneratingLink) {
-      return this.determineNextState({
-        currentId: groupId,
-        previousId: this.props.params.group,
-        goToRoute: 'group',
-        goBackToRoute: 'groups',
-        returnUrl: true
-      })
-    } else {
-      const { groupActions: { changeActiveGroup } } = this.props
-      changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
-      this.determineNextState({
-        currentId: groupId,
-        previousId: this.props.params.group,
-        goToRoute: 'group',
-        goBackToRoute: 'groups',
-        returnUrl: true
-      })
-    }
+  determineNextGroupState(groupId) {
+    return this.determineNextState({
+      currentId: groupId,
+      previousId: this.props.params.group,
+      goToRoute: 'group',
+      goBackToRoute: 'groups',
+      returnUrl: true
+    })
+  }
+
+  handleGroupClick(groupId) {
+    const { groupActions: { changeActiveGroup } } = this.props
+    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
+    this.determineNextGroupState(groupId)
   }
 
   handleGroupEdit(groupId) {
@@ -650,6 +641,7 @@ class Network extends React.Component {
             showButtons={false}
             showAsStarbursts={true}
             starburstData={{
+              linkGenerator: this.handleAccountClick,
               dailyTraffic: this.props.accountDailyTraffic,
               contentMetrics: this.props.accountMetrics,
               type: CONTENT_ITEMS_TYPES.ACCOUNT,
@@ -674,6 +666,7 @@ class Network extends React.Component {
             disableButtons={this.hasGroupsInUrl() ? false : true}
             showAsStarbursts={true}
             starburstData={{
+              linkGenerator: this.determineNextGroupState,
               dailyTraffic: this.props.groupDailyTraffic,
               contentMetrics: this.props.groupMetrics,
               type: CONTENT_ITEMS_TYPES.GROUP,
