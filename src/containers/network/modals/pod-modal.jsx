@@ -45,6 +45,7 @@ class PodFormContainer extends React.Component {
 
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
     this.saveBGP = this.saveBGP.bind(this)
+    this.clearBGP = this.clearBGP.bind(this)
 
     this.state = {
       showFootprintModal: false,
@@ -107,12 +108,18 @@ class PodFormContainer extends React.Component {
   saveBGP(values) {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
-
-    const {bgp_router_ip, bgp_as_number, bgp_password} = values
+    const { bgp_router_ip, bgp_as_number, bgp_password } = values
     if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
     if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
     if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
 
+  }
+
+  clearBGP() {
+    const { setFormVal } = this.props
+    setFormVal('UIsp_bgp_router_ip', '')
+    setFormVal('UIsp_bgp_router_as', '')
+    setFormVal('UIsp_bgp_router_password', '')
   }
 
   showFootprintModal(footprintId = null) {
@@ -153,7 +160,7 @@ class PodFormContainer extends React.Component {
 
     if (values.UIDiscoveryMethod === 'BGP') {
       service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
-      service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as)
+      service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as) || 0
       service.sp_bgp_router_password = values.UIp_bgp_router_password
 
       data.footprints = []
@@ -271,6 +278,7 @@ class PodFormContainer extends React.Component {
             onShowFootprintModal={this.showFootprintModal}
 
             onShowRoutingDaemonModal={this.showRoutingDaemonModal}
+            onDeleteRoutingDaemon={this.clearBGP}
 
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
