@@ -30,4 +30,4 @@ export const getByGroup = (state, groupId) => entitySelectors.getEntitiesByParen
 * @param String id of the item
 * @return {} property
 */
-export const getById = state => id => entitySelectors.getEntityById(state, 'locations', id)
+export const getById = (state, id) => entitySelectors.getEntityById(state, 'locations', id)
