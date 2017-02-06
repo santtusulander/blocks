@@ -67,6 +67,9 @@ import IconArrowUp       from '../components/icons/icon-arrow-up'
 import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
+import IconCheck         from '../components/icons/icon-check'
+import IconChevronRight  from '../components/icons/icon-chevron-right'
+import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
 import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
@@ -1080,6 +1083,21 @@ class Styleguide extends React.Component {
             <IconChart />
             <br />
             IconChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCheck />
+            <br />
+            IconCheck
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRight />
+            <br />
+            IconChevronRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRightBold />
+            <br />
+            IconChevronRightBold
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconClose />
