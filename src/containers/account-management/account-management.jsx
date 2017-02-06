@@ -482,7 +482,7 @@ export class AccountManagement extends Component {
           onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
-          canSeeLocations={accountIsServiceProviderType(this.props.params.account)}
+          canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
         />}
       </Content>
     )

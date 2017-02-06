@@ -226,7 +226,6 @@ class GroupFormContainer extends React.Component {
     //   }
     //   return arr;
     // }, []))
-
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name}` : account.get('name')
     return (
@@ -336,7 +335,7 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
 
 const  mapStateToProps = (state, ownProps) => {
   const { user, host, group, account, entities } = state
-  const groupId = ownProps.params.group
+  const groupId = ownProps.params.group || ownProps.groupId
   const currentUser = user.get('currentUser')
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
