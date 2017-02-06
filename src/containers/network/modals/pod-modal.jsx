@@ -56,7 +56,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, podId, initialValues, reinitForm, getFootprintData } = this.props
+    const { brand, accountId, groupId, networkId, popId, /*podId,*/ initialValues, reinitForm, getFootprintData } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
@@ -76,15 +76,15 @@ class PodFormContainer extends React.Component {
 
     accountId && this.props.fetchFootprints({ brand, account: accountId })
       .then( () => {
-
-        console.log('fetchFootprints');
-
-        initialValues.UIFootprints = initialValues.footprints.map(id => {
+        const UIFootprints = initialValues.footprints.map(id => {
           const fp = getFootprintData(id)
-          return fp ? fp : { id: 'inknown', name: 'UNKNOWN'}
+          return fp ? fp.toJS() : { id: 'unknown', name: 'UNKNOWN'}
         })
 
-        reinitForm(initialValues)
+        reinitForm({
+          ...initialValues,
+          UIFootprints
+        })
       })
 
   }
@@ -103,7 +103,6 @@ class PodFormContainer extends React.Component {
 
     if (footprint) (pushFormVal('UIFootprints', footprint))
 
-    console.log('addFootprintToPod', footprint);
   }
 
   saveBGP(values) {
@@ -254,7 +253,7 @@ class PodFormContainer extends React.Component {
       podId,
 
       group,
-      account,
+      //account,
       network,
       footprints
 
@@ -331,16 +330,33 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
-  account: PropTypes.instanceOf(Map),
+  UIDiscoveryMethod: PropTypes.string,
+  UIFootprints: PropTypes.array,
+
   accountId: PropTypes.string,
+  brand: PropTypes.string,
+  fetchAccount: PropTypes.func,
+  fetchFootprints: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchNetwork: PropTypes.func,
+  fetchPop: PropTypes.func,
+  footprints: PropTypes.array,
+  getFootprintData: PropTypes.func,
   group: PropTypes.instanceOf(Map),
+  groupId: PropTypes.string,
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
+  networkId: PropTypes.string,
   onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  //pod: PropTypes.instanceOf(Map),
+  onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pop: PropTypes.instanceOf(Map)
+  pop: PropTypes.instanceOf(Map),
+  popId: PropTypes.string,
+  pushFormVal: PropTypes.func,
+  reinitForm: PropTypes.func,
+  setFormVal: PropTypes.func
 }
 
 PodFormContainer.defaultProps = {
@@ -361,7 +377,7 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
-  const initialValues = edit && pod ? { ...pod.toJS() } : {}
+  const initialValues = edit && pod ? pod.toJS() : {}
 
   const inititalUIFootprints = edit && /*formFootprints && formFootprints.length > 0
     ? formFootprints
@@ -373,6 +389,8 @@ const mapStateToProps = (state, ownProps) => {
       })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+
+  const getFootprintData = (id) => {return getFootprintById(state)(id)}
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -388,7 +406,7 @@ const mapStateToProps = (state, ownProps) => {
 
     initialValues,
 
-    getFootprintData: (id) => {console.log('state', state, 'id', id); return getFootprintById(state)(id)}
+    getFootprintData
   }
 }
 
