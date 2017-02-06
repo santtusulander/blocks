@@ -332,7 +332,7 @@ export class Dashboard extends React.Component {
 
     return (
       <Content>
-        <PageHeader pageSubTitle="Dashboard">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               as="dashboard"
