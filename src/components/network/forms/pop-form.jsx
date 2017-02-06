@@ -16,8 +16,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 
 import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
-const validate = fields => {
-  const { name, locationId, popId } = fields
+const validate = ({ name, locationId, id }) => {
 
   const customConditions = {
     name: {
@@ -28,8 +27,8 @@ const validate = fields => {
       condition: !locationId,
       errorText: <FormattedMessage id='portal.network.popEditForm.locationId.validation.error.text'/>
     },
-    popId: {
-      condition: !isInt(popId),
+    id: {
+      condition: !isInt(id),
       errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
@@ -37,10 +36,10 @@ const validate = fields => {
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
-    popId: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
+    id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors(fields, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {

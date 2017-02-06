@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List, fromJS } from 'immutable'
+import { List } from 'immutable'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { FormGroup, FormControl, InputGroup } from 'react-bootstrap'
 
@@ -84,7 +84,7 @@ const PurgeHistoryReport = (props) => {
             </tr>
             </thead>
             <tbody>
-            {fromJS(historyData).map((data, i) => (
+            {historyData.map((data, i) => (
               <tr key={i}>
                 <td>{formatTime(data.get('created_at'))}</td>
                 <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
