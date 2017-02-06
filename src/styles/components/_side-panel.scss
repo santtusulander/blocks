@@ -2,8 +2,7 @@
 // ===========
 $side-panel-width: rem(636px);
 $side-panel-small-display-margin: rem(12px);
-$side-panel-horizontal-padding: rem(60px);
-$side-panel-horizontal-padding-footer: rem(27px);
+$side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
 $side-panel-footer-height: rem(84px);
@@ -77,7 +76,7 @@ $side-panel-overlap-offset: rem(15px);
     width: 100%;
     max-width: $side-panel-width;
 
-    padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding-footer;
+    padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
     .dark-theme & {
       background: rgba($black, 0.2);
