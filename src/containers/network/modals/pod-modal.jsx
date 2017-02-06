@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { SubmissionError, formValueSelector, arrayPush, change } from 'redux-form'
+import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
 import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
@@ -54,7 +54,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, podId } = this.props
+    const { brand, accountId, groupId, networkId, popId, podId, initialValues, reinitForm, getFootprintData } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
@@ -72,7 +72,18 @@ class PodFormContainer extends React.Component {
     //   id: podId
     // })
 
-    this.props.fetchFootprints({ brand, account: accountId })
+    accountId && this.props.fetchFootprints({ brand, account: accountId })
+      .then( () => {
+
+        console.log('fetchFootprints');
+
+        initialValues.UIFootprints = initialValues.footprints.map(id => {
+          const fp = getFootprintData(id)
+          return fp ? fp : { id: 'inknown', name: 'UNKNOWN'}
+        })
+
+        reinitForm(initialValues)
+      })
 
   }
 
@@ -336,9 +347,9 @@ const mapStateToProps = (state, ownProps) => {
     initialValues
       && initialValues.footprints
       && initialValues.footprints.map(id => {
-        const fp = getFootprintById(state)(id)
-        return fp.toJS()
+        return { id: 'loading' + id, name: 'loading ...'}
       })
+
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
 
   return {
@@ -353,7 +364,9 @@ const mapStateToProps = (state, ownProps) => {
     UIFootprints,
     UIDiscoveryMethod,
 
-    initialValues
+    initialValues,
+
+    getFootprintData: (id) => {console.log('state', state, 'id', id); return getFootprintById(state)(id)}
   }
 }
 
@@ -371,9 +384,16 @@ const mapDispatchToProps = (dispatch) => {
     fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params)),
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
-    setFormVal: (field, val) => dispatch(change('pod-form', field, val))
+    setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
+    reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }
+
+// && initialValues.footprints.map(id => {
+//   const fp = getFootprintById(state)(id)
+//   return fp ? fp.toJS() : { id: 'loading', label: 'loading ...'}
+// })
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   PodFormContainer

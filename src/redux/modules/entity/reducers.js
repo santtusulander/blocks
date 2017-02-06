@@ -13,6 +13,8 @@ export const receiveEntity = (key) => (state, action) => {
     return state.mergeDeep(state, fromJS(response.entities[key]))
   }
 
+  console.log('receice --', key)
+
   return state
 }
 
