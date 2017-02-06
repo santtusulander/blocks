@@ -388,7 +388,7 @@ class Network extends React.Component {
 
   handleNetworkEdit(networkId) {
     this.setState({networkId: networkId})
-    this.handleCancel(ADD_EDIT_NETWORK)
+    this.props.toggleModal(ADD_EDIT_NETWORK)
   }
 
   /* ==== POP Handlers ==== */
