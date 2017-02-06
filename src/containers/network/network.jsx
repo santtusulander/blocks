@@ -315,7 +315,6 @@ class Network extends React.Component {
   }
 
   handleGroupEdit(groupId) {
-    if (String(groupId) !== String(this.props.params.group)) return
     const { groupActions: { changeActiveGroup } } = this.props
     changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
     this.setState({groupId: groupId})
