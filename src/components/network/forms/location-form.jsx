@@ -155,7 +155,7 @@ const NetworkLocationForm = (props) => {
           <Field
             name="iataCode"
             options={iataCodes}
-            emptyLabel={<FormattedMessage id="portal.analytics.dropdownMenu.noResults" />}
+            emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
             labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
