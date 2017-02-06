@@ -50,7 +50,8 @@ class PodFormContainer extends React.Component {
     this.state = {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
-      footprintId: null
+      footprintId: null,
+      routingDaemonValues: {}
     }
   }
 
@@ -108,11 +109,19 @@ class PodFormContainer extends React.Component {
   saveBGP(values) {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
-    const { bgp_router_ip, bgp_as_number, bgp_password } = values
+    const { bgp_as_name, bgp_router_ip, bgp_as_number, bgp_password } = values
     if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
     if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
     if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
 
+    this.setState({
+      routingDaemonValues: {
+        bgp_as_name,
+        bgp_router_ip,
+        bgp_as_number,
+        bgp_password
+      }
+    })
   }
 
   clearBGP() {
@@ -120,6 +129,8 @@ class PodFormContainer extends React.Component {
     setFormVal('UIsp_bgp_router_ip', '')
     setFormVal('UIsp_bgp_router_as', '')
     setFormVal('UIsp_bgp_router_password', '')
+
+    this.setState({ routingDaemonValues: {} })
   }
 
   showFootprintModal(footprintId = null) {
@@ -130,8 +141,10 @@ class PodFormContainer extends React.Component {
     this.setState({ showFootprintModal: false, footprintId: null })
   }
 
-  showRoutingDaemonModal() {
-    this.setState({ showRoutingDaemonModal: true })
+  showRoutingDaemonModal(edit = false) {
+    const { routingDaemonValues } = this.state
+
+    this.setState({ showRoutingDaemonModal: true, routingDaemonValues })
   }
 
   hideRoutingDaemonModal() {
@@ -277,7 +290,7 @@ class PodFormContainer extends React.Component {
             onEditFootprint={this.showFootprintModal}
             onShowFootprintModal={this.showFootprintModal}
 
-            onShowRoutingDaemonModal={this.showRoutingDaemonModal}
+            onShowRoutingDaemonModal={(edit) => this.showRoutingDaemonModal(edit)}
             onDeleteRoutingDaemon={this.clearBGP}
 
             UIFootprints={UIFootprints}
@@ -303,6 +316,7 @@ class PodFormContainer extends React.Component {
 
         {this.state.showRoutingDaemonModal &&
         <RoutingDaemonFormContainer
+          initialValues={this.state.routingDaemonValues}
           onCancel={this.hideRoutingDaemonModal}
           onSave={this.saveBGP}
           show={true}
