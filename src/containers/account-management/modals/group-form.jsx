@@ -282,6 +282,7 @@ class GroupFormContainer extends React.Component {
       {canSeeLocations &&
         <NetworkLocationFormContainer
           params={this.props.params}
+          groupId={this.props.groupId}
           onCancel={this.hideLocationForm}
           show={this.state.visibleLocationForm}
           locationId={this.state.selectedLocationId}
