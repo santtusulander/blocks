@@ -274,7 +274,7 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId, entityIdKey, entities } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
-      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
+      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey))
       return active
     }
   }

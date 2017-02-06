@@ -16,8 +16,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 
 import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
-const validate = fields => {
-  const { name, locationId, popId } = fields
+const validate = ({ name, locationId, id }) => {
 
   const customConditions = {
     name: {
@@ -28,8 +27,8 @@ const validate = fields => {
       condition: !locationId,
       errorText: <FormattedMessage id='portal.network.popEditForm.locationId.validation.error.text'/>
     },
-    popId: {
-      condition: !isInt(popId),
+    id: {
+      condition: !isInt(id),
       errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
@@ -37,10 +36,10 @@ const validate = fields => {
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
-    popId: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
+    id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors(fields, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {
@@ -83,21 +82,23 @@ const NetworkPopForm = (props) => {
           label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
 
         <Field
-          name="iata"
+          name="locationId"
           component={FieldFormGroupSelect}
+          disabled={edit}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         {iata
-            ? <Field
-                name="locationId"
-                component={FieldFormGroupNumber}
-                addonBefore={`${iata}`}
-                min={POP_ID_MIN}
-                max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
-              />
-            : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
+          ? <Field
+              name="id"
+              component={FieldFormGroupNumber}
+              disabled={edit}
+              addonBefore={`${iata}`}
+              min={POP_ID_MIN}
+              max={POP_ID_MAX}
+              label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+            />
+          : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
         <FormFooterButtons autoAlign={false}>
