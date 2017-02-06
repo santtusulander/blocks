@@ -107,8 +107,13 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
+        // Unselect network item
+        if (this.props.selectedEntityId == networkId) {
+          this.props.handleSelectedEntity(networkId)
+        }
+
         // Close modal
-        this.props.onCancel();
+        this.props.onCancel()
       })
   }
 
@@ -159,6 +164,7 @@ NetworkFormContainer.propTypes = {
   fetchPops: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
@@ -166,7 +172,8 @@ NetworkFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
-  pops: PropTypes.instanceOf(List)
+  pops: PropTypes.instanceOf(List),
+  selectedEntityId: PropTypes.string
 }
 
 NetworkFormContainer.defaultProps = {
