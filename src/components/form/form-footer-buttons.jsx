@@ -1,23 +1,25 @@
 import React, { PropTypes } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 
+/**
+ * Available aligning options
+ * @type {Array.<string>}
+ */
+const alignOptions = ['left', 'right', 'center'];
 
-const getAlignStyle = (align) => {
-  const alignOptions = ['left', 'right', 'center'];
-  const textAlign = alignOptions.includes(align)
-    ? align
-    : FormFooterButtons.defaultProps.align;
-
-  return { textAlign };
-};
+/**
+ * Get align direction
+ * @param {string} textAlign - one of {@link alignOptions}
+ * @return {{textAlign: string}} align
+ */
+const getAlignStyle = (textAlign) => alignOptions.includes(textAlign) ?
+  { textAlign } :
+  {textAlign: FormFooterButtons.defaultProps.align};
 
 const FormFooterButtons = ({children, align}) => {
   const alignItems = getAlignStyle(align);
   return (
-    <div
-      className='modal-footer'
-      style={alignItems}
-    >
+    <div className='modal-footer' style={alignItems}>
       <ButtonToolbar>
         {children}
       </ButtonToolbar>
@@ -27,7 +29,7 @@ const FormFooterButtons = ({children, align}) => {
 
 FormFooterButtons.displayName = 'FormFooterButtons'
 FormFooterButtons.propTypes = {
-  align: PropTypes.string,
+  align: PropTypes.oneOf(alignOptions),
   children: PropTypes.array
 }
 
