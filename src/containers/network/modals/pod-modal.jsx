@@ -125,9 +125,9 @@ class PodFormContainer extends React.Component {
 
   clearBGP() {
     const { setFormVal } = this.props
-    setFormVal('UIsp_bgp_router_ip', '')
-    setFormVal('UIsp_bgp_router_as', '')
-    setFormVal('UIsp_bgp_router_password', '')
+    setFormVal('UIsp_bgp_router_ip', undefined)
+    setFormVal('UIsp_bgp_router_as', undefined)
+    setFormVal('UIsp_bgp_router_password', undefined)
 
     this.setState({ routingDaemonValues: {} })
   }
@@ -141,7 +141,7 @@ class PodFormContainer extends React.Component {
   }
 
   showRoutingDaemonModal(edit = false) {
-    const { routingDaemonValues } = this.state
+    const { routingDaemonValues } = edit ? this.state : {}
 
     this.setState({ showRoutingDaemonModal: true, routingDaemonValues })
   }
@@ -177,9 +177,9 @@ class PodFormContainer extends React.Component {
 
       data.footprints = []
     } else {
-      // service.sp_bgp_router_ip = ''
-      // service.sp_bgp_router_as = 0
-      // service.sp_bgp_router_password = 0
+      service.sp_bgp_router_ip = undefined
+      service.sp_bgp_router_as = undefined
+      service.sp_bgp_router_password = undefined
 
       //Get footprint IDs
       data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )

@@ -50,6 +50,7 @@ class RoutingDaemonFormContainer extends React.Component {
 RoutingDaemonFormContainer.displayName = 'RoutingDaemonFormContainer'
 RoutingDaemonFormContainer.propTypes = {
   editing: PropTypes.bool,
+  initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

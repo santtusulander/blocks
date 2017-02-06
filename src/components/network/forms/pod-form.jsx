@@ -11,6 +11,7 @@ import {
   Row,
   Col
 } from 'react-bootstrap'
+
 import {
   checkForErrors
 } from '../../../util/helpers'
@@ -26,7 +27,8 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
 import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
-import { isValidIPv4Address } from '../../../util/validators'
+//TODO: If Ip list needed uncomment
+//import { isValidIPv4Address } from '../../../util/validators'
 
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
@@ -53,29 +55,38 @@ const DISCOVERY_METHOD_OPTIONS = [
   {value: 'footprints', label: 'Footprints'}
 ]
 
-const validate = ({ pod_name, localAS, lb_method, pod_type, requestForwardType, provider_weight, discoveryMethod }) => {
-//   const conditions = {
-//     pod_name: {
-//       condition: !isValidTextField(pod_name),
-//       errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
-//     }
-//   }
-//   return checkForErrors(
-//     {
-//       pod_name, localAS, lb_method, pod_type,
-//       requestForwardType, provider_weight, discoveryMethod
-//     },
-//     conditions,
-//     {
-//       pod_name: <FormattedMessage id="portal.network.podForm.name.required.error"/>,
-//       lb_method: <FormattedMessage id="portal.network.podForm.lb_method.required.error"/>,
-//       pod_type: <FormattedMessage id="portal.network.podForm.pod_type.required.error"/>,
-//       requestForwardType: <FormattedMessage id="portal.network.podForm.requestForwardType.required.error"/>,
-//       provider_weight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
-//       discoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
-//       local_as: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>
-//     }
-//   )
+const validate = (values) => {
+  const { UIname, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
+
+  const conditions = {
+    UIname: {
+      condition: !isValidTextField(UIname),
+      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+    }
+  }
+  return checkForErrors(
+    {
+      UIname,
+      UILbMethod,
+      pod_type,
+      UIRequestFwdType,
+      UIProviderWeight,
+      UIDiscoveryMethod,
+      UILocalAS,
+      UIFootprints
+    },
+    conditions,
+    {
+      UIname: <FormattedMessage id="portal.network.podForm.name.required.error"/>,
+      UILbMethod: <FormattedMessage id="portal.network.podForm.lb_method.required.error"/>,
+      pod_type: <FormattedMessage id="portal.network.podForm.pod_type.required.error"/>,
+      UIRequestFwdType: <FormattedMessage id="portal.network.podForm.requestForwardType.required.error"/>,
+      UIProviderWeight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
+      UIDiscoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
+      UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>,
+      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>
+    }
+  )
 }
 
 const asyncValidate = ({ UILocalAS }) => {
@@ -94,12 +105,15 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
+/** TODO: This is needed for IPList
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
+*/
+
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprints = ({ fields, onEdit, meta: { error } }) => (
+const renderFootprints = ({ fields, onEdit }) => (
   <ul className="footprints">
     {
       fields.map(( footprint, index) =>
@@ -115,8 +129,14 @@ const renderFootprints = ({ fields, onEdit, meta: { error } }) => (
   </ul>
 )
 
+renderFootprints.propTypes = {
+  fields: PropTypes.object,
+  onEdit: PropTypes.func
+}
+renderFootprints.displayName = 'renderFootprints'
+
 /*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } }) => (
+const renderFootprint = ({ onEdit, input }) => (
   <li>
     <Row>
       <Col xs={8}>
@@ -149,6 +169,12 @@ const renderFootprint = ({ onEdit, input, label, type, meta: { touched, error } 
     </Row>
   </li>
 )
+
+renderFootprint.propTypes = {
+  input: PropTypes.object,
+  onEdit: PropTypes.func
+}
+renderFootprint.displayName = 'renderFootprint'
 
 const PodForm = ({
   asyncValidating,
@@ -261,7 +287,7 @@ const PodForm = ({
         component={FieldFormGroupNumber}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
 
-      {/* IpList MIGHT not needed <Field
+      {/* TODO: IpList MIGHT be needed <Field
         required={true}
         name="UIIpList"
         allowNew={true}
@@ -403,8 +429,6 @@ const PodForm = ({
 PodForm.displayName = "PodForm"
 
 PodForm.propTypes = {
-//  dirty: PropTypes.bool,
-//  handleSubmit: PropTypes.func,
   hasNodes: PropTypes.bool,
   intl: intlShape.isRequired,
   network: PropTypes.string,
@@ -412,6 +436,7 @@ PodForm.propTypes = {
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
   ...reduxFormPropTypes,
+
   /* needs to override reduxFormPropTypes - BUG in redux-form */
   asyncValidating: PropTypes.oneOfType([
     PropTypes.string,
