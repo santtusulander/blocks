@@ -127,13 +127,13 @@ describe('AnalysisVisitors', () => {
     expect(visitors).toBeTruthy();
   });
 
-  it('should show loading message if there is no data', () => {
+  it('should show there is no data message if there is no data', () => {
     const visitors = shallow(
       <AnalysisVisitors fetching={true}
         serviceTypes={Immutable.List()}
         intl={intlMaker()}/>
     );
-    expect(visitors.find({ id: 'portal.loading.text' }).length).toBe(4);
+    expect(visitors.find({ id: 'portal.common.no-data.text' }).length).toBe(3);
   });
 
   it('should show data in tables', () => {
