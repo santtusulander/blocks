@@ -206,8 +206,11 @@ RoutingDaemonForm.propTypes = {
 }
 
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = (state, ownProps) => {
+  const initialValues = ownProps.initialValues
+  return {
+    initialValues
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
