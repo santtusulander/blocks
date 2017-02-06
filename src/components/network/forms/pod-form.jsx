@@ -35,8 +35,6 @@ import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
 
-import './pod-form.scss'
-
 const LBMETHOD_OPTIONS = [
   {value: 'gslb', label: 'GSLB'}
 ]
