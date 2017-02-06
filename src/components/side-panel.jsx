@@ -4,12 +4,17 @@ import classNames from 'classnames'
 
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
-export const SidePanel = ({ children, className, show, subTitle, subSubTitle, title }) => {
+const modalClassDim = 'side-panel--dim'
+const overlappingClass = 'side-panel--overlapping'
+
+export const SidePanelComponent = ({ children, className, dim, overlapping, show, subTitle, subSubTitle, title }) => {
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
-    className
-  );
+    className,
+    dim ? modalClassDim : null,
+    overlapping ? overlappingClass : null
+  )
 
   if (subTitle && subSubTitle) {
     subTitleElements = (
@@ -26,6 +31,7 @@ export const SidePanel = ({ children, className, show, subTitle, subSubTitle, ti
 
   return (
     <Modal show={show} dialogClassName={dialogClassName}>
+      <div className="side-panel__veil" />
       <Modal.Header>
         <h1>{title}</h1>
         {subTitleElements}
@@ -39,10 +45,12 @@ export const SidePanel = ({ children, className, show, subTitle, subSubTitle, ti
   )
 }
 
-SidePanel.displayName = 'SidePanel'
-SidePanel.propTypes = {
+SidePanelComponent.displayName = 'SidePanel'
+SidePanelComponent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  dim: PropTypes.bool,
+  overlapping: PropTypes.bool,
   show: PropTypes.bool,
   subSubTitle: PropTypes.oneOfType([
     React.PropTypes.string,
@@ -58,4 +66,6 @@ SidePanel.propTypes = {
   ])
 }
 
-export default keyStrokeSupport(SidePanel)
+export const SidePanel = keyStrokeSupport(SidePanelComponent)
+
+export default SidePanel

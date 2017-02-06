@@ -2,6 +2,8 @@
   "portal.accountManagement.groupPropertiesName.text": "Name",
   "portal.accountManagement.groupProperties.text": "Properties",
   "portal.accountManagement.noGroupProperties.text": "No Properties",
+  "portal.accountManagement.locations.text": "Locations",
+  "portal.accountManagement.noLocations.text": "Add POP Locations for Service Provider",
 
   "portal.account.dnsList.addRecord.button": "Add record",
   "portal.account.dnsList.records.visibleRecords": "{visibleRecordCount} Records ",
@@ -77,8 +79,6 @@
   "portal.account.editUser.lastNameRequired.text": "Last Name is required",
   "portal.account.editUser.emailNameRequired.text": "Email is required",
   "portal.account.editUser.roleNameRequired.text": "Role is required",
-  "portal.account.editUser.phoneNumberInvalid.text": "Phone number is not valid",
-  "portal.account.editUser.phoneNumberCountryCodeInvalid.text": "Phone Country Code is not valid",
 
   "portal.account.editUser.userIsUpdated.text": "Updates to user saved.",
 

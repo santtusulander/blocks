@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -51,6 +50,8 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
+import FileUploadArea from '../components/file-upload.jsx'
+import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -92,6 +93,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import IconFile          from '../components/icons/icon-file'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -383,7 +385,7 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Charts</h1>
           <Row>
             <label>Stacked barchart</label>
-            <SectionContainer className="analysis-contribution">
+            <SectionContainer className="analysis-chart-container">
               {<BarChart
                 chartLabel="Month to Date"
                 chartData={stackedBarChartData}
@@ -398,7 +400,7 @@ class Styleguide extends React.Component {
             <hr />
             <Row>
               <label>Normal barchart</label>
-              <SectionContainer className="analysis-contribution">
+              <SectionContainer className="analysis-chart-container">
                 <BarChart
                   chartLabel="This Week"
                   chartData={singleBarChartData}
@@ -661,7 +663,7 @@ class Styleguide extends React.Component {
                   max={200}
                   min={0}
                   onChange={val => this.setState({
-                    numberInputValue: val === parseInt(val, 10) ?
+                    numberInputValue: val === parseInt(val, 10) || !val ?
                       val :
                       val.target.value
                   })}
@@ -975,6 +977,18 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
+          <h1 className="page-header">Dropzone</h1>
+          <FileUploadArea
+            contentValidation={() => {
+              return true
+            }}
+            onDropCompleted={(validFiles, rejectedFiles) => {
+              // eslint-disable-next-line no-console
+              console.error(rejectedFiles)
+            }}
+            acceptFileTypes={["text/csv"]}
+            uploadModalOnClick={true}/>
+
           <h1 className="page-header">MapBox</h1>
 
           <Mapbox
@@ -1202,7 +1216,11 @@ class Styleguide extends React.Component {
             <br />
             LoadingSpinnerSmall
           </span>
-
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFile />
+            <br />
+            IconFile
+          </span>
         </div>
 
       </div>

@@ -50,4 +50,28 @@ describe('NumberInput', () => {
     component.find('Button').at(1).simulate('click')
     expect(onChange.mock.calls[3][0]).toBe(10)
   })
+
+  it('should handle non-numeric values properly', () => {
+    const component = subject()
+    component.find('FormControl').simulate('change', { target: { value: 'foo' } })
+    expect(onChange.mock.calls[4][0]).toBe(100)
+    component.find('FormControl').simulate('change', { target: { value: '' } })
+    expect(onChange.mock.calls[5][0]).toBe('')
+    component.find('FormControl').simulate('change', { target: { value: '25' } })
+    expect(onChange.mock.calls[6][0]).toBe(25)
+  })
+
+  it('should handle up key presses', () => {
+    const component = subject()
+    const input = component.find('FormControl')
+    input.simulate('keyDown', { keyCode: 38, preventDefault: jest.fn() })
+    expect(onChange.mock.calls[7][0]).toBe(101)
+  })
+
+  it('should handle down key presses', () => {
+    const component = subject()
+    const input = component.find('FormControl')
+    input.simulate('keyDown', { keyCode: 40, preventDefault: jest.fn() })
+    expect(onChange.mock.calls[8][0]).toBe(99)
+  })
 })

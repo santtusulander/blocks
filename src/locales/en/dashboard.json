@@ -9,5 +9,7 @@
   "portal.dashboard.avgBandwidth.title": "Avg Bandwidth",
   "portal.dashboard.avgLatency.title": "Avg Latency",
   "portal.dashboard.connectionsPerSec.title": "Connections / sec",
-  "portal.dashboard.avgCacheHitRate.title": "Avg Cache Hit Rate"
+  "portal.dashboard.avgCacheHitRate.title": "Avg Cache Hit Rate",
+
+  "portal.dashboard.selectAccount.text": "Please select an account{br}from top left to see dashboard"
 }

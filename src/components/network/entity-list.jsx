@@ -4,17 +4,17 @@ import classNames from 'classnames'
 
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
+import ContentItemChart from '../content/content-item-chart'
 
 class EntityList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.updateEntities = this.updateEntities.bind(this)
-    this.state = this.updateEntities(props.entities)
+    this.renderConnectorLine = this.renderConnectorLine.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState(this.updateEntities(nextProps.entities))
+  componentDidMount() {
+    this.entityListItems.addEventListener('scroll', this.renderConnectorLine, false)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -22,25 +22,91 @@ class EntityList extends React.Component {
       return true
     } else if (nextProps.selectedEntityId !== this.props.selectedEntityId) {
       return true
+    } else if (nextProps.starburstData !== this.props.starburstData) {
+      return true
+    } else if (nextProps.nextEntityList) {
+      return true
     }
 
     return false
   }
 
-  updateEntities(entities) {
-    const {
-      entityIdKey,
-      entityNameKey
-    } = this.props
+  componentDidUpdate() {
+    this.renderConnectorLine()
+  }
 
-    const newEntities = entities.map(entity => Immutable.Map({
-      id: entity.get(entityIdKey),
-      name: entity.get(entityNameKey)
-    }))
+  componentWillUnmount() {
+    this.entityListItems.removeEventListener('scroll', this.renderConnectorLine, false)
+  }
 
-    return {
-      entities: newEntities,
-      showEntitiesTable: newEntities && newEntities.count() > 0
+  /**
+   * Renders the blue vertical connecting line on the right side of the entity list. This is
+   * called when the user scrolls the list and when the component is updated in order
+   * to get the correct height calculations.
+   *
+   * @method renderConnectorLine
+   */
+  renderConnectorLine() {
+    // Check if this entity list has an active item
+    if (this.hasActiveItems()) {
+      // We're modifying DOM elements, so we need to get the correct nodes from entity list
+      const childNodes = [...this.entityListItems.childNodes]
+      const { nextEntityList } = this.props
+      const nextListChildNodes = [...nextEntityList.childNodes]
+      // DOM Element of the active element
+      const activeChildNode = childNodes.filter(node => node.classList.contains('active'))[0]
+      // Active node height divided to half
+      const firstOfNextListHeight = nextListChildNodes[0] ? Math.floor(nextListChildNodes[0].offsetHeight / 2) : 0
+      const activeHalfHeight = Math.floor(activeChildNode.offsetHeight / 2)
+      const activeNodeSizes = activeChildNode.getBoundingClientRect()
+      const activeTop = activeNodeSizes.top
+      const activeBottom = activeNodeSizes.bottom
+      // DOM Element for the vertical connector line
+      const connector = this.connector
+      const connectorStyles = connector.style
+
+      // Container, the root element of this component
+      const entityList = this.entityList
+      const entityListSizes = entityList.getBoundingClientRect()
+      const entityListBottom = entityListSizes.bottom
+
+      // The actual entity list
+      const entityListItems = this.entityListItems
+      const entityListItemsSizes = entityListItems.getBoundingClientRect()
+      const entityListItemsTop = entityListItemsSizes.top
+      const entityListItemsBottom = entityListItemsSizes.bottom
+      const entityListItemsBottomOffset = entityListBottom - entityListItemsBottom
+
+      // Checks if the active item is visible in the viewport by half of its height
+      const topHalfVisibility = activeTop >= entityListItemsTop - activeHalfHeight
+      const bottomHalfVisibility = activeBottom <= entityListItemsBottom + activeHalfHeight
+      const isVisible = topHalfVisibility && bottomHalfVisibility
+
+      connectorStyles.top = entityListItems.offsetTop + firstOfNextListHeight + 'px'
+
+      // If active item is visible by half, we should set the bottom style to be
+      // where the right side tick on the element ends. Otherwise we should set it
+      // to be at the end of the entity list.
+      if (isVisible) {
+        connectorStyles.bottom = entityListItemsTop + entityListItems.offsetHeight - activeTop - activeHalfHeight + entityListItemsBottomOffset + 'px'
+      } else {
+        // This bottom value is mainly applied when the active item is scrolled down
+        // in the list.
+        connectorStyles.bottom = entityListItemsBottomOffset + 'px'
+      }
+
+      // If the active item is scrolled to the top, we should switch the top and bottom
+      // calculations so that the vertical connecting line grows accordingly.
+      if (activeTop < entityListItemsTop) {
+        connectorStyles.bottom = entityListItems.offsetHeight - firstOfNextListHeight + 'px'
+        connectorStyles.top = activeTop - entityListItemsTop + activeHalfHeight + entityListItems.offsetTop - activeChildNode.clientTop + 'px'
+
+        // If the element is scrolled up, we should set the connector line top to
+        // be static at the very top of the entity list.
+        if (connector.offsetTop <= entityListItems.offsetTop) {
+          connectorStyles.top = entityListItems.offsetTop + 'px'
+        }
+      }
     }
   }
 
@@ -62,47 +128,124 @@ class EntityList extends React.Component {
       selectedEntityId,
       multiColumn,
       numOfColumns,
-      itemsPerColumn
+      itemsPerColumn,
+      showAsStarbursts,
+      entityIdKey,
+      entityNameKey,
+      starburstData,
+      params,
+      entities
     } = this.props
 
-    const entities = this.state.entities.map(entity => {
-      const entityId = entity.get('id')
-      const entityName = entity.get('name')
-      return (
-        <NetworkItem
-          key={entityId}
-          onEdit={() => editEntity(entityId)}
-          title={entityName}
-          active={selectedEntityId === entityId.toString()}
-          onSelect={() => selectEntity(entityId)}
-          onDelet={() => deleteEntity(entityId)}
-          status="enabled"
-          />
-      )
-    })
+    if (entities.size && entities.first().get(entityIdKey)) {
+      const entityList = entities.map(entity => {
+        const entityId = entity.get(entityIdKey)
+        const entityName = entity.get(entityNameKey)
 
-    let content = entities
+        let content = (
+          <NetworkItem
+            key={entityId}
+            onEdit={() => editEntity(entityId)}
+            title={entityName}
+            active={selectedEntityId === entityId.toString()}
+            onSelect={() => selectEntity(entityId)}
+            onDelet={() => deleteEntity(entityId)}
+            status="enabled"
+            extraClassName="entity-list-item"
+            />
+        )
 
-    // If the entity column should be a multi-column, we should render
-    // additional wrappers divs in order to make separate columns for the
-    // items.
-    if (multiColumn) {
-      // First we chunk our list of elements into segments based on how many
-      // items we want to show per column and then render the wrapping divs
-      // accordingly.
-      content = this.chunkIntoSegments(entities, itemsPerColumn).map((col, i) => {
-        // We only want to show the specified amount of columns.
-        if (i < numOfColumns) {
-          return (
-            <div key={i} className="list-col">
-              {col.map(entity => entity)}
+        if (showAsStarbursts) {
+          const dailyTraffic = this.getDailyTraffic(entity)
+          const contentMetrics = this.getMetrics(entity)
+          const link = selectEntity(entityId)
+          const contentItemClasses = classNames('entity-list-item', {
+            'active': selectedEntityId === entityId.toString(),
+            'is-account': starburstData.type === 'account'
+          })
+
+          content = (
+            <div
+              className={contentItemClasses}
+              key={entityId}>
+
+              <ContentItemChart
+                chartWidth={starburstData.chartWidth}
+                barMaxHeight={starburstData.barMaxHeight}
+                name={entityName}
+                id={`${starburstData.type}-${entityId}}`}
+                dailyTraffic={dailyTraffic.get('detail').reverse()}
+                primaryData={contentMetrics.get('traffic')}
+                secondaryData={contentMetrics.get('historical_traffic')}
+                differenceData={contentMetrics.get('historical_variance')}
+                cacheHitRate={contentMetrics.get('avg_cache_hit_rate')}
+                timeToFirstByte={contentMetrics.get('avg_ttfb')}
+                maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
+                minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
+                avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
+                isAllowedToConfigure={starburstData.isAllowedToConfigure}
+                showSlices={true}
+                linkTo={link}
+                showAnalyticsLink={true}
+                onConfiguration={() => editEntity(entityId)}
+                analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
+                />
             </div>
           )
         }
-      })
-    }
 
-    return content
+        return content
+      })
+
+      let content = entityList
+
+      // If the entity column should be a multi-column, we should render
+      // additional wrappers divs in order to make separate columns for the
+      // items.
+      if (multiColumn) {
+        // First we chunk our list of elements into segments based on how many
+        // items we want to show per column and then render the wrapping divs
+        // accordingly.
+        content = this.chunkIntoSegments(entityList, itemsPerColumn).map((col, i) => {
+          // We only want to show the specified amount of columns.
+          if (i < numOfColumns) {
+            return (
+              <div key={i} className="list-col">
+                {col.map(entity => entity)}
+              </div>
+            )
+          }
+        })
+      }
+
+      return content
+    }
+  }
+
+  /**
+   * Get metric data for a specific entity. Only used when showing a starburst.
+   *
+   * @method getMetrics
+   * @param  {Immutable.Map}   item Entity to look data for
+   * @return {Immutable.Map}        Found data for entity
+   */
+  getMetrics(item) {
+    const { starburstData, entityIdKey } = this.props
+    return starburstData.contentMetrics.find(metric => metric.get(starburstData.type) === item.get(entityIdKey),
+      null, Immutable.Map({ totalTraffic: 0 }))
+  }
+
+  /**
+   * Get daily traffic data for a specific entity. Only used when showing a starburst.
+   *
+   * @method getDailyTraffic
+   * @param  {Immutable.Map}        item Entity to look data for
+   * @return {Immutable.Map}        Found data for entity
+   */
+  getDailyTraffic(item) {
+    const { starburstData, entityIdKey } = this.props
+    return starburstData.dailyTraffic.find(traffic => traffic.get(starburstData.type) === item.get(entityIdKey),
+      null, Immutable.fromJS({ detail: [] }))
   }
 
   /**
@@ -122,30 +265,44 @@ class EntityList extends React.Component {
     return Immutable.Range(0, list.count(), numOfItems).map(chunkStart => list.slice(chunkStart, chunkStart + numOfItems))
   }
 
+  /**
+   * Checks if any of the entities in the list is selected.
+   *
+   * @method hasActiveItems
+   * @return {Boolean}      Boolean of active item found
+   */
+  hasActiveItems() {
+    const { selectedEntityId, entityIdKey, entities } = this.props
+    if (entities.size && entities.first().get(entityIdKey)) {
+      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey))
+      return active
+    }
+  }
+
   render() {
     const {
       addEntity,
+      disableButtons,
       title,
-      multiColumn
+      multiColumn,
+      showButtons
     } = this.props
-
-    const {
-      showEntitiesTable
-    } = this.state
 
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
     })
 
     return (
-      <div ref={(ref) => this.entityList = ref} className="network-entity-list">
+      <div ref={ref => this.entityList = ref} className="network-entity-list">
+        {(this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
-          onAdd={addEntity}
+          onAdd={showButtons ? addEntity : null}
+          disableButtons={disableButtons}
         />
 
-        <div className={entityListClasses}>
-          {showEntitiesTable && this.renderListItems()}
+      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+          {this.renderListItems()}
         </div>
       </div>
     )
@@ -156,21 +313,35 @@ EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   deleteEntity: PropTypes.func.isRequired,
+  disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
   entityNameKey: PropTypes.string,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
+  nextEntityList: PropTypes.object,
   numOfColumns: PropTypes.number,
+  params: PropTypes.object,
   selectEntity: PropTypes.func,
   selectedEntityId: PropTypes.string,
+  showAsStarbursts: PropTypes.bool,
+  showButtons: PropTypes.bool,
+  starburstData: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 }
 EntityList.defaultProps = {
+  disableButtons: false,
   entities: Immutable.List(),
   entityIdKey: 'id',
-  entityNameKey: 'name'
+  entityNameKey: 'name',
+  showButtons: true,
+  starburstData: {
+    dailyTraffic: Immutable.List(),
+    contentMetrics: Immutable.List(),
+    barMaxHeight: '30',
+    chartWidth: '350'
+  }
 }
 
 export default EntityList

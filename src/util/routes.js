@@ -67,6 +67,15 @@ export function getAnalyticsUrl(linkType, val, params) {
   }
 }
 
+export function getDashboardUrl(linkType, val, params) {
+  switch(linkType) {
+    case 'brand':
+      return getRoute('dashboardBrand', { brand: val })
+    case 'account':
+      return getRoute('dashboardAccount', { ...params, account: val })
+  }
+}
+
 export function getContentUrl(linkType, val, params) {
   switch(linkType) {
     case 'brand':
@@ -91,7 +100,7 @@ export function getNetworkUrl(linkType, val, params) {
     case 'account':
       return getRoute('networkAccount', { ...params, account: val })
     case 'groups':
-      return getRoute('networkGroups', { ...params, account: val })
+      return getRoute('networkGroups', { ...params, account: val ? val : params.account })
     case 'group':
       return getRoute('networkGroup', { ...params, group: val })
     case 'network':

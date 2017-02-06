@@ -89,7 +89,8 @@ AnalyticsTabCacheHitRate.propTypes = {
 
 AnalyticsTabCacheHitRate.defaultProps = {
   filters: Immutable.Map(),
-  traffic: Immutable.List()
+  traffic: Immutable.List(),
+  trafficByTime: Immutable.Map()
 }
 
 const mapStateToProps = (state) => ({
@@ -97,7 +98,7 @@ const mapStateToProps = (state) => ({
   fetching: state.traffic.get('fetching'),
   filters: state.filters.get('filters'),
   traffic: state.traffic.get('traffic'),
-  trafficByTime: state.traffic.get('byTime')
+  trafficByTime: state.traffic.getIn(['byTime', 'details'])
 })
 
 function mapDispatchToProps(dispatch) {
