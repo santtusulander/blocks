@@ -97,6 +97,7 @@ const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
 
+/*eslint-disable react/no-multi-comp */
 const renderFootprints = ({ fields, onEdit, meta: { error } }) => (
   <ul className="footprints">
     {
@@ -161,8 +162,8 @@ const PodForm = ({
   submitting,
   dirty,
 
-  onAddFootprintModal,
-  onEditFootprintModal,
+  onShowFootprintModal,
+  onEditFootprint,
 
   onShowRoutingDaemonModal,
 
@@ -287,7 +288,7 @@ const PodForm = ({
     {showFootprints
         ? <div className="form-group discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onAddFootprintModal}>
+          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
         </label>
@@ -312,7 +313,7 @@ const PodForm = ({
             name="UIFootprints"
             component={renderFootprints}
             props={{
-              onEdit: onEditFootprintModal
+              onEdit: onEditFootprint
             }}
           />
         </div>

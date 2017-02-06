@@ -29,11 +29,10 @@ const pod = new schema.Entity('pods', {
       UIDiscoveryMethod: footprints && footprints.length > 0 ? 'footprints' : 'BGP',
       //UIFootprints: footprints,
       //UIIpList: ip_list,
-      UIBGP: {
-        sp_bgp_router_as,
-        sp_bgp_router_ip,
-        sp_bgp_router_password
-      },
+      UIsp_bgp_router_as: sp_bgp_router_as,
+      UIsp_bgp_router_ip: sp_bgp_router_ip,
+      UIsp_bgp_router_password: sp_bgp_router_password,
+
       ...value
     }
   }

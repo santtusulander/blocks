@@ -59,7 +59,10 @@ class FootprintFormContainer extends React.Component {
           throw new SubmissionError({ '_error': res.error.data.message })
         }
 
-        return this.props.handleFootprintSaveResponse(finalValues)
+        //add new footprint to pod
+        if (!edit) this.props.addFootprintToPod(finalValues)
+
+        //return this.props.handleFootprintSaveResponse(res)
       })
   }
 
@@ -76,7 +79,7 @@ class FootprintFormContainer extends React.Component {
         if (res.error) {
           throw new SubmissionError({ '_error': res.error.data.message })
         }
-        return this.props.handleFootprintSaveResponse(res)
+        //return this.props.handleFootprintSaveResponse(res)
       })
   }
 
@@ -131,7 +134,7 @@ FootprintFormContainer.propTypes = {
   CIDROptions: PropTypes.array,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
-  handleFootprintSaveResponse: PropTypes.func,
+  addFootprintToPod: PropTypes.func,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
