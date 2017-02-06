@@ -261,7 +261,7 @@ export class Dashboard extends React.Component {
             </Col>
           </Row>
         </DashboardPanel>
-        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
+        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={countries.size ? true : false}>
           <div ref="byLocationHolder">
             <AnalysisByLocation
               countryData={countries}
@@ -332,7 +332,7 @@ export class Dashboard extends React.Component {
 
     return (
       <Content>
-        <PageHeader pageSubTitle="Dashboard">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.dashboard.text"/>}>
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               as="dashboard"

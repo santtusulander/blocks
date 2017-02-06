@@ -123,6 +123,11 @@ class PopFormContainer extends Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
+        // Unselect POP item
+        if (this.props.selectedEntityId == popId) {
+          this.props.handleSelectedEntity(popId)
+        }
+
         //Close modal
         this.props.onCancel();
       })
@@ -194,7 +199,7 @@ PopFormContainer.propTypes = {
   fetchPop: PropTypes.func,
 
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
+  handleSelectedEntity: PropTypes.func,
   iata: PropTypes.string,
   initialValues: PropTypes.object,
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -203,7 +208,8 @@ PopFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  selectedEntityId: PropTypes.string
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
