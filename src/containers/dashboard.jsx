@@ -261,7 +261,7 @@ export class Dashboard extends React.Component {
             </Col>
           </Row>
         </DashboardPanel>
-        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={true}>
+        <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.trafficByLocation.title'})} noPadding={countries.size ? true : false}>
           <div ref="byLocationHolder">
             <AnalysisByLocation
               countryData={countries}
