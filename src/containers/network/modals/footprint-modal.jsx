@@ -33,13 +33,15 @@ class FootprintFormContainer extends React.Component {
   onSave(edit, values) {
 
     const finalValues = Object.assign({}, values, {
-      value: normalizeValueToAPI(values.value),
+      value: normalizeValueToAPI(`${values.value}_${values.data_type}`),
       location: this.props.location
     })
 
     // Prevent API from nagging from unknown fields
     delete finalValues.addFootprintMethod
     delete finalValues.accountId
+    delete finalValues.value_asnlist
+    delete finalValues.value_ipv4cidr
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
@@ -160,7 +162,6 @@ const mapStateToProps = (state, ownProps) => {
 
   const defaultValues = {
     addFootprintMethod: 'manual',
-    value: [],
     data_type: FOOTPRINT_DEFAULT_DATA_TYPE
   }
 
@@ -172,7 +173,8 @@ const mapStateToProps = (state, ownProps) => {
       }
     ) : defaultValues
 
-  initialValues.value = normalizeValueFromAPI(initialValues.value)
+  initialValues.value_ipv4cidr = normalizeValueFromAPI(initialValues.value && initialValues.data_type === 'ipv4cidr' ? initialValues.value : [])
+  initialValues.value_asnlist = normalizeValueFromAPI(initialValues.value && initialValues.data_type === 'asnlist' ? initialValues.value : [])
 
   return {
     footprint,

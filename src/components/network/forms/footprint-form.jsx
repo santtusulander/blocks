@@ -25,7 +25,7 @@ const validateASNToken = (item) => {
   return item.label && isValidASN(item.label)
 }
 
-const validate = ({ name, description, data_type, value, udn_type }) => {
+const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist, udn_type }) => {
 
   const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
 
@@ -42,15 +42,15 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
     }
   }
 
-  if (data_type === 'ipv4cidr' && value.length > 0) {
+  if (data_type === 'ipv4cidr' && value_ipv4cidr && value_ipv4cidr.length > 0) {
     let hasInvalidCIDRItems = false
-    value.forEach((cidrItem) => {
+    value_ipv4cidr.forEach((cidrItem) => {
       if (!validateCIDRToken(cidrItem)) {
         hasInvalidCIDRItems = true
       }
     })
 
-    conditions.value = [
+    conditions.value_ipv4cidr = [
       {
         condition: hasInvalidCIDRItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.CIRD.invalid.text"/>
@@ -58,15 +58,15 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
     ]
   }
 
-  if (data_type === 'asnlist' && value.length > 0) {
+  if (data_type === 'asnlist' && value_asnlist && value_asnlist.length > 0) {
     let hasInvalidASNItems = false
-    value.forEach((asnItem) => {
+    value_asnlist.forEach((asnItem) => {
       if (!validateASNToken(asnItem)) {
         hasInvalidASNItems = true
       }
     })
 
-    conditions.value = [
+    conditions.value_asnlist = [
       {
         condition: hasInvalidASNItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
@@ -75,12 +75,12 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
   }
 
   return checkForErrors(
-    { name, description, data_type, value, udn_type },
+    { name, description, data_type, udn_type, value_ipv4cidr, value_asnlist },
     conditions,
     {
       name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
       description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
-      value: <FormattedMessage id={valueValidationTranslationId}/>
+      [`value_${data_type}`]: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
 }
@@ -183,7 +183,7 @@ class FootprintForm extends React.Component {
 
           <Field
             required={true}
-            name="value"
+            name={`value_${dataType}`}
             allowNew={true}
             component={FieldFormGroupTypeahead}
             multiple={true}
@@ -257,16 +257,14 @@ const form = reduxForm({
   validate
 })(FootprintForm)
 
-const selector = formValueSelector('footprintForm')
-
 const mapStateToProps = (state) => {
+  const selector = formValueSelector('footprintForm')
   const addManual = selector(state, 'addFootprintMethod')
   const dataType = selector(state, 'data_type')
 
   return {
     addManual,
-    dataType,
-    selector
+    dataType
   }
 }
 
