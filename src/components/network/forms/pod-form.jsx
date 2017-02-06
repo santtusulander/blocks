@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, FieldArray, arrayPush, propTypes as reduxFormPropTypes } from 'redux-form'
+import { connect } from 'react-redux'
+import { reduxForm, formValueSelector, Field, FieldArray, arrayPush, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -166,12 +167,13 @@ const PodForm = ({
   onEditFootprint,
 
   onShowRoutingDaemonModal,
+  onDeleteRoutingDaemon,
 
   dispatch,
   footprints,
   UIFootprints,
-  UIDiscoveryMethod
-
+  UIDiscoveryMethod,
+  UIsp_bgp_router_as
   }) => {
 
   const edit = !!initialValues.pod_name
@@ -185,8 +187,10 @@ const PodForm = ({
   const showFootprints = (UIDiscoveryMethod === 'footprints')
   const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp && !fp.removed || fp && fp.removed === false).length > 0
 
-  //change of method is allowed is no footprints assigned
-  const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints
+  const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
+
+  //change of method is allowed is no footprints / BGP's assigned
+  const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints && !hasBGPRoutingDaemon
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
@@ -324,6 +328,33 @@ const PodForm = ({
             <IconAdd/>
           </UDNButton>
         </label>
+        {hasBGPRoutingDaemon &&
+        <ul className="footprints">
+          <li>
+            <Row>
+              <Col xs={8}>
+                <span>{UIsp_bgp_router_as}</span>
+              </Col>
+
+              <Col xs={4} className="action-buttons">
+                <Button
+                  className="btn btn-icon edit-button"
+                  onClick={() => console.log('edit')}>
+                  <IconEdit/>
+                </Button>
+
+                <Button
+                  bsStyle="link"
+                  className="btn btn-icon delete-button btn-undo"
+                  onClick={onDeleteRoutingDaemon}
+                >
+                  <IconClose/>
+                </Button>
+              </Col>
+            </Row>
+          </li>
+        </ul>
+        }
       </div>
       }
 
@@ -380,9 +411,20 @@ PodForm.propTypes = {
   ]).isRequired
 }
 
-export default reduxForm({
+const mapStateToProps = (state) => {
+  const selector = formValueSelector('pod-form')
+  const UIsp_bgp_router_as = selector(state, 'UIsp_bgp_router_as')
+
+  return {
+    UIsp_bgp_router_as
+  }
+}
+
+const form = reduxForm({
   form: 'pod-form',
   validate,
   asyncValidate,
   asyncBlurFields: [ 'UILocalAS' ]
 })(injectIntl(PodForm))
+
+export default connect(mapStateToProps)(form)
