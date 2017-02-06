@@ -140,10 +140,7 @@ class EntityList extends React.Component {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
         const entityName = entity.get(entityNameKey)
-        // NOTE: These active state checks should be in the following format, using only regular equality check (==).
-        // Using strict equal (===) will break things because selectedEntityId is always a number and the
-        // value we're getting from the entity might be a number / string / something else.
-        const isActive = selectedEntityId == entityId
+        const isActive = String(selectedEntityId) === String(entity.get(entityIdKey))
 
         let content = (
           <NetworkItem
@@ -278,10 +275,9 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId, entityIdKey, entities } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
-      // NOTE: These active state checks should be in the following format, using only regular equality check (==).
-      // Using strict equal (===) will break things because selectedEntityId is always a number and the
-      // value we're getting from the entity might be a number / string / something else.
-      const active = entities && entities.some(entity => selectedEntityId == entity.get(entityIdKey))
+      const active = entities && entities.some(entity =>
+        String(selectedEntityId) === String(entity.get(entityIdKey))
+      )
       return active
     }
   }
