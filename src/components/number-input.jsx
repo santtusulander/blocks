@@ -26,7 +26,7 @@ const NumberInput = (props) => {
     }
 
     if (onlyInteger) {
-      newValue = Math.trunc(newValue)
+      newValue = Math.trunc ? Math.trunc(newValue) : Math.round(newValue)
     }
 
     if(newValue !== null && newValue < min) {
