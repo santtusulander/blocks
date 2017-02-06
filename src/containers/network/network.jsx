@@ -848,8 +848,7 @@ Network.propTypes = {
 
 Network.defaultProps = {
   activeAccount: Immutable.Map(),
-  groups: Immutable.List(),
-  users: Immutable.List()
+  groups: Immutable.List()
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -866,7 +865,6 @@ const mapStateToProps = (state, ownProps) => {
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
-    users: state.user.get('allUsers'),
     currentUser: state.user.get('currentUser')
   };
 }
