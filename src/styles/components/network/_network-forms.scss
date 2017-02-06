@@ -1,5 +1,15 @@
 @import '../../base/colors';
 
+.sp-network-form,
+.sp-pop-form,
+.sp-pod-form,
+.sp-footprint-form,
+.sp-add-node-form,
+.sp-routing-daemon-form {
+  .form-group {
+    margin-right: 228px;
+  }
+}
 
 //SP Footprint Form
 //=================
@@ -34,13 +44,6 @@
   }
 }
 
-.sp-pop-form,
-.sp-pod-form {
-  .btn-group {
-    display: block;
-  }
-}
-
 // SP POP form-group
 //==================
 .sp-pop-form {
@@ -62,7 +65,7 @@ $input-height: 36px;
 
   .dropdown-select,
   .form-control {
-    width: 300px;
+    width: 324px;
     height: $input-height;
     margin-right: auto;
   }
@@ -84,11 +87,11 @@ $input-height: 36px;
   }
 
   .number-input {
-    width: 281px;
+    width: 306px;
   }
 }
 
-// SP Add None Form
+// SP Add Node Form
 //=================
 .sp-add-node-form {
 
@@ -100,7 +103,7 @@ $input-height: 36px;
 
 // SP Routing Daemon Form
 // =====================
-.routing-daemon__form {
+.sp-routing-daemon-form {
   .input-group-addon {
     .dark-theme & {
       padding: 0;

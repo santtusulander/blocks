@@ -110,6 +110,7 @@ const PodForm = ({
 
       <Field
         name="lb_method"
+        className="input-select"
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[
@@ -126,6 +127,7 @@ const PodForm = ({
 
       <Field
         name="pod_type"
+        className="input-select"
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[
@@ -150,6 +152,7 @@ const PodForm = ({
 
       <Field
         name="requestForwardType"
+        className="input-select"
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[
@@ -169,6 +172,7 @@ const PodForm = ({
 
       <Field
         name="discoveryMethod"
+        className="input-select"
         numericValues={true}
         component={FieldFormGroupSelect}
         options={[

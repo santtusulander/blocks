@@ -83,6 +83,7 @@ const NetworkPopForm = (props) => {
 
         <Field
           name="locationId"
+          className="input-select"
           component={FieldFormGroupSelect}
           disabled={edit}
           options={initialValues.locationOptions}

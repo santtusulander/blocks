@@ -134,7 +134,7 @@ class RoutingDaemonForm extends React.Component {
     }
 
     return (
-      <form onSubmit={handleSubmit(onSubmit)} className="routing-daemon__form">
+      <form onSubmit={handleSubmit(onSubmit)} className="sp-routing-daemon-form">
 
         <Field
           type="text"
