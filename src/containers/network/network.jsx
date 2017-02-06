@@ -750,7 +750,7 @@ class Network extends React.Component {
             groupId={this.state.groupId}
             canEditBilling={false}
             canSeeBilling={false}
-            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
             // onDelete={(groupId) => this.handleGroupDelete(groupId)}
             onSave={this.handleGroupSave}
