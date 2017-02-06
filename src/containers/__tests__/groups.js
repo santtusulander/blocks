@@ -126,7 +126,7 @@ describe('Groups', () => {
   });
 
   it('should add a new group when called', () => {
-    subject().instance().createGroup({name: 'bbb'})
+    subject().instance().createGroup({data: {name: 'bbb'}})
     expect(groupActions.createGroup.mock.calls[0]).toEqual(['udn','1',{name: 'bbb'}])
   })
 
