@@ -2,8 +2,16 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
+import footprintActions from '../../../redux/modules/entities/footprints/actions'
+import { getById } from '../../../redux/modules/entities/footprints/selectors'
+
 import SidePanel from '../../../components/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
+
+import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
+
+const normalizeValueToAPI = (value) => value.map(item => item.label)
+const normalizeValueFromAPI = (value) => value.map(item => ({ id: item, label: item }))
 
 class FootprintFormContainer extends React.Component {
 
@@ -13,10 +21,24 @@ class FootprintFormContainer extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(values) {
-    const { onSubmit } = this.props
+  componentWillMount() {
+    const { brand, account, footprintId, fetchFootprint } = this.props
+    footprintId && fetchFootprint({ brand, account, id: footprintId })
 
-    onSubmit(values)
+  }
+
+  onSubmit(values) {
+    const { onSave } = this.props
+
+    const finalValues = Object.assign({}, values, {
+      value: normalizeValueToAPI(values.value),
+      location: 'fin' // TODO: add from location form
+    })
+
+    // Prevent API from nagging from unknown field
+    delete finalValues.addFootprintMethod
+
+    onSave(finalValues)
   }
 
   render() {
@@ -25,11 +47,11 @@ class FootprintFormContainer extends React.Component {
       CIDROptions,
       editing,
       fetching,
+      initialValues,
       intl,
       onCancel,
       onDelete,
-      show,
-      udnTypeOptions
+      show
     } = this.props
 
     const formTitle = editing
@@ -43,11 +65,12 @@ class FootprintFormContainer extends React.Component {
         cancel={onCancel}
       >
         <FootprintForm
+          initialValues={initialValues}
           editing={editing}
           fetching={fetching}
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
-          udnTypeOptions={udnTypeOptions}
+          udnTypeOptions={FOOTPRINT_UDN_TYPES}
           onCancel={onCancel}
           onDelete={onDelete}
           onSubmit={this.onSubmit}
@@ -61,22 +84,51 @@ FootprintFormContainer.displayName = 'FootprintFormContainer'
 FootprintFormContainer.propTypes = {
   ASNOptions: PropTypes.array,
   CIDROptions: PropTypes.array,
+  account: PropTypes.string,
+  brand: PropTypes.string,
   editing: PropTypes.bool,
+  fetchFootprint: PropTypes.func,
   fetching: PropTypes.bool,
+  footprintId: PropTypes.number,
+  initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
-  onSubmit: PropTypes.func,
-  show: PropTypes.bool,
-  udnTypeOptions: PropTypes.array
+  onSave: PropTypes.func,
+  show: PropTypes.bool
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = (state, ownProps) => {
+  const editing = !!ownProps.footprintId
+  const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
+
+  const defaultValues = {
+    addFootprintMethod: 'manual',
+    value: [],
+    data_type: FOOTPRINT_DEFAULT_DATA_TYPE
+  }
+
+  const initialValues = editing && footprint ?
+    Object.assign(
+      {},
+      { ...footprint.toJS() }, {
+        addFootprintMethod: 'manual'
+      }
+    ) : defaultValues
+
+  initialValues.value = normalizeValueFromAPI(initialValues.value)
+
+  return {
+    editing,
+    footprint,
+    initialValues
+  }
 }
 
-const mapDispatchToProps = () => {
-  return {}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchFootprint: (params) => dispatch(footprintActions.fetchOne(params))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(FootprintFormContainer))

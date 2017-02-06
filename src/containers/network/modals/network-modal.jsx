@@ -1,75 +1,146 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { Map } from 'immutable'
+import { FormattedMessage } from 'react-intl'
+import { SubmissionError } from 'redux-form'
+import { List, Map } from 'immutable'
+
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import networkActions from '../../../redux/modules/entities/networks/actions'
+import popActions from '../../../redux/modules/entities/pops/actions'
+
+import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
+import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
-//TODO Remove mock after Redux integration
-const mockRedux = {
-  get: function(field) {
-    switch (field) {
-      case 'description':
-        return "This is network  test description"
-
-      case 'name':
-        return "Network Test"
-
-      case 'fetching':
-        return false
-
-      default:
-        return null
-    }
-  }
-}
-
 class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
-
-    this.onSubmit = this.onSubmit.bind(this)
-    this.checkforPops = this.checkforPops.bind(this)
   }
 
-  onSubmit(edit, values) {
-    // TODO: on submit functionality
-    this.props.onSave(edit, values)
+  componentWillMount(){
+    const { brand, accountId, groupId, networkId } = this.props
+
+    // If editing => fetch data from API
+    accountId && this.props.fetchAccount({brand, id: accountId})
+    groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    networkId && this.props.fetchPops({brand, account: accountId, group: groupId, network: networkId})
+
   }
 
+  componentWillReceiveProps(nextProps){
+    const { brand, accountId, groupId, networkId } = nextProps
+
+    // If editing => fetch data from API
+    if (this.props.networkId !== networkId) {
+      networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
+    }
+
+    if (this.props.accountId !== accountId) {
+      accountId && this.props.fetchAccount({brand, id: accountId})
+    }
+
+    if (this.props.groupId !== groupId) {
+      groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    }
+
+  }
+
+  /**
+   * hander for save
+   */
+  onSave(edit, values) {
+
+    const data = {
+      description: values.description
+    }
+
+    // add id if create new
+    if (!edit) {
+      data.id = values.name
+    }
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      payload: data
+    }
+
+    if (edit) params.id = values.name;
+    const save = edit ? this.props.onUpdate : this.props.onCreate
+
+    return save(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        // Close modal
+        this.props.onCancel();
+      })
+  }
+
+  /**
+   * Handler for Delete
+   */
   onDelete(networkId) {
-    // TODO: on delete functionality
-    this.props.onDelete(networkId)
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      group: this.props.groupId,
+      id: networkId
+    }
+
+    return this.props.onDelete(params)
+      .then( (resp) => {
+        if (resp.error) {
+          // Throw error => will be shown inside form
+          throw new SubmissionError({'_error': resp.error.data.message})
+        }
+
+        // Close modal
+        this.props.onCancel();
+      })
   }
 
-  checkforPops() {
-    //TODO: this should check weather the current Network has POPs or not
-    return true
+  /**
+   * Used to check if current element has children (and can be deleted)
+   */
+  hasChildren(edit) {
+    return !!(edit ? this.props.pops.size : false)
   }
 
   render() {
-    const { edit, fetching, account, group, networkId, initialValues, show, name, onCancel, intl, invalid} = this.props
+    const { account, group, network, initialValues, onCancel } = this.props
+
+    // simple way to check if editing -> no need to pass 'edit' - prop
+    const edit = !!initialValues.name
 
     const title = edit ? <FormattedMessage id="portal.network.networkForm.editNetwork.title"/>
                        : <FormattedMessage id="portal.network.networkForm.newNetwork.title"/>
-    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${name}`
+
+    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${network.get('name')}`
                           : `${account.get('name')} / ${group.get('name')}`
+
     return (
       <div>
-        <SidePanel show={show} title={title} subTitle={subTitle} cancel={onCancel}>
+        <SidePanel show={true} title={title} subTitle={subTitle} cancel={onCancel}>
           <NetworkForm
-            edit={edit}
-            fetching={fetching}
-            networkId={networkId}
-            hasPops={this.checkforPops()}
+            hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
-            intl={intl}
-            invalid={invalid}
-            onSave={(values) => this.onSubmit(edit, values)}
+            onSave={(values) => this.onSave(edit, values)}
             onDelete={(networkId) => this.onDelete(networkId)}
-            onCancel={onCancel} />
+            onCancel={onCancel}
+          />
         </SidePanel>
       </div>
     )
@@ -79,40 +150,63 @@ class NetworkFormContainer extends React.Component {
 NetworkFormContainer.displayName = "NetworkFormContainer"
 
 NetworkFormContainer.propTypes = {
-  account: PropTypes.instanceOf(Map).isRequired,
-  edit: PropTypes.bool,
-  fetching: PropTypes.bool,
-  group: PropTypes.instanceOf(Map).isRequired,
+  account: PropTypes.instanceOf(Map),
+  accountId: PropTypes.string,
+  brand: PropTypes.string,
+  fetchAccount: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchNetwork: PropTypes.func,
+  fetchPops: PropTypes.func,
+  group: PropTypes.instanceOf(Map),
+  groupId: PropTypes.string,
   initialValues: PropTypes.object,
-  intl: intlShape.isRequired,
-  invalid: PropTypes.bool,
-  name: PropTypes.string,
-  networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  network: PropTypes.instanceOf(Map),
+  networkId: PropTypes.string,
   onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  onSave: PropTypes.func,
-  show: PropTypes.bool
+  onUpdate: PropTypes.func,
+  pops: PropTypes.instanceOf(List)
 }
 
 NetworkFormContainer.defaultProps = {
   account: Map(),
-  group: Map()
+  group: Map(),
+  network: Map(),
+  pops: List()
 }
 
 
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
+  const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
+  const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
+  const edit = !!ownProps.networkId
+
   return {
-    account: state.account.get('activeAccount'),
-    group: state.group.get('activeGroup'),
-    fetching: mockRedux.get('fetching'),
-    //name: state.network.getIn(['activeNetwork', 'name']),
+    account: ownProps.accountId && getAccountById(state, ownProps.accountId),
+    group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    network,
+    pops,
+
     initialValues: {
-      name: ownProps.edit ? mockRedux.get('name') : '',
-      description: ownProps.edit ? mockRedux.get('description') : ''
+      name: edit && network ? network.get('name') : '',
+      description: edit && network ? network.get('description') : ''
     }
   }
 }
 
-export default connect(mapStateToProps)(
-  injectIntl(NetworkFormContainer)
-)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params, data) => dispatch( networkActions.create( {...params, data } )),
+    onUpdate: (params, data) => dispatch( networkActions.update( {...params, data } )),
+    onDelete: (params) => dispatch( networkActions.remove( {...params } )),
+
+    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
+    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
+    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
+    fetchPops: (params) => dispatch( popActions.fetchAll(params) )
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NetworkFormContainer)

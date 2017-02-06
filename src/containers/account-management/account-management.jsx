@@ -552,6 +552,7 @@ function mapDispatchToProps(dispatch) {
     return accountActions.deleteAccount(brandId, accountId)
       .then((response) => {
         if (!response.error) {
+          toggleModal(null)
           // Clear active account and redirect user to brand level account management.
           accountActions.clearActiveAccount()
           router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))

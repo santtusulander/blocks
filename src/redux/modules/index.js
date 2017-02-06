@@ -42,6 +42,9 @@ export const entities = require('./entities').default
 //serviceInfo
 export const serviceInfo = require('./service-info/index.js').default;
 
+//pagination
+export const pagination = require('./pagination').default;
+
 // Account Selectors
 export const accountSelectors = multireducer({
   header: accountSelector,
@@ -52,6 +55,7 @@ export const accountSelectors = multireducer({
   content: accountSelector,
   security: accountSelector,
   analytics: accountSelector,
-  serviceInfo: serviceInfo
+  serviceInfo: serviceInfo,
+  dashboard: accountSelector
 
 })

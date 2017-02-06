@@ -490,6 +490,10 @@ const TRANSLATED_MESSAGES = {
   'portal.footer.termsOfUse.text': 'Terms of Use',
 
   'portal.fileInput.chooseFile.text': 'Choose file',
+  'portal.fileInput.dropFile.text': 'Drop file here',
+  'portal.fileInput.dropFileOrClick.text': 'Drop file here or click and select one',
+  'portal.fileInput.validation.text': 'Validating...',
+  'portal.fileInput.bytes.text': '{size} bytes',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
   'portal.accountManagement.deleteAccountConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This account will be removed from UDN immediately.',

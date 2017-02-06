@@ -6,6 +6,8 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
 import { Button, Table } from 'react-bootstrap'
 
+import IconAdd from '../icons/icon-add'
+import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
@@ -36,19 +38,22 @@ const validate = ({ name }) => {
 const GroupForm = ({
   accountIsServiceProviderType,
   accountIsContentProviderType,
+  canSeeLocations,
   groupId,
   handleSubmit,
   hosts,
   intl,
   invalid,
   isFetchingHosts,
+  isFetchingLocations,
+  locations,
   onCancel,
   onDeleteHost,
+  onShowLocation,
   onSubmit,
   serviceOptions,
   showServiceItemForm
 }) => {
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}>
@@ -75,18 +80,49 @@ const GroupForm = ({
           </div>
         }
 
+        {(canSeeLocations && groupId) &&
+          <div>
+            <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
+            <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
+              <IconAdd/>
+            </UDNButton>
+            {isFetchingLocations ? <LoadingSpinner/> :
+              !locations.isEmpty() ?
+                <Table striped={true} className="fixed-layout">
+                  <tbody>
+                  {locations.map((location, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>
+                            <h5><strong>{location.get('cityName')}</strong></h5>
+                            <div className="text-sm">{location.get('iataCode')}</div>
+                        </td>
+                        <td className="one-button-cell">
+                          <ActionButtons
+                            onEdit={() => onShowLocation(location.get('reduxId'))}/>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                  </tbody>
+                </Table>
+              : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
+            }
+          </div>
+        }
+
         {(!accountIsServiceProviderType && groupId) &&
           <div>
             <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
             {isFetchingHosts ? <LoadingSpinner/> :
               !hosts.isEmpty() ?
-                    <Table striped={true} className="fixed-layout">
+                <Table striped={true} className="fixed-layout">
                   <thead>
                   <tr>
                     <th>
                       <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
                     </th>
-                        <th className="one-button-cell" />
+                    <th className="one-button-cell" />
                   </tr>
                   </thead>
                   <tbody>
@@ -107,21 +143,21 @@ const GroupForm = ({
             }
           </div>
         }
-        <FormFooterButtons>
-          <Button
-            id="cancel-btn"
-            className="btn-secondary"
-            onClick={onCancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
+      <FormFooterButtons>
+        <Button
+          id="cancel-btn"
+          className="btn-secondary"
+          onClick={onCancel}>
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-          </Button>
-        </FormFooterButtons>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid}>
+          {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+        </Button>
+      </FormFooterButtons>
     </form>
   )
 }
@@ -131,14 +167,18 @@ GroupForm.displayName = "GroupForm"
 GroupForm.propTypes = {
   accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
+  canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isFetchingLocations: PropTypes.bool,
+  locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDeleteHost: PropTypes.func,
+  onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
   serviceOptions: PropTypes.array,
   showServiceItemForm: PropTypes.func

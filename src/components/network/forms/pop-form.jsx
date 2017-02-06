@@ -16,8 +16,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 
 import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
-const validate = fields => {
-  const { name, locationId, popId } = fields
+const validate = ({ name, locationId, id }) => {
 
   const customConditions = {
     name: {
@@ -28,8 +27,8 @@ const validate = fields => {
       condition: !locationId,
       errorText: <FormattedMessage id='portal.network.popEditForm.locationId.validation.error.text'/>
     },
-    popId: {
-      condition: !isInt(popId),
+    id: {
+      condition: !isInt(id),
       errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
@@ -37,35 +36,44 @@ const validate = fields => {
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
-    popId: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
+    id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors(fields, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {
   const {
-    edit,
-    fetching,
     intl,
+    error,
     onCancel,
     invalid,
     submitting,
     onSave,
-    popId,
-    locationId,
+    iata,
     onDelete,
     initialValues,
     hasPods,
     dirty
+
   } = props
 
-  const actionButtonTitle = fetching ? <FormattedMessage id="portal.button.saving"/> :
+  const edit = !!initialValues.id
+
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
   return (
       <form onSubmit={props.handleSubmit(onSave)}>
+
+        { //This block will be shown when SubmissionError has been thrown form async call
+          error &&
+          <p className='has-error'>
+            <span className='help-block'>{error}</span>
+          </p>
+        }
+
         <Field
           type="text"
           name="name"
@@ -78,20 +86,23 @@ const NetworkPopForm = (props) => {
         <Field
           name="locationId"
           component={FieldFormGroupSelect}
+          disabled={edit}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
         <hr/>
 
-        {locationId
-            ? <Field
-                name="popId"
-                component={FieldFormGroupNumber}
-                addonBefore={`${locationId}${popId}`}
-                min={POP_ID_MIN}
-                max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />} />
-            : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
+        {iata
+          ? <Field
+              name="id"
+              component={FieldFormGroupNumber}
+              disabled={edit}
+              addonBefore={`${iata}`}
+              min={POP_ID_MIN}
+              max={POP_ID_MAX}
+              label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+            />
+          : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
         <hr/>
@@ -106,11 +117,14 @@ const NetworkPopForm = (props) => {
                 onClick={onDelete}
                 tooltipId="tooltip-help"
                 tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-                {fetching ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+                {
+                  //TODO: delete modal with confirm
+                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
                 }
               </ButtonDisableTooltip>
             </ButtonToolbar>
           }
+
           <ButtonToolbar className="pull-right">
             <Button
               id="cancel-btn"
@@ -122,7 +136,7 @@ const NetworkPopForm = (props) => {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting || fetching || (!dirty)}>
+              disabled={invalid || submitting || (!dirty)}>
               {actionButtonTitle}
             </Button>
           </ButtonToolbar>
@@ -136,12 +150,12 @@ NetworkPopForm.propTypes = {
   edit: PropTypes.bool,
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
+  iata: PropTypes.string,
   intl: intlShape,
-  locationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popId: PropTypes.string,
 
   ...reduxFormPropTypes
 }

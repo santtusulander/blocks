@@ -2,6 +2,8 @@
   "portal.accountManagement.groupPropertiesName.text": "Name",
   "portal.accountManagement.groupProperties.text": "Properties",
   "portal.accountManagement.noGroupProperties.text": "No Properties",
+  "portal.accountManagement.locations.text": "Locations",
+  "portal.accountManagement.noLocations.text": "Add POP Locations for Service Provider",
 
   "portal.account.dnsList.addRecord.button": "Add record",
   "portal.account.dnsList.records.visibleRecords": "{visibleRecordCount} Records ",

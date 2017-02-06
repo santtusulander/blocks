@@ -9,15 +9,21 @@ import * as hostActionCreators from '../../../redux/modules/host'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-info/actions'
 
+import locationActions from '../../../redux/modules/entities/locations/actions'
+import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
 import ModalWindow from '../../../components/modal'
 import { isUdnAdmin } from '../../../redux/modules/user'
 
+import NetworkLocationFormContainer from '../../network/modals/location-modal'
+
 import {
   accountIsContentProviderType,
-  accountIsServiceProviderType
+  accountIsServiceProviderType,
+  userIsServiceProvider
 } from '../../../util/helpers'
 
 import GroupForm from '../../../components/account-management/group-form'
@@ -33,17 +39,21 @@ class GroupFormContainer extends React.Component {
     this.state = {
       hostToDelete: null,
       usersToAdd: List(),
-      usersToDelete: List()
+      usersToDelete: List(),
+      visibleLocationForm: false,
+      selectedLocationId: null
     }
 
     this.notificationTimeout = null
 
     this.onSubmit = this.onSubmit.bind(this)
     this.handleDeleteHost = this.handleDeleteHost.bind(this)
+    this.showLocationForm = this.showLocationForm.bind(this)
+    this.hideLocationForm = this.hideLocationForm.bind(this)
   }
 
   componentWillMount() {
-    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, fetchServiceInfo } = this.props
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, canSeeLocations, fetchServiceInfo } = this.props
 
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
@@ -51,6 +61,10 @@ class GroupFormContainer extends React.Component {
     }
 
     fetchServiceInfo()
+
+    if (groupId && canSeeLocations) {
+      this.props.fetchLocations(groupId)
+    }
   }
 
   onSubmit(values) {
@@ -69,6 +83,14 @@ class GroupFormContainer extends React.Component {
         return onSave(values, this.state.usersToAdd)
       }
     }
+  }
+
+  showLocationForm(id) {
+    this.setState({ selectedLocationId: id, visibleLocationForm: true })
+  }
+
+  hideLocationForm() {
+    this.setState({ selectedLocationId: null, visibleLocationForm: false })
   }
 
   // deleteMember(userEmail) {
@@ -158,12 +180,15 @@ class GroupFormContainer extends React.Component {
       account,
       canEditServices,
       disabled,
+      canSeeLocations,
       groupId,
       hostActions,
       hosts,
       initialValues,
       isFetchingHosts,
+      isFetchingLocations,
       show,
+      locations,
       name,
       onCancel,
       intl,
@@ -213,6 +238,8 @@ class GroupFormContainer extends React.Component {
             accountIsServiceProviderType={accountIsServiceProviderType(account)}
             accountIsContentProviderType={accountIsContentProviderType(account)}
             canEditServices={canEditServices}
+            canSeeLocations={canSeeLocations}
+            locations={locations}
             groupId={groupId}
             hostActions={hostActions}
             hosts={hosts}
@@ -220,11 +247,14 @@ class GroupFormContainer extends React.Component {
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
+            isFetchingLocations={isFetchingLocations}
             onCancel={onCancel}
             onDeleteHost={this.handleDeleteHost}
+            onShowLocation={this.showLocationForm}
             onSubmit={this.onSubmit}
             serviceOptions={serviceOptions}
-            showServiceItemForm={showServiceItemForm} />
+            showServiceItemForm={showServiceItemForm}
+          />
         </SidePanel>
 
       {this.state.hostToDelete &&
@@ -245,6 +275,16 @@ class GroupFormContainer extends React.Component {
           cancel={() => this.setState({ hostToDelete: null })}
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
+
+      {canSeeLocations &&
+        <NetworkLocationFormContainer
+          params={this.props.params}
+          onCancel={this.hideLocationForm}
+          show={this.state.visibleLocationForm}
+          locationId={this.state.selectedLocationId}
+        />
+      }
+
       </div>
     )
   }
@@ -258,6 +298,8 @@ GroupFormContainer.propTypes = {
   canEditServices: PropTypes.bool,
   disabled: PropTypes.bool,
   fetchServiceInfo: PropTypes.func,
+  canSeeLocations: PropTypes.bool,
+  fetchLocations: PropTypes.func,
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
@@ -265,6 +307,8 @@ GroupFormContainer.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  isFetchingLocations: PropTypes.bool,
+  locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
@@ -281,23 +325,28 @@ GroupFormContainer.defaultProps = {
   hosts: List()
 }
 
-function mapStateToProps(state, { groupId }) {
+function mapStateToProps(state, ownProps) {
+  const groupId = ownProps.groupId //ownProps.params.group
   const currentUser = state.user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = state.account.get('activeAccount')
   const activeGroup = state.group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
+  const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
 
   return {
     account: activeAccount,
     activeHost: state.host.get('activeHost'),
     canEditServices,
+    canSeeLocations,
     hosts: groupId && state.host.get('allHosts'),
     initialValues: {
       ...(groupId ? activeGroup.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: state.host.get('fetching'),
+    isFetchingLocations: state.entities.fetching ? true : false,
+    locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: groupId ? state.group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
@@ -306,8 +355,9 @@ function mapStateToProps(state, { groupId }) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    fetchLocations: (group) => group && dispatch( locationActions.fetchAll(ownProps.params) ),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

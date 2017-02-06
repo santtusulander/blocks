@@ -4,26 +4,27 @@ import Immutable from 'immutable'
 
 import { analyticsBase, parseResponseData, qsBuilder, mapReducers } from '../util'
 import { TOP_PROVIDER_LENGTH } from '../../constants/dashboard'
+import { ACCOUNT_TYPE_CONTENT_PROVIDER } from '../../constants/account-management-options'
 
 const DASHBOARD_START_FETCH = 'DASHBOARD_START_FETCH'
 const DASHBOARD_FINISH_FETCH = 'DASHBOARD_FINISH_FETCH'
 const DASHBOARD_FETCHED = 'DASHBOARD_FETCHED'
 
 const emptyDashboard = Immutable.Map({
-  spDashboard: Immutable.Map(),
+  dashboard: Immutable.Map(),
   fetching: false
 })
 
 // REDUCERS
 export function dashboardFetchSuccess(state, action) {
   return state.merge({
-    spDashboard: Immutable.fromJS(action.payload.data)
+    dashboard: Immutable.fromJS(action.payload.data)
   })
 }
 
 export function dashboardFetchFailure(state) {
   return state.merge({
-    spDashboard: Immutable.List()
+    dashboard: Immutable.List()
   })
 }
 
@@ -42,31 +43,44 @@ export default handleActions({
 }, emptyDashboard)
 
 // ACTIONS
-export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts) => {
-  let contributionOpts = Object.assign({}, opts)
-  // cp-contribution endpoint expects a sp_account param instead of account
-  contributionOpts.sp_account = contributionOpts.account
-  // Remove account parameter or the query will fail
-  delete contributionOpts.account
+export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
+  let contributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  let dashboardRequests = []
+
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH
   // Show detailed data for providers
   contributionOpts.show_detail = true
 
+  // Build Promise object with different data depending on account type
+  dashboardRequests.push(axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData))
+  dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData))
+
+  if (account_type === ACCOUNT_TYPE_CONTENT_PROVIDER) {
+    // sp-contribution endpoint expects a sp_account_ids param instead of account
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/time${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+    // processDashboardData() always expects 6 arguments
+    dashboardRequests.push(null)
+    dashboardRequests.push(null)
+  } else {
+    // cp-contribution endpoint expects a sp_account param instead of account
+    contributionOpts.sp_account = contributionOpts.account
+    // Remove account parameter or the query will fail
+    delete contributionOpts.account
+    // processDashboardData() always expects 6 arguments
+    dashboardRequests.push(null)
+    dashboardRequests.push(null)
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`).then(parseResponseData))
+    dashboardRequests.push(axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData))
+  }
   // Combine data from many endpoints to serve dashboard
-  return Promise.all([
-    axios.get(`${analyticsBase()}/traffic${qsBuilder(opts)}`).then(parseResponseData),
-    axios.get(`${analyticsBase()}/traffic/on-off-net${qsBuilder(opts)}`).then(parseResponseData),
-    axios.get(`${analyticsBase()}/traffic/country${qsBuilder(opts)}`).then(parseResponseData),
-    axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(contributionOpts)}`).then(parseResponseData)
-  ])
+  return Promise.all(dashboardRequests)
   .then(axios.spread(processDashboardData))
 })
-
 export const startFetching = createAction(DASHBOARD_START_FETCH)
 
 export const finishFetching = createAction(DASHBOARD_FINISH_FETCH)
-
 
 // DATA PROCESSING
 
@@ -74,12 +88,13 @@ export const finishFetching = createAction(DASHBOARD_FINISH_FETCH)
 // a single object, which get passed to the dashboard container. This was done
 // so that there was no need to do a lot of changes in the container, which
 // previously used sp-dashboard endpoint that did all this aggregation for us
-export function processDashboardData(traffic, trafficOnOffNet, countries, cpContribution) {
+export function processDashboardData(traffic, countries, trafficTime, spContribution, trafficOnOffNet, cpContribution) {
   // Creating Immutable objects for easier error handling
   const trafficMap = Immutable.fromJS(traffic)
-  const trafficOnOffNetMap = Immutable.fromJS(trafficOnOffNet)
   const countriesMap = Immutable.fromJS(countries)
-  const cpContributionMap = Immutable.fromJS(cpContribution)
+  const trafficTimeMap = Immutable.fromJS(trafficTime || {})
+  const trafficOnOffNetMap = Immutable.fromJS(trafficOnOffNet || {})
+  const contributionMap = Immutable.fromJS(cpContribution ? cpContribution : spContribution)
 
   // Creates detail arrays for bandwidth, latency, connections and cache hit
   const trafficDetails = trafficMap.getIn(['data', 0, 'detail'], []).reduce((details, detail) => {
@@ -112,22 +127,46 @@ export function processDashboardData(traffic, trafficOnOffNet, countries, cpCont
     cacheHit: []
   })
 
+  // Build trafficData based on account type, since the structure is different
+  let trafficData = {}
+
+  if (trafficTimeMap.size !== 0) {
+    trafficData = {
+      bytes: trafficMap.getIn(['data', 0, 'totals', 'bytes', 'total'], null),
+      http: trafficTimeMap.getIn(['data', 'totals', 0, 'bytes_percentage'], null),
+      https: trafficTimeMap.getIn(['data', 'totals', 1, 'bytes_percentage'], null),
+      // Combine http and https records with groupBy. toIndexedSeq resets the
+      // array keys back to 0, 1, 2...
+      detail: trafficTimeMap.getIn(['data', 'details'], Immutable.List())
+        .groupBy(detail => detail.get('timestamp')).map(detail => {
+          return {
+            timestamp: detail.getIn([0, 'timestamp'], null),
+            bytes: detail.getIn([0, 'bytes'], null) + detail.getIn([1, 'bytes'], null),
+            bytes_http: detail.getIn([0, 'bytes'], null),
+            bytes_https: detail.getIn([1, 'bytes'], null)
+          }
+        }).toIndexedSeq()
+    }
+  } else {
+    trafficData = {
+      bytes: trafficMap.getIn(['data', 0, 'totals', 'bytes', 'total'], null),
+      bytes_net_on: trafficOnOffNetMap.getIn(['data', 'net_on', 'percent_total'], null) * 100,
+      bytes_net_off: trafficOnOffNetMap.getIn(['data', 'net_off', 'percent_total'], null) * 100,
+      detail: trafficOnOffNetMap.getIn(['data', 'detail'], Immutable.List()).map(detail => {
+        return {
+          timestamp: detail.getIn(['timestamp'], null),
+          bytes: detail.getIn(['total'], null),
+          bytes_net_on: detail.getIn(['net_on', 'bytes'], null),
+          bytes_net_off: detail.getIn(['net_off', 'bytes'], null)
+        }
+      })
+    }
+  }
+
   // Final data object returned
   return {
     data: {
-      traffic: {
-        bytes: trafficMap.getIn(['data', 0, 'totals', 'bytes', 'total'], null),
-        bytes_net_on: trafficOnOffNetMap.getIn(['data', 'net_on', 'bytes'], null),
-        bytes_net_off: trafficOnOffNetMap.getIn(['data', 'net_off', 'bytes'], null),
-        detail: trafficOnOffNetMap.getIn(['data', 'detail'], Immutable.List()).map(detail => {
-          return {
-            timestamp: Number(detail.getIn(['timestamp'], null)),
-            bytes: detail.getIn(['total'], null),
-            bytes_net_on: detail.getIn(['net_on', 'bytes'], null),
-            bytes_net_off: detail.getIn(['net_off', 'bytes'], null)
-          }
-        }).toJS()
-      },
+      traffic: trafficData,
       bandwidth: {
         bits_per_second: trafficMap.getIn(['data', 0, 'totals', 'transfer_rates', 'average'], null),
         detail: trafficDetails.bandwidth
@@ -146,7 +185,7 @@ export function processDashboardData(traffic, trafficOnOffNet, countries, cpCont
         detail: trafficDetails.cacheHit
       },
       countries: countriesMap.getIn(['data', 'countries'], []),
-      providers: cpContributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
+      providers: contributionMap.getIn(['data', 'details'], Immutable.List()).map(provider => {
         // Calculate bytes and bits_per_second since these are not returned as totals
         const bytes = (
           provider.getIn(['http', 'net_off_bytes'], 0) +
@@ -161,7 +200,8 @@ export function processDashboardData(traffic, trafficOnOffNet, countries, cpCont
           provider.getIn(['https', 'net_on_bps'], 0)
         )
         return {
-          account: provider.getIn(['account'], null),
+          // Use different provider account id depending on main account type
+          account: provider.getIn([cpContribution ? 'account' : 'sp_account'], null),
           bytes: bytes,
           bits_per_second: bits_per_second,
           detail: provider.getIn(['detail'], []),
