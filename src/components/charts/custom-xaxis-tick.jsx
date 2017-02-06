@@ -14,7 +14,7 @@ const CustomXAxisTick = ({x, y, payload, secondaryXAxisTick}) =>
     </text>
   </g>
 
-CustomXAxisTick.displayName = "CustomLegend"
+CustomXAxisTick.displayName = "CustomXAxisTick"
 CustomXAxisTick.propTypes = {
   payload: PropTypes.object,
   secondaryXAxisTick: PropTypes.arrayOf(PropTypes.string).isRequired,
