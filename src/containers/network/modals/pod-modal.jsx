@@ -74,15 +74,15 @@ class PodFormContainer extends React.Component {
 
     accountId && this.props.fetchFootprints({ brand, account: accountId })
       .then( () => {
-
-        console.log('fetchFootprints');
-
-        initialValues.UIFootprints = initialValues.footprints.map(id => {
+        const UIFootprints = initialValues.footprints.map(id => {
           const fp = getFootprintData(id)
-          return fp ? fp : { id: 'inknown', name: 'UNKNOWN'}
+          return fp ? fp.toJS() : { id: 'unknown', name: 'UNKNOWN'}
         })
 
-        reinitForm(initialValues)
+        reinitForm({
+          ...initialValues,
+          UIFootprints
+        })
       })
 
   }
@@ -339,7 +339,7 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
-  const initialValues = edit && pod ? { ...pod.toJS() } : {}
+  const initialValues = edit && pod ? pod.toJS() : {}
 
   const inititalUIFootprints = edit && /*formFootprints && formFootprints.length > 0
     ? formFootprints
@@ -351,6 +351,8 @@ const mapStateToProps = (state, ownProps) => {
       })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+
+  const getFootprintData = (id) => {console.log('state', state, 'id', id); return getFootprintById(state)(id)}
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -366,7 +368,7 @@ const mapStateToProps = (state, ownProps) => {
 
     initialValues,
 
-    getFootprintData: (id) => {console.log('state', state, 'id', id); return getFootprintById(state)(id)}
+    getFootprintData
   }
 }
 
