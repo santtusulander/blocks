@@ -270,7 +270,7 @@ class PodFormContainer extends React.Component {
 
         {this.state.showFootprintModal &&
         <FootprintFormContainer
-          accountId={this.props.accountId}
+          accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
