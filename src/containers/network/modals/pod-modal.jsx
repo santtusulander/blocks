@@ -54,7 +54,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, podId, initialValues, reinitForm, getFootprintData } = this.props
+    const { brand, accountId, groupId, networkId, popId, /*podId,*/ initialValues, reinitForm, getFootprintData } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
@@ -101,7 +101,6 @@ class PodFormContainer extends React.Component {
 
     if (footprint) (pushFormVal('UIFootprints', footprint))
 
-    console.log('addFootprintToPod', footprint);
   }
 
   saveBGP(values) {
@@ -234,7 +233,7 @@ class PodFormContainer extends React.Component {
       podId,
 
       group,
-      account,
+      //account,
       network,
       footprints
 
@@ -309,16 +308,33 @@ class PodFormContainer extends React.Component {
 PodFormContainer.displayName = "PodFormContainer"
 
 PodFormContainer.propTypes = {
-  account: PropTypes.instanceOf(Map),
+  UIDiscoveryMethod: PropTypes.string,
+  UIFootprints: PropTypes.array,
+
   accountId: PropTypes.string,
+  brand: PropTypes.string,
+  fetchAccount: PropTypes.func,
+  fetchFootprints: PropTypes.func,
+  fetchGroup: PropTypes.func,
+  fetchNetwork: PropTypes.func,
+  fetchPop: PropTypes.func,
+  footprints: PropTypes.array,
+  getFootprintData: PropTypes.func,
   group: PropTypes.instanceOf(Map),
+  groupId: PropTypes.string,
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
+  networkId: PropTypes.string,
   onCancel: PropTypes.func,
+  onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  //pod: PropTypes.instanceOf(Map),
+  onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  pop: PropTypes.instanceOf(Map)
+  pop: PropTypes.instanceOf(Map),
+  popId: PropTypes.string,
+  pushFormVal: PropTypes.func,
+  reinitForm: PropTypes.func,
+  setFormVal: PropTypes.func
 }
 
 PodFormContainer.defaultProps = {
@@ -352,7 +368,7 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
 
-  const getFootprintData = (id) => {console.log('state', state, 'id', id); return getFootprintById(state)(id)}
+  const getFootprintData = (id) => {return getFootprintById(state)(id)}
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
