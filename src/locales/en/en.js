@@ -455,6 +455,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
   'portal.navigation.network.text': 'Network',
+  'portal.navigation.dashboard.text': 'Dashboard',
 
   'portal.security.header.text': 'SECURITY',
 

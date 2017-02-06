@@ -554,7 +554,7 @@ class Network extends React.Component {
     return (
       <Content className="network-content">
 
-        <PageHeader pageSubTitle="Network">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.network.text"/>}>
           <div className="dropdown-toggle header-toggle">
             <h1>
               <TruncatedTitle content={activeAccount.get('name')} tooltipPlacement="bottom"/>
