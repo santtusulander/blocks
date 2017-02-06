@@ -33,7 +33,7 @@ class FootprintFormContainer extends React.Component {
   onSave(edit, values) {
 
     const finalValues = Object.assign({}, values, {
-      value: normalizeValueToAPI(`${values.value}_${values.data_type}`),
+      value: normalizeValueToAPI(values[`value_${values.data_type}`]),
       location: this.props.location
     })
 
