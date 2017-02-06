@@ -185,6 +185,7 @@ const PodForm = ({
   }
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
+  const showBgp = (UIDiscoveryMethod === 'BGP')
   const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp && !fp.removed || fp && fp.removed === false).length > 0
 
   const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
@@ -289,42 +290,49 @@ const PodForm = ({
         }
       />
 
-    {showFootprints
-        ? <div className="form-group discovery-section">
+      {showFootprints &&
+      <div className="form-group discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
         </label>
-          {/* Footprints autocomplete */}
-          <Field
-            className="action-item-search search-input-group"
-            component={FieldFormGroupTypeahead}
-            labelKey='name'
-            disabled={availableFootprints.length === 0}
-            name="footprintSearch"
-            options={availableFootprints}
-            required={false}
-            multiple={false}
-            allowNew={false}
-            props={{
-              onChange: (fp) => addFootprint(fp)
-            }}
-          />
+        {/* Footprints autocomplete */}
+        <Field
+          className="action-item-search search-input-group"
+          component={FieldFormGroupTypeahead}
+          labelKey='name'
+          disabled={availableFootprints.length === 0}
+          name="footprintSearch"
+          options={availableFootprints}
+          required={false}
+          multiple={false}
+          allowNew={false}
+          props={{
+            onChange: (fp) => addFootprint(fp)
+          }}
+        />
 
-          {/* Footprints list */}
-          <FieldArray
-            name="UIFootprints"
-            component={renderFootprints}
-            props={{
-              onEdit: onEditFootprint
-            }}
-          />
-        </div>
-      : <div className="form-group discovery-section">
+        {/* Footprints list */}
+        <FieldArray
+          name="UIFootprints"
+          component={renderFootprints}
+          props={{
+            onEdit: onEditFootprint
+          }}
+        />
+      </div>
+      }
+
+      {showBgp &&
+      <div className="form-group discovery-section">
         {/* BGP */}
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowRoutingDaemonModal}>
+          <UDNButton bsStyle="success"
+                     icon={true}
+                     addNew={true}
+                     disabled={hasBGPRoutingDaemon}
+                     onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
         </label>
