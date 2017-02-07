@@ -596,7 +596,7 @@ class Network extends React.Component {
     return (
       <Content className="network-content">
 
-        <PageHeader pageSubTitle="Network">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.network.text"/>}>
           <div className="dropdown-toggle header-toggle">
             <h1>
               <TruncatedTitle content={activeAccount.get('name')} tooltipPlacement="bottom"/>
@@ -605,114 +605,125 @@ class Network extends React.Component {
         </PageHeader>
 
         <PageContainer ref={container => this.container = container} className="network-entities-container">
-          <EntityList
-            ref={accounts => this.entityList.accountList = accounts}
-            entities={params.account && Immutable.List([activeAccount])}
-            addEntity={() => null}
-            deleteEntity={() => null}
-            editEntity={this.handleAccountEdit}
-            selectEntity={this.handleAccountClick}
-            selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
-            title={<FormattedMessage id='portal.network.account.title'/>}
-            showButtons={false}
-            showAsStarbursts={true}
-            starburstData={{
-              linkGenerator: this.handleAccountClick,
-              dailyTraffic: this.props.accountDailyTraffic,
-              contentMetrics: this.props.accountMetrics,
-              type: CONTENT_ITEMS_TYPES.ACCOUNT,
-              chartWidth: '450',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
-            }}
-            params={params}
-            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-          />
+          <div className="network-entities-wrapper">
+            <EntityList
+              ref={accounts => this.entityList.accountList = accounts}
+              entities={params.account && Immutable.List([activeAccount])}
+              addEntity={() => null}
+              deleteEntity={() => null}
+              editEntity={this.handleAccountEdit}
+              selectEntity={this.handleAccountClick}
+              selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
+              title={<FormattedMessage id='portal.network.account.title'/>}
+              showButtons={false}
+              showAsStarbursts={true}
+              starburstData={{
+                linkGenerator: this.handleAccountClick,
+                dailyTraffic: this.props.accountDailyTraffic,
+                contentMetrics: this.props.accountMetrics,
+                type: CONTENT_ITEMS_TYPES.ACCOUNT,
+                chartWidth: '450',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+              }}
+              params={params}
+              nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+            />
 
-          <EntityList
-            ref={groups => this.entityList.groupList = groups}
-            entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
-            addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-            deleteEntity={() => null}
-            editEntity={this.handleGroupEdit}
-            selectEntity={this.handleGroupClick}
-            selectedEntityId={`${params.group}`}
-            title={<FormattedMessage id='portal.network.groups.title'/>}
-            disableButtons={this.hasGroupsInUrl() ? false : true}
-            showAsStarbursts={true}
-            starburstData={{
-              linkGenerator: this.determineNextGroupState,
-              dailyTraffic: this.props.groupDailyTraffic,
-              contentMetrics: this.props.groupMetrics,
-              type: CONTENT_ITEMS_TYPES.GROUP,
-              chartWidth: '350',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
-            }}
-            params={params}
-            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
-          />
+            <EntityList
+              ref={groups => this.entityList.groupList = groups}
+              entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
+              addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
+              deleteEntity={() => null}
+              editEntity={this.handleGroupEdit}
+              selectEntity={this.handleGroupClick}
+              selectedEntityId={`${params.group}`}
+              title={<FormattedMessage id='portal.network.groups.title'/>}
+              disableButtons={this.hasGroupsInUrl() ? false : true}
+              showAsStarbursts={true}
+              starburstData={{
+                linkGenerator: this.determineNextGroupState,
+                dailyTraffic: this.props.groupDailyTraffic,
+                contentMetrics: this.props.groupMetrics,
+                type: CONTENT_ITEMS_TYPES.GROUP,
+                chartWidth: '350',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+              }}
+              params={params}
+              nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+            />
 
-          <EntityList
-            ref={networkListRef => this.entityList.networkList = networkListRef}
-            entities={params.group && networks}
-            addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNetworkEdit}
-            selectEntity={this.handleNetworkClick}
-            selectedEntityId={`${params.network}`}
-            title={<FormattedMessage id='portal.network.networks.title'/>}
-            disableButtons={params.group ? false : true}
-            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
-          />
+            <EntityList
+              ref={networkListRef => this.entityList.networkList = networkListRef}
+              entities={params.group && networks}
+              addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNetworkEdit}
+              selectEntity={this.handleNetworkClick}
+              selectedEntityId={`${params.network}`}
+              title={<FormattedMessage id='portal.network.networks.title'/>}
+              disableButtons={params.group ? false : true}
+              nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+            />
 
-          <EntityList
-            ref={pops => this.entityList.popList = pops}
-            entities={params.network && pops}
-            addEntity={() => this.addEntity(ADD_EDIT_POP)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePopEdit}
-            selectEntity={this.handlePopClick}
-            selectedEntityId={`${params.pop}`}
-            title={<FormattedMessage id='portal.network.pops.title'/>}
-            disableButtons={params.network ? false : true}
-            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
-          />
+            <EntityList
+              ref={pops => this.entityList.popList = pops}
+              entities={params.network && pops}
+              addEntity={() => this.addEntity(ADD_EDIT_POP)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePopEdit}
+              selectEntity={this.handlePopClick}
+              selectedEntityId={`${params.pop}`}
+              title={<FormattedMessage id='portal.network.pops.title'/>}
+              disableButtons={params.network ? false : true}
+              nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+            />
 
-          <EntityList
-            ref={pods => this.entityList.podList = pods}
-            entityNameKey='UIName'
-            entityIdKey='pod_name'
-            addEntity={() => this.addEntity(ADD_EDIT_POD)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePodEdit}
-            entities={params.pop && pods}
-            selectEntity={this.handlePodClick}
-            selectedEntityId={`${params.pod}`}
-            title={<FormattedMessage id='portal.network.pods.title'/>}
-            disableButtons={params.pop ? false : true}
-            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
-          />
+            <EntityList
+              ref={pods => this.entityList.podList = pods}
+              entityNameKey='UIName'
+              entityIdKey='pod_name'
+              addEntity={() => this.addEntity(ADD_EDIT_POD)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePodEdit}
+              entities={params.pop && pods}
+              selectEntity={this.handlePodClick}
+              selectedEntityId={`${params.pod}`}
+              title={<FormattedMessage id='portal.network.pods.title'/>}
+              disableButtons={params.pop ? false : true}
+              nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+            />
 
-          <EntityList
-            ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && this.props.getNodes(params.pod)}
-            addEntity={() => this.addEntity(ADD_NODE)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNodeEdit}
-            selectEntity={() => null}
-            title={<FormattedMessage id='portal.network.nodes.title'/>}
-            entityIdKey="reduxId"
-            disableButtons={params.pod ? false : true}
-            multiColumn={true}
-            numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
-            itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+            <EntityList
+              ref={nodes => this.entityList.nodeList = nodes}
+              entities={params.pod && this.props.getNodes(params.pod)}
+              addEntity={() => this.addEntity(ADD_NODE)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNodeEdit}
+              selectEntity={() => null}
+              title={<FormattedMessage id='portal.network.nodes.title'/>}
+              entityIdKey="reduxId"
+              disableButtons={params.pod ? false : true}
+              multiColumn={true}
+              numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
+              itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
-          />
-
+            />
+          </div>
         </PageContainer>
+
+        {networkModal === ADD_EDIT_ACCOUNT &&
+          <AccountForm
+            id="account-form"
+            onSave={this.handleAccountSave}
+            account={activeAccount}
+            onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
+            show={true}
+          />
+        }
 
         {networkModal === ADD_EDIT_GROUP &&
           <GroupFormContainer
@@ -729,18 +740,10 @@ class Network extends React.Component {
           />
         }
 
-        {networkModal === ADD_EDIT_ACCOUNT &&
-          <AccountForm
-            id="account-form"
-            onSave={this.handleAccountSave}
-            account={activeAccount}
-            onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
-            show={true}
-          />
-        }
-
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
+            handleSelectedEntity={this.handleNetworkClick}
+            selectedEntityId={`${params.network}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
@@ -751,6 +754,8 @@ class Network extends React.Component {
 
         {networkModal === ADD_EDIT_POP &&
           <PopFormContainer
+            handleSelectedEntity={this.handlePopClick}
+            selectedEntityId={`${params.pop}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
