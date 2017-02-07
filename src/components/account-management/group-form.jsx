@@ -95,7 +95,7 @@ const GroupForm = ({
 
           {(canSeeLocations && groupId) &&
             <div>
-              <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
+              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
