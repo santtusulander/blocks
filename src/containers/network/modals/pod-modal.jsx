@@ -73,9 +73,14 @@ class PodFormContainer extends React.Component {
     //   id: podId
     // })
 
+
+    /*
+    Re-init form when footprints have been fetched.
+    This is neede because we only get Footprint ids inside a POD
+    */
     accountId && this.props.fetchFootprints({ brand, account: accountId })
       .then( () => {
-        const UIFootprints = initialValues.footprints.map(id => {
+        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
           const fp = getFootprintData(id)
           return fp ? fp.toJS() : { id: 'unknown', name: 'UNKNOWN'}
         })
