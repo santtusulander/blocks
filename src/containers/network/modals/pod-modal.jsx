@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-
+import { injectIntl } from 'react-intl'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
@@ -376,7 +376,10 @@ const mapStateToProps = (state, ownProps) => {
     initialValues
       && initialValues.footprints
       && initialValues.footprints.map(id => {
-        return { id: 'loading' + id, name: 'loading ...'}
+        return {
+          id: `${ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })}_${ +id}`,
+          name: ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })
+        }
       })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
@@ -426,6 +429,6 @@ const mapDispatchToProps = (dispatch) => {
 // })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(
   PodFormContainer
-)
+))

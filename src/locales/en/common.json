@@ -12,6 +12,8 @@
   "portal.common.button.apply": "Apply",
   "portal.common.button.none": "None",
 
+  "portal.common.loading.text": "Loading",
+
   "portal.common.button.undo": "undo",
   "portal.common.button.remove": "remove",
 
