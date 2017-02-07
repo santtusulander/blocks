@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button, ButtonToolbar, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import classNames from 'classnames'
 
 import IconConfiguration from '../icons/icon-configuration'
@@ -28,7 +28,12 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
       )}
       onClick={handleSelect}>
 
-      <h4>{title}</h4>
+      {(title.length < 20) ?
+        <h4>title</h4> :
+        <OverlayTrigger placement="top" overlay={<Tooltip id="network-item-title">{title}</Tooltip>}>
+          <h4>{`${title.substr(0, 20)}...`}</h4>
+        </OverlayTrigger>
+      }
 
       <p>{content}</p>
 
