@@ -8,6 +8,10 @@ import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
 
+import {
+  accountIsServiceProviderType
+} from '../../util/helpers'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -476,6 +480,7 @@ export class AccountManagement extends Component {
           <EntityEdit
             type='group'
             entityToUpdate={this.state.groupToUpdate}
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.toggleEditGroupModal()}

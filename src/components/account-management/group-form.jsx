@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { Button, Table } from 'react-bootstrap'
+import { ButtonToolbar, Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
 import UDNButton from '../button'
@@ -48,11 +48,13 @@ const GroupForm = ({
   isFetchingLocations,
   locations,
   onCancel,
+  onDelete,
   onDeleteHost,
   onShowLocation,
   onSubmit,
   serviceOptions,
-  showServiceItemForm
+  showServiceItemForm,
+  submitting
 }) => {
   return (
     <form
@@ -111,53 +113,66 @@ const GroupForm = ({
           </div>
         }
 
-        {(!accountIsServiceProviderType && groupId) &&
-          <div>
-            <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
-            {isFetchingHosts ? <LoadingSpinner/> :
-              !hosts.isEmpty() ?
-                <Table striped={true} className="fixed-layout">
-                  <thead>
-                  <tr>
-                    <th>
-                      <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
-                    </th>
-                    <th className="one-button-cell" />
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {hosts.map((host, i) => {
-                    return (
-                      <tr key={i}>
-                            <td><TruncatedTitle content={host} /></td>
-                        <td>
-                          <ActionButtons
-                            onDelete={() => onDeleteHost(host)}/>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                  </tbody>
-                </Table>
-              : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
-            }
-          </div>
-        }
-      <FormFooterButtons>
-        <Button
-          id="cancel-btn"
-          className="btn-secondary"
-          onClick={onCancel}>
-          <FormattedMessage id="portal.button.cancel"/>
-        </Button>
+          {(!accountIsServiceProviderType && groupId) &&
+            <div>
+              <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
+              {isFetchingHosts ? <LoadingSpinner/> :
+                !hosts.isEmpty() ?
+                  <Table striped={true} className="fixed-layout">
+                    <thead>
+                    <tr>
+                      <th>
+                        <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
+                      </th>
+                      <th className="one-button-cell" />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {hosts.map((host, i) => {
+                      return (
+                        <tr key={i}>
+                              <td><TruncatedTitle content={host} /></td>
+                          <td>
+                            <ActionButtons
+                              onDelete={() => onDeleteHost(host)}/>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </Table>
+                : <p><FormattedMessage id="portal.accountManagement.noGroupProperties.text"/></p>
+              }
+            </div>
+          }
+        <FormFooterButtons autoAlign={false}>
+          { (groupId && onDelete) &&
+            <ButtonToolbar className="pull-left">
+              <Button
+                className="btn-danger"
+                disabled={submitting}
+                onClick={onDelete}
+              >
+                <FormattedMessage id="portal.button.delete"/>
+              </Button>
+            </ButtonToolbar>
+          }
+          <ButtonToolbar className="pull-right">
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid}>
-          {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-        </Button>
-      </FormFooterButtons>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting}>
+              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            </Button>
+          </ButtonToolbar>
+        </FormFooterButtons>
     </form>
   )
 }
@@ -177,11 +192,13 @@ GroupForm.propTypes = {
   isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
   serviceOptions: PropTypes.array,
-  showServiceItemForm: PropTypes.func
+  showServiceItemForm: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({

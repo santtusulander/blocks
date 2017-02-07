@@ -72,15 +72,30 @@ class GroupFormContainer extends React.Component {
     if(!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
+      // if (groupId) {
+      //   return onSave(
+      //     groupId,
+      //     values,
+      //     this.state.usersToAdd,
+      //     this.state.usersToDelete
+      //   )
+      // } else {
+      //   return onSave(values, this.state.usersToAdd)
+      // }
       if (groupId) {
-        return onSave(
+        return onSave({
           groupId,
-          values,
-          this.state.usersToAdd,
-          this.state.usersToDelete
-        )
+          data: values,
+          addUsers: this.state.usersToAdd,
+          deleteUsers: this.state.usersToDelete,
+          edit: true
+        })
       } else {
-        return onSave(values, this.state.usersToAdd)
+        return onSave({
+          data: values,
+          usersToAdd: this.state.usersToAdd,
+          edit: false
+        })
       }
     }
   }
@@ -191,6 +206,7 @@ class GroupFormContainer extends React.Component {
       locations,
       name,
       onCancel,
+      onDelete,
       intl,
       invalid,
       serviceOptions,
@@ -222,7 +238,6 @@ class GroupFormContainer extends React.Component {
     //   }
     //   return arr;
     // }, []))
-
     const title = groupId ? <FormattedMessage id="portal.account.groupForm.editGroup.title"/> : <FormattedMessage id="portal.account.groupForm.newGroup.title"/>
     const subTitle = groupId ? `${account.get('name')} / ${name}` : account.get('name')
     return (
@@ -249,6 +264,7 @@ class GroupFormContainer extends React.Component {
             isFetchingHosts={isFetchingHosts}
             isFetchingLocations={isFetchingLocations}
             onCancel={onCancel}
+            onDelete={onDelete ? () => onDelete(this.props.group) : null}
             onDeleteHost={this.handleDeleteHost}
             onShowLocation={this.showLocationForm}
             onSubmit={this.onSubmit}
@@ -279,6 +295,7 @@ class GroupFormContainer extends React.Component {
       {canSeeLocations &&
         <NetworkLocationFormContainer
           params={this.props.params}
+          groupId={this.props.groupId}
           onCancel={this.hideLocationForm}
           show={this.state.visibleLocationForm}
           locationId={this.state.selectedLocationId}
@@ -300,6 +317,7 @@ GroupFormContainer.propTypes = {
   disabled: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
+  group: PropTypes.instanceOf(Map),
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
   hosts: PropTypes.instanceOf(List),
@@ -311,6 +329,7 @@ GroupFormContainer.propTypes = {
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
   serviceOptions: PropTypes.array,
@@ -326,7 +345,7 @@ GroupFormContainer.defaultProps = {
 }
 
 function mapStateToProps(state, ownProps) {
-  const groupId = ownProps.groupId //ownProps.params.group
+  const { groupId } = ownProps
   const currentUser = state.user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
   const activeAccount = state.account.get('activeAccount')
@@ -351,13 +370,14 @@ function mapStateToProps(state, ownProps) {
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
                     : [],
-    servicesInfo: getServicesInfo(state)
+    servicesInfo: getServicesInfo(state),
+    group: activeGroup
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchLocations: (group) => group && dispatch( locationActions.fetchAll(ownProps.params) ),
+    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({ ...ownProps.params, group }) ),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

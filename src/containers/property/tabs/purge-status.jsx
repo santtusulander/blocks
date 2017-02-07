@@ -100,6 +100,11 @@ PurgeStatus.propTypes = {
   purgeObjects: React.PropTypes.instanceOf(List)
 }
 
+const paginationConfig = {
+  fields: [],
+  page_size: 5
+}
+
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
@@ -118,4 +123,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus, paginationConfig)));
