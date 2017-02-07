@@ -9,8 +9,8 @@ const KEY_UP = 38
 const KEY_DOWN = 40
 
 const NumberInput = (props) => {
-  const { max, min, onChange, onlyInteger, value } = props
-  const inputProps = { max, min, onChange, value }
+  const { max, min, onChange, value } = props
+  const { onlyInteger, ...inputProps } = props
 
   const handleChange = (enteredValue, isIncrement = false) => {
     let newValue = 0
