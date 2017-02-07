@@ -455,6 +455,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
   'portal.navigation.network.text': 'Network',
+  'portal.navigation.dashboard.text': 'Dashboard',
 
   'portal.security.header.text': 'SECURITY',
 
@@ -510,6 +511,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
+  'portal.accountManagement.groupCreated.text': 'Group created.',
+  'portal.accountManagement.groupDeleted.text': 'Group deleted.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
   'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',

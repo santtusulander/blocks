@@ -137,18 +137,18 @@ class EntityList extends React.Component {
       entities,
       isAllowedToConfigure
     } = this.props
-
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
         const entityName = entity.get(entityNameKey)
+        const isActive = String(selectedEntityId) === String(entity.get(entityIdKey))
 
         let content = (
           <NetworkItem
             key={entityId}
             onEdit={() => editEntity(entityId)}
             title={entityName}
-            active={selectedEntityId === entityId.toString()}
+            active={isActive}
             onSelect={() => selectEntity(entityId)}
             onDelet={() => deleteEntity(entityId)}
             status="enabled"
@@ -160,9 +160,9 @@ class EntityList extends React.Component {
         if (showAsStarbursts) {
           const dailyTraffic = this.getDailyTraffic(entity)
           const contentMetrics = this.getMetrics(entity)
-          const link = selectEntity(entityId)
+          const link = starburstData.linkGenerator(entityId)
           const contentItemClasses = classNames('entity-list-item', {
-            'active': selectedEntityId === entityId.toString(),
+            'active': isActive,
             'is-account': starburstData.type === 'account'
           })
 
@@ -189,6 +189,7 @@ class EntityList extends React.Component {
                 showSlices={true}
                 linkTo={link}
                 showAnalyticsLink={true}
+                onClick={() => selectEntity(entityId)}
                 onConfiguration={() => editEntity(entityId)}
                 analyticsLink={starburstData.analyticsURLBuilder ? starburstData.analyticsURLBuilder(starburstData.type, entityId, params) : null}
                 />
@@ -276,7 +277,9 @@ class EntityList extends React.Component {
   hasActiveItems() {
     const { selectedEntityId, entityIdKey, entities } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
-      const active = entities && entities.some(entity => selectedEntityId === entity.get(entityIdKey).toString())
+      const active = entities && entities.some(entity =>
+        String(selectedEntityId) === String(entity.get(entityIdKey))
+      )
       return active
     }
   }
@@ -297,7 +300,7 @@ class EntityList extends React.Component {
 
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
-        {(this.hasActiveItems()) && <div ref={ref => this.connector = ref} className="connector-divider"/>}
+        {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
           creationPermission={creationPermission}

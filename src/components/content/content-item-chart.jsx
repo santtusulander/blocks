@@ -184,7 +184,9 @@ class ContentItemChart extends React.Component {
         <div
           className={classnames({ 'content-item-chart': true, bright: this.props.brightMode, 'grid-item': true })}
           style={{width: chartWidth, height: chartWidth}}
-          id={'content-item-chart-' + (this.props.id)}>
+          id={'content-item-chart-' + (this.props.id)}
+          onClick={this.props.onClick}
+          >
           <LinkWrapper
             className="content-item-chart-link"
             disableLinkTo={this.props.disableLinkTo}
@@ -357,6 +359,7 @@ ContentItemChart.propTypes = {
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
   name: React.PropTypes.string,
+  onClick: React.PropTypes.func,
   onConfiguration: React.PropTypes.func,
   primaryData: React.PropTypes.instanceOf(Immutable.List),
   secondaryData: React.PropTypes.instanceOf(Immutable.List),

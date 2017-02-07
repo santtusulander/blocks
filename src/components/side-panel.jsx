@@ -5,13 +5,15 @@ import classNames from 'classnames'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 
 const modalClassDim = 'side-panel--dim'
+const overlappingClass = 'side-panel--overlapping'
 
-export const SidePanelComponent = ({ children, className, dim, show, subTitle, subSubTitle, title }) => {
+export const SidePanelComponent = ({ children, className, dim, overlapping, show, subTitle, subSubTitle, title }) => {
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
     className,
-    dim ? modalClassDim : null
+    dim ? modalClassDim : null,
+    overlapping ? overlappingClass : null
   )
 
   if (subTitle && subSubTitle) {
@@ -48,6 +50,7 @@ SidePanelComponent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   dim: PropTypes.bool,
+  overlapping: PropTypes.bool,
   show: PropTypes.bool,
   subSubTitle: PropTypes.oneOfType([
     React.PropTypes.string,

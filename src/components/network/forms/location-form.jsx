@@ -4,27 +4,103 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
+import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
+import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
+
+import {LOCATION_NAME_MIN_LENGTH,
+        LOCATION_NAME_MAX_LENGTH,
+        CLOUD_PROVIDER_REGION_MIN_LENGTH,
+        CLOUD_PROVIDER_REGION_MAX_LENGTH,
+        CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
+        CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
+      } from '../../../constants/network.js'
+
 import './styles/location-form.scss'
 
-const validate = fields => {
-  const customConditions = {};
+const validate = ({
+  name = '',
+  iataCode,
+  latitude = '',
+  longitude = '',
+  cloudProviderRegion,
+  cloudProviderLocationId = '' }) => {
+  const customConditions = {
+    name: [
+      {
+        condition: !isValidTextField(name, LOCATION_NAME_MIN_LENGTH, LOCATION_NAME_MAX_LENGTH),
+        errorText: (
+          <MultilineTextFieldError
+            fieldLabel={'portal.network.locationForm.name.label'}
+            minValue={LOCATION_NAME_MIN_LENGTH}
+            maxValue={LOCATION_NAME_MAX_LENGTH}/>
+        )
+      }
+    ],
+    latitude: [
+      {
+        condition: ! isValidLatitude(latitude),
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.latitude.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    longitude: [
+      {
+        condition: ! isValidLongtitude(longitude),
+        errorText: (
+          <div>
+            <FormattedMessage id='portal.network.locationForm.longitude.invalid.error' />
+          </div>
+        )
+      }
+    ],
+    cloudProviderLocationId: [
+      {
+        condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
+        errorText: (
+          <MultilineTextFieldError
+            fieldLabel={'portal.network.locationForm.name.label'}
+            minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
+            maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
+        )
+      }
+    ]
+  }
 
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.locationForm.name.required.error'/>,
     iataCode: <FormattedMessage id='portal.network.locationForm.iataCode.required.error'/>,
     latitude: <FormattedMessage id='portal.network.locationForm.latitude.required.error'/>,
     longitude: <FormattedMessage id='portal.network.locationForm.longitude.required.error'/>,
-    cloudProvider: <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
+    cloudName: <FormattedMessage id='portal.network.locationForm.cloudProvider.required.error'/>,
     cloudProviderLocationId: <FormattedMessage id='portal.network.locationForm.cloudProviderLocationId.required.error'/>
   };
 
-  return checkForErrors(fields, customConditions, requiredTexts);
+  const errors = checkForErrors(
+    { name, iataCode, latitude, longitude, cloudProviderLocationId },
+    customConditions,
+    requiredTexts
+  );
+
+  if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
+    errors.cloudProviderRegion = (
+      <MultilineTextFieldError
+        fieldLabel={'portal.network.locationForm.name.label'}
+        minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
+        maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
+    )
+  }
+
+  return errors
+
 }
 
 const NetworkLocationForm = (props) => {
@@ -32,8 +108,9 @@ const NetworkLocationForm = (props) => {
     addressFetching,
     cloudProvidersOptions,
     cloudProvidersIdOptions,
-    edit,
-    fetching,
+    error,
+    submitting,
+    initialValues,
     iataCodes,
     intl,
     invalid,
@@ -42,15 +119,30 @@ const NetworkLocationForm = (props) => {
     handleSubmit
   } = props;
 
+  const edit = !!initialValues.name
+
+  const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
+                              edit ? <FormattedMessage id="portal.button.save"/> :
+                              <FormattedMessage id="portal.button.add"/>
+
   return (
     <form
       className="location-form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
     >
+
+    {
+      error &&
+      <p className='has-error'>
+        <span className='help-block'>{error}</span>
+      </p>
+    }
+
       <Row>
         <Col md={7}>
           <Field
             name="name"
+            disabled={edit}
             type="text"
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
@@ -63,6 +155,7 @@ const NetworkLocationForm = (props) => {
           <Field
             name="iataCode"
             options={iataCodes}
+            emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
             labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
@@ -154,8 +247,8 @@ const NetworkLocationForm = (props) => {
           <ButtonToolbar className="pull-left">
             <Button
               className="btn-danger"
-              disabled={fetching}
-              onClick={onDelete}
+              disabled={submitting}
+              onClick={() => onDelete(initialValues.name)}
             >
               <FormattedMessage id="portal.button.delete"/>
             </Button>
@@ -171,12 +264,9 @@ const NetworkLocationForm = (props) => {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || fetching}
+            disabled={invalid || submitting}
           >
-            {edit
-              ? <FormattedMessage id='portal.button.save' />
-              : <FormattedMessage id='portal.button.add' />
-            }
+            {actionButtonTitle}
           </Button>
         </ButtonToolbar>
       </FormFooterButtons>
@@ -187,8 +277,6 @@ NetworkLocationForm.displayName = 'NetworkLocationEditForm';
 NetworkLocationForm.propTypes = {
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
-  edit: PropTypes.bool,
-  fetching: PropTypes.bool,
   handleSubmit: PropTypes.func,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,

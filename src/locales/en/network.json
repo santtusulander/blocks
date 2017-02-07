@@ -1,4 +1,11 @@
 {
+  "portal.network.account.title": "Account",
+  "portal.network.groups.title": "Groups",
+  "portal.network.networks.title": "Networks",
+  "portal.network.pops.title": "Pops",
+  "portal.network.pods.title": "Pods",
+  "portal.network.nodes.title": "Nodes",
+
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
   "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",
@@ -40,6 +47,13 @@
   "portal.network.addNodeForm.type.title": "Type",
   "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
   "portal.network.addNodeForm.grains.title": "Grains",
+
+  "portal.network.editNodeForm.node": "Node",
+  "portal.network.editNodeForm.title": "Edit node",
+  "portal.network.editNodeForm.title.multiple": "Edit {numNodes, plural, one {# node} other {# nodes}}",
+  "portal.network.editNodeForm.multipleValues": "Multiple values",
+  "portal.network.editNodeForm.multipleValues.help": "Changing fields with multiple values will set the same value for all current edited nodes.",
+  "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes, plural, one {# node} other {# nodes}}?",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
@@ -91,6 +105,7 @@
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.name.label": "Location Name",
   "portal.network.locationForm.name.placeholder": "Enter Location Name",
   "portal.network.locationForm.iataCode.label": "IATA Code",
   "portal.network.locationForm.iataCode.placeholder": "Enter IATA Code",
@@ -114,6 +129,13 @@
   "portal.network.locationForm.longitude.required.error": "Longitude is required",
   "portal.network.locationForm.cloudProvider.required.error": "Cloud Provider is required",
   "portal.network.locationForm.cloudProviderLocationId.required.error": "Cloud Provider Location ID is required",
+
+  "portal.network.locationForm.name.invalid.error": "Location name is invalid",
+  "portal.network.locationForm.iataCode.invalid.error": "IATA is invalid",
+  "portal.network.locationForm.latitude.invalid.error": "Latitude is invalid",
+  "portal.network.locationForm.longitude.invalid.error": "Longitude is invalid",
+  "portal.network.locationForm.cloudProviderRegion.invalid.error": "Cloud Provider Region is invalid",
+  "portal.network.locationForm.cloudProviderLocationId.invalid.error": "Cloud Provider ID is invalid",
 
   "portal.network.spConfig.routingDaemon.addForm.title": "Add Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
