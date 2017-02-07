@@ -133,7 +133,7 @@
   "portal.network.locationForm.name.invalid.error": "Location name is invalid",
   "portal.network.locationForm.iataCode.invalid.error": "IATA is invalid",
   "portal.network.locationForm.latitude.invalid.error": "Latitude is invalid",
-  "portal.network.locationForm.longtitude.invalid.error": "Latitude is invalid",
+  "portal.network.locationForm.longitude.invalid.error": "Longitude is invalid",
   "portal.network.locationForm.cloudProviderRegion.invalid.error": "Cloud Provider Region is invalid",
   "portal.network.locationForm.cloudProviderLocationId.invalid.error": "Cloud Provider ID is invalid",
 

@@ -17,8 +17,14 @@ $entity-list-item-connector-line-offset: rem(32px);
   flex: none;
 
   &:last-child {
+    border-right: 0;
+
     .btn-add-new {
       margin-right: $page-container-horizontal-padding / 2;
+    }
+
+    .connector-divider {
+      display: none;
     }
   }
 
@@ -36,14 +42,6 @@ $entity-list-item-connector-line-offset: rem(32px);
       &::before {
         display: none;
       }
-    }
-  }
-
-  &:last-child {
-    border-right: 0;
-
-    .connector-divider {
-      display: none;
     }
   }
 

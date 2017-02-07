@@ -233,11 +233,13 @@ export function getDashboardUrlFromParams(params) {
 }
 
 export function getNetworkUrlFromParams(params, currentUser, roles) {
-  const { brand, account } = params,
+  const { brand, account, group } = params,
     canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
-    if (canViewAccountDetail) {
+    if (group) {
+      return getRoute('networkGroup', params)
+    } else if (canViewAccountDetail) {
       return getRoute('networkAccount', params)
     } else {
       return getRoute('networkGroups', params)
