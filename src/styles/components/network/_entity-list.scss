@@ -10,13 +10,21 @@ $entity-list-item-connector-line-offset: rem(32px);
 .network-entity-list {
   position: relative;
   min-width: $md-sidebar-width;
+  // UDNP-2589 - Network - Add button top border hidden in active state
+  padding-top: 2px;
   overflow-x: visible;
   border-right: 2px solid;
   flex: none;
 
   &:last-child {
+    border-right: 0;
+
     .btn-add-new {
       margin-right: $page-container-horizontal-padding / 2;
+    }
+
+    .connector-divider {
+      display: none;
     }
   }
 
@@ -34,14 +42,6 @@ $entity-list-item-connector-line-offset: rem(32px);
       &::before {
         display: none;
       }
-    }
-  }
-
-  &:last-child {
-    border-right: 0;
-
-    .connector-divider {
-      display: none;
     }
   }
 

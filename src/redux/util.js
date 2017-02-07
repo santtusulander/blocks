@@ -75,3 +75,14 @@ export function getCustomDateRange( filters ) {
     endDate
   }
 }
+
+export const buildReduxId = (...ids) => {
+  return ids.reduce((reduxId, parentId, index) => {
+
+    if (index === ids.length - 1) {
+      return reduxId.concat(parentId)
+    }
+
+    return reduxId.concat(parentId + '-')
+  }, '')
+}
