@@ -21,6 +21,29 @@ label {
   line-height: 1;
 }
 
+.dark-theme {
+  input[disabled] {
+    background-color: rgba($black, 0.1);
+    user-select: none;
+
+    &:active {
+      color: $dt-text-color;
+      box-shadow: none;
+    }
+  }
+}
+
+.light-theme {
+  input[disabled] {
+    color: rgba($lt-text-color, 0.2);
+    user-select: none;
+
+    &:active {
+      box-shadow: 0 0 0 1px rgba($black, 0.1);
+    }
+  }
+}
+
 .form-control {
   height: auto;
   max-width: 900px;
@@ -570,4 +593,3 @@ textarea {
     }
   }
 }
-
