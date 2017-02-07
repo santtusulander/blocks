@@ -7,7 +7,6 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {
   Button,
-  ButtonToolbar,
   Row,
   Col
 } from 'react-bootstrap'
@@ -391,35 +390,31 @@ const PodForm = ({
       </div>
       }
 
-      <FormFooterButtons autoAlign={false}>
+      <FormFooterButtons>
         {edit &&
-          <ButtonToolbar className="pull-left">
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger"
-              disabled={hasNodes}
-              onClick={onDelete}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
-              <FormattedMessage id="portal.button.delete"/>
-            </ButtonDisableTooltip>
-          </ButtonToolbar>
+          <ButtonDisableTooltip
+            id="delete-btn"
+            className="btn-danger pull-left"
+            disabled={hasNodes}
+            onClick={onDelete}
+            tooltipId="tooltip-help"
+            tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
+            <FormattedMessage id="portal.button.delete"/>
+          </ButtonDisableTooltip>
         }
-        <ButtonToolbar className="pull-right">
-          <Button
-            id="cancel-btn"
-            className="btn-secondary"
-            onClick={onCancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
+        <Button
+          id="cancel-btn"
+          className="btn-secondary"
+          onClick={onCancel}>
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
-            {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-          </Button>
-        </ButtonToolbar>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
+          {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+        </Button>
       </FormFooterButtons>
     </form>
   )
