@@ -112,7 +112,7 @@ class PodFormContainer extends React.Component {
   saveBGP(values) {
     const { setFormVal } = this.props
     this.hideRoutingDaemonModal()
-    const { bgp_as_name, bgp_router_ip, bgp_as_number, bgp_password } = values
+    const { bgp_router_ip, bgp_as_number, bgp_password } = values
     if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
     if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
     if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
@@ -120,9 +120,10 @@ class PodFormContainer extends React.Component {
 
   clearBGP() {
     const { setFormVal } = this.props
-    setFormVal('UIsp_bgp_router_ip', undefined)
-    setFormVal('UIsp_bgp_router_as', undefined)
-    setFormVal('UIsp_bgp_router_password', undefined)
+    setFormVal('UIDiscoveryMethod', '')
+    setFormVal('UIsp_bgp_router_ip', '')
+    setFormVal('UIsp_bgp_router_as', '')
+    setFormVal('UIsp_bgp_router_password', '')
   }
 
   showFootprintModal(footprintId = null) {
