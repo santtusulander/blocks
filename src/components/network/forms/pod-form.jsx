@@ -238,7 +238,6 @@ const PodForm = ({
 
       <Field
         name="UILbMethod"
-        //numericValues={true}
         component={FieldFormGroupSelect}
         options={LBMETHOD_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
@@ -252,7 +251,6 @@ const PodForm = ({
 
       <Field
         name="pod_type"
-        //numericValues={true}
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
@@ -273,7 +271,6 @@ const PodForm = ({
 
       <Field
         name="UIRequestFwdType"
-        //numericValues={true}
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
@@ -301,7 +298,6 @@ const PodForm = ({
 
       <Field
         name="UIDiscoveryMethod"
-        //numericValues={true}
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed}
         options={DISCOVERY_METHOD_OPTIONS}
