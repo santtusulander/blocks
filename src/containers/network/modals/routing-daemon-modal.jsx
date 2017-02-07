@@ -22,14 +22,14 @@ class RoutingDaemonFormContainer extends React.Component {
 
   render() {
     const {
-      editing,
       intl,
       onCancel,
       show,
       initialValues
     } = this.props
 
-    const formTitle = editing ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
+    const edit = !!initialValues.bgp_as_number
+    const formTitle = edit ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
 
     return (
       <SidePanel
@@ -39,7 +39,7 @@ class RoutingDaemonFormContainer extends React.Component {
       >
       <RoutingDaemonForm
         initialValues={initialValues}
-        editing={editing}
+        editing={edit}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
       />
@@ -50,7 +50,6 @@ class RoutingDaemonFormContainer extends React.Component {
 
 RoutingDaemonFormContainer.displayName = 'RoutingDaemonFormContainer'
 RoutingDaemonFormContainer.propTypes = {
-  editing: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
