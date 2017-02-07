@@ -316,7 +316,7 @@ const PodForm = ({
       />
 
       {showFootprints &&
-      <div className="form-group discovery-section">
+      <div className="discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
@@ -351,7 +351,7 @@ const PodForm = ({
 
       {/* BGP */}
       {showBgp &&
-      <div className="form-group discovery-section">
+      <div className="discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
           <UDNButton bsStyle="success"
                      icon={true}

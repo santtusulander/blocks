@@ -342,7 +342,7 @@ class NetworkEditNodeForm extends React.Component {
       : <FormattedMessage id="portal.common.button.save" />
 
     return (
-      <form className="edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
           <FormGroup>

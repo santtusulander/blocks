@@ -4,48 +4,55 @@ $input-width: 324px;
 $input-height: 36px;
 $number-input-btn-width: 18px;
 $form-label-margin: 10px;
+$number-input-width: 75px;
+$panel-vertical-padding: em(8px, 14px);
+$panel-horizontal-padding: em(18px, 14px);
 
+.group-form,
 .sp-network-form,
 .sp-pop-form,
 .sp-pod-form,
 .sp-footprint-form,
 .sp-add-node-form,
-.sp-routing-daemon-form {
+.sp-edit-node-form,
+.sp-routing-daemon-form,
+.sp-location-form  {
   .form-group {
     width: $input-width;
+
+    label {
+      margin: 12px 0 10px;
+    }
   }
 }
 
-//SP Footprint Form
-//=================
-.sp-footprint-form {
-
+.sp-footprint-form,
+.sp-pod-form {
   .typeahead-form-group {
     width: 100%;
   }
+}
 
-  .form-group {
-    .control-label {
-      margin-bottom: $form-label-margin;
-    }
+// SP Group Form
+//=================
+.group-form {
+
+  .locations label {
+    margin-top: 5px;
   }
 
-  .radio {
-    margin-bottom: $form-label-margin;
-
-    span {
-      vertical-align: middle;
-    }
+  .btn-add-new {
+    margin-bottom: 20px;
   }
 }
 
-.token {
-  &__valid {
-    background-color: $green !important;
-  }
+// SP Location Form
+//=================
+.sp-location-form {
 
-  &__invalid {
-    background-color: $red !important;
+  label[for='latitude']+.input-group,
+  label[for='longitude']+.input-group {
+    width: 190px;
   }
 }
 
@@ -53,7 +60,7 @@ $form-label-margin: 10px;
 //==================
 .sp-pop-form {
   .number-input-group {
-    width: 75px;
+    width: $number-input-width;
     margin: 0 0 0 20px;
   }
 }
@@ -91,18 +98,75 @@ $form-label-margin: 10px;
     }
   }
 
+  .discovery-section {
+    margin: $bar-height 0;
+
+    label {
+      display: block;
+      margin: $form-group-padding 0;
+      line-height: $bar-height;
+    }
+
+    .btn-add-new {
+      float: right;
+    }
+  }
+
+  .footprints {
+    padding: 0;
+    margin-top: $panel-horizontal-padding;
+    list-style-type: none;
+
+    > li {
+      padding: 0 $panel-vertical-padding;
+      margin-bottom: $panel-vertical-padding;
+      font-weight: bold;
+      line-height: em(36px, 14px);
+      background-color: rgba($pale-blue, 0.2);
+
+      .light-theme & {
+        color: $lt-text-color;
+        background-color: $white;
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
+      }
+
+      .action-buttons {
+        text-align: right;
+      }
+    }
+  }
+
   .number-input {
     width: $input-width - $number-input-btn-width;
   }
 }
 
-// SP Add Node Form
+//SP Footprint Form
 //=================
-.sp-add-node-form {
+.sp-footprint-form {
 
-  &__highlight-name {
-    font-weight: bold;
-    color: $pale-blue;
+  .form-group {
+    .control-label {
+      margin-bottom: $form-label-margin;
+    }
+  }
+
+  .radio {
+    margin-bottom: $form-label-margin;
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}
+
+.token {
+  &__valid {
+    background-color: $green !important;
+  }
+
+  &__invalid {
+    background-color: $red !important;
   }
 }
 
@@ -121,12 +185,17 @@ $form-label-margin: 10px;
   }
 }
 
-//SP Location form
-//================
-.location-form {
-  .form-group {
-    .dropdown-select {
-      min-width: 100%;
-    }
+// SP Add Node Form
+//=================
+.sp-add-node-form {
+
+  .number-input-group {
+    width: $number-input-width;
+    margin-top: 7px;
+  }
+
+  &__highlight-name {
+    font-weight: bold;
+    color: $pale-blue;
   }
 }

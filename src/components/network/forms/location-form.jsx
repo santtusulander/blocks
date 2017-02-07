@@ -125,10 +125,7 @@ const NetworkLocationForm = (props) => {
                               <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form
-      className="location-form"
-      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
-    >
+    <form className="sp-location-form" onSubmit={handleSubmit}>
 
     {
       error &&
@@ -198,6 +195,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudName"
+            className="input-select"
             type="select"
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
@@ -209,6 +207,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudProvider"
+            className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
             required={false}
