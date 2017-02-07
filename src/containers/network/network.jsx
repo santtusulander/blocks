@@ -624,11 +624,11 @@ class Network extends React.Component {
                 type: CONTENT_ITEMS_TYPES.ACCOUNT,
                 chartWidth: '450',
                 barMaxHeight: '30',
-                analyticsURLBuilder: getAnalyticsUrl,
-                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+                analyticsURLBuilder: getAnalyticsUrl
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
             />
 
             <EntityList
@@ -649,11 +649,12 @@ class Network extends React.Component {
                 type: CONTENT_ITEMS_TYPES.GROUP,
                 chartWidth: '350',
                 barMaxHeight: '30',
-                analyticsURLBuilder: getAnalyticsUrl,
-                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+                analyticsURLBuilder: getAnalyticsUrl
               }}
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+              creationPermission={PERMISSIONS.CREATE_GROUP}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
             />
 
             <EntityList
@@ -667,6 +668,8 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.networks.title'/>}
               disableButtons={params.group ? false : true}
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+              creationPermission={PERMISSIONS.CREATE_NETWORK}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
             />
 
             <EntityList
@@ -680,6 +683,8 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pops.title'/>}
               disableButtons={params.network ? false : true}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+              creationPermission={PERMISSIONS.CREATE_POP}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
             />
 
             <EntityList
@@ -695,6 +700,8 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pods.title'/>}
               disableButtons={params.pop ? false : true}
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+              creationPermission={PERMISSIONS.CREATE_POD}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
             />
 
             <EntityList
@@ -710,6 +717,8 @@ class Network extends React.Component {
               multiColumn={true}
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+              creationPermission={PERMISSIONS.CREATE_NODE}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
 
             />
           </div>
