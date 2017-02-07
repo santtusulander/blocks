@@ -126,11 +126,9 @@ class Network extends React.Component {
     this.props.fetchData()
 
     this.props.fetchNetworks( group )
-    this.props.fetchPops( network )
-    this.props.fetchPods( pop )
+    this.props.fetchPops( network, group )
+    this.props.fetchPods( network, group, pop )
     this.props.fetchLocations(group)
-    this.props.fetchNetworks(group)
-    this.props.fetchPops(network, group)
 
   }
 
@@ -147,7 +145,7 @@ class Network extends React.Component {
     }
 
     if (pop) {
-      this.props.fetchPods( pop )
+      this.props.fetchPods( network, group, pop )
     }
 
     if (pod) {
@@ -859,7 +857,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, group, network /*, pop, pod */} = ownProps.params
+  const { brand, account /*, pop, pod */} = ownProps.params
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -896,7 +894,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network, group) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
-    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
+    fetchPods: (network, group, pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
