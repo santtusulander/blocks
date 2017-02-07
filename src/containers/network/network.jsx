@@ -738,7 +738,7 @@ class Network extends React.Component {
               multiColumn={true}
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
-  		        creationPermission={PERMISSIONS.CREATE_NODE}
+              creationPermission={PERMISSIONS.CREATE_NODE}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
 
             />
