@@ -13,6 +13,8 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import SectionContainer from '../layout/section-container'
+import SectionHeader from '../layout/section-header'
 
 import {
   checkForErrors
@@ -94,11 +96,14 @@ const GroupForm = ({
           <hr/>
 
           {(canSeeLocations && groupId) &&
-            <div>
-              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
-              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                <IconAdd/>
-              </UDNButton>
+            <SectionContainer>
+              <SectionHeader
+                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/></label>}
+                >
+                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
+                  <IconAdd/>
+                </UDNButton>
+              </SectionHeader>
               {isFetchingLocations ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
                   <Table striped={true} className="fixed-layout">
@@ -121,7 +126,7 @@ const GroupForm = ({
                   </Table>
                 : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
               }
-            </div>
+            </SectionContainer>
           }
 
           {(!accountIsServiceProviderType && groupId) &&
