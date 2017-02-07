@@ -1,5 +1,10 @@
 @import '../../base/colors';
 
+$input-width: 324px;
+$input-height: 36px;
+$number-input-btn-width: 18px;
+$form-label-margin: 10px;
+
 .sp-network-form,
 .sp-pop-form,
 .sp-pod-form,
@@ -7,7 +12,7 @@
 .sp-add-node-form,
 .sp-routing-daemon-form {
   .form-group {
-    margin-right: 228px;
+    width: $input-width;
   }
 }
 
@@ -16,17 +21,17 @@
 .sp-footprint-form {
 
   .typeahead-form-group {
-    margin-right: 0;
+    width: 100%;
   }
 
   .form-group {
     .control-label {
-      margin-bottom: 10px;
+      margin-bottom: $form-label-margin;
     }
   }
 
   .radio {
-    margin-bottom: 10px;
+    margin-bottom: $form-label-margin;
 
     span {
       vertical-align: middle;
@@ -55,8 +60,8 @@
 
 // SP POD Form
 //============
-$input-height: 36px;
 
+// TODO: UDNP-2181 - Abstract z-index values to variables
 #tooltip-help {
   z-index: 1070;
 }
@@ -65,7 +70,7 @@ $input-height: 36px;
 
   .dropdown-select,
   .form-control {
-    width: 324px;
+    width: $input-width;
     height: $input-height;
     margin-right: auto;
   }
@@ -87,7 +92,7 @@ $input-height: 36px;
   }
 
   .number-input {
-    width: 306px;
+    width: $input-width - $number-input-btn-width;
   }
 }
 
