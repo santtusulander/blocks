@@ -122,7 +122,7 @@ class FootprintForm extends React.Component {
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
-      <form onSubmit={handleSubmit(onSave)}>
+      <form className="sp-footprint-form" onSubmit={handleSubmit(onSave)}>
           <span className='submit-error'>
           {this.props.error}
           </span>

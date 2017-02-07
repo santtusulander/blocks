@@ -56,8 +56,7 @@ const GroupForm = ({
   submitting}) => {
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -94,7 +93,7 @@ const GroupForm = ({
           <hr/>
 
           {(canSeeLocations && groupId) &&
-            <div>
+            <div className="locations">
               <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
