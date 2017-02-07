@@ -135,7 +135,7 @@ class PopFormContainer extends Component {
   }
 
   hasChildren(edit) {
-    return (edit ? ((this.props.pods.size > 0) ? true : false ) : false)
+    return (edit ? (this.props.pods.size > 0) : false)
   }
 
   render() {
