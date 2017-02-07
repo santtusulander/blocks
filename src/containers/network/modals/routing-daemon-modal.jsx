@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
@@ -24,7 +25,8 @@ class RoutingDaemonFormContainer extends React.Component {
       editing,
       intl,
       onCancel,
-      show
+      show,
+      initialValues
     } = this.props
 
     const formTitle = editing ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
@@ -36,6 +38,7 @@ class RoutingDaemonFormContainer extends React.Component {
         cancel={onCancel}
       >
       <RoutingDaemonForm
+        initialValues={initialValues}
         editing={editing}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
@@ -55,8 +58,16 @@ RoutingDaemonFormContainer.propTypes = {
   show: PropTypes.bool
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = (state) => {
+  const selector = formValueSelector('pod-form')
+
+  return {
+    initialValues: {
+      bgp_as_number: selector(state, 'UIsp_bgp_router_as'),
+      bgp_router_ip: selector(state, 'UIsp_bgp_router_ip'),
+      bgp_password: selector(state, 'UIsp_bgp_router_password')
+    }
+  }
 }
 
 const mapDispatchToProps = () => {

@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { reduxForm, Field, change } from 'redux-form'
+import { reduxForm, Field, change, propTypes as reduxFormPropTypes  } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
@@ -74,7 +73,6 @@ class RoutingDaemonForm extends React.Component {
   }
 
   fetchBGPName(value) {
-    const { setBGPName } = this.props
     const BGPNumber = value
 
     if (!BGPNumber && BGPNumber.length == 0) {
@@ -98,7 +96,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: !holder.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => setBGPName(holder, BGPNumber))
+        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_name', holder) ) )
       })
       .catch(() => {
         this.setState({
@@ -107,7 +105,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: true,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => setBGPName('', BGPNumber))
+        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_number', '') ) )
       })
   }
 
@@ -198,43 +196,16 @@ class RoutingDaemonForm extends React.Component {
 
 RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
-  dirty: PropTypes.bool,
-  handleSubmit: PropTypes.func,
-  intl: PropTypes.object,
-  invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
   setBGPName: PropTypes.func,
-  submitting: PropTypes.bool
+
+  ...reduxFormPropTypes
 }
-
-
-const mapStateToProps = (state) => {
-  const podValues = state.form['pod-form'].initial
-  const initialValues = {
-    bgp_as_number: podValues.UIsp_bgp_router_as,
-    bgp_router_ip: podValues.UIsp_bgp_router_ip,
-    bgp_password: podValues.UIsp_bgp_router_password
-  }
-
-  return {
-    initialValues
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setBGPName: (name, BGPNumber) => {
-      dispatch(change('routing-daemon-form', 'bgp_as_name', name))
-      dispatch(change('routing-daemon-form', 'bgp_as_number', BGPNumber))
-    }
-  }
-}
-
 
 const form = reduxForm({
   form: 'routing-daemon-form',
   validate
 })(RoutingDaemonForm)
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
+export default (injectIntl(form))
