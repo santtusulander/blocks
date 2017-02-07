@@ -221,9 +221,12 @@ export function getSecurityUrlFromParams(params) {
 }
 
 export function getDashboardUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group } = params
 
   if (account) {
+    if (group) {
+      return getRoute('dashboardGroup', params)
+    }
     return getRoute('dashboardAccount', params)
   } else if (brand) {
     return getRoute('dashboardBrand', params)
