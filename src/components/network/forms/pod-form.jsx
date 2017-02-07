@@ -100,8 +100,8 @@ const asyncValidate = ({ UILocalAS }) => {
         UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
       }
     })
-
 }
+
 /** TODO: This is needed for IPList
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
