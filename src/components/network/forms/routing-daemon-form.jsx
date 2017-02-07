@@ -75,7 +75,7 @@ class RoutingDaemonForm extends React.Component {
   fetchBGPName(value) {
     const BGPNumber = value
 
-    if (!BGPNumber && BGPNumber.length == 0) {
+    if (!BGPNumber || BGPNumber.length == 0) {
       this.setState({ BGPNumberIsEmpty: true })
     }
 
@@ -136,7 +136,7 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           component={FieldFormGroup}
-          onBlur={({ target: { value } }) => this.fetchBGPName(value)}
+          onBlur={(e, value) => this.fetchBGPName(value)}
           props={{
             meta: {
               invalid: BGPNameNotFound,
