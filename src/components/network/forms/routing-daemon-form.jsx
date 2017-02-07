@@ -88,7 +88,7 @@ class RoutingDaemonForm extends React.Component {
         this.setState({
           BGPNumber,
           BGPName: holder.length ? holder : null,
-          BGPNameNotFound: holder.length ? false : true,
+          BGPNameNotFound: !holder.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
         }, () => setBGPName(holder, BGPNumber))
@@ -109,11 +109,12 @@ class RoutingDaemonForm extends React.Component {
     const {
       dirty,
       handleSubmit,
+      initialValues,
       intl,
       invalid,
       onCancel,
-      submitting,
-      onSubmit
+      onSubmit,
+      submitting
     } = this.props
 
     const { BGPName, BGPNameNotFound, isFetchingBGPName, BGPNumberIsEmpty } = this.state
@@ -124,7 +125,10 @@ class RoutingDaemonForm extends React.Component {
 
     const BGB_AS_NUMBER_PROPS = {
       input: {
-        onBlur: (e) => this.fetchBGPName(e)
+        onBlur: (e) => this.fetchBGPName(e),
+        // TODO: Nej funkar prkl.
+        // onChange: ({ target: { value } }) => initialValues.bgp_as_number = value,
+        // value: initialValues.bgp_as_number
       },
       meta: {
         invalid: BGPNameNotFound,
@@ -206,8 +210,14 @@ RoutingDaemonForm.propTypes = {
 }
 
 
-const mapStateToProps = (state, ownProps) => {
-  const initialValues = ownProps.initialValues
+const mapStateToProps = (state) => {
+  const podValues = state.form['pod-form'].initial
+  const initialValues = {
+    bgp_as_number: podValues.UIsp_bgp_router_as,
+    bgp_router_ip: podValues.UIsp_bgp_router_ip,
+    bgp_password: podValues.UIsp_bgp_router_password
+  }
+
   return {
     initialValues
   }
