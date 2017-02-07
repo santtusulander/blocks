@@ -221,7 +221,7 @@ const PodForm = ({
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
 
   return (
-    <form onSubmit={handleSubmit(onSave)}>
+    <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
       <Field
         type="text"
         name="UIName"
@@ -237,6 +237,7 @@ const PodForm = ({
       </div>
 
       <Field
+        className="input-select"
         name="UILbMethod"
         component={FieldFormGroupSelect}
         options={LBMETHOD_OPTIONS}
@@ -251,6 +252,7 @@ const PodForm = ({
 
       <Field
         name="pod_type"
+        className="input-select"
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
@@ -270,6 +272,7 @@ const PodForm = ({
         }/>
 
       <Field
+        className="input-select"
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS}
@@ -298,6 +301,7 @@ const PodForm = ({
 
       <Field
         name="UIDiscoveryMethod"
+        className="input-select"
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed}
         options={DISCOVERY_METHOD_OPTIONS}
@@ -312,7 +316,7 @@ const PodForm = ({
       />
 
       {showFootprints &&
-      <div className="form-group discovery-section">
+      <div className="discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
@@ -347,7 +351,7 @@ const PodForm = ({
 
       {/* BGP */}
       {showBgp &&
-      <div className="form-group discovery-section">
+      <div className="discovery-section">
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
           <UDNButton bsStyle="success"
                      icon={true}

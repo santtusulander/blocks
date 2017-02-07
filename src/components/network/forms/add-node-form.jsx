@@ -3,9 +3,7 @@ import React from 'react'
 import {
   Button,
   ButtonToolbar,
-  Col,
-  FormGroup,
-  Row
+  FormGroup
 } from 'react-bootstrap'
 
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
@@ -162,7 +160,7 @@ class NetworkAddNodeForm extends React.Component {
     const nodeNameProps = nodeNameData.props
 
     return (
-      <form className="add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
           {/* <Row>
@@ -179,22 +177,17 @@ class NetworkAddNodeForm extends React.Component {
 
           <FormGroup>
             <label><FormattedMessage id="portal.common.name" /></label>
-            <Row>
-              <Col sm={9}>
-                <div className="add-node-form__name-fqdn">
-                  {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
-                </div>
-              </Col>
-              <Col sm={3}>
-                <Field
-                  type="number"
-                  name="nameCode"
-                  min={0}
-                  max={99}
-                  component={FieldFormGroupNumber}
-                />
-              </Col>
-            </Row>
+              <Field
+                type="number"
+                name="nameCode"
+                min={0}
+                max={99}
+                component={FieldFormGroupNumber}
+              />
+
+            <div className="add-node-form__name-fqdn">
+              {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
+            </div>
           </FormGroup>
 
           <Field
