@@ -678,7 +678,6 @@ class Network extends React.Component {
 
             <EntityList
               ref={pops => this.entityList.popList = pops}
-              titleGenerator={entity => `${entity.get('iata')} ${entity.get('location_id')}`}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
               deleteEntity={() => () => null}
@@ -688,7 +687,7 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pops.title'/>}
               disableButtons={params.network ? false : true}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
-              contentTextGenerator={entity => entity.get('name')}
+              contentTextGenerator={entity => entity.get('id')}
             />
 
             <EntityList
