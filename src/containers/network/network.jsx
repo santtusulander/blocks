@@ -46,6 +46,9 @@ import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/n
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
+import iataCodeActions from '../../redux/modules/entities/iata-codes/actions'
+import { getIataCodes } from '../../redux/modules/entities/iata-codes/selectors'
+
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
 import PageHeader from '../../components/layout/page-header'
@@ -111,6 +114,8 @@ class Network extends React.Component {
 
     this.scrollToEntity = this.scrollToEntity.bind(this)
 
+    this.popContentTextGenerator = this.popContentTextGenerator.bind(this)
+
     this.state = {
       networks: Immutable.List(),
       pops: Immutable.List(),
@@ -141,6 +146,7 @@ class Network extends React.Component {
     this.props.fetchLocations(group)
     this.props.fetchNetworks(group)
     this.props.fetchPops(network)
+    this.props.fetchIataCodes()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -404,6 +410,12 @@ class Network extends React.Component {
   handlePopEdit(popId) {
     this.setState({popId: popId})
     this.props.toggleModal(ADD_EDIT_POP)
+  }
+
+  popContentTextGenerator(entity) {
+    const iata = entity.get('iata')
+    const iataObject = this.props.iataCodes.find(obj => obj.iata === iata)
+    return iataObject ? `${iataObject.city}, ${iata}` : iata
   }
 
   /* ==== POD Handlers ==== */
@@ -690,6 +702,7 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.networks.title'/>}
               disableButtons={params.group ? false : true}
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+              contentTextGenerator={entity => entity.get('description')}
             />
 
             <EntityList
@@ -703,6 +716,7 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pops.title'/>}
               disableButtons={params.network ? false : true}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+              contentTextGenerator={this.popContentTextGenerator}
             />
 
             <EntityList
@@ -831,6 +845,7 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchIataCodes: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
@@ -840,6 +855,7 @@ Network.propTypes = {
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
+  iataCodes: PropTypes.array,
   location: PropTypes.object,
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
@@ -870,7 +886,8 @@ const mapStateToProps = (state, ownProps) => {
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    iataCodes: getIataCodes(state)
   };
 }
 
@@ -915,6 +932,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     accountActions: accountActions,
     uiActions: uiActions,
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
+    fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
     fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )

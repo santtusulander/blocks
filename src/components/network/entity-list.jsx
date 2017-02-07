@@ -6,6 +6,10 @@ import { AccountManagementHeader } from '../account-management/account-managemen
 import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
 
+const numericStatusToStringStatus = n => (
+  n === 1 ? 'enabled' : n === 2 ? 'disabled' : n === 3 ? 'provisioning' : null
+)
+
 class EntityList extends React.Component {
   constructor(props) {
     super(props)
@@ -134,13 +138,16 @@ class EntityList extends React.Component {
       entityNameKey,
       starburstData,
       params,
-      entities
+      entities,
+      contentTextGenerator
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
         const entityName = entity.get(entityNameKey)
         const isActive = String(selectedEntityId) === String(entity.get(entityIdKey))
+        const status = numericStatusToStringStatus(entity.get('status'))
+        const contentText = contentTextGenerator(entity)
 
         let content = (
           <NetworkItem
@@ -148,9 +155,10 @@ class EntityList extends React.Component {
             onEdit={() => editEntity(entityId)}
             title={entityName}
             active={isActive}
+            content={contentText}
             onSelect={() => selectEntity(entityId)}
             onDelet={() => deleteEntity(entityId)}
-            status="enabled"
+            status={status}
             extraClassName="entity-list-item"
             />
         )
@@ -315,6 +323,7 @@ class EntityList extends React.Component {
 EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
+  contentTextGenerator: PropTypes.func,
   deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
@@ -344,7 +353,8 @@ EntityList.defaultProps = {
     contentMetrics: Immutable.List(),
     barMaxHeight: '30',
     chartWidth: '350'
-  }
+  },
+  contentTextGenerator: () => ''
 }
 
 export default EntityList
