@@ -67,7 +67,7 @@ const validate = ({
         condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
+            fieldLabel={'portal.network.locationForm.cloudProviderLocationId.label'}
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
         )
@@ -93,7 +93,7 @@ const validate = ({
   if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
     errors.cloudProviderRegion = (
       <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.name.label'}
+        fieldLabel={'portal.network.locationForm.cloudProviderRegion.text'}
         minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
         maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
     )
