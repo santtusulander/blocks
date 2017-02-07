@@ -95,7 +95,7 @@ const GroupForm = ({
 
           {(canSeeLocations && groupId) &&
             <div>
-              <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
+              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
@@ -179,7 +179,7 @@ const GroupForm = ({
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting}>
+              disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
               {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
             </Button>
           </ButtonToolbar>
