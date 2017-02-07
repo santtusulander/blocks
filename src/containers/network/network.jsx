@@ -619,7 +619,7 @@ class Network extends React.Component {
     return (
       <Content className="network-content">
 
-        <PageHeader pageSubTitle="Network">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.network.text"/>}>
           <div className="dropdown-toggle header-toggle">
             <h1>
               <TruncatedTitle content={activeAccount.get('name')} tooltipPlacement="bottom"/>
@@ -736,6 +736,16 @@ class Network extends React.Component {
           </div>
         </PageContainer>
 
+        {networkModal === ADD_EDIT_ACCOUNT &&
+          <AccountForm
+            id="account-form"
+            onSave={this.handleAccountSave}
+            account={activeAccount}
+            onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
+            show={true}
+          />
+        }
+
         {networkModal === ADD_EDIT_GROUP &&
           <GroupFormContainer
             account={activeAccount.get('name')}
@@ -751,18 +761,10 @@ class Network extends React.Component {
           />
         }
 
-        {networkModal === ADD_EDIT_ACCOUNT &&
-          <AccountForm
-            id="account-form"
-            onSave={this.handleAccountSave}
-            account={activeAccount}
-            onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
-            show={true}
-          />
-        }
-
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
+            handleSelectedEntity={this.handleNetworkClick}
+            selectedEntityId={`${params.network}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
@@ -773,6 +775,8 @@ class Network extends React.Component {
 
         {networkModal === ADD_EDIT_POP &&
           <PopFormContainer
+            handleSelectedEntity={this.handlePopClick}
+            selectedEntityId={`${params.pop}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
