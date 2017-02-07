@@ -116,6 +116,7 @@
   "portal.network.locationForm.cloudProvider.label": "Cloud Provider",
   "portal.network.locationForm.cloudProviderId.label": "Cloud Provider ID (optional)",
   "portal.network.locationForm.cloudProviderRegion.label": "Cloud Provider Region (optional)",
+  "portal.network.locationForm.cloudProviderRegion.text": "Cloud Provider Region",
   "portal.network.locationForm.cloudProviderRegion.placeholder": "Enter Cloud Provider Region",
   "portal.network.locationForm.cloudProviderLocationId.label": "Cloud Provider Location ID",
   "portal.network.locationForm.cloudProviderLocationId.placeholder": "Enter Cloud Provider Location ID",
