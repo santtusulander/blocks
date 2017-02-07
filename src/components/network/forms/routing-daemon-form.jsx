@@ -66,9 +66,16 @@ class RoutingDaemonForm extends React.Component {
     this.fetchBGPName = this.fetchBGPName.bind(this)
   }
 
-  fetchBGPName(e) {
+  componentWillMount() {
+    const { initialValues: { bgp_as_number } } = this.props
+    if (bgp_as_number) {
+      this.fetchBGPName(bgp_as_number)
+    }
+  }
+
+  fetchBGPName(value) {
     const { setBGPName } = this.props
-    const BGPNumber = e.target.value
+    const BGPNumber = value
 
     if (!BGPNumber && BGPNumber.length == 0) {
       this.setState({ BGPNumberIsEmpty: true })
@@ -109,7 +116,6 @@ class RoutingDaemonForm extends React.Component {
     const {
       dirty,
       handleSubmit,
-      initialValues,
       intl,
       invalid,
       onCancel,
@@ -123,20 +129,6 @@ class RoutingDaemonForm extends React.Component {
                                            : (BGPNameNotFound
                                            ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/> : '')
 
-    const BGB_AS_NUMBER_PROPS = {
-      input: {
-        onBlur: (e) => this.fetchBGPName(e),
-        // TODO: Nej funkar prkl.
-        // onChange: ({ target: { value } }) => initialValues.bgp_as_number = value,
-        // value: initialValues.bgp_as_number
-      },
-      meta: {
-        invalid: BGPNameNotFound,
-        touched: BGPNameNotFound,
-        error: errorMsgASNum
-      }
-    }
-
     return (
       <form onSubmit={handleSubmit(onSubmit)} className="routing-daemon__form">
 
@@ -146,7 +138,14 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           component={FieldFormGroup}
-          props={BGB_AS_NUMBER_PROPS}
+          onBlur={({ target: { value } }) => this.fetchBGPName(value)}
+          props={{
+            meta: {
+              invalid: BGPNameNotFound,
+              touched: BGPNameNotFound,
+              error: errorMsgASNum
+            }
+          }}
         />
 
         <Field
