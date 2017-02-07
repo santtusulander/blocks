@@ -82,36 +82,36 @@ const GroupForm = ({
           </div>
         }
 
-        {(canSeeLocations && groupId) &&
-          <div>
-            <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
-            <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-              <IconAdd/>
-            </UDNButton>
-            {isFetchingLocations ? <LoadingSpinner/> :
-              !locations.isEmpty() ?
-                <Table striped={true} className="fixed-layout">
-                  <tbody>
-                  {locations.map((location, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>
-                            <h5><strong>{location.get('cityName')}</strong></h5>
-                            <div className="text-sm">{location.get('iataCode')}</div>
-                        </td>
-                        <td className="one-button-cell">
-                          <ActionButtons
-                            onEdit={() => onShowLocation(location.get('reduxId'))}/>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                  </tbody>
-                </Table>
-              : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
-            }
-          </div>
-        }
+          {(canSeeLocations && groupId) &&
+            <div>
+              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
+              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
+                <IconAdd/>
+              </UDNButton>
+              {isFetchingLocations ? <LoadingSpinner/> :
+                !locations.isEmpty() ?
+                  <Table striped={true} className="fixed-layout">
+                    <tbody>
+                    {locations.map((location, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                              <h5><strong>{location.get('cityName')}</strong></h5>
+                              <div className="text-sm">{location.get('iataCode')}</div>
+                          </td>
+                          <td className="one-button-cell">
+                            <ActionButtons
+                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </Table>
+                : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
+              }
+            </div>
+          }
 
           {(!accountIsServiceProviderType && groupId) &&
             <div>
@@ -168,7 +168,7 @@ const GroupForm = ({
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting}>
+              disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
               {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
             </Button>
           </ButtonToolbar>

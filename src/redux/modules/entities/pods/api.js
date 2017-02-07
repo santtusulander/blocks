@@ -10,9 +10,31 @@ const baseUrl = ({ brand, account, group, network, pop }) => {
 const pod = new schema.Entity('pods', {
   //footprints: [ footprint ]
 }, {
+  //Add POP-id tomake unique POD IDs
   idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
   processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
+
+    const {footprints, services: [ { /*ip_list,*/ cloud_lookup_id, lb_method, local_as, request_fwd_type, provider_weight, sp_bgp_router_ip, sp_bgp_router_as, sp_bgp_router_password } ] } = value
+
+    /* UI - params are extracted from services to keep UI - object flat */
+    return {
+      parentId: parent.id,
+      UIName: value.pod_name,
+      UIId: value.pod_name,
+      UICloudLookUpId: cloud_lookup_id,
+      UILbMethod: lb_method,
+      UILocalAS: local_as,
+      UIRequestFwdType: request_fwd_type,
+      UIProviderWeight: provider_weight,
+      UIDiscoveryMethod: footprints && footprints.length > 0 ? 'footprints' : 'BGP',
+      //UIFootprints: footprints,
+      //UIIpList: ip_list,
+      UIsp_bgp_router_as: sp_bgp_router_as,
+      UIsp_bgp_router_ip: sp_bgp_router_ip,
+      UIsp_bgp_router_password: sp_bgp_router_password,
+
+      ...value
+    }
   }
 })
 
@@ -64,7 +86,13 @@ export const fetchAll = ( params ) => {
 export const create = ({ payload, ...urlParams }) => {
   return axios.post(baseUrl(urlParams), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pod)
+
+      const wrappedWithparent = {
+        id: urlParams.pop,
+        pods: [data]
+      }
+
+      return normalize(wrappedWithparent, pop)
     })
 }
 
@@ -78,7 +106,13 @@ export const create = ({ payload, ...urlParams }) => {
 export const update = ({ id, payload, ...baseUrlParams }) => {
   return axios.put(`${baseUrl(baseUrlParams)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize(data, pod)
+
+      const wrappedWithparent = {
+        id: baseUrlParams.pop,
+        pods: [data]
+      }
+
+      return normalize(wrappedWithparent, pop)
     })
 }
 
@@ -90,5 +124,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => ( {id} ))
+    .then(() => ( { id: `${baseUrlParams.pop}-${id}` } ))
 }
