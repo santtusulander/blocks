@@ -7,10 +7,9 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {
   Button,
-  ButtonToolbar,
   Row,
   Col
-import { Button } from 'react-bootstrap'
+} from 'react-bootstrap'
 
 import {
   checkForErrors
