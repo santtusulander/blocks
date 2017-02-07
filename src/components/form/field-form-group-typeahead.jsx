@@ -41,7 +41,11 @@ const FieldFormGroupTypeahead = ({
     )
   }
   return (
-    <FormGroup className={classNames({'has-error': error && dirty})} controlId={input.name} validationState={getReduxFormValidationState(meta)}>
+    <FormGroup
+      className={classNames('typeahead-form-group', {'has-error': error && dirty})}
+      controlId={input.name}
+      validationState={getReduxFormValidationState(meta)}>
+      
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <Typeahead
@@ -77,7 +81,7 @@ FieldFormGroupTypeahead.propTypes = {
   allowNew: PropTypes.bool,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  emptyLabel: PropTypes.string,
+  emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   filterBy: PropTypes.oneOfType([ PropTypes.string, PropTypes.func, PropTypes.array ]),
   input: PropTypes.object,
   intl: intlShape.isRequired,

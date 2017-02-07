@@ -45,7 +45,7 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
 
 
   return (
-    <form onSubmit={handleSubmit(onSave)}>
+    <form className="sp-network-form" onSubmit={handleSubmit(onSave)}>
 
       { //This block will be shown when SubmissionError has been thrown form async call
         error &&

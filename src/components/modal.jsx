@@ -3,6 +3,7 @@ import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 
+import DefaultErrorBlock from './form/default-error-block'
 import FieldFormGroup from './form/field-form-group'
 import keyStrokeSupport from '../decorators/key-stroke-decorator'
 import IconClose from './icons/icon-close.jsx'
@@ -14,7 +15,7 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
+    const { error, cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
 
     return (
       <Modal show={true} dialogClassName="modal-window">
@@ -24,6 +25,7 @@ class ModalWindow extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
+            {error && <DefaultErrorBlock error={error}/>}
             {children}
             {content &&
               <p>{content}</p>
