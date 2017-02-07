@@ -21,7 +21,6 @@ import {LOCATION_NAME_MIN_LENGTH,
         CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
       } from '../../../constants/network.js'
 
-import './styles/location-form.scss'
 
 const validate = ({
   name = '',
@@ -67,7 +66,7 @@ const validate = ({
         condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
+            fieldLabel={'portal.network.locationForm.cloudProviderLocationId.label'}
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
         )
@@ -93,7 +92,7 @@ const validate = ({
   if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
     errors.cloudProviderRegion = (
       <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.name.label'}
+        fieldLabel={'portal.network.locationForm.cloudProviderRegion.text'}
         minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
         maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
     )
@@ -126,10 +125,7 @@ const NetworkLocationForm = (props) => {
                               <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form
-      className="location-form"
-      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
-    >
+    <form className="sp-location-form" onSubmit={handleSubmit}>
 
     {
       error &&
@@ -199,6 +195,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudName"
+            className="input-select"
             type="select"
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
@@ -210,6 +207,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudProvider"
+            className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
             required={false}

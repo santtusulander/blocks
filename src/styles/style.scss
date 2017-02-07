@@ -136,12 +136,11 @@
 // SP Dashboard
 @import 'components/stacked-by-time-summary';
 // Network
-@import 'components/network/edit-node-form';
-@import 'components/network/add-node-form';
 @import 'components/network/entities-container';
 @import 'components/network/entity-list';
 @import 'components/network/network-item';
-@import 'components/network/footprint-form';
+@import 'components/network/network-forms';
+
 // Shared
 @import 'components/shared/action-items-container';
 
