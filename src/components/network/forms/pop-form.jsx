@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import { checkForErrors } from '../../../util/helpers'
@@ -107,39 +107,35 @@ const NetworkPopForm = (props) => {
 
         <hr/>
 
-        <FormFooterButtons autoAlign={false}>
+        <FormFooterButtons>
           { edit &&
-            <ButtonToolbar className="pull-left">
-              <ButtonDisableTooltip
-                id="delete-btn"
-                className="btn-danger"
-                disabled={hasPods}
-                onClick={onDelete}
-                tooltipId="tooltip-help"
-                tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-                {
-                  //TODO: delete modal with confirm
-                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
-                }
-              </ButtonDisableTooltip>
-            </ButtonToolbar>
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={hasPods}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
+              {
+                //TODO: delete modal with confirm
+                submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+              }
+            </ButtonDisableTooltip>
           }
 
-          <ButtonToolbar className="pull-right">
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || (!dirty)}>
-              {actionButtonTitle}
-            </Button>
-          </ButtonToolbar>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (!dirty)}>
+            {actionButtonTitle}
+          </Button>
         </FormFooterButtons>
       </form>
   )

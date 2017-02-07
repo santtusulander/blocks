@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
@@ -242,33 +242,29 @@ const NetworkLocationForm = (props) => {
         </Col>
       </Row>
 
-      <FormFooterButtons autoAlign={false}>
+      <FormFooterButtons>
         { edit &&
-          <ButtonToolbar className="pull-left">
-            <Button
-              className="btn-danger"
-              disabled={submitting}
-              onClick={() => onDelete(initialValues.name)}
-            >
-              <FormattedMessage id="portal.button.delete"/>
-            </Button>
-          </ButtonToolbar>
+          <Button
+            className="btn-danger pull-left"
+            disabled={submitting}
+            onClick={() => onDelete(initialValues.name)}
+          >
+            <FormattedMessage id="portal.button.delete"/>
+          </Button>
         }
-        <ButtonToolbar className="pull-right">
-          <Button
-            className="btn-secondary"
-            onClick={onCancel}
-          >
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting}
-          >
-            {actionButtonTitle}
-          </Button>
-        </ButtonToolbar>
+        <Button
+          className="btn-secondary"
+          onClick={onCancel}
+        >
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid || submitting}
+        >
+          {actionButtonTitle}
+        </Button>
       </FormFooterButtons>
     </form>
   )};
