@@ -50,8 +50,7 @@ class PodFormContainer extends React.Component {
     this.state = {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
-      footprintId: null,
-      routingDaemonValues: {}
+      footprintId: null
     }
   }
 
@@ -117,15 +116,6 @@ class PodFormContainer extends React.Component {
     if (bgp_router_ip) setFormVal('UIsp_bgp_router_ip', bgp_router_ip)
     if (bgp_as_number) setFormVal('UIsp_bgp_router_as', bgp_as_number)
     if (bgp_password) setFormVal('UIsp_bgp_router_password', bgp_password)
-
-    this.setState({
-      routingDaemonValues: {
-        bgp_as_name,
-        bgp_router_ip,
-        bgp_as_number,
-        bgp_password
-      }
-    })
   }
 
   clearBGP() {
@@ -133,8 +123,6 @@ class PodFormContainer extends React.Component {
     setFormVal('UIsp_bgp_router_ip', undefined)
     setFormVal('UIsp_bgp_router_as', undefined)
     setFormVal('UIsp_bgp_router_password', undefined)
-
-    this.setState({ routingDaemonValues: {} })
   }
 
   showFootprintModal(footprintId = null) {
@@ -145,10 +133,8 @@ class PodFormContainer extends React.Component {
     this.setState({ showFootprintModal: false, footprintId: null })
   }
 
-  showRoutingDaemonModal(edit = false) {
-    const { routingDaemonValues } = edit ? this.state : {}
-
-    this.setState({ showRoutingDaemonModal: true, routingDaemonValues })
+  showRoutingDaemonModal() {
+    this.setState({ showRoutingDaemonModal: true })
   }
 
   hideRoutingDaemonModal() {
@@ -294,7 +280,7 @@ class PodFormContainer extends React.Component {
             onEditFootprint={this.showFootprintModal}
             onShowFootprintModal={this.showFootprintModal}
 
-            onShowRoutingDaemonModal={(edit) => this.showRoutingDaemonModal(edit)}
+            onShowRoutingDaemonModal={this.showRoutingDaemonModal}
             onDeleteRoutingDaemon={this.clearBGP}
 
             UIFootprints={UIFootprints}
@@ -320,7 +306,6 @@ class PodFormContainer extends React.Component {
 
         {this.state.showRoutingDaemonModal &&
         <RoutingDaemonFormContainer
-          initialValues={this.state.routingDaemonValues}
           onCancel={this.hideRoutingDaemonModal}
           onSave={this.saveBGP}
           show={true}

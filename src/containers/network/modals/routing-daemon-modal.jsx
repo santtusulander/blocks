@@ -22,7 +22,6 @@ class RoutingDaemonFormContainer extends React.Component {
   render() {
     const {
       editing,
-      initialValues,
       intl,
       onCancel,
       show
@@ -37,7 +36,6 @@ class RoutingDaemonFormContainer extends React.Component {
         cancel={onCancel}
       >
       <RoutingDaemonForm
-        initialValues={initialValues}
         editing={editing}
         onCancel={onCancel}
         onSubmit={this.onSubmit}

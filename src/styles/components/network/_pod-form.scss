@@ -1,9 +1,3 @@
-@import "../../../styles/base/variables";
-@import "../../../styles/base/functions";
-@import "../../../styles/base/colors";
-@import '../../../styles/base/buttons';
-@import '../../../styles/components/modal-form-panel';
-
 $input-height: 36px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
@@ -44,8 +38,8 @@ $panel-horizontal-padding: em(18px, 14px);
 
       label {
         display: block;
-        line-height: $bar-height;
         margin: $form-group-padding 0;
+        line-height: $bar-height;
       }
 
       .btn-add-new {
@@ -54,16 +48,16 @@ $panel-horizontal-padding: em(18px, 14px);
     }
 
     .footprints {
-      list-style-type: none;
       padding: 0;
       margin-top: $panel-horizontal-padding;
+      list-style-type: none;
 
       > li {
         padding: 0 $panel-vertical-padding;
-        background-color: rgba($pale-blue, 0.2);
         margin-bottom: $panel-vertical-padding;
         font-weight: bold;
         line-height: em(36px, 14px);
+        background-color: rgba($pale-blue, 0.2);
 
         .light-theme & {
           color: $lt-text-color;

@@ -69,6 +69,9 @@ class Network extends React.Component {
   constructor(props) {
     super(props)
 
+    this.notificationTimeout = null
+    this.showNotification = this.showNotification.bind(this)
+
     this.addEntity = this.addEntity.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
 
@@ -80,6 +83,7 @@ class Network extends React.Component {
     this.handleGroupEdit = this.handleGroupEdit.bind(this)
     this.handleGroupSave = this.handleGroupSave.bind(this)
     this.handleGroupDelete = this.handleGroupDelete.bind(this)
+    this.determineNextGroupState = this.determineNextGroupState.bind(this)
 
     this.handleNetworkClick = this.handleNetworkClick.bind(this)
     this.handleNetworkEdit = this.handleNetworkEdit.bind(this)
@@ -189,6 +193,7 @@ class Network extends React.Component {
     switch (entityModal) {
 
       case ADD_EDIT_GROUP:
+        this.props.groupActions.changeActiveGroup(Immutable.Map())
         this.setState({groupId: null})
         this.props.toggleModal(ADD_EDIT_GROUP)
         break;
@@ -288,7 +293,7 @@ class Network extends React.Component {
   }
 
   /* ==== Group Handlers ==== */
-  handleGroupClick(groupId) {
+  determineNextGroupState(groupId) {
     return this.determineNextState({
       currentId: groupId,
       previousId: this.props.params.group,
@@ -298,18 +303,72 @@ class Network extends React.Component {
     })
   }
 
+  handleGroupClick(groupId) {
+    const { groupActions: { changeActiveGroup } } = this.props
+    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
+    this.determineNextGroupState(groupId)
+  }
+
   handleGroupEdit(groupId) {
-    if (String(groupId) !== String(this.props.params.group)) return
+    const { groupActions: { changeActiveGroup } } = this.props
+    changeActiveGroup(this.props.groups.find(group => group.get('id') === groupId))
     this.setState({groupId: groupId})
     this.props.toggleModal(ADD_EDIT_GROUP)
   }
 
-  handleGroupSave() {
-    // TODO
+  // handleGroupSave(data) {
+  //   console.log(data)
+  //   return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), data)
+  //     .then(action => {
+  //       this.handleCancel(ADD_EDIT_GROUP)
+  //       return action.payload
+  //     })
+  // }
+
+  handleGroupSave(payload) {
+    const { edit } = payload
+    if (edit) {
+      const { groupId, data } = payload
+
+      return Promise.all([
+        this.props.groupActions.updateGroup(
+          'udn',
+          this.props.activeAccount.get('id'),
+          groupId,
+          data
+        )
+      ])
+        .then(() => {
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
+        })
+    } else {
+      return this.props.groupActions.createGroup('udn', this.props.activeAccount.get('id'), payload.data)
+        .then(action => {
+          // this.props.hostActions.clearFetchedHosts()
+          this.props.toggleModal(null)
+          this.showNotification(<FormattedMessage id="portal.accountManagement.groupCreated.text"/>)
+          return action.payload
+        })
+    }
   }
 
-  handleGroupDelete() {
-    // TODO
+  handleGroupDelete(group) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      group.get('id')
+    ).then(response => {
+      this.props.toggleModal(null)
+      this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+      response.error &&
+        this.props.uiActions.showInfoDialog({
+          title: 'Error',
+          content: response.payload.data.message,
+          okButton: true,
+          cancel: () => this.props.uiActions.hideInfoDialog()
+        })
+    })
   }
 
   /* ==== Network Handlers ==== */
@@ -361,6 +420,12 @@ class Network extends React.Component {
   handleNodeEdit(nodeId) {
     this.setState({ nodeId: [ nodeId ] })
     this.props.toggleModal(EDIT_NODE)
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   /**
@@ -531,7 +596,7 @@ class Network extends React.Component {
     return (
       <Content className="network-content">
 
-        <PageHeader pageSubTitle="Network">
+        <PageHeader pageSubTitle={<FormattedMessage id="portal.navigation.network.text"/>}>
           <div className="dropdown-toggle header-toggle">
             <h1>
               <TruncatedTitle content={activeAccount.get('name')} tooltipPlacement="bottom"/>
@@ -540,125 +605,115 @@ class Network extends React.Component {
         </PageHeader>
 
         <PageContainer ref={container => this.container = container} className="network-entities-container">
-          <EntityList
-            ref={accounts => this.entityList.accountList = accounts}
-            entities={params.account && Immutable.List([activeAccount])}
-            addEntity={() => null}
-            deleteEntity={() => null}
-            editEntity={this.handleAccountEdit}
-            selectEntity={this.handleAccountClick}
-            selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
-            title={<FormattedMessage id='portal.network.account.title'/>}
-            showButtons={false}
-            showAsStarbursts={true}
-            starburstData={{
-              dailyTraffic: this.props.accountDailyTraffic,
-              contentMetrics: this.props.accountMetrics,
-              type: CONTENT_ITEMS_TYPES.ACCOUNT,
-              chartWidth: '450',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
-            }}
-            params={params}
-            nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
-          />
+          <div className="network-entities-wrapper">
+            <EntityList
+              ref={accounts => this.entityList.accountList = accounts}
+              entities={params.account && Immutable.List([activeAccount])}
+              addEntity={() => null}
+              deleteEntity={() => null}
+              editEntity={this.handleAccountEdit}
+              selectEntity={this.handleAccountClick}
+              selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
+              title={<FormattedMessage id='portal.network.account.title'/>}
+              showButtons={false}
+              showAsStarbursts={true}
+              starburstData={{
+                linkGenerator: this.handleAccountClick,
+                dailyTraffic: this.props.accountDailyTraffic,
+                contentMetrics: this.props.accountMetrics,
+                type: CONTENT_ITEMS_TYPES.ACCOUNT,
+                chartWidth: '450',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+              }}
+              params={params}
+              nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+            />
 
-          <EntityList
-            ref={groups => this.entityList.groupList = groups}
-            entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
-            addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-            deleteEntity={this.handleGroupEdit}
-            editEntity={this.handleGroupEdit}
-            selectEntity={(groupId) => this.handleGroupClick(groupId)}
-            selectedEntityId={`${params.group}`}
-            title={<FormattedMessage id='portal.network.groups.title'/>}
-            disableButtons={this.hasGroupsInUrl() ? false : true}
-            showAsStarbursts={true}
-            starburstData={{
-              dailyTraffic: this.props.groupDailyTraffic,
-              contentMetrics: this.props.groupMetrics,
-              type: CONTENT_ITEMS_TYPES.GROUP,
-              chartWidth: '350',
-              barMaxHeight: '30',
-              analyticsURLBuilder: getAnalyticsUrl,
-              isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
-            }}
-            params={params}
-            nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
-          />
+            <EntityList
+              ref={groups => this.entityList.groupList = groups}
+              entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
+              addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
+              deleteEntity={() => null}
+              editEntity={this.handleGroupEdit}
+              selectEntity={this.handleGroupClick}
+              selectedEntityId={`${params.group}`}
+              title={<FormattedMessage id='portal.network.groups.title'/>}
+              disableButtons={this.hasGroupsInUrl() ? false : true}
+              showAsStarbursts={true}
+              starburstData={{
+                linkGenerator: this.determineNextGroupState,
+                dailyTraffic: this.props.groupDailyTraffic,
+                contentMetrics: this.props.groupMetrics,
+                type: CONTENT_ITEMS_TYPES.GROUP,
+                chartWidth: '350',
+                barMaxHeight: '30',
+                analyticsURLBuilder: getAnalyticsUrl,
+                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+              }}
+              params={params}
+              nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+            />
 
-          <EntityList
-            ref={networkListRef => this.entityList.networkList = networkListRef}
-            entities={params.group && networks}
-            addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNetworkEdit}
-            selectEntity={this.handleNetworkClick}
-            selectedEntityId={`${params.network}`}
-            title={<FormattedMessage id='portal.network.networks.title'/>}
-            disableButtons={params.group ? false : true}
-            nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
-          />
+            <EntityList
+              ref={networkListRef => this.entityList.networkList = networkListRef}
+              entities={params.group && networks}
+              addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNetworkEdit}
+              selectEntity={this.handleNetworkClick}
+              selectedEntityId={`${params.network}`}
+              title={<FormattedMessage id='portal.network.networks.title'/>}
+              disableButtons={params.group ? false : true}
+              nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+            />
 
-          <EntityList
-            ref={pops => this.entityList.popList = pops}
-            entities={params.network && pops}
-            addEntity={() => this.addEntity(ADD_EDIT_POP)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePopEdit}
-            selectEntity={this.handlePopClick}
-            selectedEntityId={`${params.pop}`}
-            title={<FormattedMessage id='portal.network.pops.title'/>}
-            disableButtons={params.network ? false : true}
-            nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
-          />
+            <EntityList
+              ref={pops => this.entityList.popList = pops}
+              entities={params.network && pops}
+              addEntity={() => this.addEntity(ADD_EDIT_POP)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePopEdit}
+              selectEntity={this.handlePopClick}
+              selectedEntityId={`${params.pop}`}
+              title={<FormattedMessage id='portal.network.pops.title'/>}
+              disableButtons={params.network ? false : true}
+              nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+            />
 
-          <EntityList
-            ref={pods => this.entityList.podList = pods}
-            entityNameKey='UIName'
-            entityIdKey='pod_name'
-            addEntity={() => this.addEntity(ADD_EDIT_POD)}
-            deleteEntity={() => () => null}
-            editEntity={this.handlePodEdit}
-            entities={params.pop && pods}
-            selectEntity={this.handlePodClick}
-            selectedEntityId={`${params.pod}`}
-            title={<FormattedMessage id='portal.network.pods.title'/>}
-            disableButtons={params.pop ? false : true}
-            nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
-          />
+            <EntityList
+              ref={pods => this.entityList.podList = pods}
+              entityNameKey='UIName'
+              entityIdKey='pod_name'
+              addEntity={() => this.addEntity(ADD_EDIT_POD)}
+              deleteEntity={() => () => null}
+              editEntity={this.handlePodEdit}
+              entities={params.pop && pods}
+              selectEntity={this.handlePodClick}
+              selectedEntityId={`${params.pod}`}
+              title={<FormattedMessage id='portal.network.pods.title'/>}
+              disableButtons={params.pop ? false : true}
+              nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+            />
 
-          <EntityList
-            ref={nodes => this.entityList.nodeList = nodes}
-            entities={params.pod && this.props.getNodes(params.pod)}
-            addEntity={() => this.addEntity(ADD_NODE)}
-            deleteEntity={() => () => null}
-            editEntity={this.handleNodeEdit}
-            selectEntity={() => null}
-            title={<FormattedMessage id='portal.network.nodes.title'/>}
-            entityIdKey="reduxId"
-            disableButtons={params.pod ? false : true}
-            multiColumn={true}
-            numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
-            itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+            <EntityList
+              ref={nodes => this.entityList.nodeList = nodes}
+              entities={params.pod && this.props.getNodes(params.pod)}
+              addEntity={() => this.addEntity(ADD_NODE)}
+              deleteEntity={() => () => null}
+              editEntity={this.handleNodeEdit}
+              selectEntity={() => null}
+              title={<FormattedMessage id='portal.network.nodes.title'/>}
+              entityIdKey="reduxId"
+              disableButtons={params.pod ? false : true}
+              multiColumn={true}
+              numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
+              itemsPerColumn={NETWORK_NODES_PER_COLUMN}
 
-          />
-
+            />
+          </div>
         </PageContainer>
-
-        {networkModal === ADD_EDIT_GROUP &&
-          <GroupFormContainer
-            account={activeAccount.get('name')}
-            params={this.props.params}
-            groupId={this.state.groupId}
-            canEditBilling={false}
-            canSeeBilling={false}
-            canSeeLocations={true}
-            onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
-            show={true}
-          />
-        }
 
         {networkModal === ADD_EDIT_ACCOUNT &&
           <AccountForm
@@ -670,8 +725,25 @@ class Network extends React.Component {
           />
         }
 
+        {networkModal === ADD_EDIT_GROUP &&
+          <GroupFormContainer
+            account={activeAccount.get('name')}
+            params={this.props.params}
+            groupId={this.state.groupId}
+            canEditBilling={false}
+            canSeeBilling={false}
+            canSeeLocations={true}
+            onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
+            // onDelete={(groupId) => this.handleGroupDelete(groupId)}
+            onSave={this.handleGroupSave}
+            show={true}
+          />
+        }
+
         {networkModal === ADD_EDIT_NETWORK &&
           <NetworkFormContainer
+            handleSelectedEntity={this.handleNetworkClick}
+            selectedEntityId={`${params.network}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
@@ -682,6 +754,8 @@ class Network extends React.Component {
 
         {networkModal === ADD_EDIT_POP &&
           <PopFormContainer
+            handleSelectedEntity={this.handlePopClick}
+            selectedEntityId={`${params.pop}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
@@ -742,6 +816,7 @@ Network.propTypes = {
   fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
   getNodes: PropTypes.func,
+  groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
@@ -753,7 +828,8 @@ Network.propTypes = {
   pops: PropTypes.instanceOf(Immutable.List),
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uiActions: PropTypes.object
 }
 
 Network.defaultProps = {
@@ -815,7 +891,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchData: fetchData,
     groupActions: groupActions,
     accountActions: accountActions,
-
+    uiActions: uiActions,
     fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),

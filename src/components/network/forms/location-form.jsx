@@ -27,7 +27,7 @@ const validate = ({
   name = '',
   iataCode,
   latitude = '',
-  longtitude = '',
+  longitude = '',
   cloudProviderRegion,
   cloudProviderLocationId = '' }) => {
   const customConditions = {
@@ -52,12 +52,12 @@ const validate = ({
         )
       }
     ],
-    longtitude: [
+    longitude: [
       {
-        condition: ! isValidLongtitude(longtitude),
+        condition: ! isValidLongtitude(longitude),
         errorText: (
           <div>
-            <FormattedMessage id='portal.network.locationForm.longtitude.invalid.error' />
+            <FormattedMessage id='portal.network.locationForm.longitude.invalid.error' />
           </div>
         )
       }
@@ -85,7 +85,7 @@ const validate = ({
   };
 
   const errors = checkForErrors(
-    { name, iataCode, latitude, longtitude, cloudProviderLocationId },
+    { name, iataCode, latitude, longitude, cloudProviderLocationId },
     customConditions,
     requiredTexts
   );
@@ -155,7 +155,7 @@ const NetworkLocationForm = (props) => {
           <Field
             name="iataCode"
             options={iataCodes}
-            emptyLabel={<FormattedMessage id="portal.analytics.dropdownMenu.noResults" />}
+            emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
             labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}

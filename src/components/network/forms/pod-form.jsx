@@ -35,8 +35,6 @@ import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
 
-import './pod-form.scss'
-
 const LBMETHOD_OPTIONS = [
   {value: 'gslb', label: 'GSLB'}
 ]
@@ -358,7 +356,7 @@ const PodForm = ({
                      icon={true}
                      addNew={true}
                      disabled={hasBGPRoutingDaemon}
-                     onClick={() => onShowRoutingDaemonModal(false)}>
+                     onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
         </label>
@@ -373,7 +371,7 @@ const PodForm = ({
               <Col xs={4} className="action-buttons">
                 <Button
                   className="btn btn-icon edit-button"
-                  onClick={() => onShowRoutingDaemonModal(true)}>
+                  onClick={onShowRoutingDaemonModal}>
                   <IconEdit/>
                 </Button>
 

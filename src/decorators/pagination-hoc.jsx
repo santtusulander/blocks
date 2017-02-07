@@ -12,7 +12,7 @@ import { SET_ACTIVE_PAGE, SET_TOTAL, SET_SORTING, SET_FILTERING, INVALIDATE } fr
  * @param {React.Component} WrappedComponent - component to decorate
  * @return {WrappedComponent}
  */
-export default function withPagination(WrappedComponent) {
+export const withPagination = (WrappedComponent, config = {}) => {
   /** @typedef {string} actionType - type of action */
 
   /**
@@ -34,8 +34,44 @@ export default function withPagination(WrappedComponent) {
    * @return {any} - formatted payload
    */
 
+  /**
+   * Merged {@link WithPagination} default parameters with {@link WrappedComponent} config.
+   * @type {Object}
+   * @private
+   */
+  const _defaultProps = {...{
+    activePage: 1,
+    page_size: 50,
+    total: 0,
+    offset: 0,
+    fields: null,
+    sort_order: null,
+    sort_by: null,
+    filter_by: null,
+    filter_value: ''
+  }, ...config};
+
   /** @class WithPagination */
-  class WithPagination extends Component {
+  return class WithPagination extends Component {
+
+    static get defaultProps() {
+      return _defaultProps;
+    }
+
+    static get propTypes() {
+      return {
+        activePage: PropTypes.number,
+        fields: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), null]),
+        filter_by: PropTypes.string,
+        filter_value: PropTypes.string,
+        offset: PropTypes.number,
+        page_size: PropTypes.number,
+        paginationActions: PropTypes.object,
+        sort_by: PropTypes.string,
+        sort_order: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        total: PropTypes.number
+      };
+    }
 
     /**
      * Composed display name
@@ -64,6 +100,10 @@ export default function withPagination(WrappedComponent) {
         [
           'sort_order',
           (v) => v === 'asc' ? -1 : v === 'desc' ? 1 : v === -1 ? 'asc' : v === 1 ? 'desc' : v
+        ],
+        [
+          'fields',
+          (v) => v.join()
         ]
       ])
     }
@@ -250,7 +290,7 @@ export default function withPagination(WrappedComponent) {
      * @returns {{offset, page_size, sort_by, sort_order, filter_by, filter_value}}
      */
     getQueryParams(params = this.props) {
-      let { offset, page_size, sort_by, sort_order, filter_by, filter_value } = params;
+      let { offset, page_size, sort_by, sort_order, filter_by, filter_value, fields } = params;
 
       if (!filter_by || !filter_value) {
         filter_by = null;
@@ -262,7 +302,13 @@ export default function withPagination(WrappedComponent) {
         sort_order = null;
       }
 
-      return  { offset, page_size, sort_by, sort_order, filter_by, filter_value };
+      if (!fields || Array.isArray(fields) && !fields.length) {
+        fields = null;
+      } else {
+        fields = WithPagination.formatters.get('fields')(fields);
+      }
+
+      return  { offset, page_size, sort_by, sort_order, filter_by, filter_value, fields };
     }
 
     render() {
@@ -299,41 +345,12 @@ export default function withPagination(WrappedComponent) {
         registerSubscriber: this.paginationSubscribers.get('register')
       };
 
-      return (
-        <WrappedComponent
-          {...{pagination}}
-          {...passThroughProps}
-        />
-      );
+      return (<WrappedComponent {...{pagination}} {...passThroughProps} />);
     }
   }
+};
 
-  WithPagination.defaultProps = {
-    activePage: 1,
-    page_size: 5,
-    total: 0,
-    offset: 0,
-    fields: null,
-    sort_order: null,
-    sort_by: null,
-    filter_by: null,
-    filter_value: ''
-  };
-
-  WithPagination.propTypes = {
-    activePage: PropTypes.number,
-    filter_by: PropTypes.string,
-    filter_value: PropTypes.string,
-    offset: PropTypes.number,
-    page_size: PropTypes.number,
-    paginationActions: PropTypes.object,
-    sort_by: PropTypes.string,
-    sort_order: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    total: PropTypes.number
-  };
-
-  return connect(
-    paginationSelectors,
-    (dispatch) => ({paginationActions: bindActionCreators(paginationActionCreators, dispatch)})
-  )(WithPagination)
-}
+export default (WrappedComponent, config) => connect(
+  paginationSelectors,
+  (dispatch) => ({paginationActions: bindActionCreators(paginationActionCreators, dispatch)})
+)(withPagination(WrappedComponent, config))
