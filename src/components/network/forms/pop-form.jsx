@@ -59,7 +59,6 @@ const NetworkPopForm = (props) => {
   } = props
 
   const edit = !!initialValues.id
-
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
@@ -142,7 +141,6 @@ const NetworkPopForm = (props) => {
 
 NetworkPopForm.displayName = 'NetworkPopEditForm'
 NetworkPopForm.propTypes = {
-  edit: PropTypes.bool,
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
   iata: PropTypes.string,
