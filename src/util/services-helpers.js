@@ -38,8 +38,8 @@ export function getOptionById (serviceInfo, id) {
 export function getDefaultService (service_id) {
   const defaultObj = {
     service_id,
-    flow_direction: [],
     billing_meta: {
+      flow_direction: [],
       charge_number: ''
     },
     options: []
@@ -47,7 +47,7 @@ export function getDefaultService (service_id) {
   
   //flow_direction related only for media delivery service
   if (service_id !== 1) {
-    delete defaultObj.flow_direction
+    delete defaultObj.billing_meta.flow_direction
   }
 
   return fromJS(defaultObj)

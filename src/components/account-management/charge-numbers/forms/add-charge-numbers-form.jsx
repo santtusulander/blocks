@@ -33,7 +33,7 @@ class AddChargeNumbersForm extends React.Component {
         { hasFlowDirection && 
           <div>
             <Field
-              name="flow_direction"
+              name="billing_meta.flow_direction"
               component={FieldFormGroupCheckboxes}
               iterable={FLOW_DIRECTION_TYPES}
               required={false}

@@ -75,8 +75,8 @@ AddChargeNumbersModal.propTypes = {
 function mapStateToProps(state, props) {
   return {
     initialValues: {
-      flow_direction: props.activeServiceItem && props.activeServiceItem.get('flow_direction')
-                      && props.activeServiceItem.get('flow_direction').toJS(),
+//      flow_direction: props.activeServiceItem && props.activeServiceItem.get('flow_direction')
+ //                     && props.activeServiceItem.get('flow_direction').toJS(),
       billing_meta: props.activeServiceItem && props.activeServiceItem.get('billing_meta')
                     && props.activeServiceItem.get('billing_meta').toJS()
     },
