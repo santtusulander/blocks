@@ -46,8 +46,8 @@ import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/n
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
-import iataCodeActions from '../../redux/modules/entities/iata-codes/actions'
-import { getIataCodes } from '../../redux/modules/entities/iata-codes/selectors'
+import podActions from '../../redux/modules/entities/pods/actions'
+import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
@@ -64,20 +64,6 @@ import EditNodeContainer from './modals/edit-node-modal'
 import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
-
-const placeholderPods = Immutable.fromJS([
-  { id: 1, name: 'Pod 1' },
-  { id: 2, name: 'Pod 2' },
-  { id: 3, name: 'Pod 3' },
-  { id: 4, name: 'Pod 4' },
-  { id: 5, name: 'Pod 5' },
-  { id: 6, name: 'Pod 6' },
-  { id: 7, name: 'Pod 7' },
-  { id: 8, name: 'Pod 8' },
-  { id: 9, name: 'Pod 9' },
-  { id: 10, name: 'Pod 10' },
-  { id: 11, name: 'Pod 11' }
-])
 
 class Network extends React.Component {
   constructor(props) {
@@ -107,14 +93,10 @@ class Network extends React.Component {
 
     this.handlePodClick = this.handlePodClick.bind(this)
     this.handlePodEdit = this.handlePodEdit.bind(this)
-    this.handlePodSave = this.handlePodSave.bind(this)
-    this.handlePodDelete = this.handlePodDelete.bind(this)
 
     this.handleNodeEdit = this.handleNodeEdit.bind(this)
 
     this.scrollToEntity = this.scrollToEntity.bind(this)
-
-    this.popContentTextGenerator = this.popContentTextGenerator.bind(this)
 
     this.state = {
       networks: Immutable.List(),
@@ -140,17 +122,19 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
-    const { group, network } = this.props.params
+    const { group, network, pop } = this.props.params
     this.props.fetchData()
 
+    this.props.fetchNetworks( group )
+    this.props.fetchPops( network )
+    this.props.fetchPods( pop )
     this.props.fetchLocations(group)
     this.props.fetchNetworks(group)
     this.props.fetchPops(network)
-    this.props.fetchIataCodes()
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop } = nextProps.params
+    const { group, network, pop, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( group )
@@ -162,7 +146,11 @@ class Network extends React.Component {
     }
 
     if (pop) {
-      this.setState({ pods: placeholderPods })
+      this.props.fetchPods( pop )
+    }
+
+    if (pod) {
+      this.props.fetchNodes( nextProps.params )
     }
 
   }
@@ -412,26 +400,14 @@ class Network extends React.Component {
     this.props.toggleModal(ADD_EDIT_POP)
   }
 
-  popContentTextGenerator(entity) {
-    const iata = entity.get('iata')
-    const iataObject = this.props.iataCodes.find(obj => obj.iata === iata)
-    return iataObject ? `${iataObject.city}, ${iata}` : iata
-  }
-
   /* ==== POD Handlers ==== */
   handlePodClick(podId) {
-    const { brand, account, group, network, pop } = this.props.params
-
-    this.props.fetchNodes({ brand, account, group, network, pop, pod: podId })
-      .then(() => {
-
-        this.determineNextState({
-          currentId: podId,
-          previousId: this.props.params.pod,
-          goToRoute: 'pod',
-          goBackToRoute: 'pop'
-        })
-      })
+    this.determineNextState({
+      currentId: podId,
+      previousId: this.props.params.pod,
+      goToRoute: 'pod',
+      goBackToRoute: 'pop'
+    })
   }
 
   handlePodEdit(podId) {
@@ -439,12 +415,11 @@ class Network extends React.Component {
     this.props.toggleModal(ADD_EDIT_POD)
   }
 
-  handlePodSave() {
-    // TODO
-  }
-
-  handlePodDelete() {
-    // TODO
+  podContentTextGenerator(entity) {
+    const localAs = entity.getIn(['services', '0', 'local_as'])
+    const footprints = entity.get('footprints')
+    const discoveryMethod = footprints && footprints.size > 0 ? 'footprints' : 'BGP'
+    return `${localAs}, ${discoveryMethod}`
   }
 
   /* ==== Node Handlers ==== */
@@ -619,14 +594,10 @@ class Network extends React.Component {
       params,
       networks,
       pops,
+      pods,
       currentUser,
       roles
     } = this.props
-
-    const {
-      pods,
-      podId
-    } = this.state
 
     return (
       <Content className="network-content">
@@ -707,6 +678,7 @@ class Network extends React.Component {
 
             <EntityList
               ref={pops => this.entityList.popList = pops}
+              titleGenerator={entity => `${entity.get('iata')} ${entity.get('location_id')}`}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
               deleteEntity={() => () => null}
@@ -716,11 +688,13 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pops.title'/>}
               disableButtons={params.network ? false : true}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
-              contentTextGenerator={this.popContentTextGenerator}
+              contentTextGenerator={entity => entity.get('name')}
             />
 
             <EntityList
               ref={pods => this.entityList.podList = pods}
+              entityIdKey='pod_name'
+              titleGenerator={entity => entity.get('pod_name')}
               addEntity={() => this.addEntity(ADD_EDIT_POD)}
               deleteEntity={() => () => null}
               editEntity={this.handlePodEdit}
@@ -730,22 +704,24 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.pods.title'/>}
               disableButtons={params.pop ? false : true}
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+              contentTextGenerator={this.podContentTextGenerator}
             />
 
             <EntityList
               ref={nodes => this.entityList.nodeList = nodes}
+              entityIdKey="reduxId"
+              titleGenerator={entity => entity.getIn(['roles', '0'])}
               entities={params.pod && this.props.getNodes(params.pod)}
               addEntity={() => this.addEntity(ADD_NODE)}
               deleteEntity={() => () => null}
               editEntity={this.handleNodeEdit}
               selectEntity={() => null}
               title={<FormattedMessage id='portal.network.nodes.title'/>}
-              entityIdKey="reduxId"
               disableButtons={params.pod ? false : true}
               multiColumn={true}
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
-
+              contentTextGenerator={entity => entity.get('name')}
             />
           </div>
         </PageContainer>
@@ -803,13 +779,13 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
-            podId={podId}
-            edit={(podId !== null) ? true : false}
-            onSave={this.handlePodSave}
+            accountId={params.account}
+            brand={params.brand}
+            groupId={params.group}
+            networkId={params.network}
+            popId={params.pop}
+            podId={this.state.podId}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
-            onDelete={() => this.handlePodDelete(podId)}
-            show={true}
-            {...params}
           />
         }
 
@@ -845,21 +821,21 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
-  fetchIataCodes: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
+  fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
   getNodes: PropTypes.func,
   groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
-  iataCodes: PropTypes.array,
   location: PropTypes.object,
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
+  pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
@@ -878,7 +854,10 @@ const mapStateToProps = (state, ownProps) => {
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, ownProps.params.network),
+    pods: getPodsByPop(state, ownProps.params.pop),
+
     networkModal: state.ui.get('networkModal'),
+    //TODO: refactor to entities/redux
     activeAccount: state.account.get('activeAccount'),
     groups: state.group.get('allGroups'),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
@@ -886,14 +865,12 @@ const mapStateToProps = (state, ownProps) => {
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
-    currentUser: state.user.get('currentUser'),
-    iataCodes: getIataCodes(state)
+    currentUser: state.user.get('currentUser')
   };
 }
 
-
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, group, pod } = ownProps.params
+  const { brand, account, group, network /*, pop, pod */} = ownProps.params
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -908,8 +885,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     list_children: false
   }, metricsOpts)
 
-  const fetchNodes = params => dispatch(nodeActions.fetchAll(params))
-
   const fetchData = () => {
     //TODO: Fetch accounts and group using entities/redux
     accountActions.fetchAccount(brand, account)
@@ -920,22 +895,22 @@ function mapDispatchToProps(dispatch, ownProps) {
     metricsActions.fetchAccountMetrics(accountMetricsOpts)
     metricsActions.fetchGroupMetrics(metricsOpts)
     metricsActions.fetchDailyGroupTraffic(metricsOpts)
-
-    pod && fetchNodes(ownProps.params)
   }
 
   return {
-    fetchNodes,
     toggleModal: uiActions.toggleNetworkModal,
     fetchData: fetchData,
     groupActions: groupActions,
     accountActions: accountActions,
     uiActions: uiActions,
+
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
-    fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
     fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
+    //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
-    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network} ) )
+    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
+    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
+    fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
 

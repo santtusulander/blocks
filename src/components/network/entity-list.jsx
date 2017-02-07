@@ -135,16 +135,16 @@ class EntityList extends React.Component {
       itemsPerColumn,
       showAsStarbursts,
       entityIdKey,
-      entityNameKey,
       starburstData,
       params,
       entities,
-      contentTextGenerator
+      contentTextGenerator,
+      titleGenerator
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
-        const entityName = entity.get(entityNameKey)
+        const entityName = titleGenerator(entity)
         const isActive = String(selectedEntityId) === String(entity.get(entityIdKey))
         const status = numericStatusToStringStatus(entity.get('status'))
         const contentText = contentTextGenerator(entity)
@@ -153,7 +153,7 @@ class EntityList extends React.Component {
           <NetworkItem
             key={entityId}
             onEdit={() => editEntity(entityId)}
-            title={entityName}
+            title={entityName.toUpperCase()}
             active={isActive}
             content={contentText}
             onSelect={() => selectEntity(entityId)}
@@ -329,7 +329,6 @@ EntityList.propTypes = {
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
-  entityNameKey: PropTypes.string,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
@@ -340,13 +339,13 @@ EntityList.propTypes = {
   showAsStarbursts: PropTypes.bool,
   showButtons: PropTypes.bool,
   starburstData: PropTypes.object,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  titleGenerator: PropTypes.func
 }
 EntityList.defaultProps = {
   disableButtons: false,
   entities: Immutable.List(),
   entityIdKey: 'id',
-  entityNameKey: 'name',
   showButtons: true,
   starburstData: {
     dailyTraffic: Immutable.List(),
@@ -354,7 +353,8 @@ EntityList.defaultProps = {
     barMaxHeight: '30',
     chartWidth: '350'
   },
-  contentTextGenerator: () => ''
+  contentTextGenerator: () => '',
+  titleGenerator: entity => entity.get('name')
 }
 
 export default EntityList
