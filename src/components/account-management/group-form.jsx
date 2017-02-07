@@ -58,8 +58,7 @@ const GroupForm = ({
   submitting}) => {
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -98,7 +97,7 @@ const GroupForm = ({
           {(canSeeLocations && groupId) &&
             <SectionContainer>
               <SectionHeader
-                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/></label>}
+                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
                 >
                 <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                   <IconAdd/>

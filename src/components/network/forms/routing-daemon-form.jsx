@@ -128,7 +128,7 @@ class RoutingDaemonForm extends React.Component {
                                            ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/> : '')
 
     return (
-      <form onSubmit={handleSubmit(onSubmit)} className="routing-daemon__form">
+      <form onSubmit={handleSubmit(onSubmit)} className="sp-routing-daemon-form">
 
         <Field
           type="text"
