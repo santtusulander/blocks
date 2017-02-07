@@ -39,7 +39,7 @@ class AddChargeNumbersModal extends React.Component {
             title={itemDetails.get('name')}
             subTitle={subTitle}
             cancel={onCancel}
-            className="on-top-side-panel"
+            overlapping={true}
           >
             <ChargeNumbersForm 
               initialValues={initialValues}

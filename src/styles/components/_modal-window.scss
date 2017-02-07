@@ -34,18 +34,6 @@ $lt-modal-bg-color: $white;
   }
 }
 
-.modal-dialog.disabled {
-  .modal-content {
-    .dark-theme & {
-      background-color: rgba($dt-modal-bg-color, 0.2);
-    }
-
-    .light-theme & {
-      background-color: $silver;
-    }
-  }
-}
-
 .modal-window {
   .modal-header {
     padding: $modal-vertical-padding $modal-horizontal-padding 0;
