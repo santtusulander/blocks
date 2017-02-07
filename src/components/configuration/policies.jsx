@@ -100,6 +100,9 @@ class ConfigurationPolicies extends React.Component {
 
       this.deleteRule(ruleType, ruleIndex)
     }
+
+    this.handleChange([])(this.props.originalConfig)
+    
     this.handleHide()
   }
   render() {
@@ -183,6 +186,7 @@ ConfigurationPolicies.propTypes = {
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  originalConfig: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
   saveChanges: React.PropTypes.func
 }
