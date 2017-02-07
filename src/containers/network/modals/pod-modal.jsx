@@ -17,7 +17,6 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
-import { getById as getFootprintById} from '../../../redux/modules/entities/footprints/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 
 import SidePanel from '../../../components/side-panel'
@@ -320,7 +319,6 @@ PodFormContainer.propTypes = {
   fetchNetwork: PropTypes.func,
   fetchPop: PropTypes.func,
   footprints: PropTypes.array,
-  getFootprintData: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
@@ -358,17 +356,15 @@ const mapStateToProps = (state, ownProps) => {
   const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
   const initialValues = edit && pod ? pod.toJS() : {}
 
-  const inititalUIFootprints = edit && /*formFootprints && formFootprints.length > 0
-    ? formFootprints
-    : */
-    initialValues
-      && initialValues.footprints
-      && initialValues.footprints.map(id => {
-        return {
-          id: `${ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })}_${ +id}`,
-          name: ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })
-        }
-      })
+  const inititalUIFootprints = edit
+    && initialValues
+    && initialValues.footprints
+    && initialValues.footprints.map(id => {
+      return {
+        id: `${ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })}_${ +id}`,
+        name: ownProps.intl.formatMessage({ id: 'portal.common.loading.text' })
+      }
+    })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
 
@@ -406,12 +402,6 @@ const mapDispatchToProps = (dispatch) => {
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }
-
-// && initialValues.footprints.map(id => {
-//   const fp = getFootprintById(state)(id)
-//   return fp ? fp.toJS() : { id: 'loading', label: 'loading ...'}
-// })
-
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(
   PodFormContainer
