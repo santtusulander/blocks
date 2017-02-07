@@ -356,7 +356,7 @@ const PodForm = ({
                      icon={true}
                      addNew={true}
                      disabled={hasBGPRoutingDaemon}
-                     onClick={() => onShowRoutingDaemonModal(false)}>
+                     onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
         </label>
@@ -371,7 +371,7 @@ const PodForm = ({
               <Col xs={4} className="action-buttons">
                 <Button
                   className="btn btn-icon edit-button"
-                  onClick={() => onShowRoutingDaemonModal(true)}>
+                  onClick={onShowRoutingDaemonModal}>
                   <IconEdit/>
                 </Button>
 
