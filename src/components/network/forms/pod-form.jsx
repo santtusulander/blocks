@@ -225,6 +225,7 @@ const PodForm = ({
       <Field
         type="text"
         name="UIName"
+        disabled={edit}
         id="pod_name-field"
         placeholder={intl.formatMessage({id: 'portal.network.podForm.name.text'})}
         component={FieldFormGroup}
