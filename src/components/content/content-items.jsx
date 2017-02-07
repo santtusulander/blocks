@@ -433,7 +433,6 @@ class ContentItems extends React.Component {
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
-              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
               onCancel={this.hideModal}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
             />
