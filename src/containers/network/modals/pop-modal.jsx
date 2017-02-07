@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 import { List } from 'immutable'
+import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -26,7 +27,7 @@ import { buildReduxId } from '../../../redux/util'
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-
+import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -134,7 +135,7 @@ class PopFormContainer extends Component {
   }
 
   hasChildren(edit) {
-    return !(edit ? this.props.pods.size : false)
+    return (edit ? ((this.props.pods.size > 0) ? true : false ) : false)
   }
 
   render() {
@@ -148,7 +149,6 @@ class PopFormContainer extends Component {
     } = this.props
 
     const edit = !!initialValues.id
-
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
 
@@ -159,8 +159,8 @@ class PopFormContainer extends Component {
                                         }} />)
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: initialValues.createdDate,
-                                                    updatedDate: initialValues.updatedDate
+                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
+                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
                                                   }} />) : ''
 
     return (
