@@ -348,9 +348,9 @@ const PodForm = ({
       </div>
       }
 
+      {/* BGP */}
       {showBgp &&
       <div className="form-group discovery-section">
-        {/* BGP */}
         <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
           <UDNButton bsStyle="success"
                      icon={true}

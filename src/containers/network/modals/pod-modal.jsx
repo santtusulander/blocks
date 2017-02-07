@@ -55,24 +55,13 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, /*podId,*/ initialValues, reinitForm, getFootprintData } = this.props
+    const { brand, accountId, groupId, networkId, popId, initialValues, reinitForm } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
     groupId && this.props.fetchGroup({ brand, account: accountId, id: groupId })
     networkId && this.props.fetchNetwork({ brand, account: accountId, group: groupId, id: networkId })
     popId && this.props.fetchPop({ brand, account: accountId, group: groupId, network: networkId, id: popId })
-
-    // Pod is embeded in POP
-    // podId && this.props.fetchPod({
-    //   brand,
-    //   account: accountId,
-    //   group: groupId,
-    //   network: networkId,
-    //   pop: popId,
-    //   id: podId
-    // })
-
 
     /*
     Re-init form when footprints have been fetched.
@@ -81,8 +70,8 @@ class PodFormContainer extends React.Component {
     accountId && this.props.fetchFootprints({ brand, account: accountId })
       .then( () => {
         const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
-          const fp = getFootprintData(id)
-          return fp ? fp.toJS() : { id: 'unknown', name: 'UNKNOWN'}
+          const fp = this.props.footprints.find(footp => footp.id === id)
+          return fp ? fp : { id: 'unknown', name: 'UNKNOWN'}
         })
 
         reinitForm({
@@ -90,7 +79,6 @@ class PodFormContainer extends React.Component {
           UIFootprints
         })
       })
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -384,8 +372,6 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
 
-  const getFootprintData = (id) => {return getFootprintById(state)(id)}
-
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
@@ -398,9 +384,7 @@ const mapStateToProps = (state, ownProps) => {
     UIFootprints,
     UIDiscoveryMethod,
 
-    initialValues,
-
-    getFootprintData
+    initialValues
   }
 }
 
