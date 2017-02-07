@@ -14,18 +14,25 @@ const NumberInput = (props) => {
 
   const handleChange = (enteredValue, isIncrement = false) => {
     let newValue = 0
+    let parsedPrevValue = parseFloat(value)
 
     if (isIncrement) {
-      const parsedPrevValue = parseFloat(value) || 0
+      if (isNaN(parsedPrevValue)) {
+        parsedPrevValue = 0
+      }
       newValue = parsedPrevValue + enteredValue
     } else if (enteredValue === '') {
       newValue = null
     } else {
       const parsedEnteredValue = parseFloat(enteredValue)
-      newValue = isNaN(parsedEnteredValue) ? 0 : parsedEnteredValue
+      if (isNaN(parsedEnteredValue)) {
+        newValue = isNaN(parsedPrevValue) ? null : parsedPrevValue
+      } else {
+        newValue = parsedEnteredValue
+      }
     }
 
-    if (onlyInteger) {
+    if (newValue !== null && onlyInteger) {
       newValue = Math.trunc ? Math.trunc(newValue) : Math.round(newValue)
     }
 
