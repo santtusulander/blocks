@@ -179,7 +179,7 @@ const GroupForm = ({
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting}>
+              disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
               {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
             </Button>
           </ButtonToolbar>
