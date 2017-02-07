@@ -416,16 +416,22 @@ class Network extends React.Component {
   }
 
   podContentTextGenerator(entity) {
-    const localAs = entity.getIn(['services', '0', 'local_as'])
+    const podType = entity.get('pod_type')
     const footprints = entity.get('footprints')
     const discoveryMethod = footprints && footprints.size > 0 ? 'footprints' : 'BGP'
-    return `${localAs}, ${discoveryMethod}`
+    return `${podType}, ${discoveryMethod}`
   }
 
   /* ==== Node Handlers ==== */
   handleNodeEdit(nodeId) {
     this.setState({ nodeId: [ nodeId ] })
     this.props.toggleModal(EDIT_NODE)
+  }
+
+  nodeContentTextGenerator(entity) {
+    const role = entity.getIn(['roles', '0'])
+    const env = entity.get('env')
+    return `${role}, ${env}`
   }
 
   showNotification(message) {
@@ -709,7 +715,6 @@ class Network extends React.Component {
             <EntityList
               ref={nodes => this.entityList.nodeList = nodes}
               entityIdKey="reduxId"
-              titleGenerator={entity => entity.getIn(['roles', '0'])}
               entities={params.pod && this.props.getNodes(params.pod)}
               addEntity={() => this.addEntity(ADD_NODE)}
               deleteEntity={() => () => null}
@@ -720,7 +725,7 @@ class Network extends React.Component {
               multiColumn={true}
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
-              contentTextGenerator={entity => entity.get('name')}
+              contentTextGenerator={this.nodeContentTextGenerator}
             />
           </div>
         </PageContainer>
