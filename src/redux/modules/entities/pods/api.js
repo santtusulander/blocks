@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
 const baseUrl = ({ brand, account, group, network, pop }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops/${pop}/pods`
@@ -88,7 +88,7 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  * @param  {[type]} baseUrlParams [description]
  * @return {[type]}               [description]
  */
-export const remove = ({ id, ...baseUrlParams }) => {
-  return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => ( {id} ))
+export const remove = ({ id, ...params }) => {
+  return axios.delete(`${baseUrl(params)}/${id}`)
+    .then(() => ( { id: buildReduxId(params.group, params.network, params.pop, id) } ))
 }
