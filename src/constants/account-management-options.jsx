@@ -41,8 +41,23 @@ export const ROLES_MAPPING = [
   { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
 ]
 
+export const FLOW_DIRECTION_TYPES = [
+  { value: 'egress', label: 'Egress' },
+  { value: 'midgress', label: 'Midgress' },
+  { value: 'ingress', label: 'Ingress' }
+]
+
+export const REGIONS_TYPES = [
+  { value: 'us', label: 'US' },
+  { value: 'apac', label: 'APAC/EU' },
+  { value: 'region_x', label: 'REGION X' }
+]
+
 export const DNS_MIN_REFRESH = 0
 export const DNS_MIN_TTL = 0
 export const DNS_MAX_TTL = 2147483647
 export const DNS_MIN_PRIO = 0
 export const DNS_MAX_PRIO = 999
+
+export const REGION_LOCATION_TYPE = 'region'
+export const GLOBAL_LOCATION_TYPE = 'global'

@@ -25,7 +25,7 @@ const accounts = Immutable.fromJS([
     provider_type: 1,
     services: [
       {
-        id: 1
+        service_id: 1
       }
     ]
   }
@@ -37,7 +37,7 @@ const providerTypes = Immutable.fromJS({
   }
 })
 
-const services = Immutable.fromJS({
+const servicesInfo = Immutable.fromJS({
   service: {
     id: 1
   }
@@ -58,7 +58,7 @@ describe('AccountList', () => {
         params,
         providerTypes,
         router,
-        services,
+        servicesInfo,
         uiActions
       }
       return shallow(<AccountList {...props}/>)

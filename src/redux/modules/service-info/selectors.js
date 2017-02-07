@@ -3,7 +3,7 @@
  * @param  {} redux state state
  * @return {Map}       services
  */
-export const getServices = (state) => {
+export const getServicesInfo = (state) => {
   return state.serviceInfo.services
 }
 
@@ -70,10 +70,14 @@ export const getServiceOptions = (state, providerType) => {
     acc.push({
       label: service.get('name'),
       value: service.get('id'),
+      requires_charge_number: service.get('requires_charge_number'),
+      supports_regional_billing: service.get('supports_regional_billing'),
       options: service.get('options').reduce( (opts, option) => {
         opts.push({
           label: option.get('name'),
-          value: option.get('id')
+          value: option.get('id'),
+          requires_charge_number: option.get('requires_charge_number'),
+          supports_regional_billing: option.get('supports_regional_billing')
         })
         return opts
       }, [])
