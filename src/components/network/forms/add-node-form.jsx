@@ -119,7 +119,7 @@ class NetworkAddNodeForm extends React.Component {
 
     if (showAddConfirmation) {
       const confirmText = <FormattedMessage id="portal.network.addNodeForm.confirmAdd" values={{numNodes}}/>
-      return (<FormFooterButtons autoAlign={false}>
+      return (<FormFooterButtons>
         <div className="modal-footer__text">{confirmText}</div>
         <ButtonToolbar className="pull-right">
           <Button
