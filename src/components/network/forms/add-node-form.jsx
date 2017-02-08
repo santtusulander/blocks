@@ -1,11 +1,5 @@
 import React from 'react'
-
-import {
-  Button,
-  ButtonToolbar,
-  FormGroup
-} from 'react-bootstrap'
-
+import { Button, ButtonToolbar } from 'react-bootstrap'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
