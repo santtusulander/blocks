@@ -67,8 +67,6 @@ export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
   { key: 2, label: 'Footprints'}
 ])
 
-export const AS_NUM_MIN = 0
-
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999

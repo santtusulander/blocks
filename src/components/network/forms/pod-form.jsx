@@ -16,7 +16,7 @@ import {
 } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField } from '../../../util/validators'
+import { isValidTextField, isInt } from '../../../util/validators'
 
 import HelpTooltip from '../../../components/help-tooltip'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
@@ -24,7 +24,7 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
-import { AS_NUM_MIN, POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
 //TODO: If Ip list needed uncomment
 //import { isValidIPv4Address } from '../../../util/validators'
@@ -87,6 +87,15 @@ const validate = (values) => {
 }
 
 const asyncValidate = ({ UILocalAS }) => {
+
+  if (!isInt(UILocalAS)) {
+    return new Promise(() => {
+      throw {
+        UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.asIsNotAnNumber.text"/>
+      }
+    })
+  }
+
   return fetchASOverview(UILocalAS)
     .then(({ data: { holder } }) => {
       if (!holder) {
@@ -257,11 +266,10 @@ const PodForm = ({
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
-        min={AS_NUM_MIN}
         type="text"
         name="UILocalAS"
         className="as-num-input"
-        component={FieldFormGroupNumber}
+        component={FieldFormGroup}
         addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
         addonAfter={
