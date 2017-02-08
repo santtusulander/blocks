@@ -20,7 +20,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
   }
 
   const renderTitle = title => {
-    let renderedTitle = <h4>title</h4>
+    let renderedTitle = <h4>{title}</h4>
     if ((typeof title === "string") && (title.length > 20)) {
       renderedTitle = (<OverlayTrigger
                         placement="top"
