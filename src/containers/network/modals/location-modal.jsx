@@ -6,7 +6,6 @@ import { SubmissionError } from 'redux-form'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getById as getLocationById } from '../../../redux/modules/entities/locations/selectors'
 
-import { buildReduxId } from '../../../redux/util'
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
 
@@ -185,8 +184,10 @@ const cloudProvidersIdOptions = {
 const mapStateToProps = (state, ownProps) => {
   let values = {}
   if (ownProps.locationId !== null) {
+
     //locationId is already a composed reduxId
     const locationInfo = getLocationById(state, ownProps.locationId)
+
     if (locationInfo) values = locationInfo.toJS()
   }
 
