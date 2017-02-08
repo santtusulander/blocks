@@ -1,10 +1,10 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../field-form-group')
-import FieldFormGroup from '../field-form-group'
+jest.unmock('../field-form-group-select')
+import FieldFormGroupSelect from '../field-form-group-select'
 
-describe('FieldFormGroup', () => {
+describe('FieldFormGroupSelect', () => {
   let subject = null
 
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe('FieldFormGroup', () => {
       }
 
       return shallow(
-        <FieldFormGroup {...props}/>
+        <FieldFormGroupSelect {...props}/>
       )
     }
   })
@@ -41,11 +41,11 @@ describe('FieldFormGroup', () => {
   })
 
   it('error text should exist when error flags are true', () => {
-    expect(subject('', '', 'error').find('DefaultErrorBlock').length).toBe(1)
+    expect(subject('', '', 'error').find('HelpBlock').length).toBe(1)
   })
 
   it('error text should not exist when error flags are false', () => {
-    expect(subject('', '', '').find('DefaultErrorBlock').length).toBe(0)
+    expect(subject('', '', '').find('HelpBlock').length).toBe(0)
   })
 
   it('label should exist when it was given', () => {
