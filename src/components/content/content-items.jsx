@@ -11,8 +11,7 @@ import {
 } from '../../constants/account-management-options'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl,
-  getNetworkUrl
+  getContentUrl
 } from '../../util/routes'
 import { userIsCloudProvider } from '../../util/helpers'
 
@@ -165,11 +164,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        if (this.props.router.isActive('network')) {
-          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
-        } else {
-          this.props.router.push(getContentUrl('brand', 'udn', {}))
-        }
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -234,9 +229,7 @@ class ContentItems extends React.Component {
             params[0] = 'groups'
           }
 
-          const url = props.router.isActive('network')
-                        ? getNetworkUrl(...params)
-                        : getContentUrl(...params)
+          const url = getContentUrl(...params)
 
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
