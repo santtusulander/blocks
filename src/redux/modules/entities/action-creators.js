@@ -1,8 +1,17 @@
+import uniqid from 'uniqid'
+
 const actionTypes = {
   REQUEST: 'entities/REQUEST',
   RECEIVE: 'entities/RECEIVE',
   REMOVE: 'entities/REMOVE',
   FAIL: 'entities/FAIL'
+}
+
+const getPayload = requestGroup => {
+  const requestId = uniqid()
+  return {
+    [requestId]: { requestGroup }
+  }
 }
 
 export default ({
@@ -13,9 +22,10 @@ export default ({
 }) => {
   const [ request, receive, fail ] = receiveActionTypes
 
-  const fetchOne = ({ forceReload, ...requestParams }) => {
+  const fetchOne = ({ forceReload, requestGroup, ...requestParams }) => {
     return {
       forceReload,
+      payload: getPayload(requestGroup || entityType),
       types: receiveActionTypes,
       cacheKey: `fetch-one-${entityType}-${JSON.stringify(requestParams)}`,
       callApi: () => {
@@ -24,8 +34,15 @@ export default ({
     }
   }
 
-  const fetchByIds = dispatch => requestParams => {
-    dispatch({ type: request })
+  const fetchByIds = dispatch => ({ requestGroup, ...requestParams }) => {
+
+    const thunkPayload = getPayload(requestGroup || entityType)
+
+    dispatch({
+      type: request,
+      payload: thunkPayload
+    })
+
     return api.fetchIds(requestParams)
       .then((data) => {
 
@@ -33,18 +50,18 @@ export default ({
           throw new Error('Expected fetchIds to resolve with an array of IDs. ' + typeof data + ' passed instead.')
         }
 
-        dispatch({ type: receive })
+        dispatch({ type: receive, payload: thunkPayload })
 
         return data.forEach(id => {
 
-          dispatch(fetchOne({ ...requestParams, id }))
+          dispatch(fetchOne({ requestGroup, ...requestParams, id }))
 
         })
       })
       .catch(err => {
         /* eslint-disable no-console */
         console.error(err);
-        dispatch({ type: fail })
+        dispatch({ type: fail, payload: thunkPayload })
       })
   }
 
@@ -59,24 +76,28 @@ export default ({
 
     fetchOne,
 
-    fetchAll: ({ forceReload, ...requestParams }) => ({
+    fetchAll: ({ forceReload, requestGroup, ...requestParams }) => ({
       forceReload,
+      payload: getPayload(requestGroup || entityType),
       types: receiveActionTypes,
       cacheKey: `fetch-all-${entityType}-${JSON.stringify(requestParams)}`,
       callApi: () => api.fetchAll(requestParams)
     }),
 
-    create: (requestParams) => ({
+    create: ({ requestGroup, ...requestParams }) => ({
+      payload: getPayload(requestGroup || entityType),
       types: receiveActionTypes,
       callApi: () => api.create(requestParams)
     }),
 
-    update: (requestParams) => ({
+    update: ({ requestGroup, ...requestParams }) => ({
+      payload: getPayload(requestGroup || entityType),
       types: receiveActionTypes,
       callApi: () => api.update(requestParams)
     }),
 
-    remove: (requestParams) => ({
+    remove: ({ requestGroup, ...requestParams }) => ({
+      payload: getPayload(requestGroup || entityType),
       types: removeActionTypes,
       callApi: () => api.remove(requestParams)
     })
