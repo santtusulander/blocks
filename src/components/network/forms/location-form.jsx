@@ -120,7 +120,7 @@ class NetworkLocationForm extends React.Component {
     }
 
     this.onSubmit = this.onSubmit.bind(this)
-    this.fetchLocation = this.fetchLocation.bind(this)
+    this.askForFetchLocation = this.askForFetchLocation.bind(this)
     this.processLatLngFields = this.processLatLngFields.bind(this)
     this.shouldFetchLocation = this.shouldFetchLocation.bind(this)
   }
@@ -135,11 +135,11 @@ class NetworkLocationForm extends React.Component {
           latitude: initialValues.latitude,
           longitude: initialValues.longitude
         }
-      })
+      }, () => this.fetchLocation())
     }
   }
 
-  fetchLocation({ target: { value } }, fieldName) {
+  askForFetchLocation({ target: { value } }, fieldName) {
     this.processLatLngFields(fieldName, value)
       .then(() => {
         if (this.shouldFetchLocation()) {
@@ -147,21 +147,25 @@ class NetworkLocationForm extends React.Component {
             isFetchingLocation: true,
             latLng: this.props.latLng
           })
-          const { latLng } = this.state
-          locationReverseGeoCodingLookup(latLng.longitude, latLng.latitude)
-            .then(({ features }) => {
-              this.setState({
-                addressLine: features[0].place_name,
-                isFetchingLocation: false
-              })
-            })
-            .catch(() => {
-              this.setState({
-                addressLine: <FormattedMessage id="portal.network.locationForm.latLongFields.addressNotFound"/>,
-                isFetchingLocation: false
-              })
-            })
+          this.fetchLocation();
         }
+      })
+  }
+
+  fetchLocation() {
+    const { latLng } = this.state
+    locationReverseGeoCodingLookup(latLng.longitude, latLng.latitude)
+      .then(({ features }) => {
+        this.setState({
+          addressLine: features[0].place_name,
+          isFetchingLocation: false
+        })
+      })
+      .catch(() => {
+        this.setState({
+          addressLine: <FormattedMessage id="portal.network.locationForm.latLongFields.addressNotFound"/>,
+          isFetchingLocation: false
+        })
       })
   }
 
@@ -258,7 +262,7 @@ class NetworkLocationForm extends React.Component {
               component={FieldFormGroup}
               placeholder={intl.formatMessage({ id: 'portal.network.locationForm.latitude.placeholder' })}
               label={<FormattedMessage id="portal.network.locationForm.latitude.label"/>}
-              onBlur={(e) => this.fetchLocation(e, 'latitude')}
+              onBlur={(e) => this.askForFetchLocation(e, 'latitude')}
             />
           </Col>
           <Col md={5}>
@@ -268,7 +272,7 @@ class NetworkLocationForm extends React.Component {
               component={FieldFormGroup}
               placeholder={intl.formatMessage({ id: 'portal.network.locationForm.longitude.placeholder' })}
               label={<FormattedMessage id="portal.network.locationForm.longitude.label"/>}
-              onBlur={(e) => this.fetchLocation(e, 'longitude')}
+              onBlur={(e) => this.askForFetchLocation(e, 'longitude')}
             />
           </Col>
         </Row>
