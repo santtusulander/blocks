@@ -15,6 +15,10 @@ import {
   UserCanViewHosts
 } from './util/route-permissions-wrappers'
 
+import {
+  accountIsServiceProviderType
+ } from './util/helpers'
+
 import AccountManagement from './containers/account-management/account-management'
 import AccountManagementAccountDetails from './containers/account-management/tabs/details'
 import AccountManagementAccountUsers from './containers/account-management/tabs/users'
@@ -146,6 +150,25 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+const accountIsSP = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const account =
+      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
+      state.account.get('activeAccount')
+    return account
+  },
+  authenticatingSelector: (state) => state.account.get('fetching'),
+  wrapperDisplayName: 'accountIsSP',
+  predicate: (account) => {
+    return !(account && accountIsServiceProviderType(account))
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
+
 export const getRoutes = store => {
   return (
     <Route path={routes.root}>
@@ -187,7 +210,7 @@ export const getRoutes = store => {
         {/* Content / CP Accounts - routes */}
         <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
-          <Route component={ContentTransition}>
+          <Route component={accountIsSP(ContentTransition)}>
             <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
             <Route path={routes.contentGroups} component={Groups}/>
