@@ -819,7 +819,6 @@ Network.propTypes = {
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
   fetchGroup: PropTypes.func,
-  fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
   fetchPods: PropTypes.func,
