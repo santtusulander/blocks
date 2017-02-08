@@ -99,7 +99,7 @@ class ConfigurationPolicies extends React.Component {
       const ruleIndex = this.props.activeRule.get(2)
 
       this.deleteRule(ruleType, ruleIndex)
-    }else{
+    } else {
       this.handleChange([])(this.props.originalConfig)
     }
 
