@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
 import { reduxForm, Field, change, propTypes as reduxFormPropTypes  } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
@@ -65,6 +64,7 @@ class RoutingDaemonForm extends React.Component {
       BGPNumberIsEmpty: null
     }
 
+    this.setBGPName = this.setBGPName.bind(this)
     this.fetchBGPName = this.fetchBGPName.bind(this)
   }
 
@@ -73,6 +73,11 @@ class RoutingDaemonForm extends React.Component {
     if (bgp_as_number) {
       this.fetchBGPName(bgp_as_number)
     }
+  }
+
+  setBGPName(name, BGPNumber) {
+    this.props.dispatch(change('routing-daemon-form', 'bgp_as_name', name))
+    this.props.dispatch(change('routing-daemon-form', 'bgp_as_number', BGPNumber))
   }
 
   fetchBGPName(value) {
@@ -100,7 +105,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: !holder.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => this.props.setBGPName(holder, BGPNumber))
+        }, () => this.setBGPName(holder, BGPNumber))
       })
       .catch(() => {
         this.setState({
@@ -109,7 +114,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: true,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => this.props.setBGPName('', BGPNumber))
+        }, () => this.setBGPName('', BGPNumber))
       })
   }
 
@@ -205,27 +210,11 @@ RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
-  setBGPName: PropTypes.func,
 
   ...reduxFormPropTypes
 }
 
-const mapStateToProps = () => {
-  return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setBGPName: (name, BGPNumber) => {
-      dispatch(change('routing-daemon-form', 'bgp_as_name', name))
-      dispatch(change('routing-daemon-form', 'bgp_as_number', BGPNumber))
-    }
-  }
-}
-
-const form = reduxForm({
+export default reduxForm({
   form: 'routing-daemon-form',
   validate
-})(RoutingDaemonForm)
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
+})(injectIntl(RoutingDaemonForm))
