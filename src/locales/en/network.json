@@ -128,6 +128,7 @@
   "portal.network.locationForm.latLongFields.helperText.address": "ADDRESS:",
   "portal.network.locationForm.latLongFields.helperTextHint.address": "Enter Geo Coordinates",
   "portal.network.locationForm.latLongFields.helperTextLoading.address": "Fetching address",
+  "portal.network.locationForm.latLongFields.addressNotFound": "Address not found",
 
   "portal.network.locationForm.name.required.error": "Location name is required",
   "portal.network.locationForm.iataCode.required.error": "IATA code is required",
