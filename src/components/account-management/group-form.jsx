@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
@@ -49,13 +49,14 @@ const GroupForm = ({
   isFetchingLocations,
   locations,
   onCancel,
+  onDelete,
   onDeleteHost,
   onShowLocation,
-  onSubmit}) => {
+  onSubmit,
+  submitting}) => {
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -92,8 +93,8 @@ const GroupForm = ({
           <hr/>
 
           {(canSeeLocations && groupId) &&
-            <div>
-              <label><FormattedMessage id="portal.accountManagement.locations.text"/></label>
+            <div className="locations">
+              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
@@ -155,6 +156,16 @@ const GroupForm = ({
             </div>
           }
         <FormFooterButtons>
+          {(groupId && onDelete) &&
+            <Button
+              className="btn-danger pull-left"
+              disabled={submitting}
+              onClick={onDelete}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
+          }
+
           <Button
             id="cancel-btn"
             className="btn-secondary"
@@ -165,7 +176,7 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid}>
+            disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
             {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
           </Button>
         </FormFooterButtons>
@@ -189,9 +200,11 @@ GroupForm.propTypes = {
   isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({

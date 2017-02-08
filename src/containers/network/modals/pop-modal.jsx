@@ -2,7 +2,8 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
+import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -26,7 +27,7 @@ import { buildReduxId } from '../../../redux/util'
 import SidePanel from '../../../components/side-panel'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-
+import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -123,13 +124,18 @@ class PopFormContainer extends Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
+        // Unselect POP item
+        if (this.props.selectedEntityId == popId) {
+          this.props.handleSelectedEntity(popId)
+        }
+
         //Close modal
         this.props.onCancel();
       })
   }
 
   hasChildren(edit) {
-    return !(edit ? this.props.pods.size : false)
+    return (edit ? (this.props.pods.size > 0) : false)
   }
 
   render() {
@@ -137,8 +143,8 @@ class PopFormContainer extends Component {
       initialValues,
       iata,
       onCancel,
-      groupId,
-      networkId,
+      group,
+      network,
       popId
     } = this.props
 
@@ -147,15 +153,12 @@ class PopFormContainer extends Component {
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
 
-    const subTitle = (<FormattedMessage id="portal.network.subTitle.context.text"
-                                        values={{
-                                          groupId: groupId,
-                                          networkId: networkId
-                                        }} />)
+    const subTitle = (group && network) && `${group.get('name')} / ${network.get('name')} ${edit ? `/ ${initialValues.name}` : ''}`
+
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: initialValues.createdDate,
-                                                    updatedDate: initialValues.updatedDate
+                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
+                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
                                                   }} />) : ''
 
     return (
@@ -185,25 +188,26 @@ PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   brand: PropTypes.string,
-
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
-
+  group: PropTypes.instanceOf(Map),
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
+  handleSelectedEntity: PropTypes.func,
   iata: PropTypes.string,
   initialValues: PropTypes.object,
+  network: PropTypes.instanceOf(Map),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
-  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  selectedEntityId: PropTypes.string
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
@@ -211,7 +215,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
-  const pop = ownProps.popId && getPopById(state, ownProps.popId)
+  const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
   const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
   const selectedLocation = getLocationById(state, selectedLocationId)
