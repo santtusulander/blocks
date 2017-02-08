@@ -4,6 +4,7 @@ import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { FormattedMessage } from 'react-intl'
 
 import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
@@ -145,7 +146,23 @@ class ContentItems extends React.Component {
   }
 
   onItemDelete() {
-    console.log(this.state.itemToEdit)
+    this.hideModal()
+    return this.props.deleteItem(...arguments)
+      .then(({ item, name, error, payload }) => {
+        if(error) {
+          this.props.showInfoDialog({
+            title: 'Error',
+            content: payload.data.message,
+            cancel: () => this.props.hideInfoDialog(),
+            okButton: true
+          })
+        } else if(item && name) {
+          this.hideModal()
+          this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+        } else {
+          this.hideModal()
+        }
+      })
   }
 
   getTier() {

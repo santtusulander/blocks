@@ -876,8 +876,8 @@ Network.propTypes = {
   pops: PropTypes.instanceOf(Immutable.List),
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
-  toggleModal: PropTypes.func,
   toggleDeleteConfirmationModal: PropTypes.func,
+  toggleModal: PropTypes.func,
   uiActions: PropTypes.object
 }
 

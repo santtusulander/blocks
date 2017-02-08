@@ -37,6 +37,10 @@ export class Groups extends React.Component {
     this.editGroup = this.editGroup.bind(this)
     this.deleteGroup = this.deleteGroup.bind(this)
     this.sortItems = this.sortItems.bind(this)
+
+    this.state = {
+      groupToDelete: null
+    }
   }
   componentWillMount() {
     /* FIXME: This is not the right way of deciding when to fetch - causes sometimes 'No Groups found' - error
@@ -87,15 +91,28 @@ export class Groups extends React.Component {
       ),
       ...addUserActions,
       ...deleteUserActions
-    ])
-    .then(() => ({ item: 'Group', name: data.name }))
+    ]).then(({ error, payload }) => (
+      { item: 'Group', name: data.name, error, payload }
+    ))
   }
-  deleteGroup(id) {
-    this.props.groupActions.deleteGroup(
-      this.props.params.brand,
-      this.props.params.account,
-      id
-    )
+
+  showDeleteGroupModal(group) {
+    this.setState({ groupToDelete: group });
+  }
+
+  deleteGroup(group) {
+    return this.props.groupActions.deleteGroup(
+      'udn',
+      this.props.activeAccount.get('id'),
+      group.get('id')
+    ).then(({ error, payload }) => (
+      { item: 'Group', name: group.get('name'), error, payload }
+    ))
+    // this.props.groupActions.deleteGroup(
+    //   this.props.params.brand,
+    //   this.props.params.account,
+    //   id
+    // )
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
