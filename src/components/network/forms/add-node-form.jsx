@@ -175,20 +175,18 @@ class NetworkAddNodeForm extends React.Component {
             </Col>
           </Row> */}
 
-          <FormGroup>
-            <label><FormattedMessage id="portal.common.name" /></label>
-              <Field
-                type="number"
-                name="nameCode"
-                min={0}
-                max={99}
-                component={FieldFormGroupNumber}
-              />
+          <label><FormattedMessage id="portal.common.name" /></label>
+          <div className="add-node-form__name-fqdn">
+            {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
+          </div>
 
-            <div className="add-node-form__name-fqdn">
-              {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
-            </div>
-          </FormGroup>
+          <Field
+            type="number"
+            name="nameCode"
+            min={0}
+            max={99}
+            component={FieldFormGroupNumber}
+          />
 
           <Field
             name="node_role"
