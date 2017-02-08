@@ -1,4 +1,6 @@
 import {handleActions} from 'redux-actions'
+import { Map } from 'immutable'
+
 import * as fetchingReducers from './reducers'
 
 /**
@@ -14,5 +16,5 @@ export default (actionTypes) => {
     else  mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear
   }
 
-  return handleActions(mappedActions, 0)
+  return handleActions(mappedActions, Map())
 }
