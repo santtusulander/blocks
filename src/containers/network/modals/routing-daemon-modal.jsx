@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
@@ -21,13 +22,14 @@ class RoutingDaemonFormContainer extends React.Component {
 
   render() {
     const {
-      editing,
       intl,
       onCancel,
-      show
+      show,
+      initialValues
     } = this.props
 
-    const formTitle = editing ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
+    const edit = !!initialValues.bgp_as_number
+    const formTitle = edit ? 'portal.network.spConfig.routingDaemon.editForm.title' : 'portal.network.spConfig.routingDaemon.addForm.title'
 
     return (
       <SidePanel
@@ -36,6 +38,8 @@ class RoutingDaemonFormContainer extends React.Component {
         cancel={onCancel}
       >
       <RoutingDaemonForm
+        initialValues={initialValues}
+        editing={edit}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
       />
@@ -46,15 +50,23 @@ class RoutingDaemonFormContainer extends React.Component {
 
 RoutingDaemonFormContainer.displayName = 'RoutingDaemonFormContainer'
 RoutingDaemonFormContainer.propTypes = {
-  editing: PropTypes.bool,
+  initialValues: PropTypes.object,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
   show: PropTypes.bool
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = (state) => {
+  const selector = formValueSelector('pod-form')
+
+  return {
+    initialValues: {
+      bgp_as_number: selector(state, 'UIsp_bgp_router_as'),
+      bgp_router_ip: selector(state, 'UIsp_bgp_router_ip'),
+      bgp_password: selector(state, 'UIsp_bgp_router_password')
+    }
+  }
 }
 
 const mapDispatchToProps = () => {

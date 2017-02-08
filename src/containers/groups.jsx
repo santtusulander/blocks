@@ -49,7 +49,7 @@ export class Groups extends React.Component {
     this.props.fetchData()
     //}
   }
-  createGroup(data, usersToAdd) {
+  createGroup({data, usersToAdd}) {
     return this.props.groupActions.createGroup('udn', this.props.params.account, data)
       .then(({ payload }) => {
         this.props.clearFetchedHosts()
@@ -64,7 +64,7 @@ export class Groups extends React.Component {
         .then(() => ({ item: 'Group', name: data.name }))
       })
   }
-  editGroup(groupId, data, addUsers, deleteUsers) {
+  editGroup({groupId, data, addUsers, deleteUsers}) {
     const groupIdsByEmail = email => this.props.user.get('allUsers')
       .find(user => user.get('email') === email)
       .get('group_id')

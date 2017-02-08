@@ -1,5 +1,5 @@
 import React from 'react'
-import { Map, List, fromJS } from 'immutable'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -47,7 +47,9 @@ class PurgeStatus extends React.Component {
     purgeActions.startFetching()
     purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingParams })
       .then((response) => {
-        this.props.pagination.paging.onTotalChange(fromJS(response).getIn(['payload', 'total'], null))
+        const total = response && response.payload && response.payload.total || null
+        this.props.pagination.paging.onTotalChange(total)
+
         return response
       })
   }
@@ -98,6 +100,11 @@ PurgeStatus.propTypes = {
   purgeObjects: React.PropTypes.instanceOf(List)
 }
 
+const paginationConfig = {
+  fields: [],
+  page_size: 5
+}
+
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
@@ -116,4 +123,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus, paginationConfig)));

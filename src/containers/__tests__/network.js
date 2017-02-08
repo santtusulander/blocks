@@ -24,7 +24,11 @@ const subject = () => {
       account={mockAccount}
       fetchData={mockFetchData}
       fetchNetworks={jest.fn()}
+      fetchLocations={jest.fn()}
       fetchPops={jest.fn()}
+      fetchPods={jest.fn()}
+      fetchNodes={jest.fn()}
+      fetchFootprints={jest.fn()}
     />
   )
 }
