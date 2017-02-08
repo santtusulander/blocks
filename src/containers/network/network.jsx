@@ -22,6 +22,10 @@ import {
 } from '../../constants/network-modals.js'
 
 import {
+  DELETE_GROUP
+} from '../../constants/account-management-modals.js'
+
+import {
   NETWORK_SCROLL_AMOUNT,
   NETWORK_NUMBER_OF_NODE_COLUMNS,
   NETWORK_NODES_PER_COLUMN
@@ -56,6 +60,7 @@ import PageContainer from '../../components/layout/page-container'
 import PageHeader from '../../components/layout/page-header'
 import TruncatedTitle from '../../components/truncated-title'
 import EntityList from '../../components/network/entity-list'
+import ModalWindow from '../../components/modal'
 
 import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import NetworkFormContainer from './modals/network-modal'
@@ -110,7 +115,9 @@ class Network extends React.Component {
       networkId: null,
       popId: null,
       podId: null,
-      nodeId: null
+      nodeId: null,
+
+      groupToDelete: null
     }
 
     this.entityList = {
@@ -358,13 +365,20 @@ class Network extends React.Component {
     }
   }
 
+  showDeleteGroupModal(group) {
+    this.setState({ groupToDelete: group });
+
+    this.props.toggleModal(null)
+    this.props.toggleDeleteConfirmationModal(DELETE_GROUP)
+  }
+
   handleGroupDelete(group) {
     return this.props.groupActions.deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
       group.get('id')
     ).then(response => {
-      this.props.toggleModal(null)
+      this.props.toggleDeleteConfirmationModal(null)
       this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
       response.error &&
         this.props.uiActions.showInfoDialog({
@@ -587,6 +601,7 @@ class Network extends React.Component {
 
   render() {
     const {
+      accountManagementModal,
       activeAccount,
       networkModal,
       groups,
@@ -597,6 +612,21 @@ class Network extends React.Component {
       currentUser,
       roles
     } = this.props
+
+    let deleteModalProps = null
+    switch (accountManagementModal) {
+      case DELETE_GROUP:
+        deleteModalProps = {
+          title: <FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.groupToDelete.get('name')}}/>,
+          content: <FormattedMessage id="portal.accountManagement.deleteGroupConfirmation.text"/>,
+          verifyDelete: true,
+          cancelButton: true,
+          deleteButton: true,
+          cancel: () => this.props.toggleDeleteConfirmationModal(null),
+          onSubmit: () => this.handleGroupDelete(this.state.groupToDelete)
+        }
+        break
+    }
 
     return (
       <Content className="network-content">
@@ -729,6 +759,8 @@ class Network extends React.Component {
           </div>
         </PageContainer>
 
+        {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
+
         {networkModal === ADD_EDIT_ACCOUNT &&
           <AccountForm
             id="account-form"
@@ -748,7 +780,7 @@ class Network extends React.Component {
             canSeeBilling={false}
             canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
-            onDelete={(groupId) => this.handleGroupDelete(groupId)}
+            onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.handleGroupSave}
             show={true}
           />
@@ -820,6 +852,7 @@ Network.displayName = 'Network'
 Network.propTypes = {
   accountActions: React.PropTypes.object,
   accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountManagementModal: PropTypes.string,
   accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
@@ -844,6 +877,7 @@ Network.propTypes = {
   roles: PropTypes.instanceOf(Immutable.List),
   router: PropTypes.object,
   toggleModal: PropTypes.func,
+  toggleDeleteConfirmationModal: PropTypes.func,
   uiActions: PropTypes.object
 }
 
@@ -854,6 +888,7 @@ Network.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    accountManagementModal: state.ui.get('accountManagementModal'),
     getNodes: getByPod(state),
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
@@ -903,6 +938,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 
   return {
     toggleModal: uiActions.toggleNetworkModal,
+    toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     fetchData: fetchData,
     groupActions: groupActions,
     accountActions: accountActions,

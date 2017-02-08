@@ -80,6 +80,7 @@ class ContentItems extends React.Component {
     this.handleSortChange = this.handleSortChange.bind(this)
     this.onItemAdd = this.onItemAdd.bind(this)
     this.onItemSave = this.onItemSave.bind(this)
+    this.onItemDelete = this.onItemDelete.bind(this)
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
@@ -142,6 +143,11 @@ class ContentItems extends React.Component {
         }
       })
   }
+
+  onItemDelete() {
+    console.log(this.state.itemToEdit)
+  }
+
   getTier() {
     const { brand, account, group } = this.props.params
     if (group) {
@@ -432,6 +438,7 @@ class ContentItems extends React.Component {
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              onDelete={this.onItemDelete}
               onCancel={this.hideModal}
               show={true}/>
           }
