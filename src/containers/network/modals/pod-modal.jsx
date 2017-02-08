@@ -4,7 +4,6 @@ import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
 import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
-import { bindActionCreators } from 'redux'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -12,7 +11,6 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
-import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -51,7 +49,8 @@ class PodFormContainer extends React.Component {
     this.state = {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
-      footprintId: null
+      footprintId: null,
+      showDeleteModal : false
     }
   }
 
@@ -129,6 +128,10 @@ class PodFormContainer extends React.Component {
 
   hideRoutingDaemonModal() {
     this.setState({ showRoutingDaemonModal: false})
+  }
+
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
   }
 
   /**
@@ -226,7 +229,6 @@ class PodFormContainer extends React.Component {
 
   render() {
     const {
-      confirmationModalToggled,
       initialValues,
       onCancel,
       UIFootprints,
@@ -237,9 +239,10 @@ class PodFormContainer extends React.Component {
       group,
       //account,
       network,
-      footprints,
-      toggleDeleteConfirmationModal
+      footprints
     } = this.props
+
+    const {showDeleteModal} = this.state
 
     const edit = !!initialValues.pod_name
 
@@ -264,7 +267,7 @@ class PodFormContainer extends React.Component {
             initialValues={initialValues}
 
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={() => toggleDeleteConfirmationModal(false)}
+            onDelete={() => this.onToggleDeleteModal(true)}
             onCancel={onCancel}
 
             //onDeleteFootprint={this.onDeleteFootprint}
@@ -302,15 +305,15 @@ class PodFormContainer extends React.Component {
         />
         }
 
-        {edit && confirmationModalToggled &&
+        {edit && showDeleteModal &&
           <ModalWindow
             title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
             verifyDelete={true}
             cancelButton={true}
             deleteButton={true}
-            cancel={() => toggleDeleteConfirmationModal(false)}
+            cancel={() => this.onToggleDeleteModal(false)}
             onSubmit={()=>{
-              toggleDeleteConfirmationModal(false)
+              this.onToggleDeleteModal(false)
               this.onDelete(podId)
               onCancel()
             }}>
@@ -332,7 +335,6 @@ PodFormContainer.propTypes = {
 
   accountId: PropTypes.string,
   brand: PropTypes.string,
-  confirmationModalToggled: PropTypes.bool,
   fetchAccount: PropTypes.func,
   fetchFootprints: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -353,8 +355,7 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
-  setFormVal: PropTypes.func,
-  toggleDeleteConfirmationModal: PropTypes.func
+  setFormVal: PropTypes.func
 }
 
 PodFormContainer.defaultProps = {
@@ -391,7 +392,6 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
-    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
@@ -407,7 +407,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  const uiActions = bindActionCreators(uiActionCreators, dispatch)
   return {
     onCreate: (params, data) => dispatch(podActions.create({ ...params, data })),
     onUpdate: (params, data) => dispatch(podActions.update({ ...params, data })),
@@ -421,8 +420,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params)),
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
-    setFormVal: (field, val) => dispatch(change('pod-form', field, val)),    
-    toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal,
+    setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }
