@@ -35,6 +35,8 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+// TODO: Rename to groupActions once the old groupActions is abandoned
+import newGroupActions from '../../redux/modules/entities/groups/actions'
 import locationActions from '../../redux/modules/entities/locations/actions'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
@@ -339,6 +341,9 @@ class Network extends React.Component {
         )
       ])
         .then(() => {
+          // This is temporary solution to update the entities store with the new
+          // group info, since this save function uses the old group actions
+          this.props.fetchGroup({ forceReload: true, brand: 'udn', account: this.props.activeAccount.get('id'), id: groupId })
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
         })
@@ -819,6 +824,7 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
@@ -906,6 +912,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
     fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
+    fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params) ),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
