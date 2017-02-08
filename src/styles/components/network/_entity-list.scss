@@ -28,6 +28,17 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
   }
 
+  &:nth-child(3) {
+    .entity-list-item:first-of-type {
+      &.active::after {
+        height: rem(12px);
+        border-top: 2px solid $pale-blue;
+        border-right: 2px solid $pale-blue;
+        border-bottom: 0;
+      }
+    }
+  }
+
   .dark-theme & {
     border-right-color: rgba($black, 0.3);
   }
