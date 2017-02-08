@@ -247,7 +247,7 @@ function mapStateToProps(state) {
   const stateMap = Immutable.Map(state)
   const fetching = stateMap.some(
     store => store && (store.get ? store.get('fetching') : store.fetching)
-  ) && getGlobalFetching(state)
+  ) || getGlobalFetching(state)
 
   return {
     accounts: state.account.get('allAccounts'),
