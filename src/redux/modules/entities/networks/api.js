@@ -1,13 +1,14 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
 const baseUrl = ({ brand, account, group }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks`
 }
 
 const networkSchema = new schema.Entity('networks', {},{
+  idAttribute: (network, group) => buildReduxId(group.id, network.id),
   processStrategy: (value, parent) => {
     return {
       ...value,
@@ -96,5 +97,5 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  */
 export const remove = ({ id, ...baseUrlParams }) => {
   return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => ({ id }))
+    .then(() => ({ id: buildReduxId(baseUrlParams.group, id) }))
 }
