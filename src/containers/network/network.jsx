@@ -37,7 +37,6 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 
 // TODO: Rename to groupActions once the old groupActions is abandoned
 import newGroupActions from '../../redux/modules/entities/groups/actions'
-import locationActions from '../../redux/modules/entities/locations/actions'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
@@ -124,35 +123,31 @@ class Network extends React.Component {
   }
 
   componentWillMount() {
-    const { group, network, pop } = this.props.params
     this.props.fetchData()
 
-    this.props.fetchNetworks( group )
-    this.props.fetchPops( network )
-    this.props.fetchPods( pop )
-    this.props.fetchLocations(group)
+    this.props.fetchNetworks( this.props.params )
+    this.props.fetchPops( this.props.params )
+    this.props.fetchPods( this.props.params )
     this.props.fetchNodes( this.props.params )
-
   }
 
   componentWillReceiveProps(nextProps) {
     const { group, network, pop, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
-      nextProps.fetchNetworks( group )
-      nextProps.fetchLocations( group )
+      this.props.fetchNetworks( nextProps.params )
     }
 
     if (network !== this.props.params.network) {
-      nextProps.fetchPops( network )
+      this.props.fetchPops( nextProps.params )
     }
 
-    if (pop) {
-      nextProps.fetchPods( pop )
+    if (pop !== this.props.params.pop) {
+      this.props.fetchPods( nextProps.params )
     }
 
-    if (pod) {
-      nextProps.fetchNodes( nextProps.params )
+    if (pod !== this.props.params.pop) {
+      this.props.fetchNodes( nextProps.params )
     }
 
   }
@@ -873,7 +868,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const { brand, account, group, network /*, pop, pod */} = ownProps.params
+  const { brand, account /*, group, network , pop, pod */} = ownProps.params
 
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -906,12 +901,11 @@ function mapDispatchToProps(dispatch, ownProps) {
     groupActions: groupActions,
     accountActions: accountActions,
     uiActions: uiActions,
-    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
-    //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
-    fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
-    fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
-    fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params) ),
+
+    fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
+    fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
+    fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
+    fetchPods: (params) => params.pop && dispatch( podActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
