@@ -86,6 +86,7 @@
   "portal.network.podForm.localAS.notFound.error": "Local AS not found",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
   "portal.network.podForm.ipList.label": "IP List",
+  "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be a number",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
@@ -152,6 +153,7 @@
   "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
   "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
   "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.asIsNotAnNumber.text": "BGP AS must be a number",
   "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required",
