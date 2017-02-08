@@ -87,6 +87,7 @@ const ROUTES = {
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
   dashboardGroup: '/dashboard/:brand/:account/:group',
+  dashboardProperty: '/dashboard/:brand/:account/:group/:property',
 
   network: '/network',
   networkBrand: '/network/:brand',
