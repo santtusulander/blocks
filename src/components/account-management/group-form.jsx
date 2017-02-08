@@ -12,6 +12,7 @@ import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
+import ButtonDisableTooltip from '../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import {
@@ -158,13 +159,22 @@ const GroupForm = ({
           }
         <FormFooterButtons>
           {(groupId && onDelete) &&
-            <Button
+            // <Button
+            //   className="btn-danger pull-left"
+            //   disabled={submitting || isFetchingEntities || hasNetworks}
+            //   onClick={onDelete}
+            // >
+            //   <FormattedMessage id="portal.button.delete"/>
+            // </Button>
+            <ButtonDisableTooltip
+              id="delete-btn"
               className="btn-danger pull-left"
               disabled={submitting || isFetchingEntities || hasNetworks}
               onClick={onDelete}
-            >
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
               <FormattedMessage id="portal.button.delete"/>
-            </Button>
+            </ButtonDisableTooltip>
           }
 
           <Button
