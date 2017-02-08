@@ -159,13 +159,6 @@ const GroupForm = ({
           }
         <FormFooterButtons>
           {(groupId && onDelete) &&
-            // <Button
-            //   className="btn-danger pull-left"
-            //   disabled={submitting || isFetchingEntities || hasNetworks}
-            //   onClick={onDelete}
-            // >
-            //   <FormattedMessage id="portal.button.delete"/>
-            // </Button>
             <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger pull-left"

@@ -312,6 +312,7 @@ GroupFormContainer.propTypes = {
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
+  fetchNetworks: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
@@ -319,10 +320,11 @@ GroupFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
-  isFetchingHosts: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
+  isFetchingHosts: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
+  networks: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -334,7 +336,8 @@ GroupFormContainer.propTypes = {
 GroupFormContainer.defaultProps = {
   account: Map(),
   activeHost: Map(),
-  hosts: List()
+  hosts: List(),
+  networks: List()
 }
 
 const determineInitialValues = (groupId, activeGroup = Map()) => {
