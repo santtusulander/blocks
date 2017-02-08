@@ -367,7 +367,7 @@ const PodForm = ({
           <li>
             <Row>
               <Col xs={8}>
-                <span>{UIsp_bgp_router_as}</span>
+                <span><FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.as.label"/>{UIsp_bgp_router_as}</span>
               </Col>
 
               <Col xs={4} className="action-buttons">
