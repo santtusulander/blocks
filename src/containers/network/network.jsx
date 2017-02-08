@@ -35,6 +35,8 @@ import * as groupActionCreators from '../../redux/modules/group'
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 
+// TODO: Rename to groupActions once the old groupActions is abandoned
+import newGroupActions from '../../redux/modules/entities/groups/actions'
 import locationActions from '../../redux/modules/entities/locations/actions'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
@@ -338,6 +340,9 @@ class Network extends React.Component {
         )
       ])
         .then(() => {
+          // This is temporary solution to update the entities store with the new
+          // group info, since this save function uses the old group actions
+          this.props.fetchGroup({ forceReload: true, brand: 'udn', account: this.props.activeAccount.get('id'), id: groupId })
           this.props.toggleModal(null)
           this.showNotification(<FormattedMessage id="portal.accountManagement.groupUpdated.text"/>)
         })
@@ -636,11 +641,11 @@ class Network extends React.Component {
                 type: CONTENT_ITEMS_TYPES.ACCOUNT,
                 chartWidth: '450',
                 barMaxHeight: '30',
-                analyticsURLBuilder: getAnalyticsUrl,
-                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)
+                analyticsURLBuilder: getAnalyticsUrl
               }}
               params={params}
               nextEntityList={this.entityList.groupList && this.entityList.groupList.entityListItems}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_ACCOUNTS)}
             />
 
             <EntityList
@@ -661,11 +666,12 @@ class Network extends React.Component {
                 type: CONTENT_ITEMS_TYPES.GROUP,
                 chartWidth: '350',
                 barMaxHeight: '30',
-                analyticsURLBuilder: getAnalyticsUrl,
-                isAllowedToConfigure: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)
+                analyticsURLBuilder: getAnalyticsUrl
               }}
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
+              creationPermission={PERMISSIONS.CREATE_GROUP}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
             />
 
             <EntityList
@@ -679,7 +685,12 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.networks.title'/>}
               disableButtons={params.group ? false : true}
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+<<<<<<< HEAD
               contentTextGenerator={entity => entity.get('description')}
+=======
+              creationPermission={PERMISSIONS.CREATE_NETWORK}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
+>>>>>>> bbffb9b8fd9088a0ddba6d535016820956dbf5fc
             />
 
             <EntityList
@@ -694,6 +705,8 @@ class Network extends React.Component {
               disableButtons={params.network ? false : true}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
               contentTextGenerator={entity => entity.get('id')}
+              creationPermission={PERMISSIONS.CREATE_POP}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
             />
 
             <EntityList
@@ -710,6 +723,8 @@ class Network extends React.Component {
               disableButtons={params.pop ? false : true}
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
               contentTextGenerator={this.podContentTextGenerator}
+              creationPermission={PERMISSIONS.CREATE_POD}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
             />
 
             <EntityList
@@ -726,6 +741,8 @@ class Network extends React.Component {
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
               contentTextGenerator={this.nodeContentTextGenerator}
+              creationPermission={PERMISSIONS.CREATE_NODE}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
             />
           </div>
         </PageContainer>
@@ -825,6 +842,7 @@ Network.propTypes = {
   activeAccount: PropTypes.instanceOf(Immutable.Map),
   currentUser: PropTypes.instanceOf(Immutable.Map),
   fetchData: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
@@ -914,6 +932,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
     fetchPops: (network) => network && dispatch( popActions.fetchAll({brand, account, group, network}) ),
     fetchPods: (pop) => pop && dispatch( podActions.fetchAll({brand, account, group, network, pop}) ),
+    fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params) ),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }

@@ -15,7 +15,7 @@ $number-input-btn-width: $btn-height / 2;
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
 label {
-  margin-bottom: 0;
+  margin-bottom: 10px;
   font-size: rem(18px);
   font-weight: 700;
   line-height: 1;
@@ -576,20 +576,6 @@ textarea {
           border-top-color: $white;
         }
       }
-    }
-  }
-}
-
-// Routing Daemon Form
-// =====
-.routing-daemon__form {
-  .input-group-addon {
-    .dark-theme & {
-      padding: 0;
-      background-color: rgba($black, 0.2);
-    }
-    .light-theme & {
-      background-color: $white;
     }
   }
 }

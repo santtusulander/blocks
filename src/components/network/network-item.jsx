@@ -5,7 +5,7 @@ import classNames from 'classnames'
 
 import IconConfiguration from '../icons/icon-configuration'
 
-const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName }) => {
+const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, isAllowedToConfigure }) => {
 
   const handleEdit = e => {
     e.preventDefault()
@@ -49,16 +49,16 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
           <FormattedMessage id={`portal.network.item.status.${status}`} />
         </div>
       }
-
-      <ButtonToolbar>
-        <Button
-          bsStyle="primary"
-          className="btn-icon btn-round"
-          onClick={handleEdit}>
-          <IconConfiguration />
-        </Button>
-      </ButtonToolbar>
-
+      {isAllowedToConfigure &&
+        <ButtonToolbar>
+          <Button
+            bsStyle="primary"
+            className="btn-icon btn-round"
+            onClick={handleEdit}>
+            <IconConfiguration />
+          </Button>
+        </ButtonToolbar>
+      }
     </div>
   )
 }
@@ -68,6 +68,7 @@ NetworkItem.propTypes = {
   active: PropTypes.bool,
   content: PropTypes.string,
   extraClassName: PropTypes.string,
+  isAllowedToConfigure: PropTypes.bool,
   onEdit: PropTypes.func,
   onSelect: PropTypes.func,
   status: PropTypes.string,
