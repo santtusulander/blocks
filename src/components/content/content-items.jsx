@@ -4,12 +4,12 @@ import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { FormattedMessage } from 'react-intl'
 
 import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
+
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -146,7 +146,6 @@ class ContentItems extends React.Component {
   }
 
   onItemDelete() {
-    this.hideModal()
     return this.props.deleteItem(...arguments)
       .then(({ item, name, error, payload }) => {
         if(error) {
@@ -158,7 +157,7 @@ class ContentItems extends React.Component {
           })
         } else if(item && name) {
           this.hideModal()
-          this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+          this.showNotification(`${item} ${name} deleted.`)
         } else {
           this.hideModal()
         }
