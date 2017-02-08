@@ -1,25 +1,21 @@
+import { Map } from 'immutable'
+
 jest.unmock('../reducers');
 import * as reducers from '../reducers';
 
 describe('Fetching Module', () => {
 
   it('should handle set', () => {
-    const initialState = false;
-    const newState = reducers.set(initialState);
-    expect(newState).toEqual(1);
+    const initialState = Map({});
+    const action = { payload: { 123: { a: 'b' } } };
+    const newState = reducers.set(initialState, action).toJS();
+    expect(newState).toEqual({ 123: { a: 'b' } });
   });
 
-  it('should handle set (incerement)', () => {
-    const initialState = false;
-    const state1 = reducers.set(initialState);
-    const newState = reducers.set(state1);
-    expect(newState).toEqual(2);
-  });
-
-  it('should handle clear (decrement)', () => {
-    const initialState = 2;
-
-    const newState = reducers.clear(initialState);
-    expect(newState).toEqual(1);
+  it('should handle clear', () => {
+    const initialState = Map({ 123: { a: 'b' } });
+    const action = { payload: { 123: { a: 'b' } } };
+    const newState = reducers.clear(initialState, action);
+    expect(newState).toEqual(Map());
   });
 })
