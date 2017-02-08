@@ -685,12 +685,9 @@ class Network extends React.Component {
               title={<FormattedMessage id='portal.network.networks.title'/>}
               disableButtons={params.group ? false : true}
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
-<<<<<<< HEAD
               contentTextGenerator={entity => entity.get('description')}
-=======
               creationPermission={PERMISSIONS.CREATE_NETWORK}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
->>>>>>> bbffb9b8fd9088a0ddba6d535016820956dbf5fc
             />
 
             <EntityList
