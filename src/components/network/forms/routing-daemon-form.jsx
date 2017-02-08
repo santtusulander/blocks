@@ -1,17 +1,20 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { reduxForm, Field, change, propTypes as reduxFormPropTypes  } from 'redux-form'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isValidIPv4Address } from '../../../util/validators'
-import { ROUTING_DEAMON_PASSWORD_MIN_LEN, ROUTING_DEAMON_PASSWORD_MAX_LEN,
+import { AS_NUM_MIN,
+         ROUTING_DEAMON_PASSWORD_MIN_LEN, ROUTING_DEAMON_PASSWORD_MAX_LEN,
          ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN
        } from '../../../constants/network'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
@@ -77,10 +80,11 @@ class RoutingDaemonForm extends React.Component {
 
     if (!BGPNumber || BGPNumber.length == 0) {
       this.setState({ BGPNumberIsEmpty: true })
+      return
     }
 
     if (this.state.BGPNumber === BGPNumber) {
-      return;
+      return
     }
 
     this.setState({
@@ -96,7 +100,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: !holder.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_name', holder) ) )
+        }, () => this.props.setBGPName(holder, BGPNumber))
       })
       .catch(() => {
         this.setState({
@@ -105,7 +109,7 @@ class RoutingDaemonForm extends React.Component {
           BGPNameNotFound: true,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false
-        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_number', '') ) )
+        }, () => this.props.setBGPName('', BGPNumber))
       })
   }
 
@@ -126,24 +130,27 @@ class RoutingDaemonForm extends React.Component {
     const errorMsgASNum = BGPNumberIsEmpty ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text" />
                                            : (BGPNameNotFound
                                            ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/> : '')
+    const BGB_AS_NUMBER_PROPS = {
+      meta: {
+        invalid: !!errorMsgASNum,
+        touched: !!errorMsgASNum,
+        error: errorMsgASNum
+      }
+    }
 
     return (
       <form onSubmit={handleSubmit(onSubmit)} className="sp-routing-daemon-form">
 
         <Field
+          min={AS_NUM_MIN}
           type="text"
           name="bgp_as_number"
+          addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
-          component={FieldFormGroup}
+          component={FieldFormGroupNumber}
           onBlur={(e, value) => this.fetchBGPName(value)}
-          props={{
-            meta: {
-              invalid: BGPNameNotFound,
-              touched: BGPNameNotFound,
-              error: errorMsgASNum
-            }
-          }}
+          props={BGB_AS_NUMBER_PROPS}
         />
 
         <Field
@@ -153,7 +160,7 @@ class RoutingDaemonForm extends React.Component {
           placeholder={isFetchingBGPName ?
                         intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameFetching.label' }) :
                         intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label' })}
-          disabled={!BGPName && BGPNameNotFound}
+          disabled={(!BGPName && BGPNameNotFound) || BGPNumberIsEmpty}
           addonAfter={isFetchingBGPName ? <LoadingSpinnerSmall/> : ''}
           component={FieldFormGroup}
         />
@@ -203,9 +210,22 @@ RoutingDaemonForm.propTypes = {
   ...reduxFormPropTypes
 }
 
+const mapStateToProps = () => {
+  return {}
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setBGPName: (name, BGPNumber) => {
+      dispatch(change('routing-daemon-form', 'bgp_as_name', name))
+      dispatch(change('routing-daemon-form', 'bgp_as_number', BGPNumber))
+    }
+  }
+}
+
 const form = reduxForm({
   form: 'routing-daemon-form',
   validate
 })(RoutingDaemonForm)
 
-export default (injectIntl(form))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
