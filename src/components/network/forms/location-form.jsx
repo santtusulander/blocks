@@ -129,7 +129,7 @@ class NetworkLocationForm extends React.Component {
     const { initialValues } = this.props;
     const edit = !!initialValues.name
 
-    if (edit) {
+    if (edit && initialValues.latitude && initialValues.longitude) {
       this.setState({
         latLng: {
           latitude: initialValues.latitude,
