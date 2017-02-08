@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import { connect } from 'react-redux'
+import { reduxForm, Field, formValueSelector, touch, change, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Button, Col, Row } from 'react-bootstrap'
 
@@ -10,6 +11,8 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
+import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
+import { isValidLatitude, isValidLongtitude, isValidTextField } from '../../../util/validators.js'
 
 import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
 
