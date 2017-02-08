@@ -316,11 +316,14 @@ const PodForm = ({
 
       {showFootprints &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          </label>
           <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {/* Footprints autocomplete */}
         <Field
           className="action-item-search search-input-group"
