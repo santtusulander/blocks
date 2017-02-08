@@ -15,7 +15,8 @@ describe('NetworkItem', () => {
       props = {
         onEdit,
         onSelect,
-        status: 'enabled'
+        status: 'enabled',
+        isAllowedToConfigure: true
       }
       return shallow(<NetworkItem {...props}/>)
     }
