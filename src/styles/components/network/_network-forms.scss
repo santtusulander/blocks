@@ -4,7 +4,8 @@ $input-width: 324px;
 $input-height: 36px;
 $number-input-btn-width: 18px;
 $form-label-margin: 10px;
-$number-input-width: 75px;
+$number-addon-width: 35px;
+$number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
 
@@ -139,6 +140,14 @@ $panel-horizontal-padding: em(18px, 14px);
   .number-input {
     width: $input-width - $number-input-btn-width;
   }
+
+  .as-num-input {
+    width: $input-width - $number-input-btn-width - $number-addon-width;
+  }
+
+  .input-group-addon.addon-before {
+    padding-top: 0;
+  }
 }
 
 //SP Footprint Form
@@ -182,6 +191,22 @@ $panel-horizontal-padding: em(18px, 14px);
     .light-theme & {
       background-color: $white;
     }
+  }
+
+  .addon-before {
+    .dark-theme & {
+      padding: 0;
+      background-color: inherit;
+    }
+
+    .light-theme & {
+      background-color: inherit;
+    }
+  }
+
+  .input-group-addon.addon-before {
+    padding-top: 0;
+    padding-bottom: 6px;
   }
 }
 
