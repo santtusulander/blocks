@@ -214,9 +214,12 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+
+  const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
+
   const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
-  const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
-  const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
+  const pop = ownProps.popId && getPopById(state, popReduxId)
+  const pods = ownProps.popId && getPodsByPop(state, popReduxId)
   const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
   const selectedLocation = getLocationById(state, selectedLocationId)
   const locationOptions = locations.map(location => ({
@@ -227,7 +230,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
+    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.group, ownProps.network)),
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',
@@ -248,7 +251,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
     onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( popActions.remove( {...params } )),
+    onDelete: (params) => dispatch( popActions.remove(params)),
 
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
