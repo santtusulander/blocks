@@ -14,6 +14,5 @@ export const getGlobalFetching = ({ entities }) => {
  * @return {[boolean]}        is fetching or not
  */
 export const getFetchingByGroup = ({ entities }, requestGroup) => {
-  const isFetching = entities.fetching.filter(fetchingGroup => fetchingGroup.get('requestGroup') === requestGroup)
-  return isFetching
+  return entities.fetching.some(fetchingGroup => fetchingGroup.get('requestGroup') === requestGroup)
 }
