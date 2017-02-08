@@ -24,7 +24,7 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
-import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+import { AS_NUM_MIN, POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
 
 //TODO: If Ip list needed uncomment
 //import { isValidIPv4Address } from '../../../util/validators'
@@ -91,13 +91,13 @@ const asyncValidate = ({ UILocalAS }) => {
     .then(({ data: { holder } }) => {
       if (!holder) {
         throw {
-          UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+          UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
         }
       }
     })
     .catch(() => {
       throw {
-        UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+        UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
       }
     })
 }
@@ -257,10 +257,12 @@ const PodForm = ({
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
+        min={AS_NUM_MIN}
         type="text"
         name="UILocalAS"
-        id="localAS-field"
-        component={FieldFormGroup}
+        className="as-num-input"
+        component={FieldFormGroupNumber}
+        addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
         addonAfter={
           <HelpTooltip
