@@ -146,7 +146,7 @@ class Network extends React.Component {
       this.props.fetchPods( nextProps.params )
     }
 
-    if (pod !== this.props.params.pop) {
+    if (pod !== this.props.params.pod) {
       this.props.fetchNodes( nextProps.params )
     }
 
