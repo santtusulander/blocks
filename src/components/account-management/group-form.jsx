@@ -46,8 +46,9 @@ const GroupForm = ({
   intl,
   invalid,
   isFetchingHosts,
-  isFetchingLocations,
+  isFetchingEntities,
   locations,
+  hasNetworks,
   onCancel,
   onDelete,
   onDeleteHost,
@@ -98,7 +99,7 @@ const GroupForm = ({
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
               </UDNButton>
-              {isFetchingLocations ? <LoadingSpinner/> :
+              {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
                   <Table striped={true} className="fixed-layout">
                     <tbody>
@@ -159,7 +160,7 @@ const GroupForm = ({
           {(groupId && onDelete) &&
             <Button
               className="btn-danger pull-left"
-              disabled={submitting}
+              disabled={submitting || isFetchingEntities || hasNetworks}
               onClick={onDelete}
             >
               <FormattedMessage id="portal.button.delete"/>
@@ -176,7 +177,7 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
+            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
             {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
           </Button>
         </FormFooterButtons>
@@ -193,11 +194,12 @@ GroupForm.propTypes = {
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
+  hasNetworks: PropTypes.bool,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
