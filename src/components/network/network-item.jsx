@@ -20,15 +20,15 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
   }
 
   const renderTitle = title => {
-    if (typeof title === "string") {
-      (title.length < 20) ?
-      <h4>title</h4> :
-      <OverlayTrigger placement="top" overlay={<Tooltip id="network-item-title">{title}</Tooltip>}>
-        <h4>{`${title.substr(0, 20)}...`}</h4>
-      </OverlayTrigger>
-    } else {
-      <h4>title</h4>
+    let renderedTitle = <h4>title</h4>
+    if ((typeof title === "string") && (title.length > 20)) {
+      renderedTitle = (<OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip id="network-item-title">{title}</Tooltip>}>
+                          <h4>{`${title.substr(0, 20)}...`}</h4>
+                      </OverlayTrigger>)
     }
+    return renderedTitle
   }
 
   return (
