@@ -4,7 +4,7 @@ $input-width: 324px;
 $input-height: 36px;
 $number-input-btn-width: 18px;
 $form-label-margin: 10px;
-$number-addon-width: 35px;
+$number-addon-width: 19px;
 $number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
@@ -202,11 +202,6 @@ $panel-horizontal-padding: em(18px, 14px);
     .light-theme & {
       background-color: inherit;
     }
-  }
-
-  .input-group-addon.addon-before {
-    padding-top: 0;
-    padding-bottom: 6px;
   }
 }
 
