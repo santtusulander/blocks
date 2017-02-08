@@ -923,7 +923,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     accountActions: accountActions,
     uiActions: uiActions,
 
-    //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchLocations: (group) => group && dispatch( locationActions.fetchAll({brand, account, group}) ),
     //fetch networks from API (fetchByIds) as we don't get list of full objects from API => iterate each id)
     fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({brand, account, group}),
