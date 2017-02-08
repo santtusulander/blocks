@@ -215,7 +215,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
   const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
-  const pop = ownProps.popId && getPopById(state, ownProps.popId)
+  const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
   const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
   const selectedLocation = getLocationById(state, selectedLocationId)
