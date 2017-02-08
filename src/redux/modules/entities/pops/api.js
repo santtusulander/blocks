@@ -1,20 +1,8 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
+import { pod } from '../pods/api'
 import { BASE_URL_NORTH, buildReduxId } from '../../../util'
-
-/* TODO: After FOOTPRINTS are merged, import schema from 'footprints' -module */
-const footprint = new schema.Entity('footprints')
-
-/* TODO: After POD is merged, import schema from 'pod' -module */
-const pod = new schema.Entity('pods', {
-  footprints: [ footprint ]
-}, {
-  idAttribute: (value, parent) => { return buildReduxId(parent.group_id, parent.network_id, parent.id, value.pod_name) },
-  processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
-  }
-})
 
 const pop = new schema.Entity('pops',
   { pods: [ pod ] },
