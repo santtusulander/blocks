@@ -421,7 +421,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchFootprints: (params) => dispatch(footprintActions.fetchAll(params)),
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
-    setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
+    setFormVal: (field, val) => dispatch(change('pod-form', field, val)),    
     toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal,
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }

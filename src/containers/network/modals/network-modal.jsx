@@ -95,13 +95,13 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(networkId){
+  onDelete(){
     const {toggleDeleteConfirmationModal} = this.props
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: networkId
+      id: this.networkId
     }
 
     return this.props.onDelete(params)
@@ -113,8 +113,8 @@ class NetworkFormContainer extends React.Component {
         toggleDeleteConfirmationModal(false)
 
         // Unselect network item
-        if (this.props.selectedEntityId == networkId) {
-          this.props.handleSelectedEntity(networkId)
+        if (this.props.selectedEntityId == this.networkId) {
+          this.props.handleSelectedEntity(this.networkId)
         }
         // Close modal
         this.props.onCancel()
