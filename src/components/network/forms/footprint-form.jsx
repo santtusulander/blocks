@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
+import { Button, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldRadio from '../../form/field-radio'
@@ -203,12 +203,11 @@ class FootprintForm extends React.Component {
 
         { addManual !== 'manual' && this.renderDropZone()}
 
-        <FormFooterButtons autoAlign={false}>
+        <FormFooterButtons>
           { editing &&
-          <ButtonToolbar className="pull-left">
             <Button
               id="delete-btn"
-              className="btn-danger"
+              className="btn-danger pull-left"
               disabled={submitting || fetching}
               onClick={() => onDelete(footprintId)}>
               {
@@ -217,7 +216,6 @@ class FootprintForm extends React.Component {
                   : <FormattedMessage id="portal.button.delete"/>
               }
             </Button>
-          </ButtonToolbar>
           }
           <Button
             id="cancel-btn"

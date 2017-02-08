@@ -134,7 +134,8 @@ class EntityList extends React.Component {
       entityNameKey,
       starburstData,
       params,
-      entities
+      entities,
+      isAllowedToConfigure
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
@@ -152,6 +153,7 @@ class EntityList extends React.Component {
             onDelet={() => deleteEntity(entityId)}
             status="enabled"
             extraClassName="entity-list-item"
+            isAllowedToConfigure={isAllowedToConfigure}
             />
         )
 
@@ -183,7 +185,7 @@ class EntityList extends React.Component {
                 maxTransfer={contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
                 minTransfer={contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
                 avgTransfer={contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
-                isAllowedToConfigure={starburstData.isAllowedToConfigure}
+                isAllowedToConfigure={isAllowedToConfigure}
                 showSlices={true}
                 linkTo={link}
                 showAnalyticsLink={true}
@@ -285,6 +287,7 @@ class EntityList extends React.Component {
   render() {
     const {
       addEntity,
+      creationPermission,
       disableButtons,
       title,
       multiColumn,
@@ -300,6 +303,7 @@ class EntityList extends React.Component {
         {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
         <AccountManagementHeader
           title={title}
+          creationPermission={creationPermission}
           onAdd={showButtons ? addEntity : null}
           disableButtons={disableButtons}
         />
@@ -315,12 +319,14 @@ class EntityList extends React.Component {
 EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
+  creationPermission: PropTypes.string,
   deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
   entityNameKey: PropTypes.string,
+  isAllowedToConfigure: PropTypes.bool,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
@@ -338,6 +344,7 @@ EntityList.defaultProps = {
   entities: Immutable.List(),
   entityIdKey: 'id',
   entityNameKey: 'name',
+  isAllowedToConfigure: false,
   showButtons: true,
   starburstData: {
     dailyTraffic: Immutable.List(),
