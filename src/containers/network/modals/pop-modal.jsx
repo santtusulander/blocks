@@ -2,11 +2,15 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
-import { List } from 'immutable'
+
+
 import { bindActionCreators } from 'redux'
+import { List, Map } from 'immutable'
+import moment from 'moment'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
+import locationActions from '../../../redux/modules/entities/locations/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
@@ -15,26 +19,20 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
+import {
+  getByGroup as getLocationsByGroup,
+  getById as getLocationById
+} from '../../../redux/modules/entities/locations/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
 
+import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-
-const mockLocations = [
-  {
-    value: 'ORD',
-    label: 'ORD, Chicago'
-  }, {
-    value: 'OLD',
-    label: 'OLD, Miami'
-  }, {
-    value: 'MDL',
-    label: 'MDL, Lviv'
-  }]
+import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -47,11 +45,11 @@ class PopFormContainer extends Component {
     // If editing => fetch data from API
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
+    groupId && this.props.fetchLocations({brand, account: accountId, group: groupId})
     networkId && this.props.fetchNetwork({brand, account: accountId, group: groupId, id: networkId})
     popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
     popId && this.props.fetchPods({brand, account: accountId, group: groupId, network: networkId, pop: popId})
 
-    // TODO: fetch location by Group
 
   }
 
@@ -78,14 +76,14 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      iata: values.iata,
-      name: values.name,
-      location_id: `${values.locationId}`
+      name: values.name
     }
 
     // add id if create new
     if (!edit) {
-      data.id = values.name
+      data.id = this.props.iata + values.id
+      data.iata = this.props.iata
+      data.location_id = `${values.locationId}`
     }
 
     const params = {
@@ -131,13 +129,18 @@ class PopFormContainer extends Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
         this.props.toggleDeleteConfirmationModal(false)
+
+        // Unselect POP item
+        if (this.props.selectedEntityId == popId) {
+          this.props.handleSelectedEntity(popId)
+        }
         //Close modal
         this.props.onCancel();
       })
   }
 
   hasChildren(edit) {
-    return !(edit ? this.props.pods.size : false)
+    return (edit ? (this.props.pods.size > 0) : false)
   }
 
   render() {
@@ -145,8 +148,8 @@ class PopFormContainer extends Component {
       initialValues,
       iata,
       onCancel,
-      groupId,
-      networkId,
+      group,
+      network,
       popId,
       confirmationModalToggled,
       toggleDeleteConfirmationModal
@@ -157,15 +160,12 @@ class PopFormContainer extends Component {
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
                        : <FormattedMessage id='portal.network.popEditForm.addPop.title' />
 
-    const subTitle = (<FormattedMessage id="portal.network.subTitle.context.text"
-                                        values={{
-                                          groupId: groupId,
-                                          networkId: networkId
-                                        }} />)
+    const subTitle = (group && network) && `${group.get('name')} / ${network.get('name')} ${edit ? `/ ${initialValues.name}` : ''}`
+
     const subSubTitle = edit ? (<FormattedMessage id="portal.network.subTitle.date.text"
                                                   values={{
-                                                    createdDate: initialValues.createdDate,
-                                                    updatedDate: initialValues.updatedDate
+                                                    createdDate: moment.unix(initialValues.createdDate).format(NETWORK_DATE_FORMAT),
+                                                    updatedDate: moment.unix(initialValues.updatedDate).format(NETWORK_DATE_FORMAT)
                                                   }} />) : ''
 
     return (
@@ -211,17 +211,18 @@ PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   brand: PropTypes.string,
   confirmationModalToggled: PropTypes.bool,
-
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
+  fetchLocations: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
-
+  group: PropTypes.instanceOf(Map),
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
+  handleSelectedEntity: PropTypes.func,
   iata: PropTypes.string,
   initialValues: PropTypes.object,
+  network: PropTypes.instanceOf(Map),
   networkId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
@@ -229,31 +230,39 @@ PopFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  toggleDeleteConfirmationModal: PropTypes.func
+  selectedEntityId: PropTypes.string,
+  toggleDeleteConfirmationModal: PropTypes.func  
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+  const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
   const pop = ownProps.popId && getPopById(state, ownProps.popId)
   const pods = ownProps.popId && getPodsByPop(state, ownProps.popId)
+  const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
+  const selectedLocation = getLocationById(state, selectedLocationId)
+  const locationOptions = locations.map(location => ({
+    value: location.get('name'),
+    label: location.get('iataCode') + (location.get('cityName') ? `, ${location.get('cityName')}` : '')
+  })).toJS()
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
+    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
     pop,
     pods,
-    iata: formSelector(state, 'iata'),
-    confirmationModalToggled: state.ui.get('networkDeleteConfirmationModal'),
+    iata: selectedLocation ? selectedLocation.get('iataCode') : '',
 
     initialValues: {
-      id: edit && pop ? pop.get('id') : null,
+      id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,
       name: edit && pop ? pop.get('name') : '',
       createdDate: edit && pop ? pop.get('created') : '',
       updatedDate: edit && pop ? pop.get('updated') : '',
-      locationOptions: mockLocations,
+      locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
       locationId: edit && pop ? pop.get('location_id') : ''
     }
@@ -272,6 +281,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
     fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
+    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
     toggleDeleteConfirmationModal: uiActions.toggleNetworkDeleteConfirmationModal
   }
 }

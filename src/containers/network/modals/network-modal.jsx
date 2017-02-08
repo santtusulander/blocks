@@ -95,13 +95,13 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(){
+  onDelete(networkId){
     const {toggleDeleteConfirmationModal} = this.props
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: this.networkId
+      id: networkId
     }
 
     return this.props.onDelete(params)
@@ -111,8 +111,13 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
         toggleDeleteConfirmationModal(false)
+
+        // Unselect network item
+        if (this.props.selectedEntityId == networkId) {
+          this.props.handleSelectedEntity(networkId)
+        }
         // Close modal
-        this.props.onCancel();
+        this.props.onCancel()
       })
   }
 
@@ -180,6 +185,7 @@ NetworkFormContainer.propTypes = {
   fetchPops: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
@@ -188,6 +194,7 @@ NetworkFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pops: PropTypes.instanceOf(List),
+  selectedEntityId: PropTypes.string,
   toggleDeleteConfirmationModal: PropTypes.func
 }
 

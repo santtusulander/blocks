@@ -99,16 +99,8 @@ export function getNetworkUrl(linkType, val, params) {
       return getRoute('networkBrand', { brand: val })
     case 'account':
       return getRoute('networkAccount', { ...params, account: val })
-    // TODO UDNP-2563: Change this to replace current account route for network when
-    // all the Network changes are done.
-    case 'account-v2':
-      return getRoute('networkAccountV2', { ...params, account: val })
     case 'groups':
-      return getRoute('networkGroups', { ...params, account: val })
-    // TODO UDNP-2563: Change this to replace current groups route for network when
-    // all the Network changes are done.
-    case 'groups-v2':
-      return getRoute('networkGroupsV2', { ...params, account: val ? val : params.account })
+      return getRoute('networkGroups', { ...params, account: val ? val : params.account })
     case 'group':
       return getRoute('networkGroup', { ...params, group: val })
     case 'network':
@@ -241,11 +233,13 @@ export function getDashboardUrlFromParams(params) {
 }
 
 export function getNetworkUrlFromParams(params, currentUser, roles) {
-  const { brand, account } = params,
+  const { brand, account, group } = params,
     canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
-    if (canViewAccountDetail) {
+    if (group) {
+      return getRoute('networkGroup', params)
+    } else if (canViewAccountDetail) {
       return getRoute('networkAccount', params)
     } else {
       return getRoute('networkGroups', params)

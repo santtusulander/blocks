@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import { checkForErrors } from '../../../util/helpers'
@@ -16,8 +16,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 
 import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
-const validate = fields => {
-  const { name, locationId, popId } = fields
+const validate = ({ name, locationId, id }) => {
 
   const customConditions = {
     name: {
@@ -28,8 +27,8 @@ const validate = fields => {
       condition: !locationId,
       errorText: <FormattedMessage id='portal.network.popEditForm.locationId.validation.error.text'/>
     },
-    popId: {
-      condition: !isInt(popId),
+    id: {
+      condition: !isInt(id),
       errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
@@ -37,10 +36,10 @@ const validate = fields => {
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
-    popId: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
+    id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors(fields, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {
@@ -60,13 +59,12 @@ const NetworkPopForm = (props) => {
   } = props
 
   const edit = !!initialValues.id
-
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                             edit ? <FormattedMessage id="portal.button.save"/> :
                             <FormattedMessage id="portal.button.add"/>
 
   return (
-      <form onSubmit={props.handleSubmit(onSave)}>
+      <form className="sp-pop-form" onSubmit={props.handleSubmit(onSave)}>
 
         { //This block will be shown when SubmissionError has been thrown form async call
           error &&
@@ -82,63 +80,56 @@ const NetworkPopForm = (props) => {
           component={FieldFormGroup}
           label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
 
-        <hr />
-
         <Field
-          name="iata"
+          name="locationId"
+          className="input-select"
           component={FieldFormGroupSelect}
+          disabled={edit}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
-        <hr/>
-
         {iata
-            ? <Field
-                name="locationId"
-                component={FieldFormGroupNumber}
-                addonBefore={`${iata}`}
-                min={POP_ID_MIN}
-                max={POP_ID_MAX}
-                label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
-              />
-            : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
+          ? <Field
+              name="id"
+              component={FieldFormGroupNumber}
+              disabled={edit}
+              addonBefore={`${iata}`}
+              min={POP_ID_MIN}
+              max={POP_ID_MAX}
+              label={<FormattedMessage id="portal.network.popEditForm.popId.label" />}
+            />
+          : <p><FormattedMessage id="portal.network.popEditForm.popId.selectLocation.text" /></p>
         }
 
-        <hr/>
-
-        <FormFooterButtons autoAlign={false}>
+        <FormFooterButtons>
           { edit &&
-            <ButtonToolbar className="pull-left">
-              <ButtonDisableTooltip
-                id="delete-btn"
-                className="btn-danger"
-                disabled={hasPods}
-                onClick={onDelete}
-                tooltipId="tooltip-help"
-                tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-                {
-                  //TODO: delete modal with confirm
-                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
-                }
-              </ButtonDisableTooltip>
-            </ButtonToolbar>
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={hasPods}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
+              {
+                //TODO: delete modal with confirm
+                submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+              }
+            </ButtonDisableTooltip>
           }
 
-          <ButtonToolbar className="pull-right">
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || (!dirty)}>
-              {actionButtonTitle}
-            </Button>
-          </ButtonToolbar>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (!dirty)}>
+            {actionButtonTitle}
+          </Button>
         </FormFooterButtons>
       </form>
   )
@@ -146,7 +137,6 @@ const NetworkPopForm = (props) => {
 
 NetworkPopForm.displayName = 'NetworkPopEditForm'
 NetworkPopForm.propTypes = {
-  edit: PropTypes.bool,
   fetching: PropTypes.bool,
   hasPods: PropTypes.bool,
   iata: PropTypes.string,
