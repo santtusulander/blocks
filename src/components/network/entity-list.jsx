@@ -49,7 +49,7 @@ class EntityList extends React.Component {
    */
   renderConnectorLine() {
     // Check if this entity list has an active item
-    if (this.hasActiveItems()) {
+    if (this.hasActiveItems() && !this.props.fetching) {
       // We're modifying DOM elements, so we need to get the correct nodes from entity list
       const childNodes = [...this.entityListItems.childNodes]
       const { nextEntityList } = this.props
@@ -135,6 +135,7 @@ class EntityList extends React.Component {
       entityNameKey,
       starburstData,
       params,
+      noDataText,
       entities,
       isAllowedToConfigure
     } = this.props
@@ -223,6 +224,8 @@ class EntityList extends React.Component {
       }
 
       return content
+    } else if (this.props.isParentSelected) {
+      return noDataText
     }
   }
 
@@ -291,13 +294,10 @@ class EntityList extends React.Component {
       creationPermission,
       disableButtons,
       title,
-      fetching,
-      noDataText,
-      entities,
       multiColumn,
-      showButtons
+      showButtons,
+      fetching
     } = this.props
-    this.props.entityNameKey === 'pod_name' && console.log(fetching);
 
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
@@ -312,8 +312,8 @@ class EntityList extends React.Component {
           disableButtons={disableButtons}
         />
 
-      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
-          {fetching ? <LoadingSpinner/> : entities.size ? this.renderListItems() : noDataText}
+        <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+          {fetching ? <LoadingSpinner/> : this.renderListItems()}
         </div>
       </div>
     )
@@ -330,10 +330,13 @@ EntityList.propTypes = {
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
   entityNameKey: PropTypes.string,
+  fetching: PropTypes.bool,
   isAllowedToConfigure: PropTypes.bool,
+  isParentSelected: PropTypes.bool,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
+  noDataText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   numOfColumns: PropTypes.number,
   params: PropTypes.object,
   selectEntity: PropTypes.func,
