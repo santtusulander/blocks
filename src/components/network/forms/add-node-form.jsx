@@ -171,7 +171,7 @@ class NetworkAddNodeForm extends React.Component {
 
           <label><FormattedMessage id="portal.common.name" /></label>
           <div className="add-node-form__name-fqdn">
-            {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
+            {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
           </div>
 
           <Field
