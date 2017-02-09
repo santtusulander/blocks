@@ -231,12 +231,13 @@ class Network extends React.Component {
   handleCancel(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_ACCOUNT:
+        this.props.toggleModal(null)
+        break;
+
       case ADD_EDIT_GROUP:
         this.props.toggleModal(null)
         this.setState({groupId: null})
-
-      case ADD_EDIT_ACCOUNT:
-        this.props.toggleModal(null)
         break;
 
       case ADD_EDIT_NETWORK:
@@ -419,10 +420,23 @@ class Network extends React.Component {
     this.props.toggleModal(ADD_EDIT_POD)
   }
 
+  podContentTextGenerator(entity) {
+    const podType = entity.get('pod_type')
+    const footprints = entity.get('footprints')
+    const discoveryMethod = footprints && footprints.size > 0 ? 'footprints' : 'BGP'
+    return `${podType}, ${discoveryMethod}`
+  }
+
   /* ==== Node Handlers ==== */
   handleNodeEdit(nodeId) {
     this.setState({ nodeId: [ nodeId ] })
     this.props.toggleModal(EDIT_NODE)
+  }
+
+  nodeContentTextGenerator(entity) {
+    const role = entity.getIn(['roles', '0'])
+    const env = entity.get('env')
+    return `${role}, ${env}`
   }
 
   showNotification(message) {
@@ -647,7 +661,7 @@ class Network extends React.Component {
               selectEntity={this.handleGroupClick}
               selectedEntityId={`${params.group}`}
               title={<FormattedMessage id='portal.network.groups.title'/>}
-              disableButtons={this.hasGroupsInUrl() ? false : true}
+              disableButtons={!this.hasGroupsInUrl()}
               showAsStarbursts={true}
               starburstData={{
                 linkGenerator: this.determineNextGroupState,
@@ -676,8 +690,9 @@ class Network extends React.Component {
               selectEntity={this.handleNetworkClick}
               selectedEntityId={`${params.network}`}
               title={<FormattedMessage id='portal.network.networks.title'/>}
-              disableButtons={params.group ? false : true}
+              disableButtons={!params.group}
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
+              contentTextGenerator={entity => entity.get('description')}
               creationPermission={PERMISSIONS.CREATE_NETWORK}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
             />
@@ -694,8 +709,9 @@ class Network extends React.Component {
               selectEntity={this.handlePopClick}
               selectedEntityId={`${params.pop}`}
               title={<FormattedMessage id='portal.network.pops.title'/>}
-              disableButtons={params.network ? false : true}
+              disableButtons={!params.network}
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
+              contentTextGenerator={entity => entity.get('id')}
               creationPermission={PERMISSIONS.CREATE_POP}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
             />
@@ -705,8 +721,8 @@ class Network extends React.Component {
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
               ref={pods => this.entityList.podList = pods}
-              entityNameKey='UIName'
               entityIdKey='pod_name'
+              titleGenerator={entity => entity.get('pod_name')}
               addEntity={() => this.addEntity(ADD_EDIT_POD)}
               deleteEntity={() => () => null}
               editEntity={this.handlePodEdit}
@@ -714,8 +730,9 @@ class Network extends React.Component {
               selectEntity={this.handlePodClick}
               selectedEntityId={`${params.pod}`}
               title={<FormattedMessage id='portal.network.pods.title'/>}
-              disableButtons={params.pop ? false : true}
+              disableButtons={!params.pop}
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
+              contentTextGenerator={this.podContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_POD}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
             />
@@ -732,13 +749,13 @@ class Network extends React.Component {
               selectEntity={() => null}
               title={<FormattedMessage id='portal.network.nodes.title'/>}
               entityIdKey="reduxId"
-              disableButtons={params.pod ? false : true}
+              disableButtons={!params.pod}
               multiColumn={true}
               numOfColumns={NETWORK_NUMBER_OF_NODE_COLUMNS}
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
+              contentTextGenerator={this.nodeContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_NODE}
               isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
-
             />
           </div>
         </PageContainer>
