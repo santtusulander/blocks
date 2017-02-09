@@ -758,6 +758,8 @@ class Network extends React.Component {
             account={activeAccount.get('name')}
             params={this.props.params}
             groupId={this.state.groupId}
+            canEditBilling={false}
+            canSeeBilling={false}
             canSeeLocations={true}
             onCancel={() => this.handleCancel(ADD_EDIT_GROUP)}
             // onDelete={(groupId) => this.handleGroupDelete(groupId)}
