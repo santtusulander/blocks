@@ -50,6 +50,8 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 import podActions from '../../redux/modules/entities/pods/actions'
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
+import { buildReduxId } from '../../redux/util'
+
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
 import PageHeader from '../../components/layout/page-header'
@@ -588,6 +590,7 @@ class Network extends React.Component {
       networks,
       pops,
       pods,
+      nodes,
       currentUser,
       roles
     } = this.props
@@ -705,7 +708,7 @@ class Network extends React.Component {
 
             <EntityList
               ref={nodes => this.entityList.nodeList = nodes}
-              entities={params.pod && this.props.getNodes(params.pod)}
+              entities={params.pod && nodes}
               addEntity={() => this.addEntity(ADD_NODE)}
               deleteEntity={() => () => null}
               editEntity={this.handleNodeEdit}
@@ -823,7 +826,6 @@ Network.propTypes = {
   fetchNodes: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
-  getNodes: PropTypes.func,
   groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
@@ -831,6 +833,7 @@ Network.propTypes = {
   location: PropTypes.object,
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
+  nodes: React.PropTypes.instanceOf(Immutable.List),
   params: PropTypes.object,
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
@@ -846,12 +849,13 @@ Network.defaultProps = {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { group, network, pop, pod } = ownProps.params
   return {
-    getNodes: getByPod(state),
+    nodes: getByPod(state, buildReduxId(group, network, pop, pod)),
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
-    pops: getPopsByNetwork(state, ownProps.params.network),
-    pods: getPodsByPop(state, ownProps.params.pop),
+    pops: getPopsByNetwork(state, buildReduxId(group, network)),
+    pods: getPodsByPop(state, buildReduxId(group, network, pop)),
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
