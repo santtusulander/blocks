@@ -104,13 +104,11 @@ class FootprintForm extends React.Component {
       dataType,
       editing,
       fetching,
-      //footprintId,
       handleSubmit,
       intl,
       invalid,
       onCancel,
       onSave,
-      //onDelete,
       submitting,
       udnTypeOptions
     } = this.props
