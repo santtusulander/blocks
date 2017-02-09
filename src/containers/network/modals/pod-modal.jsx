@@ -58,7 +58,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, initialValues, reinitForm } = this.props
+    const { brand, accountId, groupId, networkId, popId } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
