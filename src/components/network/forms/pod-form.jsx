@@ -16,7 +16,7 @@ import {
 } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField } from '../../../util/validators'
+import { isValidTextField, isInt } from '../../../util/validators'
 
 import HelpTooltip from '../../../components/help-tooltip'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
@@ -87,17 +87,26 @@ const validate = (values) => {
 }
 
 const asyncValidate = ({ UILocalAS }) => {
+
+  if (!isInt(UILocalAS)) {
+    return new Promise(() => {
+      throw {
+        UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.asIsNotAnNumber.text"/>
+      }
+    })
+  }
+
   return fetchASOverview(UILocalAS)
     .then(({ data: { holder } }) => {
       if (!holder) {
         throw {
-          UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+          UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
         }
       }
     })
     .catch(() => {
       throw {
-        UILocalAS: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/>
+        UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
       }
     })
 }
@@ -259,8 +268,9 @@ const PodForm = ({
       <Field
         type="text"
         name="UILocalAS"
-        id="localAS-field"
+        className="as-num-input"
         component={FieldFormGroup}
+        addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
         addonAfter={
           <HelpTooltip
@@ -316,11 +326,17 @@ const PodForm = ({
 
       {showFootprints &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          </label>
+          <UDNButton bsStyle="success"
+                     icon={true}
+                     addNew={true}
+                     onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {/* Footprints autocomplete */}
         <Field
           className="action-item-search search-input-group"
@@ -351,7 +367,10 @@ const PodForm = ({
       {/* BGP */}
       {showBgp &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+          </label>
           <UDNButton bsStyle="success"
                      icon={true}
                      addNew={true}
@@ -359,13 +378,13 @@ const PodForm = ({
                      onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {hasBGPRoutingDaemon &&
         <ul className="footprints">
           <li>
             <Row>
               <Col xs={8}>
-                <span>{UIsp_bgp_router_as}</span>
+                <span><FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.as.label"/>{UIsp_bgp_router_as}</span>
               </Col>
 
               <Col xs={4} className="action-buttons">

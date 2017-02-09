@@ -10,10 +10,18 @@ const nodeSchema = new schema.Entity(
   'nodes',
   {},
   {
-    idAttribute: ({ pop_id, pod_id, id }) => buildReduxId(pop_id, pod_id, id),
-    processStrategy: ({ pop_id, pod_id, id, ...rest }) => ({
-      reduxId : buildReduxId(pop_id, pod_id, id),
-      pop_id, pod_id, id, ...rest
+    idAttribute: ({ pop_id, pod_id, network_id, group_id, id }) => buildReduxId(group_id, network_id, pop_id, pod_id, id),
+    processStrategy: ({ pop_id, pod_id, network_id, group_id, id, ...rest }) => ({
+
+      reduxId: buildReduxId(group_id, network_id, pop_id, pod_id, id),
+      parentId: buildReduxId(group_id, network_id, pop_id, pod_id),
+      pop_id,
+      pod_id,
+      network_id,
+      group_id,
+      ...rest,
+      id
+
     })
   }
 )
@@ -43,4 +51,4 @@ export const update = ({ id, payload, ...baseUrlParams }) =>
 
 export const remove = ({ id, ...params }) =>
   axios.delete(`${baseURL(params)}/${id}`)
-    .then(() => ({ id: buildReduxId(params.pop, params.pod, id) }))
+    .then(() => ({ id: buildReduxId(params.group, params.network, params.pop, params.pod, id) }))
