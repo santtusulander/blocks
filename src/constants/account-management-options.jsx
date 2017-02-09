@@ -61,3 +61,4 @@ export const DNS_MAX_PRIO = 999
 
 export const REGION_LOCATION_TYPE = 'region'
 export const GLOBAL_LOCATION_TYPE = 'global'
+export const MEDIA_DELIVERY_SERVICE_ID = 1
