@@ -3,7 +3,10 @@ import { fromJS, List } from 'immutable'
 import {
   REGION_LOCATION_TYPE,
   GLOBAL_LOCATION_TYPE,
-  MEDIA_DELIVERY_SERVICE_ID
+  MEDIA_DELIVERY_SERVICE_ID,
+  MEDIA_DELIVERY_SECURITY_OPTION_ID,
+  MEDIA_DELIVERY_TOKEN_AUTH_OPTION_ID,
+  MEDIA_DELIVERY_CONTENT_TARGETTING_OPTION_ID
 } from '../constants/account-management-options'
 
 import {
@@ -57,8 +60,7 @@ export function getDefaultService (service_id) {
     options: []
   }
   
-  //flow_direction related only for media delivery service
-  if (service_id !== 1) {
+  if (service_id !== MEDIA_DELIVERY_SERVICE_ID) {
     delete defaultObj.billing_meta.flow_direction
   }
 
@@ -97,19 +99,20 @@ export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, 
 
 export function getServicePermissions (group) {
   let servicePermissions = List()
-  const mediaDeliveryServices = group.get('services').find(service => service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID)
+  const services = group.get('services') || List()
+  const mediaDeliveryServices = services.find(service => service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID)
 
   if (mediaDeliveryServices && mediaDeliveryServices.size) {
     mediaDeliveryServices.get('options').forEach(option => {
-      if (option.get('option_id') === 1) {
+      if (option.get('option_id') === MEDIA_DELIVERY_SECURITY_OPTION_ID) {
         servicePermissions = servicePermissions.push(VIEW_CONFIGURATION_SECURITY)
       }
 
-      if (option.get('option_id') === 2) {
+      if (option.get('option_id') === MEDIA_DELIVERY_TOKEN_AUTH_OPTION_ID) {
         servicePermissions = servicePermissions.push(MEDIA_DELIVERY_TOKEN_AUTH)
       }
 
-      if (option.get('option_id') === 3) {
+      if (option.get('option_id') === MEDIA_DELIVERY_CONTENT_TARGETTING_OPTION_ID) {
         servicePermissions = servicePermissions.push(MEDIA_DELIVERY_CONTENT_TARGETTING)
       }
     })

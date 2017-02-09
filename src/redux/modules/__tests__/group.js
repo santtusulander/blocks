@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 
 jest.unmock('../group.js')
+jest.unmock('../../../util/services-helpers.js')
 
 import {
   createSuccess,
@@ -25,7 +26,8 @@ describe('Group Module', () => {
     const newState = createSuccess(state, {payload: {id: 1}});
     const expectedState = Immutable.fromJS({
       allGroups: [{id: 1}],
-      activeGroup: {id: 1}
+      activeGroup: {id: 1},
+      servicePermissions: []
     })
     expect(Immutable.is(newState, expectedState)).toBeTruthy();
   });

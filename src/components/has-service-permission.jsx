@@ -2,7 +2,7 @@ import React, { PropTypes, Component, Children } from 'react'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 
-import * as PERMISSIONS from '../constants/service-permissions.js'
+import * as PERMISSIONS from '../constants/service-permissions'
 
 class HasServicePermission extends Component {
   render() {
@@ -17,8 +17,8 @@ class HasServicePermission extends Component {
 HasServicePermission.displayName = 'HasServicePermission'
 HasServicePermission.propTypes = {
   children: React.PropTypes.node,
-  servicePermissions: PropTypes.instanceOf(List),
-  permission: PropTypes.oneOf(Object.keys(PERMISSIONS))
+  permission: PropTypes.oneOf(Object.keys(PERMISSIONS)),
+  servicePermissions: PropTypes.instanceOf(List)
 }
 
 HasServicePermission.defaultProps = {

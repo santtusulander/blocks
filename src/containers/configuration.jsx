@@ -475,11 +475,13 @@ Configuration.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
+  servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
   activeHost: Immutable.Map(),
+  servicePermissions: Immutable.List(),
   sslCertificates: Immutable.List()
 }
 
