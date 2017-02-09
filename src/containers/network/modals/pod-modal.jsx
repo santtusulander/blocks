@@ -19,6 +19,8 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 
+import { buildReduxId } from '../../../redux/util'
+
 import SidePanel from '../../../components/side-panel'
 
 import PodForm from '../../../components/network/forms/pod-form'
@@ -352,8 +354,8 @@ const mapStateToProps = (state, ownProps) => {
   const UIFootprints = selector(state, 'UIFootprints')
 
   const edit = !!ownProps.podId
-  const pop = ownProps.popId && getPopById(state, ownProps.popId)
-  const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
+  const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
+  const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
   const initialValues = edit && pod ? pod.toJS() : {}
 
   const inititalUIFootprints = edit
@@ -372,7 +374,7 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
+    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
     pop,
     pod,
@@ -388,7 +390,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(podActions.create({ ...params, data })),
     onUpdate: (params, data) => dispatch(podActions.update({ ...params, data })),
-    onDelete: (params) => dispatch(podActions.remove({ ...params })),
+    onDelete: (params) => dispatch(podActions.remove(params)),
 
     fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
     fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),

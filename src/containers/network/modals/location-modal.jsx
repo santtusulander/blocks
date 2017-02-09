@@ -184,7 +184,10 @@ const cloudProvidersIdOptions = {
 const mapStateToProps = (state, ownProps) => {
   let values = {}
   if (ownProps.locationId !== null) {
+
+    //locationId is already a composed reduxId
     const locationInfo = getLocationById(state, ownProps.locationId)
+
     if (locationInfo) values = locationInfo.toJS()
   }
 
