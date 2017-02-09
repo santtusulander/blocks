@@ -137,6 +137,10 @@ $panel-horizontal-padding: em(18px, 14px);
 
       .action-buttons {
         text-align: right;
+
+        .btn-icon {
+          line-height: normal;
+        }
       }
     }
   }
