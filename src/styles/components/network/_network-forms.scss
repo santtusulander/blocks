@@ -195,11 +195,24 @@ $panel-horizontal-padding: em(18px, 14px);
 
   .number-input-group {
     width: $number-input-width;
-    margin-top: 7px;
+    margin: 7px 0 0;
   }
 
   &__highlight-name {
     font-weight: bold;
     color: $pale-blue;
+  }
+}
+
+// SP Edit Node Form
+//=================
+.sp-edit-node-form .form-group {
+
+  &:nth-child(-n+2) {
+    width: 100%;
+
+    .input-group {
+      margin-bottom: 0;
+    }
   }
 }

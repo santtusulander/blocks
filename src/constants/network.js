@@ -35,7 +35,7 @@ export const NODE_ENVIRONMENT_OPTIONS = [
   { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
   { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
   { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'production', cacheValue: 'cdx-prod', label: 'Production' }
+  { value: 'production', cacheValue: 'cdx', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [
