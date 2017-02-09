@@ -18,6 +18,7 @@ import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
+import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
 import { deploymentModes } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
@@ -62,6 +63,7 @@ export class Configuration extends React.Component {
     this.togglePublishModal = this.togglePublishModal.bind(this)
     this.toggleVersionModal = this.toggleVersionModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.hasSecurityServicePermission = this.hasSecurityServicePermission.bind(this)
     this.notificationTimeout = null
   }
   componentWillMount() {
@@ -94,6 +96,10 @@ export class Configuration extends React.Component {
 
   isReadOnly() {
     return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_PROPERTY)
+  }
+
+  hasSecurityServicePermission() {
+    return this.props.servicePermissions.contains(VIEW_CONFIGURATION_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -341,11 +347,13 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li data-eventKey='security'>
-            <Link to={baseUrl + '/security'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.security.text"/>
-            </Link>
-          </li>
+          {this.hasSecurityServicePermission() &&
+            <li data-eventKey='security'>
+              <Link to={baseUrl + '/security'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.security.text"/>
+              </Link>
+            </li>
+          }
 
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
@@ -467,11 +475,13 @@ Configuration.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
+  servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
   activeHost: Immutable.Map(),
+  servicePermissions: Immutable.List(),
   sslCertificates: Immutable.List()
 }
 
@@ -485,6 +495,7 @@ function mapStateToProps(state) {
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
+    servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
   };
 }

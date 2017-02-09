@@ -14,6 +14,6 @@ const subject = shallow(
 
 describe('AddChargeNumbersModal', () => {
   it('should exist', () => {
-   expect(subject.length).toBe(1)
+    expect(subject.length).toBe(1)
   })
 })
