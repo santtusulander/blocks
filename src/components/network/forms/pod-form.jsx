@@ -344,7 +344,7 @@ const PodForm = ({
           labelKey='name'
           disabled={availableFootprints.length === 0}
           name="footprintSearch"
-          placeholder={intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'})}
+          placeholder={availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null}
           options={availableFootprints}
           required={false}
           multiple={false}
