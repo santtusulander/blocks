@@ -220,7 +220,7 @@ const mapStateToProps = (state, ownProps) => {
   const locations = ownProps.groupId && getLocationsByGroup(state, ownProps.groupId)
   const pop = ownProps.popId && getPopById(state, popReduxId)
   const pods = ownProps.popId && getPodsByPop(state, popReduxId)
-  const selectedLocationId = buildReduxId(ownProps.accountId, ownProps.groupId, formSelector(state, 'locationId'))
+  const selectedLocationId = buildReduxId(ownProps.groupId, formSelector(state, 'locationId'))
   const selectedLocation = getLocationById(state, selectedLocationId)
   const locationOptions = locations.map(location => ({
     value: location.get('name'),
