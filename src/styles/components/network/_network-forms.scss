@@ -4,7 +4,8 @@ $input-width: 324px;
 $input-height: 36px;
 $number-input-btn-width: 18px;
 $form-label-margin: 10px;
-$number-input-width: 75px;
+$number-addon-width: 19px;
+$number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
 
@@ -101,6 +102,10 @@ $panel-horizontal-padding: em(18px, 14px);
   .discovery-section {
     margin: $bar-height 0;
 
+    .form-control {
+      width: 100%;
+    }
+
     label {
       display: block;
       margin: $form-group-padding 0;
@@ -138,6 +143,14 @@ $panel-horizontal-padding: em(18px, 14px);
 
   .number-input {
     width: $input-width - $number-input-btn-width;
+  }
+
+  .as-num-input {
+    width: $input-width - $number-input-btn-width - $number-addon-width;
+  }
+
+  .input-group-addon.addon-before {
+    padding-top: 0;
   }
 }
 
@@ -183,6 +196,17 @@ $panel-horizontal-padding: em(18px, 14px);
       background-color: $white;
     }
   }
+
+  .addon-before {
+    .dark-theme & {
+      padding: 0;
+      background-color: inherit;
+    }
+
+    .light-theme & {
+      background-color: inherit;
+    }
+  }
 }
 
 // SP Add Node Form
@@ -191,11 +215,24 @@ $panel-horizontal-padding: em(18px, 14px);
 
   .number-input-group {
     width: $number-input-width;
-    margin-top: 7px;
+    margin: 7px 0 0;
   }
 
   &__highlight-name {
     font-weight: bold;
     color: $pale-blue;
+  }
+}
+
+// SP Edit Node Form
+//=================
+.sp-edit-node-form .form-group {
+
+  &:nth-child(-n+2) {
+    width: 100%;
+
+    .input-group {
+      margin-bottom: 0;
+    }
   }
 }
