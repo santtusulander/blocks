@@ -2,12 +2,15 @@ import React from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
+import PROVIDER_TYPES from '../../../constants/provider-types'
 
 import AnalysisVisitors from '../../../components/analysis/visitors.jsx'
 import * as visitorsActionCreators from '../../../redux/modules/visitors'
 import * as mapboxActionCreators from '../../../redux/modules/mapbox'
 import { changedParamsFiltersQS, buildFetchOpts } from '../../../util/helpers.js'
 import { getCitiesWithinBounds } from '../../../util/mapbox-helpers.js'
+import { userHasRole } from '../../../util/helpers'
 
 import { MAPBOX_CITY_LEVEL_ZOOM } from '../../../constants/mapbox'
 
@@ -88,7 +91,19 @@ class AnalyticsTabVisitors extends React.Component {
     return rangeDiff > 0 ? 'month' : 'day'
   }
 
-  render() {
+  render () {
+    const { activeAccount, currentUser } = this.props
+
+    // Check for Cloud Providers / UDN Admins
+    if (userHasRole(currentUser, PROVIDER_TYPES.CLOUD_PROVIDER) &&
+        (!activeAccount || activeAccount.get('provider_type') !== PROVIDER_TYPES.CONTENT_PROVIDER)) {
+      return (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectContentProviderAccount.text" values={{ br: <br/> }}/>
+        </div>
+      )
+    }
+
     return (
       <AnalysisVisitors
         byBrowser={this.props.byBrowser.get('browsers')}
@@ -108,12 +123,14 @@ class AnalyticsTabVisitors extends React.Component {
 
 AnalyticsTabVisitors.displayName = "AnalyticsTabVisitors"
 AnalyticsTabVisitors.propTypes = {
+  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeHostConfiguredName: React.PropTypes.string,
   byBrowser: React.PropTypes.instanceOf(Immutable.Map),
   byCity: React.PropTypes.instanceOf(Immutable.List),
   byCountry: React.PropTypes.instanceOf(Immutable.Map),
   byOS: React.PropTypes.instanceOf(Immutable.Map),
   byTime: React.PropTypes.instanceOf(Immutable.List),
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -135,12 +152,14 @@ AnalyticsTabVisitors.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     byBrowser: state.visitors.get('byBrowser'),
     byCountry: state.visitors.get('byCountry'),
     byCity: state.visitors.get('byCity'),
     byOS: state.visitors.get('byOS'),
     byTime: state.visitors.get('byTime'),
+    currentUser: state.user.get('currentUser'),
     fetching: state.visitors.get('fetching'),
     filters: state.filters.get('filters'),
     mapBounds: state.mapbox.get('mapBounds'),

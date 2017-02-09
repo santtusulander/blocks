@@ -1,15 +1,29 @@
 import React, { PropTypes } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 
-const FormFooterButtons = ({children, deleteBtn}) => {
+/** Available aligning options @type {string[]} */
+const alignOptions = ['left', 'right', 'center'];
+
+/**
+ * Get align direction
+ * @param {string} textAlign - one of {@link alignOptions}
+ * @return {{textAlign: string}} align
+ */
+const getAlignStyle = (textAlign) => alignOptions.includes(textAlign) ?
+  { textAlign } :
+  { textAlign: FormFooterButtons.defaultProps.align };
+
+/**
+ * Buttons wrapper with configurable alignment
+ * @param {React.element} children - elements to wrap
+ * @param {string} align - align direction
+ * @return {React.element}
+ */
+const FormFooterButtons = ({children, align}) => {
+  const alignItems = getAlignStyle(align);
   return (
-    <div className='modal-footer'>
-      { deleteBtn &&
-        <ButtonToolbar className="pull-left">
-          {deleteBtn}
-        </ButtonToolbar>
-      }
-      <ButtonToolbar className="pull-right">
+    <div className='modal-footer' style={alignItems}>
+      <ButtonToolbar>
         {children}
       </ButtonToolbar>
     </div>
@@ -18,8 +32,12 @@ const FormFooterButtons = ({children, deleteBtn}) => {
 
 FormFooterButtons.displayName = 'FormFooterButtons'
 FormFooterButtons.propTypes = {
-  children: PropTypes.array,
-  deleteBtn: PropTypes.node
+  align: PropTypes.oneOf(alignOptions),
+  children: PropTypes.array
+}
+
+FormFooterButtons.defaultProps = {
+  align: 'right'
 }
 
 export default FormFooterButtons

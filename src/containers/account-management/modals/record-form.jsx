@@ -47,11 +47,11 @@ const validateIpAddress = (fields, intl) => {
   }
 }
 const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, props) => {
-  let filteredFields = filterFields({ type, value, name, ttl, prio })
+  let filteredFields = filterFields({ type, value, name, ttl })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
   const conditions = {
     prio: {
-      condition: !isInt(filteredFields.prio),
+      condition: !isInt(prio),
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.prio.validationError'})
     },
     ttl: {
@@ -97,7 +97,6 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
     <SidePanel
       show={true}
       title={title}
-      className="dns-edit-form-sidebar"
       subTitle={subTitle}
       cancel={closeModal}>
       <RecordForm {...recordFormProps}/>

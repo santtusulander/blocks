@@ -43,16 +43,15 @@ export const availableMatches = [
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST, POLICY_TYPES.RESPONSE]
   },
   {
+    key: 'file_extension',
+    name: 'portal.policy.edit.matchesSelection.fileExtension.text',
+    compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST]
+  },
+  {
     key: 'content_targeting',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true
-  },
-  { // File Extension (not yet implemented on backend)
-    key: null,
-    name: 'portal.policy.edit.matchesSelection.fileExtension.text',
-    compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
-    notYetImplemented: true
   },
   { // File Name (not yet implemented on backend)
     key: 'File Name',

@@ -19,7 +19,7 @@ export const SERVICE_TYPES = [
   { value: 1, label: 'Media Delivery', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }
   /* Commented out as these cannot be set at the moment
   add as part of UDNP-1713
-  
+
   { value: 2, label: 'Content Targeting', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
   value: 3, label: 'Token Auth', accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] }*/
   // Not in 0.7 { value: 'storage', label: 'Storage', accountType: ACCOUNT_TYPE_CLOUD_PROVIDER }
@@ -40,3 +40,9 @@ export const ROLES_MAPPING = [
   { id: 4, accountTypes: [ACCOUNT_TYPE_CONTENT_PROVIDER] },
   { id: 5, accountTypes: [ACCOUNT_TYPE_SERVICE_PROVIDER] }
 ]
+
+export const DNS_MIN_REFRESH = 0
+export const DNS_MIN_TTL = 0
+export const DNS_MAX_TTL = 2147483647
+export const DNS_MIN_PRIO = 0
+export const DNS_MAX_PRIO = 999

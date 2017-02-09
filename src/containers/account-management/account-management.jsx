@@ -8,6 +8,10 @@ import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
 
+import {
+  accountIsServiceProviderType
+} from '../../util/helpers'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -27,6 +31,7 @@ import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
 import IconEdit from '../../components/icons/icon-edit'
+import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
 
 import Tabs from '../../components/tabs'
 
@@ -41,7 +46,7 @@ import {
 import * as PERMISSIONS from '../../constants/permissions.js'
 
 import { checkForErrors } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 import { getUrl, getAccountManagementUrlFromParams } from '../../util/routes'
 
 export class AccountManagement extends Component {
@@ -281,20 +286,8 @@ export class AccountManagement extends Component {
     const conditions = {
       accountName: [
         {
-          condition: !isValidAccountName(accountName),
-          errorText:
-            <div key={accountName}>
-              <FormattedMessage id="portal.accountManagement.invalidAccountName.text"/>
-              <div>
-                <div style={{marginTop: '0.5em'}}>
-                  <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                  <ul>
-                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                    <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          condition: !isValidTextField(accountName),
+          errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
         }
       ]
     }
@@ -486,9 +479,11 @@ export class AccountManagement extends Component {
           id="group-form"
           params={this.props.params}
           groupId={this.state.groupToUpdate}
-          onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
+          onSave={({groupId, data, addUsers, deleteUsers}) => this.editGroupInActiveAccount(groupId, data, addUsers, deleteUsers)}
+          // onDelete={(group) => this.showDeleteGroupModal(group)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
+          canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
         />}
       </Content>
     )
@@ -560,6 +555,7 @@ function mapDispatchToProps(dispatch) {
     return accountActions.deleteAccount(brandId, accountId)
       .then((response) => {
         if (!response.error) {
+          toggleModal(null)
           // Clear active account and redirect user to brand level account management.
           accountActions.clearActiveAccount()
           router.replace(getUrl(getRoute('accountManagement'), 'brand', brandId, {}))

@@ -203,7 +203,7 @@ describe('Main', () => {
     subject().instance().logOut()
     expect(router.push.mock.calls[0]).toContain('/login')
     expect(userActions.destroyStore.mock.calls.length).toBe(1)
-    expect(userActions.setLogin.mock.calls.length).toBe(1)
+    expect(userActions.logOut.mock.calls.length).toBe(1)
   });
 
   it('should set roles and currentUser in getChildContext()', () => {

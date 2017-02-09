@@ -12,9 +12,17 @@
   "portal.security.ssl.selectGroup.text": "Please select a group from top left to see SSL Ceritificates",
   "portal.security.ssl.noCertificates.text": "No certificates",
   "portal.security.ssl.edit.assign.text": "Assign to Group",
+  "portal.security.ssl.validation.groupRequired.text": "Group is required",
   "portal.security.ssl.edit.certTitle.text": "SSL Cert Title",
+  "portal.security.ssl.validation.certTitleRequired.text": "SSL Certificate Title is required",
   "portal.security.ssl.edit.privateKey.text": "Private Key",
+  "portal.security.ssl.validation.privateKeyRequired.text": "Private Key is required",
   "portal.security.ssl.edit.certificate.text": "Certificate",
+  "portal.security.ssl.validation.certificateRequired.text": "Certificate is required",
   "portal.security.ssl.edit.intermediateCertificates.text": "Intermediate Certificates",
-  "portal.security.ssl.expirationDate.text": "Expiration Date"
+  "portal.security.ssl.expirationDate.text": "Expiration Date",
+  "portal.security.ssl.sslIsUpdated.text": "SSL Certificate successfully updated",
+  "portal.security.ssl.sslIsCreated.text": "SSL Certificate successfully created",
+  "portal.security.ssl.sslIsRemoved.text": "SSL Certificate successfully removed",
+  "portal.security.ssl.updateFailed.text": "Saving configurations failed: {reason}"
 }

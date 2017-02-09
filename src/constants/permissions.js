@@ -72,3 +72,23 @@ export const DELETE_CERTIFICATE = 'DELETE_CERTIFICATE'
 export const CREATE_PROPERTY = 'CREATE_CERTIFICATE'
 export const MODIFY_PROPERTY = 'MODIFY_CERTIFICATE'
 export const DELETE_PROPERTY = 'DELETE_CERTIFICATE'
+
+// Network Permissions
+export const CREATE_NETWORK = 'CREATE_NETWORK'
+export const MODIFY_NETWORK = 'MODIFY_NETWORK'
+export const DELETE_NETWORK = 'DELETE_NETWORK'
+
+// POP Permissions
+export const CREATE_POP = 'CREATE_POP'
+export const MODIFY_POP = 'MODIFY_POP'
+export const DELETE_POP = 'DELETE_POP'
+
+// POD Permissions
+export const CREATE_POD = 'CREATE_POD'
+export const MODIFY_POD = 'MODIFY_POD'
+export const DELETE_POD = 'DELETE_POD'
+
+// NODE Permissions
+export const CREATE_NODE = 'CREATE_NODE'
+export const MODIFY_NODE = 'MODIFY_NODE'
+export const DELETE_NODE = 'DELETE_NODE'

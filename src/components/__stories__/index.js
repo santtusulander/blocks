@@ -33,3 +33,9 @@ import './security/certificate-form'
 // content
 import './content/add-host'
 import './content/content-item-chart'
+
+// network
+import './network/add-node-form'
+import './network/edit-node-form'
+import './network/footprint-form'
+import './network/form/routing-daemon-form'
