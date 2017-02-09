@@ -27,6 +27,10 @@ class EntityList extends React.Component {
       return true
     } else if (nextProps.nextEntityList) {
       return true
+    } else if (nextProps.fetching !== this.props.fetching) {
+      return true
+    } else if (nextProps.isParentSelected !== this.props.isParentSelected) {
+      return true
     }
 
     return false
