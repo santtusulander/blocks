@@ -78,9 +78,9 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   onSubmit(values) {
-    const { nodeNameData } = this.props
+    const { numNodes, nodeNameData } = this.props
     const { showAddConfirmation } = this.state
-    if (!showAddConfirmation) {
+    if (!showAddConfirmation && numNodes > 1) {
       this.toggleAddConfirm(true)
       return
     }
