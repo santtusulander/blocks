@@ -151,7 +151,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   allowRedirectBack: false
 })
 
-const accountIsSP = UserAuthWrapper({
+const AccountIsSP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
       state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
@@ -159,7 +159,7 @@ const accountIsSP = UserAuthWrapper({
     return account
   },
   authenticatingSelector: (state) => state.account.get('fetching'),
-  wrapperDisplayName: 'accountIsSP',
+  wrapperDisplayName: 'AccountIsSP',
   predicate: (account) => {
     return !(account && accountIsServiceProviderType(account))
   },
@@ -170,7 +170,7 @@ const accountIsSP = UserAuthWrapper({
   allowRedirectBack: false
 })
 
-const accountIsCP = UserAuthWrapper({
+const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
       state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
@@ -178,7 +178,7 @@ const accountIsCP = UserAuthWrapper({
     return account
   },
   authenticatingSelector: (state) => state.account.get('fetching'),
-  wrapperDisplayName: 'accountIsCP',
+  wrapperDisplayName: 'AccountIsCP',
   predicate: (account) => {
     return !(account && accountIsContentProviderType(account))
   },
@@ -230,7 +230,7 @@ export const getRoutes = store => {
         {/* Content / CP Accounts - routes */}
         <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
-          <Route component={accountIsSP(ContentTransition)}>
+          <Route component={AccountIsSP(ContentTransition)}>
             <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
             <Route path={routes.contentGroups} component={Groups}/>
@@ -259,15 +259,15 @@ export const getRoutes = store => {
         {/* Network / SP Accounts - routes */}
         <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-          <Route component={accountIsCP(ContentTransition)}>
+          <Route component={AccountIsCP(ContentTransition)}>
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
-          <Route path={routes.networkGroups} component={accountIsCP(Network)}/>
-          <Route path={routes.networkGroup} component={accountIsCP(Network)}/>
-          <Route path={routes.networkNetwork} component={accountIsCP(Network)}/>
-          <Route path={routes.networkPop} component={accountIsCP(Network)}/>
-          <Route path={routes.networkPod} component={accountIsCP(Network)}/>
+          <Route path={routes.networkGroups} component={AccountIsCP(Network)}/>
+          <Route path={routes.networkGroup} component={AccountIsCP(Network)}/>
+          <Route path={routes.networkNetwork} component={AccountIsCP(Network)}/>
+          <Route path={routes.networkPop} component={AccountIsCP(Network)}/>
+          <Route path={routes.networkPod} component={AccountIsCP(Network)}/>
         </Route>
 
         {/* Security - routes */}
