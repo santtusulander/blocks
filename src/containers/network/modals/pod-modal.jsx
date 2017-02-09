@@ -44,7 +44,9 @@ class PodFormContainer extends React.Component {
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
 
+    this.initFootprints = this.initFootprints.bind(this)
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
+
     this.saveBGP = this.saveBGP.bind(this)
     this.clearBGP = this.clearBGP.bind(this)
 
@@ -68,18 +70,7 @@ class PodFormContainer extends React.Component {
     Re-init form when footprints have been fetched.
     This is neede because we only get Footprint ids inside a POD
     */
-    accountId && this.props.fetchFootprints({ brand, account: accountId })
-      .then( () => {
-        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
-          const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: 'unknown', name: 'UNKNOWN'}
-        })
-
-        reinitForm({
-          ...initialValues,
-          UIFootprints
-        })
-      })
+    accountId && this.initFootprints()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,13 +80,27 @@ class PodFormContainer extends React.Component {
       this.props.fetchFootprints({ brand, account: accountId })
   }
 
+  initFootprints() {
+    const { brand, accountId, initialValues, reinitForm, fetchFootprints } = this.props
+    return fetchFootprints({ brand, account: accountId })
+      .then(() => {
+        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
+          const fp = this.props.footprints.find(footp => footp.id === id)
+          return fp ? fp : { id: 'unknown', name: 'UNKNOWN' }
+        })
+
+        reinitForm({
+          ...initialValues,
+          UIFootprints
+        })
+      });
+  }
+
   addFootprintToPod(footprint) {
-    const {pushFormVal} = this.props
-
-    this.hideFootprintModal()
-
-    if (footprint) (pushFormVal('UIFootprints', footprint))
-
+    const { pushFormVal } = this.props
+    if (footprint) {
+      (pushFormVal('UIFootprints', footprint))
+    }
   }
 
   saveBGP(values) {
@@ -286,10 +291,7 @@ class PodFormContainer extends React.Component {
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
-          onDelete={this.onDeleteFootprint}
-          onSave={this.onSaveFootprint}
           show={true}
-
           addFootprintToPod={this.addFootprintToPod}
         />
         }
