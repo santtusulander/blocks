@@ -227,6 +227,7 @@ const PodForm = ({
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
+  const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
@@ -344,6 +345,7 @@ const PodForm = ({
           labelKey='name'
           disabled={availableFootprints.length === 0}
           name="footprintSearch"
+          placeholder={noFootprintsPlaceholder}
           options={availableFootprints}
           required={false}
           multiple={false}
