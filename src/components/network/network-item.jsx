@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, ButtonToolbar, Tooltip, OverlayTrigger } from 'react-bootstrap'
+import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
 import TruncatedTitle from '../truncated-title'
 
