@@ -219,6 +219,7 @@ const NetworkLocationForm = (props) => {
             type="select"
             options={cloudProvidersIdOptions}
             required={false}
+            unselectedValue=" "
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
           />
