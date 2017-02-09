@@ -175,7 +175,7 @@ class EntityList extends React.Component {
                 chartWidth={starburstData.chartWidth}
                 barMaxHeight={starburstData.barMaxHeight}
                 name={entityName}
-                id={`${starburstData.type}-${entityId}}`}
+                id={`${starburstData.type}-${entityId}`}
                 dailyTraffic={dailyTraffic.get('detail').reverse()}
                 primaryData={contentMetrics.get('traffic')}
                 secondaryData={contentMetrics.get('historical_traffic')}
