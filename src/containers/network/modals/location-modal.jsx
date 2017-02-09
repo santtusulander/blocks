@@ -140,8 +140,7 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onDelete(locationId) {
-    const { brand, account } = this.props.params
-    const group = this.props.groupId
+    const { brand, account, group } = this.props.params
 
     const params = {
       brand: brand,
