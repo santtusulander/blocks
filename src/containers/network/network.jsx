@@ -229,12 +229,13 @@ class Network extends React.Component {
   handleCancel(entityModal) {
     switch (entityModal) {
 
+      case ADD_EDIT_ACCOUNT:
+        this.props.toggleModal(null)
+        break;
+
       case ADD_EDIT_GROUP:
         this.props.toggleModal(null)
         this.setState({groupId: null})
-
-      case ADD_EDIT_ACCOUNT:
-        this.props.toggleModal(null)
         break;
 
       case ADD_EDIT_NETWORK:
