@@ -150,7 +150,7 @@ class AnalysisOnOffNetReport extends React.Component {
       })
     }
 
-    if(this.props.onOffNetChartType === 'bar') {
+    if (this.props.onOffNetChartType === 'bar') {
       chart = (
         <AnalysisStackedByTime padding={40}
           dataKey="bytes"
@@ -158,8 +158,7 @@ class AnalysisOnOffNetReport extends React.Component {
           width={this.state.stacksWidth} height={this.state.stacksWidth / 3}
           yAxisCustomFormat={formatBytes}/>
       )
-    }
-    else {
+    } else {
       chart = (
         <AnalysisByTime axes={true} padding={40}
           dataKey="bytes"
@@ -171,6 +170,7 @@ class AnalysisOnOffNetReport extends React.Component {
         />
       )
     }
+
     const sorterProps = {
       activateSort: this.changeSort,
       activeColumn: this.state.sortBy,
@@ -249,50 +249,53 @@ class AnalysisOnOffNetReport extends React.Component {
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.onOffNet.text"/>} />
         <SectionContainer>
           <div ref="stacksHolder">
-            {this.props.fetching ?
-              <LoadingSpinner/> : chart}
+            {this.props.fetching
+              ? <LoadingSpinner/>
+              : (datasets.length ? chart : <h4><FormattedMessage id="portal.common.no-data.text" /></h4>)}
           </div>
         </SectionContainer>
 
         <SectionContainer>
-          <table className="table table-striped table-analysis">
-            <thead>
-              <tr>
-                <TableSorter {...sorterProps} column="timestamp">
-                  Date
-                </TableSorter>
-                <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
-                  On Net (Bytes)
-                </TableSorter>
-                <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
-                  On Net (%)
-                </TableSorter>
-                <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
-                  Off Net (Bytes)
-                </TableSorter>
-                <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
-                  Off Net (%)
-                </TableSorter>
-                <TableSorter {...sorterProps} column="total">
-                  Total (Bytes)
-                </TableSorter>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedStats.map((day, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
-                    <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
-                    <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
-                    <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>
-                    <td>{numeral(day.getIn(['net_off', 'percent_total'])).format('0%')}</td>
-                    <td>{formatBytes(day.get('total'))}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          {datasets.length &&
+            <table className="table table-striped table-analysis">
+              <thead>
+                <tr>
+                  <TableSorter {...sorterProps} column="timestamp">
+                    Date
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="net_on,bytes" sortFunc="specific">
+                    On Net (Bytes)
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="net_on,percent_total" sortFunc="specific">
+                    On Net (%)
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="net_off,bytes" sortFunc="specific">
+                    Off Net (Bytes)
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="net_off,percent_total" sortFunc="specific">
+                    Off Net (%)
+                  </TableSorter>
+                  <TableSorter {...sorterProps} column="total">
+                    Total (Bytes)
+                  </TableSorter>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedStats.map((day, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{moment(day.get('timestamp')).format('MM/DD/YYYY')}</td>
+                      <td>{formatBytes(day.getIn(['net_on','bytes']))}</td>
+                      <td>{numeral(day.getIn(['net_on','percent_total'])).format('0%')}</td>
+                      <td>{formatBytes(day.getIn(['net_off','bytes']))}</td>
+                      <td>{numeral(day.getIn(['net_off', 'percent_total'])).format('0%')}</td>
+                      <td>{formatBytes(day.get('total'))}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          }
         </SectionContainer>
       </div>
     )
