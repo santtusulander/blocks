@@ -39,6 +39,8 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 import newGroupActions from '../../redux/modules/entities/groups/actions'
 import locationActions from '../../redux/modules/entities/locations/actions'
 
+import { getFetchingByGroup } from '../../redux/modules/fetching/selectors'
+
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 
@@ -587,6 +589,7 @@ class Network extends React.Component {
 
   render() {
     const {
+      getFetchingByEntity,
       activeAccount,
       networkModal,
       groups,
@@ -663,6 +666,8 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={getFetchingByEntity('network')}
+              noDataText={<FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>}
               ref={networkListRef => this.entityList.networkList = networkListRef}
               entities={params.group && networks}
               addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
@@ -678,6 +683,8 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={getFetchingByEntity('pop')}
+              noDataText={<FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>}
               ref={pops => this.entityList.popList = pops}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
@@ -693,6 +700,8 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={getFetchingByEntity('pod')}
+              noDataText={<FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>}
               ref={pods => this.entityList.podList = pods}
               entityNameKey='UIName'
               entityIdKey='pod_name'
@@ -710,6 +719,8 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={getFetchingByEntity('node')}
+              noDataText={<FormattedMessage id="portal.analytics.dropdownMenu.noResults"/>}
               ref={nodes => this.entityList.nodeList = nodes}
               entities={params.pod && this.props.getNodes(params.pod)}
               addEntity={() => this.addEntity(ADD_NODE)}
@@ -859,6 +870,7 @@ const mapStateToProps = (state, ownProps) => {
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, ownProps.params.network),
     pods: getPodsByPop(state, ownProps.params.pop),
+    getFetchingByEntity: entityType => getFetchingByGroup(state, entityType),
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux

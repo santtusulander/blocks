@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import classNames from 'classnames'
 
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
@@ -290,14 +291,17 @@ class EntityList extends React.Component {
       creationPermission,
       disableButtons,
       title,
+      fetching,
+      noDataText,
+      entities,
       multiColumn,
       showButtons
     } = this.props
+    this.props.entityNameKey === 'pod_name' && console.log(fetching);
 
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
     })
-
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
         {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
@@ -309,7 +313,7 @@ class EntityList extends React.Component {
         />
 
       <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
-          {this.renderListItems()}
+          {fetching ? <LoadingSpinner/> : entities.size ? this.renderListItems() : noDataText}
         </div>
       </div>
     )
