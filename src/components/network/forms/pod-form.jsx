@@ -227,6 +227,7 @@ const PodForm = ({
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
+  const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
@@ -326,11 +327,17 @@ const PodForm = ({
 
       {showFootprints &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          </label>
+          <UDNButton bsStyle="success"
+                     icon={true}
+                     addNew={true}
+                     onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {/* Footprints autocomplete */}
         <Field
           className="action-item-search search-input-group"
@@ -338,6 +345,7 @@ const PodForm = ({
           labelKey='name'
           disabled={availableFootprints.length === 0}
           name="footprintSearch"
+          placeholder={noFootprintsPlaceholder}
           options={availableFootprints}
           required={false}
           multiple={false}
@@ -361,7 +369,10 @@ const PodForm = ({
       {/* BGP */}
       {showBgp &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+          </label>
           <UDNButton bsStyle="success"
                      icon={true}
                      addNew={true}
@@ -369,7 +380,7 @@ const PodForm = ({
                      onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {hasBGPRoutingDaemon &&
         <ul className="footprints">
           <li>
@@ -406,7 +417,7 @@ const PodForm = ({
             id="delete-btn"
             className="btn-danger pull-left"
             disabled={hasNodes}
-            onClick={onDelete}
+            onClick={handleSubmit(onDelete)}
             tooltipId="tooltip-help"
             tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
             <FormattedMessage id="portal.button.delete"/>

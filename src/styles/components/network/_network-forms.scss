@@ -107,13 +107,27 @@ $panel-horizontal-padding: em(18px, 14px);
     }
 
     label {
-      display: block;
-      margin: $form-group-padding 0;
       line-height: $bar-height;
     }
 
     .btn-add-new {
       float: right;
+    }
+
+    .bootstrap-typeahead-input-main {
+      height: $btn-height;
+      padding-left: 40px;
+      background-position: 10px;
+      background-repeat: no-repeat;
+      background-size: 21px;
+
+      .dark-theme & {
+        background-image: url('../assets/icons/dt-icon-search.svg');
+      }
+
+      .light-theme & {
+        background-image: url('../assets/icons/lt-icon-search.svg');
+      }
     }
   }
 
@@ -133,10 +147,18 @@ $panel-horizontal-padding: em(18px, 14px);
         color: $lt-text-color;
         background-color: $white;
         box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        .icon {
+          fill: $lt-text-color;
+        }
       }
 
       .action-buttons {
         text-align: right;
+
+        .btn-icon {
+          line-height: normal;
+        }
       }
     }
   }
