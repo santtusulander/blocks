@@ -25,7 +25,8 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onSubmit(edit, values) {
-    const { brand, account, group } = this.props.params
+    const { brand, account } = this.props.params
+    const group = this.props.groupId
     const data = {
       brand_id: brand,
       account_id: Number(account),
@@ -46,7 +47,7 @@ class NetworkLocationFormContainer extends Component {
 
     const params = {
       brand: brand,
-      group: group,
+      group: String(group),
       account: account,
       payload: data
     }
@@ -140,6 +141,7 @@ NetworkLocationFormContainer.propTypes = {
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
   fetchIataCodes: PropTypes.func,
+  groupId: PropTypes.number,
   iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
@@ -182,7 +184,10 @@ const cloudProvidersIdOptions = {
 const mapStateToProps = (state, ownProps) => {
   let values = {}
   if (ownProps.locationId !== null) {
-    const locationInfo = getLocationById(state)(ownProps.locationId)
+
+    //locationId is already a composed reduxId
+    const locationInfo = getLocationById(state, ownProps.locationId)
+
     if (locationInfo) values = locationInfo.toJS()
   }
 

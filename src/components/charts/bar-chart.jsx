@@ -3,6 +3,7 @@ import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, Tooltip, Legend, Respo
 
 import CustomTooltip from './custom-tooltip'
 import CustomLegend from './custom-legend'
+import CustomXAxisTick from './custom-xaxis-tick'
 
 import { formatBytes } from '../../util/helpers'
 
@@ -36,7 +37,7 @@ export default class BarChart extends Component {
 
   render() {
     const {
-      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter, hasLegend },
+      props: { chartData, barModels, chartLabel, maxBarSize, toolTipOffset, valueFormatter, hasLegend, secondaryXAxisTick },
       state: { showTooltip } } = this
 
     const tooltipIconClass = key => barModels.find(({ dataKey }) => dataKey === key).className
@@ -50,6 +51,7 @@ export default class BarChart extends Component {
             maxBarSize={maxBarSize}
             margin={{top: 100, right: 54, left: 70, bottom: 54}}>
             <XAxis
+              tick={secondaryXAxisTick && <CustomXAxisTick secondaryXAxisTick={secondaryXAxisTick} />}
               padding={{ right: 50 }}
               tickLine={false}
               axisLine={false}
@@ -107,6 +109,7 @@ BarChart.propTypes = {
   chartLabel: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]),
   hasLegend: PropTypes.bool,
   maxBarSize: PropTypes.number,
+  secondaryXAxisTick: PropTypes.array,
   toolTipOffset: PropTypes.number,
   tooltipAlwaysActive: PropTypes.bool,
   valueFormatter: PropTypes.func
