@@ -32,13 +32,13 @@ const dateFormat = 'MM/DD/YYYY HH:mm'
  */
 const getSubtitle = (state, params) => {
 
-  const pop = getPopById(state, params.pop)
+  const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
   // const group = getGroupById(state, params.group)
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
-  const network = getNetworkById(state, params.network)
+  const network = getNetworkById(state, buildReduxId(params.group, params.network))
 
-  const pod = getPodById(state, buildReduxId(params.pop, params.pod))
+  const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
 
   return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
 }

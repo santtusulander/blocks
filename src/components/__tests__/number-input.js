@@ -56,7 +56,7 @@ describe('NumberInput', () => {
     component.find('FormControl').simulate('change', { target: { value: 'foo' } })
     expect(onChange.mock.calls[4][0]).toBe(100)
     component.find('FormControl').simulate('change', { target: { value: '' } })
-    expect(onChange.mock.calls[5][0]).toBe('')
+    expect(onChange.mock.calls[5][0]).toBe(null)
     component.find('FormControl').simulate('change', { target: { value: '25' } })
     expect(onChange.mock.calls[6][0]).toBe(25)
   })
