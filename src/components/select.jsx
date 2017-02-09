@@ -73,7 +73,7 @@ class Select extends Component {
     if (this.props.className) {
       className = className + ' ' + this.props.className
     }
-    const { onTouch } = this.props
+    const { onTouch, unselectedValue } = this.props
     return (
       <Dropdown id="select" disabled={this.props.disabled} className={className}
                 onSelect={this.selectOption} onClose={onTouch}>
@@ -82,6 +82,13 @@ class Select extends Component {
           {this.getSelectedItem()}
         </Dropdown.Toggle>
         <Dropdown.Menu>
+          {(this.getSelected() && unselectedValue)&&
+            <MenuItem eventKey={unselectedValue}>
+              <div className="dropdown-select__option-label pale">
+                {this.props.emptyLabel}
+              </div>
+            </MenuItem>
+          }
           {this.props.options.map(this.getMenuItem)}
         </Dropdown.Menu>
       </Dropdown>
@@ -97,6 +104,7 @@ Select.propTypes = {
   onSelect: PropTypes.func,
   onTouch: PropTypes.func,
   options: PropTypes.array,
+  unselectedValue: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
