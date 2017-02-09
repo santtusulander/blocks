@@ -204,19 +204,6 @@ class FootprintForm extends React.Component {
         { addManual !== 'manual' && this.renderDropZone()}
 
         <FormFooterButtons>
-          { editing &&
-            <Button
-              id="delete-btn"
-              className="btn-danger pull-left"
-              disabled={submitting || fetching}
-              onClick={() => onDelete(footprintId)}>
-              {
-                fetching
-                  ? <FormattedMessage id="portal.button.deleting"/>
-                  : <FormattedMessage id="portal.button.delete"/>
-              }
-            </Button>
-          }
           <Button
             id="cancel-btn"
             className="btn-secondary"
