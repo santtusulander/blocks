@@ -33,7 +33,7 @@ class NetworkLocationFormContainer extends Component {
       group_id: Number(group),
       cloud_name: values.cloudName,
       cloud_provider: values.cloudProvider || undefined,
-      cloud_region: values.cloudRegion || undefined,
+      cloud_region: values.cloudProviderRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
       country_code: values.countryCode || '',
       state: values.state || '',
