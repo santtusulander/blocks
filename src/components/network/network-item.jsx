@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
+import TruncatedTitle from '../truncated-title'
 
 import IconConfiguration from '../icons/icon-configuration'
 
@@ -28,7 +29,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
       )}
       onClick={handleSelect}>
 
-      <h4>{title}</h4>
+      <h4><TruncatedTitle className='network-item-title' content={title} /></h4>
 
       <p>{content}</p>
 

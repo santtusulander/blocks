@@ -131,10 +131,18 @@ $panel-horizontal-padding: em(18px, 14px);
         color: $lt-text-color;
         background-color: $white;
         box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        .icon {
+          fill: $lt-text-color;
+        }
       }
 
       .action-buttons {
         text-align: right;
+
+        .btn-icon {
+          line-height: normal;
+        }
       }
     }
   }
