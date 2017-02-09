@@ -1,5 +1,7 @@
 import Immutable from 'immutable'
 
+export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:m a'
+
 export const NETWORK_SCROLL_AMOUNT = 25
 export const NETWORK_WINDOW_OFFSET = 10
 

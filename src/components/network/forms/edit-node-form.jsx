@@ -342,7 +342,7 @@ class NetworkEditNodeForm extends React.Component {
       : <FormattedMessage id="portal.common.button.save" />
 
     return (
-      <form className="edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-edit-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
           <FormGroup>
@@ -357,30 +357,28 @@ class NetworkEditNodeForm extends React.Component {
           </FormGroup>
           {fields}
         </div>
-        <FormFooterButtons autoAlign={false}>
-          <div className="pull-left">
-            <ButtonDisableTooltip
-              tooltipId="edit-node-form__delete-disabled-tooltip"
-              bsStyle="danger"
-              onClick={this.onDelete}
-            >
-              <FormattedMessage id="portal.common.button.delete" />
-            </ButtonDisableTooltip>
-          </div>
-          <div className="pull-right">
-            <Button
-              id="edit-node-form__cancel-btn"
-              className="btn-secondary"
-              onClick={this.onCancel}>
-              <FormattedMessage id="portal.common.button.cancel"/>
-            </Button>
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={pristine||invalid||submitting}>
-              {submitButtonLabel}
-            </Button>
-          </div>
+        <FormFooterButtons>
+          <ButtonDisableTooltip
+            tooltipId="edit-node-form__delete-disabled-tooltip"
+            bsStyle="danger"
+            className='pull-left'
+            onClick={this.onDelete}
+          >
+            <FormattedMessage id="portal.common.button.delete" />
+          </ButtonDisableTooltip>
+
+          <Button
+            id="edit-node-form__cancel-btn"
+            className="btn-secondary"
+            onClick={this.onCancel}>
+            <FormattedMessage id="portal.common.button.cancel"/>
+          </Button>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={pristine||invalid||submitting}>
+            {submitButtonLabel}
+          </Button>
         </FormFooterButtons>
       </form>
     )
