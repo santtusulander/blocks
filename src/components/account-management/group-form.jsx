@@ -5,7 +5,7 @@ import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { ButtonToolbar, Button, Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
 import UDNButton from '../button'
@@ -56,8 +56,7 @@ const GroupForm = ({
   submitting}) => {
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -94,7 +93,7 @@ const GroupForm = ({
           <hr/>
 
           {(canSeeLocations && groupId) &&
-            <div>
+            <div className="locations">
               <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
               <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                 <IconAdd/>
@@ -156,33 +155,30 @@ const GroupForm = ({
               }
             </div>
           }
-        <FormFooterButtons autoAlign={false}>
-          { (groupId && onDelete) &&
-            <ButtonToolbar className="pull-left">
-              <Button
-                className="btn-danger"
-                disabled={submitting}
-                onClick={onDelete}
-              >
-                <FormattedMessage id="portal.button.delete"/>
-              </Button>
-            </ButtonToolbar>
+        <FormFooterButtons>
+          {(groupId && onDelete) &&
+            <Button
+              className="btn-danger pull-left"
+              disabled={submitting}
+              onClick={onDelete}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
           }
-          <ButtonToolbar className="pull-right">
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
-              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-            </Button>
-          </ButtonToolbar>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
+
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
+            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+          </Button>
         </FormFooterButtons>
     </form>
   )
