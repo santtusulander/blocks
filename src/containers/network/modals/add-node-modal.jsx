@@ -10,6 +10,7 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 
+import { buildReduxId } from '../../../redux/util'
 
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import SidePanel from '../../../components/side-panel'
@@ -52,16 +53,14 @@ function buildNodeNameData(nameCode, nodeEnv, nodeType, { pod }) {
  */
 const getSubtitle = (state, params) => {
 
-  const pop = getPopById(state, params.pop)
+  const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
   // const group = getGroupById(state, params.group)
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
 
-  const network = getNetworkById(state, params.network)
+  const network = getNetworkById(state, buildReduxId(params.group, params.network))
 
-  //TODO This is fragile. In the future, have the same helper method construct the Id
-  //that will be used to create it in the first place.
-  const pod = getPodById(state, `${params.pop}-${params.pod}`)
+  const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
 
   return `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} - ${pop.get('iata')} / ${pod.get('pod_name')}`
 }
