@@ -99,6 +99,11 @@ $connector-offset: 2px;
     margin: 0;
   }
 
+  .network-item-title {
+    max-width: $md-sidebar-width - 40px;
+    white-space: nowrap;
+  }
+
   .status-indicator {
     position: relative;
     padding-left: $network-item-padding-vertical;

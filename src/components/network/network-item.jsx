@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, ButtonToolbar, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import classNames from 'classnames'
+import TruncatedTitle from '../truncated-title'
 
 import IconConfiguration from '../icons/icon-configuration'
 
@@ -19,18 +20,6 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
     }
   }
 
-  const renderTitle = title => {
-    let renderedTitle = <h4>{title}</h4>
-    if ((typeof title === "string") && (title.length > 20)) {
-      renderedTitle = (<OverlayTrigger
-                        placement="top"
-                        overlay={<Tooltip id="network-item-title">{title}</Tooltip>}>
-                          <h4>{`${title.substr(0, 20)}...`}</h4>
-                      </OverlayTrigger>)
-    }
-    return renderedTitle
-  }
-
   return (
     <div
       className={classNames(
@@ -40,7 +29,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
       )}
       onClick={handleSelect}>
 
-      {renderTitle(title)}
+      <h4><TruncatedTitle className='network-item-title' content={title} /></h4>
 
       <p>{content}</p>
 
