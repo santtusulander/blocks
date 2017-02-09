@@ -332,11 +332,17 @@ const PodForm = ({
 
       {showFootprints &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
-          <UDNButton bsStyle="success" icon={true} addNew={true} onClick={onShowFootprintModal}>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
+          </label>
+          <UDNButton bsStyle="success"
+                     icon={true}
+                     addNew={true}
+                     onClick={onShowFootprintModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {/* Footprints autocomplete */}
         <Field
           className="action-item-search search-input-group"
@@ -367,7 +373,10 @@ const PodForm = ({
       {/* BGP */}
       {showBgp &&
       <div className="discovery-section">
-        <label><FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+        <div className="clearfix">
+          <label>
+            <FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
+          </label>
           <UDNButton bsStyle="success"
                      icon={true}
                      addNew={true}
@@ -375,7 +384,7 @@ const PodForm = ({
                      onClick={onShowRoutingDaemonModal}>
             <IconAdd/>
           </UDNButton>
-        </label>
+        </div>
         {hasBGPRoutingDaemon &&
         <ul className="footprints">
           <li>
