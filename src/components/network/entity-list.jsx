@@ -22,6 +22,9 @@ class EntityList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if(this.props.disableButtons !== nextProps.disableButtons){
+      return true
+    }
     if (!Immutable.is(nextProps.entities, this.props.entities)) {
       return true
     } else if (nextProps.selectedEntityId !== this.props.selectedEntityId) {
@@ -183,7 +186,7 @@ class EntityList extends React.Component {
                 chartWidth={starburstData.chartWidth}
                 barMaxHeight={starburstData.barMaxHeight}
                 name={entityName}
-                id={`${starburstData.type}-${entityId}}`}
+                id={`${starburstData.type}-${entityId}`}
                 dailyTraffic={dailyTraffic.get('detail').reverse()}
                 primaryData={contentMetrics.get('traffic')}
                 secondaryData={contentMetrics.get('historical_traffic')}
