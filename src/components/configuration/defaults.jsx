@@ -88,6 +88,8 @@ class ConfigurationDefaults extends React.Component {
       const ruleIndex = this.props.activeRule.get(2)
 
       this.deleteRule(ruleType, ruleIndex)
+    } else {
+      this.handleChange([])(this.props.originalConfig)
     }
     this.handleHide()
   }
@@ -334,6 +336,7 @@ class ConfigurationDefaults extends React.Component {
           <ConfigurationPolicyRules
             defaultPolicies={config.getIn([POLICY_TYPES.DEFAULT,'policy_rules'])}
             activateRule={this.props.activateRule}
+            cancelDeletePolicyRoute = {this.props.cancelEditPolicyRoute}
             deleteRule={this.deleteRule}/>
           {this.props.activeRule ?
             <ConfigurationSidebar
@@ -370,9 +373,11 @@ ConfigurationDefaults.propTypes = {
   activeMatch: React.PropTypes.instanceOf(Immutable.List),
   activeRule: React.PropTypes.instanceOf(Immutable.List),
   activeSet: React.PropTypes.instanceOf(Immutable.List),
+  cancelEditPolicyRoute: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),
   intl: React.PropTypes.object,
+  originalConfig: React.PropTypes.instanceOf(Immutable.Map),
   readOnly: React.PropTypes.bool
 }
 ConfigurationDefaults.defaultProps = {
