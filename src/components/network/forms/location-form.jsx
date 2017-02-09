@@ -341,7 +341,7 @@ class NetworkLocationForm extends React.Component {
           <Button
             className="btn-danger pull-left"
             disabled={submitting}
-            onClick={() => onDelete(initialValues.name)}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
           >
             <FormattedMessage id="portal.button.delete"/>
           </Button>
