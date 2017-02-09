@@ -89,7 +89,6 @@ class ConfigurationDefaults extends React.Component {
 
       this.deleteRule(ruleType, ruleIndex)
     }
-
     this.handleHide()
   }
   handleEtagChange(path) {

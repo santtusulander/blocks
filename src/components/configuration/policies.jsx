@@ -100,7 +100,6 @@ class ConfigurationPolicies extends React.Component {
 
       this.deleteRule(ruleType, ruleIndex)
     }
-
     this.handleHide()
   }
   render() {

@@ -377,7 +377,6 @@ export class Configuration extends React.Component {
             changeValue: this.changeValue,
             changeValues: this.changeValues,
             config: activeConfig,
-            originalConfig: !this.props.notification ? this.state.activeConfigOriginal : Immutable.Map(),
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             saveChanges: this.saveActiveHostChanges,
