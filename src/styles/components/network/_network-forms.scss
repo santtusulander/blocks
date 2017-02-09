@@ -113,6 +113,22 @@ $panel-horizontal-padding: em(18px, 14px);
     .btn-add-new {
       float: right;
     }
+
+    .bootstrap-typeahead-input-main {
+      height: $btn-height;
+      padding-left: 40px;
+      background-position: 10px;
+      background-repeat: no-repeat;
+      background-size: 21px;
+
+      .dark-theme & {
+        background-image: url('../assets/icons/dt-icon-search.svg');
+      }
+
+      .light-theme & {
+        background-image: url('../assets/icons/lt-icon-search.svg');
+      }
+    }
   }
 
   .footprints {

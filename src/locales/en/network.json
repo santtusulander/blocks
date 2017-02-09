@@ -88,6 +88,7 @@
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
   "portal.network.podForm.ipList.label": "IP List",
   "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be an integer number",
+  "portal.network.podForm.footprintSearch.placeholder": "No footprints",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",

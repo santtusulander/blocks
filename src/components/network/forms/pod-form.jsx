@@ -233,6 +233,7 @@ const PodForm = ({
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
+  const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
@@ -350,6 +351,7 @@ const PodForm = ({
           labelKey='name'
           disabled={availableFootprints.length === 0}
           name="footprintSearch"
+          placeholder={noFootprintsPlaceholder}
           options={availableFootprints}
           required={false}
           multiple={false}
@@ -421,7 +423,7 @@ const PodForm = ({
             id="delete-btn"
             className="btn-danger pull-left"
             disabled={hasNodes}
-            onClick={onDelete}
+            onClick={handleSubmit(onDelete)}
             tooltipId="tooltip-help"
             tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
             <FormattedMessage id="portal.button.delete"/>
