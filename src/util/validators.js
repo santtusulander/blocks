@@ -235,8 +235,8 @@ export function isValidLongtitude(str) {
 }
 
 /**
- * Check if valid longtitude
- * @param  float
+ * Check if valid provider weight
+ * @param  str
  * @return {Boolean}
  */
 export function isValidProviderWeight(str) {
