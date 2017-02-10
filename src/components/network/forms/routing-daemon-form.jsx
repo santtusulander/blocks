@@ -10,7 +10,7 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isValidIPv4Address } from '../../../util/validators'
+import { isValidTextField, isValidIPv4Address, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_PASSWORD_MIN_LEN, ROUTING_DEAMON_PASSWORD_MAX_LEN,
          ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN
        } from '../../../constants/network'
@@ -59,9 +59,11 @@ class RoutingDaemonForm extends React.Component {
       BGPNumber: null,
       BGPName: null,
       BGPNameNotFound: false,
-      BGPNumberIsEmpty: null
+      BGPNumberIsEmpty: null,
+      BGPNumberInvalid: false
     }
 
+    this.setBGPName = this.setBGPName.bind(this)
     this.fetchBGPName = this.fetchBGPName.bind(this)
   }
 
@@ -72,15 +74,35 @@ class RoutingDaemonForm extends React.Component {
     }
   }
 
+  setBGPName(name, BGPNumber) {
+    this.props.dispatch(change('routing-daemon-form', 'bgp_as_name', name))
+    this.props.dispatch(change('routing-daemon-form', 'bgp_as_number', BGPNumber))
+  }
+
   fetchBGPName(value) {
     const BGPNumber = value
 
     if (!BGPNumber || BGPNumber.length == 0) {
       this.setState({ BGPNumberIsEmpty: true })
+      return
+    }
+
+    if (!isInt(BGPNumber)) {
+      this.setState({
+        BGPNumberInvalid: true,
+        BGPNameNotFound: false,
+        BGPNumberIsEmpty: false
+      })
+      return
+    } else {
+      this.setState({
+        BGPNumberInvalid: false,
+        BGPNumberIsEmpty: false
+      })
     }
 
     if (this.state.BGPNumber === BGPNumber) {
-      return;
+      return
     }
 
     this.setState({
@@ -95,8 +117,9 @@ class RoutingDaemonForm extends React.Component {
           BGPName: holder.length ? holder : null,
           BGPNameNotFound: !holder.length,
           BGPNumberIsEmpty: false,
-          isFetchingBGPName: false
-        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_name', holder) ) )
+          isFetchingBGPName: false,
+          BGPNumberInvalid: false
+        }, () => this.setBGPName(holder, BGPNumber))
       })
       .catch(() => {
         this.setState({
@@ -104,8 +127,9 @@ class RoutingDaemonForm extends React.Component {
           BGPName: null,
           BGPNameNotFound: true,
           BGPNumberIsEmpty: false,
-          isFetchingBGPName: false
-        }, () => this.props.dispatch( change('routing-daemon-form', 'bgp_as_number', '') ) )
+          isFetchingBGPName: false,
+          BGPNumberInvalid: false
+        }, () => this.setBGPName('', BGPNumber))
       })
   }
 
@@ -121,11 +145,24 @@ class RoutingDaemonForm extends React.Component {
       submitting
     } = this.props
 
-    const { BGPName, BGPNameNotFound, isFetchingBGPName, BGPNumberIsEmpty } = this.state
+    const { BGPNameNotFound, BGPNumberInvalid, isFetchingBGPName, BGPNumberIsEmpty } = this.state
 
-    const errorMsgASNum = BGPNumberIsEmpty ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text" />
-                                           : (BGPNameNotFound
-                                           ? <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label"/> : '')
+    let errorMsgASNum = ''
+    if (BGPNumberIsEmpty) {
+      errorMsgASNum = <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text" />
+    } else if (BGPNameNotFound) {
+      errorMsgASNum = <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label" />
+    } else if (BGPNumberInvalid) {
+      errorMsgASNum = <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.asIsNotAnNumber.text" />
+    }
+
+    const BGB_AS_NUMBER_PROPS = {
+      meta: {
+        invalid: !!errorMsgASNum,
+        touched: !!errorMsgASNum,
+        error: errorMsgASNum
+      }
+    }
 
     return (
       <form onSubmit={handleSubmit(onSubmit)} className="sp-routing-daemon-form">
@@ -133,17 +170,12 @@ class RoutingDaemonForm extends React.Component {
         <Field
           type="text"
           name="bgp_as_number"
+          addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label' })}
           component={FieldFormGroup}
-          onBlur={(e, value) => this.fetchBGPName(value)}
-          props={{
-            meta: {
-              invalid: BGPNameNotFound,
-              touched: BGPNameNotFound,
-              error: errorMsgASNum
-            }
-          }}
+          onBlur={(e) => this.fetchBGPName(e.target.value)}
+          props={BGB_AS_NUMBER_PROPS}
         />
 
         <Field
@@ -153,7 +185,7 @@ class RoutingDaemonForm extends React.Component {
           placeholder={isFetchingBGPName ?
                         intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNameFetching.label' }) :
                         intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label' })}
-          disabled={!BGPName && BGPNameNotFound}
+          disabled={true}
           addonAfter={isFetchingBGPName ? <LoadingSpinnerSmall/> : ''}
           component={FieldFormGroup}
         />
@@ -185,7 +217,7 @@ class RoutingDaemonForm extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || isFetchingBGPName || (!dirty)}>
+            disabled={(invalid || submitting || isFetchingBGPName || (!dirty) || (!!errorMsgASNum))}>
             <FormattedMessage id="portal.button.save"/>
           </Button>
         </FormFooterButtons>
@@ -198,14 +230,11 @@ RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
-  setBGPName: PropTypes.func,
 
   ...reduxFormPropTypes
 }
 
-const form = reduxForm({
+export default reduxForm({
   form: 'routing-daemon-form',
   validate
-})(RoutingDaemonForm)
-
-export default (injectIntl(form))
+})(injectIntl(RoutingDaemonForm))

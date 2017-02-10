@@ -8,7 +8,6 @@ import {
 import {
   getAnalyticsUrl,
   getContentUrl,
-  getNetworkUrl,
   getUrl
 } from '../../util/routes.js'
 import IsAllowed from '../is-allowed'
@@ -28,7 +27,7 @@ function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
       }
     }
 
-    if(router.isActive('/content')) {
+    if(router.isActive('/content') || router.isActive('/network')) {
       router.push(getContentUrl(...params))
     } else if(router.isActive('/analysis')) {
       router.push(getAnalyticsUrl(...params))
@@ -38,8 +37,6 @@ function AccountSelectorItem({ account, activeAccount, brand, router, user }) {
       router.push(getUrl('/security', ...params))
     } else if(router.isActive('/support')) {
       router.push(getUrl('/support', ...params))
-    } else if(router.isActive('/network')) {
-      router.push(getNetworkUrl(...params))
     } else if(router.isActive('/dashboard')) {
       router.push(getUrl('/dashboard', ...params))
     }

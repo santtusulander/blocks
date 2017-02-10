@@ -27,7 +27,7 @@ function groupActionsMaker() {
     changeActiveGroup: jest.fn(),
     updateGroup: jest.fn(),
     createGroup: jest.fn(() => Promise.resolve()),
-    deleteGroup: jest.fn()
+    deleteGroup: jest.fn(() => Promise.resolve())
   }
 }
 function uiActionsMaker() {
@@ -46,6 +46,10 @@ function metricsActionsMaker() {
     startGroupFetching: jest.fn()
   }
 }
+
+const fakeActiveAccount = Immutable.fromJS({
+  id: '1'
+})
 
 const fakeGroups = Immutable.fromJS([
   {id: '1', name: 'aaa'},
@@ -92,6 +96,7 @@ describe('Groups', () => {
     subject = viewingChart => {
       props = {
         groupActions,
+        activeAccount: fakeActiveAccount,
         uiActions: uiActionsMaker(),
         fetchUsers,
         fetchData,
@@ -131,7 +136,7 @@ describe('Groups', () => {
   })
 
   it('should delete a group when clicked', () => {
-    subject().instance().deleteGroup('aaa')
+    subject().instance().deleteGroup(Immutable.fromJS({id: 'aaa'}))
     expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','aaa'])
   })
 })
