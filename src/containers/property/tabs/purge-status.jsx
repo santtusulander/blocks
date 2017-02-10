@@ -24,7 +24,7 @@ class PurgeStatus extends React.Component {
 
     this.fetchData = this.fetchData.bind(this)
 
-    props.pagination.registerSubscriber((pagingParams) => this.fetchData(props.params, pagingParams))
+    props.pagination.registerSubscriber((pagingParams) => this.fetchData(this.props.params, pagingParams))
   }
 
   componentWillMount() {
@@ -33,10 +33,12 @@ class PurgeStatus extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, pagination: { getQueryParams }} = nextProps
+    const { params, purgeStatus: { id, status }, pagination: { getQueryParams, resetPagination }} = nextProps
+    const purgeCreated = () => status === 'created' && id !== this.props.purgeStatus.id
 
-    if (params !== this.props.params) {
-      this.fetchData(params, getQueryParams(nextProps))
+    if (params !== this.props.params || purgeCreated()) {
+      resetPagination()
+      this.fetchData(params, getQueryParams(paginationConfig))
     }
   }
 
@@ -46,11 +48,11 @@ class PurgeStatus extends React.Component {
 
     purgeActions.startFetching()
     purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingParams })
-      .then((response) => {
-        const total = response && response.payload && response.payload.total || null
+      .then((resp) => {
+        const total = resp && resp.payload && (resp.payload.total >= 0) ? resp.payload.total : null;
         this.props.pagination.paging.onTotalChange(total)
 
-        return response
+        return resp
       })
   }
 
@@ -97,7 +99,8 @@ PurgeStatus.propTypes = {
   }).isRequired,
   params: React.PropTypes.object,
   purgeActions: React.PropTypes.object,
-  purgeObjects: React.PropTypes.instanceOf(List)
+  purgeObjects: React.PropTypes.instanceOf(List),
+  purgeStatus: React.PropTypes.object
 }
 
 const paginationConfig = {
@@ -108,6 +111,10 @@ const paginationConfig = {
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
+    purgeStatus: {
+      status: state.purge.getIn(['activePurge', 'status']),
+      id: state.purge.getIn(['activePurge', 'purge_id'])
+    },
     fetching: state.purge.get('fetching'),
     purgeObjects: state.purge.get('purgeObjects')
   };

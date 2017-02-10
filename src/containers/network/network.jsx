@@ -53,7 +53,6 @@ import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/n
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
-import podActions from '../../redux/modules/entities/pods/actions'
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
 import { buildReduxId } from '../../redux/util'

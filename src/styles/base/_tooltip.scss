@@ -5,6 +5,7 @@
   z-index: 1040;
   max-width: 320px;
   font-size: $tooltip-font-size;
+  white-space: pre-line;
 
   &.in {
     opacity: 1;
