@@ -11,10 +11,7 @@ import {
   Col
 } from 'react-bootstrap'
 
-import {
-  checkForErrors,
-  translateOptions
-} from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
