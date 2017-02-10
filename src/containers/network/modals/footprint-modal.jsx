@@ -107,6 +107,7 @@ class FootprintFormContainer extends React.Component {
         show={true}
         title={intl.formatMessage({ id: formTitle })}
         cancel={onCancel}
+        overlapping={true}
       >
         <FootprintForm
           initialValues={initialValues}

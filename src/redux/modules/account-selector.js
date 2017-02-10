@@ -20,7 +20,9 @@ const emptySelector = Immutable.Map({
 export function fetchItemsSuccess(state, action) {
   const data = action.payload.data || action.payload
   const items = data.map(
-    item => item.id ? [item.id, item.name] : [item, item]
+    item => item.id ?
+      (item.provider_type ? [item.id, item.name, item.provider_type] : [item.id, item.name]) :
+      [item, item]
   )
   return state.merge({
     items: Immutable.fromJS(items)
