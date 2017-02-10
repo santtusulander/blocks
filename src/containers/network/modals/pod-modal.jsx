@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react'
-import { injectIntl } from 'react-intl'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
-import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
