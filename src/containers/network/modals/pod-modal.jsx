@@ -327,6 +327,7 @@ PodFormContainer.propTypes = {
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
+  intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
   onCancel: PropTypes.func,
