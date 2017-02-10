@@ -119,9 +119,7 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
       'Content-Type': 'application/json'
     }
   })
-  .then(() => {
-    return newPurge
-  })
+  .then((res) => ({ ...newPurge, ...res.data }))
   .catch(res => {
     return new Error(res.data.message)
   })
