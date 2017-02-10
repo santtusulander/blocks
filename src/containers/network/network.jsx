@@ -138,12 +138,11 @@ class Network extends React.Component {
 
     this.props.fetchNetworks( this.props.params )
     this.props.fetchPops( this.props.params )
-    this.props.fetchPods( this.props.params )
     this.props.fetchNodes( this.props.params )
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop, pod } = nextProps.params
+    const { group, network, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( nextProps.params )
@@ -151,10 +150,6 @@ class Network extends React.Component {
 
     if (network !== this.props.params.network) {
       this.props.fetchPops( nextProps.params )
-    }
-
-    if (pop !== this.props.params.pop) {
-      this.props.fetchPods( nextProps.params )
     }
 
     if (pod !== this.props.params.pod) {
@@ -980,7 +975,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
     fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
     fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
-    fetchPods: (params) => params.pop && dispatch( podActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
