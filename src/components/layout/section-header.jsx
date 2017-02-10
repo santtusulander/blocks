@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 
-const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, sectionSubHeaderTitle, children }) => {
+const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, sectionSubHeaderTitle, children, addonAfter }) => {
   let customClassName = className || '';
   let finalClassName = classNames(
     'section-header-container',
@@ -13,6 +13,11 @@ const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, s
       <div className="section-header-layout">
         {sectionHeaderTitle && <h3 id={headerId}>{sectionHeaderTitle}</h3>}
         {sectionSubHeaderTitle && <h4 id={subHeaderId}>{sectionSubHeaderTitle}</h4>}
+        {addonAfter &&
+          <span className="section-header-addon">
+            {addonAfter}
+          </span>
+        }
         <div className="section-header-actions">
           {children}
         </div>
@@ -23,18 +28,19 @@ const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, s
 
 SectionHeader.displayName = 'SectionHeader'
 SectionHeader.propTypes = {
-  children: React.PropTypes.node,
-  className: React.PropTypes.string,
-  headerId: React.PropTypes.string,
-  sectionHeaderTitle:  React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
+  addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  children: PropTypes.node,
+  className: PropTypes.string,
+  headerId: PropTypes.string,
+  sectionHeaderTitle: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
   ]),
-  sectionSubHeaderTitle:  React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
+  sectionSubHeaderTitle: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
   ]),
-  subHeaderId: React.PropTypes.string
+  subHeaderId: PropTypes.string
 };
 
 export default SectionHeader
