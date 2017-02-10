@@ -582,3 +582,18 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
 
   return { byTimeOpts, fetchOpts, byCityOpts, dashboardOpts }
 }
+
+/**
+ * Convert translationIDs to interface texts
+ *
+ * @param {Array} options           Array of option objects
+ * @param {Function} formatMessage  Function to convert translationIDs with
+ * @returns {Array} options         Array of option objects with converted labels
+ */
+export function translateOptions(options, formatMessage) {
+  return options.map(option => {
+    console.log(option)
+    option.label = formatMessage({id: option.label})
+    return option
+  })
+}
