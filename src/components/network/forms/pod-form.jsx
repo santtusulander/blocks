@@ -238,7 +238,7 @@ const PodForm = ({
         className="input-select"
         name="UILbMethod"
         component={FieldFormGroupSelect}
-        options={translateOptions(LBMETHOD_OPTIONS, intl.formatMessage)}
+        options={LBMETHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
         addonAfter={
           <HelpTooltip
@@ -252,7 +252,7 @@ const PodForm = ({
         name="pod_type"
         className="input-select"
         component={FieldFormGroupSelect}
-        options={translateOptions(POD_TYPE_OPTIONS, intl.formatMessage)}
+        options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
@@ -274,7 +274,7 @@ const PodForm = ({
         className="input-select"
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
-        options={translateOptions(REQUEST_FWD_TYPE_OPTIONS, intl.formatMessage)}
+        options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
 
       <Field
@@ -303,7 +303,7 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed}
-        options={translateOptions(DISCOVERY_METHOD_OPTIONS, intl.formatMessage)}
+        options={DISCOVERY_METHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
           <HelpTooltip
