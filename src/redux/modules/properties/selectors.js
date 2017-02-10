@@ -59,12 +59,3 @@ export const getById = (state, id) => {
 
   return null
 }
-
-/**
- * isFetching ?
- * @param  {}  state
- * @return Boolean
- */
-export const isFetching = (state) => {
-  return !!state.properties.fetching.size
-}

@@ -243,11 +243,12 @@ Main.childContextTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List)
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({entities, ...state}) {
+
   const stateMap = Immutable.Map(state)
   const fetching = stateMap.some(
     store => store && (store.get ? store.get('fetching') : store.fetching)
-  ) || getGlobalFetching(state)
+  ) || getGlobalFetching({entities, ...state})
 
   return {
     accounts: state.account.get('allAccounts'),
