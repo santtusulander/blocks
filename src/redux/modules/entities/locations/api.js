@@ -19,7 +19,7 @@ const locationSchema = new schema.Entity(
       groupId: value.group_id,
       cloudName: value.cloud_name,
       cloudProvider: value.cloud_provider,
-      cloudRegion: value.cloud_region,
+      cloudProviderRegion: value.cloud_region,
       cloudProviderLocationId: value.cloud_location_id,
       countryCode: value.country_code,
       state: value.state,

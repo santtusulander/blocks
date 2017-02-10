@@ -13,6 +13,9 @@ import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entiti
 
 import { getFetchingByCategory } from '../../../redux/modules/fetching/selectors'
 
+import networkActions from '../../../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -59,6 +62,10 @@ class GroupFormContainer extends React.Component {
 
     if (groupId && canSeeLocations) {
       this.props.fetchLocations(groupId)
+    }
+
+    if (groupId) {
+      this.props.fetchNetworks(groupId)
     }
   }
 
@@ -196,14 +203,15 @@ class GroupFormContainer extends React.Component {
       hosts,
       initialValues,
       isFetchingHosts,
-      isFetchingLocations,
+      isFetchingEntities,
       show,
       name,
       onCancel,
       onDelete,
       intl,
       invalid,
-      locations} = this.props
+      locations,
+      networks} = this.props
 
     /**
      * This logic is for handling members of a group. Not yet supported in the API.
@@ -247,13 +255,14 @@ class GroupFormContainer extends React.Component {
             canSeeLocations={canSeeLocations}
             locations={locations}
             groupId={groupId}
+            hasNetworks={networks.size > 0}
             hostActions={hostActions}
             hosts={hosts}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
-            isFetchingLocations={isFetchingLocations}
+            isFetchingEntities={isFetchingEntities}
             onCancel={onCancel}
             onDelete={onDelete ? () => onDelete(this.props.group) : null}
             onDeleteHost={this.handleDeleteHost}
@@ -305,6 +314,7 @@ GroupFormContainer.propTypes = {
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
+  fetchNetworks: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.number,
   hostActions: PropTypes.object,
@@ -312,10 +322,11 @@ GroupFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
+  networks: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -327,7 +338,8 @@ GroupFormContainer.propTypes = {
 GroupFormContainer.defaultProps = {
   account: Map(),
   activeHost: Map(),
-  hosts: List()
+  hosts: List(),
+  networks: List()
 }
 
 const determineInitialValues = (groupId, activeGroup = Map()) => {
@@ -359,13 +371,15 @@ const  mapStateToProps = (state, ownProps) => {
     isFetchingLocations: getFetchingByCategory(state, 'location'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: group.getIn(['activeGroup', 'name']),
-    group: group.get('activeGroup')
+    group: group.get('activeGroup'),
+    networks: groupId && getNetworksByGroup(state, groupId)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({ ...ownProps.params, group }) ),
+    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ ...ownProps.params, group })),
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ ...ownProps.params, group }),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
