@@ -12,9 +12,11 @@ import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
+import ButtonDisableTooltip from '../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
+import HelpTooltip from '../../components/help-tooltip'
 
 import {
   checkForErrors
@@ -48,8 +50,9 @@ const GroupForm = ({
   intl,
   invalid,
   isFetchingHosts,
-  isFetchingLocations,
+  isFetchingEntities,
   locations,
+  hasNetworks,
   onCancel,
   onDelete,
   onDeleteHost,
@@ -98,12 +101,19 @@ const GroupForm = ({
             <SectionContainer>
               <SectionHeader
                 sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
+                addonAfter={
+                  <HelpTooltip
+                    id="tooltip-help"
+                    title={<FormattedMessage id="portal.accountManagement.locations.text"/>}>
+                    <FormattedMessage id="portal.accountManagement.locations.tooltip.message" />
+                  </HelpTooltip>
+                }
                 >
                 <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                   <IconAdd/>
                 </UDNButton>
               </SectionHeader>
-              {isFetchingLocations ? <LoadingSpinner/> :
+              {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
                   <Table striped={true} className="fixed-layout">
                     <tbody>
@@ -162,13 +172,15 @@ const GroupForm = ({
           }
         <FormFooterButtons>
           {(groupId && onDelete) &&
-            <Button
+            <ButtonDisableTooltip
+              id="delete-btn"
               className="btn-danger pull-left"
-              disabled={submitting}
+              disabled={submitting || isFetchingEntities || hasNetworks}
               onClick={onDelete}
-            >
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
               <FormattedMessage id="portal.button.delete"/>
-            </Button>
+            </ButtonDisableTooltip>
           }
 
           <Button
@@ -181,7 +193,7 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
+            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
             {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
           </Button>
         </FormFooterButtons>
@@ -198,11 +210,12 @@ GroupForm.propTypes = {
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
+  hasNetworks: PropTypes.bool,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
