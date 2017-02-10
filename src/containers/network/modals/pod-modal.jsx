@@ -80,12 +80,14 @@ class PodFormContainer extends React.Component {
   }
 
   initFootprints() {
-    const { brand, accountId, initialValues, reinitForm, fetchFootprints } = this.props
+    const { brand, accountId, initialValues, reinitForm, fetchFootprints, intl } = this.props
+    const unknown = intl.formatMessage({id: "portal.common.unknown"});
+
     return fetchFootprints({ brand, account: accountId })
       .then(() => {
         const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
           const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: 'unknown', name: 'UNKNOWN' }
+          return fp ? fp : { id: unknown.toLower(), name: unknown }
         })
 
         reinitForm({
