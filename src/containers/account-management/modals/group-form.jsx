@@ -11,7 +11,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
-import { getFetchingByCategory } from '../../../redux/modules/fetching/selectors'
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
@@ -368,7 +368,7 @@ const  mapStateToProps = (state, ownProps) => {
     hosts: groupId && host.get('allHosts'),
     initialValues: determineInitialValues(groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    isFetchingLocations: getFetchingByCategory(state, 'location'),
+    isFetchingLocations: getFetchingByTag(state, 'location'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: group.getIn(['activeGroup', 'name']),
     group: group.get('activeGroup'),
