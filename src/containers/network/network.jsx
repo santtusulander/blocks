@@ -608,6 +608,8 @@ class Network extends React.Component {
   render() {
     const {
       isFetching,
+      groupsFetching,
+      accountFetching,
       accountManagementModal,
       activeAccount,
       networkModal,
@@ -650,6 +652,7 @@ class Network extends React.Component {
         <PageContainer ref={container => this.container = container} className="network-entities-container">
           <div className="network-entities-wrapper">
             <EntityList
+              fetching={accountFetching}
               ref={accounts => this.entityList.accountList = accounts}
               entities={params.account && Immutable.List([activeAccount])}
               addEntity={() => null}
@@ -676,8 +679,9 @@ class Network extends React.Component {
 
             <EntityList
               noDataText={<FormattedMessage id="portal.network.entities.groups.noData"/>}
-              ref={groups => this.entityList.groupList = groups}
+              fetching={groupsFetching}
               isParentSelected={!!this.props.params.account}
+              ref={groups => this.entityList.groupList = groups}
               entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
               deleteEntity={() => null}
@@ -913,6 +917,10 @@ Network.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const { group, network, pop, pod } = ownProps.params
   return {
+    //TODO: use fetching-selector and remove these once accounts/groups use new redux
+    groupsFetching: state.group.get('fetching'),
+    accountFetching: state.account.get('fetching'),
+
     accountManagementModal: state.ui.get('accountManagementModal'),
     nodes: getByPod(state, buildReduxId(group, network, pop, pod)),
     //select networks by Group from redux
