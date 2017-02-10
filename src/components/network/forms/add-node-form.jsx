@@ -1,11 +1,5 @@
 import React from 'react'
-
-import {
-  Button,
-  ButtonToolbar,
-  FormGroup
-} from 'react-bootstrap'
-
+import { Button, ButtonToolbar } from 'react-bootstrap'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -84,9 +78,9 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   onSubmit(values) {
-    const { nodeNameData } = this.props
+    const { numNodes, nodeNameData } = this.props
     const { showAddConfirmation } = this.state
-    if (!showAddConfirmation) {
+    if (!showAddConfirmation && numNodes > 1) {
       this.toggleAddConfirm(true)
       return
     }
@@ -175,20 +169,18 @@ class NetworkAddNodeForm extends React.Component {
             </Col>
           </Row> */}
 
-          <FormGroup>
-            <label><FormattedMessage id="portal.common.name" /></label>
-              <Field
-                type="number"
-                name="nameCode"
-                min={0}
-                max={99}
-                component={FieldFormGroupNumber}
-              />
+          <label><FormattedMessage id="portal.common.name" /></label>
+          <div className="add-node-form__name-fqdn">
+            {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
+          </div>
 
-            <div className="add-node-form__name-fqdn">
-              {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
-            </div>
-          </FormGroup>
+          <Field
+            type="number"
+            name="nameCode"
+            min={0}
+            max={99}
+            component={FieldFormGroupNumber}
+          />
 
           <Field
             name="node_role"
