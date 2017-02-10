@@ -216,7 +216,6 @@ class GroupFormContainer extends React.Component {
       onDelete,
       intl,
       invalid,
-      locations,
       networks,
       serviceOptions,
       showServiceItemForm

@@ -9,8 +9,7 @@ import { Button } from 'react-bootstrap'
 import { getRoute } from '../../util/routes'
 
 import {
-  accountIsServiceProviderType,
-  accountIsContentProviderType
+  accountIsServiceProviderType
 } from '../../util/helpers'
 
 import * as accountActionCreators from '../../redux/modules/account'
