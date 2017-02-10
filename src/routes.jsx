@@ -323,6 +323,7 @@ export const getRoutes = store => {
           <Route path={routes.dashboardBrand} component={Dashboard}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
+          <Route path={routes.dashboardProperty} component={Dashboard}/>
         </Route>
       </Route>
       <Route path="*" component={NotFoundPage} />
