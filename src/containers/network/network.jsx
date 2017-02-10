@@ -42,7 +42,7 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 // TODO: Rename to groupActions once the old groupActions is abandoned
 import newGroupActions from '../../redux/modules/entities/groups/actions'
 
-import { getFetchingByCategory } from '../../redux/modules/fetching/selectors'
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
@@ -885,7 +885,6 @@ Network.propTypes = {
   fetchGroup: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
-  fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
   groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
@@ -920,7 +919,7 @@ const mapStateToProps = (state, ownProps) => {
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, buildReduxId(group, network)),
     pods: getPodsByPop(state, buildReduxId(group, network, pop)),
-    isFetching: entityType => getFetchingByCategory(state, entityType),
+    isFetching: entityType => getFetchingByTag(state, entityType),
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
