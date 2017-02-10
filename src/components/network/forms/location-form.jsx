@@ -105,6 +105,7 @@ const validate = ({
 const NetworkLocationForm = (props) => {
   const {
     addressLine,
+    askForFetchLocation,
     cloudProvidersIdOptions,
     cloudProvidersOptions,
     error,
@@ -169,7 +170,9 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
-          />
+            onBlur={askForFetchLocation}
+
+        />
         </Col>
         <Col md={5}>
           <Field
@@ -178,6 +181,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
+            onBlur={askForFetchLocation}
           />
         </Col>
       </Row>
