@@ -28,7 +28,9 @@ class ConfigurationPolicyRules extends React.Component {
     this.state = {
       default_policy: null,
       request_policy: null,
-      response_policy: null
+      final_request_policy: null,
+      response_policy: null,
+      final_response_policy: null
     }
 
     this.activateRule = this.activateRule.bind(this)
@@ -161,7 +163,9 @@ class ConfigurationPolicyRules extends React.Component {
     const rows = [
       ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
-      ...this.props.responsePolicies.map(policyMapper('response'))
+      ...this.props.finalRequestPolicies.map(policyMapper('final_request')),
+      ...this.props.responsePolicies.map(policyMapper('response')),
+      ...this.props.finalResponsePolicies.map(policyMapper('final_response'))
     ]
     const isEmpty = !rows.filter(Boolean).length
     return (
@@ -197,6 +201,8 @@ ConfigurationPolicyRules.propTypes = {
   cancelDeletePolicyRoute: React.PropTypes.func,
   defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
+  finalRequestPolicies: React.PropTypes.instanceOf(Immutable.List),
+  finalResponsePolicies: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
   params: React.PropTypes.object,
   requestPolicies: React.PropTypes.instanceOf(Immutable.List),
@@ -205,6 +211,8 @@ ConfigurationPolicyRules.propTypes = {
 ConfigurationPolicyRules.defaultProps = {
   params: {},
   defaultPolicies: Immutable.List(),
+  finalRequestPolicies: Immutable.List(),
+  finalResponsePolicies: Immutable.List(),
   requestPolicies: Immutable.List(),
   responsePolicies: Immutable.List()
 }
