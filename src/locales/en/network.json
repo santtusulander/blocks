@@ -159,5 +159,7 @@
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text": "BGP AS Number is required",
-  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address"
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address",
+
+  "portal.network.groupForm.delete.tooltip.message": "This Group contains Networks so it can't be deleted.\nPlease delete all the Networks."
 }
