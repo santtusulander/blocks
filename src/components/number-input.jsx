@@ -91,7 +91,7 @@ const NumberInput = (props) => {
 NumberInput.displayName = 'NumberInput'
 NumberInput.propTypes = {
   className: PropTypes.string,
-  disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  disabled: PropTypes.bool,
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func,
