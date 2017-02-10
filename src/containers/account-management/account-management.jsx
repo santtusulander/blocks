@@ -481,7 +481,7 @@ export class AccountManagement extends Component {
           params={this.props.params}
           groupId={this.state.groupToUpdate}
           onSave={({groupId, data, addUsers, deleteUsers}) => this.editGroupInActiveAccount(groupId, data, addUsers, deleteUsers)}
-          // onDelete={(group) => this.showDeleteGroupModal(group)}
+          onDelete={(group) => this.showDeleteGroupModal(group)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
           canEditBilling={accountIsContentProviderType(this.props.activeAccount)}

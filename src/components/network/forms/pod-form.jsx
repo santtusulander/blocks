@@ -254,8 +254,8 @@ const PodForm = ({
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
-            title={<FormattedMessage id="portal.network.podForm.discoveryMethod.help.label"/>}>
-            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
+            title={<FormattedMessage id="portal.network.podForm.lbMethod.help.label"/>}>
+            <FormattedMessage id="portal.network.podForm.lbMethod.help.text" />
           </HelpTooltip>
         }/>
 
