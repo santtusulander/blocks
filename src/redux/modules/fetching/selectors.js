@@ -10,9 +10,9 @@ export const getGlobalFetching = ({ entities }) => {
 /**
  * Check if a specific request group is fetching
  * @param  {[Immutable Map]}  state
- * @param  {[string]}         requestCategory
+ * @param  {[string]}         requestTag
  * @return {[boolean]}        is fetching or not
  */
-export const getFetchingByCategory = ({ entities }, requestCategory) => {
-  return entities.fetching.some(fetchingGroup => fetchingGroup.get('requestCategory') === requestCategory)
+export const getFetchingByTag = ({ entities }, requestTag) => {
+  return entities.fetching.some(fetchingGroup => fetchingGroup.get('requestTag') === requestTag)
 }
