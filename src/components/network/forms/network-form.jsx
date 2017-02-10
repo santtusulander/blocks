@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -45,7 +45,7 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
 
 
   return (
-    <form onSubmit={handleSubmit(onSave)}>
+    <form className="sp-network-form" onSubmit={handleSubmit(onSave)}>
 
       { //This block will be shown when SubmissionError has been thrown form async call
         error &&
@@ -68,39 +68,35 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.common.description" />} />
 
-      <FormFooterButtons autoAlign={false}>
+      <FormFooterButtons>
         { edit &&
-          <ButtonToolbar className="pull-left">
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger"
-              disabled={hasPops}
-              onClick={() => onDelete(initialValues.name)}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-              {
-                //Commented out: as submitting is also true when 'saving'.
-                //Should show DELETE -modal and ask for confirmation
-                //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
-              }
-              <FormattedMessage id="portal.button.delete"/>
-            </ButtonDisableTooltip>
-          </ButtonToolbar>
+          <ButtonDisableTooltip
+            id="delete-btn"
+            className="btn-danger pull-left"
+            disabled={hasPops}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
+            tooltipId="tooltip-help"
+            tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
+            {
+              //Commented out: as submitting is also true when 'saving'.
+              //Should show DELETE -modal and ask for confirmation
+              //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
+            }
+            <FormattedMessage id="portal.button.delete"/>
+          </ButtonDisableTooltip>
         }
-        <ButtonToolbar className="pull-right">
-          <Button
-            className="btn-secondary"
-            onClick={onCancel}>
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
+        <Button
+          className="btn-secondary"
+          onClick={onCancel}>
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting}>
-            {actionButtonTitle}
-          </Button>
-        </ButtonToolbar>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid || submitting}>
+          {actionButtonTitle}
+        </Button>
       </FormFooterButtons>
     </form>
   )

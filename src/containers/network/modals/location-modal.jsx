@@ -33,7 +33,7 @@ class NetworkLocationFormContainer extends Component {
       group_id: Number(group),
       cloud_name: values.cloudName,
       cloud_provider: values.cloudProvider || undefined,
-      cloud_region: values.cloudRegion || undefined,
+      cloud_region: values.cloudProviderRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
       country_code: values.countryCode || '',
       state: values.state || '',
@@ -71,7 +71,8 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onDelete(locationId) {
-    const { brand, account, group } = this.props.params
+    const { brand, account } = this.props.params
+    const group = this.props.groupId
 
     const params = {
       brand: brand,
@@ -184,7 +185,10 @@ const cloudProvidersIdOptions = {
 const mapStateToProps = (state, ownProps) => {
   let values = {}
   if (ownProps.locationId !== null) {
+
+    //locationId is already a composed reduxId
     const locationInfo = getLocationById(state, ownProps.locationId)
+
     if (locationInfo) values = locationInfo.toJS()
   }
 

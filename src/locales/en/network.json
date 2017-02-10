@@ -59,9 +59,9 @@
   "portal.network.podForm.editPod.title": "Edit POD",
   "portal.network.podForm.name.label": "Name",
   "portal.network.podForm.name.text": "Enter POD Name",
-  "portal.network.podForm.lbMethod.label": "Lb Method",
-  "portal.network.podForm.lbMethod.help.label": "Lb Method",
-  "portal.network.podForm.lbMethod.help.text": "Lb Method Help text",
+  "portal.network.podForm.lbMethod.label": "LB Method",
+  "portal.network.podForm.lbMethod.help.label": "LB Method",
+  "portal.network.podForm.lbMethod.help.text": "LB Method Help text",
   "portal.network.podForm.type.label": "Type",
   "portal.network.podForm.localAS.label": "Local AS",
   "portal.network.podForm.localAS.help.label": "Local AS",
@@ -83,8 +83,11 @@
   "portal.network.podForm.provider_weight.required.error": "Provider Weight is required",
   "portal.network.podForm.discoveryMethod.required.error": "Discovery Method is required",
   "portal.network.podForm.localAS.required.error": "Local AS is required",
+  "portal.network.podForm.localAS.notFound.error": "Local AS not found",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
   "portal.network.podForm.ipList.label": "IP List",
+  "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be a number",
+  "portal.network.podForm.footprintSearch.placeholder": "No footprints",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",
@@ -147,12 +150,16 @@
   "portal.network.spConfig.routingDaemon.editForm.title": "Edit Routing Daemon",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.label": "BGP AS Number",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_name.label": "BGP AS Name",
+  "portal.network.spConfig.routingDaemon.editForm.as.label": "AS",
   "portal.network.spConfig.routingDaemon.editForm.asNamePlaceholder.label": "Enter AS Number First",
   "portal.network.spConfig.routingDaemon.editForm.asNameFetching.label": "Fetching name...",
   "portal.network.spConfig.routingDaemon.editForm.asNameNotFound.label": "AS name not found",
+  "portal.network.spConfig.routingDaemon.editForm.asIsNotAnNumber.text": "BGP AS must be a number",
   "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label": "BGP Router IP",
   "portal.network.spConfig.routingDaemon.editForm.bgp_password.label": "Password",
   "portal.network.spConfig.routingDaemon.editForm.required.text": "{field} is required",
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text": "BGP AS Number is required",
-  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address"
+  "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address",
+
+  "portal.network.groupForm.delete.tooltip.message": "This Group contains Networks so it can't be deleted.\nPlease delete all the Networks."
 }

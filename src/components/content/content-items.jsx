@@ -9,10 +9,10 @@ import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
+
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl,
-  getNetworkUrl
+  getContentUrl
 } from '../../util/routes'
 import { userIsCloudProvider } from '../../util/helpers'
 
@@ -80,6 +80,7 @@ class ContentItems extends React.Component {
     this.handleSortChange = this.handleSortChange.bind(this)
     this.onItemAdd = this.onItemAdd.bind(this)
     this.onItemSave = this.onItemSave.bind(this)
+    this.onItemDelete = this.onItemDelete.bind(this)
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
@@ -142,6 +143,26 @@ class ContentItems extends React.Component {
         }
       })
   }
+
+  onItemDelete() {
+    return this.props.deleteItem(...arguments)
+      .then(({ item, name, error, payload }) => {
+        if(error) {
+          this.props.showInfoDialog({
+            title: 'Error',
+            content: payload.data.message,
+            cancel: () => this.props.hideInfoDialog(),
+            okButton: true
+          })
+        } else if(item && name) {
+          this.hideModal()
+          this.showNotification(`${item} ${name} deleted.`)
+        } else {
+          this.hideModal()
+        }
+      })
+  }
+
   getTier() {
     const { brand, account, group } = this.props.params
     if (group) {
@@ -165,11 +186,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        if (this.props.router.isActive('network')) {
-          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
-        } else {
-          this.props.router.push(getContentUrl('brand', 'udn', {}))
-        }
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -234,9 +251,7 @@ class ContentItems extends React.Component {
             params[0] = 'groups'
           }
 
-          const url = props.router.isActive('network')
-                        ? getNetworkUrl(...params)
-                        : getContentUrl(...params)
+          const url = getContentUrl(...params)
 
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
@@ -433,6 +448,7 @@ class ContentItems extends React.Component {
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
+              onDelete={this.onItemDelete}
               onCancel={this.hideModal}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
             />

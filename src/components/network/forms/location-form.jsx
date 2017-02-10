@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
@@ -21,7 +21,6 @@ import {LOCATION_NAME_MIN_LENGTH,
         CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
       } from '../../../constants/network.js'
 
-import './styles/location-form.scss'
 
 const validate = ({
   name = '',
@@ -126,10 +125,7 @@ const NetworkLocationForm = (props) => {
                               <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form
-      className="location-form"
-      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
-    >
+    <form className="sp-location-form" onSubmit={handleSubmit}>
 
     {
       error &&
@@ -199,6 +195,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudName"
+            className="input-select"
             type="select"
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
@@ -210,6 +207,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudProvider"
+            className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
             required={false}
@@ -242,33 +240,29 @@ const NetworkLocationForm = (props) => {
         </Col>
       </Row>
 
-      <FormFooterButtons autoAlign={false}>
+      <FormFooterButtons>
         { edit &&
-          <ButtonToolbar className="pull-left">
-            <Button
-              className="btn-danger"
-              disabled={submitting}
-              onClick={() => onDelete(initialValues.name)}
-            >
-              <FormattedMessage id="portal.button.delete"/>
-            </Button>
-          </ButtonToolbar>
+          <Button
+            className="btn-danger pull-left"
+            disabled={submitting}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
+          >
+            <FormattedMessage id="portal.button.delete"/>
+          </Button>
         }
-        <ButtonToolbar className="pull-right">
-          <Button
-            className="btn-secondary"
-            onClick={onCancel}
-          >
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting}
-          >
-            {actionButtonTitle}
-          </Button>
-        </ButtonToolbar>
+        <Button
+          className="btn-secondary"
+          onClick={onCancel}
+        >
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid || submitting}
+        >
+          {actionButtonTitle}
+        </Button>
       </FormFooterButtons>
     </form>
   )};

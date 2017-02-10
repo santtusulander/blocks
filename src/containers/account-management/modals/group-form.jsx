@@ -12,6 +12,9 @@ import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
+import networkActions from '../../../redux/modules/entities/networks/actions'
+import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -64,6 +67,10 @@ class GroupFormContainer extends React.Component {
 
     if (groupId && canSeeLocations) {
       this.props.fetchLocations(groupId)
+    }
+
+    if (groupId) {
+      this.props.fetchNetworks(groupId)
     }
   }
 
@@ -201,7 +208,7 @@ class GroupFormContainer extends React.Component {
       hosts,
       initialValues,
       isFetchingHosts,
-      isFetchingLocations,
+      isFetchingEntities,
       show,
       locations,
       name,
@@ -209,6 +216,8 @@ class GroupFormContainer extends React.Component {
       onDelete,
       intl,
       invalid,
+      locations,
+      networks,
       serviceOptions,
       showServiceItemForm
     } = this.props
@@ -256,13 +265,14 @@ class GroupFormContainer extends React.Component {
             canSeeLocations={canSeeLocations}
             locations={locations}
             groupId={groupId}
+            hasNetworks={networks.size > 0}
             hostActions={hostActions}
             hosts={hosts}
             initialValues={initialValues}
             intl={intl}
             invalid={invalid}
             isFetchingHosts={isFetchingHosts}
-            isFetchingLocations={isFetchingLocations}
+            isFetchingEntities={isFetchingEntities}
             onCancel={onCancel}
             onDelete={onDelete ? () => onDelete(this.props.group) : null}
             onDeleteHost={this.handleDeleteHost}
@@ -316,6 +326,7 @@ GroupFormContainer.propTypes = {
   canSeeLocations: PropTypes.bool,
   disabled: PropTypes.bool,
   fetchLocations: PropTypes.func,
+  fetchNetworks: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.number,
@@ -324,10 +335,11 @@ GroupFormContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
+  networks: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -341,7 +353,8 @@ GroupFormContainer.propTypes = {
 GroupFormContainer.defaultProps = {
   account: Map(),
   activeHost: Map(),
-  hosts: List()
+  hosts: List(),
+  networks: List()
 }
 
 function mapStateToProps(state, ownProps) {
@@ -357,27 +370,28 @@ function mapStateToProps(state, ownProps) {
     account: activeAccount,
     activeHost: state.host.get('activeHost'),
     canEditServices,
-    canSeeLocations,
     hosts: groupId && state.host.get('allHosts'),
     initialValues: {
       ...(groupId ? activeGroup.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
     isFetchingHosts: state.host.get('fetching'),
-    isFetchingLocations: state.entities.fetching ? true : false,
+    isFetchingEntities: state.entities.fetching ? true : false,
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: groupId ? state.group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
                     : [],
     servicesInfo: getServicesInfo(state),
-    group: activeGroup
+    group: activeGroup,
+    networks: groupId && getNetworksByGroup(state, groupId)
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchLocations: (group) => group && dispatch( locationActions.fetchAll({ ...ownProps.params, group }) ),
+    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ ...ownProps.params, group })),
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ ...ownProps.params, group }),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

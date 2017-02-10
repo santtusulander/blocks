@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
+import { Button, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldRadio from '../../form/field-radio'
@@ -92,7 +92,7 @@ class FootprintForm extends React.Component {
   }
 
   renderDropZone() {
-    // TODO: DropZone component
+    /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
     return (
       <p>DropZone component here</p>
     )
@@ -104,13 +104,11 @@ class FootprintForm extends React.Component {
       dataType,
       editing,
       fetching,
-      footprintId,
       handleSubmit,
       intl,
       invalid,
       onCancel,
       onSave,
-      onDelete,
       submitting,
       udnTypeOptions
     } = this.props
@@ -122,12 +120,13 @@ class FootprintForm extends React.Component {
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
-      <form onSubmit={handleSubmit(onSave)}>
+      <form className="sp-footprint-form" onSubmit={handleSubmit(onSave)}>
           <span className='submit-error'>
           {this.props.error}
           </span>
 
-        <Field
+        {/* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */}
+        {/* <Field
           name="addFootprintMethod"
           type="radio"
           value="manual"
@@ -141,7 +140,7 @@ class FootprintForm extends React.Component {
           value="addfile"
           component={FieldRadio}
           label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
-        />
+        /> */}
 
         { addManual === 'manual' &&
         <div>
@@ -203,22 +202,7 @@ class FootprintForm extends React.Component {
 
         { addManual !== 'manual' && this.renderDropZone()}
 
-        <FormFooterButtons autoAlign={false}>
-          { editing &&
-          <ButtonToolbar className="pull-left">
-            <Button
-              id="delete-btn"
-              className="btn-danger"
-              disabled={submitting || fetching}
-              onClick={() => onDelete(footprintId)}>
-              {
-                fetching
-                  ? <FormattedMessage id="portal.button.deleting"/>
-                  : <FormattedMessage id="portal.button.delete"/>
-              }
-            </Button>
-          </ButtonToolbar>
-          }
+        <FormFooterButtons>
           <Button
             id="cancel-btn"
             className="btn-secondary"
@@ -259,7 +243,9 @@ const form = reduxForm({
 
 const mapStateToProps = (state) => {
   const selector = formValueSelector('footprintForm')
-  const addManual = selector(state, 'addFootprintMethod')
+  /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
+  // const addManual = selector(state, 'addFootprintMethod')
+  const addManual = 'manual'
   const dataType = selector(state, 'data_type')
 
   return {

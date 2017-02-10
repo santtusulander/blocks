@@ -9,7 +9,8 @@ import { Button } from 'react-bootstrap'
 import { getRoute } from '../../util/routes'
 
 import {
-  accountIsServiceProviderType
+  accountIsServiceProviderType,
+  accountIsContentProviderType
 } from '../../util/helpers'
 
 import * as accountActionCreators from '../../redux/modules/account'
@@ -484,6 +485,7 @@ export class AccountManagement extends Component {
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.toggleEditGroupModal()}
+            onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.editGroupInActiveAccount}
           />
         }

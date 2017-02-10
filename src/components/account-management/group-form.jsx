@@ -4,15 +4,18 @@ import FieldFormGroup from '../form/field-form-group'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import { ButtonToolbar, Button, Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
 import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
+import ButtonDisableTooltip from '../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 import ServiceOptionSelector from './service-option-selector'
+import SectionContainer from '../layout/section-container'
+import SectionHeader from '../layout/section-header'
 
 import {
   checkForErrors
@@ -45,8 +48,9 @@ const GroupForm = ({
   intl,
   invalid,
   isFetchingHosts,
-  isFetchingLocations,
+  isFetchingEntities,
   locations,
+  hasNetworks,
   onCancel,
   onDelete,
   onDeleteHost,
@@ -57,8 +61,7 @@ const GroupForm = ({
   submitting
 }) => {
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -83,12 +86,15 @@ const GroupForm = ({
         }
 
           {(canSeeLocations && groupId) &&
-            <div>
-              <label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>
-              <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                <IconAdd/>
-              </UDNButton>
-              {isFetchingLocations ? <LoadingSpinner/> :
+            <SectionContainer>
+              <SectionHeader
+                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
+                >
+                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
+                  <IconAdd/>
+                </UDNButton>
+              </SectionHeader>
+              {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
                   <Table striped={true} className="fixed-layout">
                     <tbody>
@@ -110,7 +116,7 @@ const GroupForm = ({
                   </Table>
                 : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
               }
-            </div>
+            </SectionContainer>
           }
 
           {(!accountIsServiceProviderType && groupId) &&
@@ -145,33 +151,32 @@ const GroupForm = ({
               }
             </div>
           }
-        <FormFooterButtons autoAlign={false}>
-          { (groupId && onDelete) &&
-            <ButtonToolbar className="pull-left">
-              <Button
-                className="btn-danger"
-                disabled={submitting}
-                onClick={onDelete}
-              >
-                <FormattedMessage id="portal.button.delete"/>
-              </Button>
-            </ButtonToolbar>
+        <FormFooterButtons>
+          {(groupId && onDelete) &&
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={submitting || isFetchingEntities || hasNetworks}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+              <FormattedMessage id="portal.button.delete"/>
+            </ButtonDisableTooltip>
           }
-          <ButtonToolbar className="pull-right">
-            <Button
-              id="cancel-btn"
-              className="btn-secondary"
-              onClick={onCancel}>
-              <FormattedMessage id="portal.button.cancel"/>
-            </Button>
 
-            <Button
-              type="submit"
-              bsStyle="primary"
-              disabled={invalid || submitting || (canSeeLocations && locations.isEmpty())}>
-              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-            </Button>
-          </ButtonToolbar>
+          <Button
+            id="cancel-btn"
+            className="btn-secondary"
+            onClick={onCancel}>
+            <FormattedMessage id="portal.button.cancel"/>
+          </Button>
+
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
+            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+          </Button>
         </FormFooterButtons>
     </form>
   )
@@ -185,11 +190,12 @@ GroupForm.propTypes = {
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
+  hasNetworks: PropTypes.bool,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  isFetchingLocations: PropTypes.bool,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
