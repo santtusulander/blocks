@@ -128,11 +128,17 @@ $panel-horizontal-padding: em(18px, 14px);
       background-size: 21px;
 
       .dark-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
         background-image: url('../assets/icons/dt-icon-search.svg');
+        background-size: 21px 21px;
       }
 
       .light-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
         background-image: url('../assets/icons/lt-icon-search.svg');
+        background-size: 21px 21px;
       }
     }
   }
