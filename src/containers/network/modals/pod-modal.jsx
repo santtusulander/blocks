@@ -152,7 +152,7 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseInt(values.UIProviderWeight)
+      provider_weight: parseFloat(values.UIProviderWeight)
       //TODO:find out if Ip List is needed
       //ip_list: values.UIIpList.map( ip => ip.label )
     }
