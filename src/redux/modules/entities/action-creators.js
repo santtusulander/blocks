@@ -7,10 +7,10 @@ const actionTypes = {
   FAIL: 'entities/FAIL'
 }
 
-const getPayload = requestGroup => {
+const getPayload = requestCategory => {
   const requestId = uniqid()
   return {
-    [requestId]: { requestGroup }
+    [requestId]: { requestCategory }
   }
 }
 
@@ -22,10 +22,10 @@ export default ({
 }) => {
   const [ request, receive, fail ] = receiveActionTypes
 
-  const fetchOne = ({ forceReload, requestGroup, ...requestParams }) => {
+  const fetchOne = ({ forceReload, requestCategory, ...requestParams }) => {
     return {
       forceReload,
-      payload: getPayload(requestGroup || entityType),
+      payload: getPayload(requestCategory || entityType),
       types: receiveActionTypes,
       cacheKey: `fetch-one-${entityType}-${JSON.stringify(requestParams)}`,
       callApi: () => {
@@ -34,9 +34,9 @@ export default ({
     }
   }
 
-  const fetchByIds = dispatch => ({ requestGroup, ...requestParams }) => {
+  const fetchByIds = dispatch => ({ requestCategory, ...requestParams }) => {
 
-    const thunkPayload = getPayload(requestGroup || entityType)
+    const thunkPayload = getPayload(requestCategory || entityType)
 
     dispatch({
       type: request,
@@ -54,7 +54,7 @@ export default ({
 
         return data.forEach(id => {
 
-          dispatch(fetchOne({ requestGroup, ...requestParams, id }))
+          dispatch(fetchOne({ requestCategory, ...requestParams, id }))
 
         })
       })
@@ -76,28 +76,28 @@ export default ({
 
     fetchOne,
 
-    fetchAll: ({ forceReload, requestGroup, ...requestParams }) => ({
+    fetchAll: ({ forceReload, requestCategory, ...requestParams }) => ({
       forceReload,
-      payload: getPayload(requestGroup || entityType),
+      payload: getPayload(requestCategory || entityType),
       types: receiveActionTypes,
       cacheKey: `fetch-all-${entityType}-${JSON.stringify(requestParams)}`,
       callApi: () => api.fetchAll(requestParams)
     }),
 
-    create: ({ requestGroup, ...requestParams }) => ({
-      payload: getPayload(requestGroup || entityType),
+    create: ({ requestCategory, ...requestParams }) => ({
+      payload: getPayload(requestCategory || entityType),
       types: receiveActionTypes,
       callApi: () => api.create(requestParams)
     }),
 
-    update: ({ requestGroup, ...requestParams }) => ({
-      payload: getPayload(requestGroup || entityType),
+    update: ({ requestCategory, ...requestParams }) => ({
+      payload: getPayload(requestCategory || entityType),
       types: receiveActionTypes,
       callApi: () => api.update(requestParams)
     }),
 
-    remove: ({ requestGroup, ...requestParams }) => ({
-      payload: getPayload(requestGroup || entityType),
+    remove: ({ requestCategory, ...requestParams }) => ({
+      payload: getPayload(requestCategory || entityType),
       types: removeActionTypes,
       callApi: () => api.remove(requestParams)
     })
