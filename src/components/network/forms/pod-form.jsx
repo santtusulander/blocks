@@ -12,7 +12,8 @@ import {
 } from 'react-bootstrap'
 
 import {
-  checkForErrors
+  checkForErrors,
+  translateOptions
 } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
@@ -241,7 +242,7 @@ const PodForm = ({
         className="input-select"
         name="UILbMethod"
         component={FieldFormGroupSelect}
-        options={LBMETHOD_OPTIONS}
+        options={translateOptions(LBMETHOD_OPTIONS, intl.formatMessage)}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
         addonAfter={
           <HelpTooltip
@@ -255,7 +256,7 @@ const PodForm = ({
         name="pod_type"
         className="input-select"
         component={FieldFormGroupSelect}
-        options={POD_TYPE_OPTIONS}
+        options={translateOptions(POD_TYPE_OPTIONS, intl.formatMessage)}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
@@ -277,7 +278,7 @@ const PodForm = ({
         className="input-select"
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
-        options={REQUEST_FWD_TYPE_OPTIONS}
+        options={translateOptions(REQUEST_FWD_TYPE_OPTIONS, intl.formatMessage)}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
 
       <Field
@@ -306,7 +307,7 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed}
-        options={DISCOVERY_METHOD_OPTIONS}
+        options={translateOptions(DISCOVERY_METHOD_OPTIONS, intl.formatMessage)}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
           <HelpTooltip

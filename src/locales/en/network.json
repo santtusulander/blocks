@@ -95,6 +95,12 @@
   "portal.network.podForm.ipList.label": "IP List",
   "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be an integer number",
   "portal.network.podForm.footprintSearch.placeholder": "No footprints",
+  "portal.network.podForm.lb_method.options.gslb.label": "GSLB",
+  "portal.network.podForm.pod_type.options.core.label": "Core",
+  "portal.network.podForm.pod_type.options.sp_edge.label": "SP Edge",
+  "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
+  "portal.network.podForm.discoveryMethod.options.bgp.label": "BGP",
+  "portal.network.podForm.discoveryMethod.options.footprints.label": "Footprints",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",

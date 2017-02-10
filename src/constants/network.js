@@ -68,21 +68,21 @@ export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
 ])
 
 export const LBMETHOD_OPTIONS = [
-  {value: 'gslb', label: 'GSLB'}
+  {value: 'gslb', label: 'portal.network.podForm.lb_method.options.gslb.label'}
 ]
 
 export const POD_TYPE_OPTIONS = [
-  {value: 'core', label: 'Core'},
-  {value: 'sp_edge', label: 'SP Edge'}
+  {value: 'core', label: 'portal.network.podForm.pod_type.options.core.label'},
+  {value: 'sp_edge', label: 'portal.network.podForm.pod_type.options.sp_edge.label'}
 ]
 
 export const REQUEST_FWD_TYPE_OPTIONS = [
-  {value: 'gslb_referral', label: 'GSLB Referral'}
+  {value: 'gslb_referral', label: 'portal.network.podForm.requestForwardType.options.gslb_referral.label'}
 ]
 
 export const DISCOVERY_METHOD_OPTIONS = [
-  {value: 'BGP', label: 'BGP'},
-  {value: 'footprints', label: 'Footprints'}
+  {value: 'BGP', label: 'portal.network.podForm.discoveryMethod.options.bgp.label'},
+  {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
 ]
 
 export const POD_PROVIDER_WEIGHT_MIN = 0

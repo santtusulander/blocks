@@ -3,7 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import moment from 'moment'
 
 import {
@@ -78,6 +78,8 @@ import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
 
+import { translateOptions } from '../../util/helpers'
+
 class Network extends React.Component {
   constructor(props) {
     super(props)
@@ -110,6 +112,8 @@ class Network extends React.Component {
     this.handleNodeEdit = this.handleNodeEdit.bind(this)
 
     this.scrollToEntity = this.scrollToEntity.bind(this)
+
+    this.podContentTextGenerator = this.podContentTextGenerator.bind(this)
 
     this.state = {
       networks: Immutable.List(),
@@ -433,10 +437,15 @@ class Network extends React.Component {
   }
 
   podContentTextGenerator(entity) {
+    const { intl: { formatMessage } }= this.props
     const podType = entity.get('pod_type')
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
-    const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
-    const UIDiscoveryMethod = DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod)[0]
+    const UIType = translateOptions(
+      POD_TYPE_OPTIONS.filter(({value}) => value === podType),
+      formatMessage)[0]
+    const UIDiscoveryMethod = translateOptions(
+      DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod),
+      formatMessage)[0]
     return `${UIType.label}, ${UIDiscoveryMethod.label}`
   }
 
@@ -903,6 +912,7 @@ Network.propTypes = {
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
   groupsFetching: React.PropTypes.bool,
+  intl: intlShape,
   isFetching: PropTypes.func,
   location: PropTypes.object,
   networkModal: PropTypes.string,
@@ -994,4 +1004,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Network))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Network)))
