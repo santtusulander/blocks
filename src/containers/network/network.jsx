@@ -73,8 +73,6 @@ import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
 
-import { translateOptions } from '../../util/helpers'
-
 class Network extends React.Component {
   constructor(props) {
     super(props)
