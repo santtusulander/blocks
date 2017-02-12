@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -13,6 +13,7 @@ import Toggle from '../toggle'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
 import IsAllowed from '../is-allowed'
+import NumberInput from '../number-input'
 
 import {
   getVaryHeaderRuleId,
@@ -106,8 +107,8 @@ class ConfigurationDefaults extends React.Component {
     }
   }
   changeTTLValue(path) {
-    return e => {
-      const value = secondsFromUnit(e.target.value, this.state.ttlUnit)
+    return newValue => {
+      const value = secondsFromUnit(newValue, this.state.ttlUnit)
       this.props.changeValue(path, value)
     }
   }
@@ -286,8 +287,9 @@ class ConfigurationDefaults extends React.Component {
                 'CDN TTL'}
             </Col>
             <Col lg={2} xs={3}>
-              <FormControl
+              <NumberInput
                 disabled={readOnly}
+                min={0}
                 className="ttl-value"
                 placeholder={intl.formatMessage({
                   id: 'portal.policy.edit.defaults.timeToLive.text'
