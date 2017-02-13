@@ -9,7 +9,7 @@ const KEY_UP = 38
 const KEY_DOWN = 40
 
 const NumberInput = (props) => {
-  const { max, min, onChange, value } = props
+  const { disabled, max, min, onChange, value } = props
   const { onlyInteger, ...inputProps } = props
 
   const handleChange = (enteredValue, isIncrement = false) => {
@@ -69,14 +69,14 @@ const NumberInput = (props) => {
 
       <InputGroup.Addon>
         <Button
-          disabled={value >= max}
+          disabled={disabled || value >= max}
           className="number-input-increase" onClick={() => {
             handleChange(1, true)
           }}>
           <IconArrowUp width={18} height={18} />
         </Button>
         <Button
-          disabled={value <= min}
+          disabled={disabled || value <= min}
           className="number-input-decrease" onClick={() => {
             handleChange(-1, true)
           }}>
@@ -91,6 +91,7 @@ const NumberInput = (props) => {
 NumberInput.displayName = 'NumberInput'
 NumberInput.propTypes = {
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func,

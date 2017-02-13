@@ -2,16 +2,16 @@ import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 import { ControlLabel, FormGroup, Radio } from 'react-bootstrap'
+import { List } from 'immutable'
 
 import FieldFormGroup from '../../../form/field-form-group'
 import RegionsField from './regions-field'
 
 import { 
-  REGIONS_TYPES,
   REGION_LOCATION_TYPE,
   GLOBAL_LOCATION_TYPE
 } from '../../../../constants/account-management-options'
-import { getLocationTypeFromBillingMeta } from '../../../../util/services-helpers'
+import { getLocationTypeFromBillingMeta, getRegionsInfoOptions } from '../../../../util/services-helpers'
 
 class ChargeNumbersField extends React.Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class ChargeNumbersField extends React.Component {
   }
 
   render() {
-    const { input } = this.props
+    const { input, regionsInfo } = this.props
 
     return (
       <div>
@@ -77,7 +77,7 @@ class ChargeNumbersField extends React.Component {
           <FieldArray
             name="billing_meta.regions"
             component={RegionsField}
-            iterable={REGIONS_TYPES}
+            iterable={getRegionsInfoOptions(regionsInfo)}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>}
             required={false}
           />
@@ -100,7 +100,8 @@ class ChargeNumbersField extends React.Component {
 ChargeNumbersField.displayName = 'ChargeNumbersField'
 
 ChargeNumbersField.propTypes = {
-  input: PropTypes.object
+  input: PropTypes.object,
+  regionsInfo: PropTypes.instanceOf(List)
 }
 
 export default injectIntl(ChargeNumbersField)

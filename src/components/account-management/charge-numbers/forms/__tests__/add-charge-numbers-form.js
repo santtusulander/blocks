@@ -47,6 +47,7 @@ describe('AddChargeNumbersForm', () => {
     const props = {
       handleSubmit,
       hasFlowDirection: true,
+      hasGlobalBilling: true,
       hasRegionalBilling: true
     }
     const component = shallow(<AddChargeNumbersForm {...props}/>)

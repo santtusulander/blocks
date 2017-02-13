@@ -122,5 +122,6 @@
   "portal.common.weekdayShort.saturday": "Sa",
 
   "portal.common.typeahead.emptyLabel": "Add values by typing",
-  "portal.common.typeahead.newSelectionPrefix": "Add value: "
+  "portal.common.typeahead.newSelectionPrefix": "Add value: ",
+  "portal.common.search.no-results.text": "No results found."
 }

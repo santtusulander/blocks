@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react'
-import { injectIntl } from 'react-intl'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
-import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -44,7 +43,9 @@ class PodFormContainer extends React.Component {
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
 
+    this.initFootprints = this.initFootprints.bind(this)
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
+
     this.saveBGP = this.saveBGP.bind(this)
     this.clearBGP = this.clearBGP.bind(this)
 
@@ -56,7 +57,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, initialValues, reinitForm } = this.props
+    const { brand, accountId, groupId, networkId, popId } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
@@ -68,18 +69,7 @@ class PodFormContainer extends React.Component {
     Re-init form when footprints have been fetched.
     This is neede because we only get Footprint ids inside a POD
     */
-    accountId && this.props.fetchFootprints({ brand, account: accountId })
-      .then( () => {
-        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
-          const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: 'unknown', name: 'UNKNOWN'}
-        })
-
-        reinitForm({
-          ...initialValues,
-          UIFootprints
-        })
-      })
+    accountId && this.initFootprints()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,13 +79,29 @@ class PodFormContainer extends React.Component {
       this.props.fetchFootprints({ brand, account: accountId })
   }
 
+  initFootprints() {
+    const { brand, accountId, initialValues, reinitForm, fetchFootprints, intl } = this.props
+    const unknown = intl.formatMessage({id: "portal.common.unknown"});
+
+    return fetchFootprints({ brand, account: accountId })
+      .then(() => {
+        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
+          const fp = this.props.footprints.find(footp => footp.id === id)
+          return fp ? fp : { id: unknown.toLower(), name: unknown }
+        })
+
+        reinitForm({
+          ...initialValues,
+          UIFootprints
+        })
+      });
+  }
+
   addFootprintToPod(footprint) {
-    const {pushFormVal} = this.props
-
-    this.hideFootprintModal()
-
-    if (footprint) (pushFormVal('UIFootprints', footprint))
-
+    const { pushFormVal } = this.props
+    if (footprint) {
+      (pushFormVal('UIFootprints', footprint))
+    }
   }
 
   saveBGP(values) {
@@ -146,7 +152,7 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseInt(values.UIProviderWeight)
+      provider_weight: parseFloat(values.UIProviderWeight)
       //TODO:find out if Ip List is needed
       //ip_list: values.UIIpList.map( ip => ip.label )
     }
@@ -286,10 +292,7 @@ class PodFormContainer extends React.Component {
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
-          onDelete={this.onDeleteFootprint}
-          onSave={this.onSaveFootprint}
           show={true}
-
           addFootprintToPod={this.addFootprintToPod}
         />
         }
@@ -324,6 +327,7 @@ PodFormContainer.propTypes = {
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
+  intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
   onCancel: PropTypes.func,

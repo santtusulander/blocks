@@ -4,6 +4,7 @@ import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { FormattedMessage } from 'react-intl';
 
 import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
@@ -327,7 +328,7 @@ class ContentItems extends React.Component {
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
 
-    const addHostTitle = "Add Property"
+    const addHostTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
     const addHostSubTitle = activeAccount && activeGroup
       ? `${activeAccount.get('name')} / ${activeGroup.get('name')}`
     : null

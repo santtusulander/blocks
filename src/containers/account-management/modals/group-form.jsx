@@ -15,6 +15,8 @@ import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entiti
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -356,41 +358,42 @@ GroupFormContainer.defaultProps = {
   networks: List()
 }
 
-function mapStateToProps(state, ownProps) {
+const  mapStateToProps = (state, ownProps) => {
+  const { user, host, group, account } = state
   const { groupId } = ownProps
-  const currentUser = state.user.get('currentUser')
+  const currentUser = user.get('currentUser')
   const canEditServices = isUdnAdmin(currentUser)
-  const activeAccount = state.account.get('activeAccount')
-  const activeGroup = state.group.get('activeGroup') || Map()
+  const activeAccount = account.get('activeAccount')
+  const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
 
   return {
     account: activeAccount,
-    activeHost: state.host.get('activeHost'),
+    activeHost: host.get('activeHost'),
     canEditServices,
-    hosts: groupId && state.host.get('allHosts'),
+    hosts: groupId && host.get('allHosts'),
     initialValues: {
       ...(groupId ? activeGroup.toJS() : {}),
       services: groupId ? (activeGroup.get('services') || List()) : List()
     },
-    isFetchingHosts: state.host.get('fetching'),
-    isFetchingEntities: state.entities.fetching ? true : false,
+    isFetchingHosts: host.get('fetching'),
+    isFetchingEntities: getFetchingByTag(state, 'location') || getFetchingByTag(state, 'network'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
-    name: groupId ? state.group.getIn(['activeGroup', 'name']) : '',
+    name: groupId ? group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
                     ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
-    networks: groupId && getNetworksByGroup(state, groupId)
+    networks: getNetworksByGroup(state, groupId)
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
-    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ ...ownProps.params, group })),
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ ...ownProps.params, group }),
+    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ brand, account, group }),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

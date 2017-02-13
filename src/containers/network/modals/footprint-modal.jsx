@@ -56,15 +56,19 @@ class FootprintFormContainer extends React.Component {
     }
 
     return save(params)
-      .then(res => {
-        if (res.error) {
-          throw new SubmissionError({ '_error': res.error.data.message })
+      .then(({ error, response: { entities: { footprints } } }) => {
+        if (error) {
+          throw new SubmissionError({ '_error': error.data.message })
         }
 
         //add new footprint to pod
-        if (!edit) this.props.addFootprintToPod(finalValues)
+        if (!edit) {
+          //Grab the id from the response
+          finalValues.id = Object.keys(footprints)[0]
+          this.props.addFootprintToPod(finalValues)
+        }
 
-        //return this.props.handleFootprintSaveResponse(res)
+        return this.props.onCancel()
       })
   }
 

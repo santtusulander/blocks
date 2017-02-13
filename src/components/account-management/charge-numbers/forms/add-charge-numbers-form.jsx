@@ -2,13 +2,16 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { reduxForm, Field } from 'redux-form'
-import { fromJS } from 'immutable'
+import { reduxForm, Field, FieldArray } from 'redux-form'
+
+import { fromJS, Map, List } from 'immutable'
 
 import FieldFormGroup from '../../../form/field-form-group'
 import FieldFormGroupCheckboxes from '../../../form/field-form-group-checkboxes'
 import ChargeNumbersField from './charge-numbers-field'
+import RegionsField from './regions-field'
 
+import { getRegionsInfoOptions } from '../../../../util/services-helpers'
 import { FLOW_DIRECTION_TYPES } from '../../../../constants/account-management-options'
 
 class AddChargeNumbersForm extends React.Component {
@@ -26,7 +29,7 @@ class AddChargeNumbersForm extends React.Component {
   }
 
   render() {
-    const { hasFlowDirection, hasRegionalBilling, onDisable, onCancel } = this.props
+    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo } = this.props
 
     return (
       <form onSubmit={this.props.handleSubmit(this.onEnable)}>
@@ -43,10 +46,11 @@ class AddChargeNumbersForm extends React.Component {
           </div>
         }
 
-        { hasRegionalBilling && 
+        { hasRegionalBilling && hasGlobalBilling &&
           <Field
             name="billing_meta"
             component={ChargeNumbersField}
+            regionsInfo={regionsInfo}
           />
         }
 
@@ -57,6 +61,16 @@ class AddChargeNumbersForm extends React.Component {
             component={FieldFormGroup}
             required={false}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.global_charge_number.title" />}
+          />
+        }
+
+        { !hasGlobalBilling && 
+          <FieldArray
+            name="billing_meta.regions"
+            component={RegionsField}
+            iterable={getRegionsInfoOptions(regionsInfo)}
+            label={<FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>}
+            required={false}
           />
         }
 
@@ -98,10 +112,12 @@ AddChargeNumbersForm.propTypes = {
   activeServiceItem: PropTypes.instanceOf(Map),
   handleSubmit: PropTypes.func,
   hasFlowDirection: PropTypes.bool,
+  hasGlobalBilling: PropTypes.bool,
   hasRegionalBilling: PropTypes.bool,
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  regionsInfo: PropTypes.instanceOf(List)
 }
 
 export default reduxForm({

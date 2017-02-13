@@ -14,7 +14,7 @@ class RegionsField extends React.Component {
 
   componentWillMount() {
     const { iterable, fields } = this.props
-    const values = fields.getAll()
+    const values = fields.getAll() || []
 
     iterable.forEach(checkbox => {
       const region = values.find(item => item.region_code === checkbox.value)

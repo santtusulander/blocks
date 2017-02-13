@@ -14,12 +14,12 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
 
 import {LOCATION_NAME_MIN_LENGTH,
-        LOCATION_NAME_MAX_LENGTH,
-        CLOUD_PROVIDER_REGION_MIN_LENGTH,
-        CLOUD_PROVIDER_REGION_MAX_LENGTH,
-        CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
-        CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
-      } from '../../../constants/network.js'
+  LOCATION_NAME_MAX_LENGTH,
+  CLOUD_PROVIDER_REGION_MIN_LENGTH,
+  CLOUD_PROVIDER_REGION_MAX_LENGTH,
+  CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
+  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
+} from '../../../constants/network.js'
 
 
 const validate = ({
@@ -104,35 +104,37 @@ const validate = ({
 
 const NetworkLocationForm = (props) => {
   const {
-    addressFetching,
-    cloudProvidersOptions,
+    addressLine,
+    askForFetchLocation,
     cloudProvidersIdOptions,
+    cloudProvidersOptions,
     error,
-    submitting,
-    initialValues,
+    handleSubmit,
     iataCodes,
+    initialValues,
     intl,
     invalid,
+    isFetchingLocation,
     onCancel,
     onDelete,
-    handleSubmit
+    submitting
   } = props;
 
   const edit = !!initialValues.name
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
-                              edit ? <FormattedMessage id="portal.button.save"/> :
-                              <FormattedMessage id="portal.button.add"/>
+    edit ? <FormattedMessage id="portal.button.save"/> :
+      <FormattedMessage id="portal.button.add"/>
 
   return (
     <form className="sp-location-form" onSubmit={handleSubmit}>
 
-    {
-      error &&
-      <p className='has-error'>
-        <span className='help-block'>{error}</span>
-      </p>
-    }
+      {
+        error &&
+        <p className='has-error'>
+          <span className='help-block'>{error}</span>
+        </p>
+      }
 
       <Row>
         <Col md={7}>
@@ -168,7 +170,9 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
-          />
+            onBlur={askForFetchLocation}
+
+        />
         </Col>
         <Col md={5}>
           <Field
@@ -177,6 +181,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
+            onBlur={askForFetchLocation}
           />
         </Col>
       </Row>
@@ -185,10 +190,13 @@ const NetworkLocationForm = (props) => {
           <div>
             <FormattedMessage id="portal.network.locationForm.latLongFields.helperText.address" />
           </div>
-          <div>
-            <FormattedMessage id="portal.network.locationForm.latLongFields.helperTextHint.address" />
-          </div>
-          { addressFetching && <LoadingSpinnerSmall /> }
+          {isFetchingLocation ?
+            <div>
+              <LoadingSpinnerSmall/>
+              <FormattedMessage id="portal.network.locationForm.latLongFields.helperTextLoading.address"/>
+            </div> :
+            <p>{addressLine}</p>
+          }
         </Col>
       </Row>
       <Row>
@@ -242,13 +250,13 @@ const NetworkLocationForm = (props) => {
 
       <FormFooterButtons>
         { edit &&
-          <Button
-            className="btn-danger pull-left"
-            disabled={submitting}
-            onClick={handleSubmit(() => onDelete(initialValues.name))}
-          >
-            <FormattedMessage id="portal.button.delete"/>
-          </Button>
+        <Button
+          className="btn-danger pull-left"
+          disabled={submitting}
+          onClick={handleSubmit(() => onDelete(initialValues.name))}
+        >
+          <FormattedMessage id="portal.button.delete"/>
+        </Button>
         }
         <Button
           className="btn-secondary"

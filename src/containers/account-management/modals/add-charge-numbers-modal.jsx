@@ -6,7 +6,8 @@ import { Map } from 'immutable'
 import SidePanel from '../../../components/side-panel'
 import ChargeNumbersForm from '../../../components/account-management/charge-numbers/forms/add-charge-numbers-form'
 
-import { getServiceById, getOptionById } from '../../../util/services-helpers'
+import { getServiceById, getServiceByOptionId } from '../../../util/services-helpers'
+import { MEDIA_DELIVERY_SERVICE_ID } from '../../../constants/account-management-options'
 
 class AddChargeNumbersModal extends React.Component {
   constructor(props) {
@@ -17,14 +18,18 @@ class AddChargeNumbersModal extends React.Component {
     const { activeServiceItem, onSubmit, onDisable, onCancel, servicesInfo, show, initialValues } = this.props
     let itemDetails = Map()
     let isService = null
-    let isMediaDeliveryService = null
+    let hasFlowDirection = null
+    let serviceInfoItem = null
 
     if (activeServiceItem.size) {
       isService = activeServiceItem.has('service_id')
-      isMediaDeliveryService = isService && activeServiceItem.get('service_id') === 1
-      itemDetails = isService 
-                    ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
-                    : getOptionById(servicesInfo, activeServiceItem.get('option_id'))
+      hasFlowDirection = isService && activeServiceItem.get('service_id') === MEDIA_DELIVERY_SERVICE_ID
+      serviceInfoItem = isService 
+                        ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
+                        : getServiceByOptionId(servicesInfo, activeServiceItem.get('option_id'))
+      itemDetails = isService
+                    ? serviceInfoItem
+                    : serviceInfoItem.get('options').find(item => item.get('id') === activeServiceItem.get('option_id'))
     }
 
     const subTitle = isService
@@ -44,11 +49,13 @@ class AddChargeNumbersModal extends React.Component {
             <ChargeNumbersForm 
               initialValues={initialValues}
               activeServiceItem={activeServiceItem}
-              hasFlowDirection={isMediaDeliveryService}
+              hasFlowDirection={hasFlowDirection}
               hasRegionalBilling={itemDetails.get('supports_regional_billing')}
+              hasGlobalBilling={itemDetails.get('supports_global_billing')}
               onCancel={onCancel}
               onDisable={onDisable}
               onSubmit={onSubmit}
+              regionsInfo={serviceInfoItem.get('regions')}
             />
           </SidePanel>
         }

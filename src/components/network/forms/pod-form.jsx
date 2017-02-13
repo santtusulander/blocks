@@ -16,10 +16,9 @@ import {
 } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isInt } from '../../../util/validators'
+import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
 
 import HelpTooltip from '../../../components/help-tooltip'
-import FieldFormGroupNumber from '../../form/field-form-group-number'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
@@ -35,7 +34,9 @@ import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
 
 const LBMETHOD_OPTIONS = [
-  {value: 'gslb', label: 'GSLB'}
+  {value: 'gslb', label: 'GSLB'},
+  {value: 'lb', label: 'LB'},
+  {value: 'referral', label: 'REFERRAL'}
 ]
 
 const POD_TYPE_OPTIONS = [
@@ -54,11 +55,14 @@ const DISCOVERY_METHOD_OPTIONS = [
 
 const validate = (values) => {
   const { UIname, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
-
   const conditions = {
     UIname: {
       condition: !isValidTextField(UIname),
       errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+    },
+    UIProviderWeight: {
+      condition: !isValidProviderWeight(UIProviderWeight),
+      errorText: <FormattedMessage id="portal.network.podForm.provider_weight.range.error" />
     }
   }
   return checkForErrors(
@@ -222,6 +226,8 @@ const PodForm = ({
 
   const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
 
+  const hasFootprintsOrBGP = hasFootprints || hasBGPRoutingDaemon
+
   //change of method is allowed is no footprints / BGP's assigned
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints && !hasBGPRoutingDaemon
 
@@ -254,8 +260,8 @@ const PodForm = ({
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
-            title={<FormattedMessage id="portal.network.podForm.discoveryMethod.help.label"/>}>
-            <FormattedMessage id="portal.network.podForm.discoveryMethod.help.text" />
+            title={<FormattedMessage id="portal.network.podForm.lbMethod.help.label"/>}>
+            <FormattedMessage id="portal.network.podForm.lbMethod.help.text" />
           </HelpTooltip>
         }/>
 
@@ -293,7 +299,7 @@ const PodForm = ({
         type="text"
         name="UIProviderWeight"
         id="provider_weight-field"
-        component={FieldFormGroupNumber}
+        component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
 
       {/* TODO: IpList MIGHT be needed <Field
@@ -433,7 +439,7 @@ const PodForm = ({
         <Button
           type="submit"
           bsStyle="primary"
-          disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
+          disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
           {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
         </Button>
       </FormFooterButtons>

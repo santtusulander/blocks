@@ -16,6 +16,7 @@ import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 import ServiceOptionSelector from './service-option-selector'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
+import HelpTooltip from '../../components/help-tooltip'
 
 import {
   checkForErrors
@@ -89,6 +90,13 @@ const GroupForm = ({
             <SectionContainer>
               <SectionHeader
                 sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
+                addonAfter={
+                  <HelpTooltip
+                    id="tooltip-help"
+                    title={<FormattedMessage id="portal.accountManagement.locations.text"/>}>
+                    <FormattedMessage id="portal.accountManagement.locations.tooltip.message" />
+                  </HelpTooltip>
+                }
                 >
                 <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
                   <IconAdd/>

@@ -25,6 +25,22 @@ $panel-horizontal-padding: em(18px, 14px);
       margin: 12px 0 10px;
     }
   }
+
+  .section-header-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .sp-footprint-form,
@@ -112,11 +128,17 @@ $panel-horizontal-padding: em(18px, 14px);
       background-size: 21px;
 
       .dark-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
         background-image: url('../assets/icons/dt-icon-search.svg');
+        background-size: 21px 21px;
       }
 
       .light-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
         background-image: url('../assets/icons/lt-icon-search.svg');
+        background-size: 21px 21px;
       }
     }
   }

@@ -50,6 +50,10 @@ export function getOptionById (serviceInfo, id) {
   return options.find(item => item.get('id') === id)
 }
 
+export function getServiceByOptionId (serviceInfo, id) {
+  return serviceInfo ? serviceInfo.find(service => service.get('options').find(option => option.get('id') === id)) : Map()
+}
+
 export function getDefaultService (service_id) {
   const defaultObj = {
     service_id,
@@ -119,4 +123,11 @@ export function getServicePermissions (group) {
   }
 
   return servicePermissions
+}
+
+export function getRegionsInfoOptions (regionsInfo) {
+  return regionsInfo.map(region => ({
+    value: region.get('id'),
+    label: region.get('description')
+  }))
 }
