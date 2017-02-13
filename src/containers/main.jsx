@@ -11,6 +11,7 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
+import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -242,8 +243,12 @@ Main.childContextTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List)
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({entities, ...state}) {
+
   const stateMap = Immutable.Map(state)
+  const fetching = stateMap.some(
+    store => store && (store.get ? store.get('fetching') : store.fetching)
+  ) || getGlobalFetching({entities, ...state})
 
   return {
     accounts: state.account.get('allAccounts'),
@@ -251,9 +256,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
-    fetching: stateMap.some(
-      store => store && (store.get ? store.get('fetching') : store.fetching)
-    ),
+    fetching,
     notification: state.ui.get('notification'),
     roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),

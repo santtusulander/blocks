@@ -11,6 +11,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 
@@ -350,7 +352,7 @@ const determineInitialValues = (groupId, activeGroup = Map()) => {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-  const { user, host, group, account, entities } = state
+  const { user, host, group, account } = state
   // const groupId = ownProps.params.group || ownProps.groupId
   const { groupId } = ownProps
   const currentUser = user.get('currentUser')
@@ -366,18 +368,18 @@ const  mapStateToProps = (state, ownProps) => {
     hosts: groupId && host.get('allHosts'),
     initialValues: determineInitialValues(groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    isFetchingEntities: entities.fetching ? true : false,
+    isFetchingEntities: getFetchingByTag(state, 'location') || getFetchingByTag(state, 'network'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: group.getIn(['activeGroup', 'name']),
     group: group.get('activeGroup'),
-    networks: groupId && getNetworksByGroup(state, groupId)
+    networks: getNetworksByGroup(state, groupId)
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
-    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ ...ownProps.params, group })),
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ ...ownProps.params, group }),
+    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ brand, account, group }),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }

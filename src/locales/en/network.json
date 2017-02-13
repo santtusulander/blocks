@@ -6,6 +6,12 @@
   "portal.network.pods.title": "Pods",
   "portal.network.nodes.title": "Nodes",
 
+  "portal.network.entities.groups.noData": "Start configuring the network by creating a Group.",
+  "portal.network.entities.networks.noData": "Create a Network for the selected Group.",
+  "portal.network.entities.pops.noData": "Create a POP for the selected Network.",
+  "portal.network.entities.pods.noData": "Create a POD for the selected POP.",
+  "portal.network.entities.nodes.noData": "Create a Node for the selected POD.",
+
   "portal.network.subTitle.date.text": "Created: {createdDate} | Updated: {updatedDate}",
   "portal.network.subTitle.context.text": "Group {groupId} / Network {networkId}",
   "portal.network.popEditForm.addPop.title": "Add POP",
