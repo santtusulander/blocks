@@ -21,8 +21,30 @@ class CacheKeyQueryStringForm extends React.Component {
     this.updateSet = this.updateSet.bind(this)
   }
 
+  componentWillMount() {
+    this.updateState(this.props.set.get('name'))
+  }
+
   componentWillReceiveProps(nextProps) {
-    const currentNames = nextProps.set.get('name')
+    this.updateState(nextProps.set.get('name'))
+  }
+
+  handleChangeArg(index) {
+    return e => {
+      let newArgs = this.state.queryArgs.set(index, e.target.value)
+
+      if(newArgs.last()) {
+        newArgs = newArgs.push('')
+      }
+      this.setState({queryArgs: newArgs}, this.updateSet)
+    }
+  }
+
+  handleSelectChange(value) {
+    this.setState({activeFilter: value}, this.updateSet)
+  }
+
+  updateState(currentNames) {
     let queryArgs = List()
     let activeFilter = 'ignore_all_query_parameters'
 
@@ -51,21 +73,6 @@ class CacheKeyQueryStringForm extends React.Component {
       activeFilter: activeFilter,
       queryArgs: queryArgs
     })
-  }
-
-  handleChangeArg(index) {
-    return e => {
-      let newArgs = this.state.queryArgs.set(index, e.target.value)
-
-      if(newArgs.last()) {
-        newArgs = newArgs.push('')
-      }
-      this.setState({queryArgs: newArgs}, this.updateSet)
-    }
-  }
-
-  handleSelectChange(value) {
-    this.setState({activeFilter: value}, this.updateSet)
   }
 
   updateSet() {
