@@ -100,8 +100,15 @@ class PodFormContainer extends React.Component {
 
   refreshFootprints(){
     const { UIFootprints, footprints, setFormVal } = this.props
+
     const footprintIDs = UIFootprints.map(fp => fp.id)
-    const newFootprints = footprints.filter(fp => footprintIDs.includes(fp.id))
+    const removedIDs = UIFootprints.filter(fp => fp.removed).map(fp => fp.id)
+
+    const initialFootprints = footprints.filter(fp => footprintIDs.includes(fp.id))
+    const newFootprints = initialFootprints.map(fp => {
+      const removedFootprint = Object.assign({}, fp, { removed: true})
+      return removedIDs.includes(fp.id) ? removedFootprint : fp
+    })
     setFormVal('UIFootprints', newFootprints)
   }
 
@@ -134,6 +141,7 @@ class PodFormContainer extends React.Component {
   }
 
   hideFootprintModal() {
+    this.refreshFootprints()
     this.setState({ showFootprintModal: false, footprintId: null })
   }
 
@@ -298,7 +306,6 @@ class PodFormContainer extends React.Component {
         <FootprintFormContainer
           accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
-          refreshFootprints={this.refreshFootprints}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
           show={true}

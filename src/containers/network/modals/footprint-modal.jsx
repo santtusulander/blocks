@@ -64,10 +64,8 @@ class FootprintFormContainer extends React.Component {
         //add new footprint to pod
         if (!edit) {
           //Grab the id from the response
-          finalValues.id = Object.keys(footprints)[0]
+          finalValues.id = Number(Object.keys(footprints)[0])
           this.props.addFootprintToPod(finalValues)
-        } else {
-          this.props.refreshFootprints()
         }
 
         return this.props.onCancel()
@@ -151,8 +149,7 @@ FootprintFormContainer.propTypes = {
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  onUpdate: PropTypes.func,
-  refreshFootprints: PropTypes.func
+  onUpdate: PropTypes.func
 }
 
 const mapDispatchToProps = (dispatch) => {
