@@ -16,8 +16,6 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 
-import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
-
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
