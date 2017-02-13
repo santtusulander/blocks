@@ -240,6 +240,9 @@ export function isValidLongtitude(str) {
  * @return {Boolean}
  */
 export function isValidProviderWeight(str) {
+  if (!matchesRegexp(str, /^\d+$/) && !matchesRegexp(str, /^\d+\.\d+$/)) {
+    return false
+  }
   const providerWeight = parseFloat(str)
-  return !isNaN(providerWeight) && providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
+  return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
 }
