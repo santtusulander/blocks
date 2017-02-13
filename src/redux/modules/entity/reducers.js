@@ -5,7 +5,7 @@ export const receiveEntity = (key) => (state, action) => {
   const { response = {}, payload } = action
 
   // TODO: remove me after the new Redux modules (with API-middleware) is implemented
-  if (payload) {
+  if (!response.entities && payload) {
     response.entities = payload.entities
   }
 
