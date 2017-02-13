@@ -26,7 +26,9 @@ class CacheKeyQueryStringForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateState(nextProps.set.get('name'))
+    if (!this.props.set.get('name').equals(nextProps.set.get('name'))) {
+      this.updateState(nextProps.set.get('name'))
+    }
   }
 
   handleChangeArg(index) {
