@@ -1,6 +1,6 @@
 import React from 'react'
 import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-bootstrap'
-import { Map, List, fromJS } from 'immutable'
+import Immutable, { Map, List, fromJS } from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -26,7 +26,7 @@ class CacheKeyQueryStringForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.set.get('name').equals(nextProps.set.get('name'))) {
+    if (!Immutable.is(this.props.set.get('name'), nextProps.set.get('name'))) {
       this.updateState(nextProps.set.get('name'))
     }
   }
