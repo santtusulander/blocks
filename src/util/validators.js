@@ -32,6 +32,15 @@ export function isValidEmail(email) {
 }
 
 /**
+ * Check if valid float
+ * @param str
+ * @returns {boolean}
+ */
+export function isValidFloat(str) {
+  return matchesRegexp(str, /^\d*\.?\d+$/)
+}
+
+/**
  * Check if valid IPv4 address
  * @param address
  * @returns {*}
@@ -240,7 +249,7 @@ export function isValidLongtitude(str) {
  * @return {Boolean}
  */
 export function isValidProviderWeight(str) {
-  if (!matchesRegexp(str, /^\d+(|\.\d+)$/)) {
+  if (!isValidFloat(str)) {
     return false
   }
   const providerWeight = parseFloat(str)
