@@ -45,7 +45,7 @@ import newGroupActions from '../../redux/modules/entities/groups/actions'
 import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
 
 import nodeActions from '../../redux/modules/entities/nodes/actions'
-import { getByPod } from '../../redux/modules/entities/nodes/selectors'
+import { getByPod as getNodesByPod } from '../../redux/modules/entities/nodes/selectors'
 
 import networkActions from '../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/networks/selectors'
@@ -73,6 +73,7 @@ import EditNodeContainer from './modals/edit-node-modal'
 import AccountForm from '../../components/account-management/account-form'
 
 import checkPermissions from '../../util/permissions'
+import { sortByKey } from '../../util/helpers'
 
 class Network extends React.Component {
   constructor(props) {
@@ -924,17 +925,16 @@ const mapStateToProps = (state, ownProps) => {
     accountFetching: state.account.get('fetching'),
 
     accountManagementModal: state.ui.get('accountManagementModal'),
-    nodes: getByPod(state, buildReduxId(group, network, pop, pod)),
-    //select networks by Group from redux
-    networks: getNetworksByGroup(state, ownProps.params.group),
-    pops: getPopsByNetwork(state, buildReduxId(group, network)),
-    pods: getPodsByPop(state, buildReduxId(group, network, pop)),
+    nodes: sortByKey( getNodesByPod(state, buildReduxId(group, network, pop, pod)), 'updated', 'desc'),
+    networks: sortByKey( getNetworksByGroup(state, ownProps.params.group) ),
+    pops: sortByKey( getPopsByNetwork(state, buildReduxId(group, network)) ),
+    pods: sortByKey( getPodsByPop(state, buildReduxId(group, network, pop)), 'pod_name'),
     isFetching: entityType => getFetchingByTag(state, entityType),
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
     activeAccount: state.account.get('activeAccount'),
-    groups: state.group.get('allGroups'),
+    groups: sortByKey(state.group.get('allGroups')),
     groupDailyTraffic: state.metrics.get('groupDailyTraffic'),
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
