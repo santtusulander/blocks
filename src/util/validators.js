@@ -240,7 +240,7 @@ export function isValidLongtitude(str) {
  * @return {Boolean}
  */
 export function isValidProviderWeight(str) {
-  if (!matchesRegexp(str, /^\d+$/) && !matchesRegexp(str, /^\d+\.\d+$/)) {
+  if (!matchesRegexp(str, /^\d+(|\.\d+)$/)) {
     return false
   }
   const providerWeight = parseFloat(str)
