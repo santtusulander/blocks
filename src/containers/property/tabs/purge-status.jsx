@@ -13,6 +13,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import PageContainer from '../../../components/layout/page-container'
 import PurgeHistoryReport from '../../../components/content/property/purge-status'
 
+import withPagination from '../../../decorators/pagination-hoc'
+
 class PurgeStatus extends React.Component {
 
   constructor(props) {
@@ -21,34 +23,52 @@ class PurgeStatus extends React.Component {
     this.state = {}
 
     this.fetchData = this.fetchData.bind(this)
+
+    props.pagination.registerSubscriber((pagingParams) => this.fetchData(this.props.params, pagingParams))
   }
 
   componentWillMount() {
-    this.fetchData(this.props.params)
+    const { params, pagination: { getQueryParams }} = this.props
+    this.fetchData(params, getQueryParams())
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params !== this.props.params) {
-      this.fetchData(nextProps.params)
+    const { params, purgeStatus: { id, status }, pagination: { getQueryParams, resetPagination }} = nextProps
+    const purgeCreated = () => status === 'created' && id !== this.props.purgeStatus.id
+
+    if (params !== this.props.params || purgeCreated()) {
+      resetPagination()
+      this.fetchData(params, getQueryParams(paginationConfig))
     }
   }
 
-  fetchData(params) {
+  fetchData(params, pagingParams) {
     const { purgeActions } = this.props
     const { brand, account, group, property } = params
+
     purgeActions.startFetching()
-    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
+    purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property, ...pagingParams })
+      .then((resp) => {
+        const total = resp && resp.payload && (resp.payload.total >= 0) ? resp.payload.total : null;
+        this.props.pagination.paging.onTotalChange(total)
+
+        return resp
+      })
   }
 
   render() {
-
-    const { fetching, purgeObjects } = this.props
+    const { fetching, purgeObjects, pagination: { paging, filtering, sorting }} = this.props
 
     return (
-      <PageContainer className="property-container">
+      <PageContainer
+        className="property-container"
+      >
         <PurgeHistoryReport
           fetching={fetching}
           historyData={purgeObjects}
+          {...paging}
+          {...filtering}
+          {...sorting}
         />
       </PageContainer>
     )
@@ -71,14 +91,30 @@ PurgeStatus.defaultProps = {
 
 PurgeStatus.propTypes = {
   fetching: React.PropTypes.bool,
+  pagination: React.PropTypes.shape({
+    filtering: React.PropTypes.object,
+    paging: React.PropTypes.object,
+    sorting: React.PropTypes.object,
+    registerSubscriber: React.PropTypes.func
+  }).isRequired,
   params: React.PropTypes.object,
   purgeActions: React.PropTypes.object,
-  purgeObjects: React.PropTypes.instanceOf(List)
+  purgeObjects: React.PropTypes.instanceOf(List),
+  purgeStatus: React.PropTypes.object
+}
+
+const paginationConfig = {
+  fields: [],
+  page_size: 5
 }
 
 function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
+    purgeStatus: {
+      status: state.purge.getIn(['activePurge', 'status']),
+      id: state.purge.getIn(['activePurge', 'purge_id'])
+    },
     fetching: state.purge.get('fetching'),
     purgeObjects: state.purge.get('purgeObjects')
   };
@@ -94,4 +130,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PurgeStatus));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withPagination(PurgeStatus, paginationConfig)));

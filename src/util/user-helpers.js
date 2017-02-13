@@ -21,7 +21,7 @@ export function getRoleSelectOptions(user) {
  * @return {String} phone number without countryCode
  */
 export const stripCountryCode = (phoneNumber, countryCode) => {
-  return phoneNumber.replace( new RegExp ( `^\\+${countryCode} ` ), '')
+  return phoneNumber.replace( new RegExp ( `^\\+${countryCode}` ), '')
 }
 
 /**

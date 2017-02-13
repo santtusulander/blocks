@@ -67,6 +67,15 @@ export function getAnalyticsUrl(linkType, val, params) {
   }
 }
 
+export function getDashboardUrl(linkType, val, params) {
+  switch(linkType) {
+    case 'brand':
+      return getRoute('dashboardBrand', { brand: val })
+    case 'account':
+      return getRoute('dashboardAccount', { ...params, account: val })
+  }
+}
+
 export function getContentUrl(linkType, val, params) {
   switch(linkType) {
     case 'brand':
@@ -91,7 +100,15 @@ export function getNetworkUrl(linkType, val, params) {
     case 'account':
       return getRoute('networkAccount', { ...params, account: val })
     case 'groups':
-      return getRoute('networkGroups', { ...params, account: val })
+      return getRoute('networkGroups', { ...params, account: val ? val : params.account })
+    case 'group':
+      return getRoute('networkGroup', { ...params, group: val })
+    case 'network':
+      return getRoute('networkNetwork', { ...params, network: val })
+    case 'pop':
+      return getRoute('networkPop', { ...params, pop: val })
+    case 'pod':
+      return getRoute('networkPod', { ...params, pod: val })
   }
 }
 
@@ -204,9 +221,13 @@ export function getSecurityUrlFromParams(params) {
 }
 
 export function getDashboardUrlFromParams(params) {
-  const { brand, account } = params
+  const { brand, account, group, property } = params
 
-  if (account) {
+  if (property) {
+    return getRoute('dashboardProperty', params)
+  } else if (group) {
+    return getRoute('dashboardGroup', params)
+  } else if (account) {
     return getRoute('dashboardAccount', params)
   } else if (brand) {
     return getRoute('dashboardBrand', params)
@@ -216,11 +237,13 @@ export function getDashboardUrlFromParams(params) {
 }
 
 export function getNetworkUrlFromParams(params, currentUser, roles) {
-  const { brand, account } = params,
+  const { brand, account, group } = params,
     canViewAccountDetail = checkPermissions(roles, currentUser, VIEW_ACCOUNT_DETAIL)
 
   if (account) {
-    if (canViewAccountDetail) {
+    if (group) {
+      return getRoute('networkGroup', params)
+    } else if (canViewAccountDetail) {
       return getRoute('networkAccount', params)
     } else {
       return getRoute('networkGroups', params)

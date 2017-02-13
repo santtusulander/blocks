@@ -37,6 +37,7 @@ class RoleEditForm extends React.Component {
 
   render() {
     const {
+      dirty,
       handleSubmit,
       intl,
       invalid,
@@ -128,7 +129,7 @@ class RoleEditForm extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid || submitting}>
+              disabled={invalid || submitting || !dirty}>
               <FormattedMessage id="portal.button.save"/>
             </Button>
           </FormFooterButtons>
@@ -141,6 +142,7 @@ class RoleEditForm extends React.Component {
 RoleEditForm.displayName = 'RoleEditForm'
 RoleEditForm.propTypes = {
   // roles: PropTypes.object,
+  dirty: PropTypes.bool,
   editPermsUI: PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
   intl: PropTypes.object,

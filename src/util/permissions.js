@@ -134,6 +134,46 @@ permissionMapping[PERMISSIONS.CREATE_PROPERTY] =
 permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
   (role) => role.getIn(['permissions', 'north', 'published_hosts', 'modify', 'allowed'])
 
+// Network permissions
+permissionMapping[PERMISSIONS.CREATE_NETWORK] =
+  (role) => role.getIn(['permissions', 'north', 'networks', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_NETWORK] =
+  (role) => role.getIn(['permissions', 'north', 'networks', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_NETWORK] =
+  (role) => role.getIn(['permissions', 'north', 'networks', 'delete', 'allowed'])
+
+// POP permissions
+permissionMapping[PERMISSIONS.CREATE_POP] =
+  (role) => role.getIn(['permissions', 'north', 'pops', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_POP] =
+  (role) => role.getIn(['permissions', 'north', 'pops', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_POP] =
+  (role) => role.getIn(['permissions', 'north', 'pops', 'delete', 'allowed'])
+
+// POD permissions
+permissionMapping[PERMISSIONS.CREATE_POD] =
+  (role) => role.getIn(['permissions', 'north', 'pods', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_POD] =
+  (role) => role.getIn(['permissions', 'north', 'pods', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_POD] =
+  (role) => role.getIn(['permissions', 'north', 'pods', 'delete', 'allowed'])
+
+// Node permissions
+permissionMapping[PERMISSIONS.CREATE_NODE] =
+  (role) => role.getIn(['permissions', 'north', 'nodes', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_NODE] =
+  (role) => role.getIn(['permissions', 'north', 'nodes', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_NODE] =
+  (role) => role.getIn(['permissions', 'north', 'nodes', 'delete', 'allowed'])
+
 
 /**
  * Determine if a user has a permission.
@@ -143,7 +183,7 @@ permissionMapping[PERMISSIONS.MODIFY_PROPERTY] =
  * @return {Boolean}             True if the user has permission, else false
  */
 export default function checkPermissions(roles, user, permission) {
-  const userRoles = user.get('roles')
+  const userRoles = user && user.size > 0 && user.get('roles')
   if (!userRoles) return false
 
   return userRoles.some(roleId => {

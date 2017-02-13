@@ -1,23 +1,20 @@
 import {handleActions} from 'redux-actions'
+import { Map } from 'immutable'
+
 import * as fetchingReducers from './reducers'
 
 /**
- * Utility to create 'fetching' -reducers
- * actionTypes array is used to define actions that set fetching to false
- *
- * @param actionTypes
- * @param prefix for actions
- * @returns {*}
+ * Utility function mapping actions to reducers that set or clear fetching-flag.
+ * @param  {[object]} actionTypes [actions to listen to - the one keyed 'REQUEST' is mapped to a reducer that sets fetching, others are mapped to a clearing one]
+ * @return {[function]} reducer [a single reducer that handles multiple actions]
  */
-export const createFetchingReducers = (actionTypes) => {
-  let mappedActions = []
-  Object.keys( actionTypes).forEach( actionType => {
-    if (actionType === 'START_FETCHING') {
-      mappedActions[actionTypes[actionType]] = fetchingReducers.set
-    } else {
-      mappedActions[actionTypes[actionType]] = fetchingReducers.clear
-    }
-  })
+export default (actionTypes) => {
+  const mappedActions = {}
 
-  return handleActions(mappedActions, false)
+  for (const actionType  in actionTypes) {
+    if (actionType === 'REQUEST') mappedActions[ actionTypes[actionType] ] = fetchingReducers.set
+    else  mappedActions[ actionTypes[actionType] ]= fetchingReducers.clear
+  }
+
+  return handleActions(mappedActions, Map())
 }

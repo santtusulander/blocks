@@ -2,13 +2,14 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Map }from 'immutable'
-import { Button } from 'react-bootstrap'
+import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
 import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
@@ -17,35 +18,24 @@ import {
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 
 
 import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName, accountBrand, accountType, accountServices, services }) => {
   const conditions = {
     accountName: [
       {
-        condition: ! isValidAccountName(accountName),
-        errorText: <div key={accountName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
-                    <div style={{marginTop: '0.5em'}}>
-                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                      <ul>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                      </ul>
-                    </div></div>]}
-                  </div>
+        condition: ! isValidTextField(accountName),
+        errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
       }
     ]
   }
 
-  const errors = checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
-
-  return errors;
-
+  return checkForErrors({ accountName, accountBrand, accountType, accountServices, services }, conditions)
 }
 
 class AccountForm extends React.Component {
@@ -57,6 +47,18 @@ class AccountForm extends React.Component {
 
   componentWillMount() {
     this.props.fetchServiceInfo()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // UDNP-2388: below is a hack to handle change of accountType
+    // Since accountServices holds values which were selected for
+    // previosly configured account type, we need to clear them manually.
+
+    if (nextProps.accountType && (!nextProps.account)) {
+      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+        this.props.change('accountServices', [])
+      }
+    }
   }
 
   onSubmit(values, dispatch, props){
@@ -78,7 +80,10 @@ class AccountForm extends React.Component {
   }
 
   render() {
-    const { providerTypes, serviceOptions, invalid, submitting, initialValues: { accountBrand }, show, onCancel } = this.props
+    let providerType = ''
+    let providerTypeLabel = ''
+    const { accountType, providerTypes, serviceOptions, invalid, submitting,
+            initialValues: { accountBrand }, show, onCancel, dirty } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
@@ -88,6 +93,15 @@ class AccountForm extends React.Component {
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
+    if (accountType && providerTypes) {
+      providerType = providerTypes.find((type) => {
+        return type.value === accountType
+      })
+
+      providerTypeLabel = providerType && providerType.label ?
+                                          providerType.label :
+                                          <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+    }
 
     return (
       <SidePanel
@@ -122,18 +136,23 @@ class AccountForm extends React.Component {
           />
 
           <hr/>
-
-          <Field
-            name="accountType"
-            className="input-select"
-            component={FieldFormGroupSelect}
-            options={providerTypes}
-            label={<FormattedMessage id="portal.account.manage.accountType.title" />}
-          />
+          {!this.props.account
+            ? <Field
+                name="accountType"
+                className="input-select"
+                component={FieldFormGroupSelect}
+                options={providerTypes}
+                label={<FormattedMessage id="portal.account.manage.accountType.title" />}
+              />
+            : <FormGroup>
+                <ControlLabel>{<FormattedMessage id="portal.account.manage.accountType.title" />}</ControlLabel>
+                <p>{providerTypeLabel}</p>
+              </FormGroup>
+          }
 
           <hr/>
 
-          {this.props.accountType
+          {accountType
               ? <Field
                   name="accountServices"
                   component={FieldFormGroupMultiOptionSelector}
@@ -154,7 +173,7 @@ class AccountForm extends React.Component {
               <Button
                 type="submit"
                 bsStyle="primary"
-                disabled={invalid||submitting}>
+                disabled={invalid||submitting||(!dirty)}>
                 {submitButtonLabel}
               </Button>
             </FormFooterButtons>

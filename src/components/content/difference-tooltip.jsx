@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 const ContentDifferenceTooltip = ({name}) => <div>
   <div className="tooltip-header">
     <h3>{name}</h3>
-    <FormattedMessage id="portal.content.tooltip.bandwithVsLast28.text" values={{bandwith: <b><FormattedMessage id="portal.content.tooltip.bandwith.text"/></b>}}/>
+    <FormattedMessage id="portal.content.tooltip.bandwidthVsLast28.text" values={{bandwidth: <b><FormattedMessage id="portal.content.tooltip.bandwidth.text"/></b>}}/>
   </div>
   <div>
     <FormattedMessage id="portal.content.tooltip.higher.text"/>

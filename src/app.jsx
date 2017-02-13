@@ -8,7 +8,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import promiseMiddleware from 'redux-promise'
 import axios from 'axios'
 import Raven from 'raven-js'
-import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven';
+import apiMiddleware from './redux/middleware/api'
+import UdnRavenMiddleware, {captureAndShowRavenError} from './redux/middleware/raven'
 import { FormattedMessage } from 'react-intl';
 
 import * as reducers from './redux/modules'
@@ -19,6 +20,7 @@ import {SENTRY_DSN} from './constants/sentry'
 import { tokenDidExpire } from './util/user-helpers'
 
 import './styles/style.scss'
+
 
 import Root from './root'
 
@@ -31,10 +33,12 @@ const createStoreWithMiddleware =
       UdnRavenMiddleware(SENTRY_DSN, {release: VERSION}),
       /* eslint-enable no-undef */
 
-      promiseMiddleware
+      promiseMiddleware,
+      apiMiddleware,
     )(createStore)
   : applyMiddleware(
-      promiseMiddleware
+      promiseMiddleware,
+      apiMiddleware
     )(createStore)
 
 const appReducer = combineReducers(reducers)

@@ -195,17 +195,13 @@ function mapDispatchToProps(dispatch, ownProps) {
         accountActions.startFetching()
         accountActions.fetchAccounts(ownProps.params.brand)
       }
-      if(metrics.isEmpty()) {
-        metricsActions.startAccountFetching()
-        metricsActions.fetchAccountMetrics(metricsOpts)
-      }
-      if(dailyTraffic.isEmpty()) {
-        // TODO: Replace metrics endpoint with traffic endpoint after 0.7
-        // metricsActions.startAccountFetching()
-        // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
-        //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
-        metricsActions.fetchDailyAccountTraffic(metricsOpts)
-      }
+      metricsActions.startAccountFetching()
+      metricsActions.fetchAccountMetrics(metricsOpts)
+      // TODO: Replace metrics endpoint with traffic endpoint after 0.7
+      // metricsActions.startAccountFetching()
+      // metricsActions.fetchHourlyAccountTraffic(metricsOpts)
+      //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
+      metricsActions.fetchDailyAccountTraffic(metricsOpts)
     },
     accountActions: accountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)

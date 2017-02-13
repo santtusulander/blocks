@@ -11,6 +11,7 @@
   "portal.content.property.tabs.summary.label": "Summary",
   "portal.content.property.tabs.purgeStatus.label": "Purge Status",
 
+  "portal.content.property.header.add.label": "Add Property",
   "portal.content.property.header.purge.label": "Purge",
 
   "portal.content.property.summary.requestFailed.label": "Purge request failed: {reason}",
@@ -23,7 +24,7 @@
   "portal.content.property.summary.uniqueVisitors.title": "Unique visitors / h (avg)",
   "portal.content.property.summary.timeToFirstByte.title": "Time to First Byte (avg)",
   "portal.content.property.summary.cacheHitRate.title": "Cache Hit Rate (avg)",
-  "portal.content.property.summary.bandWith.title": "Bandwidth (avg/s)",
+  "portal.content.property.summary.bandWidth.title": "Bandwidth (avg/s)",
   "portal.content.property.summary.propertySummary.title": "Property Summary",
   "portal.content.property.summary.peak.label": "Peak",
   "portal.content.property.summary.average.label": "Average",
