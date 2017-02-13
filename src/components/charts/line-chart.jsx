@@ -16,7 +16,7 @@ const LineChart = ({data, dataKey, valueFormatter = formatBitsPerSecond}) => {
         content={
             <CustomTooltip valueFormatter={valueFormatter} />}
           />
-        <Line type="monotone" dataKey={dataKey} stroke={paleblue} strokeWidth="2" dot={false} />
+        <Line type="monotone" dataKey={dataKey} stroke={paleblue} isAnimationActive={false} strokeWidth="2" dot={false} />
       </ReactLineCharts>
     </ResponsiveContainer>
   )

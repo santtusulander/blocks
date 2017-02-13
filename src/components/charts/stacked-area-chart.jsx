@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react'
 import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} from 'recharts'
 
 import d3 from 'd3'
-
+import { orderBy } from 'lodash'
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './bar-chart-legend'
 import StackAreaCustomTick from './stacked-area-chart-tick.js'
@@ -15,8 +15,8 @@ import './stacked-area-chart.scss'
 const AREA_COLORS = {
   http: paleblue,
   https: tealgreen,
-  comparison_http: black20,
-  comparison_https: darkblue,
+  comparison_http: darkblue,
+  comparison_https: black20,
 
   odd: paleblue,
   even: green,
@@ -25,8 +25,8 @@ const AREA_COLORS = {
 }
 
 const STROKE_COLORS = {
-  comparison_http: yellow,
-  comparison_https: purple
+  comparison_http: purple,
+  comparison_https: yellow
 }
 
 /**
@@ -68,9 +68,8 @@ const getStrokeColor = (key) => {
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) => {
 
   let dateFormat = "MM/DD"
-
-  const isComparison = areas.filter( ({dataKey}) => dataKey.includes('comparison_'))
-  const customLegendArea = isComparison.length ? areas.reverse() : areas
+  const customLegendAreas = orderBy(areas, 'stackId', 'asc')
+  console.log('areas', JSON.stringify(areas, null, "  "))
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
 
@@ -98,7 +97,8 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
         key={i}
         isAnimationActive={false}
         stroke={getStrokeColor(area.dataKey)}
-        strokeWidth='2'
+        strokeWidth='1'
+        fillOpacity={0.8}
         fill={getAreaColor(area.dataKey, i)}
         {...area}
       />
@@ -116,7 +116,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
         <Legend
           wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
           margin={{top: 0, left: 0, right: 0, bottom: 0}}
-          content={<CustomLegend data={customLegendArea}/>}
+          content={<CustomLegend data={customLegendAreas}/>}
         />
 
         <Tooltip
