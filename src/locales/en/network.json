@@ -35,6 +35,9 @@
   "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
 
   "portal.network.item.status.enabled": "Enabled",
+  "portal.network.item.status.disabled": "Disabled",
+  "portal.network.item.status.destroying": "Destroying",
+  "portal.network.item.status.provisioning": "Provisioning",
   "portal.network.networkForm.newNetwork.title": "Add Network",
   "portal.network.networkForm.editNetwork.title": "Edit Network",
   "portal.network.networkForm.name.placeholder": "Enter Network Name",
