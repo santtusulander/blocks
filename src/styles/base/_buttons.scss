@@ -171,7 +171,13 @@ $lt-caret-color: $silver-60;
     }
   }
 
+  .btn-icon {
+    padding: 0;
+    line-height: 0;
+  }
+
   .btn-link {
+    line-height: inherit;
     color: $btn-primary-background;
     text-transform: none;
     background-color: transparent;
@@ -187,11 +193,6 @@ $lt-caret-color: $silver-60;
       outline: none;
       box-shadow: none;
     }
-  }
-
-  .btn-icon {
-    padding: 0;
-    line-height: 0;
   }
 
   .btn-round {
