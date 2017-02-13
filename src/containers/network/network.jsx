@@ -881,6 +881,7 @@ Network.displayName = 'Network'
 Network.propTypes = {
   accountActions: React.PropTypes.object,
   accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountFetching: React.PropTypes.bool,
   accountManagementModal: PropTypes.string,
   accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
@@ -894,6 +895,7 @@ Network.propTypes = {
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
+  groupsFetching: React.PropTypes.bool,
   isFetching: PropTypes.func,
   location: PropTypes.object,
   networkModal: PropTypes.string,
