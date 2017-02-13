@@ -69,7 +69,6 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
 
   let dateFormat = "MM/DD"
   const customLegendAreas = orderBy(areas, 'stackId', 'asc')
-  console.log('areas', JSON.stringify(areas, null, "  "))
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
 
