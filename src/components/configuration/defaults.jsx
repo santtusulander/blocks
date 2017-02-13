@@ -42,6 +42,7 @@ class ConfigurationDefaults extends React.Component {
 
     this.addRule = this.addRule.bind(this)
     this.changeTTLUnit = this.changeTTLUnit.bind(this)
+    this.changeTTLValue = this.changeTTLValue.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleHide = this.handleHide.bind(this)
