@@ -127,7 +127,7 @@ export function getServicePermissions (group) {
 
 export function getRegionsInfoOptions (regionsInfo) {
   return regionsInfo.map(region => ({
-    value: region.get('id'),
+    value: region.get('region_code'),
     label: region.get('description')
-  }))
+  })).toJS()
 }
