@@ -19,7 +19,7 @@ const PurgeHistoryReport = (props) => {
     sort_order, sort_by, onSortingChange
   } = props;
 
-  const pagination = {activePage, items, onSelect: onActivePageChange};
+  const pagination = { activePage, items, onSelect: onActivePageChange };
 
   const sorterProps = {
     activeColumn: sort_by,
@@ -39,6 +39,53 @@ const PurgeHistoryReport = (props) => {
     }
   ];
 
+  const getSectionContent = () => historyData.size ? grid : filter_value && filter_by ? msgNoResult : msgNoData;
+
+  const msgNoData = (
+    <div className="text-capitalize text-center">
+      <FormattedMessage id="portal.common.no-data.text" />
+    </div>
+  );
+
+  const msgNoResult = (
+    <div className="text-capitalize text-center">
+      <FormattedMessage id="portal.common.search.no-results.text" />
+    </div>
+  );
+
+  const grid = (
+    <div style={{opacity: fetching ? 0.6 : 1}}>
+      <table className="table table-striped table-analysis">
+        <thead>
+        <tr>
+          <TableSorter {...sorterProps} column="created_at">
+            <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
+          </TableSorter>
+          <TableSorter {...sorterProps} column="completed_at">
+            <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
+          </TableSorter>
+          <TableSorter {...sorterProps} column="created_by">
+            <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
+          </TableSorter>
+          <TableSorter {...sorterProps} column="note">
+            <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
+          </TableSorter>
+        </tr>
+        </thead>
+        <tbody>
+        {historyData.map((data, i) => (
+          <tr key={i}>
+            <td>{formatTime(data.get('created_at'))}</td>
+            <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
+            <td>{data.get('created_by')}</td>
+            <td>{data.get('note')}</td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
+      <Paginator {...pagination} />
+    </div>
+  );
 
   return (
     <div>
@@ -65,39 +112,7 @@ const PurgeHistoryReport = (props) => {
         </div>
       </SectionHeader>
       <SectionContainer>
-        <div style={{opacity: fetching ? 0.6 : 1}}>
-          <table className="table table-striped table-analysis">
-            <thead>
-            <tr>
-              <TableSorter {...sorterProps} column="created_at">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.startTime.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="completed_at">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.endTime.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="created_by">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.initiatedBy.label"/>
-              </TableSorter>
-              <TableSorter {...sorterProps} column="note">
-                <FormattedMessage id="portal.content.property.purgeStatus.table.description.label"/>
-              </TableSorter>
-            </tr>
-            </thead>
-            <tbody>
-            {historyData.map((data, i) => (
-              <tr key={i}>
-                <td>{formatTime(data.get('created_at'))}</td>
-                <td>{data.get('completed_at') && formatTime(data.get('completed_at'))}</td>
-                <td>{data.get('created_by')}</td>
-                <td>{data.get('note')}</td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-          <Paginator
-            {...pagination}
-          />
-        </div>
+        {getSectionContent()}
       </SectionContainer>
     </div>
   )

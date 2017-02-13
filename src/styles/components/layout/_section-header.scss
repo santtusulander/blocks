@@ -12,6 +12,10 @@ $section-header-bottom-margin: rem(24px);
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
+
+    .section-header-addon {
+      flex-grow: 2;
+    }
   }
 
   h3 {

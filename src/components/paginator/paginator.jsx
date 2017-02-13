@@ -3,7 +3,7 @@ import { Pagination } from 'react-bootstrap'
 import './paginator.scss'
 
 const Paginator = (props) => (
-  <div className="right udn-pagination">
+  <div className="text-right udn-pagination">
     <Pagination
       bsSize="small"
       {...props}
