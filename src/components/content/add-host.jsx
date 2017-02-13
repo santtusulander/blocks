@@ -77,7 +77,7 @@ class AddHost extends React.Component {
         />
 
         <FormGroup>
-          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /></ControlLabel>
+          <ControlLabel><FormattedMessage id="portal.content.addHost.deploymentMode.text" /> *</ControlLabel>
             <Field
               name="deploymentMode"
               type="radio"

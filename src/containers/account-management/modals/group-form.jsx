@@ -16,6 +16,8 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
 import SidePanel from '../../../components/side-panel'
 
 import TruncatedTitle from '../../../components/truncated-title'
@@ -368,18 +370,18 @@ const  mapStateToProps = (state, ownProps) => {
     hosts: groupId && host.get('allHosts'),
     initialValues: determineInitialValues(groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),
-    isFetchingLocations: getFetchingByTag(state, 'location'),
+    isFetchingEntities: getFetchingByTag(state, 'location') || getFetchingByTag(state, 'network'),
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: group.getIn(['activeGroup', 'name']),
     group: group.get('activeGroup'),
-    networks: groupId && getNetworksByGroup(state, groupId)
+    networks: getNetworksByGroup(state, groupId)
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
-    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ ...ownProps.params, group })),
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ ...ownProps.params, group }),
+    fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
+    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ brand, account, group }),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
