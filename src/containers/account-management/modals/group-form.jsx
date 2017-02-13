@@ -11,10 +11,10 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
+
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
-
-import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import SidePanel from '../../../components/side-panel'
 

@@ -42,6 +42,8 @@ import * as metricsActionCreators from '../../redux/modules/metrics'
 // TODO: Rename to groupActions once the old groupActions is abandoned
 import newGroupActions from '../../redux/modules/entities/groups/actions'
 
+import { getFetchingByTag } from '../../redux/modules/fetching/selectors'
+
 import nodeActions from '../../redux/modules/entities/nodes/actions'
 import { getByPod } from '../../redux/modules/entities/nodes/selectors'
 
@@ -51,7 +53,6 @@ import { getByGroup as getNetworksByGroup } from '../../redux/modules/entities/n
 import popActions from '../../redux/modules/entities/pops/actions'
 import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/pops/selectors'
 
-import podActions from '../../redux/modules/entities/pods/actions'
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
 import { buildReduxId } from '../../redux/util'
@@ -136,12 +137,11 @@ class Network extends React.Component {
 
     this.props.fetchNetworks( this.props.params )
     this.props.fetchPops( this.props.params )
-    this.props.fetchPods( this.props.params )
     this.props.fetchNodes( this.props.params )
   }
 
   componentWillReceiveProps(nextProps) {
-    const { group, network, pop, pod } = nextProps.params
+    const { group, network, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
       this.props.fetchNetworks( nextProps.params )
@@ -149,10 +149,6 @@ class Network extends React.Component {
 
     if (network !== this.props.params.network) {
       this.props.fetchPops( nextProps.params )
-    }
-
-    if (pop !== this.props.params.pop) {
-      this.props.fetchPods( nextProps.params )
     }
 
     if (pod !== this.props.params.pod) {
@@ -611,6 +607,9 @@ class Network extends React.Component {
 
   render() {
     const {
+      isFetching,
+      groupsFetching,
+      accountFetching,
       accountManagementModal,
       activeAccount,
       networkModal,
@@ -653,6 +652,7 @@ class Network extends React.Component {
         <PageContainer ref={container => this.container = container} className="network-entities-container">
           <div className="network-entities-wrapper">
             <EntityList
+              fetching={accountFetching}
               ref={accounts => this.entityList.accountList = accounts}
               entities={params.account && Immutable.List([activeAccount])}
               addEntity={() => null}
@@ -678,6 +678,9 @@ class Network extends React.Component {
             />
 
             <EntityList
+              noDataText={<FormattedMessage id="portal.network.entities.groups.noData"/>}
+              fetching={groupsFetching}
+              isParentSelected={!!this.props.params.account}
               ref={groups => this.entityList.groupList = groups}
               entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
@@ -704,6 +707,9 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={isFetching('network')}
+              isParentSelected={!!this.props.params.group}
+              noDataText={<FormattedMessage id="portal.network.entities.networks.noData"/>}
               ref={networkListRef => this.entityList.networkList = networkListRef}
               entities={params.group && networks}
               addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
@@ -720,6 +726,9 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={isFetching('pop')}
+              isParentSelected={!!this.props.params.network}
+              noDataText={<FormattedMessage id="portal.network.entities.pops.noData"/>}
               ref={pops => this.entityList.popList = pops}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
@@ -736,6 +745,9 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={isFetching('pod')}
+              isParentSelected={!!this.props.params.pop}
+              noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
               ref={pods => this.entityList.podList = pods}
               entityIdKey='pod_name'
               titleGenerator={entity => entity.get('pod_name')}
@@ -754,6 +766,9 @@ class Network extends React.Component {
             />
 
             <EntityList
+              fetching={isFetching('node')}
+              isParentSelected={!!params.pod}
+              noDataText={<FormattedMessage id="portal.network.entities.nodes.noData"/>}
               ref={nodes => this.entityList.nodeList = nodes}
               entities={params.pod && nodes}
               addEntity={() => this.addEntity(ADD_NODE)}
@@ -866,6 +881,7 @@ Network.displayName = 'Network'
 Network.propTypes = {
   accountActions: React.PropTypes.object,
   accountDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
+  accountFetching: React.PropTypes.bool,
   accountManagementModal: PropTypes.string,
   accountMetrics: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: PropTypes.instanceOf(Immutable.Map),
@@ -874,12 +890,13 @@ Network.propTypes = {
   fetchGroup: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchNodes: PropTypes.func,
-  fetchPods: PropTypes.func,
   fetchPops: PropTypes.func,
   groupActions: PropTypes.object,
   groupDailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   groupMetrics: React.PropTypes.instanceOf(Immutable.List),
   groups: PropTypes.instanceOf(Immutable.List),
+  groupsFetching: React.PropTypes.bool,
+  isFetching: PropTypes.func,
   location: PropTypes.object,
   networkModal: PropTypes.string,
   networks: PropTypes.instanceOf(Immutable.List),
@@ -902,12 +919,17 @@ Network.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const { group, network, pop, pod } = ownProps.params
   return {
+    //TODO: use fetching-selector and remove these once accounts/groups use new redux
+    groupsFetching: state.group.get('fetching'),
+    accountFetching: state.account.get('fetching'),
+
     accountManagementModal: state.ui.get('accountManagementModal'),
     nodes: getByPod(state, buildReduxId(group, network, pop, pod)),
     //select networks by Group from redux
     networks: getNetworksByGroup(state, ownProps.params.group),
     pops: getPopsByNetwork(state, buildReduxId(group, network)),
     pods: getPodsByPop(state, buildReduxId(group, network, pop)),
+    isFetching: entityType => getFetchingByTag(state, entityType),
 
     networkModal: state.ui.get('networkModal'),
     //TODO: refactor to entities/redux
@@ -961,7 +983,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
     fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
     fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
-    fetchPods: (params) => params.pop && dispatch( podActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
