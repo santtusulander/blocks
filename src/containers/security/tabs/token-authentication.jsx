@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import * as propertyActionCreators from '../../../redux/modules/properties/actions'
-import {getProperties, isFetching} from '../../../redux/modules/properties/selectors'
+import {getProperties} from '../../../redux/modules/properties/selectors'
 
 import { getTokenAuthRules } from '../../../util/policy-config'
 import { getContentUrl, getRoute } from '../../../util/routes'
@@ -64,7 +64,7 @@ const mapStateToProps = (state, ownProps) => {
   const {params: {brand, account, group} } = ownProps
   return {
     properties: getProperties(state, brand, parseInt(account), parseInt(group)).toJS(),
-    isFetching: isFetching(state)
+    isFetching: false
   }
 }
 

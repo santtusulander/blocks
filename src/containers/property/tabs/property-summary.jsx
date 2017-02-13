@@ -396,7 +396,7 @@ class PropertySummary extends React.Component {
             </h3>
           </div>
           <div className="kpi">
-            <FormattedMessage id="portal.content.property.summary.bandWith.title"/>
+            <FormattedMessage id="portal.content.property.summary.bandWidth.title"/>
             <h3>
               {formatBitsPerSecond(avg_transfer_rate, true)}
 

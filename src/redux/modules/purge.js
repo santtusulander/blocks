@@ -77,7 +77,7 @@ export function fetchListFailure(state) {
 
 export function fetchObjectsSuccess(state, action) {
   return state.merge({
-    purgeObjects: Immutable.fromJS(action.payload.purge_objects),
+    purgeObjects: Immutable.fromJS(action.payload.data),
     fetching: false
   })
 }
@@ -119,9 +119,7 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
       'Content-Type': 'application/json'
     }
   })
-  .then(() => {
-    return newPurge
-  })
+  .then((res) => ({ ...newPurge, ...res.data }))
   .catch(res => {
     return new Error(res.data.message)
   })

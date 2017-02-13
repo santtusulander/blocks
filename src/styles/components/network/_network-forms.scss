@@ -1,0 +1,272 @@
+@import '../../base/colors';
+
+$input-width: 324px;
+$input-height: 36px;
+$number-input-btn-width: 18px;
+$form-label-margin: 10px;
+$number-addon-width: 19px;
+$number-input-width: 268px;
+$panel-vertical-padding: em(8px, 14px);
+$panel-horizontal-padding: em(18px, 14px);
+
+.group-form,
+.sp-network-form,
+.sp-pop-form,
+.sp-pod-form,
+.sp-footprint-form,
+.sp-add-node-form,
+.sp-edit-node-form,
+.sp-routing-daemon-form,
+.sp-location-form  {
+  .form-group {
+    width: $input-width;
+
+    label {
+      margin: 12px 0 10px;
+    }
+  }
+
+  .section-header-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.sp-footprint-form,
+.sp-pod-form {
+  .typeahead-form-group {
+    width: 100%;
+  }
+}
+
+// SP Group Form
+//=================
+
+// SP Location Form
+//=================
+.sp-location-form {
+
+  label[for='latitude']+.input-group,
+  label[for='longitude']+.input-group {
+    width: 190px;
+  }
+}
+
+// SP POP form-group
+//==================
+.sp-pop-form {
+  .number-input-group {
+    width: $number-input-width;
+    margin: 0 0 0 20px;
+  }
+}
+
+// SP POD Form
+//============
+
+// TODO: UDNP-2181 - Abstract z-index values to variables
+#tooltip-help {
+  z-index: 1070;
+}
+
+.sp-pod-form {
+
+  .dropdown-select,
+  .form-control {
+    width: $input-width;
+    height: $input-height;
+    margin-right: auto;
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .discovery-section {
+    margin: $bar-height 0;
+
+    .form-control {
+      width: 100%;
+    }
+
+    label {
+      line-height: $bar-height;
+    }
+
+    .btn-add-new {
+      float: right;
+    }
+
+    .bootstrap-typeahead-input-main {
+      height: $btn-height;
+      padding-left: 40px;
+      background-position: 10px;
+      background-repeat: no-repeat;
+      background-size: 21px;
+
+      .dark-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
+        background-image: url('../assets/icons/dt-icon-search.svg');
+        background-size: 21px 21px;
+      }
+
+      .light-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
+        background-image: url('../assets/icons/lt-icon-search.svg');
+        background-size: 21px 21px;
+      }
+    }
+  }
+
+  .footprints {
+    padding: 0;
+    margin-top: $panel-horizontal-padding;
+    list-style-type: none;
+
+    > li {
+      padding: 0 $panel-vertical-padding;
+      margin-bottom: $panel-vertical-padding;
+      font-weight: bold;
+      line-height: em(36px, 14px);
+      background-color: rgba($pale-blue, 0.2);
+
+      .light-theme & {
+        color: $lt-text-color;
+        background-color: $white;
+        box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        .icon {
+          fill: $lt-text-color;
+        }
+      }
+
+      .action-buttons {
+        text-align: right;
+
+        .btn-icon {
+          line-height: normal;
+        }
+      }
+    }
+  }
+
+  .number-input {
+    width: $input-width - $number-input-btn-width;
+  }
+
+  .as-num-input {
+    width: $input-width - $number-input-btn-width - $number-addon-width;
+  }
+
+  .input-group-addon.addon-before {
+    padding-top: 0;
+  }
+}
+
+//SP Footprint Form
+//=================
+.sp-footprint-form {
+
+  .form-group {
+    .control-label {
+      margin-bottom: $form-label-margin;
+    }
+  }
+
+  .radio {
+    margin-bottom: $form-label-margin;
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}
+
+.token {
+  &__valid {
+    background-color: $green !important;
+  }
+
+  &__invalid {
+    background-color: $red !important;
+  }
+}
+
+// SP Routing Daemon Form
+// =====================
+.sp-routing-daemon-form {
+  .input-group-addon {
+    .dark-theme & {
+      padding: 0;
+      background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
+    }
+  }
+
+  .addon-before {
+    .dark-theme & {
+      padding: 0;
+      background-color: inherit;
+    }
+
+    .light-theme & {
+      background-color: inherit;
+    }
+  }
+}
+
+// SP Add Node Form
+//=================
+.sp-add-node-form {
+
+  .number-input-group {
+    width: $number-input-width;
+    margin: 7px 0 0;
+  }
+
+  &__highlight-name {
+    font-weight: bold;
+    color: $pale-blue;
+  }
+}
+
+// SP Edit Node Form
+//=================
+.sp-edit-node-form .form-group {
+
+  &:nth-child(-n+2) {
+    width: 100%;
+
+    .input-group {
+      margin-bottom: 0;
+    }
+  }
+}

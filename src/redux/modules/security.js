@@ -179,6 +179,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
         group,
         cn: certificate.data.cn,
         title: certificate.data.title,
+        date_not_valid_after: certificate.data.date_not_valid_after,
         account
       }
     }))

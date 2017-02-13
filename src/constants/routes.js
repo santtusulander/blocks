@@ -1,4 +1,6 @@
-export default {
+const ROUTES = {
+  root: '/',
+
   analytics: '/analysis',
   analyticsBrand: '/analysis/:brand',
   analyticsAccount: '/analysis/:brand/:account',
@@ -84,8 +86,21 @@ export default {
   dashboard: '/dashboard',
   dashboardBrand: '/dashboard/:brand',
   dashboardAccount: '/dashboard/:brand/:account',
+  dashboardGroup: '/dashboard/:brand/:account/:group',
+  dashboardProperty: '/dashboard/:brand/:account/:group/:property',
+
   network: '/network',
   networkBrand: '/network/:brand',
   networkAccount: '/network/:brand/:account',
-  networkGroups: '/network/:brand/:account/groups'
+  networkGroups: '/network/:brand/:account/groups',
+  networkGroup: '/network/:brand/:account/groups/:group',
+  networkNetwork: '/network/:brand/:account/groups/:group/:network',
+  networkPop: '/network/:brand/:account/groups/:group/:network/:pop',
+  networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }
+
+export const ENTRY_ROUTE_SERVICE_PROVIDER = ROUTES.network
+export const ENTRY_ROUTE_DEFAULT = ROUTES.content
+export const ENTRY_ROUTE_ROOT = ROUTES.root
+
+export default ROUTES

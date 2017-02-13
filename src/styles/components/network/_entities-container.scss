@@ -1,0 +1,27 @@
+// UDNP-2577 | Network: Incorrect position of horizontal scrollbar (IE11)
+$page-header-height: 93px;
+$height-of-the-header: #{$header-total-height} - #{$page-header-height} - #{$page-header-padding-top} - #{$page-container-vertical-padding};
+
+.network-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.network-entities-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - #{$height-of-the-header});
+  padding: $page-container-vertical-padding 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1 0 auto;
+
+  .network-entities-wrapper {
+    position: absolute;
+    top: $page-container-vertical-padding;
+    right: 0;
+    left: 0;
+    display: flex;
+  }
+}

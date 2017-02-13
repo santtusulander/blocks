@@ -11,6 +11,11 @@ $token-horizontal-padding: em(12px, $form-font-size);
     min-height: 36px;
     padding-bottom: 5px;
 
+    input {
+      // Override inline style set by the component that looks wrong on IE
+      background-color: transparent !important;
+    }
+
     &.focus {
       box-shadow: inset 0 0 0 2px $pale-blue, 0 0 0 1px rgba($black, 0.1);
     }

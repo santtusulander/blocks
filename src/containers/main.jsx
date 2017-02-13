@@ -11,6 +11,7 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
+import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -19,8 +20,14 @@ import Footer from '../components/footer'
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
+import {
+  ENTRY_ROUTE_ROOT,
+  ENTRY_ROUTE_DEFAULT,
+  ENTRY_ROUTE_SERVICE_PROVIDER
+} from '../constants/routes.js'
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
+import { userIsServiceProvider } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -31,6 +38,14 @@ export class Main extends React.Component {
     this.hideNotification = this.hideNotification.bind(this)
     this.notificationTimeout = null
   }
+
+  getChildContext(){
+    return {
+      currentUser: this.props.currentUser,
+      roles: this.props.roles
+    }
+  }
+
   componentWillMount() {
     // Validate token
     this.props.userActions.checkToken()
@@ -53,9 +68,21 @@ export class Main extends React.Component {
 
   //update account if account prop changed (in url) or clear active if there is no account in route
   componentWillReceiveProps(nextProps){
+    const { user, accounts, location, params: { account } } = this.props
+    const nextCurrentUser = nextProps.user.get('currentUser')
+    const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
+    const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
+    const currentUserExists = !!nextCurrentUser.size
+    const accountChanged = account !== nextProps.params.account
+
     !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
-    if (this.props.params.account !== nextProps.params.account) {
-      this.fetchAccountData(nextProps.params.account, this.props.accounts)
+    if (accountChanged) {
+      this.fetchAccountData(nextProps.params.account, accounts)
+    }
+
+    if (currentUserChanged && currentUserExists && isAccessingRootRoute) {
+      const entryPath = userIsServiceProvider(nextCurrentUser) ? ENTRY_ROUTE_SERVICE_PROVIDER : ENTRY_ROUTE_DEFAULT
+      this.props.router.push(entryPath)
     }
   }
   fetchAccountData(account, accounts) {
@@ -72,8 +99,6 @@ export class Main extends React.Component {
     }
   }
   logOut() {
-    this.props.userActions.setLogin(false)
-
     this.props.userActions.logOut()
       .then(() => {
         // Log out, destroy store, and redirect to login page
@@ -98,14 +123,7 @@ export class Main extends React.Component {
     const infoDialogOptions = this.props.infoDialogOptions ? this.props.infoDialogOptions.toJS() : {}
 
     let classNames = 'main-container';
-    let activeAccount = this.props.activeAccount
-    /* If no activeAccount is set, but some accounts have been queried, use the
-       first found. TODO: Is there a better way to pick default account?
-     */
-    if((!activeAccount || !activeAccount.size)
-      && this.props.accounts && this.props.accounts.size) {
-      activeAccount = this.props.accounts.first()
-    }
+
     if(this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
@@ -113,7 +131,7 @@ export class Main extends React.Component {
     return (
       <div className={classNames}>
         <Navigation
-          activeAccount={activeAccount}
+          activeAccount={this.props.activeAccount}
           activeGroup={this.props.activeGroup}
           activeHost={this.props.activeHost}
           currentUser={this.props.currentUser}
@@ -220,8 +238,17 @@ Main.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+Main.childContextTypes = {
+  currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  roles: React.PropTypes.instanceOf(Immutable.List)
+}
+
+function mapStateToProps({entities, ...state}) {
+
   const stateMap = Immutable.Map(state)
+  const fetching = stateMap.some(
+    store => store && (store.get ? store.get('fetching') : store.fetching)
+  ) || getGlobalFetching({entities, ...state})
 
   return {
     accounts: state.account.get('allAccounts'),
@@ -229,9 +256,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
-    fetching: stateMap.some(
-      store => store && (store.get ? store.get('fetching') : store.fetching)
-    ),
+    fetching,
     notification: state.ui.get('notification'),
     roles: state.roles.get('roles'),
     showErrorDialog: state.ui.get('showErrorDialog'),
