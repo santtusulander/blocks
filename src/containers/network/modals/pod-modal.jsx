@@ -45,6 +45,7 @@ class PodFormContainer extends React.Component {
 
     this.initFootprints = this.initFootprints.bind(this)
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
+    this.refreshFootprints = this.refreshFootprints.bind(this)
 
     this.saveBGP = this.saveBGP.bind(this)
     this.clearBGP = this.clearBGP.bind(this)
@@ -95,6 +96,13 @@ class PodFormContainer extends React.Component {
           UIFootprints
         })
       });
+  }
+
+  refreshFootprints(){
+    const { UIFootprints, footprints, setFormVal } = this.props
+    const footprintIDs = UIFootprints.map(fp => fp.id)
+    const newFootprints = footprints.filter(fp => footprintIDs.includes(fp.id))
+    setFormVal('UIFootprints', newFootprints)
   }
 
   addFootprintToPod(footprint) {
@@ -290,6 +298,7 @@ class PodFormContainer extends React.Component {
         <FootprintFormContainer
           accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
+          refreshFootprints={this.refreshFootprints}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
           show={true}
@@ -352,7 +361,6 @@ PodFormContainer.defaultProps = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
