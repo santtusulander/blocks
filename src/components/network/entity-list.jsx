@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import classNames from 'classnames'
 
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
@@ -33,6 +34,10 @@ class EntityList extends React.Component {
       return true
     } else if (nextProps.nextEntityList) {
       return true
+    } else if (nextProps.fetching !== this.props.fetching) {
+      return true
+    } else if (nextProps.isParentSelected !== this.props.isParentSelected) {
+      return true
     }
 
     return false
@@ -55,7 +60,7 @@ class EntityList extends React.Component {
    */
   renderConnectorLine() {
     // Check if this entity list has an active item
-    if (this.hasActiveItems()) {
+    if (this.hasActiveItems() && !this.props.fetching) {
       // We're modifying DOM elements, so we need to get the correct nodes from entity list
       const childNodes = [...this.entityListItems.childNodes]
       const { nextEntityList } = this.props
@@ -140,6 +145,7 @@ class EntityList extends React.Component {
       entityIdKey,
       starburstData,
       params,
+      noDataText,
       entities,
       contentTextGenerator,
       titleGenerator,
@@ -233,6 +239,8 @@ class EntityList extends React.Component {
       }
 
       return content
+    } else if (this.props.isParentSelected) {
+      return noDataText
     }
   }
 
@@ -302,13 +310,13 @@ class EntityList extends React.Component {
       disableButtons,
       title,
       multiColumn,
-      showButtons
+      showButtons,
+      fetching
     } = this.props
 
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
     })
-
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
         {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
@@ -319,8 +327,8 @@ class EntityList extends React.Component {
           disableButtons={disableButtons}
         />
 
-      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
-          {this.renderListItems()}
+        <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+          {fetching ? <LoadingSpinner/> : this.renderListItems()}
         </div>
       </div>
     )
@@ -337,10 +345,13 @@ EntityList.propTypes = {
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
+  fetching: PropTypes.bool,
   isAllowedToConfigure: PropTypes.bool,
+  isParentSelected: PropTypes.bool,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
+  noDataText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   numOfColumns: PropTypes.number,
   params: PropTypes.object,
   selectEntity: PropTypes.func,
