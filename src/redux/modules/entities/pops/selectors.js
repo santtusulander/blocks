@@ -17,5 +17,5 @@ export const getById = (state, id) => {
  * @return List
  */
 export const getByNetwork = (state, networkId) => {
-  return getEntitiesByParent(state, 'pops', networkId, 'network_id')
+  return getEntitiesByParent(state, 'pops', networkId)
 }

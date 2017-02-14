@@ -54,7 +54,8 @@ const NetworkPopForm = (props) => {
     onDelete,
     initialValues,
     hasPods,
-    dirty
+    dirty,
+    handleSubmit
 
   } = props
 
@@ -64,7 +65,7 @@ const NetworkPopForm = (props) => {
                             <FormattedMessage id="portal.button.add"/>
 
   return (
-      <form className="sp-pop-form" onSubmit={props.handleSubmit(onSave)}>
+      <form className="sp-pop-form" onSubmit={handleSubmit(onSave)}>
 
         { //This block will be shown when SubmissionError has been thrown form async call
           error &&
@@ -107,7 +108,7 @@ const NetworkPopForm = (props) => {
               id="delete-btn"
               className="btn-danger pull-left"
               disabled={hasPods}
-              onClick={onDelete}
+              onClick={handleSubmit(onDelete)}
               tooltipId="tooltip-help"
               tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
               {

@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react'
-import { injectIntl } from 'react-intl'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { SubmissionError, formValueSelector, arrayPush, change, initialize } from 'redux-form'
-import { FormattedMessage /*, injectIntl, intlShape */} from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -18,6 +17,8 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
+
+import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -42,7 +43,9 @@ class PodFormContainer extends React.Component {
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
 
+    this.initFootprints = this.initFootprints.bind(this)
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
+
     this.saveBGP = this.saveBGP.bind(this)
     this.clearBGP = this.clearBGP.bind(this)
 
@@ -55,7 +58,7 @@ class PodFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { brand, accountId, groupId, networkId, popId, initialValues, reinitForm } = this.props
+    const { brand, accountId, groupId, networkId, popId } = this.props
 
     //If editing => fetch data from API
     accountId && this.props.fetchAccount({ brand, id: accountId })
@@ -67,18 +70,7 @@ class PodFormContainer extends React.Component {
     Re-init form when footprints have been fetched.
     This is neede because we only get Footprint ids inside a POD
     */
-    accountId && this.props.fetchFootprints({ brand, account: accountId })
-      .then( () => {
-        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
-          const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: 'unknown', name: 'UNKNOWN'}
-        })
-
-        reinitForm({
-          ...initialValues,
-          UIFootprints
-        })
-      })
+    accountId && this.initFootprints()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,13 +80,29 @@ class PodFormContainer extends React.Component {
       this.props.fetchFootprints({ brand, account: accountId })
   }
 
+  initFootprints() {
+    const { brand, accountId, initialValues, reinitForm, fetchFootprints, intl } = this.props
+    const unknown = intl.formatMessage({id: "portal.common.unknown"});
+
+    return fetchFootprints({ brand, account: accountId })
+      .then(() => {
+        const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
+          const fp = this.props.footprints.find(footp => footp.id === id)
+          return fp ? fp : { id: unknown.toLower(), name: unknown }
+        })
+
+        reinitForm({
+          ...initialValues,
+          UIFootprints
+        })
+      });
+  }
+
   addFootprintToPod(footprint) {
-    const {pushFormVal} = this.props
-
-    this.hideFootprintModal()
-
-    if (footprint) (pushFormVal('UIFootprints', footprint))
-
+    const { pushFormVal } = this.props
+    if (footprint) {
+      (pushFormVal('UIFootprints', footprint))
+    }
   }
 
   saveBGP(values) {
@@ -149,7 +157,7 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: values.UIProviderWeight
+      provider_weight: parseFloat(values.UIProviderWeight)
       //TODO:find out if Ip List is needed
       //ip_list: values.UIIpList.map( ip => ip.label )
     }
@@ -290,8 +298,6 @@ class PodFormContainer extends React.Component {
           footprintId={this.state.footprintId}
           location={pop.get('iata').toLowerCase()}
           onCancel={this.hideFootprintModal}
-          onDelete={this.onDeleteFootprint}
-          onSave={this.onSaveFootprint}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
         />
@@ -344,6 +350,7 @@ PodFormContainer.propTypes = {
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
+  intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
   onCancel: PropTypes.func,
@@ -374,8 +381,8 @@ const mapStateToProps = (state, ownProps) => {
   const UIFootprints = selector(state, 'UIFootprints')
 
   const edit = !!ownProps.podId
-  const pop = ownProps.popId && getPopById(state, ownProps.popId)
-  const pod = ownProps.podId && pop && getPodById(state, `${pop.get('name')}-${ownProps.podId}`)
+  const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
+  const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
   const initialValues = edit && pod ? pod.toJS() : {}
 
   const inititalUIFootprints = edit
@@ -394,7 +401,7 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    network: ownProps.networkId && getNetworkById(state, ownProps.networkId),
+    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
     pop,
     pod,
@@ -410,7 +417,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(podActions.create({ ...params, data })),
     onUpdate: (params, data) => dispatch(podActions.update({ ...params, data })),
-    onDelete: (params) => dispatch(podActions.remove({ ...params })),
+    onDelete: (params) => dispatch(podActions.remove(params)),
 
     fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
     fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),

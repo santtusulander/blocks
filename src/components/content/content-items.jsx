@@ -4,15 +4,16 @@ import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { FormattedMessage } from 'react-intl';
 
 import {
   ACCOUNT_TYPE_SERVICE_PROVIDER,
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
+
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl,
-  getNetworkUrl
+  getContentUrl
 } from '../../util/routes'
 import { userIsCloudProvider } from '../../util/helpers'
 
@@ -80,6 +81,7 @@ class ContentItems extends React.Component {
     this.handleSortChange = this.handleSortChange.bind(this)
     this.onItemAdd = this.onItemAdd.bind(this)
     this.onItemSave = this.onItemSave.bind(this)
+    this.onItemDelete = this.onItemDelete.bind(this)
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
@@ -142,6 +144,26 @@ class ContentItems extends React.Component {
         }
       })
   }
+
+  onItemDelete() {
+    return this.props.deleteItem(...arguments)
+      .then(({ item, name, error, payload }) => {
+        if(error) {
+          this.props.showInfoDialog({
+            title: 'Error',
+            content: payload.data.message,
+            cancel: () => this.props.hideInfoDialog(),
+            okButton: true
+          })
+        } else if(item && name) {
+          this.hideModal()
+          this.showNotification(`${item} ${name} deleted.`)
+        } else {
+          this.hideModal()
+        }
+      })
+  }
+
   getTier() {
     const { brand, account, group } = this.props.params
     if (group) {
@@ -165,11 +187,7 @@ class ContentItems extends React.Component {
         break
       case 'brand':
       case 'account':
-        if (this.props.router.isActive('network')) {
-          this.props.router.push(getNetworkUrl('brand', 'udn', {}))
-        } else {
-          this.props.router.push(getContentUrl('brand', 'udn', {}))
-        }
+        this.props.router.push(getContentUrl('brand', 'udn', {}))
         break
     }
   }
@@ -234,9 +252,7 @@ class ContentItems extends React.Component {
             params[0] = 'groups'
           }
 
-          const url = props.router.isActive('network')
-                        ? getNetworkUrl(...params)
-                        : getContentUrl(...params)
+          const url = getContentUrl(...params)
 
           // We perform this check to prevent routing to unsupported routes
           // For example, prevent clicking to SP group route (not yet supported)
@@ -312,7 +328,7 @@ class ContentItems extends React.Component {
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
 
-    const addHostTitle = "Add Property"
+    const addHostTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
     const addHostSubTitle = activeAccount && activeGroup
       ? `${activeAccount.get('name')} / ${activeGroup.get('name')}`
     : null
@@ -432,6 +448,7 @@ class ContentItems extends React.Component {
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              onDelete={this.onItemDelete}
               onCancel={this.hideModal}
               show={true}/>
           }

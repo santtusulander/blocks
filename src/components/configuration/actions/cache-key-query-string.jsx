@@ -37,7 +37,7 @@ class CacheKeyQueryString extends React.Component {
 
           <CacheKeyQueryStringForm
             intl={this.props.intl}
-            set={this.props.set}
+            set={this.state.updatedSet}
             updateSet={this.updateSet}/>
 
           <ButtonToolbar className="text-right">

@@ -60,7 +60,7 @@ describe('AnalysisOnOffNetReport', () => {
     expect(analysisOnOffNetReport).toBeDefined();
   });
 
-  it('should show data rows in table', () => {
+  it('should not show data rows in table if there is no data', () => {
     let analysisOnOffNetReport = shallow(
       <AnalysisOnOffNetReport
         dateRange={ Immutable.Map({startDate: new Date(), endDate: new Date() })}
@@ -70,8 +70,8 @@ describe('AnalysisOnOffNetReport', () => {
         onOffStatsToday={fakeOnOffStatsToday}
         intl={intlMaker()}/>
     );
-    let trs = analysisOnOffNetReport.find('tr')
-    expect(trs.length).toBe(3);
+    let noData = analysisOnOffNetReport.find({id: 'portal.common.no-data.text'})
+    expect(noData.length).toBe(1);
   });
 
   it('should show summary stats', () => {

@@ -3,6 +3,10 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
+import { FormattedMessage } from 'react-intl'
+import SectionHeader from '../../../components/layout/section-header'
+import SectionContainer from '../../../components/layout/section-container'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import AnalysisCacheHitRate from '../../../components/analysis/cache-hit-rate.jsx'
 
@@ -61,14 +65,33 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 
   render() {
-    const {traffic} = this.props
+    const { traffic, fetching } = this.props
+
+    if (!traffic.size) {
+      return (
+        <div>
+          {!fetching ?
+            <div>
+              <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.analytics.cacheHitRateByDay.text" />} />
+              <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+            </div>
+          :
+            <div>
+              <SectionContainer>
+                <LoadingSpinner />
+              </SectionContainer>
+            </div>
+          }
+        </div>
+      )
+    }
 
     return (
       <div>
         <AnalysisCacheHitRate
           traffic={traffic}
           dateRange={this.props.filters.get('dateRangeLabel')}
-          fetching={this.props.fetching}
+          fetching={fetching}
           serviceTypes={this.props.filters.get('serviceTypes')}
         />
       </div>

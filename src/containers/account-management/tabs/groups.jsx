@@ -304,7 +304,7 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                     <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                    <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
                   </IsAllowed>
                 </td>
               </tr>

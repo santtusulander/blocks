@@ -12,7 +12,9 @@ import { ASN_MIN,
          MIN_LATITUDE,
          MAX_LATITUDE,
          MIN_LONGTITUDE,
-         MAX_LONGTITUDE } from '../constants/network'
+         MAX_LONGTITUDE,
+         POD_PROVIDER_WEIGHT_MIN,
+         POD_PROVIDER_WEIGHT_MAX } from '../constants/network'
 
 
 /**
@@ -27,6 +29,15 @@ import { ASN_MIN,
  */
 export function isValidEmail(email) {
   return !!email && validator.isEmail(email)
+}
+
+/**
+ * Check if valid float
+ * @param str
+ * @returns {boolean}
+ */
+export function isValidFloat(str) {
+  return matchesRegexp(str, /^\d*\.?\d+$/)
 }
 
 /**
@@ -230,4 +241,17 @@ export function isValidLatitude(str) {
  */
 export function isValidLongtitude(str) {
   return str >= MIN_LONGTITUDE && str <= MAX_LONGTITUDE
+}
+
+/**
+ * Check if valid provider weight
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidProviderWeight(str) {
+  if (!isValidFloat(str)) {
+    return false
+  }
+  const providerWeight = parseFloat(str)
+  return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
 }

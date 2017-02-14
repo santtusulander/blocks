@@ -14,6 +14,8 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 
+import { buildReduxId } from '../../../redux/util'
+
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
@@ -209,7 +211,7 @@ NetworkFormContainer.defaultProps = {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
+  const network = ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId))
   const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
   const edit = !!ownProps.networkId
 

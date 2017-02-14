@@ -1,7 +1,6 @@
 // Side Panels
 // ===========
 $side-panel-width: rem(636px);
-$side-panel-small-display-margin: rem(12px);
 $side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
@@ -34,9 +33,6 @@ $side-panel-overlap-offset: rem(15px);
 
   .modal-content {
     height: 100vh;
-    @include sm {
-      margin-left: $side-panel-small-display-margin;
-    }
   }
 
   .modal-header {
@@ -63,7 +59,7 @@ $side-panel-overlap-offset: rem(15px);
     overflow: auto;
 
     @include sm {
-      max-width: ($side-panel-width - $side-panel-small-display-margin);
+      max-width: $side-panel-width;
     }
   }
 
@@ -87,7 +83,7 @@ $side-panel-overlap-offset: rem(15px);
     }
 
     @include sm {
-      max-width: ($side-panel-width - $side-panel-small-display-margin);
+      max-width: $side-panel-width;
     }
 
     &__text {
@@ -128,7 +124,7 @@ $side-panel-overlap-offset: rem(15px);
       background: $dt-side-panel-bg-color;
 
       @include sm {
-        max-width: ($side-panel-width - $side-panel-small-display-margin);
+        max-width: $side-panel-width;
       }
     }
   }

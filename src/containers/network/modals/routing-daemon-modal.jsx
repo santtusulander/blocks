@@ -36,6 +36,7 @@ class RoutingDaemonFormContainer extends React.Component {
         show={show}
         title={intl.formatMessage({ id: formTitle })}
         cancel={onCancel}
+        overlapping={true}
       >
       <RoutingDaemonForm
         initialValues={initialValues}

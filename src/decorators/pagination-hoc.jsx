@@ -211,6 +211,8 @@ export const withPagination = (WrappedComponent, config = {}) => {
      * @param nextProps {object}
      */
     componentWillReceiveProps(nextProps) {
+      if (nextProps.isPristine) return;
+
       const queryParams = this.getQueryParams(nextProps);
       const diff = !fromJS(queryParams).equals(fromJS(this.getQueryParams(this.props)));
 
@@ -295,6 +297,8 @@ export const withPagination = (WrappedComponent, config = {}) => {
       if (!filter_by || !filter_value) {
         filter_by = null;
         filter_value = null;
+      } else {
+        offset = 0;
       }
 
       if (!sort_by || !sort_order) {
@@ -319,8 +323,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
       } = this.props;
 
       const paging = {
-        activePage,
-        offset,
+        activePage, offset, page_size,
         items: WithPagination.getPaginationItemsCount(total, page_size),
         onActivePageChange: this.activePageSubscription,
         onTotalChange: this.totalSubscription
@@ -338,11 +341,10 @@ export const withPagination = (WrappedComponent, config = {}) => {
       };
 
       const pagination = {
-        filtering,
-        paging,
-        sorting,
+        filtering, paging, sorting,
         getQueryParams: this.getQueryParams,
-        registerSubscriber: this.paginationSubscribers.get('register')
+        registerSubscriber: this.paginationSubscribers.get('register'),
+        resetPagination: this.resetPaginationState
       };
 
       return (<WrappedComponent {...{pagination}} {...passThroughProps} />);

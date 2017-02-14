@@ -2,9 +2,14 @@ import React, { PropTypes } from 'react'
 import Immutable from 'immutable'
 import classNames from 'classnames'
 
+import LoadingSpinner from '../loading-spinner/loading-spinner'
 import { AccountManagementHeader } from '../account-management/account-management-header'
 import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
+
+const numericStatusToStringStatus = n => (
+  n === 1 ? 'provisioning' : n === 2 ? 'disabled' : n === 3 ? 'enabled' : n === 4 ? 'destroying' : null
+)
 
 class EntityList extends React.Component {
   constructor(props) {
@@ -18,6 +23,9 @@ class EntityList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if(this.props.disableButtons !== nextProps.disableButtons){
+      return true
+    }
     if (!Immutable.is(nextProps.entities, this.props.entities)) {
       return true
     } else if (nextProps.selectedEntityId !== this.props.selectedEntityId) {
@@ -25,6 +33,10 @@ class EntityList extends React.Component {
     } else if (nextProps.starburstData !== this.props.starburstData) {
       return true
     } else if (nextProps.nextEntityList) {
+      return true
+    } else if (nextProps.fetching !== this.props.fetching) {
+      return true
+    } else if (nextProps.isParentSelected !== this.props.isParentSelected) {
       return true
     }
 
@@ -48,7 +60,7 @@ class EntityList extends React.Component {
    */
   renderConnectorLine() {
     // Check if this entity list has an active item
-    if (this.hasActiveItems()) {
+    if (this.hasActiveItems() && !this.props.fetching) {
       // We're modifying DOM elements, so we need to get the correct nodes from entity list
       const childNodes = [...this.entityListItems.childNodes]
       const { nextEntityList } = this.props
@@ -131,27 +143,32 @@ class EntityList extends React.Component {
       itemsPerColumn,
       showAsStarbursts,
       entityIdKey,
-      entityNameKey,
       starburstData,
       params,
+      noDataText,
       entities,
+      contentTextGenerator,
+      titleGenerator,
       isAllowedToConfigure
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
         const entityId = entity.get(entityIdKey)
-        const entityName = entity.get(entityNameKey)
+        const entityName = titleGenerator(entity)
         const isActive = String(selectedEntityId) === String(entity.get(entityIdKey))
+        const status = numericStatusToStringStatus(entity.get('status'))
+        const contentText = contentTextGenerator(entity)
 
         let content = (
           <NetworkItem
             key={entityId}
             onEdit={() => editEntity(entityId)}
-            title={entityName}
+            title={entityName.toUpperCase()}
             active={isActive}
+            content={contentText}
             onSelect={() => selectEntity(entityId)}
             onDelet={() => deleteEntity(entityId)}
-            status="enabled"
+            status={status}
             extraClassName="entity-list-item"
             isAllowedToConfigure={isAllowedToConfigure}
             />
@@ -175,7 +192,7 @@ class EntityList extends React.Component {
                 chartWidth={starburstData.chartWidth}
                 barMaxHeight={starburstData.barMaxHeight}
                 name={entityName}
-                id={`${starburstData.type}-${entityId}}`}
+                id={`${starburstData.type}-${entityId}`}
                 dailyTraffic={dailyTraffic.get('detail').reverse()}
                 primaryData={contentMetrics.get('traffic')}
                 secondaryData={contentMetrics.get('historical_traffic')}
@@ -222,6 +239,8 @@ class EntityList extends React.Component {
       }
 
       return content
+    } else if (this.props.isParentSelected) {
+      return noDataText
     }
   }
 
@@ -291,13 +310,13 @@ class EntityList extends React.Component {
       disableButtons,
       title,
       multiColumn,
-      showButtons
+      showButtons,
+      fetching
     } = this.props
 
     const entityListClasses = classNames('network-entity-list-items', {
       'multi-column': multiColumn
     })
-
     return (
       <div ref={ref => this.entityList = ref} className="network-entity-list">
         {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
@@ -308,8 +327,8 @@ class EntityList extends React.Component {
           disableButtons={disableButtons}
         />
 
-      <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
-          {this.renderListItems()}
+        <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+          {fetching ? <LoadingSpinner/> : this.renderListItems()}
         </div>
       </div>
     )
@@ -319,17 +338,20 @@ class EntityList extends React.Component {
 EntityList.displayName = 'EntityList'
 EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
+  contentTextGenerator: PropTypes.func,
   creationPermission: PropTypes.string,
   deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
   entityIdKey: PropTypes.string,
-  entityNameKey: PropTypes.string,
+  fetching: PropTypes.bool,
   isAllowedToConfigure: PropTypes.bool,
+  isParentSelected: PropTypes.bool,
   itemsPerColumn: PropTypes.number,
   multiColumn: PropTypes.bool,
   nextEntityList: PropTypes.object,
+  noDataText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   numOfColumns: PropTypes.number,
   params: PropTypes.object,
   selectEntity: PropTypes.func,
@@ -337,13 +359,13 @@ EntityList.propTypes = {
   showAsStarbursts: PropTypes.bool,
   showButtons: PropTypes.bool,
   starburstData: PropTypes.object,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  titleGenerator: PropTypes.func
 }
 EntityList.defaultProps = {
   disableButtons: false,
   entities: Immutable.List(),
   entityIdKey: 'id',
-  entityNameKey: 'name',
   isAllowedToConfigure: false,
   showButtons: true,
   starburstData: {
@@ -351,7 +373,9 @@ EntityList.defaultProps = {
     contentMetrics: Immutable.List(),
     barMaxHeight: '30',
     chartWidth: '350'
-  }
+  },
+  contentTextGenerator: () => '',
+  titleGenerator: entity => entity.get('name')
 }
 
 export default EntityList

@@ -190,220 +190,232 @@ class AnalysisVisitors extends React.Component {
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byCountry.text"/>} />
         <SectionContainer>
-          <table className="table table-striped table-analysis">
-            <thead>
-              <tr>
-                <TableSorter {...countrySorterProps} column="name">
-                  Country
-                </TableSorter>
-                <TableSorter {...countrySorterProps} column="total">
-                  Total Visitors
-                </TableSorter>
-                <TableSorter {...countrySorterProps} column="percent_total">
-                  % of Visitors
-                </TableSorter>
-                <th className="text-center">Period Trend</th>
-                {/* Hide in 0.8 UDNP-1109
-                <TableSorter {...countrySorterProps} column="change" sortFunc="trending">
-                  Change
-                </TableSorter>
-                */}
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.fetching ?
-                <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
-                sortedCountries.map((country, i) => {
-                  const countryData = country.get('detail').map(datapoint => {
-                    return datapoint.set(
-                      'timestamp',
-                      moment(datapoint.get('timestamp'), 'X').toDate()
+          {sortedCountries.size ?
+            <table className="table table-striped table-analysis">
+              <thead>
+                <tr>
+                  <TableSorter {...countrySorterProps} column="name">
+                    Country
+                  </TableSorter>
+                  <TableSorter {...countrySorterProps} column="total">
+                    Total Visitors
+                  </TableSorter>
+                  <TableSorter {...countrySorterProps} column="percent_total">
+                    % of Visitors
+                  </TableSorter>
+                  <th className="text-center">Period Trend</th>
+                  {/* Hide in 0.8 UDNP-1109
+                  <TableSorter {...countrySorterProps} column="change" sortFunc="trending">
+                    Change
+                  </TableSorter>
+                  */}
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.fetching ?
+                  <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
+                  sortedCountries.map((country, i) => {
+                    const countryData = country.get('detail').map(datapoint => {
+                      return datapoint.set(
+                        'timestamp',
+                        moment(datapoint.get('timestamp'), 'X').toDate()
+                      )
+                    })
+                    const datasets = []
+                    if(countryData.size) {
+                      datasets.push({
+                        area: false,
+                        color: paleblue,
+                        comparisonData: false,
+                        data: countryData.toJS(),
+                        id: '',
+                        label: '',
+                        line: true,
+                        stackedAgainst: false,
+                        xAxisFormatter: false
+                      })
+                    }
+                    return (
+                      <tr key={i}>
+                        <td>{country.get('name')}</td>
+                        <td>{numeral(country.get('total')).format('0,0')}</td>
+                        <td>{numeral(country.get('percent_total')).format('0,0.0%')}</td>
+                        <td width={this.state.byTimeWidth / 3}>
+                          <AnalysisByTime
+                            axes={false}
+                            padding={0}
+                            area={false}
+                            dataKey='uniq_vis'
+                            dataSets={datasets}
+                            width={this.state.byTimeWidth / 3}
+                            height={50} />
+                        </td>
+                        {/* Hide in 0.8 UDNP-1109
+                        <td>{this.getTrending(country)}</td>
+                        */}
+                      </tr>
                     )
                   })
-                  const datasets = []
-                  if(countryData.size) {
-                    datasets.push({
-                      area: false,
-                      color: paleblue,
-                      comparisonData: false,
-                      data: countryData.toJS(),
-                      id: '',
-                      label: '',
-                      line: true,
-                      stackedAgainst: false,
-                      xAxisFormatter: false
-                    })
-                  }
-                  return (
-                    <tr key={i}>
-                      <td>{country.get('name')}</td>
-                      <td>{numeral(country.get('total')).format('0,0')}</td>
-                      <td>{numeral(country.get('percent_total')).format('0,0.0%')}</td>
-                      <td width={this.state.byTimeWidth / 3}>
-                        <AnalysisByTime
-                          axes={false}
-                          padding={0}
-                          area={false}
-                          dataKey='uniq_vis'
-                          dataSets={datasets}
-                          width={this.state.byTimeWidth / 3}
-                          height={50} />
-                      </td>
-                      {/* Hide in 0.8 UDNP-1109
-                      <td>{this.getTrending(country)}</td>
-                      */}
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
+                }
+              </tbody>
+            </table>
+          :
+            <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+          }
         </SectionContainer>
 
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byBrowser.text"/>} />
         <SectionContainer>
-          <table className="table table-striped table-analysis by-browser-table">
-            <thead>
-              <tr>
-                <TableSorter {...browserSorterProps} column="name">
-                  <FormattedMessage id="portal.analytics.visitors.grid.browser.header"/>
-                </TableSorter>
-                <TableSorter {...browserSorterProps} column="total">
-                  <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
-                </TableSorter>
-                <TableSorter {...browserSorterProps} column="percent_total">
-                  <FormattedMessage id="portal.analytics.visitors.grid.percentage.header"/>
-                </TableSorter>
-                <th className="text-center"><FormattedMessage id="portal.analytics.visitors.grid.periodTrend.header"/></th>
-                  {/* Hide in 0.8 UDNP-1109
-                  <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
-                    Change
+          {sortedBrowsers.size ?
+            <table className="table table-striped table-analysis by-browser-table">
+              <thead>
+                <tr>
+                  <TableSorter {...browserSorterProps} column="name">
+                    <FormattedMessage id="portal.analytics.visitors.grid.browser.header"/>
                   </TableSorter>
-                  */}
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.fetching ?
-                <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
-                sortedBrowsers.map((browser, i) => {
-                  const browserData = browser.get('detail').map(datapoint => {
-                    return datapoint.set(
-                      'timestamp',
-                      moment(datapoint.get('timestamp'), 'X').toDate()
+                  <TableSorter {...browserSorterProps} column="total">
+                    <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
+                  </TableSorter>
+                  <TableSorter {...browserSorterProps} column="percent_total">
+                    <FormattedMessage id="portal.analytics.visitors.grid.percentage.header"/>
+                  </TableSorter>
+                  <th className="text-center"><FormattedMessage id="portal.analytics.visitors.grid.periodTrend.header"/></th>
+                    {/* Hide in 0.8 UDNP-1109
+                    <TableSorter {...browserSorterProps} column="change" sortFunc="trending">
+                      Change
+                    </TableSorter>
+                    */}
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.fetching ?
+                  <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
+                  sortedBrowsers.map((browser, i) => {
+                    const browserData = browser.get('detail').map(datapoint => {
+                      return datapoint.set(
+                        'timestamp',
+                        moment(datapoint.get('timestamp'), 'X').toDate()
+                      )
+                    })
+                    const datasets = []
+                    if(browserData.size) {
+                      datasets.push({
+                        area: false,
+                        color: paleblue,
+                        comparisonData: false,
+                        data: browserData.toJS(),
+                        id: '',
+                        label: '',
+                        line: true,
+                        stackedAgainst: false,
+                        xAxisFormatter: false
+                      })
+                    }
+                    return (
+                      <tr key={i}>
+                        <td>{browser.get('name')}</td>
+                        <td>{numeral(browser.get('total')).format('0,0')}</td>
+                        <td>{numeral(browser.get('percent_total')).format('0,0.0%')}</td>
+                        <td width={this.state.byTimeWidth / 3}>
+                          <AnalysisByTime
+                            axes={false}
+                            padding={0}
+                            area={false}
+                            dataKey='uniq_vis'
+                            dataSets={datasets}
+                            width={this.state.byTimeWidth / 3}
+                            height={50} />
+                        </td>
+                        {/* Hide in 0.8 UDNP-1109
+                        <td>{this.getTrending(browser)}</td>
+                        */}
+                      </tr>
                     )
                   })
-                  const datasets = []
-                  if(browserData.size) {
-                    datasets.push({
-                      area: false,
-                      color: paleblue,
-                      comparisonData: false,
-                      data: browserData.toJS(),
-                      id: '',
-                      label: '',
-                      line: true,
-                      stackedAgainst: false,
-                      xAxisFormatter: false
-                    })
-                  }
-                  return (
-                    <tr key={i}>
-                      <td>{browser.get('name')}</td>
-                      <td>{numeral(browser.get('total')).format('0,0')}</td>
-                      <td>{numeral(browser.get('percent_total')).format('0,0.0%')}</td>
-                      <td width={this.state.byTimeWidth / 3}>
-                        <AnalysisByTime
-                          axes={false}
-                          padding={0}
-                          area={false}
-                          dataKey='uniq_vis'
-                          dataSets={datasets}
-                          width={this.state.byTimeWidth / 3}
-                          height={50} />
-                      </td>
-                      {/* Hide in 0.8 UDNP-1109
-                      <td>{this.getTrending(browser)}</td>
-                      */}
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
+                }
+              </tbody>
+            </table>
+          :
+            <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+          }
         </SectionContainer>
 
         <SectionHeader
           sectionHeaderTitle={<FormattedMessage id="portal.analytics.visitors.byOS.text"/>} />
         <SectionContainer>
-          <table className="table table-striped table-analysis by-os-table">
-            <thead>
-              <tr>
-                <TableSorter {...OSSorterProps} column="name">
-                  <FormattedMessage id="portal.analytics.visitors.grid.os.header"/>
-                </TableSorter>
-                <TableSorter {...OSSorterProps} column="total">
-                  <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
-                </TableSorter>
-                <TableSorter {...OSSorterProps} column="percent_total">
-                  % of Visitors
-                </TableSorter>
-                <th className="text-center">Period Trend</th>
-                  {/* Hide in 0.8 UDNP-1109
-                  <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
-                    Change
+          {sortedOS.size ?
+            <table className="table table-striped table-analysis by-os-table">
+              <thead>
+                <tr>
+                  <TableSorter {...OSSorterProps} column="name">
+                    <FormattedMessage id="portal.analytics.visitors.grid.os.header"/>
                   </TableSorter>
-                  */}
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.fetching ?
-                <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
-                sortedOS.map((os, i) => {
-                  const osData = os.get('detail').map(datapoint => {
-                    return datapoint.set(
-                      'timestamp',
-                      moment(datapoint.get('timestamp'), 'X').toDate()
+                  <TableSorter {...OSSorterProps} column="total">
+                    <FormattedMessage id="portal.analytics.visitors.grid.totalVisitors.header"/>
+                  </TableSorter>
+                  <TableSorter {...OSSorterProps} column="percent_total">
+                    % of Visitors
+                  </TableSorter>
+                  <th className="text-center">Period Trend</th>
+                    {/* Hide in 0.8 UDNP-1109
+                    <TableSorter {...OSSorterProps} column="change" sortFunc="trending">
+                      Change
+                    </TableSorter>
+                    */}
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.fetching ?
+                  <tr><td colSpan="5"><FormattedMessage id="portal.loading.text"/></td></tr> :
+                  sortedOS.map((os, i) => {
+                    const osData = os.get('detail').map(datapoint => {
+                      return datapoint.set(
+                        'timestamp',
+                        moment(datapoint.get('timestamp'), 'X').toDate()
+                      )
+                    })
+                    const datasets = []
+                    if(osData.size) {
+                      datasets.push({
+                        area: false,
+                        color: paleblue,
+                        comparisonData: false,
+                        data: osData.toJS(),
+                        id: '',
+                        label: '',
+                        line: true,
+                        stackedAgainst: false,
+                        xAxisFormatter: false
+                      })
+                    }
+                    return (
+                      <tr key={i}>
+                        <td>{os.get('name')}</td>
+                        <td>{numeral(os.get('total')).format('0,0')}</td>
+                        <td>{numeral(os.get('percent_total')).format('0,0.0%')}</td>
+                        <td width={this.state.byTimeWidth / 3}>
+                          <AnalysisByTime
+                            axes={false}
+                            padding={0}
+                            area={false}
+                            dataKey='uniq_vis'
+                            dataSets={datasets}
+                            width={this.state.byTimeWidth / 3}
+                            height={50} />
+                        </td>
+                        {/* Hide in 0.8 UDNP-1109
+                        <td>{this.getTrending(os)}</td>
+                        */}
+                      </tr>
                     )
                   })
-                  const datasets = []
-                  if(osData.size) {
-                    datasets.push({
-                      area: false,
-                      color: paleblue,
-                      comparisonData: false,
-                      data: osData.toJS(),
-                      id: '',
-                      label: '',
-                      line: true,
-                      stackedAgainst: false,
-                      xAxisFormatter: false
-                    })
-                  }
-                  return (
-                    <tr key={i}>
-                      <td>{os.get('name')}</td>
-                      <td>{numeral(os.get('total')).format('0,0')}</td>
-                      <td>{numeral(os.get('percent_total')).format('0,0.0%')}</td>
-                      <td width={this.state.byTimeWidth / 3}>
-                        <AnalysisByTime
-                          axes={false}
-                          padding={0}
-                          area={false}
-                          dataKey='uniq_vis'
-                          dataSets={datasets}
-                          width={this.state.byTimeWidth / 3}
-                          height={50} />
-                      </td>
-                      {/* Hide in 0.8 UDNP-1109
-                      <td>{this.getTrending(os)}</td>
-                      */}
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
+                }
+              </tbody>
+            </table>
+          :
+            <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+          }
         </SectionContainer>
       </div>
     )

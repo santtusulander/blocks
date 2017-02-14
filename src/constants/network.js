@@ -35,7 +35,7 @@ export const NODE_ENVIRONMENT_OPTIONS = [
   { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
   { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
   { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'production', cacheValue: 'cdx-prod', label: 'Production' }
+  { value: 'production', cacheValue: 'cdx', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [
@@ -67,7 +67,26 @@ export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
   { key: 2, label: 'Footprints'}
 ])
 
+export const LBMETHOD_OPTIONS = [
+  {value: 'gslb', label: 'portal.network.podForm.lb_method.options.gslb.label'}
+]
+
+export const POD_TYPE_OPTIONS = [
+  {value: 'core', label: 'portal.network.podForm.pod_type.options.core.label'},
+  {value: 'sp_edge', label: 'portal.network.podForm.pod_type.options.sp_edge.label'}
+]
+
+export const REQUEST_FWD_TYPE_OPTIONS = [
+  {value: 'gslb_referral', label: 'portal.network.podForm.requestForwardType.options.gslb_referral.label'}
+]
+
+export const DISCOVERY_METHOD_OPTIONS = [
+  {value: 'BGP', label: 'portal.network.podForm.discoveryMethod.options.bgp.label'},
+  {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
+]
+
 export const POD_PROVIDER_WEIGHT_MIN = 0
+export const POD_PROVIDER_WEIGHT_MAX = 1
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999
 
