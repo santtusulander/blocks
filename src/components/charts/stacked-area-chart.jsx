@@ -4,7 +4,7 @@ import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} fro
 import d3 from 'd3'
 import { orderBy } from 'lodash'
 import AreaTooltip from './area-tooltip'
-import CustomLegend from './bar-chart-legend'
+import CustomLegend from './custom-legend'
 import StackAreaCustomTick from './stacked-area-chart-tick.js'
 
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
