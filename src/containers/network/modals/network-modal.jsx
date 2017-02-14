@@ -14,6 +14,8 @@ import { getById as getAccountById } from '../../../redux/modules/entities/accou
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
 
+import { buildReduxId } from '../../../redux/util'
+
 import SidePanel from '../../../components/side-panel'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
@@ -107,8 +109,13 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
+        // Unselect network item
+        if (this.props.selectedEntityId == networkId) {
+          this.props.handleSelectedEntity(networkId)
+        }
+
         // Close modal
-        this.props.onCancel();
+        this.props.onCancel()
       })
   }
 
@@ -159,6 +166,7 @@ NetworkFormContainer.propTypes = {
   fetchPops: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
@@ -166,7 +174,8 @@ NetworkFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
-  pops: PropTypes.instanceOf(List)
+  pops: PropTypes.instanceOf(List),
+  selectedEntityId: PropTypes.string
 }
 
 NetworkFormContainer.defaultProps = {
@@ -178,7 +187,7 @@ NetworkFormContainer.defaultProps = {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const network = ownProps.networkId && getNetworkById(state, ownProps.networkId)
+  const network = ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId))
   const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
   const edit = !!ownProps.networkId
 

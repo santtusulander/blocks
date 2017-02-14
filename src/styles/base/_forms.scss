@@ -15,10 +15,33 @@ $number-input-btn-width: $btn-height / 2;
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
 label {
-  margin-bottom: 0;
+  margin-bottom: 10px;
   font-size: rem(18px);
   font-weight: 700;
   line-height: 1;
+}
+
+.dark-theme {
+  input[disabled] {
+    background-color: rgba($black, 0.1);
+    user-select: none;
+
+    &:active {
+      color: $dt-text-color;
+      box-shadow: none;
+    }
+  }
+}
+
+.light-theme {
+  input[disabled] {
+    color: rgba($lt-text-color, 0.2);
+    user-select: none;
+
+    &:active {
+      box-shadow: 0 0 0 1px rgba($black, 0.1);
+    }
+  }
 }
 
 .form-control {
@@ -556,18 +579,3 @@ textarea {
     }
   }
 }
-
-// Routing Daemon Form
-// =====
-.routing-daemon__form {
-  .input-group-addon {
-    .dark-theme & {
-      padding: 0;
-      background-color: rgba($black, 0.2);
-    }
-    .light-theme & {
-      background-color: $white;
-    }
-  }
-}
-

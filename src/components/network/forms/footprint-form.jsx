@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, ButtonToolbar, FormGroup, ControlLabel } from 'react-bootstrap'
+import { Button, ControlLabel } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import FieldRadio from '../../form/field-radio'
@@ -25,7 +25,7 @@ const validateASNToken = (item) => {
   return item.label && isValidASN(item.label)
 }
 
-const validate = ({ name, description, data_type, value, udn_type }) => {
+const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist, udn_type }) => {
 
   const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
 
@@ -42,15 +42,15 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
     }
   }
 
-  if (data_type === 'ipv4cidr' && value.length > 0) {
+  if (data_type === 'ipv4cidr' && value_ipv4cidr && value_ipv4cidr.length > 0) {
     let hasInvalidCIDRItems = false
-    value.forEach((cidrItem) => {
+    value_ipv4cidr.forEach((cidrItem) => {
       if (!validateCIDRToken(cidrItem)) {
         hasInvalidCIDRItems = true
       }
     })
 
-    conditions.value = [
+    conditions.value_ipv4cidr = [
       {
         condition: hasInvalidCIDRItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.CIRD.invalid.text"/>
@@ -58,15 +58,15 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
     ]
   }
 
-  if (data_type === 'asnlist' && value.length > 0) {
+  if (data_type === 'asnlist' && value_asnlist && value_asnlist.length > 0) {
     let hasInvalidASNItems = false
-    value.forEach((asnItem) => {
+    value_asnlist.forEach((asnItem) => {
       if (!validateASNToken(asnItem)) {
         hasInvalidASNItems = true
       }
     })
 
-    conditions.value = [
+    conditions.value_asnlist = [
       {
         condition: hasInvalidASNItems,
         errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
@@ -75,12 +75,12 @@ const validate = ({ name, description, data_type, value, udn_type }) => {
   }
 
   return checkForErrors(
-    { name, description, data_type, value, udn_type },
+    { name, description, data_type, udn_type, value_ipv4cidr, value_asnlist },
     conditions,
     {
       name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
       description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
-      value: <FormattedMessage id={valueValidationTranslationId}/>
+      [`value_${data_type}`]: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
 }
@@ -89,15 +89,10 @@ class FootprintForm extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
-  }
-
-  onSubmit(values) {
-    this.props.onSubmit(values)
   }
 
   renderDropZone() {
-    // TODO: DropZone component
+    /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
     return (
       <p>DropZone component here</p>
     )
@@ -113,7 +108,7 @@ class FootprintForm extends React.Component {
       intl,
       invalid,
       onCancel,
-      onDelete,
+      onSave,
       submitting,
       udnTypeOptions
     } = this.props
@@ -125,82 +120,75 @@ class FootprintForm extends React.Component {
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-footprint-form" onSubmit={handleSubmit(onSave)}>
           <span className='submit-error'>
           {this.props.error}
           </span>
 
-        <FormGroup>
-          <Field
-            name="addFootprintMethod"
-            type="radio"
-            value="manual"
-            component={FieldRadio}
-            label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
-          />
+        {/* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */}
+        {/* <Field
+          name="addFootprintMethod"
+          type="radio"
+          value="manual"
+          component={FieldRadio}
+          label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
+        />
 
-          <Field
-            name="addFootprintMethod"
-            type="radio"
-            value="addfile"
-            component={FieldRadio}
-            label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
-          />
-        </FormGroup>
+        <Field
+          name="addFootprintMethod"
+          type="radio"
+          value="addfile"
+          component={FieldRadio}
+          label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
+        /> */}
 
         { addManual === 'manual' &&
         <div>
-          <FormGroup>
-            <Field
-              type="text"
-              name="name"
-              placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
-            />
+          <Field
+            type="text"
+            name="name"
+            placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.name.placeholder.text' })}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.network.footprintForm.name.title.text"/>}
+          />
 
-            <Field
-              name="description"
-              type="text"
-              placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
-              component={FieldFormGroup}
-              label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
-            />
-          </FormGroup>
+          <Field
+            name="description"
+            type="text"
+            placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
+          />
 
-          <FormGroup>
+          <ControlLabel>
+            <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
+          </ControlLabel>
 
-            <ControlLabel>
-              <FormattedMessage id="portal.network.footprintForm.dataType.title.text"/>*
-            </ControlLabel>
+          <Field
+            name="data_type"
+            type="radio"
+            value="ipv4cidr"
+            component={FieldRadio}
+            label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
+          />
 
-            <Field
-              name="data_type"
-              type="radio"
-              value="ipv4cidr"
-              component={FieldRadio}
-              label={<FormattedMessage id="portal.network.footprintForm.dataType.option.cidr.text"/>}
-            />
+          <Field
+            type="radio"
+            name="data_type"
+            value="asnlist"
+            component={FieldRadio}
+            label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
+          />
 
-            <Field
-              type="radio"
-              name="data_type"
-              value="asnlist"
-              component={FieldRadio}
-              label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
-            />
-
-            <Field
-              required={true}
-              name="value"
-              allowNew={true}
-              component={FieldFormGroupTypeahead}
-              multiple={true}
-              options={[]}
-              validation={typeaheadValidationMethod}
-            />
-
-          </FormGroup>
+          <Field
+            required={true}
+            name={`value_${dataType}`}
+            allowNew={true}
+            component={FieldFormGroupTypeahead}
+            multiple={true}
+            options={[]}
+            validation={typeaheadValidationMethod}
+          />
 
           <Field
             name="udn_type"
@@ -214,22 +202,7 @@ class FootprintForm extends React.Component {
 
         { addManual !== 'manual' && this.renderDropZone()}
 
-        <FormFooterButtons autoAlign={false}>
-          { editing &&
-          <ButtonToolbar className="pull-left">
-            <Button
-              id="delete-btn"
-              className="btn-danger"
-              disabled={submitting || fetching}
-              onClick={onDelete}>
-              {
-                fetching
-                  ? <FormattedMessage id="portal.button.deleting"/>
-                  : <FormattedMessage id="portal.button.delete"/>
-              }
-            </Button>
-          </ButtonToolbar>
-          }
+        <FormFooterButtons>
           <Button
             id="cancel-btn"
             className="btn-secondary"
@@ -240,7 +213,7 @@ class FootprintForm extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting}>
+            disabled={invalid || submitting || fetching}>
             {submitButtonLabel}
           </Button>
         </FormFooterButtons>
@@ -268,16 +241,16 @@ const form = reduxForm({
   validate
 })(FootprintForm)
 
-const selector = formValueSelector('footprintForm')
-
 const mapStateToProps = (state) => {
-  const addManual = selector(state, 'addFootprintMethod')
+  const selector = formValueSelector('footprintForm')
+  /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
+  // const addManual = selector(state, 'addFootprintMethod')
+  const addManual = 'manual'
   const dataType = selector(state, 'data_type')
 
   return {
     addManual,
-    dataType,
-    selector
+    dataType
   }
 }
 

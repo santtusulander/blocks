@@ -8,6 +8,11 @@ import { Button } from 'react-bootstrap'
 
 import { getRoute } from '../../util/routes'
 
+import {
+  accountIsServiceProviderType,
+  accountIsContentProviderType
+} from '../../util/helpers'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -475,9 +480,13 @@ export class AccountManagement extends Component {
           id="group-form"
           params={this.props.params}
           groupId={this.state.groupToUpdate}
-          onSave={(id, data, addUsers, deleteUsers) => this.editGroupInActiveAccount(id, data, addUsers, deleteUsers)}
+          onSave={({groupId, data, addUsers, deleteUsers}) => this.editGroupInActiveAccount(groupId, data, addUsers, deleteUsers)}
+          onDelete={(group) => this.showDeleteGroupModal(group)}
           onCancel={() => this.toggleEditGroupModal()}
           show={true}
+          canEditBilling={accountIsContentProviderType(this.props.activeAccount)}
+          canSeeBilling={accountIsContentProviderType(this.props.activeAccount)}
+          canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
         />}
       </Content>
     )

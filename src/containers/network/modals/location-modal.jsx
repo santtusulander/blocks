@@ -1,10 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { SubmissionError } from 'redux-form'
+import { SubmissionError, formValueSelector } from 'redux-form'
 
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getById as getLocationById } from '../../../redux/modules/entities/locations/selectors'
+
+import { isValidLatitude, isValidLongtitude } from '../../../util/validators'
+import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
@@ -16,6 +19,20 @@ class NetworkLocationFormContainer extends Component {
   constructor(props) {
     super(props)
 
+    const { intl } = this.props
+
+    this.state = {
+      isFetchingLocation: false,
+      addressLine: intl.formatMessage({ id: 'portal.network.locationForm.latLongFields.helperTextHint.address' }),
+      latLng: {
+        latitude: null,
+        longitude: null
+      }
+    }
+
+    this.fetchLocation = this.fetchLocation.bind(this)
+    this.askForFetchLocation = this.askForFetchLocation.bind(this)
+    this.shouldFetchLocation = this.shouldFetchLocation.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.onDelete = this.onDelete.bind(this)
   }
@@ -24,15 +41,68 @@ class NetworkLocationFormContainer extends Component {
     this.props.fetchIataCodes()
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { initialValues } = nextProps
+    const edit = !!initialValues.name
+
+    if (edit && initialValues.latitude && initialValues.longitude) {
+      this.setState({
+        latLng: {
+          latitude: initialValues.latitude,
+          longitude: initialValues.longitude
+        }
+      }, () => this.fetchLocation())
+    }
+  }
+
+  askForFetchLocation() {
+    if (this.shouldFetchLocation()) {
+      this.setState({
+        isFetchingLocation: true,
+        latLng: this.props.latLng
+      }, () => this.fetchLocation())
+    }
+  }
+
+  shouldFetchLocation() {
+    const latLngProps = this.props.latLng
+    const latLngState = this.state.latLng
+    return !!latLngProps.latitude && !!latLngProps.longitude &&
+      isValidLatitude(latLngProps.latitude) &&
+      isValidLongtitude(latLngProps.longitude) &&
+      (
+        parseFloat(latLngProps.latitude) !== parseFloat(latLngState.latitude) ||
+        parseFloat(latLngProps.longitude) !== parseFloat(latLngState.longitude)
+      )
+  }
+
+  fetchLocation() {
+    const { latLng } = this.state
+    locationReverseGeoCodingLookup(latLng.longitude, latLng.latitude)
+      .then(({ features }) => {
+        this.setState({
+          addressLine: features[0].place_name,
+          isFetchingLocation: false
+        })
+      })
+      .catch(() => {
+        this.setState({
+          addressLine: <FormattedMessage id="portal.network.locationForm.latLongFields.addressNotFound"/>,
+          isFetchingLocation: false
+        })
+      })
+  }
+
   onSubmit(edit, values) {
-    const { brand, account, group } = this.props.params
+    const { brand, account } = this.props.params
+    const group = this.props.groupId
     const data = {
       brand_id: brand,
       account_id: Number(account),
       group_id: Number(group),
       cloud_name: values.cloudName,
       cloud_provider: values.cloudProvider || undefined,
-      cloud_region: values.cloudRegion || undefined,
+      cloud_region: values.cloudProviderRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
       country_code: values.countryCode || '',
       state: values.state || '',
@@ -46,7 +116,7 @@ class NetworkLocationFormContainer extends Component {
 
     const params = {
       brand: brand,
-      group: group,
+      group: String(group),
       account: account,
       payload: data
     }
@@ -70,7 +140,8 @@ class NetworkLocationFormContainer extends Component {
   }
 
   onDelete(locationId) {
-    const { brand, account, group } = this.props.params
+    const { brand, account } = this.props.params
+    const group = this.props.groupId
 
     const params = {
       brand: brand,
@@ -93,7 +164,6 @@ class NetworkLocationFormContainer extends Component {
       intl,
       cloudProvidersOptions,
       cloudProvidersIdOptions,
-      addressFetching,
       onCancel,
       iataCodes,
       invalid,
@@ -101,6 +171,7 @@ class NetworkLocationFormContainer extends Component {
       show
     } = this.props;
 
+    const { isFetchingLocation } = this.state
     const edit = !!initialValues.name
 
     const title = edit
@@ -116,12 +187,14 @@ class NetworkLocationFormContainer extends Component {
           overlapping={true}
         >
           <LocationForm
+            askForFetchLocation={this.askForFetchLocation}
+            addressLine={this.state.addressLine}
             edit={edit}
             iataCodes={iataCodes}
             initialValues={initialValues}
             cloudProvidersOptions={cloudProvidersOptions}
             cloudProvidersIdOptions={cloudProvidersIdOptions}
-            addressFetching={addressFetching}
+            isFetchingLocation={isFetchingLocation}
             intl={intl}
             invalid={invalid}
             onCancel={onCancel}
@@ -136,14 +209,15 @@ class NetworkLocationFormContainer extends Component {
 
 NetworkLocationFormContainer.displayName = 'NetworkLocationEditForm';
 NetworkLocationFormContainer.propTypes = {
-  addressFetching: PropTypes.bool,
   cloudProvidersIdOptions: PropTypes.arrayOf(PropTypes.object),
   cloudProvidersOptions: PropTypes.arrayOf(PropTypes.object),
   fetchIataCodes: PropTypes.func,
+  groupId: PropTypes.number,
   iataCodes: PropTypes.array,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  latLng: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -180,13 +254,20 @@ const cloudProvidersIdOptions = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+
+  const selector = formValueSelector('networkLocationForm')
   let values = {}
+
   if (ownProps.locationId !== null) {
-    const locationInfo = getLocationById(state)(ownProps.locationId)
-    if (locationInfo) values = locationInfo.toJS()
+
+    //locationId is already a composed reduxId
+    const locationInfo = getLocationById(state, ownProps.locationId)
+
+    values = locationInfo ? locationInfo.toJS() : []
   }
 
   return {
+    latLng: selector(state, 'latitude', 'longitude'),
     cloudProvidersOptions: cloudProvidersOptions.get(),
     cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
     iataCodes: getIataCodes(state),

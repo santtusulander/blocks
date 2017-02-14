@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
+import TruncatedTitle from '../truncated-title'
 
 import IconConfiguration from '../icons/icon-configuration'
 
-const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName }) => {
+const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, isAllowedToConfigure }) => {
 
   const handleEdit = e => {
     e.preventDefault()
@@ -28,7 +29,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
       )}
       onClick={handleSelect}>
 
-      <h4>{title}</h4>
+      <h4><TruncatedTitle className='network-item-title' content={title} /></h4>
 
       <p>{content}</p>
 
@@ -37,16 +38,16 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
           <FormattedMessage id={`portal.network.item.status.${status}`} />
         </div>
       }
-
-      <ButtonToolbar>
-        <Button
-          bsStyle="primary"
-          className="btn-icon btn-round"
-          onClick={handleEdit}>
-          <IconConfiguration />
-        </Button>
-      </ButtonToolbar>
-
+      {isAllowedToConfigure &&
+        <ButtonToolbar>
+          <Button
+            bsStyle="primary"
+            className="btn-icon btn-round"
+            onClick={handleEdit}>
+            <IconConfiguration />
+          </Button>
+        </ButtonToolbar>
+      }
     </div>
   )
 }
@@ -56,6 +57,7 @@ NetworkItem.propTypes = {
   active: PropTypes.bool,
   content: PropTypes.string,
   extraClassName: PropTypes.string,
+  isAllowedToConfigure: PropTypes.bool,
   onEdit: PropTypes.func,
   onSelect: PropTypes.func,
   status: PropTypes.string,

@@ -18,7 +18,10 @@ describe('PodForm', () => {
       props = {
         accountIsServiceProviderType: false,
         handleSubmit: jest.genMockFunction(),
-        intl: intlMaker()
+        asyncValidating: false,
+        intl: intlMaker(),
+        initialValues: {},
+        UIFootprints: []
       }
       return shallow(<PodForm {...props}/>)
     }

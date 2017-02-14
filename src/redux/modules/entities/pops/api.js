@@ -1,24 +1,21 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_NORTH } from '../../../util'
+import { pod } from '../pods/api'
+import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
-/* TODO: After FOOTPRINTS are merged, import schema from 'footprints' -module */
-const footprint = new schema.Entity('footprints')
+const pop = new schema.Entity('pops',
+  { pods: [ pod ] },
+  {
+    idAttribute: ({ group_id, network_id, id }) => buildReduxId(group_id, network_id, id),
 
-/* TODO: After POD is merged, import schema from 'pod' -module */
-const pod = new schema.Entity('pods', {
-  footprints: [ footprint ]
-}, {
-  idAttribute: (value, parent) => { return `${parent.id}-${value.pod_name}`},
-  processStrategy: (value, parent) => {
-    return { ...value, parentId: parent.id}
-  }
-})
-
-const pop = new schema.Entity('pops', {
-  pods: [ pod ]
-})
+    processStrategy: ({ group_id, network_id, ...rest }) => ({
+      parentId: buildReduxId(group_id, network_id),
+      group_id,
+      network_id,
+      ...rest
+    })
+  })
 
 const baseUrl = ({ brand, account, group, network }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`
@@ -83,7 +80,7 @@ export const update = ({ id, payload, ...baseUrlParams }) => {
  * @param  {[type]} baseUrlParams [description]
  * @return {[type]}               [description]
  */
-export const remove = ({ id, ...baseUrlParams }) => {
-  return axios.delete(`${baseUrl(baseUrlParams)}/${id}`)
-    .then(() => ({ id }))
+export const remove = ({ id, ...params }) => {
+  return axios.delete(`${baseUrl(params)}/${id}`)
+    .then(() => ({ id: buildReduxId(params.group, params.network, id) }))
 }

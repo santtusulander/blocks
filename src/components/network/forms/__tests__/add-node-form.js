@@ -75,6 +75,9 @@ describe('NetworkAddNodeForm', () => {
 
   it('should show confirmation', () => {
     subject = subject()
+    subject.setProps({
+      numNodes: 2
+    })
     subject.setState({ showAddConfirmation: true })
     // Check if cancel confirmation button exists aka confirmation is visible
     const cancelButton = subject.find('#cancel-confirm-btn')

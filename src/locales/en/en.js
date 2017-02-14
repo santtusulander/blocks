@@ -415,10 +415,10 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostname.text': 'New Host Name',
-  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostname.text': 'New Hostname',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new hostname',
   'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
-  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname value must be a valid hostname',
 
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
@@ -455,6 +455,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
   'portal.navigation.network.text': 'Network',
+  'portal.navigation.dashboard.text': 'Dashboard',
 
   'portal.security.header.text': 'SECURITY',
 
@@ -510,6 +511,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
+  'portal.accountManagement.groupCreated.text': 'Group created.',
+  'portal.accountManagement.groupDeleted.text': 'Group deleted.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
   'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',

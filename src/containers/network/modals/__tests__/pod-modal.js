@@ -5,7 +5,10 @@ jest.unmock('../pod-modal')
 import PodFormContainer from '../pod-modal'
 
 const subject = shallow(
-  <PodFormContainer />
+  <PodFormContainer
+    fetchFootprints={jest.fn()}
+    initialValues={{}}
+  />
 )
 
 describe('PodFormContainer', () => {

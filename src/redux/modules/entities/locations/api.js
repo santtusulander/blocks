@@ -10,16 +10,16 @@ const locationSchema = new schema.Entity(
   'locations',
   {},
   {
-    idAttribute: (({ account_id, group_id, id }) => buildReduxId(account_id, group_id, id)),
+    idAttribute: (({ group_id, id }) => buildReduxId(group_id, id)),
     processStrategy: value => ({
       name: value.id,
-      reduxId: buildReduxId(value.account_id, value.group_id, value.id),
+      reduxId: buildReduxId(value.group_id, value.id),
       brandId: value.brand_id,
       accountId: value.account_id,
       groupId: value.group_id,
       cloudName: value.cloud_name,
       cloudProvider: value.cloud_provider,
-      cloudRegion: value.cloud_region,
+      cloudProviderRegion: value.cloud_region,
       cloudProviderLocationId: value.cloud_location_id,
       countryCode: value.country_code,
       state: value.state,
@@ -69,4 +69,4 @@ export const update = ({ id, payload, ...baseUrlParams }) =>
 
 export const remove = ({ id, ...params }) =>
   axios.delete(`${baseUrl(params)}/${id}`)
-    .then(() => ({ id: buildReduxId(params.account, params.group, id) }))
+    .then(() => ({ id: buildReduxId(params.group, id) }))

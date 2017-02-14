@@ -1,5 +1,7 @@
 import Immutable from 'immutable'
 
+export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:m a'
+
 export const NETWORK_SCROLL_AMOUNT = 25
 export const NETWORK_WINDOW_OFFSET = 10
 
@@ -33,7 +35,7 @@ export const NODE_ENVIRONMENT_OPTIONS = [
   { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
   { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
   { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'production', cacheValue: 'cdx-prod', label: 'Production' }
+  { value: 'production', cacheValue: 'cdx', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [
@@ -66,6 +68,7 @@ export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
 ])
 
 export const POD_PROVIDER_WEIGHT_MIN = 0
+export const POD_PROVIDER_WEIGHT_MAX = 1
 export const POP_ID_MIN = 1
 export const POP_ID_MAX = 999
 

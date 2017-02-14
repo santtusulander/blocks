@@ -8,11 +8,20 @@ $height-of-the-header: #{$header-total-height} - #{$page-header-height} - #{$pag
 }
 
 .network-entities-container {
+  position: relative;
   display: flex;
   width: 100%;
-  min-height: calc(100vh - #{$height-of-the-header});
+  height: calc(100vh - #{$height-of-the-header});
   padding: $page-container-vertical-padding 0;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   flex: 1 0 auto;
+
+  .network-entities-wrapper {
+    position: absolute;
+    top: $page-container-vertical-padding;
+    right: 0;
+    left: 0;
+    display: flex;
+  }
 }

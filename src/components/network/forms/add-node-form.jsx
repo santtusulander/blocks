@@ -1,13 +1,5 @@
 import React from 'react'
-
-import {
-  Button,
-  ButtonToolbar,
-  Col,
-  FormGroup,
-  Row
-} from 'react-bootstrap'
-
+import { Button, ButtonToolbar } from 'react-bootstrap'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
@@ -86,9 +78,9 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   onSubmit(values) {
-    const { nodeNameData } = this.props
+    const { numNodes, nodeNameData } = this.props
     const { showAddConfirmation } = this.state
-    if (!showAddConfirmation) {
+    if (!showAddConfirmation && numNodes > 1) {
       this.toggleAddConfirm(true)
       return
     }
@@ -121,7 +113,7 @@ class NetworkAddNodeForm extends React.Component {
 
     if (showAddConfirmation) {
       const confirmText = <FormattedMessage id="portal.network.addNodeForm.confirmAdd" values={{numNodes}}/>
-      return (<FormFooterButtons autoAlign={false}>
+      return (<FormFooterButtons>
         <div className="modal-footer__text">{confirmText}</div>
         <ButtonToolbar className="pull-right">
           <Button
@@ -162,7 +154,7 @@ class NetworkAddNodeForm extends React.Component {
     const nodeNameProps = nodeNameData.props
 
     return (
-      <form className="add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
           {/* <Row>
@@ -177,25 +169,18 @@ class NetworkAddNodeForm extends React.Component {
             </Col>
           </Row> */}
 
-          <FormGroup>
-            <label><FormattedMessage id="portal.common.name" /></label>
-            <Row>
-              <Col sm={9}>
-                <div className="add-node-form__name-fqdn">
-                  {nodeNameProps.nodeType}<span className="add-node__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
-                </div>
-              </Col>
-              <Col sm={3}>
-                <Field
-                  type="number"
-                  name="nameCode"
-                  min={0}
-                  max={99}
-                  component={FieldFormGroupNumber}
-                />
-              </Col>
-            </Row>
-          </FormGroup>
+          <label><FormattedMessage id="portal.common.name" /></label>
+          <div className="add-node-form__name-fqdn">
+            {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
+          </div>
+
+          <Field
+            type="number"
+            name="nameCode"
+            min={0}
+            max={99}
+            component={FieldFormGroupNumber}
+          />
 
           <Field
             name="node_role"

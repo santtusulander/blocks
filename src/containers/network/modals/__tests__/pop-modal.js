@@ -1,5 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import Immutable from 'immutable'
 
 jest.unmock('../pop-modal.jsx')
 jest.genMockFromModule('react-bootstrap')
@@ -17,6 +18,8 @@ describe('PopFormContainer', () => {
   beforeEach(() => {
     subject = (edit = false) => {
       let props = {
+        group: Immutable.fromJS({ name: 'foo' }),
+        network: Immutable.fromJS({ name: 'bar' }),
         onCancel: jest.fn(),
         onSave: jest.fn(),
         onSubmit: jest.fn(),

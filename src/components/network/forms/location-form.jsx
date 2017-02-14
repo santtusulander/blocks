@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { ButtonToolbar, Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 
 import { checkForErrors } from '../../../util/helpers'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
@@ -14,20 +14,19 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
 
 import {LOCATION_NAME_MIN_LENGTH,
-        LOCATION_NAME_MAX_LENGTH,
-        CLOUD_PROVIDER_REGION_MIN_LENGTH,
-        CLOUD_PROVIDER_REGION_MAX_LENGTH,
-        CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
-        CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
-      } from '../../../constants/network.js'
+  LOCATION_NAME_MAX_LENGTH,
+  CLOUD_PROVIDER_REGION_MIN_LENGTH,
+  CLOUD_PROVIDER_REGION_MAX_LENGTH,
+  CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH,
+  CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH
+} from '../../../constants/network.js'
 
-import './styles/location-form.scss'
 
 const validate = ({
   name = '',
   iataCode,
   latitude = '',
-  longtitude = '',
+  longitude = '',
   cloudProviderRegion,
   cloudProviderLocationId = '' }) => {
   const customConditions = {
@@ -52,12 +51,12 @@ const validate = ({
         )
       }
     ],
-    longtitude: [
+    longitude: [
       {
-        condition: ! isValidLongtitude(longtitude),
+        condition: ! isValidLongtitude(longitude),
         errorText: (
           <div>
-            <FormattedMessage id='portal.network.locationForm.longtitude.invalid.error' />
+            <FormattedMessage id='portal.network.locationForm.longitude.invalid.error' />
           </div>
         )
       }
@@ -67,7 +66,7 @@ const validate = ({
         condition: !isValidTextField(cloudProviderLocationId, CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH, CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH),
         errorText: (
           <MultilineTextFieldError
-            fieldLabel={'portal.network.locationForm.name.label'}
+            fieldLabel={'portal.network.locationForm.cloudProviderLocationId.label'}
             minValue={CLOUD_PROVIDER_LOCATION_ID_MIN_LENGTH}
             maxValue={CLOUD_PROVIDER_LOCATION_ID_MAX_LENGTH}/>
         )
@@ -85,7 +84,7 @@ const validate = ({
   };
 
   const errors = checkForErrors(
-    { name, iataCode, latitude, longtitude, cloudProviderLocationId },
+    { name, iataCode, latitude, longitude, cloudProviderLocationId },
     customConditions,
     requiredTexts
   );
@@ -93,7 +92,7 @@ const validate = ({
   if (cloudProviderRegion && !isValidTextField(cloudProviderRegion, CLOUD_PROVIDER_REGION_MIN_LENGTH, CLOUD_PROVIDER_REGION_MAX_LENGTH)) {
     errors.cloudProviderRegion = (
       <MultilineTextFieldError
-        fieldLabel={'portal.network.locationForm.name.label'}
+        fieldLabel={'portal.network.locationForm.cloudProviderRegion.text'}
         minValue={CLOUD_PROVIDER_REGION_MIN_LENGTH}
         maxValue={CLOUD_PROVIDER_REGION_MAX_LENGTH}/>
     )
@@ -105,38 +104,37 @@ const validate = ({
 
 const NetworkLocationForm = (props) => {
   const {
-    addressFetching,
-    cloudProvidersOptions,
+    addressLine,
+    askForFetchLocation,
     cloudProvidersIdOptions,
+    cloudProvidersOptions,
     error,
-    submitting,
-    initialValues,
+    handleSubmit,
     iataCodes,
+    initialValues,
     intl,
     invalid,
+    isFetchingLocation,
     onCancel,
     onDelete,
-    handleSubmit
+    submitting
   } = props;
 
   const edit = !!initialValues.name
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
-                              edit ? <FormattedMessage id="portal.button.save"/> :
-                              <FormattedMessage id="portal.button.add"/>
+    edit ? <FormattedMessage id="portal.button.save"/> :
+      <FormattedMessage id="portal.button.add"/>
 
   return (
-    <form
-      className="location-form"
-      onSubmit={handleSubmit} // onSubmit={handleSubmit(onSave)}
-    >
+    <form className="sp-location-form" onSubmit={handleSubmit}>
 
-    {
-      error &&
-      <p className='has-error'>
-        <span className='help-block'>{error}</span>
-      </p>
-    }
+      {
+        error &&
+        <p className='has-error'>
+          <span className='help-block'>{error}</span>
+        </p>
+      }
 
       <Row>
         <Col md={7}>
@@ -155,7 +153,7 @@ const NetworkLocationForm = (props) => {
           <Field
             name="iataCode"
             options={iataCodes}
-            emptyLabel={<FormattedMessage id="portal.analytics.dropdownMenu.noResults" />}
+            emptyLabel={intl.formatMessage({id: 'portal.analytics.dropdownMenu.noResults'})}
             filterBy={['iata', 'city', 'country']}
             labelKey={'iata'}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
@@ -172,7 +170,9 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
-          />
+            onBlur={askForFetchLocation}
+
+        />
         </Col>
         <Col md={5}>
           <Field
@@ -181,6 +181,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
+            onBlur={askForFetchLocation}
           />
         </Col>
       </Row>
@@ -189,16 +190,20 @@ const NetworkLocationForm = (props) => {
           <div>
             <FormattedMessage id="portal.network.locationForm.latLongFields.helperText.address" />
           </div>
-          <div>
-            <FormattedMessage id="portal.network.locationForm.latLongFields.helperTextHint.address" />
-          </div>
-          { addressFetching && <LoadingSpinnerSmall /> }
+          {isFetchingLocation ?
+            <div>
+              <LoadingSpinnerSmall/>
+              <FormattedMessage id="portal.network.locationForm.latLongFields.helperTextLoading.address"/>
+            </div> :
+            <p>{addressLine}</p>
+          }
         </Col>
       </Row>
       <Row>
         <Col md={7}>
           <Field
             name="cloudName"
+            className="input-select"
             type="select"
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
@@ -210,6 +215,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="cloudProvider"
+            className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
             required={false}
@@ -242,33 +248,29 @@ const NetworkLocationForm = (props) => {
         </Col>
       </Row>
 
-      <FormFooterButtons autoAlign={false}>
+      <FormFooterButtons>
         { edit &&
-          <ButtonToolbar className="pull-left">
-            <Button
-              className="btn-danger"
-              disabled={submitting}
-              onClick={() => onDelete(initialValues.name)}
-            >
-              <FormattedMessage id="portal.button.delete"/>
-            </Button>
-          </ButtonToolbar>
+        <Button
+          className="btn-danger pull-left"
+          disabled={submitting}
+          onClick={handleSubmit(() => onDelete(initialValues.name))}
+        >
+          <FormattedMessage id="portal.button.delete"/>
+        </Button>
         }
-        <ButtonToolbar className="pull-right">
-          <Button
-            className="btn-secondary"
-            onClick={onCancel}
-          >
-            <FormattedMessage id="portal.button.cancel"/>
-          </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting}
-          >
-            {actionButtonTitle}
-          </Button>
-        </ButtonToolbar>
+        <Button
+          className="btn-secondary"
+          onClick={onCancel}
+        >
+          <FormattedMessage id="portal.button.cancel"/>
+        </Button>
+        <Button
+          type="submit"
+          bsStyle="primary"
+          disabled={invalid || submitting}
+        >
+          {actionButtonTitle}
+        </Button>
       </FormFooterButtons>
     </form>
   )};

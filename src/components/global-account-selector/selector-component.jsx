@@ -38,7 +38,7 @@ const SelectorComponent = ({
                 <span id="name" className="name">{option[1]}</span>
               </a>
               {drillable &&
-                <a className="caret-container" onClick={() => onCaretClick(option[0])} tabIndex="-1">
+                <a className="caret-container" onClick={() => onCaretClick(option[0], option[2])} tabIndex="-1">
                   <IconArrowRight />
                 </a>}
             </li>

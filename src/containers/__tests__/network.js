@@ -10,6 +10,7 @@ import Network from '../network/network.jsx'
 import routeConstants from '../../constants/routes'
 
 const mockFetchData = jest.fn()
+const mockIsFetching = jest.fn()
 const mockAccount = Map()
 const mockParams = Map()
 const mockLocation = {
@@ -22,10 +23,14 @@ const subject = () => {
       params={mockParams}
       location={mockLocation}
       account={mockAccount}
+      isFetching={mockIsFetching}
       fetchData={mockFetchData}
       fetchNetworks={jest.fn()}
       fetchLocations={jest.fn()}
       fetchPops={jest.fn()}
+      fetchPods={jest.fn()}
+      fetchNodes={jest.fn()}
+      fetchFootprints={jest.fn()}
     />
   )
 }

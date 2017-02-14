@@ -11,13 +11,19 @@
   "portal.common.search.text": "Search",
   "portal.common.button.apply": "Apply",
   "portal.common.button.none": "None",
+
+  "portal.common.loading.text": "Loading",
+
+  "portal.common.button.undo": "undo",
+  "portal.common.button.remove": "remove",
+
   "portal.common.button.delete": "Delete",
   "portal.common.date": "Date",
   "portal.common.date.created": "Created",
   "portal.common.date.updated": "Updated",
   "portal.common.value": "Value",
   "portal.common.unknown": "Unknown",
-  "portal.common.button.undo": "UNDO",
+
   "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
@@ -114,5 +120,6 @@
   "portal.common.weekdayShort.saturday": "Sa",
 
   "portal.common.typeahead.emptyLabel": "Add values by typing",
-  "portal.common.typeahead.newSelectionPrefix": "Add value: "
+  "portal.common.typeahead.newSelectionPrefix": "Add value: ",
+  "portal.common.search.no-results.text": "No results found."
 }
