@@ -7,10 +7,18 @@
       margin-right: 1px;
       font-size: 15px;
       color: $white;
-      background-color: $dark-paginator;
       border: 0;
-      border-right: 1px solid $dark-paginator-border;
       border-radius: 0;
+
+      .dark-theme & {
+        background-color: $dark-paginator;
+        border-right: 1px solid $dark-paginator-border;
+      }
+
+      .light-theme & {
+        background-color: rgba($pale-blue, 0.5);
+        border-right: 1px solid $white;
+      }
 
       span[aria-label='First'],
       span[aria-label='Last'] {
@@ -21,9 +29,9 @@
     &:last-child > a {
       border-right: 0;
     }
-  }
 
-  .active > a {
-    background-color: $pale-blue;
+    &.active > a {
+      background-color: $pale-blue;
+    }
   }
 }
