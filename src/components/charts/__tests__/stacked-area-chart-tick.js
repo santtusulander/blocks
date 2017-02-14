@@ -1,13 +1,13 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../stacked-area-chart-tick.js')
-import CustomTick from '../stacked-area-chart-tick'
+jest.unmock('../stacked-area-chart-tick')
+import StackAreaCustomTick from '../stacked-area-chart-tick'
 
 jest.mock('../../../util/helpers', () => ({ formatBitsPerSecond: bits_per_second => bits_per_second }))
 
 const subject = shallow(
-  <CustomTick
+  <StackAreaCustomTick
     payload={
       [{
         coordinate : "489",
