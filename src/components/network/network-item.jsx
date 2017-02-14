@@ -31,7 +31,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
 
       <h4><TruncatedTitle className='network-item-title' content={title} /></h4>
 
-      <p>{content}</p>
+      <TruncatedTitle className='network-item-content' content={content} />
 
       {status &&
         <div className={`status-indicator ${status}`}>
