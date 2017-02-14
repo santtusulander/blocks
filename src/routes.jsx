@@ -161,7 +161,11 @@ const AccountIsSP = UserAuthWrapper({
   authenticatingSelector: (state) => state.account.get('fetching'),
   wrapperDisplayName: 'AccountIsSP',
   predicate: (account) => {
-    return (account && accountIsServiceProviderType(account))
+    if(!account) {
+      return true
+    } else {
+      return accountIsServiceProviderType(account)
+    }
   },
   failureRedirectPath: (state, ownProps) => {
     const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/network\//, 'i'), '/content/')
@@ -183,8 +187,12 @@ const AccountIsCP = UserAuthWrapper({
   },
   authenticatingSelector: (state) => state.account.get('fetching'),
   wrapperDisplayName: 'AccountIsCP',
-  predicate: ({account, accountId}) => {
-    return (account && accountIsContentProviderType(account)) || !accountId
+  predicate: ({account}) => {
+    if(!account) {
+      return true
+    } else {
+      return accountIsContentProviderType(account)
+    }
   },
   failureRedirectPath: (state, ownProps) => {
     const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
@@ -263,7 +271,7 @@ export const getRoutes = store => {
         {/* Network / SP Accounts - routes */}
         <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
-          <Route component={(ContentTransition)}>
+          <Route component={ContentTransition}>
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
