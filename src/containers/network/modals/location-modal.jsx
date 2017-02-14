@@ -15,6 +15,7 @@ import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selecto
 import SidePanel from '../../../components/side-panel'
 import LocationForm from '../../../components/network/forms/location-form'
 
+import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
 class NetworkLocationFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -226,33 +227,6 @@ NetworkLocationFormContainer.propTypes = {
   show: PropTypes.bool
 };
 
-const cloudProvidersOptions = {
-  get() {
-    return [
-      {
-        value: 'Bare Metal',
-        label: 'Bare Metal'
-      }
-    ]
-  }
-};
-const cloudProvidersIdOptions = {
-  get() {
-    return [
-      {
-        value: 'sl',
-        label: 'IBM SoftLayer'
-      },{
-        value: 'do',
-        label: 'Digital Ocean'
-      },{
-        value: 'ec2',
-        label: 'Amazon EC2'
-      }
-    ]
-  }
-};
-
 const mapStateToProps = (state, ownProps) => {
 
   const selector = formValueSelector('networkLocationForm')
@@ -268,8 +242,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     latLng: selector(state, 'latitude', 'longitude'),
-    cloudProvidersOptions: cloudProvidersOptions.get(),
-    cloudProvidersIdOptions: cloudProvidersIdOptions.get(),
+    cloudProvidersOptions: LOCATION_CLOUD_PROVIDER_OPTIONS,
+    cloudProvidersIdOptions: LOCATION_CLOUD_PROVIDER_ID_OPTIONS,
     iataCodes: getIataCodes(state),
     initialValues: {
       ...values,
