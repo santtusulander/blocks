@@ -13,8 +13,8 @@ const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSe
 
   //TODO: destruct
   const ts = currentPayload && currentPayload[0] && currentPayload[0].payload && currentPayload[0].payload.timestamp
-  const compareTs = comparisonPayload && comparisonPayload[0] && comparisonPayload[0].payload && comparisonPayload[0].payload.timestamp - comparisonPayload[0].payload.timeOffset
-
+  const compareTs = comparisonPayload && comparisonPayload[0] && comparisonPayload[0].payload && comparisonPayload[0].payload.actualTime
+  
   const renderDataset = (payload, ts) => {
     const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0), true)
 
