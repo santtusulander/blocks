@@ -5,7 +5,7 @@ import d3 from 'd3'
 import { orderBy } from 'lodash'
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
-import StackAreaCustomTick from './stacked-area-chart-tick.js'
+import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
