@@ -756,7 +756,7 @@ class Network extends React.Component {
             />
 
             <EntityList
-              fetching={isFetching('pod')}
+              fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
               ref={pods => this.entityList.podList = pods}
