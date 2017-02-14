@@ -108,6 +108,7 @@ const NetworkLocationForm = (props) => {
     askForFetchLocation,
     cloudProvidersIdOptions,
     cloudProvidersOptions,
+    edit,
     error,
     handleSubmit,
     iataCodes,
@@ -119,8 +120,6 @@ const NetworkLocationForm = (props) => {
     onDelete,
     submitting
   } = props;
-
-  const edit = !!initialValues.name
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
     edit ? <FormattedMessage id="portal.button.save"/> :
