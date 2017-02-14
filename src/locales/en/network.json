@@ -28,7 +28,7 @@
   "portal.network.popEditForm.popId.validation.error.text": "POP ID is invalid",
   "portal.network.popEditForm.popId.validation.required.text": "POP ID is required",
   "portal.network.popEditForm.popId.selectLocation.text": "Please, select Location ID first.",
-  "portal.network.popEditForm.deletePop.title": "Delete Pops?",
+  "portal.network.popEditForm.deletePop.title": "Delete POP?",
   "portal.network.popEditForm.deletePop.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This pop will be removed from UDN immediately.",
 
 
@@ -101,7 +101,7 @@
   "portal.network.podForm.localAS.required.error": "Local AS is required",
   "portal.network.podForm.localAS.notFound.error": "Local AS not found",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
-  "portal.network.podForm.deletePod.title": "Delete pod?",
+  "portal.network.podForm.deletePod.title": "Delete POD?",
   "portal.network.podForm.deletePod.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This pod will be removed from UDN immediately.",
   "portal.network.podForm.ipList.label": "IP List",
   "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be an integer number",
