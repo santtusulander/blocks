@@ -95,8 +95,8 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
         key={i}
         isAnimationActive={false}
         stroke={getStrokeColor(area.dataKey)}
-        strokeWidth='1'
-        fillOpacity={0.8}
+        strokeWidth='2'
+        fillOpacity={0.9}
         fill={getAreaColor(area.dataKey, i)}
         {...area}
       />
