@@ -248,7 +248,7 @@ class Styleguide extends React.Component {
       }
     ]
 
-    const stackAreaChartData = [
+    const stackAreaChartWithComparisonData = [
       {
         "timestamp": 1486260000,
         "http": 3566127582,
@@ -1328,642 +1328,10 @@ class Styleguide extends React.Component {
         "https": 1660563173,
         "comparison_http": 3565016378,
         "comparison_https": 1676674362
-      },
-      {
-        "timestamp": 1486746000,
-        "http": 3825572986,
-        "actualTime": 1484067600,
-        "https": 1793341502,
-        "comparison_http": 3858351154,
-        "comparison_https": 1805563778
-      },
-      {
-        "timestamp": 1486749600,
-        "http": 3873906669,
-        "actualTime": 1484071200,
-        "https": 1867786355,
-        "comparison_http": 3949462583,
-        "comparison_https": 1817786134
-      },
-      {
-        "timestamp": 1486753200,
-        "http": 4086130151,
-        "actualTime": 1484074800,
-        "https": 1886675420,
-        "comparison_http": 4087241039,
-        "comparison_https": 1910008885
-      },
-      {
-        "timestamp": 1486756800,
-        "http": 4288353218,
-        "actualTime": 1484078400,
-        "https": 2040564972,
-        "comparison_http": 4216685875,
-        "comparison_https": 1920008919
-      },
-      {
-        "timestamp": 1486760400,
-        "http": 4334464356,
-        "actualTime": 1484082000,
-        "https": 2037787226,
-        "comparison_http": 4190574875,
-        "comparison_https": 1943897933
-      },
-      {
-        "timestamp": 1486764000,
-        "http": 4150019180,
-        "actualTime": 1484085600,
-        "https": 2023898220,
-        "comparison_http": 4015574115,
-        "comparison_https": 1831119608
-      },
-      {
-        "timestamp": 1486767600,
-        "http": 4047240852,
-        "actualTime": 1484089200,
-        "https": 1936675607,
-        "comparison_http": 3853906554,
-        "comparison_https": 1812230687
-      },
-      {
-        "timestamp": 1486771200,
-        "http": 3542238571,
-        "actualTime": 1484092800,
-        "https": 1674452136,
-        "comparison_http": 3821128670,
-        "comparison_https": 1741674777
-      },
-      {
-        "timestamp": 1486774800,
-        "http": 3350015366,
-        "actualTime": 1484096400,
-        "https": 1565007218,
-        "comparison_http": 3555016397,
-        "comparison_https": 1686118923
-      },
-      {
-        "timestamp": 1486778400,
-        "http": 3113903013,
-        "actualTime": 1484100000,
-        "https": 1434451161,
-        "comparison_http": 3293348534,
-        "comparison_https": 1559451648
-      },
-      {
-        "timestamp": 1486782000,
-        "http": 2834457507,
-        "actualTime": 1484103600,
-        "https": 1329450480,
-        "comparison_http": 3055569641,
-        "comparison_https": 1420562036
-      },
-      {
-        "timestamp": 1486785600,
-        "http": 2726679210,
-        "actualTime": 1484107200,
-        "https": 1260005765,
-        "comparison_http": 2935569354,
-        "comparison_https": 1361117366
-      },
-      {
-        "timestamp": 1486789200,
-        "http": 2447789029,
-        "actualTime": 1484110800,
-        "https": 1168894337,
-        "comparison_http": 2720567994,
-        "comparison_https": 1243894665
-      },
-      {
-        "timestamp": 1486792800,
-        "http": 2318344039,
-        "actualTime": 1484114400,
-        "https": 1072227173,
-        "comparison_http": 2636123295,
-        "comparison_https": 1231116783
-      },
-      {
-        "timestamp": 1486796400,
-        "http": 2181121375,
-        "actualTime": 1484118000,
-        "https": 1030004712,
-        "comparison_http": 2473900381,
-        "comparison_https": 1177227709
-      },
-      {
-        "timestamp": 1486800000,
-        "http": 1757230316,
-        "actualTime": 1484121600,
-        "https": 818892677,
-        "comparison_http": 2179454468,
-        "comparison_https": 976115634
-      },
-      {
-        "timestamp": 1486803600,
-        "http": 1757230288,
-        "actualTime": 1484125200,
-        "https": 821670414,
-        "comparison_http": 2173343386,
-        "comparison_https": 993893368
-      },
-      {
-        "timestamp": 1486807200,
-        "http": 1749452607,
-        "actualTime": 1484128800,
-        "https": 868892805,
-        "comparison_http": 2195010040,
-        "comparison_https": 991671245
-      },
-      {
-        "timestamp": 1486810800,
-        "http": 1923897859,
-        "actualTime": 1484132400,
-        "https": 885559589,
-        "comparison_http": 2310566200,
-        "comparison_https": 1104449570
-      },
-      {
-        "timestamp": 1486814400,
-        "http": 2280566028,
-        "actualTime": 1484136000,
-        "https": 1082782865,
-        "comparison_http": 2865568820,
-        "comparison_https": 1361117317
-      },
-      {
-        "timestamp": 1486818000,
-        "http": 2529455934,
-        "actualTime": 1484139600,
-        "https": 1193338866,
-        "comparison_http": 3088903100,
-        "comparison_https": 1431117684
-      },
-      {
-        "timestamp": 1486821600,
-        "http": 2667789923,
-        "actualTime": 1484143200,
-        "https": 1256672435,
-        "comparison_http": 3027791727,
-        "comparison_https": 1427228802
-      },
-      {
-        "timestamp": 1486825200,
-        "http": 2931124640,
-        "actualTime": 1484146800,
-        "https": 1347228418,
-        "comparison_http": 3329459622,
-        "comparison_https": 1522229141
-      },
-      {
-        "timestamp": 1486828800,
-        "http": 3313904049,
-        "actualTime": 1484150400,
-        "https": 1615562984,
-        "comparison_http": 3690016963,
-        "comparison_https": 1687785522
-      },
-      {
-        "timestamp": 1486832400,
-        "http": 3589461020,
-        "actualTime": 1484154000,
-        "https": 1701674534,
-        "comparison_http": 3907795703,
-        "comparison_https": 1792786069
-      },
-      {
-        "timestamp": 1486836000,
-        "http": 3622794579,
-        "actualTime": 1484157600,
-        "https": 1611118585,
-        "comparison_http": 4060574164,
-        "comparison_https": 1920564274
-      },
-      {
-        "timestamp": 1486839600,
-        "http": 3709461517,
-        "actualTime": 1484161200,
-        "https": 1760008100,
-        "comparison_http": 4172241334,
-        "comparison_https": 1963342399
-      },
-      {
-        "timestamp": 1486843200,
-        "http": 3889462443,
-        "actualTime": 1484164800,
-        "https": 1853897495,
-        "comparison_http": 4248908354,
-        "comparison_https": 2006120404
-      },
-      {
-        "timestamp": 1486846800,
-        "http": 3832795323,
-        "actualTime": 1484168400,
-        "https": 1856119681,
-        "comparison_http": 4281130969,
-        "comparison_https": 1980009236
-      },
-      {
-        "timestamp": 1486850400,
-        "http": 3981129522,
-        "actualTime": 1484172000,
-        "https": 1901675535,
-        "comparison_http": 4227797256,
-        "comparison_https": 1972231271
-      },
-      {
-        "timestamp": 1486854000,
-        "http": 3833350827,
-        "actualTime": 1484175600,
-        "https": 1803341613,
-        "comparison_http": 4030018701,
-        "comparison_https": 1907786579
-      },
-      {
-        "timestamp": 1486857600,
-        "http": 3516127227,
-        "actualTime": 1484179200,
-        "https": 1664452015,
-        "comparison_http": 3788350639,
-        "comparison_https": 1775008199
-      },
-      {
-        "timestamp": 1486861200,
-        "http": 3279459729,
-        "actualTime": 1484182800,
-        "https": 1551118251,
-        "comparison_http": 3505016097,
-        "comparison_https": 1682785517
-      },
-      {
-        "timestamp": 1486864800,
-        "http": 2982791723,
-        "actualTime": 1484186400,
-        "https": 1433339876,
-        "comparison_http": 3023347212,
-        "comparison_https": 1470006834
-      },
-      {
-        "timestamp": 1486868400,
-        "http": 2766123701,
-        "actualTime": 1484190000,
-        "https": 1337228321,
-        "comparison_http": 2799457323,
-        "comparison_https": 1296672627
-      },
-      {
-        "timestamp": 1486872000,
-        "http": 2373344261,
-        "actualTime": 1484193600,
-        "https": 1086671691,
-        "comparison_http": 2740568254,
-        "comparison_https": 1311672744
-      },
-      {
-        "timestamp": 1486875600,
-        "http": 2047231576,
-        "actualTime": 1484197200,
-        "https": 1060004957,
-        "comparison_http": 2528900596,
-        "comparison_https": 1173894330
-      },
-      {
-        "timestamp": 1486879200,
-        "http": 2418344607,
-        "actualTime": 1484200800,
-        "https": 1161116486,
-        "comparison_http": 2317788471,
-        "comparison_https": 1102782876
-      },
-      {
-        "timestamp": 1486882800,
-        "http": 2323344034,
-        "actualTime": 1484204400,
-        "https": 1065004902,
-        "comparison_http": 2230010308,
-        "comparison_https": 1009449114
-      },
-      {
-        "timestamp": 1486886400,
-        "http": 1906675527,
-        "actualTime": 1484208000,
-        "https": 883337383,
-        "comparison_http": 2319455152,
-        "comparison_https": 1080560535
-      },
-      {
-        "timestamp": 1486890000,
-        "http": 1840008453,
-        "actualTime": 1484211600,
-        "https": 881115229,
-        "comparison_http": 2322788463,
-        "comparison_https": 1058893822
-      },
-      {
-        "timestamp": 1486893600,
-        "http": 2122787540,
-        "actualTime": 1484215200,
-        "https": 991671157,
-        "comparison_http": 2049453847,
-        "comparison_https": 935004322
-      },
-      {
-        "timestamp": 1486897200,
-        "http": 2305565966,
-        "actualTime": 1484218800,
-        "https": 1040560347,
-        "comparison_http": 2177232100,
-        "comparison_https": 1010560188
-      },
-      {
-        "timestamp": 1486900800,
-        "http": 2421122390,
-        "actualTime": 1484222400,
-        "https": 1147783042,
-        "comparison_http": 2680568051,
-        "comparison_https": 1248339135
-      },
-      {
-        "timestamp": 1486904400,
-        "http": 2678901321,
-        "actualTime": 1484226000,
-        "https": 1224450145,
-        "comparison_http": 2896679951,
-        "comparison_https": 1340561796
-      },
-      {
-        "timestamp": 1486908000,
-        "http": 2660567797,
-        "actualTime": 1484229600,
-        "https": 1188894304,
-        "comparison_http": 3297237417,
-        "comparison_https": 1516118104
-      },
-      {
-        "timestamp": 1486911600,
-        "http": 2893346714,
-        "actualTime": 1484233200,
-        "https": 1344450758,
-        "comparison_http": 3530016296,
-        "comparison_https": 1616674131
-      },
-      {
-        "timestamp": 1486915200,
-        "http": 3185014724,
-        "actualTime": 1484236800,
-        "https": 1421117633,
-        "comparison_http": 3544460915,
-        "comparison_https": 1653341079
-      },
-      {
-        "timestamp": 1486918800,
-        "http": 3332793321,
-        "actualTime": 1484240400,
-        "https": 1615007439,
-        "comparison_http": 3805017388,
-        "comparison_https": 1725007948
-      },
-      {
-        "timestamp": 1486922400,
-        "http": 3572238732,
-        "actualTime": 1484244000,
-        "https": 1660007606,
-        "comparison_http": 3756128406,
-        "comparison_https": 1773897046
-      },
-      {
-        "timestamp": 1486926000,
-        "http": 3706683687,
-        "actualTime": 1484247600,
-        "https": 1720563540,
-        "comparison_http": 3876128970,
-        "comparison_https": 1864453026
-      },
-      {
-        "timestamp": 1486929600,
-        "http": 3822240067,
-        "actualTime": 1484251200,
-        "https": 1788897112,
-        "comparison_http": 4051685303,
-        "comparison_https": 1922786563
-      },
-      {
-        "timestamp": 1486933200,
-        "http": 3865573325,
-        "actualTime": 1484254800,
-        "https": 1727785756,
-        "comparison_http": 4083907693,
-        "comparison_https": 1959453474
-      },
-      {
-        "timestamp": 1486936800,
-        "http": 3986685016,
-        "actualTime": 1484258400,
-        "https": 1928897842,
-        "comparison_http": 4062241035,
-        "comparison_https": 1966675671
-      },
-      {
-        "timestamp": 1486940400,
-        "http": 3858351037,
-        "actualTime": 1484262000,
-        "https": 1856675313,
-        "comparison_http": 3955573876,
-        "comparison_https": 1891675307
-      },
-      {
-        "timestamp": 1486944000,
-        "http": 3841684450,
-        "actualTime": 1484265600,
-        "https": 1775008149,
-        "comparison_http": 3867240209,
-        "comparison_https": 1772785961
-      },
-      {
-        "timestamp": 1486947600,
-        "http": 3577794269,
-        "actualTime": 1484269200,
-        "https": 1638340817,
-        "comparison_http": 3599460970,
-        "comparison_https": 1654451986
-      },
-      {
-        "timestamp": 1486951200,
-        "http": 3403904423,
-        "actualTime": 1484272800,
-        "https": 1597229574,
-        "comparison_http": 3212792588,
-        "comparison_https": 1505006938
-      },
-      {
-        "timestamp": 1486954800,
-        "http": 3156681112,
-        "actualTime": 1484276400,
-        "https": 1478340098,
-        "comparison_http": 2942791389,
-        "comparison_https": 1382228710
-      },
-      {
-        "timestamp": 1486958400,
-        "http": 2619456531,
-        "actualTime": 1484280000,
-        "https": 1261116915,
-        "comparison_http": 2498900413,
-        "comparison_https": 1181672122
-      },
-      {
-        "timestamp": 1486962000,
-        "http": 2367788731,
-        "actualTime": 1484283600,
-        "https": 1138894121,
-        "comparison_http": 2298899469,
-        "comparison_https": 1068338253
-      },
-      {
-        "timestamp": 1486965600,
-        "http": 2186676819,
-        "actualTime": 1484287200,
-        "https": 1020560294,
-        "comparison_http": 2531122711,
-        "comparison_https": 1200005542
-      },
-      {
-        "timestamp": 1486969200,
-        "http": 2047231700,
-        "actualTime": 1484290800,
-        "https": 934448719,
-        "comparison_http": 2370010900,
-        "comparison_https": 1154449887
-      },
-      {
-        "timestamp": 1486972800,
-        "http": 1790008326,
-        "actualTime": 1484294400,
-        "https": 857781785,
-        "comparison_http": 2018342538,
-        "comparison_https": 943337559
-      },
-      {
-        "timestamp": 1486976400,
-        "http": 1715563450,
-        "actualTime": 1484298000,
-        "https": 882781830,
-        "comparison_http": 1990009167,
-        "comparison_https": 931115442
-      },
-      {
-        "timestamp": 1486980000,
-        "http": 2423344531,
-        "actualTime": 1484301600,
-        "https": 1098893902,
-        "comparison_http": 2057787220,
-        "comparison_https": 967226770
-      },
-      {
-        "timestamp": 1486983600,
-        "http": 2534456096,
-        "actualTime": 1484305200,
-        "https": 1197227787,
-        "comparison_http": 2219454623,
-        "comparison_https": 1005560196
-      },
-      {
-        "timestamp": 1486987200,
-        "http": 2371677657,
-        "actualTime": 1484308800,
-        "https": 1122783042,
-        "comparison_http": 2715568117,
-        "comparison_https": 1262783505
-      },
-      {
-        "timestamp": 1486990800,
-        "http": 2598900777,
-        "actualTime": 1484312400,
-        "https": 1258339126,
-        "comparison_http": 2912791250,
-        "comparison_https": 1407784214
-      },
-      {
-        "timestamp": 1486994400,
-        "http": 3058347440,
-        "actualTime": 1484316000,
-        "https": 1426117703,
-        "comparison_http": 3084458612,
-        "comparison_https": 1438895525
-      },
-      {
-        "timestamp": 1486998000,
-        "http": 3262237250,
-        "actualTime": 1484319600,
-        "https": 1585007282,
-        "comparison_http": 3338348718,
-        "comparison_https": 1538340476
-      },
-      {
-        "timestamp": 1487001600,
-        "http": 3329459795,
-        "actualTime": 1484323200,
-        "https": 1585007298,
-        "comparison_http": 3440015835,
-        "comparison_https": 1668896624
-      },
-      {
-        "timestamp": 1487005200,
-        "http": 3562794415,
-        "actualTime": 1484326800,
-        "https": 1672229853,
-        "comparison_http": 3649461297,
-        "comparison_https": 1773341547
-      },
-      {
-        "timestamp": 1487008800,
-        "http": 4078352026,
-        "actualTime": 1484330400,
-        "https": 1942231160,
-        "comparison_http": 4037796596,
-        "comparison_https": 1833897386
-      },
-      {
-        "timestamp": 1487012400,
-        "http": 4250575362,
-        "actualTime": 1484334000,
-        "https": 1963897919,
-        "comparison_http": 4152796973,
-        "comparison_https": 1921120032
-      },
-      {
-        "timestamp": 1487016000,
-        "http": 4134463483,
-        "actualTime": 1484337600,
-        "https": 1911119969,
-        "comparison_http": 4332242273,
-        "comparison_https": 2048342775
-      },
-      {
-        "timestamp": 1487019600,
-        "http": 4176130559,
-        "actualTime": 1484341200,
-        "https": 1872786465,
-        "comparison_http": 4291686429,
-        "comparison_https": 2101120860
-      },
-      {
-        "timestamp": 1487023200,
-        "http": 4060574351,
-        "actualTime": 1484344800,
-        "https": 1867230767,
-        "comparison_http": 4045018737,
-        "comparison_https": 1909453253
-      },
-      {
-        "timestamp": 1487026800,
-        "http": 3844462230,
-        "actualTime": 1484348400,
-        "https": 1867786350,
-        "comparison_http": 3952240166,
-        "comparison_https": 1838341853
       }
     ]
 
-    const stackAreaChartAreas = [
+    const stackAreaChartWithComparisonAreas = [
       {
         "dataKey": "comparison_http",
         "name": "Comparison HTTP",
@@ -1986,6 +1354,45 @@ class Styleguide extends React.Component {
         "dataKey": "https",
         "name": "HTTPS",
         "className": "https",
+        "stackId": 1
+      }
+    ]
+
+    const AreaChartArea = [
+      {
+        "dataKey": "http",
+        "name": "HTTP",
+        "className": "http",
+        "stackId": 1
+      }
+    ]
+
+    const stackAreaChartAreas = [
+      {
+        "dataKey": "http",
+        "name": "HTTP",
+        "className": "http",
+        "stackId": 1
+      },
+      {
+        "dataKey": "https",
+        "name": "HTTPS",
+        "className": "https",
+        "stackId": 1
+      }
+    ]
+
+    const ComparisonAreaChartAreas = [
+      {
+        "dataKey": "comparison_http",
+        "name": "Comparison HTTP",
+        "className": "comparison_http",
+        "stackId": 2
+      },
+      {
+        "dataKey": "http",
+        "name": "HTTP",
+        "className": "http",
         "stackId": 1
       }
     ]
@@ -2277,7 +1684,9 @@ class Styleguide extends React.Component {
                 ]}/>}
             </SectionContainer>
             </Row>
+
             <hr />
+
             <Row>
               <label>Normal barchart</label>
               <SectionContainer className="analysis-chart-container">
@@ -2287,18 +1696,7 @@ class Styleguide extends React.Component {
                   barModels={[{ dataKey: 'onNetHttp', name: 'On-Net HTTP', className: 'line-0' }]}/>
               </SectionContainer>
             </Row>
-            <hr/>
-            <Row>
-              <label>Stack area chart with comparison</label>
-              <SectionContainer className="analysis-by-time">
-                <StackedAreaChart
-                  areas={stackAreaChartAreas}
-                  data={stackAreaChartData}
-                  valueFormatter={formatBitsPerSecond}
-                />
-              </SectionContainer>
-            </Row>
-            
+
             <hr/>
 
             <Row>
@@ -2307,6 +1705,60 @@ class Styleguide extends React.Component {
                 <LineChart
                   data={lineChartData}
                   dataKey="bits_per_second"
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={AreaChartArea}
+                  data={stackAreaChartWithComparisonData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Stacked area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={stackAreaChartAreas}
+                  data={stackAreaChartWithComparisonData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={ComparisonAreaChartAreas}
+                  data={stackAreaChartWithComparisonData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison chart for two stacked area</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={stackAreaChartWithComparisonAreas}
+                  data={stackAreaChartWithComparisonData}
+                  valueFormatter={formatBitsPerSecond}
                 />
               </SectionContainer>
             </Row>

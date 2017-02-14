@@ -10,7 +10,6 @@ import StackAreaCustomTick from './stacked-area-chart-tick.js'
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
 import { paleblue, green, black20, darkblue, black, tealgreen, yellow, purple } from '../../constants/colors'
-import './stacked-area-chart.scss'
 
 const AREA_COLORS = {
   http: paleblue,
@@ -65,7 +64,7 @@ const getStrokeColor = (key) => {
   return "false";
 }
 
-const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) => {
+const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, chartLabel}) => {
 
   let dateFormat = "MM/DD"
   const customLegendAreas = orderBy(areas, 'stackId', 'asc')
@@ -105,31 +104,34 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond}) =
   }
 
   return (
-    <ResponsiveContainer minHeight={200} aspect={2.5} className='stacked-area-chart-container'>
-      <AreaChart data={data} margin={{left:50, bottom: 30}}>
-        { renderAreas(areas) }
+    <div className="stacked-area-chart-container">
+      <span id="stacked-area-chart-label" className="stacked-area-chart-label">{chartLabel}</span>
+      <ResponsiveContainer minHeight={300} aspect={2}>
+        <AreaChart data={data} margin={{left:50, bottom: 30, top: 100}}>
+          { renderAreas(areas) }
 
-        <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
-        <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
+          <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
+          <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
-        <Legend
-          wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
-          margin={{top: 0, left: 0, right: 0, bottom: 0}}
-          content={<CustomLegend data={customLegendAreas}/>}
-        />
+          <Legend
+            wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
+            margin={{top: 0, left: 0, right: 0, bottom: 0}}
+            content={<CustomLegend data={customLegendAreas}/>}
+          />
 
-        <Tooltip
-          animationEasing="linear"
-          cursor={{stroke: black}}
-          content={
-            <AreaTooltip
-              iconClass={() => 'tooltip-class'}
-              valueFormatter={valueFormatter}
-            />
-          }
-        />
-      </AreaChart>
-  </ResponsiveContainer>
+          <Tooltip
+            animationEasing="linear"
+            cursor={{stroke: black}}
+            content={
+              <AreaTooltip
+                iconClass={() => 'tooltip-class'}
+                valueFormatter={valueFormatter}
+              />
+            }
+          />
+        </AreaChart>
+    </ResponsiveContainer>
+  </div>
   )
 }
 
@@ -137,6 +139,7 @@ StackedAreaChart.displayName = 'StackedAreaChart'
 
 StackedAreaChart.propTypes = {
   areas: PropTypes.array,
+  chartLabel: PropTypes.string,
   data: PropTypes.array,
   valueFormatter: PropTypes.func
 }

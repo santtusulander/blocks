@@ -1,0 +1,22 @@
+@import '../../base/colors';
+
+.stacked-area-chart-container{
+  .recharts-area {
+      &.https_bits_per_second {
+        path.recharts-curve {
+          stroke: $green;
+        }
+        path.recharts-area-area {
+          fill: $green;
+        }
+      }
+  }
+
+  .stacked-area-chart-label {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-weight: bold;
+  }
+
+}
