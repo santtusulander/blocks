@@ -57,11 +57,11 @@ describe('ConfigurationDefaults', () => {
       <ConfigurationDefaults changeValue={changeValue} intl={intlMaker()}
         config={fakeConfig}/>
     )
-    const ttlInput = defaults.find('.ttl-value')
-    ttlInput.simulate('change', {target: {value: 30}})
+
+    defaults.instance().changeTTLValue(agePath)(30)
     expect(changeValue.mock.calls[0][0].toJS()).toEqual(agePath.toJS())
     expect(changeValue.mock.calls[0][1]).toBe(30)
-    
+
     defaults.instance().changeTTLUnit(agePath)('minutes')
     expect(changeValue.mock.calls[1][0]).toEqual(agePath)
     expect(changeValue.mock.calls[1][1]).toBe(600)
