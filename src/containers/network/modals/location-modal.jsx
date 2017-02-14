@@ -16,6 +16,9 @@ import SidePanel from '../../../components/side-panel'
 import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
+
+const LOCATION_ADDRESS_HELP_TEXT_ID = 'portal.network.locationForm.latLongFields.helperTextHint.address'
+
 class NetworkLocationFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -24,7 +27,7 @@ class NetworkLocationFormContainer extends Component {
 
     this.state = {
       isFetchingLocation: false,
-      addressLine: intl.formatMessage({ id: 'portal.network.locationForm.latLongFields.helperTextHint.address' }),
+      addressLine: intl.formatMessage({ id: LOCATION_ADDRESS_HELP_TEXT_ID }),
       latLng: {
         latitude: null,
         longitude: null
@@ -35,6 +38,7 @@ class NetworkLocationFormContainer extends Component {
     this.askForFetchLocation = this.askForFetchLocation.bind(this)
     this.shouldFetchLocation = this.shouldFetchLocation.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.onCancel = this.onCancel.bind(this)
     this.onDelete = this.onDelete.bind(this)
   }
 
@@ -136,7 +140,7 @@ class NetworkLocationFormContainer extends Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
-        this.props.onCancel()
+        this.onCancel()
       })
   }
 
@@ -156,8 +160,24 @@ class NetworkLocationFormContainer extends Component {
           throw new SubmissionError({_error: resp.error.data.message})
         }
 
-        this.props.onCancel()
+        this.onCancel()
       })
+  }
+
+  onCancel() {
+    const { intl, onCancel } = this.props
+
+    // Reset to initial state
+    this.setState({
+      isFetchingLocation: false,
+      addressLine: intl.formatMessage({ id: LOCATION_ADDRESS_HELP_TEXT_ID }),
+      latLng: {
+        latitude: null,
+        longitude: null
+      }
+    })
+
+    onCancel && onCancel()
   }
 
   render() {
@@ -172,7 +192,7 @@ class NetworkLocationFormContainer extends Component {
       show
     } = this.props;
 
-    const { isFetchingLocation } = this.state
+    const { isFetchingLocation, addressLine } = this.state
     const edit = !!initialValues.name
 
     const title = edit
@@ -189,7 +209,7 @@ class NetworkLocationFormContainer extends Component {
         >
           <LocationForm
             askForFetchLocation={this.askForFetchLocation}
-            addressLine={this.state.addressLine}
+            addressLine={addressLine}
             edit={edit}
             iataCodes={iataCodes}
             initialValues={initialValues}
@@ -198,7 +218,7 @@ class NetworkLocationFormContainer extends Component {
             isFetchingLocation={isFetchingLocation}
             intl={intl}
             invalid={invalid}
-            onCancel={onCancel}
+            onCancel={this.onCancel}
             onDelete={this.onDelete}
             onSubmit={(values) => this.onSubmit(edit, values)}
           />
