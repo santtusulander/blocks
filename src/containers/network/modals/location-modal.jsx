@@ -6,7 +6,7 @@ import { SubmissionError, formValueSelector } from 'redux-form'
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getById as getLocationById } from '../../../redux/modules/entities/locations/selectors'
 
-import { isValidLatitude, isValidLongtitude } from '../../../util/validators'
+import { isValidLatitude, isValidLongitude } from '../../../util/validators'
 import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
@@ -69,7 +69,7 @@ class NetworkLocationFormContainer extends Component {
     const latLngState = this.state.latLng
     return !!latLngProps.latitude && !!latLngProps.longitude &&
       isValidLatitude(latLngProps.latitude) &&
-      isValidLongtitude(latLngProps.longitude) &&
+      isValidLongitude(latLngProps.longitude) &&
       (
         parseFloat(latLngProps.latitude) !== parseFloat(latLngState.latitude) ||
         parseFloat(latLngProps.longitude) !== parseFloat(latLngState.longitude)

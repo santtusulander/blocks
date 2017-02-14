@@ -11,7 +11,7 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
+import { isValidLatitude, isValidLongitude , isValidTextField} from '../../../util/validators.js'
 
 import {LOCATION_NAME_MIN_LENGTH,
   LOCATION_NAME_MAX_LENGTH,
@@ -53,7 +53,7 @@ const validate = ({
     ],
     longitude: [
       {
-        condition: ! isValidLongtitude(longitude),
+        condition: ! isValidLongitude(longitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.longitude.invalid.error' />

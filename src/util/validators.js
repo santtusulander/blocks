@@ -235,11 +235,11 @@ export function isValidLatitude(str) {
 }
 
 /**
- * Check if valid longtitude
+ * Check if valid longitude
  * @param  float
  * @return {Boolean}
  */
-export function isValidLongtitude(str) {
+export function isValidLongitude(str) {
   return str >= MIN_LONGTITUDE && str <= MAX_LONGTITUDE
 }
 
