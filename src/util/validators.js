@@ -45,11 +45,11 @@ export function isValidFloat(str) {
  * @param address
  * @returns {*}
  */
-export function isValidIPv4Address(address) {
+export function isValidIPv4Address(address, onlyCIDR) {
 
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
+  if(splitAddr.length > 1 || onlyCIDR) {
     return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) <= 32 )
   }
 
