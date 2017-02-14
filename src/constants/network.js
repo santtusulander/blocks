@@ -68,7 +68,9 @@ export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([
 ])
 
 export const LBMETHOD_OPTIONS = [
-  {value: 'gslb', label: 'portal.network.podForm.lb_method.options.gslb.label'}
+  {value: 'gslb', label: 'portal.network.podForm.lb_method.options.gslb.label'},
+  {value: 'lb', label: 'portal.network.podForm.lb_method.options.lb.label'},
+  {value: 'referral', label: 'portal.network.podForm.lb_method.options.referral.label'}
 ]
 
 export const POD_TYPE_OPTIONS = [
