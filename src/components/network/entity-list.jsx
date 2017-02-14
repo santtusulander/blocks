@@ -8,7 +8,7 @@ import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
 
 const numericStatusToStringStatus = n => (
-  n === 1 ? 'enabled' : n === 2 ? 'disabled' : n === 3 ? 'provisioning' : null
+  n === 1 ? 'provisioning' : n === 2 ? 'disabled' : n === 3 ? 'enabled' : n === 4 ? 'destroying' : null
 )
 
 class EntityList extends React.Component {
