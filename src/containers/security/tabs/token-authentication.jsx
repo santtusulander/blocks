@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
@@ -70,10 +70,10 @@ TabTokenAuthentication.displayName = 'TabTokenAuthentication'
 TabTokenAuthentication.propTypes = {
   fetchGroups: PropTypes.func,
   fetchProperties: PropTypes.func,
-  groups: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   isFetching: PropTypes.bool,
   params: PropTypes.object,
-  properties: PropTypes.object
+  properties: PropTypes.instanceOf(List)
 }
 
 TabTokenAuthentication.defaultProps = {
