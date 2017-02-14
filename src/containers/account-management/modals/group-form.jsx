@@ -323,7 +323,6 @@ GroupFormContainer.propTypes = {
   activeHost: PropTypes.instanceOf(Map),
   canEditServices: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
-  disabled: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
