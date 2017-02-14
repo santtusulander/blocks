@@ -21,7 +21,7 @@ import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/en
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
-
+import ModalWindow from '../../../components/modal'
 import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'
@@ -52,7 +52,8 @@ class PodFormContainer extends React.Component {
     this.state = {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
-      footprintId: null
+      footprintId: null,
+      showDeleteModal : false
     }
   }
 
@@ -135,6 +136,10 @@ class PodFormContainer extends React.Component {
 
   hideRoutingDaemonModal() {
     this.setState({ showRoutingDaemonModal: false})
+  }
+
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
   }
 
   /**
@@ -243,8 +248,9 @@ class PodFormContainer extends React.Component {
       //account,
       network,
       footprints
-
     } = this.props
+
+    const {showDeleteModal} = this.state
 
     const edit = !!initialValues.pod_name
 
@@ -269,7 +275,7 @@ class PodFormContainer extends React.Component {
             initialValues={initialValues}
 
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={() => this.onDelete(podId)}
+            onDelete={() => this.onToggleDeleteModal(true)}
             onCancel={onCancel}
 
             //onDeleteFootprint={this.onDeleteFootprint}
@@ -304,6 +310,23 @@ class PodFormContainer extends React.Component {
           show={true}
         />
         }
+
+        {edit && showDeleteModal &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => this.onToggleDeleteModal(false)}
+            onSubmit={()=>{
+              this.onToggleDeleteModal(false)
+              this.onDelete(podId)
+              onCancel()
+            }}>
+            <p>
+             <FormattedMessage id="portal.network.podForm.deletePod.confirmation.text"/>
+            </p>
+          </ModalWindow>}
 
       </div>
     )
