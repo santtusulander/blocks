@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Map, List } from 'immutable'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 
 import accountActions from '../../../redux/modules/entities/accounts/actions'
@@ -27,15 +27,19 @@ class TabTokenAuthentication extends Component {
   }
 
   fetchData(){
-    const {brand,account} = this.props.params
+    const {brand,account, group} = this.props.params
 
-    this.props.fetchGroups(this.props.params)
-      .then( () => {
-        this.props.groups.map( group => {
-          this.props.fetchProperties({brand, account, group: group.get('id')})
+    if (group) {
+      this.props.fetchProperties({brand, account, group})
+    } else {
+      /* Fetch all groups and properties */
+      this.props.fetchGroups(this.props.params)
+        .then( () => {
+          this.props.groups.map( group => {
+            this.props.fetchProperties({brand, account, group: group.get('id')})
+          })
         })
-      })
-
+    }
   }
 
   render(){
@@ -77,7 +81,7 @@ TabTokenAuthentication.propTypes = {
 }
 
 TabTokenAuthentication.defaultProps = {
-  properties: Map()
+  properties: List()
 }
 
 const mapStateToProps = (state, ownProps) => {
