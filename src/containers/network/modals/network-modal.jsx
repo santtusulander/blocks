@@ -17,12 +17,17 @@ import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entitie
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
 class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
+    this.networkId = null
+    this.state = {
+      showDeleteModal : false
+    }
   }
 
   componentWillMount(){
@@ -52,6 +57,10 @@ class NetworkFormContainer extends React.Component {
       groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     }
 
+  }
+
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
   }
 
   /**
@@ -93,13 +102,12 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(networkId) {
-
+  onDelete(){
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: networkId
+      id: this.networkId
     }
 
     return this.props.onDelete(params)
@@ -110,10 +118,9 @@ class NetworkFormContainer extends React.Component {
         }
 
         // Unselect network item
-        if (this.props.selectedEntityId == networkId) {
-          this.props.handleSelectedEntity(networkId)
+        if (this.props.selectedEntityId == this.networkId) {
+          this.props.handleSelectedEntity(this.networkId)
         }
-
         // Close modal
         this.props.onCancel()
       })
@@ -127,8 +134,8 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel } = this.props
-
+    const { account, group, network, initialValues, onCancel} = this.props
+    const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
 
@@ -145,10 +152,27 @@ class NetworkFormContainer extends React.Component {
             hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={(networkId) => this.onDelete(networkId)}
+            onDelete={(networkId) => {
+              this.networkId = networkId
+              this.onToggleDeleteModal(true)
+            }
+            }
             onCancel={onCancel}
           />
         </SidePanel>
+
+        {edit && showDeleteModal &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.network.networkForm.deleteNetwork.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => this.onToggleDeleteModal(false)}
+            onSubmit={() => this.onDelete()}>
+            <p>
+             <FormattedMessage id="portal.network.networkForm.deleteNetwork.confirmation.text"/>
+            </p>
+          </ModalWindow>}
       </div>
     )
   }
@@ -214,7 +238,6 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPops: (params) => dispatch( popActions.fetchAll(params) )
-
   }
 }
 

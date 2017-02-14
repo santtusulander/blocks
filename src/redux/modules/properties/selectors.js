@@ -1,5 +1,4 @@
 import {List} from 'immutable'
-import {getFetching} from '../fetching/selectors'
 
 /**
  * Get all host IDs (keys from state)
@@ -59,13 +58,4 @@ export const getById = (state, id) => {
   }
 
   return null
-}
-
-/**
- * isFetching ?
- * @param  {}  state
- * @return Boolean
- */
-export const isFetching = (state) => {
-  return getFetching(state.properties.fetching)
 }
