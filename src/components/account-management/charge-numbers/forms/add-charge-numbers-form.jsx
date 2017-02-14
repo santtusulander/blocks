@@ -74,18 +74,15 @@ class AddChargeNumbersForm extends React.Component {
           />
         }
 
-        <FormFooterButtons autoAlign={false}>
-          <ButtonToolbar className="pull-left">
+        <FormFooterButtons>
+          <ButtonToolbar>
             <Button
               id='disable-button'
-              bsStyle="danger"
+              className="btn-danger pull-left"
               onClick={onDisable}
             >
               <FormattedMessage id='portal.common.button.disable' />
             </Button>
-          </ButtonToolbar>
-
-          <ButtonToolbar className="pull-right">
             <Button
               id='cancel-button'
               className="btn-outline"

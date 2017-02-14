@@ -90,7 +90,7 @@ class AccountForm extends React.Component {
   render() {
     let providerType = ''
     let providerTypeLabel = ''
-    const { accountType, providerTypes, serviceOptions, invalid, submitting, disabled,
+    const { accountType, providerTypes, serviceOptions, invalid, submitting,
             initialValues: { accountBrand }, show, onCancel, dirty } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
@@ -117,7 +117,6 @@ class AccountForm extends React.Component {
         title={title}
         subTitle={subTitle}
         cancel={onCancel}
-        disabled={disabled}
       >
 
         <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
@@ -213,7 +212,6 @@ AccountForm.displayName = "AccountForm"
 AccountForm.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountType: PropTypes.number,
-  disabled: PropTypes.bool,
   fetchServiceInfo: PropTypes.func,
   intl: PropTypes.object,
   onCancel: PropTypes.func,

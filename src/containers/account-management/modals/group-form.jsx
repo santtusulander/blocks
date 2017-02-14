@@ -203,7 +203,6 @@ class GroupFormContainer extends React.Component {
     const {
       account,
       canEditServices,
-      disabled,
       canSeeLocations,
       groupId,
       hostActions,
@@ -254,7 +253,6 @@ class GroupFormContainer extends React.Component {
       <div>
         <SidePanel
           show={show}
-          disabled={disabled}
           title={title}
           subTitle={subTitle}
           cancel={onCancel}
