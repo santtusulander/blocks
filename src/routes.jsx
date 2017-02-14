@@ -17,7 +17,8 @@ import {
 
 import {
   accountIsServiceProviderType,
-  accountIsContentProviderType
+  accountIsContentProviderType,
+  accountIsCloudProviderType
  } from './util/helpers'
 
 import AccountManagement from './containers/account-management/account-management'
@@ -191,7 +192,7 @@ const AccountIsCP = UserAuthWrapper({
     if(!account) {
       return true
     } else {
-      return accountIsContentProviderType(account)
+      return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
     }
   },
   failureRedirectPath: (state, ownProps) => {
