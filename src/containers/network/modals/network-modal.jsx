@@ -212,7 +212,8 @@ NetworkFormContainer.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId))
-  const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
+  const networkId = buildReduxId(ownProps.groupId, ownProps.networkId)
+  const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
 
   return {
