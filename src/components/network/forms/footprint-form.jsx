@@ -92,7 +92,7 @@ class FootprintForm extends React.Component {
   }
 
   renderDropZone() {
-    // TODO: DropZone component
+    /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
     return (
       <p>DropZone component here</p>
     )
@@ -104,13 +104,11 @@ class FootprintForm extends React.Component {
       dataType,
       editing,
       fetching,
-      footprintId,
       handleSubmit,
       intl,
       invalid,
       onCancel,
       onSave,
-      onDelete,
       submitting,
       udnTypeOptions
     } = this.props
@@ -127,7 +125,8 @@ class FootprintForm extends React.Component {
           {this.props.error}
           </span>
 
-        <Field
+        {/* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */}
+        {/* <Field
           name="addFootprintMethod"
           type="radio"
           value="manual"
@@ -141,7 +140,7 @@ class FootprintForm extends React.Component {
           value="addfile"
           component={FieldRadio}
           label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
-        />
+        /> */}
 
         { addManual === 'manual' &&
         <div>
@@ -204,19 +203,6 @@ class FootprintForm extends React.Component {
         { addManual !== 'manual' && this.renderDropZone()}
 
         <FormFooterButtons>
-          { editing &&
-            <Button
-              id="delete-btn"
-              className="btn-danger pull-left"
-              disabled={submitting || fetching}
-              onClick={() => onDelete(footprintId)}>
-              {
-                fetching
-                  ? <FormattedMessage id="portal.button.deleting"/>
-                  : <FormattedMessage id="portal.button.delete"/>
-              }
-            </Button>
-          }
           <Button
             id="cancel-btn"
             className="btn-secondary"
@@ -257,7 +243,9 @@ const form = reduxForm({
 
 const mapStateToProps = (state) => {
   const selector = formValueSelector('footprintForm')
-  const addManual = selector(state, 'addFootprintMethod')
+  /* UDNP-2520 - Integrate File Upload component into 'Add footprint' form */
+  // const addManual = selector(state, 'addFootprintMethod')
+  const addManual = 'manual'
   const dataType = selector(state, 'data_type')
 
   return {

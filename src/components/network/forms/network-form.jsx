@@ -74,7 +74,7 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
             id="delete-btn"
             className="btn-danger pull-left"
             disabled={hasPops}
-            onClick={() => onDelete(initialValues.name)}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
             tooltipId="tooltip-help"
             tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
             {

@@ -6,7 +6,16 @@ import { BASE_URL_NORTH, buildReduxId } from '../../../util'
 
 const pop = new schema.Entity('pops',
   { pods: [ pod ] },
-  { idAttribute: ({ group_id, network_id, id }) => buildReduxId(group_id, network_id, id) })
+  {
+    idAttribute: ({ group_id, network_id, id }) => buildReduxId(group_id, network_id, id),
+
+    processStrategy: ({ group_id, network_id, ...rest }) => ({
+      parentId: buildReduxId(group_id, network_id),
+      group_id,
+      network_id,
+      ...rest
+    })
+  })
 
 const baseUrl = ({ brand, account, group, network }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks/${network}/pops`

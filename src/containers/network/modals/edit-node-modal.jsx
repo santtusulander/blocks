@@ -208,7 +208,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
 const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/
-  const updateNode = ({ reduxId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
+  const updateNode = ({ reduxId, parentId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
     .then(({ error }) => {
       if (error) {
         return Promise.reject(new SubmissionError({ _error: error.data.message }))

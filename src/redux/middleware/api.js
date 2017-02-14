@@ -42,15 +42,15 @@ export default function apiMiddleware({ dispatch, getState }) {
 
     const [ requestType, successType, failureType ] = types;
 
-    dispatch({ ...payload, type: requestType });
+    dispatch({ payload, type: requestType });
 
     return callApi().then(
-      response => dispatch({ ...payload, response, type: successType }),
+      response => dispatch({ payload, response, type: successType }),
       error => {
         if (cacheKey) {
           dispatch({ type: CACHE_REQUEST_CLEAR, payload: cacheKey })
         }
-        return dispatch({ ...payload, error, type: failureType })
+        return dispatch({ payload, error, type: failureType })
       }
     );
   };

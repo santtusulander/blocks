@@ -18,7 +18,7 @@ export const pod = new schema.Entity('pods', {
 
     /* UI - params are extracted from services to keep UI - object flat */
     return {
-      parentId: parent.id,
+      parentId: buildReduxId(parent.group_id, parent.network_id, parent.id),
       UIName: value.pod_name,
       UIId: value.pod_name,
       UICloudLookUpId: cloud_lookup_id,

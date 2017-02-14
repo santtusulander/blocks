@@ -4,7 +4,8 @@ $input-width: 324px;
 $input-height: 36px;
 $number-input-btn-width: 18px;
 $form-label-margin: 10px;
-$number-input-width: 75px;
+$number-addon-width: 19px;
+$number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
 
@@ -24,6 +25,22 @@ $panel-horizontal-padding: em(18px, 14px);
       margin: 12px 0 10px;
     }
   }
+
+  .section-header-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .sp-footprint-form,
@@ -35,16 +52,6 @@ $panel-horizontal-padding: em(18px, 14px);
 
 // SP Group Form
 //=================
-.group-form {
-
-  .locations label {
-    margin-top: 5px;
-  }
-
-  .btn-add-new {
-    margin-bottom: 20px;
-  }
-}
 
 // SP Location Form
 //=================
@@ -106,13 +113,33 @@ $panel-horizontal-padding: em(18px, 14px);
     }
 
     label {
-      display: block;
-      margin: $form-group-padding 0;
       line-height: $bar-height;
     }
 
     .btn-add-new {
       float: right;
+    }
+
+    .bootstrap-typeahead-input-main {
+      height: $btn-height;
+      padding-left: 40px;
+      background-position: 10px;
+      background-repeat: no-repeat;
+      background-size: 21px;
+
+      .dark-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
+        background-image: url('../assets/icons/dt-icon-search.svg');
+        background-size: 21px 21px;
+      }
+
+      .light-theme & {
+        // UDNP-2691 - Search icon is missing on IE11
+        width: 100%;
+        background-image: url('../assets/icons/lt-icon-search.svg');
+        background-size: 21px 21px;
+      }
     }
   }
 
@@ -132,16 +159,32 @@ $panel-horizontal-padding: em(18px, 14px);
         color: $lt-text-color;
         background-color: $white;
         box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+        .icon {
+          fill: $lt-text-color;
+        }
       }
 
       .action-buttons {
         text-align: right;
+
+        .btn-icon {
+          line-height: normal;
+        }
       }
     }
   }
 
   .number-input {
     width: $input-width - $number-input-btn-width;
+  }
+
+  .as-num-input {
+    width: $input-width - $number-input-btn-width - $number-addon-width;
+  }
+
+  .input-group-addon.addon-before {
+    padding-top: 0;
   }
 }
 
@@ -187,6 +230,17 @@ $panel-horizontal-padding: em(18px, 14px);
       background-color: $white;
     }
   }
+
+  .addon-before {
+    .dark-theme & {
+      padding: 0;
+      background-color: inherit;
+    }
+
+    .light-theme & {
+      background-color: inherit;
+    }
+  }
 }
 
 // SP Add Node Form
@@ -195,11 +249,24 @@ $panel-horizontal-padding: em(18px, 14px);
 
   .number-input-group {
     width: $number-input-width;
-    margin-top: 7px;
+    margin: 7px 0 0;
   }
 
   &__highlight-name {
     font-weight: bold;
     color: $pale-blue;
+  }
+}
+
+// SP Edit Node Form
+//=================
+.sp-edit-node-form .form-group {
+
+  &:nth-child(-n+2) {
+    width: 100%;
+
+    .input-group {
+      margin-bottom: 0;
+    }
   }
 }

@@ -95,8 +95,11 @@ export class Dashboard extends React.Component {
     clearTimeout(this.measureContainersTimeout)
   }
 
-  fetchData(params, filters, activeAccount) {
-    if (params.account) {
+  fetchData(urlParams, filters, activeAccount) {
+    if (urlParams.account) {
+      // Dashboard should fetch only account level data
+      const params = { brand: urlParams.brand, account: urlParams.account }
+
       let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
       const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)

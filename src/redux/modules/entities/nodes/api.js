@@ -14,7 +14,13 @@ const nodeSchema = new schema.Entity(
     processStrategy: ({ pop_id, pod_id, network_id, group_id, id, ...rest }) => ({
 
       reduxId: buildReduxId(group_id, network_id, pop_id, pod_id, id),
-      pop_id, pod_id, network_id, group_id, id, ...rest
+      parentId: buildReduxId(group_id, network_id, pop_id, pod_id),
+      pop_id,
+      pod_id,
+      network_id,
+      group_id,
+      ...rest,
+      id
 
     })
   }
