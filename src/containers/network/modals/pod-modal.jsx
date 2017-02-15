@@ -17,6 +17,7 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
+import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -29,8 +30,6 @@ import RoutingDaemonFormContainer from './routing-daemon-modal'
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
-
-    this.checkforNodes = this.checkforNodes.bind(this)
 
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
@@ -229,12 +228,6 @@ class PodFormContainer extends React.Component {
       })
   }
 
-  checkforNodes() {
-    //TODO: this should check weather the current POD has Nodes or not
-    // and return a boolean
-    return false
-  }
-
   render() {
     const {
       initialValues,
@@ -246,6 +239,7 @@ class PodFormContainer extends React.Component {
 
       group,
       //account,
+      hasNodes,
       network,
       footprints
     } = this.props
@@ -271,7 +265,7 @@ class PodFormContainer extends React.Component {
 
           <PodForm
             footprints={footprints}
-            hasNodes={this.checkforNodes()}
+            hasNodes={hasNodes}
             initialValues={initialValues}
 
             onSave={(values) => this.onSave(edit, values)}
@@ -349,6 +343,7 @@ PodFormContainer.propTypes = {
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
@@ -401,6 +396,7 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
     pop,
