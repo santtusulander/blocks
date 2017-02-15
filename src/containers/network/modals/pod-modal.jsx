@@ -31,8 +31,6 @@ class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    this.checkforNodes = this.checkforNodes.bind(this)
-
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
     this.hideFootprintModal = this.hideFootprintModal.bind(this)
@@ -228,12 +226,6 @@ class PodFormContainer extends React.Component {
         //Close modal
         this.props.onCancel();
       })
-  }
-
-  checkforNodes() {
-    //TODO: this should check weather the current POD has Nodes or not
-    // and return a boolean
-    return false
   }
 
   render() {
