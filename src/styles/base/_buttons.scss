@@ -177,7 +177,7 @@ $lt-caret-color: $silver-60;
   }
 
   .btn-link {
-    line-height: inherit;
+    line-height: $btn-line-height;
     color: $btn-primary-background;
     text-transform: none;
     background-color: transparent;
