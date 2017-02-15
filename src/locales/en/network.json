@@ -137,6 +137,8 @@
   "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
   "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
   "portal.network.footprintForm.file.label": "CSV File",
+  "portal.network.footprintForm.file.help.label": "CSV File",
+  "portal.network.footprintForm.file.help.text": "The UDN uses two AS numbers for routing",
   "portal.network.footprintForm.file.download.text": "Download template",
   "portal.network.footprintForm.file.invalid.text": "Couldn't add a Footprint. Not a valid CSV file.",
 
