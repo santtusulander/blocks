@@ -101,7 +101,6 @@ class NetworkLocationFormContainer extends Component {
       account_id: Number(account),
       group_id: Number(group),
       cloud_name: values.cloudName,
-      cloud_provider: values.cloudProvider || ' ',
       cloud_region: values.cloudRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
       country_code: values.countryCode || '',
@@ -113,6 +112,7 @@ class NetworkLocationFormContainer extends Component {
       lat: parseFloat(values.latitude),
       lon: parseFloat(values.longitude)
     }
+    if (values.cloudProvider) data.cloud_provider = values.cloudProvider
 
     const params = {
       brand: brand,

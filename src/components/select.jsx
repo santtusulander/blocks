@@ -82,7 +82,7 @@ class Select extends Component {
           {this.getSelectedItem()}
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {(this.getSelected() && unselectedValue)&&
+          {(this.getSelected() && (unselectedValue !== undefined)) &&
             <MenuItem eventKey={unselectedValue}>
               <div className="dropdown-select__option-label pale">
                 {this.props.emptyLabel}
