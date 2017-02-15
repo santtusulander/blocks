@@ -47,7 +47,7 @@ class TabTokenAuthentication extends Component {
 
     const editUrlBuilder = (propertyId, policyParams) => editOrDelete => {
 
-      const property = this.props.properties.find( p => p.get('published_host_idm', propertyId) )
+      const property = this.props.properties.find( p => p.get('published_host_id') === propertyId )
 
       const propertyParams = {
         brand: this.props.params.brand,
