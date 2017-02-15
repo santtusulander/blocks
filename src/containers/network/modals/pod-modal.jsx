@@ -164,7 +164,7 @@ class PodFormContainer extends React.Component {
     if (values.UIDiscoveryMethod === 'BGP') {
       service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
       service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as) || 0
-      service.sp_bgp_router_password = values.UIp_bgp_router_password
+      service.sp_bgp_router_password = values.UIsp_bgp_router_password
 
       data.footprints = []
     } else {
