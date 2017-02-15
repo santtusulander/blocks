@@ -149,8 +149,9 @@ class NetworkFormContainer extends React.Component {
       <div>
         <SidePanel show={true} title={title} subTitle={subTitle} cancel={onCancel}>
           <NetworkForm
-            hasPops={isFetching ? true : this.hasChildren(edit)}
+            hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
+            isFetching={isFetching}
             onSave={(values) => this.onSave(edit, values)}
             onDelete={(networkId) => {
               this.networkId = networkId
