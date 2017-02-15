@@ -383,7 +383,7 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
-  const initialValues = edit && pod ? pod.toJS() : {}
+  const initialValues = edit && pod ? pod.toJS() : { UIRequestFwdType : "on_net" }
 
   const inititalUIFootprints = edit
     && initialValues
