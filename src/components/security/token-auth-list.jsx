@@ -19,7 +19,9 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.schema.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.sharedSecretValue.text"/></th>
             <th width="19%"><FormattedMessage id="portal.security.tokenAuth.created.text"/></th>
-            <th width="1%" />
+            <IsAllowed to={MODIFY_PROPERTY}>
+              <th width="1%" />
+            </IsAllowed>
           </tr>
 
         </thead>
@@ -35,8 +37,8 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
                 <td>{rule.schema}</td>
                 <td>**********</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
-                <td className="nowrap-column action-buttons primary">
-                  <IsAllowed to={MODIFY_PROPERTY}>
+                <IsAllowed to={MODIFY_PROPERTY}>
+                  <td className="nowrap-column action-buttons primary">
                     <div>
                       <Link
                         to={routeTo('edit')}
@@ -45,8 +47,8 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
                       </Link>
                       <Link to={routeTo('delete')} className='btn btn-icon'><IconTrash /></Link>
                     </div>
-                  </IsAllowed>
-                </td>
+                  </td>
+                </IsAllowed>
               </tr>
             )
           })}
