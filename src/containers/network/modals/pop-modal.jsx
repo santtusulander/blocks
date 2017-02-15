@@ -268,7 +268,8 @@ const mapStateToProps = (state, ownProps) => {
       updatedDate: edit && pop ? pop.get('updated') : '',
       locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
-      locationId: edit && pop ? pop.get('location_id') : ''
+      locationId: edit && pop ? pop.get('location_id') : '',
+      status: edit && pop ? pop.get('status') : 1
     }
   }
 }
