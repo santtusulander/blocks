@@ -19,6 +19,27 @@ import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } f
 
 const LOCATION_ADDRESS_HELP_TEXT_ID = 'portal.network.locationForm.latLongFields.helperTextHint.address'
 
+/**
+ * Set address data values from location data
+ * @param addressData Address data object
+ * @param value       Location data, either main object or one of its contexts
+ */
+function setAddressDataValue(addressData, value) {
+  const valueType = value.id.split('.')[0]
+
+  if (valueType === 'address') {
+    addressData.street = value.text
+  } else if (valueType === 'postcode') {
+    addressData.postalCode = value.text
+  } else if (valueType === 'place') {
+    addressData.city = value.text
+  } else if (valueType === 'region') {
+    addressData.state = value.text
+  } else if (valueType === 'country') {
+    addressData.countryCode = value.short_code
+  }
+}
+
 class NetworkLocationFormContainer extends Component {
   constructor(props) {
     super(props)
@@ -28,6 +49,7 @@ class NetworkLocationFormContainer extends Component {
     this.state = {
       isFetchingLocation: false,
       addressLine: intl.formatMessage({ id: LOCATION_ADDRESS_HELP_TEXT_ID }),
+      addressData: {},
       latLng: {
         latitude: null,
         longitude: null
@@ -82,46 +104,55 @@ class NetworkLocationFormContainer extends Component {
   }
 
   fetchLocation() {
-    const { latLng } = this.state
+    const { latLng } = this.props
     locationReverseGeoCodingLookup(latLng.longitude, latLng.latitude)
       .then(({ features }) => {
+        const addressData = {}
+
+        setAddressDataValue(addressData, features[0])
+
+        features[0].context.forEach(context => setAddressDataValue(addressData, context))
+
         this.setState({
           addressLine: features[0].place_name,
-          isFetchingLocation: false
+          isFetchingLocation: false,
+          addressData
         })
       })
       .catch(() => {
         this.setState({
           addressLine: <FormattedMessage id="portal.network.locationForm.latLongFields.addressNotFound"/>,
-          isFetchingLocation: false
+          isFetchingLocation: false,
+          addressData: {}
         })
       })
   }
 
   onSubmit(edit, values) {
     const { brand, account } = this.props.params
-    const group = this.props.groupId
+    const { groupId } = this.props
+    const { addressData } = this.state
     const data = {
       brand_id: brand,
       account_id: Number(account),
-      group_id: Number(group),
+      group_id: Number(groupId),
       cloud_name: values.cloudName,
       cloud_provider: values.cloudProvider || undefined,
       cloud_region: values.cloudProviderRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
-      country_code: values.countryCode || '',
-      state: values.state || '',
-      city_name: values.iataCode[0].city || '',
       iata_code: values.iataCode[0].iata,
-      street: values.street || '',
-      postalcode: values.postalCode || '',
+      city_name: addressData.city || '',
+      country_code: addressData.countryCode || '',
+      state: addressData.state || '',
+      street: addressData.street || '',
+      postalcode: addressData.postalCode || '',
       lat: parseFloat(values.latitude),
       lon: parseFloat(values.longitude)
     }
 
     const params = {
       brand: brand,
-      group: String(group),
+      group: String(groupId),
       account: account,
       payload: data
     }
@@ -171,6 +202,7 @@ class NetworkLocationFormContainer extends Component {
     this.setState({
       isFetchingLocation: false,
       addressLine: intl.formatMessage({ id: LOCATION_ADDRESS_HELP_TEXT_ID }),
+      addressData: {},
       latLng: {
         latitude: null,
         longitude: null
