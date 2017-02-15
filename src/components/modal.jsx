@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
+import classnames from 'classnames'
 
 import DefaultErrorBlock from './form/default-error-block'
 import FieldFormGroup from './form/field-form-group'
@@ -15,10 +16,35 @@ class ModalWindow extends React.Component {
   }
 
   render() {
-    const { error, cancel, cancelButton, children, closeButton, closeButtonSecondary, closeModal, content, continueButton, deleteButton, intl, invalid, loading, loginButton, okButton, reloadButton, stayButton, handleSubmit, onSubmit, submitButton, submitting, title, verifyDelete } = this.props
+    const {
+      cancel,
+      cancelButton,
+      children,
+      className,
+      closeButton,
+      closeButtonSecondary,
+      closeModal,
+      content,
+      continueButton,
+      deleteButton,
+      error,
+      handleSubmit,
+      intl,
+      invalid,
+      loading,
+      loginButton,
+      okButton,
+      onSubmit,
+      reloadButton,
+      stayButton,
+      submitButton,
+      submitting,
+      title,
+      verifyDelete
+    } = this.props
 
     return (
-      <Modal show={true} dialogClassName="modal-window">
+      <Modal show={true} dialogClassName={classnames('modal-window', className)}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Header>
             <h1>{title}</h1>
