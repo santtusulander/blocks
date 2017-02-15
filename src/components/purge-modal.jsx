@@ -25,7 +25,8 @@ class PurgeModal extends React.Component {
       purgeObjectsError: '',
       purgeObjectsWarning: '',
       purgeEmailError: '',
-      type: ''
+      type: '',
+      invalid: true
     }
 
     this.emailValidationTimeout = null
@@ -44,13 +45,15 @@ class PurgeModal extends React.Component {
     this.setState({
       purgeObjectsError: '',
       purgeObjectsWarning: '',
-      type: type
+      type: type,
+      invalid: true
     })
     if (type == 'url' || type == 'directory') {
       this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
     } else if (type == 'hostname') {
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', Immutable.List()))
     } else if (type == 'group') {
+      this.setState({invalid: false})
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', (this.props.allHosts).toJS()))
     }
   }
@@ -91,13 +94,18 @@ class PurgeModal extends React.Component {
         this.props.activePurge.set('objects', Immutable.List(parsedObjs))
       )
     }
+    
+    this.validatePurgeObjects(e)
   }
   parseTypeahead(e) {
     const parsedTypeahead = e.map(val => val.label)
+    parsedTypeahead.length ? this.setState({invalid: false}) : this.setState({invalid: true})
     this.props.changePurge(this.props.activePurge.set('published_hosts', Immutable.List(parsedTypeahead)))
   }
   validatePurgeObjects(e) {
     const value = e.target.value
+    this.setState({invalid: false})
+
     if(!value) {
       this.setState({
         purgeObjectsError: <FormattedMessage id="portal.analytics.purgeModal.minAmount.error"/>
@@ -164,7 +172,7 @@ class PurgeModal extends React.Component {
             componentClass="textarea"
             placeholder={placeholder}
             value={this.props.activePurge.get('objects').join(',\n')}
-            onBlur={this.validatePurgeObjects}
+
             onChange={this.parsePurgeObjects}
           />
         </FormGroup>
@@ -316,7 +324,7 @@ class PurgeModal extends React.Component {
               <Button
                 type="submit"
                 bsStyle="primary"
-                disabled={this.state.purgeObjectsError || this.state.purgeEmailError ? true : false}>
+                disabled={this.state.invalid || this.state.purgeObjectsError || this.state.purgeEmailError ? true : false}>
                 <FormattedMessage id="portal.analytics.purgeModal.button.purge.text"/>
               </Button>
             </FormFooterButtons>
