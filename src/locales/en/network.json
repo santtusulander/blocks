@@ -136,6 +136,9 @@
   "portal.network.footprintForm.CIRD.invalid.text": "You should remove all invalid IPV4 CIDR items",
   "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
   "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
+  "portal.network.footprintForm.file.label": "CSV File",
+  "portal.network.footprintForm.file.download.text": "Download template",
+  "portal.network.footprintForm.file.invalid.text": "Couldn't add a Footprint. Not a valid CSV file.",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
