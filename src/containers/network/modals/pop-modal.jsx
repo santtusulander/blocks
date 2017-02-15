@@ -2,6 +2,8 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
+
+
 import { List, Map } from 'immutable'
 import moment from 'moment'
 
@@ -25,6 +27,7 @@ import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/s
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
@@ -32,6 +35,9 @@ import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      showDeleteModal : false
+    }
   }
 
   componentWillMount(){
@@ -63,6 +69,10 @@ class PopFormContainer extends Component {
     if (this.props.groupId !== groupId) {
       groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
     }
+  }
+
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
   }
 
   /**
@@ -128,7 +138,6 @@ class PopFormContainer extends Component {
         if (this.props.selectedEntityId == popId) {
           this.props.handleSelectedEntity(popId)
         }
-
         //Close modal
         this.props.onCancel();
       })
@@ -148,6 +157,8 @@ class PopFormContainer extends Component {
       popId
     } = this.props
 
+    const { showDeleteModal } = this.state
+
     const edit = !!initialValues.id
 
     const title = edit ? <FormattedMessage id='portal.network.popEditForm.editPop.title' />
@@ -162,24 +173,39 @@ class PopFormContainer extends Component {
                                                   }} />) : ''
 
     return (
-      <SidePanel
-        show={true}
-        title={title}
-        subTitle={subTitle}
-        subSubTitle={subSubTitle}
-        cancel={() => onCancel()}
-      >
+      <div>
+        <SidePanel
+          show={true}
+          title={title}
+          subTitle={subTitle}
+          subSubTitle={subSubTitle}
+          cancel={() => onCancel()}
+        >
 
-        <NetworkPopForm
-          hasPods={this.hasChildren(edit)}
-          iata={iata}
-          initialValues={initialValues}
-          onDelete={() => this.onDelete(popId)}
-          onSave={(values) => this.onSave(edit, values)}
-          onCancel={() => onCancel()}
-        />
+          <NetworkPopForm
+            hasPods={this.hasChildren(edit)}
+            iata={iata}
+            initialValues={initialValues}
+            onDelete={() => this.onToggleDeleteModal(true)}
+            onSave={(values) => this.onSave(edit, values)}
+            onCancel={() => onCancel()}
+          />
 
-      </SidePanel>
+        </SidePanel>
+
+        {edit && showDeleteModal &&
+          <ModalWindow
+            title={<FormattedMessage id="portal.network.popEditForm.deletePop.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => this.onToggleDeleteModal(false)}
+            onSubmit={() => this.onDelete(popId)}>
+            <p>
+             <FormattedMessage id="portal.network.popEditForm.deletePop.confirmation.text"/>
+            </p>
+          </ModalWindow>}
+      </div>
     )
   }
 }
@@ -230,7 +256,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.group, ownProps.network)),
+    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',

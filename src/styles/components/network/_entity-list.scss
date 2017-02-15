@@ -97,7 +97,7 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
 
     .list-col {
-      min-width: $md-sidebar-width;
+      width: $md-sidebar-width - 60px;
       margin-right: $multi-col-item-right-margin;
 
       &:not(:first-of-type) {

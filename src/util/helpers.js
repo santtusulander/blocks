@@ -6,7 +6,7 @@ import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
-import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER } from '../constants/account-management-options'
+import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
@@ -426,6 +426,10 @@ export function accountIsContentProviderType(account) {
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
+export function accountIsCloudProviderType(account) {
+  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
+}
+
 export function getAccountByID(accounts, ids) {
   if (Array.isArray(ids)) {
     let accountsArray = []
@@ -486,6 +490,36 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
   }
   return sortFunc
 }
+
+
+/**
+ * sort Immutable List by key
+ * @param  {List} list
+ * @param  {String} [key='name']
+ * @param  {String} [direction='asc|desc']
+ * @return {List} sorted list
+ */
+export const sortByKey = ( list, key = 'name', direction = 'asc') => {
+  if (!list || list.isEmpty() ) return
+
+  return list.sort(
+      (a, b) => {
+        const valA = a.get(key)
+        const valB = b.get(key)
+        if ( isNaN(valA) || isNaN(valB) ) {
+          return (direction === 'asc')
+            ? valA.toString().localeCompare(valB.toString())
+            : - valA.toString().localeCompare(String(valB.toString()))
+        }
+
+        if (a > b && direction === 'asc') return 1
+        if (a > b && direction === 'desc') return -1
+
+        return 0
+      }
+  )
+}
+
 
 /**
  * Checks to see if a redux-form field has an error and returns "error". This

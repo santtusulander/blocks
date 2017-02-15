@@ -32,16 +32,26 @@ export function isValidEmail(email) {
 }
 
 /**
+ * Check if valid float
+ * @param str
+ * @returns {boolean}
+ */
+export function isValidFloat(str) {
+  return matchesRegexp(str, /^\d*\.?\d+$/)
+}
+
+/**
  * Check if valid IPv4 address
  * @param address
  * @returns {*}
  */
-export function isValidIPv4Address(address) {
+export function isValidIPv4Address(address, onlyCIDR) {
 
-  const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
+  const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) <= 32 )
+  if(splitAddr.length > 1 || onlyCIDR) {
+    const cidr = Number(splitAddr[1])
+    return validator.isIP(splitAddr[0], 4) && ( (cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32 )
   }
 
   return !!address && validator.isIP(address, 4)
@@ -240,6 +250,9 @@ export function isValidLongtitude(str) {
  * @return {Boolean}
  */
 export function isValidProviderWeight(str) {
+  if (!isValidFloat(str)) {
+    return false
+  }
   const providerWeight = parseFloat(str)
-  return !isNaN(providerWeight) && providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
+  return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
 }
