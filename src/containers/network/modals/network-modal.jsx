@@ -163,6 +163,7 @@ class NetworkFormContainer extends React.Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='network-delete-modal'
             title={<FormattedMessage id="portal.network.networkForm.deleteNetwork.title"/>}
             verifyDelete={true}
             cancelButton={true}
