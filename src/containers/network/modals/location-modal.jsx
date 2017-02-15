@@ -39,25 +39,16 @@ class NetworkLocationFormContainer extends Component {
 
   componentWillMount() {
     this.props.fetchIataCodes()
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const { initialValues } = nextProps
-    const initialAddressLine = this.props.intl.formatMessage({ id: 'portal.network.locationForm.latLongFields.helperTextHint.address' })
-    const edit = !!initialValues.name
+    const { initialValues } = this.props
 
-    if (edit && initialValues.latitude && initialValues.longitude && initialAddressLine === this.state.addressLine) {
+    if (initialValues.latitude && initialValues.longitude) {
       this.setState({
         latLng: {
           latitude: initialValues.latitude,
           longitude: initialValues.longitude
         }
       }, () => this.fetchLocation())
-    }
-    if( !edit && initialAddressLine !== this.state.addressLine ) {
-      this.setState({
-        addressLine: initialAddressLine
-      })
     }
   }
 
