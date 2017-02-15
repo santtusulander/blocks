@@ -13,7 +13,7 @@ import Notification from '../components/notification'
 const modalClassDim = 'side-panel--dim'
 const overlappingClass = 'side-panel--overlapping'
 
-class SidePanelComponent extends Component {
+class SidePanel extends Component {
   constructor(props) {
     super(props)
 
@@ -79,8 +79,8 @@ class SidePanelComponent extends Component {
   }
 }
 
-SidePanelComponent.displayName = 'SidePanel'
-SidePanelComponent.propTypes = {
+SidePanel.displayName = 'SidePanel'
+SidePanel.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   dim: PropTypes.bool,
@@ -102,9 +102,6 @@ SidePanelComponent.propTypes = {
   uiActions: PropTypes.object
 }
 
-export const SidePanel = keyStrokeSupport(SidePanelComponent)
-
-
 function mapStateToProps(state) {
   return {
     notification: state.ui.get('sidePanelNotification')
@@ -117,4 +114,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SidePanel);
+export default connect(mapStateToProps, mapDispatchToProps)(keyStrokeSupport(SidePanel));
