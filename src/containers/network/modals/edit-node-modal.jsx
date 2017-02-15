@@ -104,6 +104,7 @@ class EditNodeFormContainer extends React.Component {
           </HelpPopover>}
           {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, dateFormat)}</span>}
         </span>
+        {" | "}
         <span className="edit-node__dates edit-node__dates--updated">
           {updatedText}:
           {hasMultipleNodes &&
