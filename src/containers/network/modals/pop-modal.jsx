@@ -81,7 +81,8 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      name: values.name
+      name: values.name,
+      status: values.status
     }
 
     // add id if create new
