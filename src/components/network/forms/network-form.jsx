@@ -35,7 +35,7 @@ const validate = ({ name, description }) => {
 }
 
 const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete }) => {
-  const deleteButtonDisabled = isFetching ? true : hasPops
+  const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
   const edit = !!initialValues.name
 
