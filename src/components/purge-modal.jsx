@@ -94,7 +94,7 @@ class PurgeModal extends React.Component {
         this.props.activePurge.set('objects', Immutable.List(parsedObjs))
       )
     }
-    
+
     this.validatePurgeObjects(e)
   }
   parseTypeahead(e) {
@@ -172,7 +172,6 @@ class PurgeModal extends React.Component {
             componentClass="textarea"
             placeholder={placeholder}
             value={this.props.activePurge.get('objects').join(',\n')}
-
             onChange={this.parsePurgeObjects}
           />
         </FormGroup>
