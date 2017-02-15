@@ -125,6 +125,7 @@ const DnsDomainEditForm = (props) => {
         placeholder={intl.formatMessage({id: 'portal.accountManagement.dns.form.domainNamePlaceholder.text'})}
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.accountManagement.dns.form.domainName.text" />}
+        disabled={edit}
       />
 
       <hr/>
