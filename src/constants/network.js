@@ -87,6 +87,13 @@ export const DISCOVERY_METHOD_OPTIONS = [
   {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
 ]
 
+export const STATUS_OPTIONS = [
+  {value: 1, label: 'portal.network.item.status.provisioning'},
+  {value: 2, label: 'portal.network.item.status.disabled'},
+  {value: 3, label: 'portal.network.item.status.enabled'},
+  {value: 4, label: 'portal.network.item.status.destroying'}
+]
+
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POD_PROVIDER_WEIGHT_MAX = 1
 export const POP_ID_MIN = 1

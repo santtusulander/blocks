@@ -37,6 +37,7 @@
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
   "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
 
+  "portal.network.item.status.label": "Status",
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.item.status.disabled": "Disabled",
   "portal.network.item.status.destroying": "Destroying",
