@@ -2,8 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
+import { formatUnixTimestamp } from '../../../util/helpers'
 import { SubmissionError } from 'redux-form'
-import moment from 'moment'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
@@ -72,7 +72,7 @@ class EditNodeFormContainer extends React.Component {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (let dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{moment.unix(node[dateProp]).format(NETWORK_DATE_FORMAT)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], NETWORK_DATE_FORMAT)}</td></tr>)
         }
       }
     }
@@ -101,7 +101,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{moment.unix(firstNode.created).format(NETWORK_DATE_FORMAT)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, NETWORK_DATE_FORMAT)}</span>}
         </span>
         {" | "}
         <span className="edit-node__dates edit-node__dates--updated">
@@ -118,7 +118,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{moment.unix(firstNode.updated).format(NETWORK_DATE_FORMAT)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, NETWORK_DATE_FORMAT)}</span>}
         </span>
       </div>
     )
