@@ -88,10 +88,10 @@ export const DISCOVERY_METHOD_OPTIONS = [
 ]
 
 export const STATUS_OPTIONS = [
-  {value: 1, label: 'Provisioning'},
-  {value: 2, label: 'Disabled'},
-  {value: 3, label: 'Enabled'},
-  {value: 4, label: 'Destroying'}
+  {value: 1, label: 'portal.network.item.status.provisioning'},
+  {value: 2, label: 'portal.network.item.status.disabled'},
+  {value: 3, label: 'portal.network.item.status.enabled'},
+  {value: 4, label: 'portal.network.item.status.destroying'}
 ]
 
 export const POD_PROVIDER_WEIGHT_MIN = 0
