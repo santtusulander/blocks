@@ -82,6 +82,13 @@ const NetworkPopForm = (props) => {
           label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
 
         <Field
+          name="status"
+          component={FieldFormGroupSelect}
+          options={[]}
+          label={<FormattedMessage id="portal.network.popEditForm.status.label" />}
+        />
+
+        <Field
           name="locationId"
           className="input-select"
           component={FieldFormGroupSelect}
