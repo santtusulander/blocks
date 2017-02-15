@@ -12,7 +12,8 @@ import {
   UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
   UserCanViewDns,
-  UserCanViewHosts
+  UserCanViewHosts,
+  CanViewConfigurationSecurity
 } from './util/route-permissions-wrappers'
 
 import {
@@ -262,7 +263,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.configurationTabDetails} />
             <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
             <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
-            <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
+            <Route path={routes.configurationTabSecurity} component={CanViewConfigurationSecurity(store)(ConfigurationSecurity)}/>
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
