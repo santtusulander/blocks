@@ -290,12 +290,12 @@ class GroupFormContainer extends React.Component {
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
 
-      {canSeeLocations &&
+      {canSeeLocations && this.state.visibleLocationForm &&
         <NetworkLocationFormContainer
           params={this.props.params}
           groupId={this.props.groupId}
           onCancel={this.hideLocationForm}
-          show={this.state.visibleLocationForm}
+          show={true}
           locationId={this.state.selectedLocationId}
         />
       }
