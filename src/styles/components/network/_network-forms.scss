@@ -8,6 +8,7 @@ $number-addon-width: 19px;
 $number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
+$hint-input-left-padding: 40px;
 
 .group-form,
 .sp-network-form,
@@ -118,6 +119,10 @@ $panel-horizontal-padding: em(18px, 14px);
 
     .btn-add-new {
       float: right;
+    }
+
+    .bootstrap-typeahead-input-hint {
+      padding-left: $hint-input-left-padding;
     }
 
     .bootstrap-typeahead-input-main {
