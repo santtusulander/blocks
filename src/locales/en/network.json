@@ -107,6 +107,8 @@
   "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be an integer number",
   "portal.network.podForm.footprintSearch.placeholder": "No footprints",
   "portal.network.podForm.lb_method.options.gslb.label": "GSLB",
+  "portal.network.podForm.lb_method.options.lb.label": "LB",
+  "portal.network.podForm.lb_method.options.referral.label": "REFERRAL",
   "portal.network.podForm.pod_type.options.core.label": "Core",
   "portal.network.podForm.pod_type.options.sp_edge.label": "SP Edge",
   "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
