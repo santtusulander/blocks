@@ -1,301 +1,205 @@
 import React, { PropTypes, Component } from 'react'
+import classnames from 'classnames'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'multireducer';
-import { Map, List, is } from 'immutable'
+import { Dropdown, FormControl } from 'react-bootstrap'
 
-import { resetChangedAccount } from '../../redux/modules/account'
-import * as accountSelectorActionCreators from '../../redux/modules/account-selector'
-import * as PERMISSIONS from '../../constants/permissions.js'
-import checkPermissions from '../../util/permissions'
-import ProviderTypes from '../../constants/provider-types'
+import ToggleElement from './toggle-element'
 
-import SelectorComponent from './selector-component.jsx'
+import propertyActions from '../../redux/modules/entities/properties/actions'
+import { getByGroup } from '../../redux/modules/entities/properties/selectors'
 
-const tierHierarchy = [
-  'property',
-  'group',
-  'account',
-  'brand'
-]
+import groupActions from '../../redux/modules/entities/groups/actions'
+import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 
-class AccountSelector extends Component {
-  constructor(props) {
-    super(props)
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import { getByBrand } from '../../redux/modules/entities/accounts/selectors'
 
-    this.tier = null
-    this.account = null
-    this.group = null
-    this.providerType = null
-    this.fetchItems = this.fetchItems.bind(this)
-    this.onCaretClick = this.onCaretClick.bind(this)
-    this.onItemClick = this.onItemClick.bind(this)
-    this.onTopbarClick = this.onTopbarClick.bind(this)
-    this.isDrillable = this.isDrillable.bind(this)
+import IconArrowRight from '../icons/icon-arrow-right'
+
+class Selector extends Component {
+
+  state = {
+    open: false,
+    activeNode: this.props.activeNode
   }
 
-  componentWillMount() {
-    this.fetchByTier(this.props.params)
+  componentWillReceiveProps({ activeNode }) {
+    activeNode !== this.props.activeNode && this.setState({ activeNode })
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { params, getChangedItem } = this.props
-    const prevChangedItem = getChangedItem(this.tier)
-    const nextChangedItem = nextProps.getChangedItem(this.tier)
-    if(JSON.stringify(nextProps.params) !== JSON.stringify(params) ||
-      (nextChangedItem && !is(prevChangedItem, nextChangedItem))) {
-      this.fetchByTier(nextProps.params)
-      this.props.accountSelectorActions.setOpen(false)
-    }
-  }
+  toggleMenu = () => this.setState({ open: !this.state.open })
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.children !== nextProps.children) {
-      return true
+  renderCaret = (nodeId, fetchChildren) => {
+
+    const handleCaretClick = () => {
+      fetchChildren(nodeId).then(() =>
+        this.setState({ activeNode: nodeId })
+      )
     }
 
-    if (this.props.open !== nextProps.open) {
-      return true
-    }
-
-    if (this.props.open) {
-      return true
-    } else {
-      if (JSON.stringify(this.props.params) !== JSON.stringify(nextProps.params)) {
-        return true
-      } else if (!is(this.props.items, nextProps.items)) {
-        return true
-      } else if (
-        this.props.startTier !== nextProps.startTier
-        || this.props.restrictedTo !== nextProps.restrictedTo
-      ) {
-        return true
-      }
-    }
-
-    return false
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick, false)
-  }
-
-  canSeeAccounts() {
-    return checkPermissions(
-      this.props.roles,
-      this.props.currentUser,
-      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+    return (
+      <a className="caret-container" onClick={handleCaretClick} tabIndex="-1">
+        <IconArrowRight />
+      </a>
     )
   }
 
-  canSeeProperties() {
-    return checkPermissions(
-      this.props.roles,
-      this.props.currentUser,
-      PERMISSIONS.VIEW_CONTENT_PROPERTIES
-    ) && this.providerType !== ProviderTypes.SERVICE_PROVIDER
-  }
+  goBack = entityType => this.setState({ [entityType]: undefined })
 
-  setInitialTier(params) {
-    const { property, group, account, brand } = params
-    let initTier = this.props.startTier || property && 'property' ||
-      group && 'group' || account && 'account' || brand && 'brand'
-    if(!this.canSeeAccounts() && (initTier === 'account' || initTier === 'brand')) {
-      initTier = 'group'
-    }
-    this.tier = initTier
-  }
+  renderTree = (tree) => {
 
-  fetchByTier(params) {
-    this.setInitialTier(params)
-    const paramArray = Object.keys(params).map(param => {
-      this[param] = params[param]
-      return params[param]
-    })
-    this.fetchItems(this.tier, ...paramArray)
-  }
+    const { nodes, idKey = 'id', fetchChildren } = tree
+    const parentId = tree[idKey]
 
-  fetchItems(nextTier, brand, account, group) {
-    let fetchParams = [brand]
-    if(!this.canSeeAccounts() && (nextTier === 'account' || nextTier === 'brand')) {
-      nextTier = 'group'
-    }
-    if(!this.canSeeAccounts() && !account) {
-      account = this.props.currentUser.get('account_id')
-    }
-    if(nextTier === 'property') {
-      fetchParams = [brand, account, group]
-    }
-    else if(nextTier === 'group') {
-      fetchParams = [brand, account]
-    }
-    this.props.accountSelectorActions.fetchItems(...fetchParams).then(() => {
-      this.props.accountSelectorActions.setSearch('')
-    })
-    this.tier = nextTier
-  }
+    return (
+      <ul className="scrollable-menu">
+        {nodes.map((node) => {
 
-  /**
-   * Item name pressed -> should route to that item. Since the same menu items are displayed
-   * in brand and account tiers, in both cases 'account' gets passed
-   */
-  onItemClick(value) {
-    let { onSelect, params: { brand, account, group }, accountSelectorActions } = this.props
-    if(!this.canSeeAccounts() && !account) {
-      account = this.props.currentUser.get('account_id')
-    }
-    this.props.accountSelectorActions.setOpen(false)
-    accountSelectorActions.setSearch('')
-    onSelect(
-      this.tier === 'brand' ? 'account' : this.tier,
-      value,
-      {
-        brand,
-        account: this.account || account,
-        group: this.group || group
-      }
+          const { idKey = 'id', labelKey = 'name' } = node
+
+          const nodeId = node[idKey]
+          const nodeName = node[labelKey]
+
+          return (
+            <li className={classnames({ 'active': this.state.activeNode == nodeId })}>
+
+              <a>{nodeName}</a>
+
+              {this.renderCaret(nodeId, fetchChildren)}
+
+              {this.renderTree(node)}
+
+            </li>
+          )
+        })}
+      </ul>
     )
-  }
-
-   /**
-    * top bar pressed -> calls to function from parent with desired effects
-    */
-  onTopbarClick() {
-    let { topBarAction, params: { brand, account, group, property } } = this.props
-    if(!this.canSeeAccounts() && !account) {
-      account = this.props.currentUser.get('account_id')
-    }
-    topBarAction(
-      this.tier,
-      this.fetchItems,
-      {
-        account: this.account || account,
-        group: this.group || group,
-        property: this.property || property,
-        brand
-      }
-    )
-  }
-
-  onCaretClick(value, providerType) {
-    let fetchArgs;
-    if(this.tier === 'group') {
-      this.group = value
-      fetchArgs = ['property', 'udn', this.account, this.group]
-    }
-    else {
-      this.account = value
-      this.providerType = providerType
-      fetchArgs = ['group', 'udn', this.account]
-    }
-
-    this.fetchItems(...fetchArgs)
-  }
-
-  sortedOptions() {
-    const searchValue = this.props.searchValue.toLowerCase()
-    const itemsToSort = searchValue !== '' ?
-      this.props.items.filter(item => item.get(1).toLowerCase().includes(searchValue)) :
-      this.props.items
-    return itemsToSort.sort((a,b) => {
-      const aLower = a.get(1).toLowerCase()
-      const bLower = b.get(1).toLowerCase()
-      if ( aLower < bLower ) return -1
-      if ( aLower > bLower ) return 1
-      return 0
-    })
-  }
-
-  isDrillable() {
-    let { restrictedTo } = this.props
-
-    if (!this.canSeeProperties() && this.tier === 'group') {
-      return false
-    }
-
-    return restrictedTo
-      && (this.tier === restrictedTo || tierHierarchy.findIndex(tier => tier === restrictedTo) < tierHierarchy.findIndex(tier => tier === this.tier))
-      || this.tier === 'property' ? false : true
   }
 
   render() {
-    const { topBarTexts, resetChanged, getChangedItem, open, searchValue, accountSelectorActions, ...other } = this.props
-    const topBarText = this.tier === 'group' && !this.canSeeAccounts() ? '' : topBarTexts[this.tier]
-    const menuProps = Object.assign(other, {
-      close: () => this.props.accountSelectorActions.setOpen(false),
-      toggle: () => {
-        getChangedItem(this.tier) !== null && !open && resetChanged(this.tier)
-        accountSelectorActions.setOpen(!open)
-      },
-      onSearch: e => accountSelectorActions.setSearch(e.target.value),
-      drillable: this.isDrillable(),
-      items: this.sortedOptions().toJS(),
-      topBarText: topBarText,
-      onSelect: this.selectOption,
-      searchValue,
-      open,
-      onItemClick: this.onItemClick,
-      onTopbarClick: this.onTopbarClick,
-      onCaretClick: this.onCaretClick
-    })
     return (
-      <SelectorComponent {...menuProps}/>
+      <Dropdown id="" open={this.state.open} onToggle={() => {/*noop*/}} className="selector-component">
+        <ToggleElement bsRole="toggle" toggle={this.toggleMenu}>
+          <span>{this.props.children}</span>
+        </ToggleElement>
+        <Dropdown.Menu>
+          <li className="action-container">
+            <FormControl
+              className="header-search-input"
+              type="text"
+              placeholder="Search"
+              value={''}/>
+          </li>
+          <li className="menu-container">
+            {this.renderTree(this.props.tree)}
+          </li>
+        </Dropdown.Menu>
+      </Dropdown>
     )
   }
 }
 
-AccountSelector.displayName = "AccountSelector"
-AccountSelector.propTypes = {
-  accountSelectorActions: PropTypes.object,
-  children: React.PropTypes.node,
-  currentUser: React.PropTypes.instanceOf(Map),
-  fetchItems: PropTypes.func,
-  getChangedItem: PropTypes.func,
-  items: React.PropTypes.instanceOf(List),
-  onSelect: PropTypes.func,
-  open: PropTypes.bool,
-  params: PropTypes.object,
-  resetChanged: PropTypes.func,
-  restrictedTo: PropTypes.string,
-  roles: React.PropTypes.instanceOf(List),
-  searchValue: PropTypes.string,
-  startTier: PropTypes.string,
-  topBarAction: PropTypes.func,
-  topBarTexts: PropTypes.object
-}
-AccountSelector.defaultProps = {
-  items: List(),
-  roles: List(),
-  currentUser: Map()
-}
-
-function mapStateToProps(state, {as}) {
-  const accountSelector = state.accountSelectors[as]
-  return {
-    getChangedItem: tier => {
-      switch(tier) {
-        case 'brand':
-        case 'account': return state.account.get('changedAccount')
+const mapStateToProps = () => ({
+  activeNode: 'udn',
+  tree: {
+    id: 'udn',
+    fetchChildren: () => Promise.resolve(console.log('fetch accs fron brand udn')),
+    nodes: [
+      {
+        id: 1,
+        name: 'acc1',
+        fetchChildren: () => Promise.resolve(console.log('fetch grps for acc 1')),
+        nodes: []
+      },
+      {
+        id: 3,
+        name: 'acc3',
+        fetchChildren: () => Promise.resolve(console.log('fetch grps for acc 3')),
+        nodes: []
+      },
+      {
+        id: 2,
+        name: 'acc2',
+        fetchChildren: () => Promise.resolve(console.log('fetch grps for acc id 2')),
+        nodes: [
+          {
+            id: 6,
+            name: 'grp1',
+            fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 1')),
+            nodes: [
+              {
+                id: 7,
+                name: 'prop1',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 1')),
+                nodes: []
+              },
+              {
+                id: 8,
+                name: 'prop2',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 2')),
+                nodes: []
+              },
+              {
+                id: 9,
+                name: 'prop3',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 3')),
+                nodes: []
+              }
+            ]
+          },
+          {
+            id: 5,
+            name: 'grp2',
+            fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 2')),
+            nodes: []
+          },
+          {
+            id: 4,
+            name: 'grp3',
+            fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 3')),
+            nodes: []
+          }
+        ]
       }
-    },
-    items: accountSelector.get('items'),
-    open: accountSelector.get('open'),
-    roles: state.roles.get('roles'),
-    searchValue: accountSelector.get('searchValue'),
-    currentUser: state.user.get('currentUser')
+    ]
+  }
+
+  // accounts: brand => getByBrand(state, brand),
+  // groups: account => getByAccount(state, account),
+  // properties: group => getByGroup(state, group)
+})
+
+const mapDispatchToProps = (dispatch, { params: { brand } }) => {
+  return {
+    fetchAccounts: () => dispatch(accountActions.fetchAll({ brand })),
+    fetchGroups: (accountId) => dispatch(groupActions.fetchAll({ brand, account: accountId })),
+    fetchProperties: (accountId) => (groupId) => dispatch(propertyActions.fetchAll({ brand, account: accountId, group: groupId }))
   }
 }
 
-function mapDispatchToProps(dispatch, {as}) {
-  return {
-    accountSelectorActions: bindActionCreators(accountSelectorActionCreators, dispatch, as),
-    resetChanged: tier => {
-      switch(tier) {
-        case 'brand':
-        case 'account':
-          dispatch(resetChangedAccount())
-      }
-    }
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Selector)
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountSelector)
+// {/* <DD
+//   entities={accounts(groupId)}
+//   nameKey
+//   idKey
+//   caret={this.caret}
+//
+//
+//   DD = ({ entities, nameKey = 'name', idKey = 'id', caret }) => {
+//     return (
+//       <ul>
+//         {entities.map(entity =>
+//           <li>
+//             <a>{entity[nameKey]}</a>
+//             {caret}
+//             <DD
+//               entities={accounts(groupId)}
+//               nameKey
+//               idKey
+//               caret={this.caret}/>
+//           </li>
+//         )}
+//       </ul>
+//     )
+//   } */}

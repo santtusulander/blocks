@@ -5,7 +5,7 @@ import { Navbar } from 'react-bootstrap' // Button, Input
 
 import GlobalLoadingBar from '../components/header/global-loading-bar'
 import LogoItem from '../components/header/logo-item'
-import AccountSelectorItem from '../components/header/account-selector-item'
+import AccountSelector from '../components/global-account-selector/global-account-selector'
 import BreadcrumbsItem from '../components/header/breadcrumbs-item'
 import UserMenu from '../components/header/user-menu'
 
@@ -54,13 +54,9 @@ class Header extends React.Component {
         <div className="header__content">
           <ul className="header__left nav navbar-nav">
             <LogoItem user={this.props.user} />
-            <AccountSelectorItem
-              account={account}
-              activeAccount={activeAccount}
-              brand={brand}
-              router={router}
-              user={user}
-            />
+            <AccountSelector params={this.props.params}>
+              asdsdasdsad
+            </AccountSelector>
             <BreadcrumbsItem
               activeGroup={activeGroup}
               params={params}

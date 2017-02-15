@@ -36,10 +36,27 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   }
 
   .dropdown-menu {
-    top: 100%;
     width: $dropdown-selector-width;
+    height: 400px;
     max-height: none;
     overflow-y: auto !important;
+
+    .menu-container {
+      position: relative;
+      height: 100%;
+
+      .scrollable-menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        visibility: hidden;
+
+        &.top-level-menu {
+          visibility: visible;
+        }
+      }
+    }
 
     & > li,
     li {
@@ -53,6 +70,10 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         align-items: center;
         flex-direction: row;
         flex-grow: 1;
+      }
+
+      &.active > .scrollable-menu {
+        visibility: visible;
       }
 
       .caret-container {
