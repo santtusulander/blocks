@@ -2,8 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { Table } from 'react-bootstrap'
-import { formatUnixTimestamp } from '../../../util/helpers'
 import { SubmissionError } from 'redux-form'
+import moment from 'moment'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
@@ -21,8 +21,7 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
-
-const dateFormat = 'MM/DD/YYYY HH:mm'
+import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 /**
  * build a subtitle for the modal using URL params
@@ -68,12 +67,12 @@ class EditNodeFormContainer extends React.Component {
       created: [],
       updated: []
     }
-
+    
     if (hasMultipleNodes) {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (let dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], dateFormat)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{moment.unix(node[dateProp]).format(NETWORK_DATE_FORMAT)}</td></tr>)
         }
       }
     }
@@ -89,7 +88,7 @@ class EditNodeFormContainer extends React.Component {
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
-          {createdText}:
+          {createdText}{": "}
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-created" buttonText={multipleValuesText} title={createdText} placement="bottom">
             <Table striped={true} condensed={true}>
@@ -102,11 +101,11 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{moment.unix(firstNode.created).format(NETWORK_DATE_FORMAT)}</span>}
         </span>
         {" | "}
         <span className="edit-node__dates edit-node__dates--updated">
-          {updatedText}:
+          {updatedText}{": "}
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-updated" buttonText={multipleValuesText} title={updatedText} placement="bottom">
             <Table striped={true} condensed={true}>
@@ -119,7 +118,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{moment.unix(firstNode.updated).format(NETWORK_DATE_FORMAT)}</span>}
         </span>
       </div>
     )
