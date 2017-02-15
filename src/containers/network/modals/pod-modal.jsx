@@ -149,7 +149,8 @@ class PodFormContainer extends React.Component {
 
     const data = {
       pod_name: values.UIName,
-      pod_type: values.pod_type
+      pod_type: values.pod_type,
+      status: values.status
     }
 
     const service = {
@@ -396,6 +397,7 @@ const mapStateToProps = (state, ownProps) => {
     })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+  initialValues.status = edit && pod ? pod.get('status') : 1
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
