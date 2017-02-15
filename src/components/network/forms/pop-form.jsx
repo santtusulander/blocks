@@ -14,7 +14,7 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
-import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
+import { POP_ID_MIN, POP_ID_MAX, STATUS_OPTIONS } from '../../../constants/network.js'
 
 const validate = ({ name, locationId, id }) => {
 
@@ -84,7 +84,7 @@ const NetworkPopForm = (props) => {
         <Field
           name="status"
           component={FieldFormGroupSelect}
-          options={[]}
+          options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
           label={<FormattedMessage id="portal.network.popEditForm.status.label" />}
         />
 
