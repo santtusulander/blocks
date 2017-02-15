@@ -147,6 +147,10 @@ class EntityEdit extends React.Component {
   }
 }
 
+EntityEdit.defaultProps = {
+  entityToUpdate: Map()
+}
+
 EntityEdit.displayName = 'EntityEdit'
 EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),

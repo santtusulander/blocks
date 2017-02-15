@@ -1,3 +1,6 @@
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+
 export const ACCOUNT_TYPE_CONTENT_PROVIDER = 1;
 export const ACCOUNT_TYPE_SERVICE_PROVIDER = 2;
 export const ACCOUNT_TYPE_CLOUD_PROVIDER = 3;
@@ -42,9 +45,9 @@ export const ROLES_MAPPING = [
 ]
 
 export const FLOW_DIRECTION_TYPES = [
-  { value: 'egress', label: 'Egress' },
-  { value: 'midgress', label: 'Midgress' },
-  { value: 'ingress', label: 'Ingress' }
+  { value: 'egress', label: <FormattedMessage id="portal.account.chargeNumbersForm.egress.title"/> },
+  { value: 'midgress', label: <FormattedMessage id="portal.account.chargeNumbersForm.midgress.title"/> },
+  { value: 'ingress', label: <FormattedMessage id="portal.account.chargeNumbersForm.ingress.title"/> }
 ]
 
 export const DNS_MIN_REFRESH = 0

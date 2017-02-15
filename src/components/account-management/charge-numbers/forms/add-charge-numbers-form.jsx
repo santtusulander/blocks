@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Button, ButtonToolbar } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { reduxForm, Field, FieldArray } from 'redux-form'
@@ -75,29 +75,27 @@ class AddChargeNumbersForm extends React.Component {
         }
 
         <FormFooterButtons>
-          <ButtonToolbar>
-            <Button
-              id='disable-button'
-              className="btn-danger pull-left"
-              onClick={onDisable}
-            >
-              <FormattedMessage id='portal.common.button.disable' />
-            </Button>
-            <Button
-              id='cancel-button'
-              className="btn-outline"
-              onClick={onCancel}
-            >
-              <FormattedMessage id='portal.common.button.cancel' />
-            </Button>
-            <Button
-              id='submit-button'
-              type='submit'
-              bsStyle="primary"
-            >
-              <FormattedMessage id='portal.common.button.enable' />
-            </Button>
-          </ButtonToolbar>
+          <Button
+            id='disable-button'
+            className="btn-danger pull-left"
+            onClick={onDisable}
+          >
+            <FormattedMessage id='portal.common.button.disable' />
+          </Button>
+          <Button
+            id='cancel-button'
+            className="btn-outline"
+            onClick={onCancel}
+          >
+            <FormattedMessage id='portal.common.button.cancel' />
+          </Button>
+          <Button
+            id='submit-button'
+            type='submit'
+            bsStyle="primary"
+          >
+            <FormattedMessage id='portal.common.button.enable' />
+          </Button>
         </FormFooterButtons>
       </form>
     )

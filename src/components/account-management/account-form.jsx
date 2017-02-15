@@ -91,7 +91,7 @@ class AccountForm extends React.Component {
     let providerType = ''
     let providerTypeLabel = ''
     const { accountType, providerTypes, serviceOptions, invalid, submitting,
-            initialValues: { accountBrand }, show, onCancel, dirty } = this.props
+            initialValues: { accountBrand }, show, onCancel } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
@@ -197,7 +197,7 @@ class AccountForm extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid||submitting||(!dirty)}>
+              disabled={invalid || submitting}>
               {submitButtonLabel}
             </Button>
           </FormFooterButtons>

@@ -436,7 +436,7 @@ class ContentItems extends React.Component {
           {this.state.showModal && this.getTier() === 'brand' &&
             <EntityEdit
               type='account'
-              entityToUpdate={this.state.itemToEdit || Immutable.Map()}
+              entityToUpdate={this.state.itemToEdit}
               currentUser={this.props.user.get('currentUser')}
               onCancel={this.hideModal}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
@@ -445,7 +445,7 @@ class ContentItems extends React.Component {
           {this.state.showModal && this.getTier() === 'account' &&
             <EntityEdit
               type='group'
-              entityToUpdate={this.state.itemToEdit || Immutable.Map()}
+              entityToUpdate={this.state.itemToEdit}
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}

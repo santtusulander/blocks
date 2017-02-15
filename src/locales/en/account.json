@@ -76,6 +76,9 @@
   "portal.account.chargeNumbersForm.flow_direction.title": "Flow Direction",
   "portal.account.chargeNumbersForm.service.title": "SERVICE",
   "portal.account.chargeNumbersForm.option.title": "OPTION",
+  "portal.account.chargeNumbersForm.egress.title": "Egress",
+  "portal.account.chargeNumbersForm.ingress.title": "Ingress",
+  "portal.account.chargeNumbersForm.midgress.title": "Midgress",
 
   "portal.account.soaForm.validation.required": "Required",
   "portal.account.soaForm.validation.invalid": "Invalid input",
