@@ -15,22 +15,38 @@ export default function(WrappedSelect) {
       }
       this.close = this.close.bind(this)
       this.handleClick = this.handleClick.bind(this)
+      this.onItemClick = this.onItemClick.bind(this)
+      this.onToggle = this.onToggle.bind(this)
     }
 
-    componentWillMount() {
-      document.addEventListener('click', this.handleClick, false)
+    componentDidMount() {
+      findDOMNode(this.node).addEventListener('click', this.handleClick, false)
     }
 
     componentWillUnmount() {
-      document.removeEventListener('click', this.handleClick, false)
+      findDOMNode(this.node).removeEventListener('click', this.handleClick, false)
       this.props.close && this.props.close()
     }
 
     handleClick(e) {
-      if (findDOMNode(this).contains(e.target)) {
+      const node = findDOMNode(this.node)
+      if (node && node.contains(e.target)) {
         return
       }
       this.close()
+    }
+
+    onItemClick(value) {
+      const { onItemClick } = this.props
+      if (onItemClick) {
+        onItemClick(value)
+      }
+      this.close()
+    }
+
+    onToggle() {
+      this.props.toggle && this.props.toggle()
+      this.setState({ open: !this.state.open })
     }
 
     close() {
@@ -38,24 +54,17 @@ export default function(WrappedSelect) {
         if (this.props.close) {
           this.props.close()
         } else {
-          this.setState({ open: !this.state.open })
+          this.setState({ open: false })
         }
       }
     }
 
     render() {
-      let newProps = {}
-      if (this.props.open === undefined) {
-        newProps.open = this.state.open
-        newProps.onItemClick = value => {
-          this.props.onItemClick(value)
-          this.close()
-        }
-      }
-      if (!this.props.toggle) {
-        newProps.toggle = () => this.setState({ open: !this.state.open })
-      }
-      return (<WrappedSelect {...this.props}{...newProps}/>)
+      return (
+        <span ref={(node) => {this.node = node}}>
+          <WrappedSelect {...this.props} onItemClick={this.onItemClick} toggle={this.onToggle}/>
+        </span>
+      )
     }
   }
 
@@ -65,6 +74,9 @@ export default function(WrappedSelect) {
     onItemClick: PropTypes.func,
     open: PropTypes.bool,
     toggle: PropTypes.func
+  }
+  AutoClose.defaultProps = {
+    open: false
   }
 
   return AutoClose
