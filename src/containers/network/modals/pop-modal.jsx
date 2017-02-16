@@ -195,7 +195,7 @@ class PopFormContainer extends Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
-            className='network-delete-modal'
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.popEditForm.deletePop.title"/>}
             verifyDelete={true}
             cancelButton={true}
