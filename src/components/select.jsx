@@ -104,7 +104,7 @@ Select.propTypes = {
   onSelect: PropTypes.func,
   onTouch: PropTypes.func,
   options: PropTypes.array,
-  unselectedValue: PropTypes.string,
+  unselectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 

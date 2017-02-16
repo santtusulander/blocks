@@ -52,7 +52,7 @@ FieldFormGroupSelect.propTypes = {
   numericValues: PropTypes.bool,
   options: PropTypes.array,
   required: PropTypes.bool,
-  unselectedValue: PropTypes.string
+  unselectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
 export default FieldFormGroupSelect
