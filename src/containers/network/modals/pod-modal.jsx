@@ -17,6 +17,7 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
+import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -29,8 +30,6 @@ import RoutingDaemonFormContainer from './routing-daemon-modal'
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
-
-    this.checkforNodes = this.checkforNodes.bind(this)
 
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
@@ -154,7 +153,6 @@ class PodFormContainer extends React.Component {
     }
 
     const service = {
-      cloud_lookup_id: values.UICloudLookUpId,
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
@@ -166,7 +164,7 @@ class PodFormContainer extends React.Component {
     if (values.UIDiscoveryMethod === 'BGP') {
       service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
       service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as) || 0
-      service.sp_bgp_router_password = values.UIp_bgp_router_password
+      service.sp_bgp_router_password = values.UIsp_bgp_router_password
 
       data.footprints = []
     } else {
@@ -225,15 +223,13 @@ class PodFormContainer extends React.Component {
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
 
+        // Unselect POD item
+        if (this.props.selectedEntityId == podId) {
+          this.props.handleSelectedEntity(podId)
+        }
         //Close modal
         this.props.onCancel();
       })
-  }
-
-  checkforNodes() {
-    //TODO: this should check weather the current POD has Nodes or not
-    // and return a boolean
-    return false
   }
 
   render() {
@@ -247,6 +243,7 @@ class PodFormContainer extends React.Component {
 
       group,
       //account,
+      hasNodes,
       network,
       footprints
     } = this.props
@@ -272,7 +269,7 @@ class PodFormContainer extends React.Component {
 
           <PodForm
             footprints={footprints}
-            hasNodes={this.checkforNodes()}
+            hasNodes={hasNodes}
             initialValues={initialValues}
 
             onSave={(values) => this.onSave(edit, values)}
@@ -350,6 +347,8 @@ PodFormContainer.propTypes = {
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
+  hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
@@ -363,6 +362,7 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
+  selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setFormVal: PropTypes.func
 }
 
@@ -384,7 +384,13 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
-  const initialValues = edit && pod ? pod.toJS() : {}
+  const defaultValues = {
+    UIRequestFwdType: 'on_net',
+    UILbMethod: 'gslb',
+    pod_type: 'sp_edge',
+    UIProviderWeight: 1
+  }
+  const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
     && initialValues
@@ -403,6 +409,7 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
     pop,

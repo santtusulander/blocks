@@ -10,6 +10,7 @@ import {
   Row,
   Col
 } from 'react-bootstrap'
+import classnames from 'classnames'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -132,18 +133,21 @@ renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
 const renderFootprint = ({ onEdit, input }) => (
-  <li>
+  <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
         <span>{input.value.name}</span>
       </Col>
 
       <Col xs={4} className="action-buttons">
-        <Button
-          className="btn btn-icon edit-button"
-          onClick={() => onEdit(input.value.id)}>
-          <IconEdit/>
-        </Button>
+
+        { !input.value.removed &&
+          <Button
+            className="btn btn-icon edit-button"
+            onClick={() => onEdit(input.value.id)}>
+            <IconEdit/>
+          </Button>
+        }
 
         <Button
           bsStyle="link"
@@ -239,11 +243,6 @@ const PodForm = ({
           label={<FormattedMessage id="portal.network.item.status.label" />}
         />
       }
-
-      <div className="form-group">
-        <label>Cloud Lookup ID</label>
-        <div className="sub-title">{initialValues.UICloudLookUpId}</div>
-      </div>
 
       <Field
         className="input-select"
