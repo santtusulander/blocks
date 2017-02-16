@@ -234,11 +234,6 @@ const PodForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.name.label" />}/>
 
-      <div className="form-group">
-        <label>Cloud Lookup ID</label>
-        <div className="sub-title">{initialValues.UICloudLookUpId}</div>
-      </div>
-
       <Field
         className="input-select"
         name="UILbMethod"

@@ -14,14 +14,13 @@ export const pod = new schema.Entity('pods', {
   idAttribute: (value, { group_id, network_id, id }) => { return buildReduxId(group_id, network_id, id, value.pod_name) },
   processStrategy: (value, parent) => {
 
-    const {footprints, services: [ { /*ip_list,*/ cloud_lookup_id, lb_method, local_as, request_fwd_type, provider_weight, sp_bgp_router_ip, sp_bgp_router_as, sp_bgp_router_password } ] } = value
+    const {footprints, services: [ { /*ip_list,*/ lb_method, local_as, request_fwd_type, provider_weight, sp_bgp_router_ip, sp_bgp_router_as, sp_bgp_router_password } ] } = value
 
     /* UI - params are extracted from services to keep UI - object flat */
     return {
       parentId: buildReduxId(parent.group_id, parent.network_id, parent.id),
       UIName: value.pod_name,
       UIId: value.pod_name,
-      UICloudLookUpId: cloud_lookup_id,
       UILbMethod: lb_method,
       UILocalAS: local_as,
       UIRequestFwdType: request_fwd_type,
