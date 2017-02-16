@@ -75,7 +75,7 @@ class RegionsField extends React.Component {
   }
 
   render() {
-    const { iterable, fields, label, required = true, meta: { error } } = this.props
+    const { iterable, fields, label, required = true, meta: { error, dirty } } = this.props
     const allFields = fields.getAll() || []
     const regions = allFields.map(item => item.region_code)
 
@@ -85,7 +85,7 @@ class RegionsField extends React.Component {
         {iterable.map((item, i) => {
           return this.renderRegionItem(regions, item, i)
         })}
-        {error && <p className='has-error'><DefaultErrorBlock error={error}/></p>}
+        {error && dirty && <p className='has-error'><DefaultErrorBlock error={error}/></p>}
       </FormGroup>
     )
   }
