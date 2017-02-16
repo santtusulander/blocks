@@ -43,15 +43,6 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
                     minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
                     maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
                     />
-    },
-    description: {
-      condition: !isValidFootprintDescription(description),
-      errorText: <MultilineTextFieldError
-                    fieldLabel="portal.common.description"
-                    customTextValidationError={footprintDesValidation}
-                    minValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN}
-                    maxValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN}
-                    />
     }
   }
 
@@ -87,7 +78,7 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
     ]
   }
 
-  return checkForErrors(
+  const errors = checkForErrors(
     { name, data_type, udn_type, value_ipv4cidr, value_asnlist },
     conditions,
     {
@@ -95,6 +86,21 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
       [`value_${data_type}`]: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
+
+  // TO DO, refactor checkForErrors, so field which not required still able to check for conditions
+
+  if(description && !isValidFootprintDescription(description)) {
+    errors.description = (
+      <MultilineTextFieldError
+        fieldLabel="portal.common.description"
+        customTextValidationError={footprintDesValidation}
+        minValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN}
+        maxValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN}
+      />
+    )
+  }
+
+  return errors
 }
 
 class FootprintForm extends React.Component {
@@ -170,6 +176,7 @@ class FootprintForm extends React.Component {
             placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
+            required={false}
           />
 
           <ControlLabel>
