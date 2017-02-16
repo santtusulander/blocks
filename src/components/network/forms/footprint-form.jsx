@@ -208,6 +208,7 @@ class FootprintForm extends React.Component {
           <ControlLabel><FormattedMessage id="portal.network.footprintForm.file.label"/></ControlLabel>
           <InputGroup.Addon>
             <HelpTooltip
+              placement="bottom"
               id="tooltip-help"
               title={<FormattedMessage id="portal.network.footprintForm.file.help.label"/>}>
               <FormattedMessage id="portal.network.footprintForm.file.help.text" />
