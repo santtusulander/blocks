@@ -111,6 +111,8 @@
   "portal.network.podForm.lb_method.options.referral.label": "REFERRAL",
   "portal.network.podForm.pod_type.options.core.label": "Core",
   "portal.network.podForm.pod_type.options.sp_edge.label": "SP Edge",
+  "portal.network.podForm.requestForwardType.options.on_net.label": "On-Net",
+  "portal.network.podForm.requestForwardType.options.public.label": "Cache",
   "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
   "portal.network.podForm.discoveryMethod.options.bgp.label": "BGP",
   "portal.network.podForm.discoveryMethod.options.footprints.label": "Footprints",
