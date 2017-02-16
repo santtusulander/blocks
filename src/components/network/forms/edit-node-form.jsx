@@ -27,7 +27,7 @@ import {
 } from '../../../constants/network'
 
 export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
-export const FORM_FIELDS = ['roles', 'env', 'type', 'cloud_driver', 'custom_grains']
+export const FORM_FIELDS = ['status', 'roles', 'env', 'type', 'cloud_driver', 'custom_grains']
 
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
