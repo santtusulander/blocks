@@ -2,7 +2,10 @@ import validator from 'validator'
 import { matchesRegexp } from './helpers'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
-         FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
+         FORM_TEXT_FIELD_DEFAULT_MAX_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN } from '../constants/common'
 
 import { ASN_MIN,
          ASN_MAX,
@@ -150,13 +153,23 @@ export function isValidTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
 }
 
 /**
- * Check if valid text-field, only allow _ ., used in footprint and pod form
+ * Check if valid text-field, only allow special character _ ., used in footprint and pod form
  * @param text
  * @returns {boolean}
  */
-export function isValidFootprintTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLen = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
+export function isValidFootprintTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLen = FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN) {
   const textFieldRegexp = new RegExp(`^[a-zA-Z0-9 ._]{${minLen},${maxLen}}$`)
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
+}
+
+/**
+ * Check if valid description, allow every character except a line break, only any character from range, used in footprint and pod form
+ * @param text
+ * @returns {boolean}
+ */
+export function isValidFootprintDescription(text, minLen = FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN, maxLen = FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^.{${minLen},${maxLen}}$`)
+  return textFieldRegexp.test(text)
 }
 
 /**
