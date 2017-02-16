@@ -52,7 +52,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         height: 100%;
         visibility: hidden;
 
-        &.top-level-menu {
+        &.visible {
           visibility: visible;
         }
       }
