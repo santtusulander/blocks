@@ -11,6 +11,10 @@ import classnames from 'classnames'
 
 import IconSelectCaret from '../components/icons/icon-select-caret'
 
+function getDOMNodeTop(ref) {
+  return findDOMNode(ref).getBoundingClientRect().top
+}
+
 class Tabs extends React.Component {
   constructor(props) {
     super(props)
@@ -19,8 +23,10 @@ class Tabs extends React.Component {
       hiddenTabs: []
     }
 
+    this.tabEls = []
+    this.hiddenTabs = []
+
     this.timeout = null
-    this.getDOMNodeTop = this.getDOMNodeTop.bind(this)
     this.measureTabs = this.measureTabs.bind(this)
   }
   componentDidMount() {
@@ -45,15 +51,14 @@ class Tabs extends React.Component {
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (findDOMNode(this.refs['tab0']) != null &&
-        findDOMNode(this.refs['hiddenTabs']) != null) {
+      if (this.tabEls.length && this.hiddenTabs.length) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
         // fit on same line and we need to hide some of them. Looping through
         // tabs in reverse since we start hiding them from the end
         reverseTabs.forEach((tab, i) => {
-          if (this.getDOMNodeTop('hiddenTabs') > this.getDOMNodeTop('tab0')) {
+          if (getDOMNodeTop(this.hiddenTabs[0]) > getDOMNodeTop(this.tabEls[0])) {
             // Don't hide active tab
             if(tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
@@ -64,26 +69,25 @@ class Tabs extends React.Component {
       }
     })
   }
-  getDOMNodeTop(ref) {
-    return findDOMNode(this.refs[ref]).getBoundingClientRect().top
-  }
+
   render() {
     const { children, className, onSelect } = this.props
+    const { hiddenTabs } = this.state
     return (
       <ul role="tablist" className={classnames('nav nav-tabs', className)}>
         {children && children.length > 1 ?
-          children.filter((tab, i) => !this.state.hiddenTabs.includes(i)).map((tab, i) => {
+          children.filter((tab, i) => !hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
               tab, {
-                ref: `tab${i}`,
+                ref: (tabEl) => {this.tabEls[i] = tabEl},
                 key: i
               }
             )
           })
           : children
         }
-        <li ref="hiddenTabs">
-          {this.state.hiddenTabs.length !== 0 ?
+        <li ref={(listEl) => {this.hiddenTabs[0] = listEl}}>
+          {hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
               <Dropdown.Toggle className="tabs-dropdown-toggle" noCaret={true}>
                 <FormattedMessage id="portal.common.MORE.text"/>
@@ -91,7 +95,7 @@ class Tabs extends React.Component {
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-wide-menu">
                 {children.concat().map((tab, i) => {
-                  if (this.state.hiddenTabs.includes(i)) {
+                  if (hiddenTabs.includes(i)) {
                     return React.cloneElement(
                       tab, {
                         key: i,
