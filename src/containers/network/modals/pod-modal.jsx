@@ -152,7 +152,6 @@ class PodFormContainer extends React.Component {
     }
 
     const service = {
-      cloud_lookup_id: values.UICloudLookUpId,
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
