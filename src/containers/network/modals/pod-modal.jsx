@@ -310,6 +310,7 @@ class PodFormContainer extends React.Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
             verifyDelete={true}
             cancelButton={true}

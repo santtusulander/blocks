@@ -100,6 +100,21 @@ $lt-modal-bg-color: $white;
       background: rgba($black, 0.04);
     }
   }
+
+  &.modal-window-raised {
+    .modal-content {
+      padding: 2px;
+
+      .dark-theme & {
+        box-shadow: inset 0 0 0 2px rgba($black, 0.2);
+      }
+
+      .light-theme & {
+        box-shadow: inset 0 0 0 2px rgba($black, 0.04);
+      }
+
+    }
+  }
 }
 
 .close-modal {
