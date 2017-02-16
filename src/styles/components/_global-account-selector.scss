@@ -40,6 +40,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
     height: 400px;
     max-height: none;
     overflow-y: auto !important;
+    visibility: hidden;
 
     .menu-container {
       position: relative;
@@ -50,11 +51,6 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         top: 0;
         left: 0;
         height: 100%;
-        visibility: hidden;
-
-        &.visible {
-          visibility: visible;
-        }
       }
     }
 
@@ -72,7 +68,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         flex-grow: 1;
       }
 
-      &.active > .scrollable-menu {
+      &.active > .dropdown-menu {
         visibility: visible;
       }
 

@@ -53,10 +53,33 @@ class Selector extends Component {
     )
   }
 
-  renderTree = (nodes = Selector.emptyArray, className = "scrollable-menu") => {
-    return (
-      <ul className={className}>
-        {nodes.reduce((listItems, node) => {
+  renderMenu = (entities, parentId) =>
+    <Dropdown.Menu>
+      <li className="action-container">
+
+        {parentId || 'UDN ADMIN'}
+        {parentId &&
+          <a onClick={() => this.changeTier(parentId)}>
+            BACK
+          </a>}
+
+        <FormControl
+          className="header-search-input"
+          type="text"
+          placeholder="Search"
+          onChange={this.onSearchChange}
+          value={this.state.search}/>
+      </li>
+      <li className="menu-container">
+        {entities}
+      </li>
+    </Dropdown.Menu>
+
+  renderTree = (tree = Selector.emptyArray, parentId) => {
+    return this.renderMenu(
+      <ul className="scrollable-menu">
+
+        {tree.reduce((listItems, node) => {
 
           const { idKey = 'id', labelKey = 'name', fetchChildren, nodes } = node
 
@@ -72,7 +95,7 @@ class Selector extends Component {
 
                 {nodes && this.renderCaret(nodeId, fetchChildren)}
 
-                {this.renderTree(nodes)}
+                {this.renderTree(nodes, nodeId)}
 
               </li>
             )
@@ -81,36 +104,19 @@ class Selector extends Component {
           return listItems
         }, [])}
       </ul>
-    )
+    , parentId)
   }
 
   render() {
 
-    const { props: { tree, children }, state: { activeNode, search, open } } = this
-
-    const baseListClasses = classnames(
-      "scrollable-menu",
-      { 'visible': tree.some(({ id }) => id == activeNode) }
-    )
+    const { props: { tree, children }, state: { open } } = this
 
     return (
       <Dropdown id="" open={open} onToggle={() => {/*noop*/}} className="selector-component">
         <ToggleElement bsRole="toggle" toggle={this.toggleMenu}>
           <span>{children}</span>
         </ToggleElement>
-        <Dropdown.Menu>
-          <li className="action-container">
-            <FormControl
-              className="header-search-input"
-              type="text"
-              placeholder="Search"
-              onChange={this.onSearchChange}
-              value={search}/>
-          </li>
-          <li className="menu-container">
-            {this.renderTree(tree, baseListClasses)}
-          </li>
-        </Dropdown.Menu>
+        {this.renderTree(tree)}
       </Dropdown>
     )
   }
