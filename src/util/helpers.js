@@ -294,7 +294,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @returns {*}
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
-  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
+  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : formatDate(unix, format)
 }
 
 /**
