@@ -256,3 +256,12 @@ export function isValidProviderWeight(str) {
   const providerWeight = parseFloat(str)
   return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
 }
+
+/**
+ * Check if valid charge number
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidChargeNumber(str) {
+  return matchesRegexp(str, /^C-[0-9]{8}$/)
+}
