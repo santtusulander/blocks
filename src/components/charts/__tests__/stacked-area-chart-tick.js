@@ -1,5 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
+import '../../../../__mocks__/recharts'
 
 jest.unmock('../stacked-area-chart-tick')
 import StackAreaCustomTick from '../stacked-area-chart-tick'
