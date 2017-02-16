@@ -151,6 +151,10 @@ label {
   }
 }
 
+.submit-error {
+  color: $form-error-color;
+}
+
 .control-label {
   .has-success & {
     color: $form-success-color;

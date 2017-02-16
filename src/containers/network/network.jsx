@@ -756,7 +756,7 @@ class Network extends React.Component {
             />
 
             <EntityList
-              fetching={isFetching('pod')}
+              fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
               ref={pods => this.entityList.podList = pods}
@@ -855,6 +855,8 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
+            handleSelectedEntity={this.handlePodClick}
+            selectedEntityId={`${params.pod}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
