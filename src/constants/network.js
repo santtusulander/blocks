@@ -79,6 +79,8 @@ export const POD_TYPE_OPTIONS = [
 ]
 
 export const REQUEST_FWD_TYPE_OPTIONS = [
+  {value: 'on_net', label: 'portal.network.podForm.requestForwardType.options.on_net.label'},
+  {value: 'public', label: 'portal.network.podForm.requestForwardType.options.public.label'},
   {value: 'gslb_referral', label: 'portal.network.podForm.requestForwardType.options.gslb_referral.label'}
 ]
 
