@@ -41,6 +41,7 @@
   "portal.common.textFieldMultilineValidation.line1.text": "Requirements:",
   "portal.common.textFieldMultilineValidation.line2.text": "minimum of {minValue} and maximum of {maxValue} characters",
   "portal.common.textFieldMultilineValidation.line3.text": "allowed special characters: _ . , - & ( ) [ ]",
+  "portal.common.textFieldMultilineValidation.line4.text": "allowed special characters: _ .",
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
 

@@ -12,10 +12,14 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
-import { isValidTextField, isValidIPv4Address, isValidASN } from '../../../util/validators'
+import { isValidFootprintTextField , isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
-import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
+import { FORM_DESCRIPTION_FIELD_MIN_LEN,
+         FORM_DESCRIPTION_FIELD_MAX_LEN,
+         FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label, true)
@@ -31,12 +35,13 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
 
   const conditions = {
     name: {
-      condition: !isValidTextField(name),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text"/>
+      condition: !isValidFootprintTextField(name, FORM_TEXT_FIELD_DEFAULT_MIN_LEN, FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN ),
+      errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text" footprintTextValidation={true}/>
     },
     description: {
-      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
+      condition: !isValidFootprintTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
+                                          footprintTextValidation={true}
                                           minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
                                           maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN}/>
     }
