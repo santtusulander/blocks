@@ -231,12 +231,14 @@ const PodForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.name.label" />}/>
 
-      <Field
-        name="status"
-        component={FieldFormGroupSelect}
-        options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={<FormattedMessage id="portal.network.item.status.label" />}
-      />
+      {edit &&
+        <Field
+          name="status"
+          component={FieldFormGroupSelect}
+          options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+          label={<FormattedMessage id="portal.network.item.status.label" />}
+        />
+      }
 
       <div className="form-group">
         <label>Cloud Lookup ID</label>
