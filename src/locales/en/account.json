@@ -85,7 +85,6 @@
 
   "portal.account.roleEdit.roleNameRequired.text": "Role name is required",
   "portal.account.roleEdit.title": "Edit Role",
-  "portal.account.roleEdit.disclaimer.text": "Edit Role",
   "portal.account.roleEdit.enterRoleName.text": "Enter Role Name",
   "portal.account.roleEdit.name.text": "Name",
   "portal.account.roleEdit.permissions.label": "Permissions",

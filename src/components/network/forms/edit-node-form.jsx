@@ -189,6 +189,7 @@ class NetworkEditNodeForm extends React.Component {
         name: 'roles',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_ROLE_OPTIONS,
         labelId: 'portal.network.addNodeForm.role.title'
       },
@@ -196,6 +197,7 @@ class NetworkEditNodeForm extends React.Component {
         name: 'env',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_ENVIRONMENT_OPTIONS,
         labelId: 'portal.network.addNodeForm.environment.title'
       },
@@ -203,6 +205,7 @@ class NetworkEditNodeForm extends React.Component {
         name: 'type',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_TYPE_OPTIONS,
         labelId: 'portal.network.addNodeForm.type.title'
       },
@@ -210,6 +213,7 @@ class NetworkEditNodeForm extends React.Component {
         name: 'cloud_driver',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_CLOUD_DRIVER_OPTIONS,
         labelId: 'portal.network.addNodeForm.cloudDriver.title'
       },
