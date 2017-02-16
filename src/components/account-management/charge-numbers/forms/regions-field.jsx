@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap'
+import DefaultErrorBlock from '../../../form/default-error-block'
 import Checkbox from '../../../checkbox'
 
 class RegionsField extends React.Component {
@@ -74,7 +75,7 @@ class RegionsField extends React.Component {
   }
 
   render() {
-    const { iterable, fields, label, required = true } = this.props
+    const { iterable, fields, label, required = true, meta: { error, dirty } } = this.props
     const allFields = fields.getAll() || []
     const regions = allFields.map(item => item.region_code)
 
@@ -84,6 +85,7 @@ class RegionsField extends React.Component {
         {iterable.map((item, i) => {
           return this.renderRegionItem(regions, item, i)
         })}
+        {error && dirty && <p className='has-error'><DefaultErrorBlock error={error}/></p>}
       </FormGroup>
     )
   }
@@ -99,6 +101,7 @@ RegionsField.propTypes = {
   fields: PropTypes.object,
   iterable: PropTypes.array,
   label: PropTypes.object,
+  meta: PropTypes.object,
   required: PropTypes.bool
 }
 

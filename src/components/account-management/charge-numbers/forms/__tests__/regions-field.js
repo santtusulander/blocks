@@ -7,10 +7,16 @@ import RegionsField from '../regions-field'
 const fields = {
   getAll: jest.fn()
 }
+const meta = {
+  error: ''
+}
+
 
 const subject = shallow(
   <RegionsField
-    fields={fields} />
+    fields={fields}
+    meta = {meta}
+  />
 )
 
 describe('RegionsField', () => {
