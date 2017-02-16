@@ -60,6 +60,10 @@ const GroupForm = ({
   onSubmit,
   submitting}) => {
 
+  const tooltipHintId = hasNetworks ? "portal.network.groupForm.delete.tooltip.network.message"
+                                    : ((canSeeLocations && (!locations.isEmpty()))
+                                    ? "portal.network.groupForm.delete.tooltip.location.message" : null)
+
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
@@ -175,10 +179,10 @@ const GroupForm = ({
             <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger pull-left"
-              disabled={submitting || isFetchingEntities || hasNetworks}
+              disabled={submitting || isFetchingEntities || (!!tooltipHintId)}
               onClick={onDelete}
               tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+              tooltipMessage={tooltipHintId && {text: intl.formatMessage({id: tooltipHintId})}}>
               <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           }
