@@ -854,6 +854,8 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
+            handleSelectedEntity={this.handlePodClick}
+            selectedEntityId={`${params.pod}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
