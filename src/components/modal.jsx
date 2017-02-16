@@ -163,6 +163,7 @@ ModalWindow.propTypes = {
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
+  className: PropTypes.string,
   closeButton: PropTypes.bool,
   closeButtonSecondary: PropTypes.bool,
   closeModal: PropTypes.bool,
