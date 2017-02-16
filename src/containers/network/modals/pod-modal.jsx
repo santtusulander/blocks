@@ -223,6 +223,10 @@ class PodFormContainer extends React.Component {
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
 
+        // Unselect POD item
+        if (this.props.selectedEntityId == podId) {
+          this.props.handleSelectedEntity(podId)
+        }
         //Close modal
         this.props.onCancel();
       })
@@ -343,6 +347,7 @@ PodFormContainer.propTypes = {
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
   hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
@@ -357,6 +362,7 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
+  selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setFormVal: PropTypes.func
 }
 
