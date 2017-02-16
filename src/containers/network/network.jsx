@@ -834,6 +834,7 @@ class Network extends React.Component {
             brand={params.brand}
             groupId={params.group}
             networkId={this.state.networkId}
+            isFetching ={isFetching('pop')}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
           />
         }
@@ -854,6 +855,8 @@ class Network extends React.Component {
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
+            handleSelectedEntity={this.handlePodClick}
+            selectedEntityId={`${params.pod}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}

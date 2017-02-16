@@ -152,7 +152,6 @@ class PodFormContainer extends React.Component {
     }
 
     const service = {
-      cloud_lookup_id: values.UICloudLookUpId,
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
@@ -223,6 +222,10 @@ class PodFormContainer extends React.Component {
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
 
+        // Unselect POD item
+        if (this.props.selectedEntityId == podId) {
+          this.props.handleSelectedEntity(podId)
+        }
         //Close modal
         this.props.onCancel();
       })
@@ -307,6 +310,7 @@ class PodFormContainer extends React.Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
             verifyDelete={true}
             cancelButton={true}
@@ -343,6 +347,7 @@ PodFormContainer.propTypes = {
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
   hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
@@ -357,6 +362,7 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
+  selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setFormVal: PropTypes.func
 }
 
@@ -378,7 +384,13 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
-  const initialValues = edit && pod ? pod.toJS() : {}
+  const defaultValues = {
+    UIRequestFwdType: 'on_net',
+    UILbMethod: 'gslb',
+    pod_type: 'sp_edge',
+    UIProviderWeight: 1
+  }
+  const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
     && initialValues

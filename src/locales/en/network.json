@@ -50,11 +50,11 @@
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
   "portal.network.networkForm.delete.tooltip.message": "This Network contains POPs so it can't be deleted.\nPlease delete all the POPs.",
-  "portal.network.networkForm.deleteNetwork.title": "Delete network?",
+  "portal.network.networkForm.deleteNetwork.title": "Delete Network?",
   "portal.network.networkForm.deleteNetwork.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This network will be removed from UDN immediately.",
 
 
-  "portal.network.addNodeForm.title": "Add nodes",
+  "portal.network.addNodeForm.title": "Add Node",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
   "portal.network.addNodeForm.howMany.title": "How many?",
   "portal.network.addNodeForm.role.title": "Role",
@@ -64,8 +64,8 @@
   "portal.network.addNodeForm.grains.title": "Grains",
 
   "portal.network.editNodeForm.node": "Node",
-  "portal.network.editNodeForm.title": "Edit node",
-  "portal.network.editNodeForm.title.multiple": "Edit {numNodes, plural, one {# node} other {# nodes}}",
+  "portal.network.editNodeForm.title": "Edit Node",
+  "portal.network.editNodeForm.title.multiple": "Edit {numNodes, plural, one {# Node} other {# Nodes}}",
   "portal.network.editNodeForm.multipleValues": "Multiple values",
   "portal.network.editNodeForm.multipleValues.help": "Changing fields with multiple values will set the same value for all current edited nodes.",
   "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes, plural, one {# node} other {# nodes}}?",
@@ -111,6 +111,8 @@
   "portal.network.podForm.lb_method.options.referral.label": "REFERRAL",
   "portal.network.podForm.pod_type.options.core.label": "Core",
   "portal.network.podForm.pod_type.options.sp_edge.label": "SP Edge",
+  "portal.network.podForm.requestForwardType.options.on_net.label": "On-Net",
+  "portal.network.podForm.requestForwardType.options.public.label": "Cache",
   "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
   "portal.network.podForm.discoveryMethod.options.bgp.label": "BGP",
   "portal.network.podForm.discoveryMethod.options.footprints.label": "Footprints",
@@ -188,5 +190,6 @@
   "portal.network.spConfig.routingDaemon.editForm.bgp_as_number.required.text": "BGP AS Number is required",
   "portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text": "BGP Router IP must be a valid IPv4 address",
 
-  "portal.network.groupForm.delete.tooltip.message": "This Group contains Networks so it can't be deleted.\nPlease delete all the Networks."
+  "portal.network.groupForm.delete.tooltip.network.message": "This Group contains Networks so it can't be deleted.\nPlease delete all the Networks.",
+  "portal.network.groupForm.delete.tooltip.location.message": "This Group contains Locations so it can't be deleted.\nPlease delete all the Locations."
 }

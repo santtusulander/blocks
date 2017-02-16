@@ -39,13 +39,10 @@ class NetworkLocationFormContainer extends Component {
 
   componentWillMount() {
     this.props.fetchIataCodes()
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const { initialValues } = nextProps
-    const edit = !!initialValues.name
+    const { initialValues } = this.props
 
-    if (edit && initialValues.latitude && initialValues.longitude) {
+    if (initialValues.latitude && initialValues.longitude) {
       this.setState({
         latLng: {
           latitude: initialValues.latitude,
