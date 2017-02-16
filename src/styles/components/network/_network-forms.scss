@@ -8,6 +8,7 @@ $number-addon-width: 19px;
 $number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
+$typeahead-input-left-padding: 40px;
 
 .group-form,
 .sp-network-form,
@@ -120,9 +121,13 @@ $panel-horizontal-padding: em(18px, 14px);
       float: right;
     }
 
+    .bootstrap-typeahead-input-hint {
+      padding-left: $typeahead-input-left-padding;
+    }
+
     .bootstrap-typeahead-input-main {
       height: $btn-height;
-      padding-left: 40px;
+      padding-left: $typeahead-input-left-padding;
       background-position: 10px;
       background-repeat: no-repeat;
       background-size: 21px;
@@ -149,7 +154,7 @@ $panel-horizontal-padding: em(18px, 14px);
     list-style-type: none;
 
     > li {
-      padding: 0 $panel-vertical-padding;
+      padding: 5px 15px;
       margin-bottom: $panel-vertical-padding;
       font-weight: bold;
       line-height: em(36px, 14px);
@@ -162,6 +167,18 @@ $panel-horizontal-padding: em(18px, 14px);
 
         .icon {
           fill: $lt-text-color;
+        }
+      }
+
+      &.removed {
+        opacity: 0.6;
+
+        .col-xs-8 {
+          text-decoration: line-through;
+        }
+
+        .btn-undo {
+          text-transform: uppercase;
         }
       }
 
