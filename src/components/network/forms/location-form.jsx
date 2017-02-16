@@ -266,7 +266,7 @@ const NetworkLocationForm = (props) => {
         <Button
           type="submit"
           bsStyle="primary"
-          disabled={invalid || submitting}
+          disabled={invalid || submitting || isFetchingLocation}
         >
           {actionButtonTitle}
         </Button>
