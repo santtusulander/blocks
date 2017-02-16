@@ -53,35 +53,33 @@ class Selector extends Component {
     )
   }
 
-  recursionInfernoStarter = (nodes) => nodes.reduce((listItems, node) => {
-
-    const { idKey = 'id', labelKey = 'name', fetchChildren, nodes } = node
-
-    const nodeId = node[idKey]
-    const nodeName = node[labelKey]
-
-    if (nodeName.contains(this.state.search)) {
-
-      listItems.push(
-        <li className={classnames({ 'active': this.state.activeNode == nodeId })}>
-
-          <a>{nodeName}</a>
-
-          {nodes && this.renderCaret(nodeId, fetchChildren)}
-
-          {this.renderTree(nodes)}
-
-        </li>
-      )
-    }
-
-    return listItems
-  }, [])
-
-  renderTree = (nodes = Selector.emptyArray) => {
+  renderTree = (nodes = Selector.emptyArray, className = "scrollable-menu") => {
     return (
-      <ul className="scrollable-menu">
-        {this.recursionInfernoStarter(nodes)}
+      <ul className={className}>
+        {nodes.reduce((listItems, node) => {
+
+          const { idKey = 'id', labelKey = 'name', fetchChildren, nodes } = node
+
+          const nodeId = node[idKey]
+          const nodeName = node[labelKey]
+
+          if (nodeName.includes(this.state.search)) {
+
+            listItems.push(
+              <li className={classnames({ 'active': this.state.activeNode == nodeId })}>
+
+                <a>{nodeName}</a>
+
+                {nodes && this.renderCaret(nodeId, fetchChildren)}
+
+                {this.renderTree(nodes)}
+
+              </li>
+            )
+          }
+
+          return listItems
+        }, [])}
       </ul>
     )
   }
@@ -110,9 +108,7 @@ class Selector extends Component {
               value={search}/>
           </li>
           <li className="menu-container">
-            <ul className={baseListClasses}>
-              {this.recursionInfernoStarter(tree)}
-            </ul>
+            {this.renderTree(tree, baseListClasses)}
           </li>
         </Dropdown.Menu>
       </Dropdown>
@@ -125,6 +121,7 @@ const mapStateToProps = () => ({
   activeNode: 'udn',
   tree: [{
     id: 'udn',
+    name: 'udn',
     fetchChildren: () => Promise.resolve(console.log('fetch accs fron brand udn')),
     nodes: [
       {
