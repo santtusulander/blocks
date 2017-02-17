@@ -15,6 +15,7 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
 import ButtonDisableTooltip from '../../button-disable-tooltip'
+import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -198,7 +199,8 @@ class NetworkEditNodeForm extends React.Component {
         component: FieldFormGroupSelect,
         disabled: true,
         options: NODE_ROLE_OPTIONS,
-        labelId: 'portal.network.addNodeForm.role.title'
+        labelId: 'portal.network.addNodeForm.role.title',
+        tooltipText: 'portal.network.nodeForm.role.help.text'
       },
       {
         name: 'env',
@@ -206,7 +208,8 @@ class NetworkEditNodeForm extends React.Component {
         component: FieldFormGroupSelect,
         disabled: true,
         options: NODE_ENVIRONMENT_OPTIONS,
-        labelId: 'portal.network.addNodeForm.environment.title'
+        labelId: 'portal.network.addNodeForm.environment.title',
+        tooltipText: 'portal.network.nodeForm.environment.help.text'
       },
       {
         name: 'type',
@@ -214,7 +217,8 @@ class NetworkEditNodeForm extends React.Component {
         component: FieldFormGroupSelect,
         disabled: true,
         options: NODE_TYPE_OPTIONS,
-        labelId: 'portal.network.addNodeForm.type.title'
+        labelId: 'portal.network.addNodeForm.type.title',
+        tooltipText: 'portal.network.nodeForm.type.help.text'
       },
       {
         name: 'cloud_driver',
@@ -222,7 +226,8 @@ class NetworkEditNodeForm extends React.Component {
         component: FieldFormGroupSelect,
         disabled: true,
         options: NODE_CLOUD_DRIVER_OPTIONS,
-        labelId: 'portal.network.addNodeForm.cloudDriver.title'
+        labelId: 'portal.network.addNodeForm.cloudDriver.title',
+        tooltipText: 'portal.network.nodeForm.cloudDriver.help.text'
       },
       {
         name: 'custom_grains',
@@ -230,7 +235,8 @@ class NetworkEditNodeForm extends React.Component {
         disabled: true,
         className: 'input-textarea',
         component: FieldFormGroup,
-        labelId: 'portal.network.addNodeForm.grains.title'
+        labelId: 'portal.network.addNodeForm.grains.title',
+        tooltipText: 'portal.network.nodeForm.grains.help.text'
       }
     ]
 
@@ -281,7 +287,14 @@ class NetworkEditNodeForm extends React.Component {
           <label>{fieldLabelText}</label>
           {fieldToggle}
           <div className={isExpanded ? 'show' : 'hidden'}>
-            <Field {...fieldData} />
+            <Field {...fieldData}
+              addonAfter={
+                <HelpTooltip
+                  id="tooltip-help"
+                  title={<FormattedMessage id={fieldData.labelId}/>}>
+                  <FormattedMessage id={fieldData.tooltipText} />
+                </HelpTooltip>
+              }/>
             {helpMessage && <div className="edit-node-form__field-help">{helpMessage}</div>}
           </div>
         </FormGroup>

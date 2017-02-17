@@ -8,6 +8,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
@@ -188,6 +189,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_ROLE_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.role.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.role.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -196,6 +204,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_ENVIRONMENT_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.environment.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.environment.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -204,6 +219,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_TYPE_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.type.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.type.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -212,6 +234,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_CLOUD_DRIVER_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.cloudDriver.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -221,6 +250,13 @@ class NetworkAddNodeForm extends React.Component {
             className="input-textarea"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.addNodeForm.grains.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.grains.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.grains.help.text" />
+              </HelpTooltip>
+            }
           />
         </div>
         {footerButtons}

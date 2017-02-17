@@ -22,7 +22,7 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          } from '../../../constants/common'
 
 
-import HelpTooltip from '../../../components/help-tooltip'
+import HelpTooltip from '../../help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
@@ -263,7 +263,14 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.type.label"/>}>
+            <FormattedMessage id="portal.network.podForm.type.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         type="text"
@@ -285,7 +292,14 @@ const PodForm = ({
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.requestForwardType.label"/>}>
+            <FormattedMessage id="portal.network.podForm.requestForwardType.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         min={POD_PROVIDER_WEIGHT_MIN}
@@ -293,7 +307,14 @@ const PodForm = ({
         name="UIProviderWeight"
         id="provider_weight-field"
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
+        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.providerWeight.label"/>}>
+            <FormattedMessage id="portal.network.podForm.providerWeight.help.text" />
+          </HelpTooltip>
+        }/>
 
       {/* TODO: IpList MIGHT be needed <Field
         required={true}
