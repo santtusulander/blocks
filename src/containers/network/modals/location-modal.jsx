@@ -13,6 +13,7 @@ import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import LocationForm from '../../../components/network/forms/location-form'
 
 import { LOCATION_CLOUD_PROVIDER_OPTIONS, LOCATION_CLOUD_PROVIDER_ID_OPTIONS } from '../../../constants/network'
@@ -53,13 +54,15 @@ class NetworkLocationFormContainer extends Component {
       latLng: {
         latitude: null,
         longitude: null
-      }
+      },
+      showDeleteModal : false
     }
 
     this.fetchLocation = this.fetchLocation.bind(this)
     this.askForFetchLocation = this.askForFetchLocation.bind(this)
     this.shouldFetchLocation = this.shouldFetchLocation.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    this.onToggleDeleteModal = this.onToggleDeleteModal.bind(this)
     this.onCancel = this.onCancel.bind(this)
     this.onDelete = this.onDelete.bind(this)
   }
@@ -172,9 +175,13 @@ class NetworkLocationFormContainer extends Component {
       })
   }
 
-  onDelete(locationId) {
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
+  }
+
+  onDelete() {
     const { brand, account } = this.props.params
-    const group = this.props.groupId
+    const {groupId: group, initialValues: { name: locationId } } = this.props
 
     const params = {
       brand: brand,
@@ -221,7 +228,7 @@ class NetworkLocationFormContainer extends Component {
       show
     } = this.props;
 
-    const { isFetchingLocation, addressLine } = this.state
+    const { isFetchingLocation, addressLine, showDeleteModal } = this.state
     const edit = !!initialValues.name
 
     const title = edit
@@ -248,10 +255,23 @@ class NetworkLocationFormContainer extends Component {
             intl={intl}
             invalid={invalid}
             onCancel={this.onCancel}
-            onDelete={this.onDelete}
+            onDelete={() => this.onToggleDeleteModal(true)}
             onSubmit={(values) => this.onSubmit(edit, values)}
           />
         </SidePanel>
+        {edit && showDeleteModal &&
+            <ModalWindow
+              className='modal-window-raised'
+              title={<FormattedMessage id="portal.network.locationForm.deleteLocation.title"/>}
+              verifyDelete={true}
+              cancelButton={true}
+              deleteButton={true}
+              cancel={() => this.onToggleDeleteModal(false)}
+              onSubmit={() => this.onDelete()}>
+              <p>
+               <FormattedMessage id="portal.network.locationForm.deleteLocation.confirmation.text"/>
+              </p>
+            </ModalWindow>}
       </div>
     );
   }

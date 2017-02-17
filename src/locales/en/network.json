@@ -150,6 +150,8 @@
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.deleteLocation.title": "Delete Location?",
+  "portal.network.locationForm.deleteLocation.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This location will be removed from UDN immediately.",
   "portal.network.locationForm.name.label": "Location Name",
   "portal.network.locationForm.name.placeholder": "Enter Location Name",
   "portal.network.locationForm.iataCode.label": "IATA Code",
