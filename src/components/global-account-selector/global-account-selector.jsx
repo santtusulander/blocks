@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react'
-import classnames from 'classnames'
 import { connect } from 'react-redux'
-import { Dropdown, FormControl } from 'react-bootstrap'
+import { Dropdown } from 'react-bootstrap'
 
 import ToggleElement from './toggle-element'
 
@@ -14,7 +13,8 @@ import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import { getByBrand } from '../../redux/modules/entities/accounts/selectors'
 
-import IconArrowRight from '../icons/icon-arrow-right'
+import SelectorItems from './selector-items'
+import SelectorHeader from './selector-header'
 
 class Selector extends Component {
 
@@ -30,93 +30,71 @@ class Selector extends Component {
     activeNode !== this.props.activeNode && this.setState({ activeNode, search: '' })
   }
 
-  onSearchChange(e) {
+  onSearchChange = e => {
     this.setState({ search: e.target.value })
   }
 
-  changeTier(activeNode) {
+  changeTier = activeNode => {
     this.setState({ activeNode, search: '' })
   }
 
   toggleMenu = () => this.setState({ open: !this.state.open })
 
-  renderCaret = (nodeId, fetchChildren) => {
+  renderDropdown = (tree = Selector.emptyArray, parentId) => {
+    console.log('menee tänne');
+    let found = false
+    let selectorNodes = []
+    let recurse = undefined
+    let activeNodeName = undefined
 
-    const handleCaretClick = () => {
-      fetchChildren(nodeId).then(() => this.changeTier(nodeId))
+    for (const node of tree) {
+
+      const { idKey = 'id', labelKey = 'name', nodes } = node
+      const nodeId = node[idKey]
+
+      if (nodeId == this.state.activeNode) {
+
+        found = true
+        activeNodeName = node[labelKey]
+        selectorNodes = nodes
+        break
+
+      } else {
+        recurse = this.renderDropdown(nodes, nodeId)
+      }
+    }
+
+    if (!found) {
+      return recurse
     }
 
     return (
-      <a className="caret-container" onClick={handleCaretClick} tabIndex="-1">
-        <IconArrowRight />
-      </a>
+      <Dropdown.Menu>
+        <SelectorHeader
+          parentId={parentId}
+          goToParent={this.changeTier}
+          searchValue={this.state.search}
+          onSearchChange={this.onSearchChange}
+          activeNodeName={activeNodeName} />
+
+        <SelectorItems
+          goToChild={this.changeTier}
+          selectorNodes={selectorNodes}
+          searchValue={this.state.search} />
+      </Dropdown.Menu>
     )
   }
 
-  renderMenu = (entities, parentId) =>
-    <Dropdown.Menu>
-      <li className="action-container">
-
-        {parentId || 'UDN ADMIN'}
-        {parentId &&
-          <a onClick={() => this.changeTier(parentId)}>
-            BACK
-          </a>}
-
-        <FormControl
-          className="header-search-input"
-          type="text"
-          placeholder="Search"
-          onChange={this.onSearchChange}
-          value={this.state.search}/>
-      </li>
-      <li className="menu-container">
-        {entities}
-      </li>
-    </Dropdown.Menu>
-
-  renderTree = (tree = Selector.emptyArray, parentId) => {
-    return this.renderMenu(
-      <ul className="scrollable-menu">
-
-        {tree.reduce((listItems, node) => {
-
-          const { idKey = 'id', labelKey = 'name', fetchChildren, nodes } = node
-
-          const nodeId = node[idKey]
-          const nodeName = node[labelKey]
-
-          if (nodeName.includes(this.state.search)) {
-
-            listItems.push(
-              <li className={classnames({ 'active': this.state.activeNode == nodeId })}>
-
-                <a>{nodeName}</a>
-
-                {nodes && this.renderCaret(nodeId, fetchChildren)}
-
-                {this.renderTree(nodes, nodeId)}
-
-              </li>
-            )
-          }
-
-          return listItems
-        }, [])}
-      </ul>
-    , parentId)
-  }
-
   render() {
-
     const { props: { tree, children }, state: { open } } = this
+    const menu = this.renderDropdown(tree)
 
     return (
       <Dropdown id="" open={open} onToggle={() => {/*noop*/}} className="selector-component">
         <ToggleElement bsRole="toggle" toggle={this.toggleMenu}>
           <span>{children}</span>
         </ToggleElement>
-        {this.renderTree(tree)}
+        {menu}
       </Dropdown>
     )
   }
@@ -124,10 +102,10 @@ class Selector extends Component {
 
 const mapStateToProps = () => ({
 
-  activeNode: 'udn',
+  activeNode: 6,
   tree: [{
     id: 'udn',
-    name: 'udn',
+    name: 'UDN Admin',
     fetchChildren: () => Promise.resolve(console.log('fetch accs fron brand udn')),
     nodes: [
       {
@@ -173,13 +151,45 @@ const mapStateToProps = () => ({
             id: 5,
             name: 'grp2',
             fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 2')),
-            nodes: []
+            nodes: [
+              {
+                id: 3454,
+                name: 'prop1',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 1'))
+              },
+              {
+                id: 843545,
+                name: 'prop2',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 2'))
+              },
+              {
+                id: 9345543,
+                name: 'prop3',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 3'))
+              }
+            ]
           },
           {
             id: 4,
             name: 'grp3',
             fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 3')),
-            nodes: []
+            nodes: [
+              {
+                id: 10,
+                name: 'prop1',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 1'))
+              },
+              {
+                id: 16,
+                name: 'prop2',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 2'))
+              },
+              {
+                id: 123,
+                name: 'prop3',
+                fetchChildren: () => Promise.resolve(console.log('fetch grps for grp 3'))
+              }
+            ]
           }
         ]
       }
@@ -200,28 +210,3 @@ const mapDispatchToProps = (dispatch, { params: { brand } }) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Selector)
-
-// {/* <DD
-//   entities={accounts(groupId)}
-//   nameKey
-//   idKey
-//   caret={this.caret}
-//
-//
-//   DD = ({ entities, nameKey = 'name', idKey = 'id', caret }) => {
-//     return (
-//       <ul>
-//         {entities.map(entity =>
-//           <li>
-//             <a>{entity[nameKey]}</a>
-//             {caret}
-//             <DD
-//               entities={accounts(groupId)}
-//               nameKey
-//               idKey
-//               caret={this.caret}/>
-//           </li>
-//         )}
-//       </ul>
-//     )
-//   } */}
