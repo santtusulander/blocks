@@ -217,7 +217,9 @@ const NetworkLocationForm = (props) => {
             className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
+            disabled={edit}
             required={false}
+            unselectedValue={null}
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
           />
