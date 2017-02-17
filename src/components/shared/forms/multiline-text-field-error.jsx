@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../../../constants/common'
 
-const MultilineTextFieldError = ({fieldLabel, minValue, maxValue, customTextValidationError}) => {
+const MultilineTextFieldError = ({fieldLabel, minValue, maxValue, customValidationErrorText}) => {
   return (
     <div>
       <FormattedMessage id="portal.common.invalid" /> <FormattedMessage id={fieldLabel} />
@@ -13,12 +13,7 @@ const MultilineTextFieldError = ({fieldLabel, minValue, maxValue, customTextVali
           <li>
             <FormattedMessage id="portal.common.textFieldMultilineValidation.line2.text" values={{ minValue, maxValue }}/>
           </li>
-          { !customTextValidationError &&
-            <li><FormattedMessage id="portal.common.textFieldMultilineValidation.line3.text" /></li>
-          }
-          { customTextValidationError &&
-            <li><FormattedMessage id={customTextValidationError} /></li>
-          }
+          <li><FormattedMessage id={customValidationErrorText} /></li>
         </ul>
       </div>
     </div>
@@ -27,7 +22,7 @@ const MultilineTextFieldError = ({fieldLabel, minValue, maxValue, customTextVali
 
 MultilineTextFieldError.displayName = "MultilineTextFieldError"
 MultilineTextFieldError.propTypes = {
-  customTextValidationError: React.PropTypes.string,
+  customValidationErrorText: React.PropTypes.string,
   fieldLabel: React.PropTypes.string,
   maxValue: React.PropTypes.number,
   minValue: React.PropTypes.number
@@ -35,7 +30,8 @@ MultilineTextFieldError.propTypes = {
 
 MultilineTextFieldError.defaultProps = {
   maxValue: FORM_TEXT_FIELD_DEFAULT_MAX_LEN,
-  minValue: FORM_TEXT_FIELD_DEFAULT_MIN_LEN
+  minValue: FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+  customValidationErrorText: "portal.common.textFieldMultilineValidation.line3.text"
 }
 
 export default MultilineTextFieldError
