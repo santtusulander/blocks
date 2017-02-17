@@ -106,6 +106,8 @@ export const STATUS_OPTIONS = [
   {value: 4, label: 'portal.network.item.status.destroying'}
 ]
 
+export const STATUS_VALUE_DEFAULT = 1
+
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POD_PROVIDER_WEIGHT_MAX = 1
 export const POP_ID_MIN = 1

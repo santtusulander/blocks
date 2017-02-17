@@ -32,7 +32,8 @@ import {
   LBMETHOD_OPTIONS,
   POD_TYPE_OPTIONS,
   REQUEST_FWD_TYPE_OPTIONS,
-  DISCOVERY_METHOD_OPTIONS
+  DISCOVERY_METHOD_OPTIONS,
+  STATUS_OPTIONS
 } from '../../../constants/network'
 
 //TODO: If Ip list needed uncomment
@@ -243,6 +244,15 @@ const PodForm = ({
         placeholder={intl.formatMessage({id: 'portal.network.podForm.name.text'})}
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.name.label" />}/>
+
+      {edit &&
+        <Field
+          name="status"
+          component={FieldFormGroupSelect}
+          options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+          label={<FormattedMessage id="portal.network.item.status.label" />}
+        />
+      }
 
       <Field
         className="input-select"
