@@ -15,9 +15,14 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight } from '../../../util/validators'
 
-import HelpTooltip from '../../../components/help-tooltip'
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
+         } from '../../../constants/common'
+
+
+import HelpTooltip from '../../help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
@@ -43,8 +48,13 @@ const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
   const conditions = {
     UIName: {
-      condition: !isValidTextField(UIName),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+      condition: !isValidFootprintTextField(UIName),
+      errorText: <MultilineTextFieldError
+                    fieldLabel="portal.network.podForm.name.label"
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
+                    minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
+                    maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
+                />
     },
     UIProviderWeight: {
       condition: !isValidProviderWeight(UIProviderWeight),
@@ -263,7 +273,14 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.type.label"/>}>
+            <FormattedMessage id="portal.network.podForm.type.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         type="text"
@@ -285,7 +302,14 @@ const PodForm = ({
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.requestForwardType.label"/>}>
+            <FormattedMessage id="portal.network.podForm.requestForwardType.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         min={POD_PROVIDER_WEIGHT_MIN}
@@ -293,7 +317,14 @@ const PodForm = ({
         name="UIProviderWeight"
         id="provider_weight-field"
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
+        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.providerWeight.label"/>}>
+            <FormattedMessage id="portal.network.podForm.providerWeight.help.text" />
+          </HelpTooltip>
+        }/>
 
       {/* TODO: IpList MIGHT be needed <Field
         required={true}

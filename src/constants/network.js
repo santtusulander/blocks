@@ -26,6 +26,16 @@ export const MAX_LONGTITUDE = 180
 
 export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
 
+export const LOCATION_CLOUD_PROVIDER_OPTIONS = [
+  { value: 'Bare Metal', label: 'Bare Metal' }
+]
+
+export const LOCATION_CLOUD_PROVIDER_ID_OPTIONS = [
+  { value: 'sl', label: 'IBM SoftLayer' },
+  { value: 'do', label: 'Digital Ocean' },
+  { value: 'ec2',label: 'Amazon EC2' }
+]
+
 export const NODE_TYPE_OPTIONS = [
   { value: 'sp_edge', label: 'SP Edge' },
   { value: 'udn_core', label: 'UDN Core' }

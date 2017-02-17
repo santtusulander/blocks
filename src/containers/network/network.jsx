@@ -693,7 +693,7 @@ class Network extends React.Component {
               fetching={groupsFetching}
               isParentSelected={!!this.props.params.account}
               ref={groups => this.entityList.groupList = groups}
-              entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
+              entities={groups}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
               deleteEntity={() => null}
               editEntity={this.handleGroupEdit}
@@ -834,6 +834,7 @@ class Network extends React.Component {
             brand={params.brand}
             groupId={params.group}
             networkId={this.state.networkId}
+            isFetching ={isFetching('pop')}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
           />
         }
