@@ -32,14 +32,12 @@ const validateASNToken = (item) => {
 const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist, udn_type }) => {
 
   const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
-  const footprintNameValidation = 'portal.common.textFieldMultilineValidation.line4.text'
-  const footprintDesValidation = 'portal.common.textFieldMultilineValidation.line5.text'
   const conditions = {
     name: {
       condition: !isValidFootprintTextField(name),
       errorText: <MultilineTextFieldError
                     fieldLabel="portal.network.footprintForm.name.invalid.text"
-                    customTextValidationError={footprintNameValidation}
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
                     minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
                     maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
                     />
@@ -87,13 +85,13 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
     }
   )
 
-  // TO DO, refactor checkForErrors, so field which not required still able to check for conditions
-
+  /* TODO, refactor checkForErrors, so field which not required still able to check for conditions
+     UDNP-2772 Validation function does not support validation for optional fields */
   if(description && !isValidFootprintDescription(description)) {
     errors.description = (
       <MultilineTextFieldError
         fieldLabel="portal.common.description"
-        customTextValidationError={footprintDesValidation}
+        customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.all"
         minValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN}
         maxValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN}
       />

@@ -45,13 +45,12 @@ import IconClose from '../../icons/icon-close'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
-  const popNameValidation = 'portal.common.textFieldMultilineValidation.line4.text'
   const conditions = {
     UIName: {
       condition: !isValidFootprintTextField(UIName),
       errorText: <MultilineTextFieldError
                     fieldLabel="portal.network.podForm.name.label"
-                    customTextValidationError={popNameValidation}
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
                     minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
                     maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
                 />
