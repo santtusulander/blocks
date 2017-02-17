@@ -441,7 +441,7 @@ class Network extends React.Component {
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
     const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
     const UIDiscoveryMethod = DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod)[0]
-    return `${formatMessage({id: UIType.label})}, ${formatMessage({id: UIDiscoveryMethod.label})}`
+    return `${UIType ? formatMessage({id: UIType.label}) : 'Unknown type'}, ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : 'Unknown discovery method'}`
   }
 
   /* ==== Node Handlers ==== */
@@ -455,7 +455,7 @@ class Network extends React.Component {
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
     const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
-    return `${UIRole.label}, ${UIEnv.label}`
+    return `${UIRole ? UIRole.label : 'Unknown role'}, ${UIEnv ? UIEnv.label : 'Unknown environment'}`
   }
 
   showNotification(message) {
