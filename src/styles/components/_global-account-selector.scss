@@ -2,6 +2,7 @@
 // ================================
 
 $dd-font-size: 14px;
+$back-caret-width: 30px;
 $dropdown-selector-width: rem(320px);
 $dropdown-selector-max-height: rem(480px);
 $dd-horizontal-padding: em(18px, $dd-font-size);
@@ -17,6 +18,41 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
 
   &__toggle {
     display: flex;
+  }
+
+  li.action-container {
+    flex-direction: column;
+
+    & > div {
+      display: flex;
+      height: 78px;
+      padding-bottom: 6px;
+      padding-left: 12px;
+      flex-direction: row;
+
+      & > div {
+
+        display: flex;
+
+        & > {
+          h2 {
+            align-self: center;
+          }
+
+          span {
+            position: absolute;
+            align-self: flex-end;
+          }
+        }
+
+      }
+
+      a {
+        width: $back-caret-width;
+        margin-left: -30px;
+        flex-grow: 0;
+      }
+    }
   }
 
   .dropdown-toggle {
@@ -40,7 +76,6 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
     height: 400px;
     max-height: none;
     overflow-y: auto !important;
-    visibility: hidden;
 
     .menu-container {
       position: relative;
@@ -66,10 +101,6 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
         align-items: center;
         flex-direction: row;
         flex-grow: 1;
-      }
-
-      &.active > .dropdown-menu {
-        visibility: visible;
       }
 
       .caret-container {
