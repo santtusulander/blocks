@@ -30,7 +30,7 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-import { NETWORK_DATE_FORMAT } from '../../../constants/network'
+import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -241,7 +241,6 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
-  const provisioningStatusID = 1
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 
@@ -271,7 +270,7 @@ const mapStateToProps = (state, ownProps) => {
       locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
       locationId: edit && pop ? pop.get('location_id') : '',
-      status: edit && pop ? pop.get('status') : provisioningStatusID
+      status: edit && pop ? pop.get('status') : STATUS_VALUE_DEFAULT
     }
   }
 }
