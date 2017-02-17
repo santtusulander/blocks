@@ -253,7 +253,7 @@ const NetworkLocationForm = (props) => {
         <Button
           className="btn-danger pull-left"
           disabled={submitting}
-          onClick={handleSubmit(() => onDelete())}
+          onClick={handleSubmit(onDelete)}
         >
           <FormattedMessage id="portal.button.delete"/>
         </Button>
