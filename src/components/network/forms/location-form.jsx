@@ -112,7 +112,6 @@ const NetworkLocationForm = (props) => {
     error,
     handleSubmit,
     iataCodes,
-    initialValues,
     intl,
     invalid,
     isFetchingLocation,
