@@ -22,11 +22,12 @@ import {
   NODE_CLOUD_DRIVER_OPTIONS,
   NODE_ENVIRONMENT_OPTIONS,
   NODE_ROLE_OPTIONS,
-  NODE_TYPE_OPTIONS
+  NODE_TYPE_OPTIONS,
+  STATUS_OPTIONS
 } from '../../../constants/network'
 
 export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
-export const FORM_FIELDS = ['roles', 'env', 'type', 'cloud_driver', 'custom_grains']
+export const FORM_FIELDS = ['status', 'roles', 'env', 'type', 'cloud_driver', 'custom_grains']
 
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
@@ -185,6 +186,12 @@ class NetworkEditNodeForm extends React.Component {
     const { hasMultipleNodes, expandedFields } = this.state
 
     const fields = [
+      {
+        name: 'status',
+        component: FieldFormGroupSelect,
+        options: STATUS_OPTIONS.map(({value, label}) => ({ value, label: this.props.intl.formatMessage({id: label}) })),
+        labelId: 'portal.network.item.status.label'
+      },
       {
         name: 'roles',
         className: 'input-select',

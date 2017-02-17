@@ -15,7 +15,12 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
+         } from '../../../constants/common'
+
 
 import HelpTooltip from '../../../components/help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
@@ -42,8 +47,13 @@ const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
   const conditions = {
     UIName: {
-      condition: !isValidTextField(UIName),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+      condition: !isValidFootprintTextField(UIName),
+      errorText: <MultilineTextFieldError
+                    fieldLabel="portal.network.podForm.name.label"
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
+                    minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
+                    maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
+                />
     },
     UIProviderWeight: {
       condition: !isValidProviderWeight(UIProviderWeight),
