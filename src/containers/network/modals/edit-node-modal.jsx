@@ -7,6 +7,7 @@ import { SubmissionError } from 'redux-form'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -221,6 +222,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         return Promise.reject(new SubmissionError({ _error: error.data.message }))
       }
     })
+  const showNotification = (message) => dispatch(changeNotification(message))
 
   return {
 
@@ -232,7 +234,11 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
             return updateNode(node)
           }
         )
-      ).then(() => onCancel())
+      ).then(() => {
+        showNotification(<FormattedMessage id="portal.network.editNodeForm.updateNode.status"/>)
+        setTimeout(showNotification, 10000)
+        onCancel()
+      })
     },
 
     onDelete: nodes => {
@@ -240,7 +246,11 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         nodes.map(
           ({ id }) => deleteNode(id)
         )
-      ).then(() => onCancel())
+      ).then(() => {
+        showNotification(<FormattedMessage id="portal.network.editNodeForm.deleteNode.status"/>)
+        setTimeout(showNotification, 10000)
+        onCancel()
+      })
     }
   }
 }

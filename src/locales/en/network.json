@@ -28,6 +28,9 @@
   "portal.network.popEditForm.popId.validation.error.text": "POP ID is invalid",
   "portal.network.popEditForm.popId.validation.required.text": "POP ID is required",
   "portal.network.popEditForm.popId.selectLocation.text": "Please, select Location ID first.",
+  "portal.network.popEditForm.createPop.status": "Create POP successfully!",
+  "portal.network.popEditForm.updatePop.status": "Update POP successfully!",
+  "portal.network.popEditForm.deletePop.status": "Delete POP successfully!",
   "portal.network.popEditForm.deletePop.title": "Delete POP?",
   "portal.network.popEditForm.deletePop.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This POP will be removed from UDN immediately.",
 
@@ -50,6 +53,9 @@
   "portal.network.networkForm.name.required.error": "Network name is required",
   "portal.network.networkForm.description.required.error": "Description is required",
   "portal.network.networkForm.delete.tooltip.message": "This Network contains POPs so it can't be deleted.\nPlease delete all the POPs.",
+  "portal.network.networkForm.createNetwork.status": "Create network successfully!",
+  "portal.network.networkForm.updateNetwork.status": "Update network successfully!",
+  "portal.network.networkForm.deleteNetwork.status": "Delete network successfully!",
   "portal.network.networkForm.deleteNetwork.title": "Delete network?",
   "portal.network.networkForm.deleteNetwork.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This network will be removed from UDN immediately.",
 
@@ -62,6 +68,7 @@
   "portal.network.addNodeForm.type.title": "Type",
   "portal.network.addNodeForm.cloudDriver.title": "Cloud Driver",
   "portal.network.addNodeForm.grains.title": "Grains",
+  "portal.network.addNodeForm.createNode.status": "Create Node successfully!",
 
   "portal.network.editNodeForm.node": "Node",
   "portal.network.editNodeForm.title": "Edit node",
@@ -69,6 +76,8 @@
   "portal.network.editNodeForm.multipleValues": "Multiple values",
   "portal.network.editNodeForm.multipleValues.help": "Changing fields with multiple values will set the same value for all current edited nodes.",
   "portal.network.deleteNodesConfirmation.text": "Are you sure you want to delete {numNodes, plural, one {# node} other {# nodes}}?",
+  "portal.network.editNodeForm.updateNode.status": "Update node successfully!",
+  "portal.network.editNodeForm.deleteNode.status": "Delete node successfully!",
 
   "portal.network.podForm.newPod.title": "Add POD",
   "portal.network.podForm.editPod.title": "Edit POD",
@@ -101,6 +110,9 @@
   "portal.network.podForm.localAS.required.error": "Local AS is required",
   "portal.network.podForm.localAS.notFound.error": "Local AS not found",
   "portal.network.podForm.delete.tooltip.message": "This POD contains Nodes so it can't be deleted.\nPlease delete all the Nodes.",
+  "portal.network.podForm.createPod.status": "Create POD successfully!",
+  "portal.network.podForm.updatePod.status": "Update POD successfully!",
+  "portal.network.podForm.deletePod.status": "Delete POD successfully!",
   "portal.network.podForm.deletePod.title": "Delete POD?",
   "portal.network.podForm.deletePod.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This POD will be removed from UDN immediately.",
   "portal.network.podForm.ipList.label": "IP List",

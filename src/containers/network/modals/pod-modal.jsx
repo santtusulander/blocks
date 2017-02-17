@@ -10,6 +10,7 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -29,6 +30,7 @@ import RoutingDaemonFormContainer from './routing-daemon-modal'
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
+    this.notificationTimeout = null
 
     this.checkforNodes = this.checkforNodes.bind(this)
 
@@ -142,6 +144,11 @@ class PodFormContainer extends React.Component {
     this.setState({ showDeleteModal })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
+  }
   /**
    * hander for save
    */
@@ -199,6 +206,10 @@ class PodFormContainer extends React.Component {
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
 
+        const message = edit ? <FormattedMessage id="portal.network.podForm.updatePod.status"/> :
+         <FormattedMessage id="portal.network.podForm.createPod.status"/>
+        this.showNotification(message)
+
         //Close modal
         this.props.onCancel();
       })
@@ -223,6 +234,8 @@ class PodFormContainer extends React.Component {
           // Throw error => will be shown inside form
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
+
+        this.showNotification(<FormattedMessage id="portal.network.podForm.deletePod.status"/>)
 
         //Close modal
         this.props.onCancel();
@@ -362,7 +375,8 @@ PodFormContainer.propTypes = {
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
-  setFormVal: PropTypes.func
+  setFormVal: PropTypes.func,
+  showNotification: PropTypes.func
 }
 
 PodFormContainer.defaultProps = {
@@ -428,6 +442,7 @@ const mapDispatchToProps = (dispatch) => {
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
     setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
+    showNotification: (message) => dispatch( changeNotification(message) ),
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }

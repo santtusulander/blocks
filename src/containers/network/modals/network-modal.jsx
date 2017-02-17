@@ -8,6 +8,7 @@ import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -25,6 +26,7 @@ class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
     this.networkId = null
+    this.notificationTimeout = null
     this.state = {
       showDeleteModal : false
     }
@@ -94,9 +96,19 @@ class NetworkFormContainer extends React.Component {
           throw new SubmissionError({'_error': resp.error.data.message})
         }
 
+        const message = edit ? <FormattedMessage id="portal.network.networkForm.updateNetwork.status"/> :
+         <FormattedMessage id="portal.network.networkForm.createNetwork.status"/>
+        this.showNotification(message)
+
         // Close modal
         this.props.onCancel();
       })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
   }
 
   /**
@@ -116,6 +128,7 @@ class NetworkFormContainer extends React.Component {
           // Throw error => will be shown inside form
           throw new SubmissionError({'_error': resp.error.data.message})
         }
+        this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
 
         // Unselect network item
         if (this.props.selectedEntityId == this.networkId) {
@@ -199,7 +212,8 @@ NetworkFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pops: PropTypes.instanceOf(List),
-  selectedEntityId: PropTypes.string
+  selectedEntityId: PropTypes.string,
+  showNotification: PropTypes.func
 }
 
 NetworkFormContainer.defaultProps = {
@@ -238,7 +252,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPops: (params) => dispatch( popActions.fetchAll(params) )
+    fetchPops: (params) => dispatch( popActions.fetchAll(params) ),
+
+    showNotification: (message) => dispatch( changeNotification(message) )
   }
 }
 
