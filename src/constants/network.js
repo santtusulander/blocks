@@ -41,7 +41,7 @@ export const NODE_ENVIRONMENT_OPTIONS = [
 export const NODE_ROLE_OPTIONS = [
   { value: 'cache', label: 'Cache' },
   { value: 'gslb', label: 'GSLB' },
-  { value: 'slsb', label: 'SLSB' }
+  { value: 'slb', label: 'SLB' }
 ]
 
 export const NODE_CLOUD_DRIVER_OPTIONS = [
