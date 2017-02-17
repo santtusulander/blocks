@@ -393,6 +393,7 @@ const mapStateToProps = (state, ownProps) => {
     pod_type: 'sp_edge',
     UIProviderWeight: 0.5
   }
+  
   const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
