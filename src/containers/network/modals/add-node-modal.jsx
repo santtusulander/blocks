@@ -157,7 +157,9 @@ const mapStateToProps = (state, { params }) => {
     initialValues: {
       numNodes: 1,
       nodeNameCode: 0,
+      cloud_driver: 6,
       node_role: 'cache',
+      node_type: 'udn_core',
       node_env: 'production'
     }
   }
