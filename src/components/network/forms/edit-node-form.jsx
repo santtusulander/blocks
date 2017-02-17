@@ -189,7 +189,7 @@ class NetworkEditNodeForm extends React.Component {
       {
         name: 'status',
         component: FieldFormGroupSelect,
-        options: STATUS_OPTIONS.map(({value, label}) => { return { value, label: this.props.intl.formatMessage({id: label}) }}),
+        options: STATUS_OPTIONS.map(({value, label}) => ({ value, label: this.props.intl.formatMessage({id: label}) })),
         labelId: 'portal.network.item.status.label'
       },
       {
