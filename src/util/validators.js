@@ -2,7 +2,10 @@ import validator from 'validator'
 import { matchesRegexp } from './helpers'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
-         FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
+         FORM_TEXT_FIELD_DEFAULT_MAX_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN } from '../constants/common'
 
 import { ASN_MIN,
          ASN_MAX,
@@ -142,11 +145,37 @@ export function isValidHostName(hostName) {
 /**
  * Check if valid text-field
  * @param text
+ * @param minLength
+ * @param maxLength
  * @returns {boolean}
  */
-export function isValidTextField(text, minLen = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLen = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
-  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLen},${maxLen}}$`)
+export function isValidTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_TEXT_FIELD_DEFAULT_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9_ \\.,\\-\\&\\(\\)\[\\]]{${minLength},${maxLength}}$`)
   return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
+}
+
+/**
+ * Check if valid text-field, only allow special character _ ., used in footprint and pod form
+ * @param text
+ * @param minLength
+ * @param maxLength
+ * @returns {boolean}
+ */
+export function isValidFootprintTextField(text, minLength = FORM_TEXT_FIELD_DEFAULT_MIN_LEN, maxLength = FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^[a-zA-Z0-9 ._]{${minLength},${maxLength}}$`)
+  return text && textFieldRegexp.test(text) && !isOnlyWhiteSpace(text)
+}
+
+/**
+ * Check if valid description, allow every character except a line break, only any character from range, used in footprint and pod form
+ * @param text
+ * @param minLength
+ * @param maxLength
+ * @returns {boolean}
+ */
+export function isValidFootprintDescription(text, minLength = FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN, maxLength = FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN) {
+  const textFieldRegexp = new RegExp(`^.{${minLength},${maxLength}}$`)
+  return textFieldRegexp.test(text)
 }
 
 /**
