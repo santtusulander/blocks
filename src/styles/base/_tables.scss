@@ -163,10 +163,10 @@
   .one-button-cell {
     width: $btn-height * 2;
   }
-}
 
-&.fixed-layout {
-  table-layout: fixed;
+  &.fixed-layout {
+    table-layout: fixed;
+  }
 }
 
 .table-percentage-line {

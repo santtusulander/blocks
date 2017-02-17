@@ -54,9 +54,9 @@ class Header extends React.Component {
         <div className="header__content">
           <ul className="header__left nav navbar-nav">
             <LogoItem user={this.props.user} />
-            <AccountSelector params={this.props.params}>
+            {/* <AccountSelector params={this.props.params}>
               asdsdasdsad
-            </AccountSelector>
+            </AccountSelector> */}
             <BreadcrumbsItem
               activeGroup={activeGroup}
               params={params}
