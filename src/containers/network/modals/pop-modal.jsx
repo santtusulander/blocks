@@ -241,6 +241,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+  const provisioningStatusID = 1
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 
@@ -270,7 +271,7 @@ const mapStateToProps = (state, ownProps) => {
       locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
       locationId: edit && pop ? pop.get('location_id') : '',
-      status: edit && pop ? pop.get('status') : 1
+      status: edit && pop ? pop.get('status') : provisioningStatusID
     }
   }
 }
