@@ -81,10 +81,11 @@ class NetworkAddNodeForm extends React.Component {
 
     const {nodeNameData} = nextProps
     const nodeNameProps = nodeNameData.props
-    if (
-      nextProps.nodeNameData.props.cacheEnv !== this.props.nodeNameData.props.cacheEnv
-      || nextProps.nodeNameData.props.nodeType !== this.props.nodeNameData.props.nodeType
-    ) {
+
+    /* This will autogenerate node_name if cacheEnv or nodeType changed */
+    if ( nextProps.nodeNameData.props.cacheEnv !== this.props.nodeNameData.props.cacheEnv
+        || nextProps.nodeNameData.props.nodeType !== this.props.nodeNameData.props.nodeType ) {
+
       this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
     }
 
