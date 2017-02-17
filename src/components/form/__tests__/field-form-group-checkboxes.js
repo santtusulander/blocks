@@ -1,24 +1,22 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../field-telephone-input')
-import FieldTelephoneInput from '../field-telephone-input'
+jest.unmock('../field-form-group-checkboxes')
+import FieldFormGroupCheckboxes from '../field-form-group-checkboxes'
 
-describe('FieldTelephoneInput', () => {
+describe('FieldFormGroupCheckboxes', () => {
+
   let subject = null
 
   beforeEach(() => {
-    subject = (error = '',
-               label = (<div></div>)) => {
+    subject = (error,
+               label = (<div></div>),
+               addonAfter = (<div className="addon"></div>)) => {
       const props = {
         label,
+        addonAfter,
         input: {
-          name: 'name',
-          value: {
-            phone_country_code: '001',
-            phone_number: '99999999'
-          },
-          onChange: () => {}
+          name: 'name'
         },
         meta: {
           error: error,
@@ -27,13 +25,21 @@ describe('FieldTelephoneInput', () => {
       }
 
       return shallow(
-        <FieldTelephoneInput {...props}/>
+        <FieldFormGroupCheckboxes {...props}/>
       )
     }
   })
 
   it('should exist', () => {
     expect(subject().length).toBe(1)
+  })
+
+  it('Addon should exist when it was given', () => {
+    expect(subject('', '').find('.addon').length).toBe(1)
+  })
+
+  it('Addon should not exist when it was not given', () => {
+    expect(subject('', '', '').find('.addon').length).toBe(0)
   })
 
   it('label should exist when it was given', () => {
@@ -45,10 +51,10 @@ describe('FieldTelephoneInput', () => {
   })
 
   it('error text should exist when error flags are true', () => {
-    expect(subject('error').find('DefaultErrorBlock').length).toBe(1)
+    expect(subject('error').find('HelpBlock').length).toBe(1)
   })
 
   it('error text should not exist when error flags are false', () => {
-    expect(subject().find('DefaultErrorBlock').length).toBe(0)
+    expect(subject('').find('HelpBlock').length).toBe(0)
   })
 })

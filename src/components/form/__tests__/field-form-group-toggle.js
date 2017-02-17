@@ -8,7 +8,7 @@ describe('FieldFormGroupToggle', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (label = (<div></div>)) => {
+    subject = (label = null) => {
       const props = {
         label,
         input: {
@@ -27,6 +27,6 @@ describe('FieldFormGroupToggle', () => {
   })
 
   it('label should exist when it was given', () => {
-    expect(subject().find('ControlLabel').length).toBe(1)
+    expect(subject((<div></div>)).find('ControlLabel').length).toBe(1)
   })
 })
