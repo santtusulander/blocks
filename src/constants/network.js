@@ -64,6 +64,12 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 7, label: 'LXC' },
   { value: 8, label: 'Docker' }
 ]
+
+export const NODE_TYPE_DEFAULT = 'udn_core'
+export const NODE_ROLE_DEFAULT = 'cache'
+export const NODE_ENVIRONMENT_DEFAULT = 'production'
+export const NODE_CLOUD_DRIVER_DEFAULT = 6
+
 export const FOOTPRINT_UDN_TYPES = [
   { value: 'billing_asn', label: 'Billing ASN' },
   { value: 'on_net', label: 'On Net' },
