@@ -454,7 +454,7 @@ class Network extends React.Component {
     const nodeRole = entity.getIn(['roles', '0'])
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
-    const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value}) => value === nodeEnv)[0]
+    const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
     return `${UIRole.label}, ${UIEnv.label}`
   }
 
