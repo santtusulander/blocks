@@ -27,6 +27,8 @@ import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'
 
+import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
+
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
@@ -148,7 +150,8 @@ class PodFormContainer extends React.Component {
 
     const data = {
       pod_name: values.UIName,
-      pod_type: values.pod_type
+      pod_type: values.pod_type,
+      status: values.status
     }
 
     const service = {
@@ -403,6 +406,7 @@ const mapStateToProps = (state, ownProps) => {
     })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+  initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
