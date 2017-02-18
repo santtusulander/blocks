@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 
-export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:m a'
+export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:mm a'
 
 export const NETWORK_SCROLL_AMOUNT = 25
 export const NETWORK_WINDOW_OFFSET = 10
@@ -25,6 +25,16 @@ export const MIN_LONGTITUDE = -180
 export const MAX_LONGTITUDE = 180
 
 export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
+
+export const LOCATION_CLOUD_PROVIDER_OPTIONS = [
+  { value: 'Bare Metal', label: 'Bare Metal' }
+]
+
+export const LOCATION_CLOUD_PROVIDER_ID_OPTIONS = [
+  { value: 'sl', label: 'IBM SoftLayer' },
+  { value: 'do', label: 'Digital Ocean' },
+  { value: 'ec2',label: 'Amazon EC2' }
+]
 
 export const NODE_TYPE_OPTIONS = [
   { value: 'sp_edge', label: 'SP Edge' },
@@ -54,6 +64,12 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 7, label: 'LXC' },
   { value: 8, label: 'Docker' }
 ]
+
+export const NODE_TYPE_DEFAULT = 'udn_core'
+export const NODE_ROLE_DEFAULT = 'cache'
+export const NODE_ENVIRONMENT_DEFAULT = 'production'
+export const NODE_CLOUD_DRIVER_DEFAULT = 6
+
 export const FOOTPRINT_UDN_TYPES = [
   { value: 'billing_asn', label: 'Billing ASN' },
   { value: 'on_net', label: 'On Net' },
@@ -88,6 +104,15 @@ export const DISCOVERY_METHOD_OPTIONS = [
   {value: 'BGP', label: 'portal.network.podForm.discoveryMethod.options.bgp.label'},
   {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
 ]
+
+export const STATUS_OPTIONS = [
+  {value: 1, label: 'portal.network.item.status.provisioning'},
+  {value: 2, label: 'portal.network.item.status.disabled'},
+  {value: 3, label: 'portal.network.item.status.enabled'},
+  {value: 4, label: 'portal.network.item.status.destroying'}
+]
+
+export const STATUS_VALUE_DEFAULT = 1
 
 export const POD_PROVIDER_WEIGHT_MIN = 0
 export const POD_PROVIDER_WEIGHT_MAX = 1

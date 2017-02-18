@@ -83,29 +83,6 @@ $typeahead-input-left-padding: 40px;
 
 .sp-pod-form {
 
-  .dropdown-select,
-  .form-control {
-    width: $input-width;
-    height: $input-height;
-    margin-right: auto;
-  }
-
-  .input-group-addon {
-    .btn-icon {
-      width: $input-height;
-      height: $input-height;
-      margin: -5px 0 0 20px;
-      color: $white;
-      background-color: rgba($black, 0.2);
-      border-radius: 50%;
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-    }
-  }
-
   .discovery-section {
     margin: $bar-height 0;
 
@@ -196,12 +173,40 @@ $typeahead-input-left-padding: 40px;
     width: $input-width - $number-input-btn-width;
   }
 
-  .as-num-input {
+  .as-num-input.form-control {
     width: $input-width - $number-input-btn-width - $number-addon-width;
   }
 
   .input-group-addon.addon-before {
     padding-top: 0;
+  }
+}
+
+.sp-pod-form,
+.sp-add-node-form,
+.sp-edit-node-form {
+
+  .dropdown-select,
+  .form-control {
+    width: $input-width;
+    height: $input-height;
+    margin-right: auto;
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
   }
 }
 
@@ -264,9 +269,13 @@ $typeahead-input-left-padding: 40px;
 //=================
 .sp-add-node-form {
 
-  .number-input-group {
+  .add-node-form__name-fqdn {
+    margin-bottom: 7px;
+  }
+
+  .number-input-group .number-input,
+  .add-node-form__name-fqdn+.form-group {
     width: $number-input-width;
-    margin: 7px 0 0;
   }
 
   &__highlight-name {
