@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.3.0-rc9",
+  "version": "1.3.0-rc10",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
