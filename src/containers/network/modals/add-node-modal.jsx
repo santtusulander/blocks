@@ -150,8 +150,8 @@ AddNodeContainer.propTypes = {
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const nameCode = formSelector(state, 'nameCode') || 0
-  const nodeEnv = formSelector(state, 'node_env') || 'production'
-  const nodeType = formSelector(state, 'node_type') || 'sp_cache'
+  const nodeEnv = formSelector(state, 'node_env') || NODE_ENVIRONMENT_DEFAULT
+  const nodeType = formSelector(state, 'node_type') || NODE_TYPE_DEFAULT
 
   const nodeNameData = buildNodeNameData(nameCode, nodeEnv, nodeType, params)
   const nodeNameProps = nodeNameData.props
