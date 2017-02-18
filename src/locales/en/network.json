@@ -37,6 +37,7 @@
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
   "portal.network.popEditForm.delete.tooltip.message": "This POP contains PODs so it can't be deleted.\nPlease delete all the PODs.",
 
+  "portal.network.item.status.label": "Status",
   "portal.network.item.status.enabled": "Enabled",
   "portal.network.item.status.disabled": "Disabled",
   "portal.network.item.status.destroying": "Destroying",
@@ -53,6 +54,11 @@
   "portal.network.networkForm.deleteNetwork.title": "Delete Network?",
   "portal.network.networkForm.deleteNetwork.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This network will be removed from UDN immediately.",
 
+  "portal.network.nodeForm.role.help.text": "Defines the role for this server in CloudScale",
+  "portal.network.nodeForm.environment.help.text": "Defines which environment this node will be created in",
+  "portal.network.nodeForm.type.help.text": "Define whether Node is part of SP Edge or UDN Core deployment",
+  "portal.network.nodeForm.cloudDriver.help.text": "Defines whether node is hosted on Bare Metal or any other cloud provider",
+  "portal.network.nodeForm.grains.help.text": "At present we utilize the FQDN as the custom grain",
 
   "portal.network.addNodeForm.title": "Add Node",
   "portal.network.addNodeForm.confirmAdd": "Create {numNodes} nodes? Are you sure?",
@@ -78,11 +84,14 @@
   "portal.network.podForm.lbMethod.help.label": "LB Method",
   "portal.network.podForm.lbMethod.help.text": "Load Balancing method allows user to assign type of load balancing function the POD will provide to improve delivery across the UDN network. The user can assign a POD to act as Global Server Load Balancer (GSLB), Load Balancer (LB) or Referrer (Referral) in the UDN network.",
   "portal.network.podForm.type.label": "Type",
+  "portal.network.podForm.type.help.text": "Defines whether POD is part of SP Edge or UDN Core deployment",
   "portal.network.podForm.localAS.label": "Local AS",
   "portal.network.podForm.localAS.help.label": "Local AS",
   "portal.network.podForm.localAS.help.text": "The UDN uses two AS numbers for routing. The Local AS announces UDN-owned CIDRs by service. For example, HTTP, HTTPS, GSLB, etc. It is also used for public peering in the UDN Core.",
   "portal.network.podForm.requestForwardType.label": "Request Forward Type",
+  "portal.network.podForm.requestForwardType.help.text": "Defines what type of traffic will be served by this PoD (e.g. on-net - only on-net traffic, public - all traffic)",
   "portal.network.podForm.providerWeight.label": "Provider Weight",
+  "portal.network.podForm.providerWeight.help.text": "Defines priority of POD. e.g. If provider weight is set to 0 for UDN and 1 for SP Edge, this informs the system to prefer SP edge nodes over a UDN core",
   "portal.network.podForm.discoveryMethod.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.label": "Discovery Method",
   "portal.network.podForm.discoveryMethod.help.text": "This allows the users to specify the source of network block data. The user can provide BGP router information to announce the IP CIDRs the UDN can use. The user can also manually configure their own network Footprints using IPv4 numbers or list of ASNs.",
@@ -141,6 +150,8 @@
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",
+  "portal.network.locationForm.deleteLocation.title": "Delete Location?",
+  "portal.network.locationForm.deleteLocation.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This location will be removed from UDN immediately.",
   "portal.network.locationForm.name.label": "Location Name",
   "portal.network.locationForm.name.placeholder": "Enter Location Name",
   "portal.network.locationForm.iataCode.label": "IATA Code",
