@@ -80,7 +80,8 @@ class NetworkAddNodeForm extends React.Component {
 
   componentWillReceiveProps(nextProps){
 
-    const { props: {nodeNameProps} } = nextProps
+    const { nodeNameData } = nextProps
+    const nodeNameProps = nodeNameData.props
 
     /* This will autogenerate node_name if cacheEnv or nodeType changed */
     if ( nodeNameProps.cacheEnv !== this.props.nodeNameData.props.cacheEnv
