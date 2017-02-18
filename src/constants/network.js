@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 
-export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:m a'
+export const NETWORK_DATE_FORMAT = 'MMM, D YYYY h:mm a'
 
 export const NETWORK_SCROLL_AMOUNT = 25
 export const NETWORK_WINDOW_OFFSET = 10
@@ -64,6 +64,12 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
   { value: 7, label: 'LXC' },
   { value: 8, label: 'Docker' }
 ]
+
+export const NODE_TYPE_DEFAULT = 'udn_core'
+export const NODE_ROLE_DEFAULT = 'cache'
+export const NODE_ENVIRONMENT_DEFAULT = 'production'
+export const NODE_CLOUD_DRIVER_DEFAULT = 6
+
 export const FOOTPRINT_UDN_TYPES = [
   { value: 'billing_asn', label: 'Billing ASN' },
   { value: 'on_net', label: 'On Net' },
