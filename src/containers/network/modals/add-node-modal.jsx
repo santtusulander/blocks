@@ -150,10 +150,11 @@ AddNodeContainer.propTypes = {
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const nameCode = formSelector(state, 'nameCode') || 0
-  const nodeEnv = formSelector(state, 'node_env') || 'production'
-  const nodeType = formSelector(state, 'node_type')
+  const nodeEnv = formSelector(state, 'node_env') || NODE_ENVIRONMENT_DEFAULT
+  const nodeType = formSelector(state, 'node_type') || NODE_TYPE_DEFAULT
 
   const nodeNameData = buildNodeNameData(nameCode, nodeEnv, nodeType, params)
+  const nodeNameProps = nodeNameData.props
 
   return {
     subtitle: getSubtitle(state, params),
@@ -165,7 +166,8 @@ const mapStateToProps = (state, { params }) => {
       cloud_driver: NODE_CLOUD_DRIVER_DEFAULT,
       node_role: NODE_ROLE_DEFAULT,
       node_type: NODE_TYPE_DEFAULT,
-      node_env: NODE_ENVIRONMENT_DEFAULT
+      node_env: NODE_ENVIRONMENT_DEFAULT,
+      node_name: `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`
     }
   }
 }

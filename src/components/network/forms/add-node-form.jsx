@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
-import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+import { change, Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupNumber from '../../form/field-form-group-number'
+//import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpTooltip from '../../help-tooltip'
@@ -78,8 +78,22 @@ class NetworkAddNodeForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
+  componentWillReceiveProps(nextProps){
+
+    const { nodeNameData } = nextProps
+    const nodeNameProps = nodeNameData.props
+
+    /* This will autogenerate node_name if cacheEnv or nodeType changed */
+    if ( nodeNameProps.cacheEnv !== this.props.nodeNameData.props.cacheEnv
+        || nodeNameProps.nodeType !== this.props.nodeNameData.props.nodeType ) {
+
+      this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
+    }
+
+  }
+
   onSubmit(values) {
-    const { numNodes, nodeNameData } = this.props
+    const { numNodes } = this.props
     const { showAddConfirmation } = this.state
     if (!showAddConfirmation && numNodes > 1) {
       this.toggleAddConfirm(true)
@@ -87,7 +101,6 @@ class NetworkAddNodeForm extends React.Component {
     }
 
     const finalValues = {...values}
-    finalValues.node_name = nodeNameData.name
     return this.props.onSave(finalValues)
       .catch(error => {
         this.toggleAddConfirm(false)
@@ -170,17 +183,28 @@ class NetworkAddNodeForm extends React.Component {
             </Col>
           </Row> */}
 
+          { /* Commented out because of UDNP-2780 - maybe needed in future
           <label><FormattedMessage id="portal.common.name" /></label>
+          */}
           <div className="add-node-form__name-fqdn">
             {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
           </div>
 
+          {/*
           <Field
             type="number"
             name="nameCode"
             min={0}
             max={99}
             component={FieldFormGroupNumber}
+          />
+          */}
+
+          <Field
+            type='text'
+            name='node_name'
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.common.name" />}
           />
 
           <Field
