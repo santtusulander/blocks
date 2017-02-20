@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidFootprintTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address } from '../../../util/validators'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
@@ -35,9 +35,6 @@ import {
   DISCOVERY_METHOD_OPTIONS,
   STATUS_OPTIONS
 } from '../../../constants/network'
-
-//TODO: If Ip list needed uncomment
-//import { isValidIPv4Address } from '../../../util/validators'
 
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
@@ -111,11 +108,9 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
-/** TODO: This is needed for IPList
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
-*/
 
 
 /*eslint-disable react/no-multi-comp */
@@ -332,7 +327,7 @@ const PodForm = ({
           </HelpTooltip>
         }/>
 
-      {/* TODO: IpList MIGHT be needed <Field
+      <Field
         required={true}
         name="UIIpList"
         allowNew={true}
@@ -341,7 +336,7 @@ const PodForm = ({
         options={[]}
         validation={validateCIDRToken}
         label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
-      />*/}
+      />
 
       <hr/>
 
