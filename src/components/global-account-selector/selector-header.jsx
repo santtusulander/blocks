@@ -1,15 +1,17 @@
 import React from 'react'
 import { FormControl } from 'react-bootstrap'
 
+import IsAllowed from '../is-allowed'
 import IconArrowLeft from '../icons/icon-arrow-left'
 
-export default ({ searchValue, onSearchChange, childrenLabel = 'assdadsa', parentId, activeNodeName, goToParent }) =>
+export default ({ searchValue, onSearchChange, childrenLabel = 'assdadsa', parentId, viewParentPermission, activeNodeName, goToParent }) =>
   <li className="action-container">
     <div>
-      {parentId &&
+      <IsAllowed to={viewParentPermission}>
         <a onClick={() => goToParent(parentId)}>
           <IconArrowLeft/>
-        </a>}
+        </a>
+      </IsAllowed>
       <div>
         <h2>{activeNodeName}</h2>
         {childrenLabel && <span>{childrenLabel}</span>}

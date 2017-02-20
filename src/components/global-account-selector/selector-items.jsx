@@ -1,41 +1,32 @@
 import React from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
 
-export default ({ selectorNodes, goToChild, searchValue }) => {
-
-  const caret = (nodeId, fetchChildren) => {
-
-    const handleCaretClick = () => {
-      fetchChildren(nodeId).then(() => goToChild(nodeId))
-    }
-
-    return (
-      <a className="caret-container" onClick={handleCaretClick} tabIndex="-1">
-        <IconArrowRight />
-      </a>
-    )
-  }
+export default ({ selectorNodes, goToChild, searchValue, handleCaretClick, handleEntityClick }) => {
 
   return (
     <li className="menu-container">
 
       {/* Dropdown with nodes */}
       <ul className="scrollable-menu">
-        {selectorNodes.reduce((listItems, node) => {
+        {selectorNodes.reduce((listItems, node, i) => {
 
-          const { idKey = 'id', labelKey = 'name', fetchChildren, nodes } = node
+          const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren }, nodes } = node
 
           const nodeId = node[idKey]
           const nodeName = node[labelKey]
-          
+
           if (nodeName.includes(searchValue)) {
 
             listItems.push(
-              <li>
+              <li key={i}>
 
-                <a>{nodeName}</a>
+                <a onClick={() => handleEntityClick(node)}>{nodeName}</a>
 
-                {nodes && caret(nodeId, fetchChildren)}
+                {nodes &&
+                  <a className="caret-container" onClick={() => handleCaretClick(fetchChildren, nodeId)} tabIndex="-1">
+                    <IconArrowRight />
+                  </a>
+                }
 
               </li>
             )
