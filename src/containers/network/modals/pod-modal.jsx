@@ -158,9 +158,8 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseFloat(values.UIProviderWeight)
-      //TODO:find out if Ip List is needed
-      //ip_list: values.UIIpList.map( ip => ip.label )
+      provider_weight: parseFloat(values.UIProviderWeight),
+      ip_list: values.UIIpList.map( ip => ip.label )
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
@@ -400,7 +399,7 @@ const mapStateToProps = (state, ownProps) => {
     pod_type: 'sp_edge',
     UIProviderWeight: 0.5
   }
-  
+
   const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
@@ -415,6 +414,7 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
   initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map( ip => { return {id: ip, label: ip} } ).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
