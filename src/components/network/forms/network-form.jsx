@@ -35,10 +35,10 @@ const validate = ({ name, description }) => {
 }
 
 const NetworkForm = ({
-  error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete,
+  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete,
   networkPermissions: { deleteAllowed, modifyAllowed }
 }) => {
-
+  const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
   const edit = !!initialValues.name
 
@@ -76,7 +76,7 @@ const NetworkForm = ({
           <ButtonDisableTooltip
             id="delete-btn"
             className="btn-danger pull-left"
-            disabled={hasPops}
+            disabled={deleteButtonDisabled}
             onClick={handleSubmit(() => onDelete(initialValues.name))}
             tooltipId="tooltip-help"
             tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
@@ -116,6 +116,7 @@ NetworkForm.propTypes = {
   hasPops: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetching: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,

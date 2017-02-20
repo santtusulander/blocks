@@ -25,6 +25,7 @@ describe('NetworkLocationForm', () => {
       const initialValues = edit ? {name: 'udn'} : {}
       locationPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
       props = {
+        edit,
         onCancel,
         onSave,
         handleSubmit: jest.fn(),

@@ -30,7 +30,7 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-import { NETWORK_DATE_FORMAT } from '../../../constants/network'
+import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
@@ -81,7 +81,8 @@ class PopFormContainer extends Component {
   onSave(edit, values) {
 
     const data = {
-      name: values.name
+      name: values.name,
+      status: values.status
     }
 
     // add id if create new
@@ -189,6 +190,7 @@ class PopFormContainer extends Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.popEditForm.deletePop.title"/>}
             verifyDelete={true}
             cancelButton={true}
@@ -263,7 +265,8 @@ const mapStateToProps = (state, ownProps) => {
       updatedDate: edit && pop ? pop.get('updated') : '',
       locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
-      locationId: edit && pop ? pop.get('location_id') : ''
+      locationId: edit && pop ? pop.get('location_id') : '',
+      status: edit && pop ? pop.get('status') : STATUS_VALUE_DEFAULT
     }
   }
 }

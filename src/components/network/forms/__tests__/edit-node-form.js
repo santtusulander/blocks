@@ -73,8 +73,8 @@ describe('NetworkEditNodeForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 5 fields', () => {
-    expect(subject().find('Field').length).toBe(5)
+  it('should have 6 fields', () => {
+    expect(subject().find('Field').length).toBe(6)
   })
 
   it('should have 2 buttons', () => {

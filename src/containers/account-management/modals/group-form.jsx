@@ -54,7 +54,8 @@ class GroupFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, canSeeLocations } = this.props
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account },
+            groupId, canSeeLocations, canFetchNetworks } = this.props
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
@@ -64,7 +65,7 @@ class GroupFormContainer extends React.Component {
       this.props.fetchLocations(groupId)
     }
 
-    if (groupId) {
+    if (groupId && canFetchNetworks) {
       this.props.fetchNetworks(groupId)
     }
   }
@@ -292,12 +293,12 @@ class GroupFormContainer extends React.Component {
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
 
-      {canSeeLocations &&
+      {canSeeLocations && this.state.visibleLocationForm &&
         <NetworkLocationFormContainer
           params={this.props.params}
           groupId={this.props.groupId}
           onCancel={this.hideLocationForm}
-          show={this.state.visibleLocationForm}
+          show={true}
           locationId={this.state.selectedLocationId}
           locationPermissions={locationPermissions}
         />
@@ -314,6 +315,7 @@ GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
   canEditBilling: PropTypes.bool,
+  canFetchNetworks: PropTypes.bool,
   canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
@@ -363,12 +365,14 @@ const  mapStateToProps = (state, ownProps) => {
   const canEditBilling = ownProps.hasOwnProperty('canEditBilling') ? ownProps.canEditBilling : userIsCloudProvider(currentUser)
   const canSeeBilling = ownProps.hasOwnProperty('canSeeBilling') ? ownProps.canSeeBilling : userIsContentProvider(currentUser) || canEditBilling
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
+  const canFetchNetworks = userIsServiceProvider(currentUser)
   return {
     account: account.get('activeAccount'),
     activeHost: host.get('activeHost'),
     canEditBilling,
     canSeeBilling,
     canSeeLocations,
+    canFetchNetworks,
     hosts: groupId && host.get('allHosts'),
     initialValues: determineInitialValues(groupId, group.get('activeGroup')),
     isFetchingHosts: host.get('fetching'),

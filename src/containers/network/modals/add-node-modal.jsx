@@ -16,7 +16,12 @@ import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import SidePanel from '../../../components/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
-import { NETWORK_DOMAIN_NAME, NODE_ENVIRONMENT_OPTIONS } from '../../../constants/network'
+import { NETWORK_DOMAIN_NAME,
+         NODE_ENVIRONMENT_OPTIONS,
+         NODE_TYPE_DEFAULT,
+         NODE_ROLE_DEFAULT,
+         NODE_ENVIRONMENT_DEFAULT,
+         NODE_CLOUD_DRIVER_DEFAULT } from '../../../constants/network'
 
 const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 
@@ -147,10 +152,11 @@ AddNodeContainer.propTypes = {
 const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const nameCode = formSelector(state, 'nameCode') || 0
-  const nodeEnv = formSelector(state, 'node_env') || 'production'
-  const nodeType = formSelector(state, 'node_type')
+  const nodeEnv = formSelector(state, 'node_env') || NODE_ENVIRONMENT_DEFAULT
+  const nodeType = formSelector(state, 'node_type') || NODE_TYPE_DEFAULT
 
   const nodeNameData = buildNodeNameData(nameCode, nodeEnv, nodeType, params)
+  const nodeNameProps = nodeNameData.props
 
   return {
     subtitle: getSubtitle(state, params),
@@ -159,8 +165,11 @@ const mapStateToProps = (state, { params }) => {
     initialValues: {
       numNodes: 1,
       nodeNameCode: 0,
-      node_role: 'cache',
-      node_env: 'production'
+      cloud_driver: NODE_CLOUD_DRIVER_DEFAULT,
+      node_role: NODE_ROLE_DEFAULT,
+      node_type: NODE_TYPE_DEFAULT,
+      node_env: NODE_ENVIRONMENT_DEFAULT,
+      node_name: `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`
     }
   }
 }
