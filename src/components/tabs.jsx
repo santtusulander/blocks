@@ -31,8 +31,8 @@ class Tabs extends React.Component {
       hiddenTabs: []
     }
 
-    this.tabEls = []
-    this.hiddenTabs = []
+    this.tabElements = []
+    this.hiddenTabsElement = null
 
     this.timeout = null
     this.measureTabs = this.measureTabs.bind(this)
@@ -52,21 +52,21 @@ class Tabs extends React.Component {
   measureTabs() {
     if (!this.props.children || !this.props.children.length) return
 
-    let hiddenTabs = []
+    const hiddenTabs = []
     this.setState({ hiddenTabs: hiddenTabs })
-    let reverseTabs = this.props.children.slice().reverse()
+    const reverseTabs = this.props.children.slice().reverse()
 
     // Check that DOM nodes are rendered before running the calculations.
     // This is mainly for componentWillReceiveProps() event
     window.requestAnimationFrame(() => {
-      if (this.tabEls.length && this.hiddenTabs.length) {
+      if (this.tabElements.length && this.hiddenTabsElement) {
 
         // Compare top position of More link to the first tab child. If More link's
         // top position is bigger than first tab's, it means that all tabs don't
         // fit on same line and we need to hide some of them. Looping through
         // tabs in reverse since we start hiding them from the end
         reverseTabs.forEach((tab, i) => {
-          if (getDOMNodeTop(this.hiddenTabs[0]) > getDOMNodeTop(this.tabEls[0])) {
+          if (getDOMNodeTop(this.hiddenTabsElement) > getDOMNodeTop(this.tabElements[0])) {
             // Don't hide active tab
             if(tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
@@ -87,14 +87,14 @@ class Tabs extends React.Component {
           children.filter((tab, i) => !hiddenTabs.includes(i)).map((tab, i) => {
             return React.cloneElement(
               tab, {
-                ref: (tabEl) => {this.tabEls[i] = tabEl},
+                ref: (tabEl) => {this.tabElements[i] = tabEl},
                 key: i
               }
             )
           })
           : children
         }
-        <li ref={(listEl) => {this.hiddenTabs[0] = listEl}}>
+        <li ref={(node) => {this.hiddenTabsElement = node}}>
           {hiddenTabs.length !== 0 ?
             <Dropdown id="nav-dropdown-within-tab" pullRight={true}>
               <Dropdown.Toggle className="tabs-dropdown-toggle" noCaret={true}>
