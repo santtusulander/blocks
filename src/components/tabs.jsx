@@ -11,7 +11,15 @@ import classnames from 'classnames'
 
 import IconSelectCaret from '../components/icons/icon-select-caret'
 
+/**
+ * Get DOM node top position
+ * @param ref
+ * @returns {Number}
+ */
 function getDOMNodeTop(ref) {
+  if (!ref) {
+    return 0
+  }
   return findDOMNode(ref).getBoundingClientRect().top
 }
 
