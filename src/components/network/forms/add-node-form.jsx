@@ -118,7 +118,7 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   getFooterButtons() {
-    const { invalid, submitting, numNodes } = this.props
+    const { invalid, submitting, numNodes, nodePermissions: { modifyAllowed } } = this.props
     const { showAddConfirmation } = this.state
 
     const submitButtonLabel = submitting
@@ -136,12 +136,14 @@ class NetworkAddNodeForm extends React.Component {
             onClick={() => this.toggleAddConfirm(false)}>
             <FormattedMessage id="portal.button.back"/>
           </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid||submitting}>
-            {submitButtonLabel}
-          </Button>
+          { modifyAllowed &&
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting}>
+              {submitButtonLabel}
+            </Button>
+          }
         </ButtonToolbar>
       </FormFooterButtons>)
     } else {
@@ -152,12 +154,14 @@ class NetworkAddNodeForm extends React.Component {
           onClick={this.onCancel}>
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid||submitting}>
-          <FormattedMessage id="portal.button.add" />
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}>
+            <FormattedMessage id="portal.button.add" />
+          </Button>
+        }
       </FormFooterButtons>)
     }
   }

@@ -149,7 +149,8 @@ class EntityList extends React.Component {
       entities,
       contentTextGenerator,
       titleGenerator,
-      isAllowedToConfigure
+      isAllowedToConfigure,
+      viewAllowed
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
@@ -170,8 +171,8 @@ class EntityList extends React.Component {
             onDelet={() => deleteEntity(entityId)}
             status={status}
             extraClassName="entity-list-item"
-            isAllowedToConfigure={isAllowedToConfigure}
-            />
+            viewAllowed={viewAllowed}
+          />
         )
 
         if (showAsStarbursts) {
@@ -360,7 +361,8 @@ EntityList.propTypes = {
   showButtons: PropTypes.bool,
   starburstData: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  titleGenerator: PropTypes.func
+  titleGenerator: PropTypes.func,
+  viewAllowed: PropTypes.bool
 }
 EntityList.defaultProps = {
   disableButtons: false,

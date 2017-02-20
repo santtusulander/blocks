@@ -149,14 +149,7 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const {
-      initialValues,
-      iata,
-      onCancel,
-      group,
-      network,
-      popId
-    } = this.props
+    const { initialValues, iata, onCancel, group, network, popId, popPermissions } = this.props
 
     const { showDeleteModal } = this.state
 
@@ -190,6 +183,7 @@ class PopFormContainer extends Component {
             onDelete={() => this.onToggleDeleteModal(true)}
             onSave={(values) => this.onSave(edit, values)}
             onCancel={() => onCancel()}
+            popPermissions={popPermissions}
           />
 
         </SidePanel>
@@ -235,6 +229,7 @@ PopFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  popPermissions: PropTypes.object,
   selectedEntityId: PropTypes.string
 }
 

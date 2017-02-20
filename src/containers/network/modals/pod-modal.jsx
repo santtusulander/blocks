@@ -247,7 +247,9 @@ class PodFormContainer extends React.Component {
       //account,
       hasNodes,
       network,
-      footprints
+      footprints,
+      podPermissions,
+      footprintPermissions
     } = this.props
 
     const {showDeleteModal} = this.state
@@ -288,6 +290,8 @@ class PodFormContainer extends React.Component {
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
+            podPermissions={podPermissions}
+            footprintPermissions={footprintPermissions}
           />
 
         </SidePanel>
@@ -300,6 +304,7 @@ class PodFormContainer extends React.Component {
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
+          footprintPermissions={footprintPermissions}
         />
         }
 
@@ -347,6 +352,7 @@ PodFormContainer.propTypes = {
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPop: PropTypes.func,
+  footprintPermissions: PropTypes.object,
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
@@ -361,6 +367,7 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  podPermissions: PropTypes.object,
   pop: PropTypes.instanceOf(Map),
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,

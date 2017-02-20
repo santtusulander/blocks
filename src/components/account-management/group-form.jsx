@@ -52,6 +52,7 @@ const GroupForm = ({
   isFetchingHosts,
   isFetchingEntities,
   locations,
+  locationPermissions: { createAllowed, viewAllowed },
   hasNetworks,
   onCancel,
   onDelete,
@@ -113,9 +114,17 @@ const GroupForm = ({
                   </HelpTooltip>
                 }
                 >
-                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                  <IconAdd/>
-                </UDNButton>
+                { createAllowed &&
+                  <UDNButton
+                    className="pull-right"
+                    bsStyle="success"
+                    icon={true}
+                    addNew={true}
+                    onClick={() => onShowLocation(null)}
+                  >
+                    <IconAdd/>
+                  </UDNButton>
+                }
               </SectionHeader>
               {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
@@ -128,10 +137,11 @@ const GroupForm = ({
                               <h5><strong>{location.get('cityName')}</strong></h5>
                               <div className="text-sm">{location.get('iataCode')}</div>
                           </td>
-                          <td className="one-button-cell">
-                            <ActionButtons
-                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
-                          </td>
+                          { viewAllowed &&
+                            <td className="one-button-cell">
+                              <ActionButtons onEdit={() => onShowLocation(location.get('reduxId'))} />
+                            </td>
+                          }
                         </tr>
                       )
                     })}
@@ -220,6 +230,7 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
