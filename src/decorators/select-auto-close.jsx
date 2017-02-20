@@ -1,9 +1,3 @@
-/* eslint-disable react/no-find-dom-node */
-// It is acceptible to use ReactDOM.findDOMNode, since it is not deprecated.
-// react/no-find-dom-node is designed to avoid use of React.findDOMNode and
-// Component.getDOMNode
-
-import { findDOMNode } from 'react-dom'
 import React, { PropTypes, Component } from 'react'
 
 export default function(WrappedSelect) {
@@ -20,17 +14,16 @@ export default function(WrappedSelect) {
     }
 
     componentDidMount() {
-      findDOMNode(this.node).addEventListener('click', this.handleClick, false)
+      document.addEventListener('click', this.handleClick)
     }
 
     componentWillUnmount() {
-      findDOMNode(this.node).removeEventListener('click', this.handleClick, false)
+      document.removeEventListener('click', this.handleClick)
       this.props.close && this.props.close()
     }
 
-    handleClick(e) {
-      const node = findDOMNode(this.node)
-      if (node && node.contains(e.target)) {
+    handleClick(event) {
+      if (this.node && this.node.contains(event.target)) {
         return
       }
       this.close()
@@ -61,7 +54,7 @@ export default function(WrappedSelect) {
 
     render() {
       return (
-        <span ref={(node) => {this.node = node}}>
+        <span className="select-auto-close" ref={(node) => {this.node = node}}>
           <WrappedSelect {...this.props} onItemClick={this.onItemClick} toggle={this.onToggle}/>
         </span>
       )
