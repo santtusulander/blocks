@@ -8,7 +8,7 @@ describe('FieldFormGroupSelect', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (addonBefore = '', addonAfter = '', error = '', label = '') => {
+    subject = (addonAfter = '', addonBefore = '', error = '', label = '') => {
       const props = {
         addonBefore,
         addonAfter,
@@ -32,12 +32,20 @@ describe('FieldFormGroupSelect', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('addonBefore should exist', () => {
+  it('AddonAfter should exist when it was given', () => {
+    expect(subject((<div id='addonAfter'></div>)).find('#addonAfter').length).toBe(1)
+  })
+
+  it('AddonAfter should not exist when it was not given', () => {
+    expect(subject('').find('#addonAfter').length).toBe(0)
+  })
+
+  it('AddonBefore should exist when it was given', () => {
     expect(subject((<div id='addonBefore'></div>)).find('#addonBefore').length).toBe(1)
   })
 
-  it('addonAfter should exist', () => {
-    expect(subject('', (<div id='addonAfter'></div>)).find('#addonAfter').length).toBe(1)
+  it('AddonBefore should not exist when it was not given', () => {
+    expect(subject('', '').find('#addonBefore').length).toBe(0)
   })
 
   it('error text should exist when error flags are true', () => {
