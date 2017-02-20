@@ -148,6 +148,7 @@ class EditNodeFormContainer extends React.Component {
       verifyDelete: true,
       deleteButton: true,
       cancelButton: true,
+      className: 'modal-window-raised',
       cancel: () => this.onToggleDeleteModal(false),
       onSubmit: () => {
         return this.props.onDelete(this.props.nodes).catch(error => {
