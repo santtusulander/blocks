@@ -289,7 +289,8 @@ class NetworkEditNodeForm extends React.Component {
       nodes,
       pristine,
       submitting,
-      error
+      error,
+      nodePermissions: { deleteAllowed, modifyAllowed }
     } = this.props
 
     const { hasMultipleNodes } = this.state
@@ -362,14 +363,16 @@ class NetworkEditNodeForm extends React.Component {
           {fields}
         </div>
         <FormFooterButtons>
-          <ButtonDisableTooltip
-            tooltipId="edit-node-form__delete-disabled-tooltip"
-            bsStyle="danger"
-            className='pull-left'
-            onClick={this.onDelete}
-          >
-            <FormattedMessage id="portal.common.button.delete" />
-          </ButtonDisableTooltip>
+          { deleteAllowed &&
+            <ButtonDisableTooltip
+              tooltipId="edit-node-form__delete-disabled-tooltip"
+              bsStyle="danger"
+              className='pull-left'
+              onClick={this.onDelete}
+            >
+              <FormattedMessage id="portal.common.button.delete" />
+            </ButtonDisableTooltip>
+          }
 
           <Button
             id="edit-node-form__cancel-btn"
@@ -377,12 +380,14 @@ class NetworkEditNodeForm extends React.Component {
             onClick={this.onCancel}>
             <FormattedMessage id="portal.common.button.cancel"/>
           </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={pristine||invalid||submitting}>
-            {submitButtonLabel}
-          </Button>
+          { modifyAllowed &&
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={pristine || invalid || submitting}>
+              {submitButtonLabel}
+            </Button>
+          }
         </FormFooterButtons>
       </form>
     )

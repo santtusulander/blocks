@@ -134,7 +134,7 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel} = this.props
+    const { account, group, network, initialValues, onCancel, networkPermissions } = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -158,6 +158,7 @@ class NetworkFormContainer extends React.Component {
             }
             }
             onCancel={onCancel}
+            networkPermissions={networkPermissions}
           />
         </SidePanel>
 
@@ -194,6 +195,7 @@ NetworkFormContainer.propTypes = {
   initialValues: PropTypes.object,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
+  networkPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,

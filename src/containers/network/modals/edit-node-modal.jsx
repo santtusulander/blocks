@@ -60,14 +60,14 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle, nodePermissions } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
       created: [],
       updated: []
     }
-    
+
     if (hasMultipleNodes) {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
@@ -138,7 +138,8 @@ class EditNodeFormContainer extends React.Component {
       nodes,
       onCancel,
       onDelete: this.onToggleDeleteModal,
-      onSave
+      onSave,
+      nodePermissions
     }
 
     const deleteModalProps = {
@@ -171,6 +172,7 @@ EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 EditNodeFormContainer.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
+  nodePermissions: React.PropTypes.object,
   nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,

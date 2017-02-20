@@ -76,8 +76,11 @@ import AddNodeContainer from './modals/add-node-modal'
 import EditNodeContainer from './modals/edit-node-modal'
 import AccountForm from '../../components/account-management/account-form'
 
-import checkPermissions from '../../util/permissions'
 import { sortByKey } from '../../util/helpers'
+import checkPermissions, {
+  getLocationPermissions, getNetworkPermissions, getNODEPermissions,
+  getPODPermissions, getPOPPermissions, getFootprintsPermissions
+} from '../../util/permissions'
 
 class Network extends React.Component {
   constructor(props) {
@@ -649,6 +652,13 @@ class Network extends React.Component {
         break
     }
 
+    const locationPermissions = getLocationPermissions(roles, currentUser)
+    const networkPermissions = getNetworkPermissions(roles, currentUser)
+    const popPermissions = getPOPPermissions(roles, currentUser)
+    const podPermissions = getPODPermissions(roles, currentUser)
+    const nodePermissions = getNODEPermissions(roles, currentUser)
+    const footprintPermissions = getFootprintsPermissions(roles, currentUser)
+
     return (
       <Content className="network-content">
 
@@ -733,7 +743,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
               contentTextGenerator={entity => entity.get('description')}
               creationPermission={PERMISSIONS.CREATE_NETWORK}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
+              viewAllowed={networkPermissions.viewAllowed}
             />
 
             <EntityList
@@ -752,7 +762,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
               contentTextGenerator={entity => entity.get('id')}
               creationPermission={PERMISSIONS.CREATE_POP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
+              viewAllowed={popPermissions.viewAllowed}
             />
 
             <EntityList
@@ -773,7 +783,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
               contentTextGenerator={this.podContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_POD}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
+              viewAllowed={podPermissions.viewAllowed}
             />
 
             <EntityList
@@ -794,7 +804,7 @@ class Network extends React.Component {
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
               contentTextGenerator={this.nodeContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_NODE}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
+              viewAllowed={nodePermissions.viewAllowed}
             />
           </div>
         </PageContainer>
@@ -823,6 +833,7 @@ class Network extends React.Component {
             onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.handleGroupSave}
             show={true}
+            locationPermissions={locationPermissions}
           />
         }
 
@@ -835,6 +846,7 @@ class Network extends React.Component {
             groupId={params.group}
             networkId={this.state.networkId}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
+            networkPermissions={networkPermissions}
           />
         }
 
@@ -848,6 +860,7 @@ class Network extends React.Component {
             networkId={params.network}
             popId={this.state.popId}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
+            popPermissions={popPermissions}
           />
         }
 
@@ -861,6 +874,8 @@ class Network extends React.Component {
             popId={params.pop}
             podId={this.state.podId}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
+            podPermissions={podPermissions}
+            footprintPermissions={footprintPermissions}
           />
         }
 
@@ -871,6 +886,7 @@ class Network extends React.Component {
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
+            nodePermissions={nodePermissions}
           />
         }
 
@@ -881,6 +897,7 @@ class Network extends React.Component {
             params={params}
             onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
+            nodePermissions={nodePermissions}
           />
         }
       </Content>

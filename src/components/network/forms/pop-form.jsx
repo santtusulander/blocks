@@ -55,8 +55,8 @@ const NetworkPopForm = (props) => {
     initialValues,
     hasPods,
     dirty,
-    handleSubmit
-
+    handleSubmit,
+    popPermissions: { deleteAllowed, modifyAllowed }
   } = props
 
   const edit = !!initialValues.id
@@ -103,17 +103,17 @@ const NetworkPopForm = (props) => {
         }
 
         <FormFooterButtons>
-          { edit &&
+          { edit && deleteAllowed &&
             <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger pull-left"
               disabled={hasPods}
               onClick={handleSubmit(onDelete)}
               tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
+              tooltipMessage={{text: intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
               {
                 //TODO: delete modal with confirm
-                submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+                submitting ? <FormattedMessage id="portal.button.deleting"/> : <FormattedMessage id="portal.button.delete"/>
               }
             </ButtonDisableTooltip>
           }
@@ -125,12 +125,14 @@ const NetworkPopForm = (props) => {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || (!dirty)}>
-            {actionButtonTitle}
-          </Button>
+          { modifyAllowed &&
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting || (!dirty)}>
+              {actionButtonTitle}
+            </Button>
+          }
         </FormFooterButtons>
       </form>
   )

@@ -108,7 +108,7 @@ const validateCIDRToken = (item) => {
 
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprints = ({ fields, onEdit }) => (
+const renderFootprints = ({ fields, onEdit, footprintPermissions }) => (
   <ul className="footprints">
     {
       fields.map(( footprint, index) =>
@@ -118,6 +118,7 @@ const renderFootprints = ({ fields, onEdit }) => (
           type="text"
           component={renderFootprint}
           onEdit={onEdit}
+          footprintPermissions={footprintPermissions}
         />
       )
     }
@@ -126,12 +127,13 @@ const renderFootprints = ({ fields, onEdit }) => (
 
 renderFootprints.propTypes = {
   fields: PropTypes.object,
+  footprintPermissions: PropTypes.object,
   onEdit: PropTypes.func
 }
 renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input }) => (
+const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, deleteAllowed } }) => (
   <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
@@ -140,35 +142,37 @@ const renderFootprint = ({ onEdit, input }) => (
 
       <Col xs={4} className="action-buttons">
 
-        { !input.value.removed &&
+        { !input.value.removed && viewAllowed &&
           <Button
             className="btn btn-icon edit-button"
             onClick={() => onEdit(input.value.id)}>
             <IconEdit/>
           </Button>
         }
+        { deleteAllowed &&
+          <Button
+            bsStyle="link"
+            className="btn btn-icon delete-button btn-undo"
+            onClick={() => {
+              const newVal = { ...input.value, removed: !input.value.removed }
+              input.onChange(newVal)
+            }}
+          >
 
-        <Button
-          bsStyle="link"
-          className="btn btn-icon delete-button btn-undo"
-          onClick={() => {
-            const newVal = { ...input.value, removed: !input.value.removed }
-            input.onChange(newVal)
-          }}
-        >
+            { input.value.removed
+              ? <FormattedMessage id="portal.common.button.undo"/>
+              : <IconClose/>
+            }
 
-          { input.value.removed
-            ? <FormattedMessage id="portal.common.button.undo"/>
-            : <IconClose/>
-          }
-
-        </Button>
+          </Button>
+        }
       </Col>
     </Row>
   </li>
 )
 
 renderFootprint.propTypes = {
+  footprintPermissions: PropTypes.object,
   input: PropTypes.object,
   onEdit: PropTypes.func
 }
@@ -186,6 +190,8 @@ const PodForm = ({
   onSave,
   submitting,
   dirty,
+  podPermissions: { deleteAllowed, modifyAllowed },
+  footprintPermissions,
 
   onShowFootprintModal,
   onEditFootprint,
@@ -325,12 +331,14 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           </label>
-          <UDNButton bsStyle="success"
-                     icon={true}
-                     addNew={true}
-                     onClick={onShowFootprintModal}>
-            <IconAdd/>
-          </UDNButton>
+          { footprintPermissions.createAllowed &&
+            <UDNButton bsStyle="success"
+               icon={true}
+               addNew={true}
+               onClick={onShowFootprintModal}>
+              <IconAdd/>
+            </UDNButton>
+          }
         </div>
         {/* Footprints autocomplete */}
         <Field
@@ -354,7 +362,8 @@ const PodForm = ({
           name="UIFootprints"
           component={renderFootprints}
           props={{
-            onEdit: onEditFootprint
+            onEdit: onEditFootprint,
+            footprintPermissions
           }}
         />
       </div>
@@ -406,7 +415,7 @@ const PodForm = ({
       }
 
       <FormFooterButtons>
-        {edit &&
+        {edit && deleteAllowed &&
           <ButtonDisableTooltip
             id="delete-btn"
             className="btn-danger pull-left"
@@ -424,12 +433,14 @@ const PodForm = ({
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
-          {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
+            {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+          </Button>
+        }
       </FormFooterButtons>
     </form>
   )

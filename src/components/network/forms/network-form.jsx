@@ -34,7 +34,10 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete }) => {
+const NetworkForm = ({
+  error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete,
+  networkPermissions: { deleteAllowed, modifyAllowed }
+}) => {
 
   //simple way to check if editing -> no need to pass 'edit' - prop
   const edit = !!initialValues.name
@@ -69,7 +72,7 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
         label={<FormattedMessage id="portal.common.description" />} />
 
       <FormFooterButtons>
-        { edit &&
+        { edit && deleteAllowed &&
           <ButtonDisableTooltip
             id="delete-btn"
             className="btn-danger pull-left"
@@ -91,12 +94,14 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting}>
-          {actionButtonTitle}
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}>
+            {actionButtonTitle}
+          </Button>
+        }
       </FormFooterButtons>
     </form>
   )

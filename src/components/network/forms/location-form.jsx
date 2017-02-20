@@ -13,7 +13,8 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
 
-import {LOCATION_NAME_MIN_LENGTH,
+import {
+  LOCATION_NAME_MIN_LENGTH,
   LOCATION_NAME_MAX_LENGTH,
   CLOUD_PROVIDER_REGION_MIN_LENGTH,
   CLOUD_PROVIDER_REGION_MAX_LENGTH,
@@ -117,7 +118,8 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting
+    submitting,
+    locationPermissions: { modifyAllowed, deleteAllowed }
   } = props;
 
   const edit = !!initialValues.name
@@ -249,14 +251,14 @@ const NetworkLocationForm = (props) => {
       </Row>
 
       <FormFooterButtons>
-        { edit &&
-        <Button
-          className="btn-danger pull-left"
-          disabled={submitting}
-          onClick={handleSubmit(() => onDelete(initialValues.name))}
-        >
-          <FormattedMessage id="portal.button.delete"/>
-        </Button>
+        { edit && deleteAllowed &&
+          <Button
+            className="btn-danger pull-left"
+            disabled={submitting}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
+          >
+            <FormattedMessage id="portal.button.delete"/>
+          </Button>
         }
         <Button
           className="btn-secondary"
@@ -264,13 +266,15 @@ const NetworkLocationForm = (props) => {
         >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting}
-        >
-          {actionButtonTitle}
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}
+          >
+            {actionButtonTitle}
+          </Button>
+        }
       </FormFooterButtons>
     </form>
   )};
