@@ -45,12 +45,13 @@ export function isValidFloat(str) {
  * @param address
  * @returns {*}
  */
-export function isValidIPv4Address(address) {
+export function isValidIPv4Address(address, onlyCIDR) {
 
-  const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
+  const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 4) && ( parseInt(splitAddr[1]) <= 32 )
+  if(splitAddr.length > 1 || onlyCIDR) {
+    const cidr = Number(splitAddr[1])
+    return validator.isIP(splitAddr[0], 4) && ( (cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32 )
   }
 
   return !!address && validator.isIP(address, 4)
@@ -254,4 +255,13 @@ export function isValidProviderWeight(str) {
   }
   const providerWeight = parseFloat(str)
   return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
+}
+
+/**
+ * Check if valid charge number
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidChargeNumber(str) {
+  return matchesRegexp(str, /^C-[0-9]{8}$/)
 }

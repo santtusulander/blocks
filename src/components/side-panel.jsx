@@ -8,6 +8,7 @@ const modalClassDim = 'side-panel--dim'
 const overlappingClass = 'side-panel--overlapping'
 
 export const SidePanelComponent = ({ children, className, dim, overlapping, show, subTitle, subSubTitle, title }) => {
+
   let subTitleElements = ''
   let dialogClassName = classNames(
     'side-panel',
