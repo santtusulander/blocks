@@ -212,6 +212,7 @@ class GroupFormContainer extends React.Component {
       intl,
       invalid,
       locations,
+      locationPermissions,
       networks} = this.props
 
     /**
@@ -269,7 +270,8 @@ class GroupFormContainer extends React.Component {
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             onShowLocation={this.showLocationForm}
-            />
+            locationPermissions={locationPermissions}
+          />
         </SidePanel>
 
       {this.state.hostToDelete &&
@@ -298,6 +300,7 @@ class GroupFormContainer extends React.Component {
           onCancel={this.hideLocationForm}
           show={true}
           locationId={this.state.selectedLocationId}
+          locationPermissions={locationPermissions}
         />
       }
 
@@ -326,6 +329,7 @@ GroupFormContainer.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   networks: PropTypes.instanceOf(List),

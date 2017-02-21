@@ -13,7 +13,8 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { isValidLatitude, isValidLongitude , isValidTextField} from '../../../util/validators.js'
 
-import {LOCATION_NAME_MIN_LENGTH,
+import {
+  LOCATION_NAME_MIN_LENGTH,
   LOCATION_NAME_MAX_LENGTH,
   CLOUD_PROVIDER_REGION_MIN_LENGTH,
   CLOUD_PROVIDER_REGION_MAX_LENGTH,
@@ -117,7 +118,8 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting
+    submitting,
+    locationPermissions: { modifyAllowed, deleteAllowed }
   } = props;
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
@@ -249,7 +251,7 @@ const NetworkLocationForm = (props) => {
       </Row>
 
       <FormFooterButtons>
-        { edit &&
+        { edit && deleteAllowed &&
         <Button
           className="btn-danger pull-left"
           disabled={submitting}
@@ -264,13 +266,15 @@ const NetworkLocationForm = (props) => {
         >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting || isFetchingLocation}
-        >
-          {actionButtonTitle}
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || isFetchingLocation}
+          >
+            {actionButtonTitle}
+          </Button>
+        }
       </FormFooterButtons>
     </form>
   )};

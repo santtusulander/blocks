@@ -225,7 +225,8 @@ class NetworkLocationFormContainer extends Component {
       iataCodes,
       invalid,
       initialValues,
-      show
+      show,
+      locationPermissions
     } = this.props;
 
     const { isFetchingLocation, addressLine, showDeleteModal } = this.state
@@ -257,6 +258,7 @@ class NetworkLocationFormContainer extends Component {
             onCancel={this.onCancel}
             onDelete={() => this.onToggleDeleteModal(true)}
             onSubmit={(values) => this.onSubmit(edit, values)}
+            locationPermissions={locationPermissions}
           />
         </SidePanel>
         {edit && showDeleteModal &&
@@ -288,6 +290,7 @@ NetworkLocationFormContainer.propTypes = {
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   latLng: PropTypes.object,
+  locationPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,

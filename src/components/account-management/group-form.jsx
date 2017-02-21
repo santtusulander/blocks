@@ -52,6 +52,7 @@ const GroupForm = ({
   isFetchingHosts,
   isFetchingEntities,
   locations,
+  locationPermissions,
   hasNetworks,
   onCancel,
   onDelete,
@@ -63,6 +64,11 @@ const GroupForm = ({
   const tooltipHintId = hasNetworks ? "portal.network.groupForm.delete.tooltip.network.message"
                                     : ((canSeeLocations && (!locations.isEmpty()))
                                     ? "portal.network.groupForm.delete.tooltip.location.message" : null)
+
+  let actionButtonTitle = groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
 
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
@@ -113,9 +119,17 @@ const GroupForm = ({
                   </HelpTooltip>
                 }
                 >
-                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                  <IconAdd/>
-                </UDNButton>
+                { locationPermissions && locationPermissions.createAllowed &&
+                  <UDNButton
+                    className="pull-right"
+                    bsStyle="success"
+                    icon={true}
+                    addNew={true}
+                    onClick={() => onShowLocation(null)}
+                  >
+                    <IconAdd/>
+                  </UDNButton>
+                }
               </SectionHeader>
               {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
@@ -128,10 +142,11 @@ const GroupForm = ({
                               <h5><strong>{location.get('cityName')}</strong></h5>
                               <div className="text-sm">{location.get('iataCode')}</div>
                           </td>
-                          <td className="one-button-cell">
-                            <ActionButtons
-                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
-                          </td>
+                          { locationPermissions && locationPermissions.viewAllowed &&
+                            <td className="one-button-cell">
+                              <ActionButtons onEdit={() => onShowLocation(location.get('reduxId'))} />
+                            </td>
+                          }
                         </tr>
                       )
                     })}
@@ -198,7 +213,7 @@ const GroupForm = ({
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            {actionButtonTitle}
           </Button>
         </FormFooterButtons>
     </form>
@@ -220,6 +235,7 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

@@ -14,13 +14,16 @@ function intlMaker() {
 
 describe('GroupForm', () => {
   let subject, error, props = null
+  let locationPermissions = {}
 
   beforeEach(() => {
-    subject = () => {
+    subject = (permissions = {}) => {
+      locationPermissions = {createAllowed: true, deleteAllowed: true, modifyAllowed: true, ...permissions}
       props = {
         accountIsServiceProviderType: false,
         handleSubmit: jest.genMockFunction(),
-        intl: intlMaker()
+        intl: intlMaker(),
+        locationPermissions
       }
       return shallow(<GroupForm {...props}/>)
     }

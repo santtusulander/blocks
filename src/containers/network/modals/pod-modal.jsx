@@ -158,9 +158,8 @@ class PodFormContainer extends React.Component {
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseFloat(values.UIProviderWeight)
-      //TODO:find out if Ip List is needed
-      //ip_list: values.UIIpList.map( ip => ip.label )
+      provider_weight: parseFloat(values.UIProviderWeight),
+      ip_list: values.UIIpList.map( ip => ip.label )
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
@@ -247,7 +246,9 @@ class PodFormContainer extends React.Component {
       //account,
       hasNodes,
       network,
-      footprints
+      footprints,
+      podPermissions,
+      footprintPermissions
     } = this.props
 
     const {showDeleteModal} = this.state
@@ -288,6 +289,8 @@ class PodFormContainer extends React.Component {
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
+            podPermissions={podPermissions}
+            footprintPermissions={footprintPermissions}
           />
 
         </SidePanel>
@@ -300,6 +303,7 @@ class PodFormContainer extends React.Component {
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
+          footprintPermissions={footprintPermissions}
         />
         }
 
@@ -347,6 +351,7 @@ PodFormContainer.propTypes = {
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPop: PropTypes.func,
+  footprintPermissions: PropTypes.object,
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
@@ -361,6 +366,7 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  podPermissions: PropTypes.object,
   pop: PropTypes.instanceOf(Map),
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
@@ -393,7 +399,7 @@ const mapStateToProps = (state, ownProps) => {
     pod_type: 'sp_edge',
     UIProviderWeight: 0.5
   }
-  
+
   const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
@@ -408,6 +414,7 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
   initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map( ip => { return {id: ip, label: ip} } ).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),

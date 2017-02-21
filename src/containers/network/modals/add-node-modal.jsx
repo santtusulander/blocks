@@ -108,7 +108,7 @@ class AddNodeContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, initialValues, intl, nodeNameData, numNodes, subtitle } = this.props
+    const { show, onCancel, initialValues, intl, nodeNameData, numNodes, subtitle, nodePermissions } = this.props
     const { showConfirmation } = this.state
 
     const panelTitle = <FormattedMessage id="portal.network.addNodeForm.title" />
@@ -128,6 +128,7 @@ class AddNodeContainer extends React.Component {
             onSave={this.onSubmit}
             onCancel={onCancel}
             onToggleConfirm={this.onToggleConfirm}
+            nodePermissions={nodePermissions}
           />
         </SidePanel>
       </div>
@@ -141,6 +142,7 @@ AddNodeContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   nodeNameData: PropTypes.object,
+  nodePermissions: PropTypes.object,
   numNodes: PropTypes.number,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,

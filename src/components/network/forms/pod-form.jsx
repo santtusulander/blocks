@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidFootprintTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address } from '../../../util/validators'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
@@ -35,9 +35,6 @@ import {
   DISCOVERY_METHOD_OPTIONS,
   STATUS_OPTIONS
 } from '../../../constants/network'
-
-//TODO: If Ip list needed uncomment
-//import { isValidIPv4Address } from '../../../util/validators'
 
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
@@ -111,15 +108,13 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
-/** TODO: This is needed for IPList
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
-*/
 
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprints = ({ fields, onEdit }) => (
+const renderFootprints = ({ fields, onEdit, footprintPermissions }) => (
   <ul className="footprints">
     {
       fields.map(( footprint, index) =>
@@ -129,6 +124,7 @@ const renderFootprints = ({ fields, onEdit }) => (
           type="text"
           component={renderFootprint}
           onEdit={onEdit}
+          footprintPermissions={footprintPermissions}
         />
       )
     }
@@ -137,12 +133,13 @@ const renderFootprints = ({ fields, onEdit }) => (
 
 renderFootprints.propTypes = {
   fields: PropTypes.object,
+  footprintPermissions: PropTypes.object,
   onEdit: PropTypes.func
 }
 renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input }) => (
+const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, deleteAllowed } }) => (
   <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
@@ -151,35 +148,37 @@ const renderFootprint = ({ onEdit, input }) => (
 
       <Col xs={4} className="action-buttons">
 
-        { !input.value.removed &&
+        { !input.value.removed && viewAllowed &&
           <Button
             className="btn btn-icon edit-button"
             onClick={() => onEdit(input.value.id)}>
             <IconEdit/>
           </Button>
         }
+        { deleteAllowed &&
+          <Button
+            bsStyle="link"
+            className="btn btn-icon delete-button btn-undo"
+            onClick={() => {
+              const newVal = { ...input.value, removed: !input.value.removed }
+              input.onChange(newVal)
+            }}
+          >
 
-        <Button
-          bsStyle="link"
-          className="btn btn-icon delete-button btn-undo"
-          onClick={() => {
-            const newVal = { ...input.value, removed: !input.value.removed }
-            input.onChange(newVal)
-          }}
-        >
+            { input.value.removed
+              ? <FormattedMessage id="portal.common.button.undo"/>
+              : <IconClose/>
+            }
 
-          { input.value.removed
-            ? <FormattedMessage id="portal.common.button.undo"/>
-            : <IconClose/>
-          }
-
-        </Button>
+          </Button>
+        }
       </Col>
     </Row>
   </li>
 )
 
 renderFootprint.propTypes = {
+  footprintPermissions: PropTypes.object,
   input: PropTypes.object,
   onEdit: PropTypes.func
 }
@@ -197,6 +196,8 @@ const PodForm = ({
   onSave,
   submitting,
   dirty,
+  podPermissions: { deleteAllowed, modifyAllowed },
+  footprintPermissions,
 
   onShowFootprintModal,
   onEditFootprint,
@@ -233,6 +234,11 @@ const PodForm = ({
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
   const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
+
+  let actionButtonTitle = edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
@@ -326,7 +332,7 @@ const PodForm = ({
           </HelpTooltip>
         }/>
 
-      {/* TODO: IpList MIGHT be needed <Field
+      <Field
         required={true}
         name="UIIpList"
         allowNew={true}
@@ -335,7 +341,7 @@ const PodForm = ({
         options={[]}
         validation={validateCIDRToken}
         label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
-      />*/}
+      />
 
       <hr/>
 
@@ -361,12 +367,14 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           </label>
-          <UDNButton bsStyle="success"
-                     icon={true}
-                     addNew={true}
-                     onClick={onShowFootprintModal}>
-            <IconAdd/>
-          </UDNButton>
+          { footprintPermissions.createAllowed &&
+            <UDNButton bsStyle="success"
+               icon={true}
+               addNew={true}
+               onClick={onShowFootprintModal}>
+              <IconAdd/>
+            </UDNButton>
+          }
         </div>
         {/* Footprints autocomplete */}
         <Field
@@ -390,7 +398,8 @@ const PodForm = ({
           name="UIFootprints"
           component={renderFootprints}
           props={{
-            onEdit: onEditFootprint
+            onEdit: onEditFootprint,
+            footprintPermissions
           }}
         />
       </div>
@@ -442,12 +451,12 @@ const PodForm = ({
       }
 
       <FormFooterButtons>
-        {edit &&
+        {edit && deleteAllowed &&
           <ButtonDisableTooltip
             id="delete-btn"
             className="btn-danger pull-left"
             disabled={hasNodes}
-            onClick={handleSubmit(onDelete)}
+            onClick={onDelete}
             tooltipId="tooltip-help"
             tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
             <FormattedMessage id="portal.button.delete"/>
@@ -460,12 +469,14 @@ const PodForm = ({
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
-          {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-        </Button>
+        { modifyAllowed &&
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
+            {actionButtonTitle}
+          </Button>
+        }
       </FormFooterButtons>
     </form>
   )

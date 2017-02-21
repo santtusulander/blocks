@@ -126,7 +126,8 @@ class FootprintForm extends React.Component {
       onCancel,
       onSave,
       submitting,
-      udnTypeOptions
+      udnTypeOptions,
+      footprintPermissions: { modifyAllowed }
     } = this.props
 
     const submitButtonLabel = editing
@@ -227,12 +228,14 @@ class FootprintForm extends React.Component {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || fetching}>
-            {submitButtonLabel}
-          </Button>
+          { modifyAllowed &&
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting || fetching}>
+              {submitButtonLabel}
+            </Button>
+          }
         </FormFooterButtons>
       </form>
     )
