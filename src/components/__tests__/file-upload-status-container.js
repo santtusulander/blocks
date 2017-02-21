@@ -5,7 +5,7 @@ jest.unmock('../file-upload-status-container')
 import FileUploadStatus from '../file-upload-status-container'
 
 const subject = shallow(
-  <FileUploadStatus />
+  <FileUploadStatus uploads={[]} />
 )
 
 describe('FileUploadStatusContainer', () => {
