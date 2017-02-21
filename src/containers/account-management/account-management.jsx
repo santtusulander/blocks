@@ -13,6 +13,8 @@ import {
   accountIsContentProviderType
 } from '../../util/helpers'
 
+import { getLocationPermissions } from '../../util/permissions'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -487,6 +489,7 @@ export class AccountManagement extends Component {
           canEditBilling={accountIsContentProviderType(this.props.activeAccount)}
           canSeeBilling={accountIsContentProviderType(this.props.activeAccount)}
           canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+          locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
         />}
       </Content>
     )

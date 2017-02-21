@@ -114,7 +114,7 @@ const GroupForm = ({
                   </HelpTooltip>
                 }
                 >
-                { locationPermissions.createAllowed &&
+                { locationPermissions && locationPermissions.createAllowed &&
                   <UDNButton
                     className="pull-right"
                     bsStyle="success"
@@ -137,7 +137,7 @@ const GroupForm = ({
                               <h5><strong>{location.get('cityName')}</strong></h5>
                               <div className="text-sm">{location.get('iataCode')}</div>
                           </td>
-                          { locationPermissions.viewAllowed &&
+                          { locationPermissions && locationPermissions.viewAllowed &&
                             <td className="one-button-cell">
                               <ActionButtons onEdit={() => onShowLocation(location.get('reduxId'))} />
                             </td>
