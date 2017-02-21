@@ -10,6 +10,9 @@ const FileUploadStatus = () => {
           <IconHeaderCaret />
         </span>
       </div>
+      <div className='file-upload-status-body'>
+        <span>body</span>
+      </div>
     </div>
   )
 }

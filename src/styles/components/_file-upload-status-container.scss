@@ -1,8 +1,7 @@
 @import '../styles/base/colors';
 
 $upload-status-width: rem(300px);
-$upload-status-horizontal-padding: rem(6px);
-$upload-status-vertical-padding: rem(14px);
+$upload-status-paddings: rem(6px) rem(14px);
 
 .file-upload-status-wrapper {
   width: $upload-status-width;
@@ -10,7 +9,7 @@ $upload-status-vertical-padding: rem(14px);
 
 .file-upload-status-header {
   width: 100%;
-  padding: $upload-status-horizontal-padding $upload-status-vertical-padding;
+  padding: $upload-status-paddings;
   color: $white;
   background: $pale-blue;
 }
@@ -21,5 +20,19 @@ $upload-status-vertical-padding: rem(14px);
   > svg {
     width: rem(16px);
     height: rem(16px);
+    fill: $white !important;
   }
 }
+
+.file-upload-status-body {
+  padding: $upload-status-paddings;
+
+  .dark-theme & {
+    background-color: $black;
+  }
+
+  .light-theme & {
+    background-color: $white-20;
+  }
+}
+
