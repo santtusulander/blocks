@@ -1,12 +1,15 @@
 import React, { PropTypes } from 'react'
 import IconHeaderCaret from './icons/icon-header-caret'
 import StatusItem from './file-upload-status-item'
+import { FormattedMessage } from 'react-intl'
 
 const FileUploadStatus = ({uploads}) => {
   return (
     <div className='file-upload-status-wrapper'>
       <div className='file-upload-status-header'>
-        <span>{`Uploading ${uploads.length} items`}</span>
+        <FormattedMessage
+          id="portal.storage.uploadContent.uploading.text"
+          values={{number: uploads.length}} />
         <div className='file-upload-status-header-caret'>
           <IconHeaderCaret />
         </div>

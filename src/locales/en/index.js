@@ -9,6 +9,7 @@ import network from './network.json'
 import password from './password.json'
 import security from './security.json'
 import services from './services.json'
+import storage from './storage.json'
 import support from './support.json'
 import user from './user.json'
 import validators from './validators.json';
@@ -28,6 +29,7 @@ export default Object.assign({},
   password,
   security,
   services,
+  storage,
   support,
   user,
   validators,
