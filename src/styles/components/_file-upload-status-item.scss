@@ -2,21 +2,33 @@
 
 $upload-status-item-paddings: rem(6px) rem(14px);
 $upload-status-item-margins: rem(6px) 0;
+$upload-status-item-title-width: 225px;
+
+.file-upload-status-icon-wrapper {
+  display: inline-block;
+  width: 15%;
+  text-align: center;
+  vertical-align: super;
+}
 
 .file-upload-status-item {
   width: 100%;
   padding: $upload-status-item-paddings;
-  background-color: #00222A;
+  margin: $upload-status-item-margins;
+  border-radius: rem(2px);
 
-  &:not(last-child) {
-    margin: $upload-status-item-margins;
+  .dark-theme & {
+    background-color: #00222A;
   }
+
+  .light-theme & {
+    background-color: rgba($black, .1);
+  }
+
 }
 
 .file-upload-status-type-icon {
-  display: inline-block;
-  width: 15%;
-  vertical-align: super;
+  @extend .file-upload-status-icon-wrapper;
 
   > svg {
     fill: $pale-blue !important;
@@ -26,24 +38,30 @@ $upload-status-item-margins: rem(6px) 0;
 .file-update-status-item-info {
   display: inline-block;
   width: 70%;
+  padding: 0 5px;
   vertical-align: text-bottom;
+}
+
+.file-upload-status-item-name {
+  white-space: nowrap;
+  color: $pale-blue;
 }
 
 .file-upload-status-progress {
   height: 5px;
   margin: 0;
-  background-color: rgba($pale-blue, 0.6);
+  background-color: rgba($pale-blue, 0.3);
   border-radius: 0;
+  box-shadow: none;
 
   > .progress-bar {
     background-color: $pale-blue;
+    box-shadow: none;
   }
 }
 
 .file-update-status-remove-icon {
-  display: inline-block;
+  @extend .file-upload-status-icon-wrapper;
   float: right;
-  width: 15%;
-  vertical-align: super;
   cursor: pointer;
 }

@@ -6,7 +6,7 @@ import ThemeWrap from './theme-wrap.jsx'
 
 const mockData = [
   {
-    name: 'item #1',
+    name: 'item with a very long name',
     type: 'file',
     progress: 75
   },
