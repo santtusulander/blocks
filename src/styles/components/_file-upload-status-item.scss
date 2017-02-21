@@ -17,7 +17,7 @@ $upload-status-item-margins: rem(6px) 0;
   border-radius: rem(2px);
 
   .dark-theme & {
-    background-color: #00222A;
+    background-color: rgba($dark-blue, 0.4);
   }
 
   .light-theme & {
