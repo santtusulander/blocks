@@ -7,6 +7,7 @@ import './delete-modal'
 //import './global-account-selector'
 //import './info-modal'
 import './inline-add'
+import './file-upload-status-container'
 
 //account management
 import './account-management/sidebar'
