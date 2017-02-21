@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address, isInvalidIPListWithoutSubnet } from '../../../util/validators'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
@@ -42,7 +42,7 @@ import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
 
 const validate = (values) => {
-  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
+  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList } = values
   const conditions = {
     UIName: {
       condition: !isValidFootprintTextField(UIName),
@@ -56,6 +56,10 @@ const validate = (values) => {
     UIProviderWeight: {
       condition: !isValidProviderWeight(UIProviderWeight),
       errorText: <FormattedMessage id="portal.network.podForm.provider_weight.range.error" />
+    },
+    UIIpList: {
+      condition: isInvalidIPListWithoutSubnet(UIIpList),
+      errorText: <FormattedMessage id="portal.network.podForm.ipList.invalid.error" />
     }
   }
   return checkForErrors(
@@ -67,7 +71,8 @@ const validate = (values) => {
       UIProviderWeight,
       UIDiscoveryMethod,
       UILocalAS,
-      UIFootprints
+      UIFootprints,
+      UIIpList
     },
     conditions,
     {
@@ -78,7 +83,8 @@ const validate = (values) => {
       UIProviderWeight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
       UIDiscoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
       UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>,
-      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>
+      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>,
+      UIIpList: <FormattedMessage id="portal.network.podForm.ipList.required.error"/>
     }
   )
 }
@@ -109,9 +115,8 @@ const asyncValidate = ({ UILocalAS }) => {
 }
 
 const validateCIDRToken = (item) => {
-  return item.label && isValidIPv4Address(item.label)
+  return item.label && isValidIPv4Address(item.label, false, true)
 }
-
 
 /*eslint-disable react/no-multi-comp */
 const renderFootprints = ({ fields, onEdit, footprintPermissions }) => (
