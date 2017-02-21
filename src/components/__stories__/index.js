@@ -8,6 +8,7 @@ import './delete-modal'
 //import './info-modal'
 import './inline-add'
 import './file-upload-status-container'
+import './file-upload-status-item'
 
 //account management
 import './account-management/sidebar'

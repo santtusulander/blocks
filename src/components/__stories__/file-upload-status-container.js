@@ -4,13 +4,26 @@ import {storiesOf} from '@kadira/storybook'
 import FileUploadStatus from '../file-upload-status-container.jsx'
 import ThemeWrap from './theme-wrap.jsx'
 
+const mockData = [
+  {
+    name: 'item #1',
+    type: 'file',
+    progress: 75
+  },
+  {
+    name: 'item #2',
+    type: 'file',
+    progress: 33
+  }
+]
+
 storiesOf('File Upload Status', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
     </ThemeWrap>
   ))
-  .add('Default', () => (
-    <FileUploadStatus />
+  .add('Container', () => (
+    <FileUploadStatus uploads={mockData}/>
   ))
 
