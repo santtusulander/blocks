@@ -8,7 +8,7 @@ const subject = shallow(
   <FileUploadStatus />
 )
 
-describe('FileUploadStatus', () => {
+describe('FileUploadStatusContainer', () => {
   it('should exist', () => {
     expect(subject.length).toBe(1)
   })
