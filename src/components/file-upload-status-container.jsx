@@ -17,11 +17,13 @@ const FileUploadStatus = ({uploads}) => {
       </div>
       <div className='file-upload-status-body'>
         <div className='file-upload-status-cancel-link'>
-          <Button bsStyle="link">
+          <Button
+            bsStyle="link"
+            onClick={() => {}}>
             <FormattedMessage id="portal.storage.uploadContent.cancel.text" />
           </Button>
         </div>
-        {uploads.map(data => <StatusItem {...data} />)}
+        {uploads.map((data, index) => <StatusItem key={index} {...data} />)}
       </div>
     </div>
   )

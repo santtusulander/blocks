@@ -7,7 +7,7 @@ import ThemeWrap from './theme-wrap.jsx'
 const mockData = [
   {
     name: 'too long name for item being uploaded',
-    type: 'file',
+    type: 'directory',
     progress: 75
   },
   {

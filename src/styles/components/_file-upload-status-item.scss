@@ -61,6 +61,6 @@ $upload-status-item-margins: rem(6px) 0;
 
 .file-update-status-remove-icon {
   @extend .file-upload-status-icon-wrapper;
-  float: right;
+  padding: 0;
   cursor: pointer;
 }
