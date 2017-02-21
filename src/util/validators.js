@@ -51,7 +51,7 @@ export function isValidFloat(str) {
  */
 export function isInvalidIPListWithoutSubnet(addresses) {
   const invalidAddresses = addresses.filter(address => !isValidIPv4Address(address, false, true))
-  return invalidAddresses.length
+  return !!invalidAddresses.length
 }
 
 /**
