@@ -238,6 +238,9 @@ textarea {
   &.form-control {
     min-height: $textarea-min-height;
   }
+  &[disabled] {
+    opacity: 0.2 !important;
+  }
 }
 
 .checkbox-array {
