@@ -6,12 +6,12 @@ import ThemeWrap from './theme-wrap.jsx'
 
 const mockData = [
   {
-    name: 'item with a very long name',
+    name: 'too long name for item being uploaded',
     type: 'file',
     progress: 75
   },
   {
-    name: 'item #2',
+    name: 'filename.mov',
     type: 'file',
     progress: 33
   }

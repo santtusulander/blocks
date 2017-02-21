@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import IconHeaderCaret from './icons/icon-header-caret'
 import StatusItem from './file-upload-status-item'
+import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 const FileUploadStatus = ({uploads}) => {
@@ -15,6 +16,11 @@ const FileUploadStatus = ({uploads}) => {
         </div>
       </div>
       <div className='file-upload-status-body'>
+        <div className='file-upload-status-cancel-link'>
+          <Button bsStyle="link">
+            <FormattedMessage id="portal.storage.uploadContent.cancel.text" />
+          </Button>
+        </div>
         {uploads.map(data => <StatusItem {...data} />)}
       </div>
     </div>

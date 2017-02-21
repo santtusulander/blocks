@@ -1,6 +1,6 @@
 @import '../styles/base/colors';
 
-$upload-status-item-paddings: rem(6px) rem(14px);
+$upload-status-item-paddings: rem(6px);
 $upload-status-item-margins: rem(6px) 0;
 
 .file-upload-status-icon-wrapper {
@@ -47,7 +47,7 @@ $upload-status-item-margins: rem(6px) 0;
 }
 
 .file-upload-status-progress {
-  height: 5px;
+  height: rem(5px);
   margin: 0;
   background-color: rgba($pale-blue, 0.3);
   border-radius: 0;

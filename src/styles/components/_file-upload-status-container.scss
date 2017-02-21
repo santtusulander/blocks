@@ -1,6 +1,6 @@
 @import '../styles/base/colors';
 
-$upload-status-width: rem(300px);
+$upload-status-width: rem(360px);
 $upload-status-offset: rem(24px);
 $upload-status-wrapper-paddings: rem(6px) rem(14px);
 $upload-status-body-paddings: rem(10px) rem(14px);
@@ -16,7 +16,8 @@ $upload-status-body-paddings: rem(10px) rem(14px);
 .file-upload-status-header {
   width: 100%;
   padding: $upload-status-wrapper-paddings;
-  color: $white;
+  font-weight: bold;
+  color: $dt-text-color;
   background-color: $pale-blue;
 }
 
@@ -26,7 +27,15 @@ $upload-status-body-paddings: rem(10px) rem(14px);
   > svg {
     width: rem(16px);
     height: rem(16px);
-    fill: $white !important;
+    fill: $dt-text-color !important;
+  }
+}
+
+.file-upload-status-cancel-link {
+  text-align: right;
+
+  > .btn {
+    padding: 0;
   }
 }
 

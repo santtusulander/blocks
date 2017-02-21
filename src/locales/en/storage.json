@@ -1,3 +1,4 @@
 {
-  "portal.storage.uploadContent.uploading.text": "Uploading {number} items"
+  "portal.storage.uploadContent.uploading.text": "Uploading {number} items",
+  "portal.storage.uploadContent.cancel.text": "Cancel All"
 }
