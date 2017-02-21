@@ -65,6 +65,11 @@ const GroupForm = ({
                                     : ((canSeeLocations && (!locations.isEmpty()))
                                     ? "portal.network.groupForm.delete.tooltip.location.message" : null)
 
+  let actionButtonTitle = groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
+
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
@@ -208,7 +213,7 @@ const GroupForm = ({
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            {actionButtonTitle}
           </Button>
         </FormFooterButtons>
     </form>
