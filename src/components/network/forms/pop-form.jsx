@@ -117,13 +117,10 @@ const NetworkPopForm = (props) => {
               id="delete-btn"
               className="btn-danger pull-left"
               disabled={hasPods}
-              onClick={handleSubmit(onDelete)}
+              onClick={onDelete}
               tooltipId="tooltip-help"
               tooltipMessage={{text: intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-              {
-                //TODO: delete modal with confirm
-                submitting ? <FormattedMessage id="portal.button.deleting"/> : <FormattedMessage id="portal.button.delete"/>
-              }
+              <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           }
 
