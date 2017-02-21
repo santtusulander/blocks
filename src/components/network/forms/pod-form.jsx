@@ -235,6 +235,11 @@ const PodForm = ({
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
   const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
 
+  let actionButtonTitle = edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
+
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
       <Field
@@ -469,7 +474,7 @@ const PodForm = ({
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
-            {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            {actionButtonTitle}
           </Button>
         }
       </FormFooterButtons>
