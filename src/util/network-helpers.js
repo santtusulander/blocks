@@ -52,3 +52,32 @@ const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
   const query = qsBuilder(params)
   return ripeInstance.get(`/${dataCallName}/data.${format}${query}`).then(parseResponseData)
 }
+
+/**
+ * Generate nodename
+ * @param  {String} pod_id
+ * @param  {String} iata
+ * @param  {String} serverNumber
+ * @param  {String} node_role
+ * @param  {String} node_env
+ * @param  {String} domain
+ * @return {String}
+ */
+export const generateNodeName = ({pod_id, iata, serverNumber, node_role, node_env, domain} ) => {
+  let envDomain = `${node_env}.${domain}`
+
+  //environment should be blank for prod
+  if (node_env === 'production') {
+    envDomain = `${domain}`
+  }
+
+  if ( node_role === 'cache') {
+    return `large.${pod_id}.cache${serverNumber}.${iata}.${envDomain}`
+  } else if (node_role === 'gslb') {
+    return `gslb.${pod_id}.ns${serverNumber}.par.${envDomain}`
+  } else if (node_role === 'slb') {
+    return `slb.${pod_id}.ns${serverNumber}.par.${envDomain}`
+  }
+
+  return `unknown.${envDomain}`
+}

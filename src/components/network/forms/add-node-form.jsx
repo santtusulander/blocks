@@ -5,14 +5,14 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroup from '../../form/field-form-group'
-//import FieldFormGroupNumber from '../../form/field-form-group-number'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
-import { isInt } from '../../../util/validators'
-
+import { isInt, isValidFQDN } from '../../../util/validators'
+import { generateNodeName } from '../../../util/network-helpers'
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
   NODE_ENVIRONMENT_OPTIONS,
@@ -24,8 +24,15 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) => {
+const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }) => {
+
   const conditions = {
+    node_name: [
+      {
+        condition: !isValidFQDN(node_name),
+        errorText: 'Not valid domain name'
+      }
+    ],
     numNodes: [
       {
         condition: isEmpty(numNodes),
@@ -62,7 +69,7 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
     ]
   }
 
-  return checkForErrors({ numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
+  return checkForErrors({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
 }
 
 class NetworkAddNodeForm extends React.Component {
@@ -80,14 +87,25 @@ class NetworkAddNodeForm extends React.Component {
 
   componentWillReceiveProps(nextProps){
 
-    const { nodeNameData } = nextProps
-    const nodeNameProps = nodeNameData.props
+    const { nodeEnv, nodeType, nodeRole, serverNumber } = nextProps
 
     /* This will autogenerate node_name if cacheEnv or nodeType changed */
-    if ( nodeNameProps.cacheEnv !== this.props.nodeNameData.props.cacheEnv
-        || nodeNameProps.nodeType !== this.props.nodeNameData.props.nodeType ) {
+    if ( nodeEnv !== this.props.nodeEnv
+      || nodeType !== this.props.nodeType
+      || nodeRole !== this.props.nodeRole
+      || serverNumber !== this.props.serverNumber ) {
 
-      this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
+      //this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
+      const nodeName = generateNodeName({
+        pod_id: nextProps.pod.get('pod_id'),
+        iata: nextProps.pop.get('iata'),
+        serverNumber: nextProps.serverNumber,
+        node_role: nextProps.nodeRole,
+        node_env: nextProps.nodeEnv,
+        domain: nextProps.domain
+      })
+
+      this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
     }
 
   }
@@ -163,14 +181,15 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, nodeNameData, error } = this.props
+    const { handleSubmit, error } = this.props
     const footerButtons = this.getFooterButtons()
-    const nodeNameProps = nodeNameData.props
+    //const nodeNameProps = nodeNameData.props
 
     return (
       <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
+
           {/* <Row>
             <Col sm={3}>
               <Field
@@ -185,20 +204,19 @@ class NetworkAddNodeForm extends React.Component {
 
           { /* Commented out because of UDNP-2780 - maybe needed in future
           <label><FormattedMessage id="portal.common.name" /></label>
-          */}
           <div className="add-node-form__name-fqdn">
             {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
           </div>
+          */}
 
-          {/*
           <Field
             type="number"
-            name="nameCode"
+            name="serverNumber"
             min={0}
             max={99}
             component={FieldFormGroupNumber}
+            label="Node ID"
           />
-          */}
 
           <Field
             type='text'
