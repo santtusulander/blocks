@@ -43,6 +43,7 @@ import IconClose from '../../icons/icon-close'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList } = values
+  const IPList = UIIpList.map(address => address.label)
   const conditions = {
     UIName: {
       condition: !isValidFootprintTextField(UIName),
@@ -58,7 +59,7 @@ const validate = (values) => {
       errorText: <FormattedMessage id="portal.network.podForm.provider_weight.range.error" />
     },
     UIIpList: {
-      condition: isInvalidIPListWithoutSubnet(UIIpList),
+      condition: isInvalidIPListWithoutSubnet(IPList),
       errorText: <FormattedMessage id="portal.network.podForm.ipList.invalid.error" />
     }
   }
