@@ -7,9 +7,9 @@ const FileUploadStatus = ({uploads}) => {
     <div className='file-upload-status-wrapper'>
       <div className='file-upload-status-header'>
         <span>{`Uploading ${uploads.length} items`}</span>
-        <span className='file-upload-status-header-caret'>
+        <div className='file-upload-status-header-caret'>
           <IconHeaderCaret />
-        </span>
+        </div>
       </div>
       <div className='file-upload-status-body'>
         {uploads.map(data => <StatusItem {...data} />)}
