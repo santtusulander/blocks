@@ -1,6 +1,3 @@
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
-
 export const STORAGE_LOCATIONS = [
   {"label": "San Jose, California, USA", value: 1, "options": []},
   {"label": "Frankfurkt, Germany", value: 2, "options": []},
@@ -11,9 +8,9 @@ export const STORAGE_ABR_DEFAULT = false
 export const STORAGE_ESTIMATE_DEFAULT = "100"
 export const STORAGE_ESTIMATES_METRIC_DEFAULT = 'tb'
 export const STORAGE_ESTIMATE_METRICS = [
-  ['tb', <FormattedMessage id="portal.storage.storageForm.terrabyte.text"/>],
-  ['gb', <FormattedMessage id="portal.storage.storageForm.gigabyte.text"/>],
-  ['mb', <FormattedMessage id="portal.storage.storageForm.megabyte.text"/>]
+  ['tb', 'TB'],
+  ['gb', 'GB'],
+  ['mb', 'MB']
 ]
 
 export const STORAGE_ABR_PROFILES = [

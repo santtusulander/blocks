@@ -2,10 +2,6 @@
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
 
-  "portal.storage.storageForm.terrabyte.text": "TB",
-  "portal.storage.storageForm.gigabyte.text": "GB",
-  "portal.storage.storageForm.megabyte.text": "MB",
-
   "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
   "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
   "portal.storage.storageForm.name.required.error": "Storage name is required",
