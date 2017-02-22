@@ -145,7 +145,7 @@ const mapStateToProps = (state, { params }) => {
   const domain = NETWORK_DOMAIN_NAME
 
   const nodeName = generateNodeName({
-    pod_id: pod && pod.get('pod_id'),
+    pod_id: pod && pod.get('id'),
     iata: pop && pop.get('iata'),
     serverNumber: serverNumber,
     node_role: nodeRole,
