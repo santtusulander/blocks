@@ -23,11 +23,20 @@ $upload-status-body-paddings: rem(10px) rem(14px);
 
 .file-upload-status-header-caret {
   float: right;
+  padding: 0;
 
   > svg {
     width: rem(16px);
     height: rem(16px);
     fill: $dt-text-color !important;
+  }
+
+  > .caret-icon {
+    transition: transform 0.35s;
+
+    &.upward {
+      transform: rotateZ(180deg);
+    }
   }
 }
 
@@ -40,7 +49,10 @@ $upload-status-body-paddings: rem(10px) rem(14px);
 }
 
 .file-upload-status-body {
-  padding: $upload-status-body-paddings;
+
+  .panel-body {
+    padding: $upload-status-body-paddings;
+  }
 
   .dark-theme & {
     background-color: $black;
