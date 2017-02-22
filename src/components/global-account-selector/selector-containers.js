@@ -1,3 +1,5 @@
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
@@ -6,90 +8,78 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 
 import { getAccounts } from './selectors'
 
-import { DENY_ALWAYS } from '../../constants/permissions'
+import { DENY_ALWAYS, VIEW_CONTENT_ACCOUNTS } from '../../constants/permissions'
+import checkPermissions from '../../util/permissions'
 
 import Selector from './global-account-selector'
 
 /**
- * redux mapper functions for drillable account selectors
- * @param  {[type]} state    [description]
+ * dispatch to props for top header admin account selector.
+ * @param  {[type]} dispatch [description]
+ * @param  {[type]} params   [description]
+ * @return {[type]}          [description]
+ */
+const adminAccountSelectorDispatchToProps = (dispatch, { params: { brand } }) => {
+
+  return {
+    dispatch,
+    fetchData: () => dispatch(accountActions.fetchAll({ brand }))
+  }
+}
+
+/**
+ * dispatch to props for all the other selectors in the app.
+ * @param  {[type]} dispatch [description]
  * @param  {[type]} params   [description]
  * @param  {[type]} account  [description]
  * @param  {[type]} group    [description]
  * @param  {[type]} property [description]
  * @return {[type]}          [description]
  */
-const drillableStateToProps = (state, { params: { brand, account, group, property } }) => {
-  return {
-    activeNode: property ? group : account || brand,
-    tree: [{
-      id: brand,
-      name: 'UDN Admin',
-      nodeInfo: {
-        viewParentPermission: DENY_ALWAYS
-      },
-      nodes: getAccounts(state, brand)
-    }]
-  }
-}
-
-const drillableDispatchToProps = (dispatch, { params: { brand, account, group, property } }) => {
+const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property } }) => {
 
   return {
     dispatch,
-    fetchData: () => {
-      const fetchArray = []
+    fetchData: (user, roles) => {
+      const permissionToViewAccounts = checkPermissions(roles, user, VIEW_CONTENT_ACCOUNTS)
 
-      fetchArray.push(dispatch(accountActions.fetchAll({ brand })))
-      property && fetchArray.push(dispatch(propertyActions.fetchAll({ brand, account, group })))
-      group && fetchArray.push(dispatch(groupActions.fetchAll({ brand, account })))
-      return Promise.all(fetchArray)
+      return Promise.all([
+        permissionToViewAccounts && dispatch(accountActions.fetchAll({ brand })),
+        !permissionToViewAccounts && dispatch(accountActions.fetchOne({ brand, id: account })),
+        account && dispatch(groupActions.fetchAll({ brand, account })),
+        property && dispatch(propertyActions.fetchAll({ brand, account, group }))
+      ])
     }
   }
 }
 
 /**
-* redux mapper functions for UDN admin level account selectors in the top header
-* @param  {[type]} dispatch [description]
-* @param  {[type]} params   [description]
-* @param  {[type]} account  [description]
-* @param  {[type]} group    [description]
-* @param  {[type]} property [description]
-* @return {[type]}          [description]
-*/
-const topLevelStateToProps = (state, { params: { brand } }) => {
-
-  return {
-    activeNode: brand,
-    tree: [{
-      id: brand,
-      name: 'UDN Admin',
-      nodeInfo: {
-        viewParentPermission: DENY_ALWAYS
-      },
-      nodes: getAccounts(state, brand, false)
-    }]
-  }
-}
-
-const topLevelDispatchToProps = (dispatch, { params: { brand } }) => {
-
-  return {
-    dispatch,
-    fetchData: () => {
-      return dispatch(accountActions.fetchAll({ brand }))
-    }
-  }
-}
-
-/**
-* Export the drillable account selector.
-* @type {[type]}
-*/
-export const DrillableAccountSelector = connect(drillableStateToProps, drillableDispatchToProps)(Selector)
-
-/**
- * Export the top-level admin account selector
- * @type {[type]}
+ * state to props for the account selector
+ * @param  {[type]} state        [description]
+ * @param  {[type]} params       [description]
+ * @param  {[type]} restrictions [description]
+ * @return {[type]}              [description]
  */
-export const AdminAccountSelector = connect(topLevelStateToProps, topLevelDispatchToProps)(Selector)
+const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, hide = {}, activeNode }) => {
+
+  hide = { account: {}, group: {}, ...hide }
+
+  const nodes = getAccounts(state, { brand }, hide)
+  const headerSubtitle = <FormattedMessage id="portal.common.account.multiple" values={{numAccounts: nodes.length || 0}}/>
+
+  return {
+    activeNode: activeNode || (property ? group : account || brand),
+    tree: [{
+      id: brand,
+      name: 'UDN Admin',
+      nodeInfo: {
+        headerSubtitle,
+        showBackCaretPermission: DENY_ALWAYS,
+        nodes
+      }
+    }]
+  }
+}
+
+export const AccountSelector = connect(accountSelectorStateToProps, accountSelectorDispatchToProps)(Selector)
+export const AdminAccountSelector = connect(accountSelectorStateToProps, adminAccountSelectorDispatchToProps)(Selector)
