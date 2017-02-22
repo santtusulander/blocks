@@ -1,7 +1,7 @@
 import React from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
 
-export default ({ selectorNodes, goToChild, searchValue, handleCaretClick, handleEntityClick }) => {
+export default ({ selectorNodes = [], goToChild, searchValue, handleCaretClick, handleEntityClick }) => {
 
   return (
     <li className="menu-container">
@@ -10,7 +10,7 @@ export default ({ selectorNodes, goToChild, searchValue, handleCaretClick, handl
       <ul className="scrollable-menu">
         {selectorNodes.reduce((listItems, node, i) => {
 
-          const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren }, nodes } = node
+          const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren, nodes } } = node
 
           const nodeId = node[idKey]
           const nodeName = node[labelKey]
