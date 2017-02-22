@@ -1,3 +1,69 @@
+$storage-kpi-item-height: rem(48px);
+
 .storage-kpi-item {
   display: inline-block;
+  vertical-align: top;
+
+  &:not(last-child) {
+    margin-right: rem(50px);
+  }
+}
+
+.storage-kpi-item-title {
+  font-size: rem(13px);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.storage-kpi-item-content {
+  display: flex;
+  height: $storage-kpi-item-height;
+}
+
+.storage-kpi-item-note {
+  font-size: rem(12px);
+  opacity: 0.8;
+}
+
+.storage-kpi-text {
+  align-self: flex-end;
+}
+
+.storage-kpi-chart {
+  display: flex;
+  height: $storage-kpi-item-height;
+  margin-left: rem(5px);
+
+  > .mini-chart {
+    width: rem(80px);
+    align-self: flex-end;
+  }
+
+  .analysis-by-time {
+    display: flex;
+
+    > svg {
+      align-self: flex-end;
+    }
+  }
+}
+
+.storage-kpi-number {
+  font-weight: bold;
+
+  .value {
+    font-size: rem(36px);
+
+    .dark-theme & {
+      color: $white;
+    }
+
+    .light-theme & {
+      color: $black;
+    }
+  }
+
+  .suffix {
+    font-size: rem(20px);
+  }
 }
