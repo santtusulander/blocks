@@ -5,13 +5,13 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import DefaultErrorBlock from '../../form/default-error-block'
 import FieldFormGroup from '../../form/field-form-group'
-//import FieldFormGroupNumber from '../../form/field-form-group-number'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
-import { isInt } from '../../../util/validators'
+import { isInt, isValidFQDN } from '../../../util/validators'
 
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
@@ -24,8 +24,15 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) => {
+const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }) => {
+
   const conditions = {
+    node_name: [
+      {
+        condition: !isValidFQDN(node_name),
+        errorText: <FormattedMessage id="portal.validators.type.fqdn" values={{field: <FormattedMessage id="portal.common.name" /> }}/>
+      }
+    ],
     numNodes: [
       {
         condition: isEmpty(numNodes),
@@ -62,7 +69,7 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
     ]
   }
 
-  return checkForErrors({ numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
+  return checkForErrors({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
 }
 
 class NetworkAddNodeForm extends React.Component {
@@ -78,16 +85,13 @@ class NetworkAddNodeForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
+    const { nodeName } = nextProps
 
-    const { nodeNameData } = nextProps
-    const nodeNameProps = nodeNameData.props
-
-    /* This will autogenerate node_name if cacheEnv or nodeType changed */
-    if ( nodeNameProps.cacheEnv !== this.props.nodeNameData.props.cacheEnv
-        || nodeNameProps.nodeType !== this.props.nodeNameData.props.nodeType ) {
-
-      this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
+    // This will autogenerate the value of the node_name field if the nodeName prop changed
+    // See mapStateToProps in src/containers/network/modals/add-node-modal.jsx
+    if ( nodeName !== this.props.nodeName ) {
+      this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
     }
 
   }
@@ -167,14 +171,14 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, nodeNameData, error } = this.props
+    const { handleSubmit, error } = this.props
     const footerButtons = this.getFooterButtons()
-    const nodeNameProps = nodeNameData.props
 
     return (
       <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
+
           {/* <Row>
             <Col sm={3}>
               <Field
@@ -189,24 +193,23 @@ class NetworkAddNodeForm extends React.Component {
 
           { /* Commented out because of UDNP-2780 - maybe needed in future
           <label><FormattedMessage id="portal.common.name" /></label>
-          */}
           <div className="add-node-form__name-fqdn">
             {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
           </div>
-
-          {/*
-          <Field
-            type="number"
-            name="nameCode"
-            min={0}
-            max={99}
-            component={FieldFormGroupNumber}
-          />
           */}
 
           <Field
-            type='text'
-            name='node_name'
+            type="number"
+            name="serverNumber"
+            min={0}
+            max={99}
+            component={FieldFormGroupNumber}
+            label="Node ID"
+          />
+
+          <Field
+            type="text"
+            name="node_name"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.common.name" />}
           />
@@ -297,7 +300,6 @@ NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
-  nodeNameData: React.PropTypes.object,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   onToggleConfirm: React.PropTypes.func,

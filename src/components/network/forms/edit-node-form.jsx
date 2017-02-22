@@ -288,7 +288,7 @@ class NetworkEditNodeForm extends React.Component {
           {fieldToggle}
           <div className={isExpanded ? 'show' : 'hidden'}>
             <Field {...fieldData}
-              addonAfter={
+              addonAfter={fieldData.tooltipText &&
                 <HelpTooltip
                   id="tooltip-help"
                   title={<FormattedMessage id={fieldData.labelId}/>}>

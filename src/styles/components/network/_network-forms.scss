@@ -275,7 +275,11 @@ $typeahead-input-left-padding: 40px;
 
   .number-input-group .number-input,
   .add-node-form__name-fqdn+.form-group {
-    width: $number-input-width;
+    // Changed this as part of UDNP-2780 where we decided to make node name editable.
+    // After making that change, the width of the number input got messed up,
+    // so this was necessary. This might need to be reverted back in the future.
+    // width: $number-input-width;
+    width: 100%;
   }
 
   &__highlight-name {
