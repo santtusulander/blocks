@@ -138,7 +138,7 @@ const mapStateToProps = (state, { params }) => {
   const serverNumber = formSelector(state, 'serverNumber') || 0
   const nodeEnv = formSelector(state, 'node_env') || NODE_ENVIRONMENT_DEFAULT
   const nodeType = formSelector(state, 'node_type') || NODE_TYPE_DEFAULT
-  const nodeRole = formSelector(state, 'node_rolee') || NODE_ROLE_DEFAULT
+  const nodeRole = formSelector(state, 'node_role') || NODE_ROLE_DEFAULT
 
   const pop = getPopById(state, params.pop)
   const pod = getPodById(state, params.pod)
