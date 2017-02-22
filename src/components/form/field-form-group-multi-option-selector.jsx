@@ -1,21 +1,44 @@
 import React, { PropTypes } from 'react';
-import {FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
+import {FormGroup, ControlLabel, HelpBlock, InputGroup} from 'react-bootstrap';
 import { List } from 'immutable'
 import MultiOptionSelector from '../multi-option-selector'
 import { getReduxFormValidationState } from '../../util/helpers'
 
-const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { touched, error }, className, label, required = true}) => {
+const FieldFormGroupMultiOptionSelector  = ({ addonAfter, addonAfterLabel, addonBefore,
+                                              input, options, meta: { touched, error },
+                                              className, label, required = true}) => {
   return (
     <FormGroup className={className} controlId={input.name} validationState={getReduxFormValidationState(input)}>
-      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+      {label &&
+        <ControlLabel>
+          {label}{required && ' *'}
+          {addonAfterLabel &&
+            <InputGroup.Addon className="addon-after-label">
+              {addonAfterLabel}
+            </InputGroup.Addon>
+          }
+        </ControlLabel>
+      }
 
-    <MultiOptionSelector
+      {addonBefore &&
+        <InputGroup.Addon>
+          {addonBefore}
+        </InputGroup.Addon>
+      }
+
+      <MultiOptionSelector
         options={options}
         field={{
           value: List(input.value||[]),
           onChange: val => input.onChange(val)
         }}
       />
+
+      {addonAfter &&
+        <InputGroup.Addon>
+          {addonAfter}
+        </InputGroup.Addon>
+      }
 
       {error && touched &&
         <HelpBlock className='error-msg'>{error}</HelpBlock>
@@ -26,6 +49,9 @@ const FieldFormGroupMultiOptionSelector  = ({ input, options, meta: { touched, e
 
 FieldFormGroupMultiOptionSelector.displayName = 'FieldFormGroupMultiOptionSelector'
 FieldFormGroupMultiOptionSelector.propTypes = {
+  addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   input: PropTypes.object,
   label: PropTypes.object,
