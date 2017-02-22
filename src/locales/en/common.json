@@ -46,6 +46,11 @@
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
 
+  "portal.common.account.multiple": "{numAccounts} {numAccounts, plural, one {Account} other {Accounts}}",
+  "portal.common.storage.multiple": "{numStorages} {numStorages, plural, one {Storage} other {Storages}}",
+  "portal.common.group.multiple": "{numGroups} {numGroups, plural, one {Group} other {Groups}}",
+  "portal.common.property.multiple": "{numProperties} {numProperties, plural, one {Property} other {Properties}}",
+
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
   "portal.common.statusCode.102": "Processing",
