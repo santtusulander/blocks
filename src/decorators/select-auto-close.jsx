@@ -46,9 +46,8 @@ export default function(WrappedSelect) {
       if (this.props.open || this.state.open) {
         if (this.props.close) {
           this.props.close()
-        } else {
-          this.setState({ open: false })
         }
+        this.setState({ open: false })
       }
     }
 
