@@ -1,0 +1,28 @@
+{
+  "portal.storage.storageForm.add.title": "New Storage",
+  "portal.storage.storageForm.edit.title": "Edit Storage",
+
+  "portal.storage.storageForm.terrabyte.text": "TB",
+  "portal.storage.storageForm.gigabyte.text": "GB",
+  "portal.storage.storageForm.megabyte.text": "MB",
+
+  "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
+  "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
+  "portal.storage.storageForm.name.required.error": "Storage name is required",
+  "portal.storage.storageForm.name.placeholder": "Enter Storage Name",
+  "portal.storage.storageForm.locations.label": "Locations",
+  "portal.storage.storageForm.locations.required.error": "At least one location is required",
+  "portal.storage.storageForm.estimate.label": "Estimated Usage",
+  "portal.storage.storageForm.estimate.required.error": "Estimated Usage is required",
+  "portal.storage.storageForm.abr.label": "Enable ABR Workflow",
+  "portal.storage.storageForm.abr.required.error": "ABR Workflow is required",
+  "portal.storage.storageForm.abrProfile.placeholder": "Please select ABR Profile",
+  "portal.storage.storageForm.abrProfile.required.error": "ABR Profile is required",
+
+  "portal.storage.storageForm.locations.help.label": "Locations",
+  "portal.storage.storageForm.locations.help.text": "Help text...",
+  "portal.storage.storageForm.estimate.help.label": "Estimated Usage",
+  "portal.storage.storageForm.estimate.help.text": "Help text...",
+  "portal.storage.storageForm.abrProfile.help.label": "ABR Workflow",
+  "portal.storage.storageForm.abrProfile.help.text": "Help text..."
+}
