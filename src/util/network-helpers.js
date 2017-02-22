@@ -2,7 +2,11 @@ import axios from 'axios'
 
 import { parseResponseData, qsBuilder } from '../redux/util'
 import { MAPBOX_REVERSE_LOOKUP_ENDPOINT } from '../constants/mapbox.js'
-import { RIPE_STAT_DATA_API_ENDPOINT } from '../constants/network'
+import {
+  RIPE_STAT_DATA_API_ENDPOINT,
+  NODE_ENVIRONMENT_OPTIONS,
+  NETWORK_DOMAIN_NAME
+} from '../constants/network'
 
 const ripeInstance = axios.create({
   baseURL: RIPE_STAT_DATA_API_ENDPOINT
@@ -63,8 +67,10 @@ const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
  * @param  {String} domain
  * @return {String}
  */
-export const generateNodeName = ({pod_id, iata, serverNumber, node_role, node_env, domain} ) => {
-  let envDomain = `${node_env}.${domain}`
+export const generateNodeName = ({ pod_id, iata, serverNumber, node_role, node_env, domain = NETWORK_DOMAIN_NAME }) => {
+  const cacheEnv = NODE_ENVIRONMENT_OPTIONS.find(obj => obj.value === node_env).cacheValue
+
+  let envDomain = `${cacheEnv}.${domain}`
 
   //environment should be blank for prod
   if (node_env === 'production') {
@@ -72,11 +78,11 @@ export const generateNodeName = ({pod_id, iata, serverNumber, node_role, node_en
   }
 
   if ( node_role === 'cache') {
-    return `large.${pod_id}.cache${serverNumber}.${iata}.${envDomain}`
+    return `large.pod${pod_id}.cache${serverNumber}.${iata}.${envDomain}`
   } else if (node_role === 'gslb') {
-    return `gslb.${pod_id}.ns${serverNumber}.par.${envDomain}`
+    return `gslb.pod${pod_id}.ns${serverNumber}.${iata}.${envDomain}`
   } else if (node_role === 'slb') {
-    return `slb.${pod_id}.ns${serverNumber}.par.${envDomain}`
+    return `slb.pod${pod_id}.ns${serverNumber}.${iata}.${envDomain}`
   }
 
   return `unknown.${envDomain}`

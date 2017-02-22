@@ -12,7 +12,7 @@ import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt, isValidFQDN } from '../../../util/validators'
-import { generateNodeName } from '../../../util/network-helpers'
+
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
   NODE_ENVIRONMENT_OPTIONS,
@@ -85,26 +85,12 @@ class NetworkAddNodeForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
+    const { nodeName } = nextProps
 
-    const { nodeEnv, nodeType, nodeRole, serverNumber } = nextProps
-
-    /* This will autogenerate node_name if cacheEnv or nodeType changed */
-    if ( nodeEnv !== this.props.nodeEnv
-      || nodeType !== this.props.nodeType
-      || nodeRole !== this.props.nodeRole
-      || serverNumber !== this.props.serverNumber ) {
-
-      //this.props.dispatch( change(ADD_NODE_FORM_NAME, 'node_name', `${nodeNameProps.nodeType}${nodeNameProps.nameCode}.${nodeNameProps.location}.${nodeNameProps.cacheEnv}.${nodeNameProps.domain}`))
-      const nodeName = generateNodeName({
-        pod_id: nextProps.pod.get('pod_id'),
-        iata: nextProps.pop.get('iata'),
-        serverNumber: nextProps.serverNumber,
-        node_role: nextProps.nodeRole,
-        node_env: nextProps.nodeEnv,
-        domain: nextProps.domain
-      })
-
+    // This will autogenerate the value of the node_name field if the nodeName prop changed
+    // See mapStateToProps in src/containers/network/modals/add-node-modal.jsx
+    if ( nodeName !== this.props.nodeName ) {
       this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
     }
 

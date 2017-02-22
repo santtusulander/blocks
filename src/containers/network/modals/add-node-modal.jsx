@@ -16,9 +16,7 @@ import nodeActions from '../../../redux/modules/entities/nodes/actions'
 import SidePanel from '../../../components/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
-import { NETWORK_DOMAIN_NAME,
-         NODE_ENVIRONMENT_OPTIONS,
-         NODE_TYPE_DEFAULT,
+import { NODE_TYPE_DEFAULT,
          NODE_ROLE_DEFAULT,
          NODE_ENVIRONMENT_DEFAULT,
          NODE_CLOUD_DRIVER_DEFAULT } from '../../../constants/network'
@@ -106,6 +104,7 @@ class AddNodeContainer extends React.Component {
           dim={showConfirmation}>
           <NetworkAddNodeForm
             intl={intl}
+            nodeName={nodeName}
             numNodes={numNodes}
             initialValues={initialValues}
             onSave={this.onSubmit}
@@ -124,6 +123,7 @@ AddNodeContainer.displayName = "AddNodeContainer"
 AddNodeContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
+  nodeName: PropTypes.string,
   nodePermissions: PropTypes.object,
   numNodes: PropTypes.number,
   onCancel: PropTypes.func,
@@ -137,31 +137,23 @@ const mapStateToProps = (state, { params }) => {
   const numNodes = formSelector(state, 'numNodes') || 1
   const serverNumber = formSelector(state, 'serverNumber') || 0
   const nodeEnv = formSelector(state, 'node_env') || NODE_ENVIRONMENT_DEFAULT
-  const nodeType = formSelector(state, 'node_type') || NODE_TYPE_DEFAULT
   const nodeRole = formSelector(state, 'node_role') || NODE_ROLE_DEFAULT
 
-  const pop = getPopById(state, params.pop)
-  const pod = getPodById(state, params.pod)
-  const domain = NETWORK_DOMAIN_NAME
+  const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
+  const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
 
   const nodeName = generateNodeName({
     pod_id: pod && pod.get('id'),
     iata: pop && pop.get('iata'),
     serverNumber: serverNumber,
     node_role: nodeRole,
-    node_env: nodeEnv,
-    domain: domain
+    node_env: nodeEnv
   })
 
   return {
     subtitle: getSubtitle(state, params),
     numNodes,
-    nodeEnv,
-    nodeType,
-    nodeRole,
-    serverNumber,
-    pop,
-    pod,
+    nodeName,
     initialValues: {
       numNodes: 1,
       serverNumber: 0,
