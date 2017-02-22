@@ -12,6 +12,10 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import StorageForm from '../../../components/storage/forms/storage-form'
 
+/*
+  TODO: remove this in scope of
+  UDNP-2832 - Integrate CIS Storage configuration form with the redux
+*/
 const storage_mock = {
   get(cmd) {
     switch (cmd) {
@@ -28,8 +32,6 @@ const storage_mock = {
     }
   }
 }
-
-
 
 class StorageFormContainer extends React.Component {
   constructor(props) {
@@ -49,21 +51,16 @@ class StorageFormContainer extends React.Component {
   }
 
   onSave(edit, values) {
-
-    const data = {
-      description: values.description
-    }
-
-    // add id if create new
-    if (!edit) {
-      data.id = values.name
-    }
+    /*
+      TODO: fix onSave function in scope of
+      UDNP-2832 - Integrate CIS Storage configuration form with the redux
+    */
 
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      payload: data
+      payload: {}
     }
 
     if (edit) params.id = values.name;
@@ -81,10 +78,11 @@ class StorageFormContainer extends React.Component {
       })
   }
 
-  /**
-   * Handler for Delete
-   */
   onDelete(storageId){
+    /*
+      TODO: fix onDelete function in scope of
+      UDNP-2832 - Integrate CIS Storage configuration form with the redux
+    */
     const params = {
       brand: 'udn',
       account: this.props.accountId,
@@ -174,6 +172,10 @@ const formSelector = formValueSelector('storageForm')
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')
+  /*
+    TODO: change initialValues to fetch proper data
+    UDNP-2832 - Integrate CIS Storage configuration form with the redux
+  */
   const storage = storage_mock
 
   return {
@@ -191,6 +193,10 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  /*
+    TODO: change networkActions to storageActions in scope of
+    UDNP-2832 - Integrate CIS Storage configuration form with the redux
+  */
   return {
     onCreate: (params, data) => dispatch( networkActions.create( {...params, data } )),
     onUpdate: (params, data) => dispatch( networkActions.update( {...params, data } )),

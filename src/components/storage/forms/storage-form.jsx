@@ -10,18 +10,21 @@ import FieldFormGroupToggle from '../../form/field-form-group-toggle'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi-option-selector'
 
-import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
-
 import { checkForErrors } from '../../../util/helpers'
-import { isValidTextField } from '../../../util/validators'
+import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
 import { STORAGE_LOCATIONS, STORAGE_ESTIMATE_METRICS, STORAGE_ABR_PROFILES,
-         STORAGE_ESTIMATES_METRIC_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT} from '../../../constants/storage'
+         STORAGE_ESTIMATES_METRIC_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
+         STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
 
 const validate = ({ name, locations, estimate, estimate_metric, abr, abrProfile }) => {
   const conditions = {
     name: {
-      condition: !isValidTextField(name),
-      errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
+      condition: !isValidStorageName(name),
+      errorText: <FormattedMessage id="portal.storage.storageForm.name.validation.error" />
+    },
+    estimate: {
+      condition: !isValidEstimatedUsage(estimate),
+      errorText: <FormattedMessage id="portal.storage.storageForm.estimate.validation.error" />
     }
   }
 
@@ -104,6 +107,7 @@ class StorageForm extends React.Component {
           <Field
             className="estimate-field"
             name="estimate"
+            min={STORAGE_ESTIMATE_MIN}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.storage.storageForm.estimate.label" />}
             addonAfterLabel={
