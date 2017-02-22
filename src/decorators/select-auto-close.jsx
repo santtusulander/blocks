@@ -55,7 +55,7 @@ export default function(WrappedSelect) {
     render() {
       return (
         <span className="select-auto-close" ref={(node) => {this.node = node}}>
-          <WrappedSelect {...this.props} onItemClick={this.onItemClick} toggle={this.onToggle}/>
+          <WrappedSelect {...this.props} open={this.state.open} onItemClick={this.onItemClick} toggle={this.onToggle}/>
         </span>
       )
     }
