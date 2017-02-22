@@ -18,13 +18,22 @@ storiesOf('Storage', module)
       </Provider>
     </ThemeWrap>
   ))
-  .add('StorageForm', () => (
+  .add('StorageForm (Add)', () => (
     <StorageFormContainer
       show={true}
       editing={false}
       fetching={false}
       onCancel={action('Handling cancel')}
-      onDelete={action('Handling submit')}
       onSubmit={action('Handling submit')}
     />
-  ));
+  ))
+  .add('StorageForm (Edit)', () => (
+    <StorageFormContainer
+      show={true}
+      editing={false}
+      fetching={false}
+      storageId={'1'}
+      onCancel={action('Handling cancel')}
+      onSubmit={action('Handling submit')}
+    />
+  ))
