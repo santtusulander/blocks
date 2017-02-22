@@ -143,8 +143,8 @@ const mapStateToProps = (state, { params }) => {
   const pod = getPodById(state, buildReduxId(params.group, params.network, params.pop, params.pod))
 
   const nodeName = generateNodeName({
-    pod_id: pod && pod.get('id'),
-    iata: pop && pop.get('iata'),
+    pod_id: pod && pod.get('pod_name'),
+    iata: pop && pop.get('iata'), //id should contain IATA + id eg. GKA13
     serverNumber: serverNumber,
     node_role: nodeRole,
     node_env: nodeEnv

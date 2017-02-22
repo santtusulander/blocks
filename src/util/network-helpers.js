@@ -77,12 +77,15 @@ export const generateNodeName = ({ pod_id, iata, serverNumber, node_role, node_e
     envDomain = `${domain}`
   }
 
+  //make pod_id (=== pod_name) alphanumeric
+  const sanitizedPodId = String(pod_id).replace(/[^a-z0-9]/gi, '').toLowerCase()
+
   if ( node_role === 'cache') {
-    return `large.pod${pod_id}.cache${serverNumber}.${iata}.${envDomain}`
+    return `large.${sanitizedPodId}.cache${serverNumber}.${iata}.${envDomain}`
   } else if (node_role === 'gslb') {
-    return `gslb.pod${pod_id}.ns${serverNumber}.${iata}.${envDomain}`
+    return `gslb.${sanitizedPodId}.ns${serverNumber}.${iata}.${envDomain}`
   } else if (node_role === 'slb') {
-    return `slb.pod${pod_id}.ns${serverNumber}.${iata}.${envDomain}`
+    return `slb.${sanitizedPodId}.ns${serverNumber}.${iata}.${envDomain}`
   }
 
   return `unknown.${envDomain}`
