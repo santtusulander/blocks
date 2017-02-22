@@ -1,12 +1,15 @@
 $storage-kpi-item-height: rem(48px);
-$storage-kpi-item-margin: rem(5px);
+$storage-kpi-item-margin: rem(60px);
+$storage-kpi-content-margin: rem(8px);
+$storage-kpi-mini-chart-width: rem(80px);
+$storage-kpi-comparison-bars-width: rem(100px);
 
 .storage-kpi-item {
   display: inline-block;
   vertical-align: top;
 
   &:not(last-child) {
-    margin-right: rem(50px);
+    margin-right: $storage-kpi-item-margin;
   }
 }
 
@@ -33,10 +36,10 @@ $storage-kpi-item-margin: rem(5px);
 .storage-kpi-chart {
   display: flex;
   height: $storage-kpi-item-height;
-  margin-left: $storage-kpi-item-margin;
+  margin-left: $storage-kpi-content-margin;
 
   > .mini-chart {
-    width: rem(80px);
+    width: $storage-kpi-mini-chart-width;
     align-self: flex-end;
   }
 
@@ -50,9 +53,9 @@ $storage-kpi-item-margin: rem(5px);
 }
 
 .storage-kpi-comparison-bars {
-  width: rem(100px);
+  width: $storage-kpi-comparison-bars-width;
   height: 0.4 * $storage-kpi-item-height;
-  margin: 0 0 $storage-kpi-item-margin $storage-kpi-item-margin;
+  margin: 0 0 rem(5px) $storage-kpi-content-margin;
   align-self: flex-end;
 }
 
@@ -72,6 +75,7 @@ $storage-kpi-item-margin: rem(5px);
   }
 
   .suffix {
+    margin-left: $storage-kpi-content-margin;
     font-size: rem(20px);
   }
 }

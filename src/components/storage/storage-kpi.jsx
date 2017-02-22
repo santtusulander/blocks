@@ -10,10 +10,10 @@ const StorageKPI = () => {
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <span className='value'>112</span>
-            <span className='suffix'> / 100 TB</span>
+            <span className='suffix'>/ 100 TB</span>
           </div>
           <div className='storage-kpi-comparison-bars'>
-            <ComparisonBars referenceValue={100} currentValue={112} />
+            <ComparisonBars referenceValue={100} currentValue={0} />
           </div>
         </div>
       </div>
@@ -22,7 +22,7 @@ const StorageKPI = () => {
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <span className='value'>112</span>
-            <span className='suffix'> TB</span>
+            <span className='suffix'>TB</span>
           </div>
         </div>
         <span className='storage-kpi-item-note'>(this month)</span>

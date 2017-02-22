@@ -9,7 +9,7 @@ const ComparisonBars = ({currentValue, referenceValue}) => {
     referenceWidth = 100
     currentWidth = 100 * currentValue / referenceValue
   }
-  if (referenceWidth === 0) referenceWidth = 1
+  if (currentWidth === 0) currentWidth = 1
 
   return (
     <div className='comparison-bars-container'>
