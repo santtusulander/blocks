@@ -265,3 +265,33 @@ export function isValidProviderWeight(str) {
 export function isValidChargeNumber(str) {
   return matchesRegexp(str, /^C-[0-9]{8}$/)
 }
+
+/**
+ * Check if estimated usage
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidEstimatedUsage(str) {
+  if (!isInt(str)) {
+    return false
+  }
+
+  return (parseInt(str) >= POD_PROVIDER_WEIGHT_MIN)
+}
+
+/**
+ * Check if valid host-name
+ * @param hostName
+ * @returns {boolean|*}
+ */
+export function isValidStorageName(storageName) {
+  /* Validation rules:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-zA-Z0-9-];
+    - doesn't begin or end with a hyphen;
+  */
+  if (storageName.length > 255) return false
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*?$/)
+}
