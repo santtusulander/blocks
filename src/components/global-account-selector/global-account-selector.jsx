@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
+import { Map, List } from 'immutable'
 
 import ToggleElement from './toggle-element'
 
@@ -8,8 +9,6 @@ import SelectorHeader from './selector-header'
 
 export default class Selector extends Component {
 
-  static emptyArray = []
-
   state = {
     open: false,
     activeNode: this.props.activeNode,
@@ -17,11 +16,17 @@ export default class Selector extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchData()
+    this.props.fetchData(this.context.currentUser, this.context.roles)
   }
 
-  componentWillReceiveProps({ activeNode }) {
-    activeNode !== this.props.activeNode && this.setState({ activeNode, search: '' })
+  componentWillReceiveProps({ activeNode, fetchData }) {
+    if (activeNode !== this.props.activeNode) {
+
+      fetchData(this.context.currentUser, this.context.roles)
+        .then(() => {
+          this.changeActiveNode(activeNode)
+        })
+    }
   }
 
   onSearchChange = e => {
@@ -30,71 +35,85 @@ export default class Selector extends Component {
 
   handleCaretClick = (fetchChildren, nodeId) => {
     this.props.dispatch(fetchChildren())
-      .then(() => this.changeTier(nodeId))
+      .then(() => this.changeActiveNode(nodeId))
   }
 
-  changeTier = activeNode => {
+  changeActiveNode = activeNode => {
     this.setState({ activeNode, search: '' })
   }
 
   toggleMenu = () => this.setState({ open: !this.state.open, search: '' })
 
-  renderDropdown = (tree = Selector.emptyArray, parentId) => {
+  findActiveNode = (tree = [], parentId) => {
 
-    let found, selectorNodes, menu, activeNodeName, viewParentPermission = undefined
+    let found, foundFromChild = undefined
+
     for (const node of tree) {
-      const { labelKey = 'name', idKey = 'id', nodes, nodeInfo } = node
+      const { idKey = 'id', nodeInfo } = node
       const nodeId = node[idKey]
 
       if (nodeId == this.state.activeNode) {
 
-        found = true
-        viewParentPermission = nodeInfo.viewParentPermission
-        activeNodeName = node[labelKey]
-        selectorNodes = nodes
+        found = node
         break
 
       } else {
+        foundFromChild = this.findActiveNode(nodeInfo.nodes, nodeId)
 
-        menu = this.renderDropdown(nodes, nodeId)
-
-        if (menu) {
-          return menu
+        if (foundFromChild) {
+          return foundFromChild
         }
       }
     }
-    if (found) {
-      return (
-        <Dropdown.Menu>
-          <SelectorHeader
-            parentId={parentId}
-            viewParentPermission={viewParentPermission}
-            goToParent={this.changeTier}
-            searchValue={this.state.search}
-            onSearchChange={this.onSearchChange}
-            activeNodeName={activeNodeName} />
 
-          <SelectorItems
-            handleEntityClick={this.props.handleEntityClick}
-            handleCaretClick={this.handleCaretClick}
-            goToChild={this.changeTier}
-            selectorNodes={selectorNodes}
-            searchValue={this.state.search} />
-        </Dropdown.Menu>
-      )
+    if (found) {
+      return { ...found, parentId };
     }
   }
 
-  render() {
-    const { props: { tree, children }, state: { open } } = this
+  renderDropdown = () => {
 
+    const nodeToView = this.findActiveNode(this.props.tree)
+
+    if (nodeToView) {
+
+      const { parentId, labelKey = 'name', nodeInfo } = nodeToView
+      return (
+          <Dropdown.Menu>
+            <SelectorHeader
+              parentId={parentId}
+              subtitle={nodeInfo.headerSubtitle}
+              showBackCaretPermission={nodeInfo.showBackCaretPermission}
+              goToParent={this.changeActiveNode}
+              searchValue={this.state.search}
+              onSearchChange={this.onSearchChange}
+              activeNodeName={nodeToView[labelKey]} />
+
+            <SelectorItems
+              handleEntityClick={this.props.handleEntityClick}
+              handleCaretClick={this.handleCaretClick}
+              goToChild={this.changeActiveNode}
+              selectorNodes={nodeInfo.nodes}
+              searchValue={this.state.search} />
+          </Dropdown.Menu>
+      )
+    } else return <Dropdown.Menu />
+  }
+
+  render() {
+    const { props: { children }, state: { open } } = this
     return (
       <Dropdown id="" open={open} onToggle={() => {/*noop*/}} className="selector-component">
         <ToggleElement bsRole="toggle" toggle={this.toggleMenu}>
           <span>{children}</span>
         </ToggleElement>
-        {this.renderDropdown(tree) || <Dropdown.Menu/>}
+        {this.renderDropdown()}
       </Dropdown>
     )
   }
+}
+
+Selector.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
 }
