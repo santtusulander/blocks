@@ -6,7 +6,8 @@ import { getReduxFormValidationState } from '../../util/helpers'
 
 const FieldFormGroupMultiOptionSelector  = ({ addonAfter, addonAfterLabel, addonBefore,
                                               input, options, meta: { touched, error },
-                                              className, label, required = true}) => {
+                                              className, label, required = true,
+                                              disabled = false}) => {
   return (
     <FormGroup className={className} controlId={input.name} validationState={getReduxFormValidationState(input)}>
       {label &&
@@ -27,6 +28,7 @@ const FieldFormGroupMultiOptionSelector  = ({ addonAfter, addonAfterLabel, addon
       }
 
       <MultiOptionSelector
+        disabled={disabled}
         options={options}
         field={{
           value: List(input.value||[]),
@@ -53,6 +55,7 @@ FieldFormGroupMultiOptionSelector.propTypes = {
   addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   input: PropTypes.object,
   label: PropTypes.object,
   meta: PropTypes.object,
