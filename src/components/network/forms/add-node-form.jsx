@@ -30,7 +30,7 @@ const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_d
     node_name: [
       {
         condition: !isValidFQDN(node_name),
-        errorText: 'Not valid domain name'
+        errorText: <FormattedMessage id="portal.validators.type.fqdn" values={{field: <FormattedMessage id="portal.common.name" /> }}/>
       }
     ],
     numNodes: [
