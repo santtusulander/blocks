@@ -41,14 +41,20 @@ class StorageForm extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(change('storageForm', 'abr', STORAGE_ABR_DEFAULT))
-    this.props.dispatch(change('storageForm', 'estimate', STORAGE_ESTIMATE_DEFAULT))
-    this.props.dispatch(change('storageForm', 'estimate_metric', STORAGE_ESTIMATES_METRIC_DEFAULT))
+    const { initialValues, dispatch } = this.props
+    const edit = !!initialValues.name
+
+    if (!edit) {
+      dispatch(change('storageForm', 'abr', STORAGE_ABR_DEFAULT))
+      dispatch(change('storageForm', 'estimate', STORAGE_ESTIMATE_DEFAULT))
+    }
+
+    dispatch(change('storageForm', 'estimate_metric', STORAGE_ESTIMATES_METRIC_DEFAULT))
   }
 
   render() {
     const { error, submitting, handleSubmit, intl, initialValues,
-            invalid, hasPops, onCancel, onSave, onDelete, abrToggle } = this.props
+            invalid, onCancel, onSave, onDelete, abrToggle } = this.props
 
     const edit = !!initialValues.name
 
@@ -122,7 +128,7 @@ class StorageForm extends React.Component {
           className="abr-field"
           component={FieldFormGroupToggle}
           label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
-          disabled={edit ? true : false}
+          readonly={edit ? true : false}
           required={edit ? false : true}
           addonAfterLabel={
             <HelpTooltip
@@ -150,7 +156,6 @@ class StorageForm extends React.Component {
             <Button
               id="delete-btn"
               className="btn-danger pull-left"
-              disabled={hasPops}
               onClick={handleSubmit(() => onDelete(initialValues.name))}
             >
               <FormattedMessage id="portal.button.delete"/>
@@ -179,7 +184,6 @@ StorageForm.displayName = "StorageForm"
 StorageForm.propTypes = {
   abrToggle: PropTypes.bool,
   fetching: PropTypes.bool,
-  handleSubmit: PropTypes.func,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,

@@ -11,13 +11,30 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import StorageForm from '../../../components/storage/forms/storage-form'
-import '../../../components/account-management/group-form.scss'
+
+const storage_mock = {
+  get(cmd) {
+    switch (cmd) {
+      case 'name':
+        return 'Name'
+      case 'locations':
+        return '2'
+      case 'estimate':
+        return '100'
+      case 'abr':
+        return true
+      case 'abrProfile':
+        return 'abr_tv_16_9_high'
+    }
+  }
+}
+
+
 
 class StorageFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    this.storageId = null
     this.state = {
       showDeleteModal : false
     }
@@ -29,11 +46,6 @@ class StorageFormContainer extends React.Component {
 
   onToggleDeleteModal(showDeleteModal) {
     this.setState({ showDeleteModal })
-  }
-
-  onDelete(storageId) {
-    this.storageId = storageId
-    this.onToggleDeleteModal(true)
   }
 
   onSave(edit, values) {
@@ -72,12 +84,12 @@ class StorageFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(){
+  onDelete(storageId){
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: this.storageId
+      id: storageId
     }
 
     return this.props.onDelete(params)
@@ -93,7 +105,7 @@ class StorageFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, storage, initialValues, onCancel, abrToggle } = this.props
+    const { account, group, storage, initialValues, onCancel, abrToggle, show } = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -106,11 +118,11 @@ class StorageFormContainer extends React.Component {
 
     return (
       <div>
-        <SidePanel show={true} title={title} subTitle={subTitle} cancel={onCancel}>
+        <SidePanel show={show} title={title} subTitle={subTitle} cancel={onCancel}>
           <StorageForm
             initialValues={initialValues}
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={this.onDelete}
+            onDelete={() => this.onToggleDeleteModal(true)}
             onCancel={onCancel}
             abrToggle={abrToggle}
           />
@@ -123,7 +135,7 @@ class StorageFormContainer extends React.Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={() => this.onDelete()}>
+            onSubmit={(storageId) => this.onDelete(storageId)}>
             <p>
              <FormattedMessage id="portal.storage.storageForm.deleteModal.confirmation.text"/>
             </p>
@@ -145,20 +157,24 @@ StorageFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
-  storage: PropTypes.instanceOf(Map)
+  show: PropTypes.bool,
+  storage: PropTypes.instanceOf(Map),
+  // eslint-disable-next-line react/no-unused-prop-types
+  storageId: PropTypes.string
 }
 
 StorageFormContainer.defaultProps = {
   account: Map(),
   group: Map(),
-  storage: Map()
+  storage: Map(),
+  show: true
 }
 
 const formSelector = formValueSelector('storageForm')
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')
-  const storage = ''
+  const storage = storage_mock
 
   return {
     abrToggle: isABRSelected,
