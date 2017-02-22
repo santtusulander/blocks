@@ -94,26 +94,28 @@ class StorageForm extends React.Component {
           }
         />
 
-        <Field
-          className="estimate-field"
-          name="estimate"
-          component={FieldFormGroup}
-          label={<FormattedMessage id="portal.storage.storageForm.estimate.label" />}
-          addonAfterLabel={
-            <HelpTooltip
-              id="tooltip-help"
-              title={<FormattedMessage id="portal.storage.storageForm.estimate.help.label"/>}>
-              <FormattedMessage id="portal.storage.storageForm.estimate.help.text" />
-            </HelpTooltip>
-          }
-        />
+        <div className="estimate-field-group">
+          <Field
+            className="estimate-field"
+            name="estimate"
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.storage.storageForm.estimate.label" />}
+            addonAfterLabel={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.storage.storageForm.estimate.help.label"/>}>
+                <FormattedMessage id="portal.storage.storageForm.estimate.help.text" />
+              </HelpTooltip>
+            }
+          />
 
-        <Field
-          className="metric-field"
-          name="estimate_metric"
-          component={FieldFormGroupSelect}
-          options={STORAGE_ESTIMATE_METRICS}
-        />
+          <Field
+            className="metric-field"
+            name="estimate_metric"
+            component={FieldFormGroupSelect}
+            options={STORAGE_ESTIMATE_METRICS}
+          />
+        </div>
 
         <Field
           name="abr"

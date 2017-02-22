@@ -93,7 +93,7 @@ class StorageFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, storage, initialValues, onCancel, abrToggle} = this.props
+    const { account, group, storage, initialValues, onCancel, abrToggle } = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -166,7 +166,10 @@ const mapStateToProps = (state, ownProps) => {
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     initialValues: {
       name: edit && storage ? storage.get('name') : '',
-      description: edit && storage ? storage.get('description') : ''
+      locations: edit && storage ? storage.get('locations') : '',
+      estimate: edit && storage ? storage.get('estimate') : '',
+      abr: edit && storage ? storage.get('abr') : '',
+      abrProfile: edit && storage ? storage.get('abrProfile') : ''
     }
   }
 }

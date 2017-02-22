@@ -23,16 +23,24 @@ $arb-toggle-margin-right: 18px;
   }
 
   .estimate-field {
-    width: (($input-width / 2) - $input-box-padding-left);
+    width: 180px;
     text-align: right;
   }
 
-  .metric-field-col {
-    padding-left: 0;
+  .estimate-field-group {
+    .form-group {
+      float: left;
+    }
+  }
+
+  .metric-field {
+    margin-top: 58px;
+    margin-left: -15px;
   }
 
   .abr-field {
     width: 100%;
+    clear: both;
 
     .toggle {
       float: right;
