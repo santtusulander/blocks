@@ -13,7 +13,7 @@ const StackAreaCustomTick = ({ payload = [], valueFormatter = formatBitsPerSecon
 
 StackAreaCustomTick.displayName = "StackAreaCustomTick"
 StackAreaCustomTick.propTypes = {
-  payload: PropTypes.array,
+  payload: PropTypes.oneOfType([ PropTypes.object, PropTypes.array ]),
   valueFormatter: PropTypes.func,
   x: PropTypes.number,
   y: PropTypes.number
