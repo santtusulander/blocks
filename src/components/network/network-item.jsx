@@ -6,7 +6,7 @@ import TruncatedTitle from '../truncated-title'
 
 import IconConfiguration from '../icons/icon-configuration'
 
-const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, isAllowedToConfigure }) => {
+const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, viewAllowed }) => {
 
   const handleEdit = e => {
     e.preventDefault()
@@ -33,12 +33,12 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
 
       <TruncatedTitle className='network-item-content' content={content} />
 
-      {status &&
+      { status &&
         <div className={`status-indicator ${status}`}>
           <FormattedMessage id={`portal.network.item.status.${status}`} />
         </div>
       }
-      {isAllowedToConfigure &&
+      { viewAllowed &&
         <ButtonToolbar>
           <Button
             bsStyle="primary"
@@ -57,11 +57,11 @@ NetworkItem.propTypes = {
   active: PropTypes.bool,
   content: PropTypes.string,
   extraClassName: PropTypes.string,
-  isAllowedToConfigure: PropTypes.bool,
   onEdit: PropTypes.func,
   onSelect: PropTypes.func,
   status: PropTypes.string,
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  viewAllowed: PropTypes.bool
 }
 
 export default NetworkItem

@@ -51,6 +51,7 @@ const GroupForm = ({
   isFetchingHosts,
   isFetchingEntities,
   locations,
+  locationPermissions,
   hasNetworks,
   onCancel,
   onDelete,
@@ -61,6 +62,16 @@ const GroupForm = ({
   showServiceItemForm,
   submitting
 }) => {
+
+  const tooltipHintId = hasNetworks ? "portal.network.groupForm.delete.tooltip.network.message"
+                                    : ((canSeeLocations && (!locations.isEmpty()))
+                                    ? "portal.network.groupForm.delete.tooltip.location.message" : null)
+
+  let actionButtonTitle = groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
+
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
@@ -98,9 +109,17 @@ const GroupForm = ({
                   </HelpTooltip>
                 }
                 >
-                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                  <IconAdd/>
-                </UDNButton>
+                { locationPermissions && locationPermissions.createAllowed &&
+                  <UDNButton
+                    className="pull-right"
+                    bsStyle="success"
+                    icon={true}
+                    addNew={true}
+                    onClick={() => onShowLocation(null)}
+                  >
+                    <IconAdd/>
+                  </UDNButton>
+                }
               </SectionHeader>
               {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
@@ -113,10 +132,11 @@ const GroupForm = ({
                               <h5><strong>{location.get('cityName')}</strong></h5>
                               <div className="text-sm">{location.get('iataCode')}</div>
                           </td>
-                          <td className="one-button-cell">
-                            <ActionButtons
-                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
-                          </td>
+                          { locationPermissions && locationPermissions.viewAllowed &&
+                            <td className="one-button-cell">
+                              <ActionButtons onEdit={() => onShowLocation(location.get('reduxId'))} />
+                            </td>
+                          }
                         </tr>
                       )
                     })}
@@ -164,10 +184,10 @@ const GroupForm = ({
             <ButtonDisableTooltip
               id="delete-btn"
               className="btn-danger pull-left"
-              disabled={submitting || isFetchingEntities || hasNetworks}
+              disabled={submitting || isFetchingEntities || (!!tooltipHintId)}
               onClick={onDelete}
               tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+              tooltipMessage={tooltipHintId && {text: intl.formatMessage({id: tooltipHintId})}}>
               <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           }
@@ -182,8 +202,8 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            disabled={invalid || submitting || isFetchingEntities}>
+            {actionButtonTitle}
           </Button>
         </FormFooterButtons>
     </form>
@@ -204,6 +224,7 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

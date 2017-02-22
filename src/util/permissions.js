@@ -144,6 +144,9 @@ permissionMapping[PERMISSIONS.MODIFY_NETWORK] =
 permissionMapping[PERMISSIONS.DELETE_NETWORK] =
   (role) => role.getIn(['permissions', 'north', 'networks', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_NETWORK] =
+  (role) => role.getIn(['permissions', 'north', 'networks', 'show', 'allowed'])
+
 // POP permissions
 permissionMapping[PERMISSIONS.CREATE_POP] =
   (role) => role.getIn(['permissions', 'north', 'pops', 'create', 'allowed'])
@@ -153,6 +156,9 @@ permissionMapping[PERMISSIONS.MODIFY_POP] =
 
 permissionMapping[PERMISSIONS.DELETE_POP] =
   (role) => role.getIn(['permissions', 'north', 'pops', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_POP] =
+  (role) => role.getIn(['permissions', 'north', 'pops', 'show', 'allowed'])
 
 // POD permissions
 permissionMapping[PERMISSIONS.CREATE_POD] =
@@ -164,6 +170,9 @@ permissionMapping[PERMISSIONS.MODIFY_POD] =
 permissionMapping[PERMISSIONS.DELETE_POD] =
   (role) => role.getIn(['permissions', 'north', 'pods', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_POD] =
+  (role) => role.getIn(['permissions', 'north', 'pods', 'show', 'allowed'])
+
 // Node permissions
 permissionMapping[PERMISSIONS.CREATE_NODE] =
   (role) => role.getIn(['permissions', 'north', 'nodes', 'create', 'allowed'])
@@ -174,6 +183,77 @@ permissionMapping[PERMISSIONS.MODIFY_NODE] =
 permissionMapping[PERMISSIONS.DELETE_NODE] =
   (role) => role.getIn(['permissions', 'north', 'nodes', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_NODE] =
+  (role) => role.getIn(['permissions', 'north', 'nodes', 'show', 'allowed'])
+
+// Location permissions
+permissionMapping[PERMISSIONS.CREATE_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'show', 'allowed'])
+
+// Footprint permissions
+permissionMapping[PERMISSIONS.CREATE_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'show', 'allowed'])
+
+
+export const getLocationPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_LOCATION),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_LOCATION),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_LOCATION),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_LOCATION)
+})
+
+export const getNetworkPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NETWORK),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NETWORK),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NETWORK),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NETWORK)
+})
+
+export const getPOPPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POP),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POP),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POP),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POP)
+})
+
+export const getPODPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_POD),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_POD),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_POD),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_POD)
+})
+
+export const getFootprintsPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_FOOTPRINT),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_FOOTPRINT),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_FOOTPRINT),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_FOOTPRINT)
+})
+
+export const getNODEPermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_NODE),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_NODE),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_NODE),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NODE)
+})
 
 /**
  * Determine if a user has a permission.
