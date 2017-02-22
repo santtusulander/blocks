@@ -5,7 +5,8 @@ export const STORAGE_LOCATIONS = [
 ]
 
 export const STORAGE_ABR_DEFAULT = false
-export const STORAGE_ESTIMATE_DEFAULT = "100"
+export const STORAGE_ESTIMATE_DEFAULT = 100
+export const STORAGE_ESTIMATE_MIN = 1
 export const STORAGE_ESTIMATES_METRIC_DEFAULT = 'tb'
 export const STORAGE_ESTIMATE_METRICS = [
   ['tb', 'TB'],
@@ -13,6 +14,10 @@ export const STORAGE_ESTIMATE_METRICS = [
   ['mb', 'MB']
 ]
 
+/*
+  TODO: change this to be fetched from the API.
+  UDNP-2832 - Integrate CIS Storage configuration form with the redux
+*/
 export const STORAGE_ABR_PROFILES = [
     ["abr_tv_16_9_high", "ABR dynamic packager - Smart TV - 16x9, high bitrate"],
     ["abr_pc_16_9_mid", "ABR dynamic packager - PC Player - 16x9, middle bitrate"],

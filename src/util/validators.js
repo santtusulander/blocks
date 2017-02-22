@@ -4,6 +4,8 @@ import { matchesRegexp } from './helpers'
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_TEXT_FIELD_DEFAULT_MAX_LEN } from '../constants/common'
 
+import { STORAGE_ESTIMATE_MIN } from '../constants/storage'
+
 import { ASN_MIN,
          ASN_MAX,
          ASN_RESERVED,
@@ -276,7 +278,7 @@ export function isValidEstimatedUsage(str) {
     return false
   }
 
-  return (parseInt(str) >= POD_PROVIDER_WEIGHT_MIN)
+  return (parseInt(str) >= STORAGE_ESTIMATE_MIN)
 }
 
 /**
