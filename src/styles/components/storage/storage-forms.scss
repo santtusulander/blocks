@@ -1,0 +1,62 @@
+$input-box-padding-left: 15px;
+$metric-margin-top: 40px;
+$arb-toggle-margin-right: 18px;
+
+.storage-form {
+  .form-group {
+    .name-field {
+      width: $input-width;
+    }
+
+    label {
+      margin: 12px 0 10px;
+    }
+
+    // .dropdown-select.metric-field {
+    //   margin-top: $metric-margin-top;
+    // }
+  }
+
+  .multi-option-selector-fields,
+  .abr-profile-field {
+    width: 100%;
+  }
+
+  .estimate-field {
+    width: (($input-width / 2) - $input-box-padding-left);
+    text-align: right;
+  }
+
+  .metric-field-col {
+    padding-left: 0;
+  }
+
+  .abr-field {
+    width: 100%;
+
+    .toggle {
+      float: right;
+      margin-top: 9px;
+      margin-right: $arb-toggle-margin-right;
+    }
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .addon-after-label {
+    display: inline;
+  }
+}
