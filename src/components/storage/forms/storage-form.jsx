@@ -123,7 +123,7 @@ class StorageForm extends React.Component {
           />
 
           <Field
-            className="metric-field"
+            className="unit-field"
             name="estimate_unit"
             component={FieldFormGroupSelect}
             options={STORAGE_ESTIMATE_UNITS}

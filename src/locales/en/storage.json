@@ -10,7 +10,7 @@
   "portal.storage.storageForm.locations.label": "Locations",
   "portal.storage.storageForm.locations.required.error": "At least one location is required",
   "portal.storage.storageForm.estimate.label": "Estimated Usage",
-  "portal.storage.storageForm.estimate.validation.error": "Estimated Usage is must be an integer number and be greater than 0",
+  "portal.storage.storageForm.estimate.validation.error": "Estimated Usage must be an integer number and be greater than 0",
   "portal.storage.storageForm.estimate.required.error": "Estimated Usage is required",
   "portal.storage.storageForm.abr.label": "Enable ABR Workflow",
   "portal.storage.storageForm.abr.required.error": "ABR Workflow is required",

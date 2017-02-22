@@ -1,6 +1,11 @@
-$input-box-padding-left: 15px;
-$metric-margin-top: 40px;
+$unit-field-margin-top: 58px;
+$unit-field-margin-left: -15px;
+$arb-toggle-margin-top: 9px;
 $arb-toggle-margin-right: 18px;
+$estimate-field-width: 180px;
+$estimate-field-max-width: 215px;
+$label-margin-top: 12px;
+$label-margin-bottom: 10px;
 
 .storage-form {
   .form-group {
@@ -9,12 +14,8 @@ $arb-toggle-margin-right: 18px;
     }
 
     label {
-      margin: 12px 0 10px;
+      margin: $label-margin-top 0 $label-margin-bottom;
     }
-
-    // .dropdown-select.metric-field {
-    //   margin-top: $metric-margin-top;
-    // }
   }
 
   .multi-option-selector-fields,
@@ -23,19 +24,20 @@ $arb-toggle-margin-right: 18px;
   }
 
   .estimate-field {
-    width: 180px;
+    width: $estimate-field-width;
     text-align: right;
   }
 
   .estimate-field-group {
     .form-group {
       float: left;
+      max-width: $estimate-field-max-width;
     }
   }
 
-  .metric-field {
-    margin-top: 58px;
-    margin-left: -15px;
+  .unit-field {
+    margin-top: $unit-field-margin-top;
+    margin-left: $unit-field-margin-left;
   }
 
   .abr-field {
@@ -44,7 +46,7 @@ $arb-toggle-margin-right: 18px;
 
     .toggle {
       float: right;
-      margin-top: 9px;
+      margin-top: $arb-toggle-margin-top;
       margin-right: $arb-toggle-margin-right;
     }
   }
