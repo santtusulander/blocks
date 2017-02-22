@@ -1,17 +1,20 @@
 export const STORAGE_LOCATIONS = [
-  {"label": "San Jose, California, USA", value: 1, "options": []},
-  {"label": "Frankfurkt, Germany", value: 2, "options": []},
-  {"label": "Hong Kong, China", value: 3, "options": []}
+  {label: "San Jose, California, USA", value: 1, options: []},
+  {label: "Frankfurkt, Germany", value: 2, options: []},
+  {label: "Hong Kong, China", value: 3, options: []}
 ]
 
 export const STORAGE_ABR_DEFAULT = false
 export const STORAGE_ESTIMATE_DEFAULT = 100
 export const STORAGE_ESTIMATE_MIN = 1
-export const STORAGE_ESTIMATES_METRIC_DEFAULT = 'tb'
-export const STORAGE_ESTIMATE_METRICS = [
+export const STORAGE_ESTIMATE_UNITS_DEFAULT = 'tb'
+export const STORAGE_ESTIMATE_UNITS = [
+  ['pb', 'PB'],
   ['tb', 'TB'],
   ['gb', 'GB'],
-  ['mb', 'MB']
+  ['mb', 'MB'],
+  ['kb', 'KB'],
+  ['b', 'B']
 ]
 
 /*

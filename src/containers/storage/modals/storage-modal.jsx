@@ -22,9 +22,9 @@ const storage_mock = {
       case 'name':
         return 'Name'
       case 'locations':
-        return '2'
+        return '1'
       case 'estimate':
-        return '100'
+        return '10000000000000000'
       case 'abr':
         return true
       case 'abrProfile':
@@ -54,6 +54,8 @@ class StorageFormContainer extends React.Component {
     /*
       TODO: fix onSave function in scope of
       UDNP-2832 - Integrate CIS Storage configuration form with the redux
+
+      Don't forget to conver estimated usage value to bytes.
     */
 
     const params = {

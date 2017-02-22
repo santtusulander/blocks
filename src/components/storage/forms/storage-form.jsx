@@ -10,13 +10,13 @@ import FieldFormGroupToggle from '../../form/field-form-group-toggle'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi-option-selector'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
-import { STORAGE_LOCATIONS, STORAGE_ESTIMATE_METRICS, STORAGE_ABR_PROFILES,
-         STORAGE_ESTIMATES_METRIC_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
+import { STORAGE_LOCATIONS, STORAGE_ESTIMATE_UNITS, STORAGE_ABR_PROFILES,
+         STORAGE_ESTIMATE_UNITS_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
          STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
 
-const validate = ({ name, locations, estimate, estimate_metric, abr, abrProfile }) => {
+const validate = ({ name, locations, estimate, estimate_unit, abr, abrProfile }) => {
   const conditions = {
     name: {
       condition: !isValidStorageName(name),
@@ -28,7 +28,7 @@ const validate = ({ name, locations, estimate, estimate_metric, abr, abrProfile 
     }
   }
 
-  return checkForErrors({ name, locations, estimate, estimate_metric, abr, abrProfile }, conditions, {
+  return checkForErrors({ name, locations, estimate, estimate_unit, abr, abrProfile }, conditions, {
     name: <FormattedMessage id="portal.storage.storageForm.name.required.error"/>,
     locations: <FormattedMessage id="portal.storage.storageForm.locations.required.error"/>,
     estimate: <FormattedMessage id="portal.storage.storageForm.estimate.required.error"/>,
@@ -46,13 +46,16 @@ class StorageForm extends React.Component {
   componentDidMount() {
     const { initialValues, dispatch } = this.props
     const edit = !!initialValues.name
+    const estimate = separateUnit(formatBytes(initialValues.estimate))
 
     if (!edit) {
       dispatch(change('storageForm', 'abr', STORAGE_ABR_DEFAULT))
       dispatch(change('storageForm', 'estimate', STORAGE_ESTIMATE_DEFAULT))
+      dispatch(change('storageForm', 'estimate_unit', STORAGE_ESTIMATE_UNITS_DEFAULT))
+    } else {
+      dispatch(change('storageForm', 'estimate', estimate.value))
+      dispatch(change('storageForm', 'estimate_unit', estimate.unit.toLowerCase()))
     }
-
-    dispatch(change('storageForm', 'estimate_metric', STORAGE_ESTIMATES_METRIC_DEFAULT))
   }
 
   render() {
@@ -121,9 +124,9 @@ class StorageForm extends React.Component {
 
           <Field
             className="metric-field"
-            name="estimate_metric"
+            name="estimate_unit"
             component={FieldFormGroupSelect}
-            options={STORAGE_ESTIMATE_METRICS}
+            options={STORAGE_ESTIMATE_UNITS}
           />
         </div>
 
