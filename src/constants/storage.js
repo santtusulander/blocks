@@ -7,7 +7,7 @@ export const STORAGE_LOCATIONS = [
   {"label": "Hong Kong, China", value: 3, "options": []}
 ]
 
-export const STORAGE_ABR_DEFAULT = true
+export const STORAGE_ABR_DEFAULT = false
 export const STORAGE_ESTIMATE_DEFAULT = "100"
 export const STORAGE_ESTIMATES_METRIC_DEFAULT = 'tb'
 export const STORAGE_ESTIMATE_METRICS = [
