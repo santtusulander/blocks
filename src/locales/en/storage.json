@@ -20,9 +20,9 @@
   "portal.storage.storageForm.abrProfile.required.error": "ABR Profile is required",
 
   "portal.storage.storageForm.locations.help.label": "Locations",
-  "portal.storage.storageForm.locations.help.text": "Help text...",
+  "portal.storage.storageForm.locations.help.text": "By selecting a location the user is opting for the ingest point to use that location as the storage point. By selecting multiple locations the user is opting to utilize our geo-replication service to ingest copies of the content in multiple locations.",
   "portal.storage.storageForm.estimate.help.label": "Estimated Usage",
-  "portal.storage.storageForm.estimate.help.text": "Help text...",
+  "portal.storage.storageForm.estimate.help.text": "By setting this value the user will be able to track their actual usage against their estimated usage across the UDN portal in analytics. The value entered here doesn't serve as a quota or a cap for actual usage.",
   "portal.storage.storageForm.abrProfile.help.label": "ABR Workflow",
-  "portal.storage.storageForm.abrProfile.help.text": "Help text..."
+  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest."
 }
