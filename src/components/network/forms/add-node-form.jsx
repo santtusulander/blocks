@@ -187,7 +187,6 @@ class NetworkAddNodeForm extends React.Component {
   render() {
     const { handleSubmit, error } = this.props
     const footerButtons = this.getFooterButtons()
-    //const nodeNameProps = nodeNameData.props
 
     return (
       <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
@@ -223,8 +222,8 @@ class NetworkAddNodeForm extends React.Component {
           />
 
           <Field
-            type='text'
-            name='node_name'
+            type="text"
+            name="node_name"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.common.name" />}
           />
@@ -315,7 +314,6 @@ NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
-  nodeNameData: React.PropTypes.object,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   onToggleConfirm: React.PropTypes.func,

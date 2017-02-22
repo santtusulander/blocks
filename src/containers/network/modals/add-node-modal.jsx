@@ -28,31 +28,6 @@ import { generateNodeName } from '../../../util/network-helpers'
 const formSelector = formValueSelector(ADD_NODE_FORM_NAME)
 
 /**
- * Build a name for the node
- * @param  {[type]} nameCode [description]
- * @param  {[type]} nodeEnv  [description]
- * @param  {[type]} nodeType [description]
- * @param  {[type]} pod      [description]
- * @return {[type]}          [description]
- */
-// function buildNodeNameData(nameCode, nodeEnv, nodeType, { pod }) {
-//   const domain = NETWORK_DOMAIN_NAME
-//   const location = pod
-//   const cacheEnv = NODE_ENVIRONMENT_OPTIONS.find(obj => obj.value === nodeEnv).cacheValue
-//
-//   return {
-//     name: `${nodeType}${nameCode}.${location}.${cacheEnv}.${domain}`,
-//     props: {
-//       cacheEnv,
-//       domain,
-//       location,
-//       nameCode,
-//       nodeType
-//     }
-//   }
-// }
-
-/**
  * build a subtitle for the modal using URL params
  * @param  {[type]} state  [description]
  * @param  {[type]} params [description]
@@ -108,7 +83,16 @@ class AddNodeContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, initialValues, intl, nodeNameData, numNodes, subtitle, nodePermissions } = this.props
+    const {
+      show,
+      onCancel,
+      initialValues,
+      intl,
+      numNodes,
+      nodeName,
+      subtitle,
+      nodePermissions
+    } = this.props
     const { showConfirmation } = this.state
 
     const panelTitle = <FormattedMessage id="portal.network.addNodeForm.title" />
@@ -122,7 +106,6 @@ class AddNodeContainer extends React.Component {
           dim={showConfirmation}>
           <NetworkAddNodeForm
             intl={intl}
-            nodeNameData={nodeNameData}
             numNodes={numNodes}
             initialValues={initialValues}
             onSave={this.onSubmit}
@@ -141,7 +124,6 @@ AddNodeContainer.displayName = "AddNodeContainer"
 AddNodeContainer.propTypes = {
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
-  nodeNameData: PropTypes.object,
   nodePermissions: PropTypes.object,
   numNodes: PropTypes.number,
   onCancel: PropTypes.func,
