@@ -33,9 +33,13 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
       & > div {
 
         display: flex;
+        width: 100%;
 
         & > {
           h2 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             align-self: center;
           }
 
