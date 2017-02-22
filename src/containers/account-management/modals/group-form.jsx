@@ -324,8 +324,8 @@ GroupFormContainer.displayName = "GroupFormContainer"
 GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
-  canFetchNetworks: PropTypes.bool,
   canEditServices: PropTypes.bool,
+  canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
@@ -386,7 +386,7 @@ const  mapStateToProps = (state, ownProps) => {
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: groupId ? group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
-                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List()))
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,

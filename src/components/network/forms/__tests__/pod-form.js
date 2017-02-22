@@ -17,7 +17,7 @@ describe('PodForm', () => {
 
   beforeEach(() => {
     subject = (pod_name = '', hasNodes = false, showFootprints = false) => {
-      podPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
+      podPermissions = {deleteAllowed: true, modifyAllowed: true}
       props = {
         hasNodes,
         showFootprints,
