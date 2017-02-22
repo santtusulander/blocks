@@ -83,7 +83,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
 
     const steps = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? d3.time.hour.utc : d3.time.day.utc
 
-    dateFormat = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? dateFormat = "HH:mm" : "MM/DD"
+    dateFormat = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? dateFormat = "HH:mm" : "MMM DD"
 
     const scale = d3.time
                     .scale
