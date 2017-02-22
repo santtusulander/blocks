@@ -1,5 +1,6 @@
 import React from 'react'
 import MiniChart from '../mini-chart'
+import ComparisonBars from './comparison-bars'
 
 const StorageKPI = () => {
   return (
@@ -11,7 +12,9 @@ const StorageKPI = () => {
             <span className='value'>112</span>
             <span className='suffix'> / 100 TB</span>
           </div>
-
+          <div className='storage-kpi-comparison-bars'>
+            <ComparisonBars referenceValue={100} currentValue={112} />
+          </div>
         </div>
       </div>
       <div className='storage-kpi-item'>

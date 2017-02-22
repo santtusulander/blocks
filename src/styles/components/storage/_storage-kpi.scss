@@ -1,4 +1,5 @@
 $storage-kpi-item-height: rem(48px);
+$storage-kpi-item-margin: rem(5px);
 
 .storage-kpi-item {
   display: inline-block;
@@ -32,7 +33,7 @@ $storage-kpi-item-height: rem(48px);
 .storage-kpi-chart {
   display: flex;
   height: $storage-kpi-item-height;
-  margin-left: rem(5px);
+  margin-left: $storage-kpi-item-margin;
 
   > .mini-chart {
     width: rem(80px);
@@ -46,6 +47,13 @@ $storage-kpi-item-height: rem(48px);
       align-self: flex-end;
     }
   }
+}
+
+.storage-kpi-comparison-bars {
+  width: rem(100px);
+  height: 0.4 * $storage-kpi-item-height;
+  margin: 0 0 $storage-kpi-item-margin $storage-kpi-item-margin;
+  align-self: flex-end;
 }
 
 .storage-kpi-number {

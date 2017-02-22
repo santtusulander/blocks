@@ -1,0 +1,15 @@
+.comparison-bars-container {
+  height: 100%;
+
+  .comparison-bar {
+    height: 50%;
+
+    &.current {
+      background-color: $pale-blue;
+    }
+
+    &.reference {
+      background-color: $black;
+    }
+  }
+}
