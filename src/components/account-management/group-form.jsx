@@ -212,7 +212,7 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
+            disabled={invalid || submitting || isFetchingEntities}>
             {actionButtonTitle}
           </Button>
         </FormFooterButtons>
