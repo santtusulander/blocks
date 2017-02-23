@@ -2,15 +2,16 @@ import React, { PropTypes } from 'react'
 import { Dropdown, MenuItem } from 'react-bootstrap'
 
 import Button from './button'
-import IconAdd from './icons/icon-add.jsx'
+import IconAdd from './icons/icon-add'
+import CustomToggle from './customToggle'
 
 const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (
-    <Dropdown pullRight={pullRight}>
-      <div bsRole={!disabled && "toggle"} className='button-toggle'>
+    <Dropdown id="dropdown-custom-menu" pullRight={pullRight} disabled={disabled}>
+      <CustomToggle bsRole="toggle">
         <Button bsStyle={bsStyle} icon={true} disabled={disabled}>
           <IconAdd/>
         </Button>
-      </div>
+      </CustomToggle>
       <Dropdown.Menu className="button-dropdown-menu">
         {
           options.map(({label, callback}, index)=>(
