@@ -14,8 +14,8 @@ const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (
       </CustomToggle>
       <Dropdown.Menu className="button-dropdown-menu">
         {
-          options.map(({label, callback}, index)=>(
-            <MenuItem key={index} onClick={callback}> {label} </MenuItem>
+          options.map(({label, handleClick}, index)=>(
+            <MenuItem key={index} onClick={handleClick}> {label} </MenuItem>
           ))
         }
       </Dropdown.Menu>
@@ -29,7 +29,7 @@ ButtonDropdown.propTypes = {
   options: PropTypes.arrayOf(
     React.PropTypes.shape({
       label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number ]).isRequired,
-      callback: React.PropTypes.func.isRequired
+      handleClick: React.PropTypes.func.isRequired
     })
   ).isRequired,
   pullRight: PropTypes.bool

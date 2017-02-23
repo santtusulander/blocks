@@ -11,11 +11,11 @@ const defaultProps = {
   options: [
     {
       label:'New File Upload',
-      callback: () => console.log('New File Upload')
+      handleClick: () => console.log('New File Upload')
     },
     {
       label:'New Folder',
-      callback: () => console.log('New Folder')
+      handleClick: () => console.log('New Folder')
     }
   ],
   pullRight: true
