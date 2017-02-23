@@ -14,8 +14,11 @@ import ModalWindow from '../../../components/modal'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import { getSortData } from '../../../util/helpers'
+
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 
+// TODO Remove this in scope of UDNP-2849 when redux will be ready
 const mockRedux = {
   get: function(entity) {
     switch (entity) {
@@ -75,7 +78,7 @@ class AccountManagementStorages extends Component {
     this.changeSearch = this.changeSearch.bind(this)
     this.changeSort = this.changeSort.bind(this)
     this.addStorage = this.addStorage.bind(this)
-    this.editStorage = this.addStorage.bind(this)
+    this.editStorage = this.editStorage.bind(this)
     this.deleteStorage = this.deleteStorage.bind(this)
   }
 
@@ -92,6 +95,7 @@ class AccountManagementStorages extends Component {
     })
   }
 
+  // TODO Integrate storage add/edit/delete functionality in scope of UDNP-2849 when forms and redux will be ready
   addStorage() {
     this.props.toggleModal(ADD_STORAGE);
   }
@@ -117,24 +121,6 @@ class AccountManagementStorages extends Component {
     })
   }
 
-  sortData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if(aVal < bVal) {
-        return -1 * sortDir
-      }
-      else if(aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
-  }
-
   render() {
     const { storages, accountManagementModal, toggleModal, intl } = this.props
 
@@ -145,7 +131,7 @@ class AccountManagementStorages extends Component {
     }
 
     const filteredStorages = this.filterData(this.state.search.toLowerCase())
-    const sortedStorages = this.sortData(filteredStorages, this.state.sortBy, this.state.sortDir)
+    const sortedStorages = getSortData(filteredStorages, this.state.sortBy, this.state.sortDir)
 
     const numHiddenStorages = storages.size - sortedStorages.size
     const storageText = (sortedStorages.size === 1) ? ` ${intl.formatMessage({id: 'portal.account.storages.single.text'})}` :
