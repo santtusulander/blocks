@@ -125,6 +125,25 @@
   }
 }
 
+.storage-item-tooltip {
+  &.top {
+    min-width: 250px;
+    padding: 0 0 30px;
+  }
+
+  .storage-month-info {
+    margin-top: 18px;
+
+    .tooltip-storage-value {
+      float: right;
+    }
+  }
+
+  .tooltip-arrow {
+    display: none;
+  }
+}
+
 .interactive-password-tooltip {
   .valid {
     color: $green;
