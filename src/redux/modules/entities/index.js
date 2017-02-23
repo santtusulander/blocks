@@ -77,19 +77,28 @@ const networks =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const ingestPoints =
+const CISingestPoints =
   handleActions({
     [actionTypes.RECEIVE] : receiveEntity('ingestPoints'),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const CISclusters =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('clusters'),
+    //[actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+
 export default combineReducers({
   accounts,
   nodes,
   groups,
   iataCodes,
-  ingestPoints,
+  CISingestPoints,
+  CISclusters,
   properties,
   pops,
   networks,
