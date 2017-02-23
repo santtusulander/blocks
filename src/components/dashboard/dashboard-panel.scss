@@ -12,6 +12,16 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
 .dashboard-panel {
   margin-bottom: $dashboard-panel-margin;
 
+  &.threeItemPerRow {
+    .dashboard-panels & {
+      width: calc((100% - 2 * (#{$dashboard-panel-margin}))/3);
+    }
+    margin-right: $dashboard-panel-margin;
+    &.threeItemPerRow:last-child{
+      margin-right: 0px;
+    }
+  }
+
   .dashboard-panels & {
     width: calc(50% - (#{$dashboard-panel-margin} / 2));
 

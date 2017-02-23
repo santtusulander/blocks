@@ -4,12 +4,13 @@ import classNames from 'classnames'
 import './dashboard-panel.scss'
 
 const DashboardPanel = (props) => {
-  const { children, className, noPadding, title } = props
+  const { children, className, threeItemPerRow, noPadding, title } = props
   return (
     <div className={classNames(
       'dashboard-panel',
       {
         className,
+        threeItemPerRow,
         'no-padding': noPadding
       }
     )}>

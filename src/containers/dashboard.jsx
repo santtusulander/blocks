@@ -278,13 +278,12 @@ export class Dashboard extends React.Component {
               mapboxActions={this.props.mapboxActions}/>
           </div>
         </DashboardPanel>
-        <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
           <Table className="table-simple">
             <thead>
               <tr>
                 <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
                 <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
               </tr>
             </thead>
             <tbody>
@@ -301,14 +300,6 @@ export class Dashboard extends React.Component {
                         dataKey="bytes"
                         data={provider.get('detail').toJS()} />
                     </td>
-                    <td>
-                      <MiniChart
-                        kpiRight={true}
-                        kpiValue={numeral(provider.get('percent_total')).format('0')}
-                        kpiUnit="%"
-                        dataKey="percent_of_timestamp"
-                        data={provider.get('detail').toJS()} />
-                    </td>
                   </tr>
                 )
               })}
@@ -318,6 +309,12 @@ export class Dashboard extends React.Component {
             <div className="no-data">
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
+        </DashboardPanel>
+        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+          <h2>fdafs</h2>
+        </DashboardPanel>
+        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+          <h2>fdafs</h2>
         </DashboardPanel>
       </DashboardPanels>
     )
