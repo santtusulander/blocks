@@ -1,3 +1,5 @@
+import { Map } from 'immutable'
+
 /**
  * Get entity from state by Id
  * @param id
@@ -5,7 +7,7 @@
  * @returns {*}
  */
 export const getEntityById = ( state, entityType, id) => {
-  return state.entities[entityType].get(String(id))
+  return state.entities[entityType].get(String(id)) || Map()
 }
 
 /**
