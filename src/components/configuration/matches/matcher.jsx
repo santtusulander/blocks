@@ -30,6 +30,7 @@ class Matcher extends React.Component {
     this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
+
   componentWillReceiveProps(nextProps) {
     if(!Immutable.is(nextProps.match, this.props.match)) {
       const fieldDetail = nextProps.match.get('field_detail')
@@ -43,18 +44,22 @@ class Matcher extends React.Component {
       })
     }
   }
+
   handleValChange(e) {
     this.setState({val: e.target.value})
   }
+
   handleContainsValChange(e) {
     this.setState({containsVal: e.target.value})
   }
+
   handleMatchesChange(value) {
     this.setState({
       activeFilter: value,
       containsVal: ''
     })
   }
+
   validate() {
     const {
       activeFilter,
@@ -70,19 +75,19 @@ class Matcher extends React.Component {
         return true
     }
   }
+
   saveChanges() {
-    // matches with a contain value put val in field_detail and use containsVal
-    // as child key
-//    const children = this.props.match
-      //.getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
     let newMatch = this.props.match
+
+    newMatch = newMatch.delete('_temp')
+
     if (this.props.contains) {
       newMatch = newMatch.set('field_detail', this.state.val)
     }
 
     switch (this.state.activeFilter) {
       case 'exists':
-        newMatch = newMatch.set('type', 'exist')
+        newMatch = newMatch.set('type', 'exists')
         break
       case 'contains':
         newMatch = newMatch.set('type', 'in')
@@ -90,13 +95,13 @@ class Matcher extends React.Component {
         break
       case 'equals':
         newMatch = newMatch.set('type', 'equals')
-                           .set('value', this.state.containsVal)
+                           .set('value', this.state.val)
         break
       case 'empty':
         newMatch = newMatch.set('type', 'empty')
         break
       case 'does_not_exist':
-        newMatch = newMatch.set('type', 'exist')
+        newMatch = newMatch.set('type', 'exists')
                            .set('inverted', true)
         break
       case 'does_not_contain':
@@ -106,6 +111,7 @@ class Matcher extends React.Component {
         break
       case 'does_not_equals':
         newMatch = newMatch.set('type', 'equals')
+                           .set('value', this.state.val)
                            .set('inverted', true)
         break
       case 'does_not_empty':
@@ -113,42 +119,27 @@ class Matcher extends React.Component {
                            .set('inverted', true)
         break
     }
-    //}
-    // if there's no contain value, use val as the child key
-    // else {
-    //   newMatch = newMatch.delete('field_detail')
-    //   switch (this.state.activeFilter) {
-    //     case 'exists':
-    //       newMatch = newMatch
-    //         .set('cases', Immutable.fromJS([
-    //           [this.state.val || WILDCARD_REGEXP, children]
-    //         ]))
-    //         .delete('default')
-    //       break
-    //     case 'does_not_exist':
-    //       newMatch = newMatch
-    //         .set('cases', Immutable.fromJS([
-    //           [this.state.val || WILDCARD_REGEXP, []]
-    //         ]))
-    //         .set('default', children)
-    //       break
-    //   }
-    // }
+
     this.props.changeValue(this.props.path, newMatch)
-    this.props.close()
+    this.props.activateMatch(null)
   }
+
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
       this.state.activeFilter === 'does_not_contain';
+ 
     let matchOpts = [
       ['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>],
       ['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>]
     ]
+
     if(this.props.contains) {
       matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
       matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
     }
+
     const isValid = this.validate()
+
     return (
       <div>
         <Modal.Header>

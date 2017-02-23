@@ -1,4 +1,5 @@
 import React from 'react'
+import { fromJS } from 'immutable'
 
 import MatchesSelection from './matches-selection'
 import ActionsSelection from './actions-selection'
@@ -31,16 +32,24 @@ import {
 } from '../../util/policy-config'
 
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
-  const {changeValue, formatMessage, activateSet} = actions
-  const clearActiveMatchSet = () => activateSet(null)
+  const { changeValue, formatMessage, activateSet, activateMatch, cancelActiveEditForm } = actions
+
+  const saveAction = (path, key, data) => {
+    if(path) {
+      changeValue(path, fromJS({[key]: data}))
+      activateSet(null)
+    }
+  }
+
   let activeEditForm = null
   if(matchPath) {
     const activeMatch = config.getIn(matchPath)
     const matcherProps = {
       changeValue: changeValue,
-      close: clearActiveMatchSet,
+      close: cancelActiveEditForm,
       match: activeMatch,
-      path: matchPath
+      path: matchPath,
+      activateMatch
     }
 
     let matchType = activeMatch.get('field')
@@ -142,20 +151,21 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
   }
   if(setPath) {
     const activeSet = config.getIn(setPath)
-    const setterProps = {
-      changeValue: changeValue,
-      close: clearActiveMatchSet,
-      path: setPath,
-      set: activeSet
-    }
-
-    let setType = setPath.last()
-    //let setType = activeSet.keySeq().first()//setPath.last()
+    let setKey = activeSet.keySeq().first()
     // if (setPath.contains('script_lua')) {
     //   setType = 'content_targeting'
     // }
 
-    switch(setType) {
+    const setterProps = {
+      changeValue: changeValue,
+      close: cancelActiveEditForm,
+      path: setPath,
+      saveAction,
+      set: activeSet.get(setKey),
+      setKey
+    }
+
+    switch(setKey) {
       case 'cache_name':
         activeEditForm = (
           <ConfigurationActionCacheKeyQueryString {...setterProps}/>

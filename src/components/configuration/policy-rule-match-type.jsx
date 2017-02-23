@@ -21,6 +21,7 @@ class PolicyRuleMatchType extends Component {
   }
 
   render() {
+    const { disabled } = this.props
     return (
       <div>
         <FormGroup>
@@ -31,6 +32,7 @@ class PolicyRuleMatchType extends Component {
             className="input-select"
             onSelect={this.handleTypeChange}
             value={this.state.type}
+            disabled={disabled}
             options={[
               {value: 'all', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchType.action.all'})},
               {value: 'any', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchType.action.any'})}

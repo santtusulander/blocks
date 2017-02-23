@@ -82,7 +82,7 @@ class ConfigurationPolicyRules extends React.Component {
       /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
       let matchLabel = ''
       let actionsLabel = ''
-      const firstPolicy = rule.get('rule_body').first()
+      //const firstPolicy = rule.get('rule_body').first()
 
       // if(!firstPolicy.has('match')) {
       //   return null

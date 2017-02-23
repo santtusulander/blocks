@@ -15,7 +15,7 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import { getActiveMatchSetForm } from './helpers'
 import { isPolicyRuleEmpty } from '../../util/policy-config'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
-import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
+import { POLICY_TYPES, DEFAULT_RULE } from '../../constants/property-config'
 
 class ConfigurationPolicies extends React.Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class ConfigurationPolicies extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
     this.changeActiveRuleMatchType = this.changeActiveRuleMatchType.bind(this)
+    this.cancelActiveMatchSetEditForm = this.cancelActiveMatchSetEditForm.bind(this)
   }
 
 
@@ -54,7 +55,7 @@ class ConfigurationPolicies extends React.Component {
   addRule(policyType) {
     this.setState({ isEditingRule: false })
 
-    const policyRules = this.props.config.getIn([policyType, 'policy_rules']).push(DEFAULT_MATCH)
+    const policyRules = this.props.config.getIn([policyType, 'policy_rules']).push(DEFAULT_RULE)
     this.props.changeValue([policyType, 'policy_rules'], policyRules)
     this.props.activateRule([policyType, 'policy_rules', policyRules.size - 1])
     //this.props.activateMatch([policyType, 'policy_rules', policyRules.size - 1, 'match'])
@@ -69,7 +70,7 @@ class ConfigurationPolicies extends React.Component {
     const oldRuleIndex = oldRulePath.get(2)
     const oldRuleset = this.props.config.getIn([oldRuleType, 'policy_rules']).splice(oldRuleIndex, 1)
     const ruleName = this.props.config.getIn(oldRulePath).get('rule_name')
-    const newMatch = ruleName ? DEFAULT_MATCH.set('rule_name', ruleName) : DEFAULT_MATCH
+    const newMatch = ruleName ? DEFAULT_RULE.set('rule_name', ruleName) : DEFAULT_RULE
     const newRuleset = this.props.config.getIn([policyType, 'policy_rules']).push(newMatch)
     this.props.changeValues([
       [[oldRuleType, 'policy_rules'], oldRuleset],
@@ -108,6 +109,29 @@ class ConfigurationPolicies extends React.Component {
     }
     this.handleHide()
   }
+  cancelActiveMatchSetEditForm() {
+    const { config, activeMatch, activeSet, activateMatch, activateSet } = this.props
+
+    if (activeMatch) {
+      config.getIn(activeMatch).get('_temp') && this.deleteTempItem(activeMatch)
+
+      activateMatch(null)
+    }
+
+    if (activeSet) {
+      config.getIn(activeSet).get('_temp') && this.deleteTempItem(activeSet)
+      activateSet(null)
+    }
+  }
+  deleteTempItem(path) {
+    const { config, changeValue } = this.props
+    const parentPath = path.slice(0, -1)
+
+    const filtered = config.getIn(parentPath)
+        .filterNot(val => val.get('_temp'))
+
+    changeValue(parentPath, filtered)
+  }
   render() {
     let config = this.props.config;
     if(!config || !config.size) {
@@ -118,7 +142,9 @@ class ConfigurationPolicies extends React.Component {
     const activeEditFormActions = {
       changeValue: this.props.changeValue,
       formatMessage: this.props.intl.formatMessage,
-      activateSet: this.props.activateSet
+      activateSet: this.props.activateSet,
+      activateMatch: this.props.activateMatch,
+      cancelActiveEditForm: this.cancelActiveMatchSetEditForm
     }
     const activeEditForm = getActiveMatchSetForm(
       this.props.activeRule ? config.getIn(this.props.activeRule) : null,
@@ -151,7 +177,7 @@ class ConfigurationPolicies extends React.Component {
           {this.props.activeRule ?
             <ConfigurationSidebar
               rightColVisible={!!activeEditForm}
-              handleRightColClose={()=>this.props.activateMatch(null)}
+              handleRightColClose={this.cancelActiveMatchSetEditForm}
               onHide={this.handleCancel}
               rightColContent={activeEditForm}>
               <ConfigurationPolicyRuleEdit

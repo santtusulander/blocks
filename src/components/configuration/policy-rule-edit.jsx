@@ -7,10 +7,8 @@ import IconAdd from '../icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 import PolicyRuleMatchType from './policy-rule-match-type'
 import {
-  matchFilterChildPaths,
   parsePolicy,
   policyContainsSetComponent,
-  matchIsContentTargeting,
   policyIsCompatibleWithAction,
   getRuleMatchType
 } from '../../util/policy-config'
@@ -77,7 +75,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const path = ['rule_body', 'actions']
       const newIndex = this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
-      const actions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(Immutable.Map())
+      const actions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(Immutable.Map({_temp: true}))
  
       this.props.changeValue([],
         this.props.config.setIn(this.props.rulePath.concat(path), actions)
@@ -86,51 +84,31 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
 
-  deleteMatch(matches, i) {
+  deleteMatch(path) {
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      if (i === 0){
-        //const childPath = matchFilterChildPaths[matches[0].filterType]
-        const newPath = matches[0].path //.concat(childPath)
-        const currentSets = this.props.config.getIn(newPath)
 
-        this.props.changeValue(
-          matches[0].path.slice(0, -2),
-          this.props.config.getIn(matches[0].path)//.concat(childPath))
-        )
-        this.props.changeValue([],
-         this.props.config.setIn(
-           matches[1].path, //.concat(matchFilterChildPaths[matches[1].filterType]),
-           currentSets
-         )
-        )
-      }
-
-      matches.map((match, key)=>{
-        if(key < i){
-          this.props.changeValue(
-            matches[key+1].path,
-            this.props.config.getIn(match.path)
-          )
-        }
-      })
-
+      const parentPath = path.slice(0, -1)
+      const index = path.last()
+      const filtered = this.props.config.getIn(parentPath)
+        .filterNot((val, i) => i === index)
+ 
+      this.props.changeValue(parentPath, filtered)
       this.props.activateMatch(null)
     }
   }
   deleteSet(path) {
-    const flattenedPolicy = parsePolicy(this.props.rule, [])
-    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
-      return this.deleteContentTargetingSet(path)
-    }
     return e => {
       e.preventDefault()
       e.stopPropagation()
-      const setContainerPath = path.slice(0, -3)
-      const filtered = this.props.config.getIn(setContainerPath)
-        .filterNot((val, i) => i === path.get(path.size-3))
-      this.props.changeValue(setContainerPath, filtered)
+
+      const parentPath = path.slice(0, -1)
+      const index = path.last()
+      const filtered = this.props.config.getIn(parentPath)
+        .filterNot((val, i) => i === index)
+ 
+      this.props.changeValue(parentPath, filtered)
       this.props.activateSet(null)
     }
   }
@@ -199,6 +177,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
       // content targeting
       } 
+
+      if (flattenedPolicy.sets.length === 0) {
+        return true
+      }
       // else {
       //   const config = this.props.config
       //   const rootMatchInfo = flattenedPolicy.matches[0]
@@ -301,7 +283,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                       onArrowDown={i < flattenedPolicy.sets.length - 1 ?
                         this.moveSet(set.path, i+1) : () => false}
                       arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
-                      onDelete={this.deleteSet(set.path)} />
+                      onDelete={this.deleteSet(set.path)}
+                      deleteDisabled={flattenedPolicy.sets.length === 1 && flattenedPolicy.matches.length > 0}
+                    />
                   </Col>
                 </div>
               )
@@ -372,8 +356,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   <Col xs={2} className="text-right">
                     <ActionButtons
                       className="secondary"
-                      onDelete={this.deleteMatch(flattenedPolicy.matches, i)}
-                      deleteDisabled={flattenedPolicy.matches.length < 2} />
+                      onDelete={this.deleteMatch(match.path)}
+                    />
                   </Col>
                 </div>
               )
