@@ -12,5 +12,6 @@ export default jest.mock('recharts', () => ({
   Pie: 'Pie',
   PieChart: 'PieChart',
   ReactLineCharts: 'ReactLineCharts',
-  Line: 'Line'
+  Line: 'Line',
+  ComposedChart: 'ComposedChart'
 }))
