@@ -91,7 +91,7 @@ export function actionIsTokenAuth(sets) {
   return sets.some( set => (set.setkey === 'tokenauth') )
 }
 
-export function parsePolicy(policy, path) {
+const parsePolicyItem = (policy, path) => {
   // if this is a match
   if(policy && policy.has('match')) {
     const match = policy.get('match')
@@ -103,7 +103,7 @@ export function parsePolicy(policy, path) {
       // build up a path to the nested rules
       const nextPath = path.concat(['match'], childPath, [i])
       // recurse to parse the nested policy rules
-      const {matches, sets} = parsePolicy(subcase, nextPath)
+      const {matches, sets} = parsePolicyItem(subcase, nextPath)
       // add any found matches / sets to the list
       combinations.matches = combinations.matches.concat(matches)
       combinations.sets = combinations.sets.concat(sets)
@@ -126,15 +126,16 @@ export function parsePolicy(policy, path) {
   // if this is a set
   else if(policy && policy.has('set')) {
     // sets are the deepest level, so just return data about the sets
+    const seqSets = policy.get('set').keySeq().toArray().map((key) => {
+      return {
+        setkey: key,
+        name: key,
+        path: path.concat(['set', key])
+      }
+    })
     return {
       matches: [],
-      sets: policy.get('set').keySeq().toArray().map((key) => {
-        return {
-          setkey: key,
-          name: key,
-          path: path.concat(['set', key])
-        }
-      })
+      sets: seqSets
     }
   }
   // if this is a content targeting "action"
@@ -174,6 +175,106 @@ export function parsePolicy(policy, path) {
     }
   }
 }
+
+export function parsePolicy(rule, path) {
+  return rule.get('rule_body').reduce((reducedPolicy, policy, i) => {
+    const childPath = path.concat(['rule_body'], [i])
+    let { matches, sets } = parsePolicyItem(policy, childPath)
+
+    reducedPolicy.matches = reducedPolicy.matches.concat(matches)
+    reducedPolicy.sets = reducedPolicy.sets.concat(sets)
+
+    return reducedPolicy
+  }, {
+    matches: [],
+    sets: []
+  })
+}
+
+
+// export function parsePolicy(policy, path) {
+//   // if this is a match
+//   if(policy && policy.has('match')) {
+//     const match = policy.get('match')
+//     const fieldDetail = match.get('field_detail')
+//     const caseKey = match.getIn(['cases', 0, 0])
+//     const filterType = getMatchFilterType(match)
+//     const childPath = matchFilterChildPaths[filterType]
+//     let {matches, sets} = match.getIn(childPath).reduce((combinations, subcase, i) => {
+//       // build up a path to the nested rules
+//       const nextPath = path.concat(['match'], childPath, [i])
+//       // recurse to parse the nested policy rules
+//       const {matches, sets} = parsePolicy(subcase, nextPath)
+//       // add any found matches / sets to the list
+//       combinations.matches = combinations.matches.concat(matches)
+//       combinations.sets = combinations.sets.concat(sets)
+//       return combinations
+//     }, {matches: [], sets: []})
+//     // add info about this match to the list of matches
+//     matches.push({
+//       containsVal: fieldDetail ? caseKey : '',
+//       field: match.get('field'),
+//       fieldDetail: fieldDetail,
+//       filterType: match.get('field') ? filterType : '',
+//       values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
+//       path: path.concat(['match'])
+//     })
+//     return {
+//       matches: matches,
+//       sets: sets
+//     }
+//   }
+//   // if this is a set
+//   else if(policy && policy.has('set')) {
+//     // sets are the deepest level, so just return data about the sets
+//     return {
+//       matches: [],
+//       sets: policy.get('set').keySeq().toArray().map((key) => {
+//         return {
+//           setkey: key,
+//           name: key,
+//           path: path.concat(['set', key])
+//         }
+//       })
+//     }
+//   }
+//   // if this is a content targeting "action"
+//   else if (policy && policy.has('script_lua')) {
+//     // we will search for actions in the following paths
+//     // this is forward-thinking for when we eventually add city/state support
+//     const searchPaths = [
+//       // ['script_lua', 'target', 'geo', 0, 'city'],
+//       // ['script_lua', 'target', 'geo', 0, 'state'],
+//       ['script_lua', 'target', 'geo', 0, 'country']
+//     ]
+
+//     let sets = []
+
+//     for (let searchPath of searchPaths) {
+//       if (policy.getIn(searchPath)) {
+//         const actions = policy.getIn(searchPath).toJS().map((action, index) => {
+//           return {
+//             setkey: index,
+//             name: setContentTargetingActionName(action),
+//             path: path.concat(searchPath).concat([index])
+//           }
+//         })
+//         sets = sets.concat(actions)
+//       }
+//     }
+
+//     return {
+//       matches: [],
+//       sets
+//     }
+//   }
+//   else {
+//     return {
+//       matches: [],
+//       sets: []
+//     }
+//   }
+// }
 
 /**
  * Get script_lua block from policy rule
@@ -295,4 +396,8 @@ export const getTokenAuthRules = (properties) => {
  */
 export const isPolicyRuleEmpty = (config, rulePath) => {
   return Immutable.is(config.getIn(rulePath).get('match'), DEFAULT_MATCH.get('match'))
+}
+
+export const getRuleMatchType = (rule) => {
+  return 'all';
 }

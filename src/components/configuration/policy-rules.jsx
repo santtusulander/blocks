@@ -76,21 +76,23 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
   render() {
-    const policyMapper = type => (policy, i) => {
-      if(!policy.has('match')) {
-        return null
-      }
-
-      const {matches, sets} = parsePolicy(policy, [])
+    const policyMapper = type => (rule, i) => {
+      const { matches, sets } = parsePolicy(rule, [])
 
       /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
       let matchLabel = ''
       let actionsLabel = ''
-      if ( matchIsContentTargeting(policy.get('match') )) {
+      const firstPolicy = rule.get('rule_body').first()
+
+      if(!firstPolicy.has('match')) {
+        return null
+      }
+
+      if ( matchIsContentTargeting(firstPolicy.get('match') )) {
         matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
         actionsLabel = ''
 
-        const scriptLua = getScriptLua( policy )
+        const scriptLua = getScriptLua( firstPolicy )
 
         const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
         const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
@@ -112,7 +114,7 @@ class ConfigurationPolicyRules extends React.Component {
         TODO: remove UDN admin checks as part of UDNP-1713
         Allow CT / TA modification only for UDN Admin
       */}
-      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
+      const ruleNeedsAdmin = matchIsContentTargeting(firstPolicy.get('match')) || actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -121,8 +123,8 @@ class ConfigurationPolicyRules extends React.Component {
       )
 
       return (
-        <tr key={policy + i}>
-          <td>{policy.get('rule_name')}</td>
+        <tr key={rule + i}>
+          <td>{rule.get('rule_name')}</td>
           <td className="text-right">{type}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>

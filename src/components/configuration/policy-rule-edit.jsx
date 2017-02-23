@@ -5,12 +5,14 @@ import Immutable from 'immutable'
 import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
+import PolicyRuleMatchType from './policy-rule-match-type'
 import {
   matchFilterChildPaths,
   parsePolicy,
   policyContainsSetComponent,
   matchIsContentTargeting,
-  policyIsCompatibleWithAction
+  policyIsCompatibleWithAction,
+  getRuleMatchType
 } from '../../util/policy-config'
 import Select from '../select'
 import {
@@ -216,6 +218,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   render() {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
+    const ruleMatchType = getRuleMatchType(this.props.rule)
 
     const disableAddMatchButton = () => {
       // token auth
@@ -285,6 +288,48 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               />
             </FormGroup>
           }
+
+          <Row className="header-btn-row">
+            <Col xs={8}>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
+            </Col>
+            <Col xs={4} className="text-right">
+              <Button bsStyle="primary"
+                      className="btn-icon btn-add-new"
+                      onClick={this.addAction(flattenedPolicy.matches[0])}
+                      disabled={disableAddActionButton()}>
+                <IconAdd />
+              </Button>
+            </Col>
+          </Row>
+
+          <div className="conditions">
+            {flattenedPolicy.sets.map((set, i) => {
+              let active = false
+              if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
+                active = true
+              }
+              return (
+                <div key={i}
+                  className={active ? 'condition clearfix active' : 'condition clearfix'}
+                  onClick={this.activateSet(set.path)}>
+                  <Col xs={8}>
+                    <p>{i + 1} {set.name}</p>
+                  </Col>
+                  <Col xs={4} className="text-right">
+                    <ActionButtons
+                      className="secondary"
+                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
+                      arrowUpDisabled={i <= 0}
+                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
+                        this.moveSet(set.path, i+1) : () => false}
+                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
+                      onDelete={this.deleteSet(set.path)} />
+                  </Col>
+                </div>
+              )
+            })}
+          </div>
 
           <Row className="header-btn-row">
             <Col sm={8}>
@@ -358,54 +403,21 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             })}
           </div>
 
-          <Row className="header-btn-row">
-            <Col xs={8}>
-              <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
-            </Col>
-            <Col xs={4} className="text-right">
-              <Button bsStyle="primary"
-                      className="btn-icon btn-add-new"
-                      onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={disableAddActionButton()}>
-                <IconAdd />
-              </Button>
-            </Col>
-          </Row>
+          <PolicyRuleMatchType
+            ruleMatchType={ruleMatchType}
+            changeActiveRuleMatchType={this.props.changeActiveRuleMatchType}
+          />
 
-          <div className="conditions">
-            {flattenedPolicy.sets.map((set, i) => {
-              let active = false
-              if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
-                active = true
-              }
-              return (
-                <div key={i}
-                  className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateSet(set.path)}>
-                  <Col xs={8}>
-                    <p>{i + 1} {set.name}</p>
-                  </Col>
-                  <Col xs={4} className="text-right">
-                    <ActionButtons
-                      className="secondary"
-                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
-                      arrowUpDisabled={i <= 0}
-                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(set.path, i+1) : () => false}
-                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
-                      onDelete={this.deleteSet(set.path)} />
-                  </Col>
-                </div>
-              )
-            })}
-          </div>
           <ButtonToolbar className="text-right">
-            <Button bsStyle="primary" onClick={this.props.cancelAction}>
+            <Button
+              bsStyle="primary"
+              onClick={this.props.cancelAction}>
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
-            <Button bsStyle="primary"
-                    onClick={this.props.hideAction}
-                    disabled={disableButton()}>
+            <Button
+              bsStyle="primary"
+              onClick={this.props.hideAction}
+              disabled={disableButton()}>
               <FormattedMessage id="portal.button.add"/>
             </Button>
           </ButtonToolbar>
@@ -423,6 +435,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
   activeSetPath: React.PropTypes.instanceOf(Immutable.List),
   cancelAction: React.PropTypes.func,
+  changeActiveRuleMatchType: React.PropTypes.func,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),

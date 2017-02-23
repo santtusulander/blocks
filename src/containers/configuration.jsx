@@ -38,6 +38,8 @@ import ConfigurationDiffBar from '../components/configuration/diff-bar'
 import IconCaretDown from '../components/icons/icon-caret-down'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
+import { parsePolicy } from '../util/policy-config'
+
 const pubNamePath = ['services',0,'configurations',0,'edge_configuration','published_name']
 
 export class Configuration extends React.Component {
@@ -90,6 +92,7 @@ export class Configuration extends React.Component {
   getActiveConfig() {
     return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
+
   changeValue(path, value) {
     return this.changeValues([[path, value]])
   }
