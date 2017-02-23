@@ -222,7 +222,13 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'origin_test_path']
                   )}
                 />
-                <InputGroup.Addon />
+                <InputGroup.Addon>
+                  <HelpTooltip
+                    id="tooltip_origin_test_path"
+                    title={<FormattedMessage id="portal.configuration.details.originTestPath.text"/>}>
+                    <FormattedMessage id="portal.configuration.details.originTestPath.help.text" />
+                  </HelpTooltip>
+                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -273,7 +279,13 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'customer_cname']
                   )}
                 />
-                <InputGroup.Addon />
+                <InputGroup.Addon>
+                  <HelpTooltip
+                    id="tooltip_origin_target_cname"
+                    title={<FormattedMessage id="portal.configuration.details.targetCname.text"/>}>
+                    <FormattedMessage id="portal.configuration.details.targetCname.help.text" />
+                  </HelpTooltip>
+                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -283,7 +295,7 @@ class ConfigurationDetails extends React.Component {
     )
   }
 }
-
+// TODO: Provide help text for origin test path, target cname
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
