@@ -30,6 +30,7 @@ import AccountManagementAccounts from './components/account-management/system/ac
 import AccountManagementSystemUsers from './components/account-management/system/users'
 import AccountManagementBrands from './components/account-management/system/brands'
 import AccountManagementDNS from './containers/account-management/tabs/dns'
+import AccountManagementStorages from './containers/account-management/tabs/storages'
 import AccountManagementRoles from './components/account-management/system/roles'
 import AccountManagementServices from './components/account-management/system/services'
 import AnalyticsContainer from './containers/analytics/analytics-container.jsx'
@@ -352,12 +353,14 @@ export const getRoutes = store => {
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
           </Route>
           <Route path={routes.accountManagementGroup} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
           </Route>
           <Route path={routes.accountManagementProperty} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
