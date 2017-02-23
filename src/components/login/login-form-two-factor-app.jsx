@@ -86,7 +86,7 @@ LoginFormTwoFactorApp.displayName = "LoginFormTwoFactorApp"
 LoginFormTwoFactorApp.propTypes = {
   // loginError prop is used in componentWillReceiveProps
   // eslint-disable-next-line react/no-unused-prop-types
-  loginError: React.PropTypes.string,
+  loginError: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
   router: React.PropTypes.object,
   startAppPulling: React.PropTypes.func,
   userName: React.PropTypes.string
