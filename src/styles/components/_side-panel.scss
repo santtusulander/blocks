@@ -2,15 +2,17 @@
 // ===========
 $side-panel-width: rem(636px);
 $side-panel-horizontal-padding: rem(42px);
-$side-panel-header-height: rem(108px);
+$side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
 $side-panel-footer-height: rem(84px);
 $side-panel-footer-vertical-padding: rem(24px);
 $side-panel-body-margin: rem(36px);
 $dt-side-panel-bg-color: $medium-blue;
 $lt-side-panel-bg-color: $white;
+$side-panel-overlap-offset: rem(15px);
 
 .side-panel.modal-dialog {
+  position: relative;
   float: right;
   width: $side-panel-width;
   margin: 0;
@@ -30,37 +32,45 @@ $lt-side-panel-bg-color: $white;
   }
 
   .modal-content {
-    @include sm {
-      margin-left: 12px;
-    }
+    height: 100vh;
   }
 
   .modal-header {
-    height: $side-panel-header-height;
+    min-height: $side-panel-header-height;
     padding: $side-panel-header-top-padding $side-panel-horizontal-padding 0;
     border-bottom: 2px solid rgba($black, 0.2);
 
     .dark-theme & {
       color: $white;
     }
+
+    .sub-title-two-line {
+      .sub-sub-title {
+        margin-bottom: 5px;
+        opacity: 0.5;
+      }
+    }
   }
 
   .modal-body {
-    height: calc(100vh - #{$side-panel-header-height + ($side-panel-body-margin )});
+    height: calc(100vh - #{$side-panel-header-height + (2 * $side-panel-body-margin) + $side-panel-footer-height});
     padding: 0 $side-panel-horizontal-padding;
-    margin: $side-panel-body-margin 0 0 0;
+    margin: $side-panel-body-margin 0 #{$side-panel-footer-height + $side-panel-body-margin};
     overflow: auto;
 
-    > form {
-      padding-bottom: #{$side-panel-header-height + ($side-panel-body-margin )};
+    @include sm {
+      max-width: $side-panel-width;
     }
   }
 
   .modal-footer {
-    width: 100%;
     position: fixed;
+    right: 0;
     bottom: 0;
-    left: 0;
+    // TODO: UDNP-2181 - Abstract z-index values to variables
+    z-index: 11;
+    width: 100%;
+    max-width: $side-panel-width;
 
     padding: $side-panel-footer-vertical-padding $side-panel-horizontal-padding;
 
@@ -71,5 +81,56 @@ $lt-side-panel-bg-color: $white;
     .light-theme & {
       background: rgba($black, 0.04);
     }
+
+    @include sm {
+      max-width: $side-panel-width;
+    }
+
+    &__text {
+      display: inline-block;
+      float: left;
+      padding: 0.5rem 0.5rem 0.5rem 0;
+      text-align: left;
+
+      .dark-theme & {
+        color: $dt-text-color;
+      }
+
+      .light-theme & {
+        color: $white-20;
+      }
+    }
+  }
+
+  .side-panel__veil {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  &.side-panel--dim {
+    .side-panel__veil {
+      display: block;
+    }
+
+    .modal-footer {
+      // TODO: UDNP-2181 - Abstract z-index values to variables
+      z-index: 11;
+      background: $dt-side-panel-bg-color;
+
+      @include sm {
+        max-width: $side-panel-width;
+      }
+    }
+  }
+
+  &.side-panel--overlapping {
+    right: -($side-panel-overlap-offset);
+    box-shadow: 0 0 50px 0 rgba($black, 0.4);
   }
 }

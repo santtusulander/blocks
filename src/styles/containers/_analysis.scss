@@ -21,9 +21,9 @@
     .light-theme & {
       &,
       & .recharts-bar-rectangle {
-        color: $link-blue;
-        fill: $link-blue;
-        stroke: $link-blue;
+        color: $link-blue !important;
+        fill: $link-blue !important;
+        stroke: $link-blue !important;
       }
     }
   }
@@ -34,9 +34,9 @@
     .light-theme & {
       &,
       & .recharts-bar-rectangle {
-        color: $pale-blue;
-        fill: $pale-blue;
-        stroke: $pale-blue;
+        color: $pale-blue !important;
+        fill: $pale-blue !important;
+        stroke: $pale-blue !important;
       }
     }
   }
@@ -47,9 +47,9 @@
     .light-theme & {
       &,
       & .recharts-bar-rectangle {
-        color: $orange;
-        fill: $orange;
-        stroke: $orange;
+        color: $orange !important;
+        fill: $orange !important;
+        stroke: $orange !important;
       }
     }
   }
@@ -60,9 +60,9 @@
     .light-theme & {
       &,
       & .recharts-bar-rectangle {
-        color: $yellow;
-        fill: $yellow;
-        stroke: $yellow;
+        color: $yellow !important;
+        fill: $yellow !important;
+        stroke: $yellow !important;
       }
     }
   }

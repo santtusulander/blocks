@@ -6,7 +6,7 @@ const DefaultErrorBlock = ({ error }) =>
 
 DefaultErrorBlock.displayName = 'DefaultErrorBlock'
 DefaultErrorBlock.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.bool])
 }
 
 export default DefaultErrorBlock

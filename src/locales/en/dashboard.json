@@ -3,10 +3,13 @@
   "portal.dashboard.trafficPercentage.title": "% of Traffic",
   "portal.dashboard.provider.title": "Provider",
   "portal.dashboard.trafficByLocation.title": "Traffic by location",
-  "portal.dashboard.top5CP.title": "Top 5 Content Providers",
+  "portal.dashboard.topCP.title": "Top {amount} Content Providers",
+  "portal.dashboard.topSP.title": "Top {amount} Service Providers",
 
   "portal.dashboard.avgBandwidth.title": "Avg Bandwidth",
   "portal.dashboard.avgLatency.title": "Avg Latency",
   "portal.dashboard.connectionsPerSec.title": "Connections / sec",
-  "portal.dashboard.avgCacheHitRate.title": "Avg Cache Hit Rate"
+  "portal.dashboard.avgCacheHitRate.title": "Avg Cache Hit Rate",
+
+  "portal.dashboard.selectAccount.text": "Please select an account{br}from top left to see dashboard"
 }

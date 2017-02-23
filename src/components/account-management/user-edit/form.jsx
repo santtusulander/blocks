@@ -8,19 +8,12 @@ import FieldTelephoneInput from '../../form/field-telephone-input'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { isValidPhoneNumber, isValidCountryCode } from '../../../util/validators'
 
 let errors = {}
 const validate = (values) => {
   errors = {}
 
-  const {
-    first_name,
-    last_name,
-    email,
-    phone,
-    role
-  } = values
+  const { first_name, last_name, email, role } = values
 
   if(!first_name) {
     errors.first_name = <FormattedMessage id="portal.account.editUser.firstNameRequired.text"/>
@@ -35,14 +28,6 @@ const validate = (values) => {
 
   if(!role) {
     errors.role = <FormattedMessage id="portal.account.editUser.roleRequired.text"/>
-  }
-
-  if (phone.phone_number && !isValidPhoneNumber(phone.phone_number)) {
-    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberInvalid.text"/>
-  }
-
-  if (phone.phone_counry_code && isValidCountryCode(phone.phone_counry_code)) {
-    errors.phone = <FormattedMessage id="portal.account.editUser.phoneNumberCountryCodeInvalid.text"/>
   }
 
   return errors;
@@ -63,19 +48,11 @@ class AccountManagementUserEditForm extends React.Component {
   // }
 
   save(values) {
-    const {
-      first_name,
-      last_name,
-      phone,
-      groups,
-      role
-    } = values
+    const { first_name, last_name, groups, role } = values
 
     const newValues = {
       first_name: first_name,
       last_name: last_name,
-      phone_number: phone.phone_number,
-      phone_country_code: phone.phone_country_code,
       group_id: groups,
       roles: [ role ]
     }
@@ -107,8 +84,7 @@ class AccountManagementUserEditForm extends React.Component {
           component={FieldFormGroup}
           label={<FormattedMessage id="portal.user.edit.email.text"/>}
           disabled={true}
-          required={false}
-        />
+          required={false} />
 
         <div className="user-form__name">
           <Row>
@@ -118,8 +94,7 @@ class AccountManagementUserEditForm extends React.Component {
                 name="first_name"
                 placeholder={intl.formatMessage({id: 'portal.user.edit.firstName.text'})}
                 component={FieldFormGroup}
-                label={<FormattedMessage id="portal.user.edit.firstName.text"/>}
-              />
+                label={<FormattedMessage id="portal.user.edit.firstName.text"/>} />
             </Col>
 
             <Col sm={6}>
@@ -128,8 +103,7 @@ class AccountManagementUserEditForm extends React.Component {
                 name="last_name"
                 placeholder={intl.formatMessage({id: 'portal.user.edit.lastName.text'})}
                 component={FieldFormGroup}
-                label={<FormattedMessage id="portal.user.edit.lastName.text"/>}
-              />
+                label={<FormattedMessage id="portal.user.edit.lastName.text"/>} />
             </Col>
           </Row>
         </div>
@@ -138,8 +112,9 @@ class AccountManagementUserEditForm extends React.Component {
           <Field
             name="phone"
             component={FieldTelephoneInput}
+            disabled={true}
             label={<FormattedMessage id="portal.user.edit.phoneNumber.text"/>}
-          />
+            required={false} />
         </div>
 
         <hr/>
@@ -149,8 +124,7 @@ class AccountManagementUserEditForm extends React.Component {
           component={FieldFormGroupSelect}
           options={roleOptions}
           label={<FormattedMessage id="portal.user.edit.role.text"/>}
-          className="input-select"
-        />
+          className="input-select" />
 
 
         {/* TODO: uncomment once UDNP-2008 is unblocked

@@ -47,7 +47,7 @@ export class Property extends React.Component {
   }
 
   savePurge() {
-    const { account, brand, group, property } = this.props.params
+    const { account, brand, group } = this.props.params
     const { activeHostConfiguredName, activePurge, purgeActions } = this.props
 
     purgeActions.createPurge(
@@ -56,16 +56,14 @@ export class Property extends React.Component {
       group,
       activeHostConfiguredName,
       activePurge.toJS()
-    ).then((action) => {
-      if (action.payload instanceof Error) {
-        this.setState({ purgeActive: false })
-        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{ reason: action.payload.message }}/>)
-      }
-      else {
-        this.setState({ purgeActive: false })
-        purgeActions.fetchPurgeObjects(brand, account, group, { published_host_id: property })
-        this.showNotification(<FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>)
-      }
+    )
+    .then(({ payload }) => {
+      const getMessage = () => payload instanceof Error ?
+        <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/> :
+        <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
+
+      this.setState({purgeActive: false})
+      this.showNotification(getMessage())
     })
   }
 
@@ -128,7 +126,7 @@ export class Property extends React.Component {
           cancelButton={true}
           deleteButton={true}
           cancel={toggleDelete}
-          submit={() => {
+          onSubmit={() => {
             deleteHost(brand, account, group, this.props.activeHost)
               .then(() => router.push(getContentUrl('group', group, { brand, account })))
           }}

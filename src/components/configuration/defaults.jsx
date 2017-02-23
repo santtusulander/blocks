@@ -35,6 +35,7 @@ class ConfigurationDefaults extends React.Component {
     super(props)
 
     this.state = {
+      isEditingRule: true,
       ttlUnit: 'seconds'
     }
 
@@ -59,6 +60,7 @@ class ConfigurationDefaults extends React.Component {
   }
   addRule(e) {
     e.preventDefault()
+    this.setState({ isEditingRule: false })
     const defaultPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT, 'policy_rules']).push(Immutable.fromJS(DEFAULT_MATCH))
     this.props.changeValue([POLICY_TYPES.DEFAULT, 'policy_rules'], defaultPolicies)
     this.props.activateRule([POLICY_TYPES.DEFAULT, 'policy_rules', defaultPolicies.size - 1])
@@ -77,6 +79,7 @@ class ConfigurationDefaults extends React.Component {
     }
   }
   handleHide() {
+    this.setState({ isEditingRule: true })
     this.props.activateRule(null)
   }
   handleCancel() {
@@ -349,7 +352,8 @@ class ConfigurationDefaults extends React.Component {
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}
                 hideAction={this.handleHide}
-                cancelAction={this.handleCancel}/>
+                cancelAction={this.handleCancel}
+                isEditingRule={this.state.isEditingRule}/>
             </ConfigurationSidebar>
           : ''}
         </SectionContainer>

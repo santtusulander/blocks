@@ -4,12 +4,28 @@
   "portal.common.button.saving": "Saving...",
   "portal.common.button.deleting": "Deleting...",
   "portal.common.button.add": "Add",
+  "portal.common.button.edit": "Edit",
   "portal.common.button.ok": "OK",
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
+  "portal.common.button.enable": "Enable",
+  "portal.common.button.disable": "Disable",
   "portal.common.search.text": "Search",
   "portal.common.button.apply": "Apply",
   "portal.common.button.none": "None",
+
+  "portal.common.loading.text": "Loading",
+
+  "portal.common.button.undo": "undo",
+  "portal.common.button.remove": "remove",
+
+  "portal.common.button.delete": "Delete",
+  "portal.common.date": "Date",
+  "portal.common.date.created": "Created",
+  "portal.common.date.updated": "Updated",
+  "portal.common.value": "Value",
+  "portal.common.unknown": "Unknown",
+
   "portal.common.MORE.text": "MORE",
   "portal.common.error.warning.title": "Warning",
   "portal.common.error.tokenExpire.title": "Session Expired",
@@ -18,8 +34,17 @@
   "portal.common.error.unauthorized.title": "Unauthorized",
   "portal.common.error.unauthorized.content": "You do not have permission to access information on this page.",
   "portal.common.error.invalid.email.text": "Email address is invalid.",
+  "portal.common.error.field.required.text": "{label} is required.",
   "portal.common.ON.text": "ON",
   "portal.common.OFF.text": "OFF",
+  "portal.common.name": "Name",
+  "portal.common.description": "Description",
+  "portal.common.invalid": "Invalid",
+  "portal.common.textFieldMultilineValidation.line1.text": "Requirements:",
+  "portal.common.textFieldMultilineValidation.line2.text": "minimum of {minValue} and maximum of {maxValue} characters",
+  "portal.common.textFieldMultilineValidation.line3.text": "allowed special characters: _ . , - & ( ) [ ]",
+  "portal.common.noAvailabe.text": "No {label}",
+  "portal.common.add.label.text": "Add {label}",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
@@ -94,5 +119,9 @@
   "portal.common.weekdayShort.wednesday": "We",
   "portal.common.weekdayShort.thursday": "Th",
   "portal.common.weekdayShort.friday": "Fr",
-  "portal.common.weekdayShort.saturday": "Sa"
+  "portal.common.weekdayShort.saturday": "Sa",
+
+  "portal.common.typeahead.emptyLabel": "Add values by typing",
+  "portal.common.typeahead.newSelectionPrefix": "Add value: ",
+  "portal.common.search.no-results.text": "No results found."
 }

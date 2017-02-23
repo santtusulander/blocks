@@ -1,51 +1,45 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Map }from 'immutable'
-import { Button } from 'react-bootstrap'
+import { Map, List }from 'immutable'
+
+import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupSelect from '../form/field-form-group-select'
 import FieldFormGroupMultiOptionSelector from '../form/field-form-group-multi-option-selector'
 import FormFooterButtons from '../form/form-footer-buttons'
 import SidePanel from '../side-panel'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
-import {getProviderTypeOptions, getServiceOptions} from '../../redux/modules/service-info/selectors'
-import {fetchAll as serviceInfofetchAll} from '../../redux/modules/service-info/actions'
+import { getProviderTypeOptions, getServiceOptions } from '../../redux/modules/service-info/selectors'
+import { fetchAll as serviceInfofetchAll } from '../../redux/modules/service-info/actions'
 import {
-  BRAND_OPTIONS
+  BRAND_OPTIONS,
+  ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
 import { checkForErrors } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
+import { getServicesIds, getServicesFromIds } from '../../util/services-helpers'
 
+import ServiceOptionSelector from './service-option-selector'
 
 import './account-form.scss'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-const validate = ({ accountName, accountBrand, accountType, services }) => {
+const validate = ({ accountName, accountBrand, accountType, accountServices, services }) => {
   const conditions = {
     accountName: [
       {
-        condition: ! isValidAccountName(accountName),
-        errorText: <div key={accountName}>{[<FormattedMessage key={1} id="portal.account.manage.invalidAccountName.text" />, <div key={2}>
-                    <div style={{marginTop: '0.5em'}}>
-                      <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                      <ul>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                        <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                      </ul>
-                    </div></div>]}
-                  </div>
+        condition: ! isValidTextField(accountName),
+        errorText: <MultilineTextFieldError fieldLabel="portal.account.manage.accountName.title" />
       }
     ]
   }
 
-  const errors = checkForErrors({ accountName, accountBrand, accountType, services }, conditions)
-
-  return errors;
-
+  return checkForErrors({ accountName, accountBrand, accountType, accountServices, services }, conditions)
 }
 
 class AccountForm extends React.Component {
@@ -59,16 +53,32 @@ class AccountForm extends React.Component {
     this.props.fetchServiceInfo()
   }
 
-  onSubmit(values, dispatch, props){
+  componentWillReceiveProps(nextProps) {
+    // UDNP-2388: below is a hack to handle change of accountType
+    // Since accountServices holds values which were selected for
+    // previosly configured account type, we need to clear them manually.
+
+    if (nextProps.accountType && (!nextProps.account)) {
+      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+        this.props.change('accountServices', [])
+      }
+    }
+  }
+
+  onSubmit(values, dispatch, { account, accountType, onSave }){
+    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER 
+                     ? values.accountServices.toJS()
+                     : getServicesFromIds(values.accountServicesIds)
+
     const data = {
       name: values.accountName,
       provider_type: values.accountType,
-      services: values.accountServices
+      services
     }
 
-    const accountId = props.account && props.account.get('id') || null
+    const accountId = account && account.get('id') || null
 
-    return this.props.onSave(values.accountBrand, accountId, data)
+    return onSave(values.accountBrand, accountId, data)
       //TODO: Handle submittion error
       //  .then( (res) => {
       //    if (res)
@@ -78,7 +88,10 @@ class AccountForm extends React.Component {
   }
 
   render() {
-    const { providerTypes, serviceOptions, invalid, submitting, initialValues: { accountBrand }, show, onCancel } = this.props
+    let providerType = ''
+    let providerTypeLabel = ''
+    const { accountType, providerTypes, serviceOptions, invalid, submitting,
+            initialValues: { accountBrand }, show, onCancel } = this.props
     const title = this.props.account
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
@@ -88,6 +101,15 @@ class AccountForm extends React.Component {
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
+    if (accountType && providerTypes) {
+      providerType = providerTypes.find((type) => {
+        return type.value === accountType
+      })
+
+      providerTypeLabel = providerType && providerType.label ?
+                                          providerType.label :
+                                          <FormattedMessage id="portal.account.manage.providerTypeUnknown.text" />
+    }
 
     return (
       <SidePanel
@@ -123,43 +145,65 @@ class AccountForm extends React.Component {
 
           <hr/>
 
-          <Field
-            name="accountType"
-            className="input-select"
-            component={FieldFormGroupSelect}
-            options={providerTypes}
-            label={<FormattedMessage id="portal.account.manage.accountType.title" />}
-          />
-
-          <hr/>
-
-          {this.props.accountType
-              ? <Field
-                  name="accountServices"
-                  component={FieldFormGroupMultiOptionSelector}
-                  options={serviceOptions}
-                  label={<FormattedMessage id="portal.account.manage.services.title" />}
-                />
-              : <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
+          { !this.props.account.get('id')
+            ? <Field
+                name="accountType"
+                className="input-select"
+                component={FieldFormGroupSelect}
+                options={providerTypes}
+                label={<FormattedMessage id="portal.account.manage.accountType.title" />}
+              />
+            : <FormGroup>
+                <ControlLabel>{<FormattedMessage id="portal.account.manage.accountType.title" />}</ControlLabel>
+                <p>{providerTypeLabel}</p>
+              </FormGroup>
           }
 
-          <FormFooterButtons>
-              <Button
-                id="cancel-btn"
-                className="btn-secondary"
-                onClick={onCancel}>
-                <FormattedMessage id="portal.button.cancel"/>
-              </Button>
+           <hr/>
 
-              <Button
-                type="submit"
-                bsStyle="primary"
-                disabled={invalid||submitting}>
-                {submitButtonLabel}
-              </Button>
-            </FormFooterButtons>
+           { accountType && accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+              <Field
+                name="accountServicesIds"
+                component={FieldFormGroupMultiOptionSelector}
+                options={serviceOptions}
+                label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+                required={false}
+              />
+           }
+
+           { accountType && accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER &&
+              <Field
+                name="accountServices"
+                component={ServiceOptionSelector}
+                showServiceItemForm={this.props.showServiceItemForm}
+                options={serviceOptions}
+                label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+                required={false}
+              />
+           }
+
+           { !accountType &&
+            <p><FormattedMessage id="portal.account.manage.selectAccountType.text" /></p>
+           }
+
+          <FormFooterButtons>
+            <Button
+              id="cancel-btn"
+              className="btn-secondary"
+              onClick={onCancel}>
+              <FormattedMessage id="portal.button.cancel"/>
+            </Button>
+
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting}>
+              {submitButtonLabel}
+            </Button>
+          </FormFooterButtons>
         </form>
       </SidePanel>
+
     )
   }
 }
@@ -179,20 +223,23 @@ AccountForm.propTypes = {
 }
 
 AccountForm.defaultProps = {
+  account: Map(),
   serviceOptions: []
 }
 
 const formSelector = formValueSelector('accountForm')
-const mapStateToProps = (state, ownProps) => {
 
+const mapStateToProps = (state, ownProps) => {
   const accountType = formSelector(state, 'accountType')
+
   return {
     accountType,
     initialValues: {
       accountBrand: 'udn',
       accountName: ownProps.account && ownProps.account.get('name'),
       accountType: ownProps.account && ownProps.account.get('provider_type'),
-      accountServices: ownProps.account && ownProps.account.get('services').toJS()
+      accountServices: ownProps.account && ownProps.account.get('services') || List(),
+      accountServicesIds: ownProps.account && ownProps.account.get('services') && getServicesIds(ownProps.account.get('services')).toJS() || []
     },
     invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),

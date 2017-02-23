@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Immutable from 'immutable'
-import Typeahead from 'react-bootstrap-typeahead'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -40,6 +39,7 @@ import Tabs from '../components/tabs'
 import MonthPicker from '../components/month-picker'
 import StackedByTimeSummary from '../components/stacked-by-time-summary'
 import MiniChart from '../components/mini-chart'
+import NumberInput from '../components/number-input'
 import SidePanel from '../components/side-panel'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
@@ -49,6 +49,9 @@ import MultiOptionSelector from '../components/multi-option-selector'
 import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
+import NetworkItem from '../components/network/network-item'
+import FileUploadArea from '../components/file-upload.jsx'
+import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -64,6 +67,9 @@ import IconArrowUp       from '../components/icons/icon-arrow-up'
 import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
+import IconCheck         from '../components/icons/icon-check'
+import IconChevronRight  from '../components/icons/icon-chevron-right'
+import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
 import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
@@ -90,6 +96,7 @@ import IconServices      from '../components/icons/icon-services'
 import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
+import IconFile          from '../components/icons/icon-file'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -133,7 +140,8 @@ class Styleguide extends React.Component {
         'link8',
         'link9'
       ]),
-      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ])
+      multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
+      numberInputValue: 100
     }
   }
 
@@ -307,6 +315,24 @@ class Styleguide extends React.Component {
         "bits_per_second": 472250782,
         "code": "MYS",
         "total": 81604876012993
+      }
+    ])
+
+    const cityData = Immutable.fromJS([
+      {
+        "name": "daejeon",
+        "percent_change": 0.5567,
+        "percent_total": 0.0864,
+        "historical_total": 1404256487825,
+        "total": 2186010027527,
+        "requests": 8744,
+        "country": "KOR",
+        "region": "30",
+        "lat": 36.3261,
+        "lon": 127.4299,
+        "bits_per_second": 8800367,
+        "average_bits_per_second": 8800362,
+        "average_bytes": 3960163093
       }
     ])
 
@@ -628,6 +654,32 @@ class Styleguide extends React.Component {
 
           <hr />
 
+          <Row>
+
+            <Col xs={6}>
+
+              <ControlLabel>Number Input</ControlLabel>
+              <p>Example min = 0, max = 200</p>
+
+              <FormGroup>
+                <NumberInput
+                  max={200}
+                  min={0}
+                  onChange={val => this.setState({
+                    numberInputValue: val === parseInt(val, 10) || !val ?
+                      val :
+                      val.target.value
+                  })}
+                  value={this.state.numberInputValue} />
+              </FormGroup>
+
+            </Col>
+
+          </Row>
+
+
+          <hr />
+
           <div className="row">
 
             <div className="col-xs-6">
@@ -928,14 +980,38 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
+          <h1 className="page-header">Dropzone</h1>
+          <FileUploadArea
+            contentValidation={() => {
+              return true
+            }}
+            onDropCompleted={(validFiles, rejectedFiles) => {
+              // eslint-disable-next-line no-console
+              console.error(rejectedFiles)
+            }}
+            acceptFileTypes={["text/csv"]}
+            uploadModalOnClick={true}/>
+
           <h1 className="page-header">MapBox</h1>
 
           <Mapbox
             geoData={countriesGeoJSON}
+            cityData={cityData}
             countryData={countryData}
             theme={this.props.theme}
             height={600}
             />
+
+
+          <h1 className="page-header">Network</h1>
+
+          <NetworkItem
+            title="Network 1"
+            content="Lorem ipsum dolor sit amet"
+            status="enabled"
+            onSelect={() => null}
+            onEdit={() => null} />
+
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -1007,6 +1083,21 @@ class Styleguide extends React.Component {
             <IconChart />
             <br />
             IconChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCheck />
+            <br />
+            IconCheck
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRight />
+            <br />
+            IconChevronRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRightBold />
+            <br />
+            IconChevronRightBold
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconClose />
@@ -1143,7 +1234,11 @@ class Styleguide extends React.Component {
             <br />
             LoadingSpinnerSmall
           </span>
-
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFile />
+            <br />
+            IconFile
+          </span>
         </div>
 
       </div>

@@ -59,7 +59,7 @@ class ConfigurationPolicies extends React.Component {
     this.props.activateMatch([policyType, 'policy_rules', policyRules.size - 1, 'match'])
   }
   changeActiveRuleType(policyType) {
-    if (policyType !== POLICY_TYPES.REQUEST && policyType !== POLICY_TYPES.RESPONSE) {
+    if ([ POLICY_TYPES.REQUEST, POLICY_TYPES.FINAL_REQUEST, POLICY_TYPES.RESPONSE, POLICY_TYPES.FINAL_RESPONSE].indexOf(policyType) === -1) {
       return
     }
 
@@ -138,6 +138,8 @@ class ConfigurationPolicies extends React.Component {
             params={this.props.params}
             requestPolicies={config.getIn([POLICY_TYPES.REQUEST, 'policy_rules'])}
             responsePolicies={config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])}
+            finalRequestPolicies={config.getIn([POLICY_TYPES.FINAL_REQUEST, 'policy_rules'])}
+            finalResponsePolicies={config.getIn([POLICY_TYPES.FINAL_RESPONSE, 'policy_rules'])}
             activateRule={this.props.activateRule}
             deleteRule={this.deleteRule}/>
           {this.props.activeRule ?

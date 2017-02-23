@@ -1,16 +1,25 @@
 import React, { PropTypes, Component } from 'react'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { withRouter } from 'react-router'
 
-import * as propertyActionCreators from '../../../redux/modules/properties/actions'
-import {getProperties, isFetching} from '../../../redux/modules/properties/selectors'
+import accountActions from '../../../redux/modules/entities/accounts/actions'
+import { getById } from '../../../redux/modules/entities/accounts/selectors'
+
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+
+import propertyActions from '../../../redux/modules/entities/properties/actions'
+import { getByGroup as getPropertiesByGroup, getByAccount as getPropetiesByAccount } from '../../../redux/modules/entities/properties/selectors'
 
 import { getTokenAuthRules } from '../../../util/policy-config'
 import { getContentUrl, getRoute } from '../../../util/routes'
 
+import { getFetchingByTag } from '../../../redux/modules/fetching//selectors'
+
 import TokenAuthList from '../../../components/security/token-auth-list'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+
+const REQUEST_TAG = 'req-token-auth'
 
 class TabTokenAuthentication extends Component {
   componentDidMount(){
@@ -18,19 +27,32 @@ class TabTokenAuthentication extends Component {
   }
 
   fetchData(){
-    const {brand,account,group} = this.props.params
-    this.props.fetchProperties(brand,account,group)
+    const {brand,account, group} = this.props.params
+
+    if (group) {
+      this.props.fetchProperties({brand, account, group})
+    } else {
+      /* Fetch all groups and properties */
+      this.props.fetchGroups(this.props.params)
+        .then( () => {
+          this.props.groups.map( group => {
+            this.props.fetchProperties({brand, account, group: group.get('id')})
+          })
+        })
+    }
   }
 
   render(){
     const {properties, isFetching} = this.props
 
     const editUrlBuilder = (propertyId, policyParams) => editOrDelete => {
-      const property = this.props.properties[propertyId]
+
+      const property = this.props.properties.find( p => p.get('published_host_id') === propertyId )
+
       const propertyParams = {
         brand: this.props.params.brand,
-        account: property.accountId,
-        group: property.groupId
+        account: this.props.params.account,
+        group: property.get('parentId')
       }
       return `${getContentUrl('propertyConfiguration', propertyId, propertyParams)}/policies/${getRoute('configurationTabPoliciesEditPolicy', { ...policyParams, editOrDelete })}`
     }
@@ -38,7 +60,7 @@ class TabTokenAuthentication extends Component {
     if ( isFetching )
       return <LoadingSpinner />
 
-    const tokenAuthRules = getTokenAuthRules( properties )
+    const tokenAuthRules = getTokenAuthRules( properties.toJS() )
 
     return (
           <TokenAuthList rules={tokenAuthRules} editUrlBuilder={editUrlBuilder}/>
@@ -50,35 +72,35 @@ class TabTokenAuthentication extends Component {
 TabTokenAuthentication.displayName = 'TabTokenAuthentication'
 
 TabTokenAuthentication.propTypes = {
+  fetchGroups: PropTypes.func,
   fetchProperties: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   isFetching: PropTypes.bool,
   params: PropTypes.object,
-  properties: PropTypes.object
+  properties: PropTypes.instanceOf(List)
 }
 
 TabTokenAuthentication.defaultProps = {
-  properties: {}
+  properties: List()
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {params: {brand, account, group} } = ownProps
+  const {params: {account, group} } = ownProps
+
   return {
-    properties: getProperties(state, brand, parseInt(account), parseInt(group)).toJS(),
-    isFetching: isFetching(state)
+    account: getById(state, account),
+    groups: getGroupsByAccount(state, account),
+    properties: group ? getPropertiesByGroup(state, group) : getPropetiesByAccount(state, account),
+    isFetching: getFetchingByTag(state, REQUEST_TAG)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  const propertyActions = bindActionCreators(propertyActionCreators, dispatch)
-
-  const fetchProperties = (brand, account, group) => {
-    propertyActions.startFetching()
-    propertyActions.fetchAllWithDetails(brand,account,group)
-  }
-
   return {
-    fetchProperties
+    fetchAccount: (params) => dispatch( accountActions.fetchOne({...params, requestTag: REQUEST_TAG}) ),
+    fetchGroups: (params) => dispatch( groupActions.fetchAll({...params, requestTag: REQUEST_TAG}) ),
+    fetchProperties: (params) => propertyActions.fetchByIds(dispatch)({...params, requestTag: REQUEST_TAG})
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TabTokenAuthentication))
+export default connect(mapStateToProps, mapDispatchToProps)(TabTokenAuthentication)

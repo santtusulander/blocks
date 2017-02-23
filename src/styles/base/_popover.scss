@@ -1,0 +1,55 @@
+.popover {
+  &__link {
+    display: inline-block;
+  }
+}
+
+.help-popover {
+  &.bottom {
+    margin-top: 20px;
+  }
+}
+
+.dark-theme {
+  .popover {
+    background: $medium-blue;
+
+    &.right {
+      .arrow {
+        &:after {
+          border-right-color: $medium-blue;
+        }
+      }
+    }
+
+    &.left {
+      .arrow {
+        &:after {
+          border-left-color: $medium-blue;
+        }
+      }
+    }
+
+    &.top {
+      .arrow {
+        &:after {
+          border-top-color: $medium-blue;
+        }
+      }
+    }
+
+    &.bottom {
+      .arrow {
+        &:after {
+          border-bottom-color: $medium-blue;
+        }
+      }
+    }
+
+    &-title {
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 0;
+      color: $white;
+    }
+  }
+}

@@ -19,6 +19,7 @@ describe('GroupForm', () => {
     subject = () => {
       props = {
         accountIsServiceProviderType: false,
+        accountIsContentProviderType: true,
         handleSubmit: jest.genMockFunction(),
         intl: intlMaker()
       }

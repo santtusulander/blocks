@@ -8,10 +8,6 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountName.placeholder.text': 'Account Name',
   'portal.account.manage.accountType.text': 'Account Type',
   'portal.account.manage.services.text': 'Services',
-  'portal.account.manage.invalidAccountName.text': 'Account name is invalid.',
-  'portal.account.manage.nameValidationRequirements.line1.text': 'Requirements:',
-  'portal.account.manage.nameValidationRequirements.line2.text': 'minimum of 3 and maximum of 40 characters',
-  'portal.account.manage.nameValidationRequirements.line3.text': 'allowed special characters: _ . , - & ( ) [ ]',
   'portal.account.manage.providerTypeUnknown.text': 'Unknown',
   'portal.account.manage.editAccount.title': 'Edit Account',
   'portal.account.manage.newAccount.title': 'Add New Account',
@@ -40,7 +36,7 @@ const TRANSLATED_MESSAGES = {
   'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
-  'portal.dnsDomain.delete.disclaimer.text': 'Deleting domain {itemToDelete} will also delete all the records related to it.',
+  'portal.dnsDomain.delete.disclaimer.text': 'Are you sure you want to delete {itemToDelete}?',
 
   'portal.brand.edit.editBrand.title': 'Edit Brand',
   'portal.brand.edit.newBrand.title': 'New Brand',
@@ -91,7 +87,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.demoPlayback.clientBufferEvents.text': 'Client Buffer Events',
   'portal.analytics.demoPlayback.droppedFrames.text': 'Dropped Frames',
   'portal.analytics.demoPlayback.bitrateBySegment.text': 'Bitrate by Segment',
-  'portal.analytics.demoPlayback.bandwithBySegment.text': 'Bandwith by Segment',
+  'portal.analytics.demoPlayback.bandwidthBySegment.text': 'Bandwidth by Segment',
 
   'portal.analytics.cacheHitRateByDay.text': 'Daily Cache Hit Rate Report',
 
@@ -104,13 +100,13 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.trafficOverview.httpsDatasetLabel.text': 'HTTPS',
   'portal.analytics.trafficOverview.httpComparisonDatasetLabel.text': 'Comparison HTTP',
   'portal.analytics.trafficOverview.httpsComparisonDatasetLabel.text': 'Comparison HTTPS',
-  'portal.analytics.trafficOverview.bandwith.text': 'BANDWIDTH',
+  'portal.analytics.trafficOverview.bandwidth.text': 'BANDWIDTH',
   'portal.analytics.trafficOverview.requests.text': 'REQUESTS',
   'portal.analytics.trafficOverview.transferByTime.text': 'TRANSFER BY TIME',
   'portal.analytics.trafficOverview.byGeography.text': 'BY GEOGRAPHY',
   'portal.analytics.trafficOverview.byCountry.text': 'BY COUNTRY',
   'portal.analytics.trafficOverview.byCountry.country.header': 'Country',
-  'portal.analytics.trafficOverview.byCountry.bandwith.header': 'Bandwith',
+  'portal.analytics.trafficOverview.byCountry.bandwidth.header': 'Bandwidth',
   'portal.analytics.trafficOverview.byCountry.request.header': 'Requests',
   'portal.analytics.trafficOverview.byCountry.periodTrend.header': 'Period Trend',
 
@@ -306,7 +302,7 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.removeVary.header': 'Remove Vary',
   'portal.policy.edit.removeVary.text': 'Remove Vary Header',
   'portal.policy.edit.fileExtension.header': 'File Extension',
-  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like .GIF, JPG, .MOV, .MP3',
+  'portal.policy.edit.fileExtension.disclaimer.text': 'Match one or more file extensions like GIF, JPG, MOV, MP3',
   'portal.policy.edit.fileExtension.fileExtension.text': 'File Extension',
   'portal.policy.edit.fileExtension.fileExtension.placeholder': 'Enter File Extensions separated by commas',
   'portal.policy.edit.fileExtension.ignoreCase.text': 'Ignore case',
@@ -419,21 +415,21 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.versions.saved.text': 'Saved',
   'portal.policy.edit.versions.deactivated.text': 'De-Activated',
 
-  'portal.content.addHost.newHostname.text': 'New Host Name',
-  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new Host Name',
+  'portal.content.addHost.newHostname.text': 'New Hostname',
+  'portal.content.addHost.newHostnamePlaceholder.text': 'Enter new hostname',
   'portal.content.addHost.newHostnamePlaceholder.required': 'Hostname is required',
-  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname is invalid',
+  'portal.content.addHost.newHostnamePlaceholder.invalid': 'Hostname value must be a valid hostname',
 
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
-  
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
-  'portal.content.tooltip.bandwith.text': 'Bandwith',
-  'portal.content.tooltip.bandwithVsLast28.text': '{bandwith} vs 28 days ago',
+  'portal.content.tooltip.bandwidth.text': 'Bandwidth',
+  'portal.content.tooltip.bandwidthVsLast28.text': '{bandwidth} vs 28 days ago',
   'portal.content.tooltip.higher.text': 'Higher',
   'portal.content.tooltip.same.text': 'Same',
   'portal.content.tooltip.lower.text': 'Lower',
@@ -448,8 +444,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.content.text': 'Content',
 
   'portal.header.menu.theme.title': 'UI Theme',
-  'portal.header.menu.theme.ericssonDark.text': 'Ericsson Dark Theme',
-  'portal.header.menu.theme.ericssonLight.text': 'Ericsson Light Theme',
+  'portal.header.menu.theme.ericssonTitle.text': 'Ericsson {themeTitle} theme',
   'portal.header.menu.logout.text': 'Logout',
   'portal.header.menu.editProfile.text': 'Edit Profile',
 
@@ -460,6 +455,7 @@ const TRANSLATED_MESSAGES = {
   'portal.navigation.account.text': 'Account',
   'portal.navigation.support.text': 'Support',
   'portal.navigation.network.text': 'Network',
+  'portal.navigation.dashboard.text': 'Dashboard',
 
   'portal.security.header.text': 'SECURITY',
 
@@ -495,6 +491,10 @@ const TRANSLATED_MESSAGES = {
   'portal.footer.termsOfUse.text': 'Terms of Use',
 
   'portal.fileInput.chooseFile.text': 'Choose file',
+  'portal.fileInput.dropFile.text': 'Drop file here',
+  'portal.fileInput.dropFileOrClick.text': 'Drop file here or click and select one',
+  'portal.fileInput.validation.text': 'Validating...',
+  'portal.fileInput.bytes.text': '{size} bytes',
 
   'portal.accountManagement.accountNameAlreadyUsed.text': 'That account name is taken',
   'portal.accountManagement.deleteAccountConfirmation.text': 'Please confirm by writing "delete" below, and pressing the delete button. This account will be removed from UDN immediately.',
@@ -511,6 +511,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
+  'portal.accountManagement.groupCreated.text': 'Group created.',
+  'portal.accountManagement.groupDeleted.text': 'Group deleted.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
   'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',
@@ -534,8 +536,11 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.dns.form.validation.email.text' : 'Responsible Person Mailbox is required',
   'portal.accountManagement.dns.form.validation.nameServer.text' : 'Primary Nameserver is required',
   'portal.accountManagement.dns.form.validation.refresh.text' : 'Refresh is required',
+  'portal.accountManagement.dns.form.validation.minRefresh.text' : 'Minimum Refresh value is {minRefresh}',
   'portal.accountManagement.dns.form.validation.ttl.text' : 'TTL is required',
+  'portal.accountManagement.dns.form.validation.minTtl.text' : 'Minimum TTL is {minTtl}',
   'portal.accountManagement.dns.form.validation.maxTtl.text' : 'Maximum TTL is {maxTtl}',
+  'portal.accountManagement.dns.form.validation.minNegativeTtl.text' : 'Minimum Negative TTL is {minTtl}',
   'portal.accountManagement.dns.form.validation.maxNegativeTtl.text' : 'Maximum Negative TTL is {maxTtl}',
 
   'portal.accountManagement.dns.domain.deleteError' : 'Unable to delete domain',
@@ -595,9 +600,9 @@ const TRANSLATED_MESSAGES = {
   'portal.startburstHelp.settings.text': 'Settings',
   'portal.startburstHelp.help.text': 'Help',
   'portal.startburstHelp.starburst.text': 'Starburst',
-  'portal.startburstHelp.prior4weeksBandwith.text': 'Average bandwidth for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
-  'portal.startburstHelp.prior4weeksBandwithFttb.text': 'Average Time to First Byte for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidth.text': 'Average bandwidth for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthCacheHit.text': 'Average Cache Hit Rate for the prior 4 weeks',
+  'portal.startburstHelp.prior4weeksBandwidthFttb.text': 'Average Time to First Byte for the prior 4 weeks',
   'portal.startburstHelp.sortingNote.text': 'Note: Starbursts are sorted on the basis of Total Traffic',
   'portal.startburstHelp.notRepresentative.text': 'delivered and are not representative of the Average Traffic',
   'portal.startburstHelp.displayedOnStarburst.text': 'displayed on Starburst.',
@@ -756,6 +761,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.no': 'No',
   'portal.button.export': 'Export',
   'portal.button.delete': 'Delete',
+  'portal.button.deleting': 'Deleting...',
   'portal.button.ok': 'OK',
   'portal.button.resetting': 'Resetting...',
   'portal.button.reset': 'Reset',

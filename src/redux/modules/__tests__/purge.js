@@ -71,7 +71,7 @@ describe('Purge Module', () => {
 
   it('should handle fetch objects success', () => {
     const state = Immutable.fromJS({ fetching: true });
-    const newState = fetchObjectsSuccess(state, {payload: {purge_objects: [1, 2, 3]}});
+    const newState = fetchObjectsSuccess(state, {payload: {data: [1, 2, 3]}});
     expect(newState.get('purgeObjects').size).toBe(3);
     expect(newState.get('fetching')).toBeFalsy();
   });

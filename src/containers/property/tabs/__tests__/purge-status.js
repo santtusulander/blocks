@@ -11,13 +11,18 @@ function purgeActionsMaker() {
   }
 }
 
+function paginationParamsMock() {
+  return {page_size: 3}
+}
+
 describe('PurgeStatus', () => {
   let subject, error, props = null
 
   beforeEach(() => {
     subject = () => {
       props = {
-        purgeActions: purgeActionsMaker()
+        purgeActions: purgeActionsMaker(),
+        pagingQueryParams: paginationParamsMock()
       }
       return shallow(<PurgeStatus {...props}/>)
     }

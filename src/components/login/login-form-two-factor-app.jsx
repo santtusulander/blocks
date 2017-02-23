@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm.jsx'
 import { AUTHY_APP_POLLING_INTERVAL } from '../../constants/login.js'
@@ -24,6 +24,9 @@ export class LoginFormTwoFactorApp extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.loginError) {
       this.stopPulling()
+
+      // UDNP-2356: redirect to Login page on error.
+      this.props.router.push('/')
     }
   }
 
@@ -56,23 +59,19 @@ export class LoginFormTwoFactorApp extends Component {
         </Modal.Header>
         <Modal.Body className="token-inputs-group">
           <div className="token-input-info">
-            { !this.props.loginError &&
-              <p>
-                <FormattedMessage id="portal.login.2fa.verificationByAppHint.text"
-                                  values={{
-                                    app: <strong><FormattedMessage id="portal.login.2fa.verificationByApp.authyApp.text" /></strong>,
-                                    username: <strong>{this.props.userName}</strong>
-                                  }} />
-              </p>
-            }
-            { this.props.loginError &&
-              <p>{this.props.loginError} | <FormattedMessage id="portal.login.2fa.verificationHintTryAgain.text" /></p>
-            }
+            <p>
+              <FormattedMessage id="portal.login.2fa.verificationByAppHint.text"
+                                values={{
+                                  app: <strong><FormattedMessage id="portal.login.2fa.verificationByApp.authyApp.text" /></strong>,
+                                  username: <strong>{this.props.userName}</strong>
+                                }} />
+            </p>
           </div>
           <div className="text-center">
-            { !this.props.loginError &&
+            <div className='token-input-info loading'>
               <LoadingSpinnerSmall />
-            }
+            </div>
+
             <Link to={`/`} className="btn btn-link center-block token-trouble-btn">
               <FormattedMessage id="portal.login.2fa.goBack.text"/>
             </Link>
@@ -85,9 +84,12 @@ export class LoginFormTwoFactorApp extends Component {
 
 LoginFormTwoFactorApp.displayName = "LoginFormTwoFactorApp"
 LoginFormTwoFactorApp.propTypes = {
+  // loginError prop is used in componentWillReceiveProps
+  // eslint-disable-next-line react/no-unused-prop-types
   loginError: React.PropTypes.string,
+  router: React.PropTypes.object,
   startAppPulling: React.PropTypes.func,
   userName: React.PropTypes.string
 }
 
-export default LoginFormTwoFactorApp;
+export default withRouter(LoginFormTwoFactorApp);

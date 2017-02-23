@@ -5,7 +5,7 @@ import './loading-spinner.scss'
 
 function LoadingSpinnerSmall() {
   return (
-    <Icon className="loading-spinner-sm" width="36" height="36" viewbox="0 0 36 36">
+    <Icon className="loading-spinner-sm" width={36} height={36} viewbox="0 0 36 36">
       <g>
         <path className="base" d="M18,31c-7.2,0-13-5.8-13-13S10.8,5,18,5s13,5.8,13,13S25.2,31,18,31z M18,8C12.5,8,8,12.5,8,18
         s4.5,10,10,10s10-4.5,10-10S23.5,8,18,8z"/>

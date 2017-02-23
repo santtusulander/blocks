@@ -5,12 +5,13 @@ import classNames from 'classnames'
 import IsAllowed from './is-allowed'
 import IconEdit from './icons/icon-edit.jsx'
 import IconTrash from './icons/icon-trash.jsx'
+import IconClose from './icons/icon-close.jsx'
 import IconArrowUp from './icons/icon-arrow-up.jsx'
 import IconArrowDown from './icons/icon-arrow-down.jsx'
 
 import { ALLOW_ALWAYS } from '../constants/permissions'
 
-function ActionButtons ({ arrowDownDisabled, arrowUpDisabled, className, deleteDisabled, onArrowDown, onArrowUp, onEdit, onDelete, permissions }) {
+function ActionButtons ({ arrowDownDisabled, arrowUpDisabled, className, deleteDisabled, removeDisabled, onArrowDown, onArrowUp, onEdit, onDelete, onRemove, permissions }) {
   let finalClassName = classNames(
     'action-buttons',
     {
@@ -59,6 +60,17 @@ function ActionButtons ({ arrowDownDisabled, arrowUpDisabled, className, deleteD
         </Button>
       </IsAllowed>
       }
+
+      {onRemove &&
+      <IsAllowed to={permissions ? permissions.delete : ALLOW_ALWAYS}>
+        <Button
+          onClick={onRemove}
+          className="btn btn-icon remove-button"
+          disabled={removeDisabled}>
+          <IconClose/>
+        </Button>
+      </IsAllowed>
+      }
     </div>
   )
 }
@@ -73,7 +85,9 @@ ActionButtons.propTypes = {
   onArrowUp: PropTypes.func,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
-  permissions: PropTypes.object
+  onRemove: PropTypes.func,
+  permissions: PropTypes.object,
+  removeDisabled: PropTypes.bool
 }
 
 export default ActionButtons

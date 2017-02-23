@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage } from 'react-intl'
+import SectionHeader from '../../../components/layout/section-header'
 
 import AnalysisContribution from '../../../components/analysis/contribution.jsx'
 
@@ -115,9 +116,20 @@ class AnalyticsTabContribution extends React.Component {
   }
 
   render(){
+    const { contribution } = this.props
+
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>
     if (this.props.accountType === ProviderTypes.CONTENT_PROVIDER) {
       sectionHeaderTitle = <FormattedMessage id="portal.analytics.serviceProviderContribution.totalTraffic.label"/>
+    }
+
+    if (contribution.size === 0) {
+      return (
+        <div>
+          <SectionHeader sectionHeaderTitle={sectionHeaderTitle} />
+          <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+        </div>
+      )
     }
 
     return (
@@ -125,7 +137,7 @@ class AnalyticsTabContribution extends React.Component {
         dateRangeLabel={this.props.filters.get('dateRangeLabel')}
         dateRange={this.props.filters.get('dateRange')}
         sectionHeaderTitle={sectionHeaderTitle}
-        stats={this.props.contribution}
+        stats={contribution}
         onOffFilter={this.props.filters.get('onOffNet')}
         serviceTypes={this.props.filters.get('serviceTypes')}
       />
@@ -158,7 +170,7 @@ function mapStateToProps(state) {
     accountType: state.account.getIn(['activeAccount', 'provider_type']),
     activeAccount: state.account.get('activeAccount'),
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
-    contribution: state.traffic.get('contribution'),
+    contribution: state.traffic.getIn(['contribution', 'details']),
     filters: state.filters.get('filters'),
     currentUser: state.user.get('currentUser')
   }

@@ -2,6 +2,9 @@
   "portal.accountManagement.groupPropertiesName.text": "Name",
   "portal.accountManagement.groupProperties.text": "Properties",
   "portal.accountManagement.noGroupProperties.text": "No Properties",
+  "portal.accountManagement.locations.text": "Locations",
+  "portal.accountManagement.locations.tooltip.message": "Users can build a Locations service catalog that allows them to provide information about their physical network infrastructure.\nUsers can utilize a created location across the entire account.",
+  "portal.accountManagement.noLocations.text": "Add at least one POP Location for Service Provider",
 
   "portal.account.dnsList.addRecord.button": "Add record",
   "portal.account.dnsList.records.visibleRecords": "{visibleRecordCount} Records ",
@@ -15,7 +18,6 @@
 
   "portal.account.groups.name.error.exists": "That group name is taken",
   "portal.account.groups.name.error.required": "'Group name is required',",
-  "portal.account.groups.name.error.invalid": "Group name is invalid.",
   "portal.account.groups.name.placeholder": "Name",
   "portal.account.groups.single.text": "Group",
   "portal.account.groups.multiple.text": "Groups",
@@ -54,7 +56,6 @@
   "portal.account.domainForm.validation.nameServer": "Nameserver is invalid",
   "portal.account.domainForm.validation.negativeTtl.text": "Negative TTL is required",
 
-  "portal.account.groupForm.name.validation.error": "Invalid Group name",
   "portal.account.groupForm.name.required.error": "Group name is required",
   "portal.account.groupForm.name.label": "Group Name",
   "portal.account.groupForm.name.text": "Enter Group Name",
@@ -65,6 +66,21 @@
   "portal.account.groupForm.charge_model.option.percentile": "95/5",
   "portal.account.groupForm.editGroup.title": "Edit Group",
   "portal.account.groupForm.newGroup.title": "Add new group",
+  "portal.account.groupForm.services_options.title": "Services and Options",
+  "portal.account.chargeNumbersForm.charge_allocation.title": "Charge Allocation",
+  "portal.account.chargeNumbersForm.by_region.title": "By region",
+  "portal.account.chargeNumbersForm.use_global_rate.title": "Use a global rate",
+  "portal.account.chargeNumbersForm.regions.title": "Regions",
+  "portal.account.chargeNumbersForm.charge_number.title": "Charge Number:",
+  "portal.account.chargeNumbersForm.global_charge_number.title": "Global Charge Number",
+  "portal.account.chargeNumbersForm.flow_direction.title": "Flow Direction",
+  "portal.account.chargeNumbersForm.service.title": "SERVICE",
+  "portal.account.chargeNumbersForm.option.title": "OPTION",
+  "portal.account.chargeNumbersForm.egress.title": "Egress",
+  "portal.account.chargeNumbersForm.ingress.title": "Ingress",
+  "portal.account.chargeNumbersForm.midgress.title": "Midgress",
+  "portal.account.chargeNumbersForm.charge_number.validationError": "Charge number format is invalid",
+  "portal.account.chargeNumbersForm.regions.validationError": "At least one of the regions contains invalid charge number",
 
   "portal.account.soaForm.validation.required": "Required",
   "portal.account.soaForm.validation.invalid": "Invalid input",
@@ -79,8 +95,6 @@
   "portal.account.editUser.lastNameRequired.text": "Last Name is required",
   "portal.account.editUser.emailNameRequired.text": "Email is required",
   "portal.account.editUser.roleNameRequired.text": "Role is required",
-  "portal.account.editUser.phoneNumberInvalid.text": "Phone number is not valid",
-  "portal.account.editUser.phoneNumberCountryCodeInvalid.text": "Phone Country Code is not valid",
 
   "portal.account.editUser.userIsUpdated.text": "Updates to user saved.",
 

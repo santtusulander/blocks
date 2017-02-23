@@ -14,6 +14,7 @@ $login-modal-logo-left-padding: rem(12px);
 $login-modal-token-input-info-top-padding: rem(16px);
 $login-modal-token-input-width-height: rem(52px);
 $login-modal-token-input-margins: rem(12px);
+$login-modal-token-loading-margins: rem(37px);
 $login-modal-token-inputs-group-padding: rem(70px);
 $login-modal-token-inputs-group-margin-bottom: rem(102px);
 $login-modal-token-trouble-btn-margin-top: rem(64px);
@@ -180,6 +181,10 @@ $login-modal-token-having-trouble-support-text-margin-bottom: rem(20px);
 
 .token-input-info {
   padding-top: $login-modal-token-input-info-top-padding;
+}
+
+.token-input-info.loading {
+  margin: $login-modal-token-loading-margins auto;
 }
 
 .action-button-container {

@@ -40,9 +40,7 @@ describe('PolicyRuleOption', () => {
 
   it('should not exist unless compatible with current policy', () => {
     fakePolicyType = 'response_policy'
-    // TODO: remove these expects and replace with `expect(subject()).toBeUndefined()` — UDNP-1852
-    expect(subject().children().length).toBe(0)
-    expect(subject().debug()).toBe('<noscript />')
+    expect(subject().html()).toBeNull()
   })
 
   it('should be able to be disabled by function prop', () => {

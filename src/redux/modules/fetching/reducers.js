@@ -2,10 +2,11 @@
  * Reducers for Fetching - module
  * @returns {boolean}
  */
-export const set = () => {
-  return true
+export const set = (state, { payload }) => {
+  return state.merge(payload)
 }
 
-export const clear = () => {
-  return false
+export const clear = (state, { payload }) => {
+  const [ requestId ] = Object.keys(payload)
+  return state.delete(requestId)
 }

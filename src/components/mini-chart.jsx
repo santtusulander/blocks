@@ -46,7 +46,7 @@ class MiniChart extends React.Component {
       stackedAgainst: false,
       xAxisFormatter: false
     }]
-    if(Number(kpiValue) === 0) {
+    if(!data.length) {
       return (
         <div className={classNames({ 'mini-chart': true, className })}>
           {label && <div className="mini-chart-label">{label}</div>}
@@ -64,7 +64,7 @@ class MiniChart extends React.Component {
           <div className="mini-chart-label">{label}</div>
         : null}
         <div className="mini-chart-container">
-          {kpiValue ?
+          {kpiValue || parseInt(kpiValue, 10) === 0 ?
             <div className={classNames({
               'mini-chart-col': true,
               'mini-chart-kpi': true,

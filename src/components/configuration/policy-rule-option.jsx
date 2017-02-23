@@ -4,6 +4,7 @@ import classNames from 'classnames'
 
 import IconCaretRight from '../icons/icon-caret-right'
 import IsAdmin from '../is-admin'
+import HasServicePermission from '../has-service-permission'
 
 /**
  * A component designed for displaying possible match/action options when creating
@@ -15,19 +16,19 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     name,
     compatibleWith,
     notYetImplemented,
-    requiresAdmin
+    requiresAdmin,
+    servicePermission
   } = option
 
   if (compatibleWith.indexOf(policyType) < 0) {
-    // TODO: replace this with `return null` — UDNP-1852
-    return <noscript />
+    return null
   }
 
   const isEnabled = checkIfEnabled(key) && !notYetImplemented
   const className = classNames({
     inactive: !isEnabled
   })
-  const listItem = (
+  let listItem = (
     <li>
       <a href="#" className={className} onClick={isEnabled ? onClick(key) : null}>
         <IconCaretRight width={28} height={28} />
@@ -36,7 +37,15 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     </li>
   )
 
-  return requiresAdmin ? <IsAdmin>{listItem}</IsAdmin> : listItem
+  if (requiresAdmin) {
+    listItem = <IsAdmin>{listItem}</IsAdmin>
+  }
+
+  if (servicePermission) {
+    listItem = <HasServicePermission permission={servicePermission}>{listItem}</HasServicePermission>
+  }
+
+  return listItem
 }
 
 PolicyRuleOption.displayName = 'PolicyRuleOption'

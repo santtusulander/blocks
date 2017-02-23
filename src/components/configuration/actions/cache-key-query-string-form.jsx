@@ -1,6 +1,6 @@
 import React from 'react'
 import { ControlLabel, Col, FormControl, FormGroup, Panel, Row } from 'react-bootstrap'
-import Immutable from 'immutable'
+import Immutable, { Map, List, fromJS } from 'immutable'
 
 import Select from '../../select'
 import InputConnector from '../../input-connector'
@@ -11,9 +11,45 @@ class CacheKeyQueryStringForm extends React.Component {
   constructor(props) {
     super(props);
 
-    const currentNames = props.set.get('name')
-    let queryArgs = Immutable.List([''])
+    this.state = {
+      activeFilter: '',
+      queryArgs: List()
+    }
+
+    this.handleChangeArg = this.handleChangeArg.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.updateSet = this.updateSet.bind(this)
+  }
+
+  componentWillMount() {
+    this.updateState(this.props.set.get('name'))
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!Immutable.is(this.props.set.get('name'), nextProps.set.get('name'))) {
+      this.updateState(nextProps.set.get('name'))
+    }
+  }
+
+  handleChangeArg(index) {
+    return e => {
+      let newArgs = this.state.queryArgs.set(index, e.target.value)
+
+      if(newArgs.last()) {
+        newArgs = newArgs.push('')
+      }
+      this.setState({queryArgs: newArgs}, this.updateSet)
+    }
+  }
+
+  handleSelectChange(value) {
+    this.setState({activeFilter: value}, this.updateSet)
+  }
+
+  updateState(currentNames) {
+    let queryArgs = List()
     let activeFilter = 'ignore_all_query_parameters'
+
     if(currentNames) {
       if(currentNames.find(name => name.get('field') === 'request_query')) {
         activeFilter = 'include_all_query_parameters'
@@ -22,53 +58,54 @@ class CacheKeyQueryStringForm extends React.Component {
         const currentQueryArgs = currentNames
           .filter(name => name.get('field') === 'request_query_arg')
           .map(name => name.get('field_detail'))
-        if(currentQueryArgs.size) {
-          queryArgs = currentQueryArgs.push('')
+
+        if(currentQueryArgs.size){
+          queryArgs = currentQueryArgs
+
+          if(currentQueryArgs.last() !== '') {
+            queryArgs = queryArgs.push('')
+          }
+
           activeFilter = 'include_some_parameters'
         }
       }
     }
 
-    this.state = {
+    this.setState({
       activeFilter: activeFilter,
       queryArgs: queryArgs
-    }
+    })
+  }
 
-    this.handleChangeArg = this.handleChangeArg.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.updateSet = this.updateSet.bind(this)
-  }
-  handleChangeArg(index) {
-    return e => {
-      let newArgs = this.state.queryArgs.set(index, e.target.value)
-      if(newArgs.last()) {
-        newArgs = newArgs.push('')
-      }
-      this.setState({queryArgs: newArgs}, this.updateSet)
-    }
-  }
-  handleSelectChange(value) {
-    this.setState({activeFilter: value}, this.updateSet)
-  }
   updateSet() {
-    let newName = [
+    let newName = fromJS([
       {field: 'request_host'},
       {field: 'request_path'}
-    ]
+    ])
+
     if(this.state.activeFilter === 'include_all_query_parameters') {
-      newName.push({field: 'request_query'})
+      newName = newName.push(Map({field: 'request_query'}))
     }
     else if(this.state.activeFilter === 'include_some_parameters') {
+      if (!this.state.queryArgs.size) {
+        newName = newName.push(Map({
+          field: 'request_query_arg',
+          field_detail: ''
+        }))
+      }
+
       this.state.queryArgs.forEach(queryArg => {
         if(queryArg) {
-          newName.push({
+          newName = newName.push(Map({
             field: 'request_query_arg',
             field_detail: queryArg
-          })
+          }))
         }
       })
     }
+
     const newSet = this.props.set.set('name', newName)
+
     this.props.updateSet(newSet)
   }
   render() {
@@ -92,6 +129,7 @@ class CacheKeyQueryStringForm extends React.Component {
           {!horizontal && formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.queryName.text' })}
         </ControlLabel>
         <FormControl
+          disabled={disabled}
           placeholder={formatMessage({ id: 'portal.policy.edit.cacheKeyQueryString.enterQueryName.text' })}
           value={queryArg}
           onChange={this.handleChangeArg(i)}/>
@@ -145,7 +183,7 @@ CacheKeyQueryStringForm.propTypes = {
   disabled: React.PropTypes.bool,
   horizontal: React.PropTypes.bool,
   intl: React.PropTypes.object,
-  set: React.PropTypes.instanceOf(Immutable.Map),
+  set: React.PropTypes.instanceOf(Map),
   updateSet: React.PropTypes.func
 }
 

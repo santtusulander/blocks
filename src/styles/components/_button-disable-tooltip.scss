@@ -1,0 +1,16 @@
+// ButtonDisableTooltip
+// =============
+
+.button-disable-wrapper {
+  cursor: not-allowed;
+
+  button {
+    pointer-events: none;
+  }
+}
+
+.modal-footer {
+  .button-disable-wrapper {
+    position: absolute;
+  }
+}

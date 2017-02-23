@@ -23,7 +23,8 @@ const TRAFFIC_STORAGE_FETCHED = 'TRAFFIC_STORAGE_FETCHED'
 const emptyTraffic = Immutable.Map({
   traffic: Immutable.List(),
   totals: Immutable.Map(),
-  byTime: Immutable.List(),
+  byTime: Immutable.Map(),
+  byTimeComparison: Immutable.Map(),
   byCountry: Immutable.List(),
   byCity: Immutable.List(),
   fetching: false,
@@ -48,7 +49,7 @@ const emptyTraffic = Immutable.Map({
     net_off: {bytes: 0, percent_total: 0},
     total: 0
   }),
-  contribution: Immutable.List(),
+  contribution: Immutable.Map(),
   storage: Immutable.List(),
   totalEgress: 0
 })
@@ -88,31 +89,37 @@ export function totalsFetchFailure(state){
 
 export function trafficByTimeSuccess(state, action){
   return state.merge({
-    byTime: Immutable.fromJS(action.payload.data.map(datapoint => {
-      datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
-      return datapoint
-    }))
+    byTime: {
+      totals: Immutable.fromJS(action.payload.data.totals),
+      details: Immutable.fromJS(action.payload.data.details.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      }))
+    }
   })
 }
 
 export function trafficByTimeFailure(state){
   return state.merge({
-    byTime: Immutable.List()
+    byTime: Immutable.Map()
   })
 }
 
 export function trafficByTimeComparisonSuccess(state, action){
   return state.merge({
-    byTimeComparison: Immutable.fromJS(action.payload.data.map(datapoint => {
-      datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
-      return datapoint
-    }))
+    byTimeComparison: {
+      totals: Immutable.fromJS(action.payload.data.totals),
+      details: Immutable.fromJS(action.payload.data.details.map(datapoint => {
+        datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
+        return datapoint
+      }))
+    }
   })
 }
 
 export function trafficByTimeComparisonFailure(state){
   return state.merge({
-    byTimeComparison: Immutable.List()
+    byTimeComparison: Immutable.Map()
   })
 }
 
@@ -184,7 +191,7 @@ export function trafficServiceProvidersSuccess(state, action){
 }
 export function trafficServiceProvidersFailure(state){
   return state.merge({
-    contribution: Immutable.List()
+    contribution: Immutable.Map()
   })
 }
 
@@ -195,7 +202,7 @@ export function trafficContentProvidersSuccess(state, action){
 }
 export function trafficContentProvidersFailure(state){
   return state.merge({
-    contribution: Immutable.List()
+    contribution: Immutable.Map()
   })
 }
 
@@ -288,9 +295,14 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
   let data = {}
+  let totals = {}
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
-  .then(action => Promise.all(action.data.map(datum => {
+  .then(action => {
+    totals = action.data.totals
+    return action.data.details
+  })
+  .then(details => Promise.all(details.map(datum => {
     const account = Number(datum.sp_account)
     const group = Number(datum.sp_group)
 
@@ -302,17 +314,27 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
       return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
     }
   })))
-  .then(resp => resp.map(resp => {
-    let name = resp.data.name || `ID: ${resp.data.id}`
-    return Object.assign({}, data[resp.data.id], {name: name})
-  }))
+  .then(resp => {
+    return ({
+      totals: totals,
+      details: resp.map(resp => {
+        let name = resp.data.name || `ID: ${resp.data.id}`
+        return Object.assign({}, data[resp.data.id], {name: name})
+      })
+    })
+  })
 })
 
 export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
   let data = {}
+  let totals = {}
   return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
-  .then(action => Promise.all(action.data.map(datum => {
+  .then(action => {
+    totals = action.data.totals
+    return action.data.details
+  })
+  .then(details => Promise.all(details.map(datum => {
     const account = Number(datum.account)
     const group = Number(datum.group)
 
@@ -324,10 +346,15 @@ export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETC
       return axios.get(`${BASE_URL_AAA}/brands/${opts.brand}/accounts/${account}`)
     }
   })))
-  .then(resp => resp.map(resp => {
-    let name = resp.data.name || `ID: ${resp.data.id}`
-    return Object.assign({}, data[resp.data.id], {name: name})
-  }))
+  .then(resp => {
+    return ({
+      totals: totals,
+      details: resp.map(resp => {
+        let name = resp.data.name || `ID: ${resp.data.id}`
+        return Object.assign({}, data[resp.data.id], {name: name})
+      })
+    })
+  })
 })
 
 export const fetchStorage = createAction(TRAFFIC_STORAGE_FETCHED, () => {

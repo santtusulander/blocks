@@ -21,6 +21,16 @@ export const REDIRECT_RESPONSE_CODES = [301,302]
 
 export const WILDCARD_REGEXP = '.*';
 
+// NOTE: OK, so this RegExp is pretty nuts.
+// Basically, what it does is allow us to grab a list of file extensions from a
+// different RegExp string returned by the server.
+// An example input string: (.*)\\.(aif|aiff)
+// We need to get the aif|aiff part of that string.
+export const FILE_EXTENSION_REGEXP = /\(\.\*\)(?:\\)?\\\.\((.*)\)/
+export const FILE_EXTENSION_CASE_START = '(.*)\\\\.('
+export const FILE_EXTENSION_CASE_END = ')'
+export const FILE_EXTENSION_DEFAULT_CASE = FILE_EXTENSION_CASE_START + FILE_EXTENSION_CASE_END
+
 export function getMatchFilterType(match) {
   if(!match.get('field_detail')) {
     return match.get('default') ? 'does_not_exist' : 'exists'
@@ -70,6 +80,11 @@ export function policyContainsSetComponent(policy, setComponent) {
 export function matchIsContentTargeting(match) {
   return !!(match.get('field') === 'request_host'
           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
+}
+
+export function matchIsFileExtension(match) {
+  return !!((match.get('field') === 'request_url' || match.get('field') === 'request_path')
+          && FILE_EXTENSION_REGEXP.test(match.getIn(["cases", 0, 0])))
 }
 
 export function actionIsTokenAuth(sets) {

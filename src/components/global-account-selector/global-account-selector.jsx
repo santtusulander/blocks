@@ -7,6 +7,7 @@ import { resetChangedAccount } from '../../redux/modules/account'
 import * as accountSelectorActionCreators from '../../redux/modules/account-selector'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import checkPermissions from '../../util/permissions'
+import ProviderTypes from '../../constants/provider-types'
 
 import SelectorComponent from './selector-component.jsx'
 
@@ -24,6 +25,7 @@ class AccountSelector extends Component {
     this.tier = null
     this.account = null
     this.group = null
+    this.providerType = null
     this.fetchItems = this.fetchItems.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
     this.onItemClick = this.onItemClick.bind(this)
@@ -90,7 +92,7 @@ class AccountSelector extends Component {
       this.props.roles,
       this.props.currentUser,
       PERMISSIONS.VIEW_CONTENT_PROPERTIES
-    )
+    ) && this.providerType !== ProviderTypes.SERVICE_PROVIDER
   }
 
   setInitialTier(params) {
@@ -174,7 +176,7 @@ class AccountSelector extends Component {
     )
   }
 
-  onCaretClick(value) {
+  onCaretClick(value, providerType) {
     let fetchArgs;
     if(this.tier === 'group') {
       this.group = value
@@ -182,6 +184,7 @@ class AccountSelector extends Component {
     }
     else {
       this.account = value
+      this.providerType = providerType
       fetchArgs = ['group', 'udn', this.account]
     }
 

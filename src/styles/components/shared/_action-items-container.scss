@@ -1,0 +1,77 @@
+// Action Item Container
+// ============
+
+.action-item {
+  width: 100%;
+
+  .action-item-header {
+    margin: 30px 0;
+
+    .action-item-title {
+      display: inline;
+    }
+  }
+
+  .search-input-group {
+    .form-control {
+      width: 100% !important;
+      padding: 10px 0 10px 50px;
+      margin: 0;
+      background-position: 15px center;
+      background-repeat: no-repeat;
+      background-size: 20px 20px;
+      border-radius: 5px;
+
+      .dark-theme & {
+        background-image: url('../assets/icons/dt-icon-search.svg');
+      }
+
+      .light-theme & {
+        background-image: url('../assets/icons/lt-icon-search.svg');
+      }
+    }
+  }
+
+  .action {
+    display: table;
+    width: 100%;
+    min-height: $bar-height;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    .action-name {
+      display: table-cell;
+      width: 70%;
+      vertical-align: middle;
+    }
+
+    .action-buttons {
+      display: table-cell;
+    }
+
+    .dark-theme & {
+      color: $dt-text-color;
+      background-color: rgba($white, 0.1);
+    }
+
+    .light-theme & {
+      background-color: rgba($black, 0.1);
+    }
+
+    &.removed {
+      .action-name {
+        text-decoration: line-through;
+      }
+
+      .dark-theme & {
+        color: rgba($dt-text-color, 0.5);
+        background-color: rgba($white, 0.05);
+      }
+
+      .light-theme & {
+        background-color: rgba($black, 0.05);
+      }
+    }
+  }
+}

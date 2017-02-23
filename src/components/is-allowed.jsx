@@ -1,43 +1,35 @@
-import React, { PropTypes, Component, Children } from 'react'
+import { PropTypes, Children, Component } from 'react'
 import { List, Map } from 'immutable'
-import { connect } from 'react-redux'
 
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
 
 class IsAllowed extends Component {
-  render() {
-    const { children, currentUser, roles, to, not } = this.props;
+  render(){
+    const { children,  to, not } = this.props;
+    const { currentUser, roles } = this.context;
+
     let isAllowed = checkPermissions(roles, currentUser, to)
     if(not) {
       isAllowed = !isAllowed
     }
     return (
-      isAllowed && Children.only(children)
+      !!isAllowed && Children.only(children)
     )
   }
 }
 
-
 IsAllowed.displayName = 'IsAllowed'
-IsAllowed.propTypes = {
-  children: React.PropTypes.node,
+
+IsAllowed.contextTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  not: React.PropTypes.bool,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(List)
+}
+
+IsAllowed.propTypes = {
+  children: PropTypes.node,
+  not: PropTypes.bool,
   to: PropTypes.oneOf(Object.keys(PERMISSIONS))
 }
 
-IsAllowed.defaultProps = {
-  currentUser: Map(),
-  roles: List()
-}
-
-function mapStateToProps(state) {
-  return {
-    roles: state.roles.get('roles'),
-    currentUser: state.user.get('currentUser')
-  };
-}
-
-export default connect(mapStateToProps)(IsAllowed)
+export default IsAllowed

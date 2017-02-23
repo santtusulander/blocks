@@ -1,15 +1,17 @@
 import React from 'react'
-import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
+import { Tooltip, FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { Field } from 'redux-form'
 
 import * as userActionCreators from '../../../redux/modules/user'
 import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
+import FieldFormGroup from '../../../components/form/field-form-group'
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
@@ -19,10 +21,11 @@ import InlineAdd from '../../../components/inline-add'
 // import FilterChecklistDropdown from '../../../components/filter-checklist-dropdown/filter-checklist-dropdown'
 import ArrayTd from '../../../components/array-td/array-td'
 import IsAllowed from '../../../components/is-allowed'
+import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
-import { isValidAccountName } from '../../../util/validators'
+import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
@@ -113,23 +116,8 @@ class AccountManagementAccountGroups extends React.Component {
           errorText: <FormattedMessage id="portal.account.groups.name.error.exists"/>
         },
         {
-          condition: !isValidAccountName(name),
-          errorText: (
-            <div>
-              {[
-                <FormattedMessage key={`${name}-0`} id="portal.account.groups.name.error.invalid"/>,
-                <div key={`${name}-1`}>
-                  <div style={{marginTop: '0.5em'}}>
-                    <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-                    <ul>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                      <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-                    </ul>
-                  </div>
-                </div>
-              ]}
-            </div>
-          )
+          condition: !isValidTextField(name),
+          errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
         }
       ]
     }
@@ -224,10 +212,20 @@ class AccountManagementAccountGroups extends React.Component {
       this.state.sortDir
     )
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
+    const errorTooltip = ({ error, active }) =>
+      !active &&
+        <Tooltip placement="bottom" className="in" id="tooltip-bottom">
+          {error}
+        </Tooltip>
     const inlineAddInputs = [
       [
         {
-          input: <FormControl id='name' placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}/>
+          input: <Field
+            name="name"
+            id="name"
+            ErrorComponent={errorTooltip}
+            placeholder={this.props.intl.formatMessage({id: 'portal.account.groups.name.placeholder'})}
+            component={FieldFormGroup}/>
         }
       ],
       [
@@ -286,7 +284,6 @@ class AccountManagementAccountGroups extends React.Component {
           <tbody>
           {this.state.adding && <InlineAdd
             validate={this.validateInlineAdd}
-            fields={['name']}
             inputs={inlineAddInputs}
             unmount={this.cancelAdding}
             save={this.saveNewGroup}/>}
@@ -307,7 +304,7 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                     <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                    <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
                   </IsAllowed>
                 </td>
               </tr>

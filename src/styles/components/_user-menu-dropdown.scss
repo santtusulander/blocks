@@ -41,6 +41,10 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
       }
     }
 
+    .theme-title {
+      text-transform: capitalize;
+    }
+
     .dropdown-header {
       padding: $user-menu-header-vertical-padding $user-menu-horizontal-padding;
       font-size: inherit;
@@ -50,11 +54,6 @@ $user-menu-horizontal-padding: em(30px, $user-menu-font-size);
       .light-theme & {
         color: $lt-text-color;
         background-color: rgba($black, 0.04);
-      }
-
-      > span {
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
 

@@ -67,6 +67,10 @@ class AnalysisCacheHitRate extends React.Component {
       }
     })
 
+    const secondaryXAxisTick = detail.map(datapoint =>
+      moment(datapoint.get('timestamp')).format('MMM')
+    )
+
     if(this.state.chartType === 'column') {
       chart = (
         <BarChart
@@ -74,7 +78,8 @@ class AnalysisCacheHitRate extends React.Component {
           chartLabel={<FormattedMessage id={this.props.dateRange}/>}
           maxBarSize={70}
           barModels={[{ dataKey: 'chit_ratio', name: '', className: 'line-1' }]}
-          chartData={data.toJS()}/>
+          chartData={data.toJS()}
+          secondaryXAxisTick={secondaryXAxisTick.toJS()} />
       )
     } else {
       const dataset = {

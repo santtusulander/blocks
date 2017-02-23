@@ -1,43 +1,35 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
-import {
-  Button,
-  Table
-} from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 
+import IconAdd from '../icons/icon-add'
+import UDNButton from '../button'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
+import ButtonDisableTooltip from '../../components/button-disable-tooltip'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import ServiceOptionSelector from './service-option-selector'
+import SectionContainer from '../layout/section-container'
+import SectionHeader from '../layout/section-header'
+import HelpTooltip from '../../components/help-tooltip'
 
 import {
   checkForErrors
 } from '../../util/helpers'
-import { isValidAccountName } from '../../util/validators'
+import { isValidTextField } from '../../util/validators'
 
 import './group-form.scss'
 
 const validate = ({ name }) => {
   const conditions = {
     name: {
-      condition: !isValidAccountName(name),
-      errorText:
-        <div>
-          <FormattedMessage id="portal.account.groupForm.name.validation.error"/>,
-          <div key={1}>
-            <div style={{marginTop: '0.5em'}}>
-              <FormattedMessage id="portal.account.manage.nameValidationRequirements.line1.text" />
-              <ul>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line2.text" /></li>
-                <li><FormattedMessage id="portal.account.manage.nameValidationRequirements.line3.text" /></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      condition: !isValidTextField(name),
+      errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
     }
   }
   return checkForErrors(
@@ -49,21 +41,28 @@ const validate = ({ name }) => {
 
 const GroupForm = ({
   accountIsServiceProviderType,
-  canEditBilling,
-  canSeeBilling,
+  accountIsContentProviderType,
+  canSeeLocations,
   groupId,
   handleSubmit,
   hosts,
   intl,
   invalid,
   isFetchingHosts,
+  isFetchingEntities,
+  locations,
+  hasNetworks,
   onCancel,
+  onDelete,
   onDeleteHost,
-  onSubmit}) => {
-
+  onShowLocation,
+  onSubmit,
+  serviceOptions,
+  showServiceItemForm,
+  submitting
+}) => {
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
         type="text"
         name="name"
@@ -72,45 +71,74 @@ const GroupForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.account.groupForm.name.label" />}/>
 
-        {canSeeBilling &&
-          <Field
-            name="charge_id"
-            disabled={!canEditBilling}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
-            component={FieldFormGroup}
-            label={intl.formatMessage({id:"portal.account.groupForm.charge_number.label"})}
-            required={false}/>
+        <hr/>
+
+        {(accountIsContentProviderType) &&
+          <div>
+            <Field
+              name="services"
+              component={ServiceOptionSelector}
+              showServiceItemForm={showServiceItemForm}
+              options={serviceOptions}
+              label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+            />
+            <hr/>
+          </div>
         }
 
-        {canSeeBilling &&
-          <Field
-            name="charge_model"
-            disabled={!canEditBilling}
-            numericValues={true}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
-            component={FieldFormGroupSelect}
-            options={[
-              [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
-              [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
-            ]}
-            label={intl.formatMessage({id: "portal.account.groupForm.charge_model.label"})}
-            required={false}/>
+          {(canSeeLocations && groupId) &&
+            <SectionContainer>
+              <SectionHeader
+                sectionSubHeaderTitle={<label><FormattedMessage id="portal.accountManagement.locations.text"/> *</label>}
+                addonAfter={
+                  <HelpTooltip
+                    id="tooltip-help"
+                    title={<FormattedMessage id="portal.accountManagement.locations.text"/>}>
+                    <FormattedMessage id="portal.accountManagement.locations.tooltip.message" />
+                  </HelpTooltip>
+                }
+                >
+                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
+                  <IconAdd/>
+                </UDNButton>
+              </SectionHeader>
+              {isFetchingEntities ? <LoadingSpinner/> :
+                !locations.isEmpty() ?
+                  <Table striped={true} className="fixed-layout">
+                    <tbody>
+                    {locations.map((location, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                              <h5><strong>{location.get('cityName')}</strong></h5>
+                              <div className="text-sm">{location.get('iataCode')}</div>
+                          </td>
+                          <td className="one-button-cell">
+                            <ActionButtons
+                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </Table>
+                : <p><FormattedMessage id="portal.accountManagement.noLocations.text"/></p>
+              }
+            </SectionContainer>
           }
-
-          <hr/>
 
           {(!accountIsServiceProviderType && groupId) &&
             <div>
               <label><FormattedMessage id="portal.accountManagement.groupProperties.text"/></label>
               {isFetchingHosts ? <LoadingSpinner/> :
                 !hosts.isEmpty() ?
-                      <Table striped={true} className="fixed-layout">
+                  <Table striped={true} className="fixed-layout">
                     <thead>
                     <tr>
                       <th>
                         <FormattedMessage id="portal.accountManagement.groupPropertiesName.text"/>
                       </th>
-                          <th className="one-button-cell" />
+                      <th className="one-button-cell" />
                     </tr>
                     </thead>
                     <tbody>
@@ -132,6 +160,18 @@ const GroupForm = ({
             </div>
           }
         <FormFooterButtons>
+          {(groupId && onDelete) &&
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={submitting || isFetchingEntities || hasNetworks}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+              <FormattedMessage id="portal.button.delete"/>
+            </ButtonDisableTooltip>
+          }
+
           <Button
             id="cancel-btn"
             className="btn-secondary"
@@ -142,7 +182,7 @@ const GroupForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid}>
+            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
             {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
           </Button>
         </FormFooterButtons>
@@ -153,18 +193,26 @@ const GroupForm = ({
 GroupForm.displayName = "GroupForm"
 
 GroupForm.propTypes = {
+  accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
-  canEditBilling: PropTypes.bool,
-  canSeeBilling: PropTypes.bool,
+  canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
+  hasNetworks: PropTypes.bool,
   hosts: PropTypes.instanceOf(List),
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
-  onSubmit: PropTypes.func
+  onShowLocation: PropTypes.func,
+  onSubmit: PropTypes.func,
+  serviceOptions: PropTypes.array,
+  showServiceItemForm: PropTypes.func,
+  ...reduxFormPropTypes
 }
 
 export default reduxForm({

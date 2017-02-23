@@ -75,8 +75,8 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
  * @param  {string}              activeHostConfiguredName String of active host
  * @param  {object}              actions                  Object of which actions should be called
  */
-export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions } = {}) {
-  const { byCityOpts, aggregateGranularity } = buildFetchOpts({
+export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions, aggregation } = {}) {
+  const { byCityOpts } = buildFetchOpts({
     params,
     filters,
     location,
@@ -85,7 +85,7 @@ export function getCitiesWithinBounds({ params, filters, location, coordinates, 
   })
 
   actions.startFetching()
-  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregateGranularity }).then(
+  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation }).then(
     actions.finishFetching()
   )
 }

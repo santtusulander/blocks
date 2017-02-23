@@ -1,17 +1,17 @@
 import React, { PropTypes, Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
 import {
   change,
   Fields,
   getFormValues,
   propTypes as reduxFormPropTypes,
   reduxForm,
-  reset,
-  SubmissionError
+  reset
 } from 'redux-form'
 import { List, Map } from 'immutable'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Modal } from 'react-bootstrap'
 
 import * as securityActionCreators from '../../redux/modules/security'
@@ -23,23 +23,23 @@ const validate = values => {
   const { title, privateKey, certificate, group } = values
 
   if (!group || group === '') {
-    errors.group = 'Required'
+    errors.group = <FormattedMessage id='portal.security.ssl.validation.groupRequired.text'/>
   }
   if (!title) {
-    errors.title = 'Required'
+    errors.title = <FormattedMessage id='portal.security.ssl.validation.certTitleRequired.text'/>
   }
   if (!privateKey) {
-    errors.privateKey = 'Required'
+    errors.privateKey = <FormattedMessage id='portal.security.ssl.validation.privateKeyRequired.text'/>
   }
   if (!certificate) {
-    errors.certificate = 'Required'
+    errors.certificate = <FormattedMessage id='portal.security.ssl.validation.certificateRequired.text'/>
   }
   return errors
 }
 
 class CertificateFormContainer extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -50,7 +50,7 @@ class CertificateFormContainer extends Component {
   }
 
   handleFormSubmit(values){
-    const { certificateToEdit, upload, edit, securityActions, resetForm, toggleModal } = this.props
+    const { certificateToEdit, upload, edit, securityActions, resetForm, toggleModal, showNotification } = this.props
     const cert = certificateToEdit && certificateToEdit.get('cn')
     const data = [
       'udn',
@@ -71,8 +71,11 @@ class CertificateFormContainer extends Component {
     if (cert) {
       return edit(data).then(res => {
         if (res.error) {
-          // TODO: The error fields from API
-          throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
+          showNotification(this.props.intl.formatMessage(
+                                {id: 'portal.security.ssl.updateFailed.text'},
+                                {reason: res.payload.data.message}))
+        } else {
+          showNotification(<FormattedMessage id="portal.security.ssl.sslIsUpdated.text" />)
         }
         securityActions.resetCertificateToEdit()
         return resetForm(toggleModal)
@@ -81,8 +84,11 @@ class CertificateFormContainer extends Component {
 
     return upload(data).then(res => {
       if (res.error) {
-        // TODO: The error fields from API
-        throw new SubmissionError({ /*certificate: res.payload.data.message,*/ _error: res.payload.data.message })
+        showNotification(this.props.intl.formatMessage(
+                              {id: 'portal.security.ssl.updateFailed.text'},
+                              {reason: res.payload.data.message}))
+      } else {
+        showNotification(<FormattedMessage id="portal.security.ssl.sslIsCreated.text" />)
       }
       securityActions.resetCertificateToEdit()
       return resetForm(toggleModal)
@@ -131,6 +137,7 @@ CertificateFormContainer.propTypes = {
   fields: PropTypes.object,
   formValues: PropTypes.object,
   groups: PropTypes.instanceOf(List),
+  showNotification: PropTypes.func,
   title: PropTypes.object,
   toggleModal: PropTypes.func,
   upload: PropTypes.func

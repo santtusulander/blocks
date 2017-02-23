@@ -214,8 +214,8 @@ function mapStateToProps(state) {
   return {
     activeHostConfiguredName: state.host.get('activeHostConfiguredName'),
     totals: state.traffic.get('totals'),
-    trafficByTime: state.traffic.get('byTime'),
-    trafficByTimeComparison: state.traffic.get('byTimeComparison'),
+    trafficByTime: state.traffic.getIn(['byTime', 'details']),
+    trafficByTimeComparison: state.traffic.getIn(['byTimeComparison', 'details']),
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
     totalEgress: state.traffic.get('totalEgress'),

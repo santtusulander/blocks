@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
 import * as PERMISSIONS from './constants/permissions'
-import routes from './constants/routes'
+import routes, { ENTRY_ROUTE_ROOT } from './constants/routes'
 import {
   UserHasPermission,
   UserCanListAccounts,
@@ -12,8 +12,15 @@ import {
   UserCanTicketAccounts,
   UserCanViewAnalyticsTab,
   UserCanViewDns,
-  UserCanViewHosts
+  UserCanViewHosts,
+  CanViewConfigurationSecurity
 } from './util/route-permissions-wrappers'
+
+import {
+  accountIsServiceProviderType,
+  accountIsContentProviderType,
+  accountIsCloudProviderType
+ } from './util/helpers'
 
 import AccountManagement from './containers/account-management/account-management'
 import AccountManagementAccountDetails from './containers/account-management/tabs/details'
@@ -44,6 +51,7 @@ import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
+import Network from './containers/network/network'
 import Hosts from './containers/hosts'
 import Login from './containers/login'
 import Main from './containers/main'
@@ -137,7 +145,7 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotLoggedIn',
   predicate: (user) => user.get('loggedIn') === false,
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.query.redirect || '/content'
+    const redirectPath = ownProps.location.query.redirect || ENTRY_ROUTE_ROOT
 
     return redirectPath
 
@@ -145,9 +153,59 @@ const UserIsNotLoggedIn = UserAuthWrapper({
   allowRedirectBack: false
 })
 
+const AccountIsSP = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const account =
+      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
+      state.account.get('activeAccount')
+    return account
+  },
+  authenticatingSelector: (state) => state.account.get('fetching'),
+  wrapperDisplayName: 'AccountIsSP',
+  predicate: (account) => {
+    if(!account) {
+      return true
+    } else {
+      return accountIsServiceProviderType(account)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/network\//, 'i'), '/content/')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
+
+const AccountIsCP = UserAuthWrapper({
+  authSelector: (state, ownProps) => {
+    const account =
+      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
+      state.account.get('activeAccount')
+    return {
+      account,
+      accountId: ownProps.params.account
+    }
+
+  },
+  authenticatingSelector: (state) => state.account.get('fetching'),
+  wrapperDisplayName: 'AccountIsCP',
+  predicate: ({account}) => {
+    if(!account) {
+      return true
+    } else {
+      return accountIsContentProviderType(account) || accountIsCloudProviderType(account)
+    }
+  },
+  failureRedirectPath: (state, ownProps) => {
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
+    return redirectPath
+  },
+  allowRedirectBack: false
+})
+
 export const getRoutes = store => {
   return (
-    <Route path="/">
+    <Route path={routes.root}>
       <Route path="/login" component={UserIsNotLoggedIn(Login)}/>
       <Route path="/forgot-password" component={UserIsNotLoggedIn(ForgotPassword)}/>
       {/*
@@ -160,8 +218,8 @@ export const getRoutes = store => {
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
       { /* Routes below are protected by login*/}
+      <IndexRoute component={UserIsLoggedIn(Main)} />
       <Route component={UserIsLoggedIn(Main)}>
-        <IndexRedirect to={getRoute('content', {brand: 'udn'})} />
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
@@ -184,7 +242,7 @@ export const getRoutes = store => {
         </Route>
 
         {/* Content / CP Accounts - routes */}
-        <Route path={routes.content} component={UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store)}>
+        <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
             <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
@@ -205,7 +263,7 @@ export const getRoutes = store => {
             <IndexRedirect to={routes.configurationTabDetails} />
             <Route path={routes.configurationTabDetails} component={ConfigurationDetails}/>
             <Route path={routes.configurationTabDefaults} component={ConfigurationDefaults}/>
-            <Route path={routes.configurationTabSecurity} component={ConfigurationSecurity}/>
+            <Route path={routes.configurationTabSecurity} component={CanViewConfigurationSecurity(store)(ConfigurationSecurity)}/>
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
@@ -213,13 +271,17 @@ export const getRoutes = store => {
         </Route>
 
         {/* Network / SP Accounts - routes */}
-        <Route path={routes.network} component={UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store)}>
+        <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
             <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
-            <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-            <Route path={routes.networkGroups} component={Groups}/>
+            <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
+          <Route path={routes.networkGroups} component={Network}/>
+          <Route path={routes.networkGroup} component={Network}/>
+          <Route path={routes.networkNetwork} component={Network}/>
+          <Route path={routes.networkPop} component={Network}/>
+          <Route path={routes.networkPod} component={Network}/>
         </Route>
 
         {/* Security - routes */}
@@ -318,6 +380,7 @@ export const getRoutes = store => {
           <Route path={routes.dashboardBrand} component={Dashboard}/>
           <Route path={routes.dashboardAccount} component={Dashboard}/>
           <Route path={routes.dashboardGroup} component={Dashboard}/>
+          <Route path={routes.dashboardProperty} component={Dashboard}/>
         </Route>
       </Route>
       <Route path="*" component={NotFoundPage} />

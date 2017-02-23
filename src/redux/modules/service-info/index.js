@@ -2,7 +2,7 @@ import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
 import {Map} from 'immutable'
 
-//import {createFetchingReducers} from '../fetching/actions'
+//import createFetchingReducers from '../fetching/actions'
 
 import {mapReducers} from '../../util'
 import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'

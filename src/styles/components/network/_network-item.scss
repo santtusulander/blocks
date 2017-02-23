@@ -1,0 +1,216 @@
+// Network Item
+// ============
+
+$network-item-padding-horizontal: 12px;
+$network-item-padding-vertical: 16px;
+$network-item-title-width: 225px;
+$network-item-status-indicator-width: 8px;
+$network-item-connector-line-offset: rem(32px);
+$connector-offset: 2px;
+
+.network-item {
+  position: relative;
+  padding: $network-item-padding-horizontal $network-item-padding-vertical;
+  margin-bottom: $network-item-padding-horizontal;
+  cursor: pointer;
+  border: 2px solid;
+
+  &.entity-list-item {
+    margin-left: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &::before {
+      height: calc(100% + #{$entity-list-item-padding-vertical});
+    }
+
+    &.active::after {
+      left: calc(100% + #{$connector-offset});
+    }
+
+    .truncated-title {
+      width: $network-item-title-width;
+      white-space: nowrap;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+  .dark-theme & {
+    background-color: rgba($black, 0.5);
+    background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.05));
+    background-repeat: no-repeat;
+    border-color: $black;
+
+    &.active {
+      background-color: $black;
+      background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
+
+      &,
+      &:hover {
+        border-color: $pale-blue;
+      }
+    }
+
+    &.disabled {
+
+      &,
+      &:hover {
+        background-color: rgba($black, 0.25);
+        background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.05));
+        border-color: rgba($black, 0.2);
+      }
+    }
+
+    &:hover {
+      background-color: $black;
+      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3)), radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.1)), linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.1));
+      border-color: rgba($pale-blue, 0.25);
+    }
+  }
+
+  .light-theme & {
+    background-color: $white;
+    border-color: rgba($black, 0.2);
+
+    &.active {
+      background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+
+      &,
+      &:hover {
+        border-color: $pale-blue;
+      }
+    }
+
+    &.disabled {
+
+      &,
+      &:hover {
+        background-color: rgba($white, 0.6);
+        background-image: none;
+        border-color: rgba($black, 0.1);
+      }
+    }
+
+    &:hover {
+      background-image: linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.15));
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .network-item-title {
+    white-space: nowrap;
+  }
+
+  .status-indicator {
+    position: relative;
+    padding-left: $network-item-padding-vertical;
+
+    .dark-theme & {
+      color: rgba($silver-60, 0.5);
+    }
+
+    .light-theme & {
+      color: rgba($black, 0.3);
+    }
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      display: block;
+      width: $network-item-status-indicator-width;
+      height: $network-item-status-indicator-width;
+      border-radius: 50%;
+      content: '';
+      transform: translateY(-50%);
+    }
+
+    &.enabled::before {
+      background-color: $green;
+    }
+
+    &.disabled::before {
+      background-color: $red;
+    }
+
+    &.provisioning::before {
+      background-color: $yellow;
+    }
+  }
+
+  .btn-toolbar {
+    position: absolute;
+    top: 50%;
+    right: $network-item-padding-vertical;
+    display: none;
+    padding: 2px;
+    transform: translateY(-50%);
+
+    .btn-icon {
+      .dark-theme &,
+      .light-theme & {
+        &:hover,
+        &:focus,
+        &:active,
+        &.active,
+        &:active:hover,
+        &.active:focus {
+          .icon {
+            fill: $pale-blue;
+          }
+        }
+      }
+
+      .dark-theme & {
+        background-color: $black;
+        background-image: linear-gradient(rgba($pale-blue, 0.3), rgba($pale-blue, 0.3));
+
+        &:hover,
+        &:focus {
+          background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+        }
+
+        &:active,
+        &.active,
+        &:active:hover,
+        &.active:focus {
+          background-image: linear-gradient(rgba($pale-blue, 0.2), rgba($pale-blue, 0.2));
+          box-shadow: 0 0 0 2px $white;
+        }
+      }
+
+      .light-theme & {
+        background-color: $pale-blue;
+        background-image: linear-gradient(rgba($black, 0.2), rgba($black, 0.2));
+
+        &:hover,
+        &:focus {
+          background-image: linear-gradient(rgba($black, 0.3), rgba($black, 0.3));
+        }
+
+        &:active,
+        &.active,
+        &:active:hover,
+        &.active:focus {
+          background-image: linear-gradient(rgba($black, 0.4), rgba($black, 0.4));
+          box-shadow: 0 0 0 2px rgba($black, 0.4);
+        }
+      }
+    }
+  }
+
+  &:hover:not(.disabled) {
+
+    .btn-toolbar {
+      display: block;
+    }
+  }
+}

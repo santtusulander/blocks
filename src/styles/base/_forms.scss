@@ -10,14 +10,38 @@ $form-inline-margin-right: em(12px, $form-font-size);
 $textarea-min-height: em(96px, $form-font-size);
 $form-error-color: $red;
 $form-success-color: $green;
+$number-input-btn-width: $btn-height / 2;
 
 // scss-lint:disable SelectorDepth
 // Need to override BootStrap
 label {
-  margin-bottom: 0;
+  margin-bottom: 10px;
   font-size: rem(18px);
   font-weight: 700;
   line-height: 1;
+}
+
+.dark-theme {
+  input[disabled] {
+    background-color: rgba($black, 0.1);
+    user-select: none;
+
+    &:active {
+      color: $dt-text-color;
+      box-shadow: none;
+    }
+  }
+}
+
+.light-theme {
+  input[disabled] {
+    color: rgba($lt-text-color, 0.2);
+    user-select: none;
+
+    &:active {
+      box-shadow: 0 0 0 1px rgba($black, 0.1);
+    }
+  }
 }
 
 .form-control {
@@ -125,6 +149,10 @@ label {
       }
     }
   }
+}
+
+.submit-error {
+  color: $form-error-color;
 }
 
 .control-label {
@@ -428,6 +456,10 @@ textarea {
   .has-error & {
     color: $form-error-color;
   }
+
+  .multiline-tex-field-error {
+    margin-top: 0.5em;
+  }
 }
 
 .search-input {
@@ -474,5 +506,80 @@ textarea {
 
   & .input-group-addon {
     padding-top: 9px;
+  }
+}
+
+.number-input-group {
+
+  .number-input {
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+
+  .input-group-addon {
+    position: relative;
+    min-width: $number-input-btn-width;
+    padding: 0;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.2);
+    }
+
+    .light-theme & {
+      background-color: $white;
+    }
+
+    .btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 50%;
+      min-width: $number-input-btn-width;
+      padding: 0;
+      background-color: rgba($black, 0.2);
+      border-radius: 0;
+
+      &:focus,
+      &:active {
+        box-shadow: none;
+      }
+
+      .icon {
+        display: block;
+
+        .dark-theme & {
+          fill: $dt-text-color;
+
+          &:hover {
+            fill: $white;
+          }
+        }
+
+        .light-theme & {
+          fill: $lt-text-color;
+
+          &:hover {
+            fill: $black;
+          }
+        }
+      }
+
+      + .btn {
+        top: $number-input-btn-width;
+        border-top: 1px solid;
+
+        .dark-theme & {
+          border-top-color: rgba($pale-blue, 0.2);
+        }
+
+        .light-theme & {
+          border-top-color: $white;
+        }
+      }
+    }
   }
 }

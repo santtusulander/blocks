@@ -49,7 +49,7 @@ const SSLList = ({ groups, certificates, editCertificate, deleteCertificate, upl
             )
           }) : (
             <tr id="empty-msg">
-              <td colSpan="4">
+              <td colSpan="5">
                 <FormattedMessage id="portal.security.ssl.noCertificates.text" />
               </td>
             </tr>

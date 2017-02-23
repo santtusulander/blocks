@@ -4,7 +4,7 @@ import MatchesSelection from './matches-selection'
 import ActionsSelection from './actions-selection'
 
 // import ConfigurationMatchMimeType from './matches/mime-type'
-// import ConfigurationMatchFileExtension from './matches/file-extension'
+import ConfigurationMatchFileExtension from './matches/file-extension'
 // import ConfigurationMatchFileName from './matches/file-name'
 // import ConfigurationMatchIpAddress from './matches/ip-address'
 import ConfigurationContentTargetingMatch from './matches/content-targeting'
@@ -25,7 +25,10 @@ import ConfigurationActionHeader from './actions/header'
 // import ConfigurationActionCors from './actions/cors'
 import ConfigurationContentTargetingAction from './actions/content-targeting'
 
-import { matchIsContentTargeting } from '../../util/policy-config'
+import {
+  matchIsContentTargeting,
+  matchIsFileExtension
+} from '../../util/policy-config'
 
 export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, actions) {
   const {changeValue, formatMessage, activateSet} = actions
@@ -42,7 +45,9 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
 
     let matchType = activeMatch.get('field')
 
-    if (matchIsContentTargeting(activeMatch)) {
+    if (matchIsFileExtension(activeMatch)) {
+      matchType = 'file_extension'
+    } else if (matchIsContentTargeting(activeMatch)) {
       matchType = 'content_targeting'
     }
 
@@ -111,6 +116,13 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
             {...matcherProps}/>
         )
         break
+      case 'file_extension':
+        activeEditForm = (
+          <ConfigurationMatchFileExtension
+            {...matcherProps}
+          />
+        )
+        break
       case 'content_targeting':
         activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
         break
@@ -123,7 +135,6 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         )
         break
       // <ConfigurationMatchMimeType {...matcherProps}/>
-      // <ConfigurationMatchFileExtension {...matcherProps}/>
       // <ConfigurationMatchFileName {...matcherProps}/>
       // <ConfigurationMatchIpAddress {...matcherProps}/>
     }

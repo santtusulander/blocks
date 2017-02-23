@@ -1,8 +1,8 @@
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import { storiesOf, action } from '@kadira/storybook';
 
-const ThemeWrap = require('./theme-wrap.jsx');
-const Confirmation = require('../confirmation.jsx')
+import ThemeWrap from './theme-wrap'
+import Confirmation from '../confirmation'
 
 storiesOf('Confirmation', module)
   .addDecorator((story) => (
@@ -11,5 +11,8 @@ storiesOf('Confirmation', module)
     </ThemeWrap>
   ))
   .add('Confirmation', () => (
-    <Confirmation />
+    <Confirmation
+      handleCancel={action('Handling cancel')}
+      handleConfirm={action('Handling confirm')}
+    />
   ));

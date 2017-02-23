@@ -11,15 +11,11 @@ import {
   Button,
   ButtonToolbar,
   Panel } from 'react-bootstrap';
-import Typeahead from 'react-bootstrap-typeahead'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import Typeahead from './typeahead'
 import Select from './select'
-import {
-  isValidEmail,
-  isValidURL,
-  isValidRelativePath
-} from '../util/validators'
+import { isValidEmail, isValidRelativePath } from '../util/validators'
 
 class PurgeModal extends React.Component {
   constructor(props) {
@@ -109,15 +105,18 @@ class PurgeModal extends React.Component {
       return true
     }
 
-    if(this.state.type === 'url') {
+    if(this.state.type === 'url' || this.state.type === 'directory' ) {
       const values = value.split(',').map(val => val.trim().replace(/\r?\n|\r/g, ''))
       const errors = values.filter(val => {
-        return !isValidURL(val) && !isValidRelativePath(val)
+        return !isValidRelativePath(val)
       })
 
       if(errors.length){
+        const errorList = errors.join(', ')
         this.setState({
-          purgeObjectsError: `Check url${errors.length > 1 ? 's' : ''} ${errors.join(', ')}`
+          purgeObjectsError: this.state.type === 'url' ?
+           <FormattedMessage id="portal.analytics.purgeModal.invalidate.urls" values={{ errors: errorList}} /> :
+          <FormattedMessage id="portal.analytics.purgeModal.invalidate.directories" values={{ errors: errorList}} />
         })
         return true
       }

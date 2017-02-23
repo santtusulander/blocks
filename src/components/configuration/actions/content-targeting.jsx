@@ -2,11 +2,11 @@ import React from 'react'
 import { Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Typeahead from 'react-bootstrap-typeahead'
 
 import Select from '../../../components/select'
 import country_list from '../../../constants/country-list'
 import * as StatusCodes from '../../../util/status-codes'
+import Typeahead from '../../../components/typeahead'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
