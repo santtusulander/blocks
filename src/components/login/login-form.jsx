@@ -167,7 +167,7 @@ export class LoginForm extends Component {
 LoginForm.displayName = "LoginForm"
 LoginForm.propTypes = {
   fetching: React.PropTypes.bool,
-  loginError: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   onSubmit: React.PropTypes.func,
   sessionExpired: React.PropTypes.string,
   userName: React.PropTypes.string

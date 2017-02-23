@@ -166,7 +166,7 @@ export class LoginFormTwoFactorCode extends Component {
 LoginFormTwoFactorCode.displayName = "LoginFormTwoFactorCode"
 LoginFormTwoFactorCode.propTypes = {
   fetching: React.PropTypes.bool,
-  loginError: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   onCodeChange: React.PropTypes.func,
   onSubmit: React.PropTypes.func
 }
