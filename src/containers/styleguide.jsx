@@ -34,6 +34,7 @@ import SectionContainer from '../components/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
 import BarChart from '../components/charts/bar-chart'
 import StackedAreaChart from '../components/charts/stacked-area-chart'
+import LineAreaComposedChart from '../components/charts/line-area-composed-chart'
 import LineChart from '../components/charts/line-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import SelectorComponent from '../components/global-account-selector/selector-component'
@@ -1561,6 +1562,129 @@ class Styleguide extends React.Component {
       }
     ]
 
+    const composedChartData = [
+      {
+        "timestamp": 1486674000,
+        "storage": 4293353131,
+        "comparison_storage": 3920573638,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486677600,
+        "storage": 4124463309,
+        "comparison_storage": 3732794940,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486681200,
+        "storage": 3939462700,
+        "comparison_storage": 3616127919,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486684800,
+        "storage": 3720017179,
+        "comparison_storage": 3756683846,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486688400,
+        "storage": 3528905112,
+        "comparison_storage": 3530016332,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486692000,
+        "storage": 3188348138,
+        "comparison_storage": 3092791876,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486695600,
+        "storage": 2866124297,
+        "comparison_storage": 2870013220,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486699200,
+        "storage": 2998347188,
+        "comparison_storage": 3011125041,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486702800,
+        "storage": 2840568629,
+        "comparison_storage": 2766679451,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486706400,
+        "storage": 2181121207,
+        "comparison_storage": 2582789707,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486710000,
+        "storage": 1986675988,
+        "comparison_storage": 2477233745,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486713600,
+        "storage": 1777785972,
+        "comparison_storage": 2260010422,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486717200,
+        "storage": 1731674596,
+        "comparison_storage": 2220010169,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486720800,
+        "storage": 2585567492,
+        "comparison_storage": 1970564649,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486724400,
+        "storage": 2705568093,
+        "comparison_storage": 2156121187,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486728000,
+        "storage": 2778346217,
+        "comparison_storage": 2171121038,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486731600,
+        "storage": 2993902833,
+        "comparison_storage": 2403344375,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486735200,
+        "storage": 2957791380,
+        "comparison_storage": 2796679673,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486738800,
+        "storage": 3207237081,
+        "comparison_storage": 3124458781,
+        "estimate": 2796679673
+      },
+      {
+        "timestamp": 1486742400,
+        "storage": 3643905801,
+        "comparison_storage": 3565016378,
+        "estimate": 2796679673
+      }
+    ]
+
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
         bytes: datapoint.bytes_net_on || 0,
@@ -1758,6 +1882,19 @@ class Styleguide extends React.Component {
                   chartLabel="Oct 2016 Month To Date"
                   areas={twoStackedAreaComparisonDatasets}
                   data={stackAreaChartWithComparisonData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Comparison chart composed with line chart </label>
+              <SectionContainer className="analysis-by-time">
+                <LineAreaComposedChart
+                  chartLabel="Oct 2016 Month To Date"
+                  data={composedChartData}
                   valueFormatter={formatBitsPerSecond}
                 />
               </SectionContainer>
