@@ -52,6 +52,7 @@ import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
 import FileUploadArea from '../components/file-upload.jsx'
 import Typeahead from '../components/typeahead'
+import StorageItemChart from '../components/content/storage-item-chart'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -1002,7 +1003,6 @@ class Styleguide extends React.Component {
             height={600}
             />
 
-
           <h1 className="page-header">Network</h1>
 
           <NetworkItem
@@ -1012,6 +1012,17 @@ class Styleguide extends React.Component {
             onSelect={() => null}
             onEdit={() => null} />
 
+          <h1 className="page-header">Storage</h1>
+
+          <StorageItemChart
+            name="Storage 02"
+            location="Hong Kong"
+            currentUsage = {80.2e12}
+            estimate = {250e12}
+            peak = {160e12}
+            lastMonthUsage = {100e12}
+            lastMonthEstimate = {210e12}
+            lastMonthPeak = {160e12} />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
