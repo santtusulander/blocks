@@ -77,11 +77,19 @@ const networks =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const ingestPoints =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('ingestPoints'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
 export default combineReducers({
   accounts,
   nodes,
   groups,
   iataCodes,
+  ingestPoints,
   properties,
   pops,
   networks,
