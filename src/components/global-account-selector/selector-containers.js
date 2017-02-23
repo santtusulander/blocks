@@ -1,12 +1,13 @@
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
 import groupActions from '../../redux/modules/entities/groups/actions'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 
-import { getAccounts } from './selectors'
+import { getGroups, getBrands, getAccounts } from './selectors'
+
+import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
+import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 
 import { DENY_ALWAYS, VIEW_CONTENT_ACCOUNTS } from '../../constants/permissions'
 import checkPermissions from '../../util/permissions'
@@ -60,24 +61,45 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
  * @param  {[type]} restrictions [description]
  * @return {[type]}              [description]
  */
-const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, hide = {}, activeNode }) => {
+const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, has = ['brand', 'account', 'group'] }) => {
 
-  hide = { account: {}, group: {}, ...hide }
+  const hasBrand = has.includes('brand')
+  const hasAccount = has.includes('account')
+  const hasGroup = has.includes('group')
 
-  const nodes = getAccounts(state, { brand }, hide)
-  const headerSubtitle = <FormattedMessage id="portal.common.account.multiple" values={{numAccounts: nodes.length || 0}}/>
+  let activeNode = brand
+  let tree = []
+
+  const getSingleGroup = (state, parents, callBack) => ([ getGroupById(state, group).toJS() ].map(callBack))
+  const getSingleAccount = (state, parents, callBack) => ([ getAccountById(state, account).toJS() ].map(callBack))
+
+  if (hasBrand) {
+
+    tree = getBrands(state, brand, has)
+
+  } else if (hasAccount) {
+
+    tree = getAccounts(state, { brand }, has, getSingleAccount)
+
+  } else if (hasGroup) {
+
+    tree = getGroups(state, { brand, account }, has, getSingleGroup)
+  }
+
+  if (hasBrand && brand) {
+    activeNode = brand
+  }
+  if (hasAccount && account) {
+    activeNode = account
+  }
+  if (hasGroup && property) {
+    activeNode = group
+  }
+
 
   return {
-    activeNode: activeNode || (property ? group : account || brand),
-    tree: [{
-      id: brand,
-      name: 'UDN Admin',
-      nodeInfo: {
-        headerSubtitle,
-        showBackCaretPermission: DENY_ALWAYS,
-        nodes
-      }
-    }]
+    activeNode: activeNode,
+    tree
   }
 }
 
