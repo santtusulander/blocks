@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { PieChart, Pie } from 'recharts'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { Link } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 
 import IconConfiguration from '../icons/icon-configuration'
 import IconChart from '../icons/icon-chart'
@@ -37,17 +38,17 @@ const StorageItemChart = (
     id={'tooltip-' + 'name'}>
       <h3>{name}</h3>
       <div className="storage-month-info">
-        <span>Current usage</span>
+        <FormattedMessage id="portal.account.storage.tooltip.currentUsage"/>
         <span className="tooltip-storage-value">{formatBytes(currentUsage, null, FORMAT)}</span>
         <br />
-        <span>Peak this month</span>
+        <FormattedMessage id="portal.account.storage.tooltip.peakThisMonth"/>
         <span className="tooltip-storage-value">{formatBytes(peak, null, FORMAT)}</span>
       </div>
       <div className="storage-month-info">
-        <span>End of last month</span>
+        <FormattedMessage id="portal.account.storage.tooltip.endOfLastMonth"/>
         <span className="tooltip-storage-value">{formatBytes(currentUsage, null, FORMAT)}</span>
         <br />
-        <span>Peak last month</span>
+        <FormattedMessage id="portal.account.storage.tooltip.peakLastMonth"/>
         <span className="tooltip-storage-value">{formatBytes(lastMonthPeak, null, FORMAT)}</span>
       </div>
     </Tooltip>)

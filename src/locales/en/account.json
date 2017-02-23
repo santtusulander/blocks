@@ -31,6 +31,11 @@
   "portal.account.groups.table.noGroupsFound.text": "No groups found with the search term {searchTerm}",
   "portal.account.groups.modal.unsaved.content": "You have made changes to the Group(s), are you sure you want to exit without saving?",
 
+  "portal.account.storage.tooltip.currentUsage": "Current usage",
+  "portal.account.storage.tooltip.peakThisMonth": "Peak this month",
+  "portal.account.storage.tooltip.endOfLastMonth": "End of last month",
+  "portal.account.storage.tooltip.peakLastMonth": "Peak last month",
+
   "portal.account.recordForm.newRecord.title": "New DNS Record",
   "portal.account.recordForm.editRecord.title": "Edit DNS Record",
   "portal.account.recordForm.selectRecordType.label": "Select Record Type",
