@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { reduxForm, Field, propTypes as reduxFormPropTypes } from 'redux-form'
 import FieldFormGroup from '../form/field-form-group'
-import FieldFormGroupSelect from '../form/field-form-group-select'
 import FormFooterButtons from '../form/form-footer-buttons'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { List } from 'immutable'
@@ -14,6 +13,7 @@ import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
 import ButtonDisableTooltip from '../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
+import ServiceOptionSelector from './service-option-selector'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
 import HelpTooltip from '../../components/help-tooltip'
@@ -41,8 +41,7 @@ const validate = ({ name }) => {
 
 const GroupForm = ({
   accountIsServiceProviderType,
-  canEditBilling,
-  canSeeBilling,
+  accountIsContentProviderType,
   canSeeLocations,
   groupId,
   handleSubmit,
@@ -58,8 +57,10 @@ const GroupForm = ({
   onDeleteHost,
   onShowLocation,
   onSubmit,
-  submitting}) => {
-
+  serviceOptions,
+  showServiceItemForm,
+  submitting
+}) => {
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
@@ -70,32 +71,20 @@ const GroupForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.account.groupForm.name.label" />}/>
 
-        {canSeeBilling &&
-          <Field
-            name="charge_id"
-            disabled={!canEditBilling}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.charge_id.text'})}
-            component={FieldFormGroup}
-            label={intl.formatMessage({id:"portal.account.groupForm.charge_number.label"})}
-            required={false}/>
+        <hr/>
+
+        {(accountIsContentProviderType) &&
+          <div>
+            <Field
+              name="services"
+              component={ServiceOptionSelector}
+              showServiceItemForm={showServiceItemForm}
+              options={serviceOptions}
+              label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
+            />
+            <hr/>
+          </div>
         }
-
-        {canSeeBilling &&
-          <Field
-            name="charge_model"
-            disabled={!canEditBilling}
-            numericValues={true}
-            placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
-            component={FieldFormGroupSelect}
-            options={[
-              [1, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.percentile" })],
-              [2, intl.formatMessage({ id: "portal.account.groupForm.charge_model.option.bytesDelivered" })]
-            ]}
-            label={intl.formatMessage({id: "portal.account.groupForm.charge_model.label"})}
-            required={false}/>
-          }
-
-          <hr/>
 
           {(canSeeLocations && groupId) &&
             <SectionContainer>
@@ -204,9 +193,8 @@ const GroupForm = ({
 GroupForm.displayName = "GroupForm"
 
 GroupForm.propTypes = {
+  accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
-  canEditBilling: PropTypes.bool,
-  canSeeBilling: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
@@ -222,6 +210,8 @@ GroupForm.propTypes = {
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
+  serviceOptions: PropTypes.array,
+  showServiceItemForm: PropTypes.func,
   ...reduxFormPropTypes
 }
 

@@ -1,6 +1,9 @@
+$single-col-loading-spinner-top-margin: 100px;
+$multi-col-loading-spinner-top-margin: 50px;
 $multi-col-item-right-margin: 12px;
 $connector-offset: 2px;
 $entity-list-items-height-offset: 375px;
+
 
 $entity-list-item-padding-horizontal: 12px;
 $entity-list-item-padding-vertical: 16px;
@@ -56,6 +59,11 @@ $entity-list-item-connector-line-offset: rem(32px);
     }
   }
 
+  .loading-spinner {
+    position: relative;
+    margin-top: $single-col-loading-spinner-top-margin;
+  }
+
   .connector-divider {
     position: absolute;
     top: 0;
@@ -82,10 +90,14 @@ $entity-list-item-connector-line-offset: rem(32px);
 
     &.multi-column {
       display: flex;
+
+      .loading-spinner {
+        margin-top: $multi-col-loading-spinner-top-margin;
+      }
     }
 
     .list-col {
-      min-width: $md-sidebar-width;
+      width: $md-sidebar-width - 60px;
       margin-right: $multi-col-item-right-margin;
 
       &:not(:first-of-type) {

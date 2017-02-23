@@ -68,7 +68,9 @@ class Tabs extends React.Component {
     return findDOMNode(this.refs[ref]).getBoundingClientRect().top
   }
   render() {
-    const { children, className, onSelect } = this.props
+    const { className, onSelect } = this.props
+    const children = this.props.children.filter(item => item)
+
     return (
       <ul role="tablist" className={classnames('nav nav-tabs', className)}>
         {children && children.length > 1 ?
