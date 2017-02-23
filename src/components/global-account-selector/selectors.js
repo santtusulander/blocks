@@ -9,7 +9,8 @@ import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 
 import { getByBrand } from '../../redux/modules/entities/accounts/selectors'
 
-import { VIEW_CONTENT_ACCOUNTS, VIEW_CONTENT_GROUPS, DENY_ALWAYS } from '../../constants/permissions'
+const getGroupsForAccount = (state, parents, callBack) => getByAccount(state, parents.account).toJS().map(callBack)
+const getAccountsForBrand = (state, parents, callBack) => getByBrand(state, parents.brand).toJS().map(callBack)
 
 /**
  * get groups from state, setting child nodes and defining a function to fetch child nodes for each one.
@@ -18,18 +19,17 @@ import { VIEW_CONTENT_ACCOUNTS, VIEW_CONTENT_GROUPS, DENY_ALWAYS } from '../../c
  * @param  {[type]} accountId [description]
  * @return {[type]}           [description]
  */
-const getGroups = (state, parents, hide) => {
+export const getGroups = (state, parents, has, callBack = getGroupsForAccount) => {
 
-  return getByAccount(state, String(parents.account)).toJS().map((group) => {
+  return callBack(state, parents, (group) => {
 
-    const nodes = !hide.group.childCarets && getProperties(state, { ...parents, group: group.id })
+    const nodes = has.includes("group") && getProperties(state, { ...parents, group: group.id })
     const headerSubtitle = <FormattedMessage id="portal.common.property.multiple" values={{numProperties: nodes.length || 0}}/>
 
     return {
       ...group,
       nodeInfo: {
         headerSubtitle,
-        showBackCaretPermission: hide.group.backCaret ? DENY_ALWAYS : VIEW_CONTENT_GROUPS,
         fetchChildren: () => propertyActions.fetchAll({ ...parents, group: group.id }),
         entityType: 'group',
         parents,
@@ -44,7 +44,7 @@ const getGroups = (state, parents, hide) => {
  * @param  {[type]} groupId [description]
  * @return {[type]}         [description]
  */
-const getProperties = (state, parents) => {
+export const getProperties = (state, parents) => {
 
   return getByGroup(state, String(parents.group)).toJS().map((property) => {
 
@@ -53,7 +53,6 @@ const getProperties = (state, parents) => {
       idKey: 'published_host_id',
       labelKey: 'published_host_id',
       nodeInfo: {
-        showBackCaretPermission: VIEW_CONTENT_GROUPS,
         entityType: 'property',
         parents
       }
@@ -68,18 +67,17 @@ const getProperties = (state, parents) => {
  * @param  {Object} [hide={}] [description]
  * @return {[type]}           [description]
  */
-export const getAccounts = (state, parents, hide) => {
+export const getAccounts = (state, parents, has, callBack = getAccountsForBrand) => {
+  return callBack(state, parents, account => {
 
-  return getByBrand(state, parents.brand).toJS().map(account => {
+    const nodes = has.includes("account") && getGroups(state, { ...parents, account: account.id }, has)
 
-    const nodes = !hide.account.childCarets && getGroups(state, { ...parents, account: account.id }, hide)
     const headerSubtitle = <FormattedMessage id="portal.common.group.multiple" values={{numGroups: nodes.length || 0}}/>
 
     return {
       ...account,
       nodeInfo: {
         headerSubtitle,
-        showBackCaretPermission: hide.account.backCaret ? DENY_ALWAYS : VIEW_CONTENT_ACCOUNTS,
         fetchChildren: () => groupActions.fetchAll({ ...parents, account: account.id }),
         entityType: 'account',
         parents,
@@ -87,4 +85,18 @@ export const getAccounts = (state, parents, hide) => {
       }
     }
   })
+}
+
+export const getBrands = (state, brand, has) => {
+
+  const nodes = has.includes('brand') && getAccounts(state, { brand }, has)
+  const headerSubtitle = <FormattedMessage id="portal.common.account.multiple" values={{numAccounts: nodes.length || 0}}/>
+  return [{
+    id: brand,
+    name: 'UDN Admin',
+    nodeInfo: {
+      headerSubtitle,
+      nodes
+    }
+  }]
 }

@@ -44,7 +44,7 @@ export default class Selector extends Component {
 
   toggleMenu = () => this.setState({ open: !this.state.open, search: '' })
 
-  findActiveNode = (tree = [], parentId) => {
+  findActiveNode = (tree = [], parentNodeId) => {
 
     let found, foundFromChild = undefined
 
@@ -67,7 +67,7 @@ export default class Selector extends Component {
     }
 
     if (found) {
-      return { ...found, parentId };
+      return { ...found, parentNodeId };
     }
   }
 
@@ -77,13 +77,12 @@ export default class Selector extends Component {
 
     if (nodeToView) {
 
-      const { parentId, labelKey = 'name', nodeInfo } = nodeToView
+      const { parentNodeId, labelKey = 'name', nodeInfo } = nodeToView
       return (
           <Dropdown.Menu>
             <SelectorHeader
-              parentId={parentId}
+              parentId={parentNodeId}
               subtitle={nodeInfo.headerSubtitle}
-              showBackCaretPermission={nodeInfo.showBackCaretPermission}
               goToParent={this.changeActiveNode}
               searchValue={this.state.search}
               onSearchChange={this.onSearchChange}
