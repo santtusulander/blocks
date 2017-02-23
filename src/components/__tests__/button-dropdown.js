@@ -10,11 +10,11 @@ const defaultProps = {
   options: [
     {
       label:'New File Upload',
-      callback: jest.fn()
+      handleClick: jest.fn()
     },
     {
       label:'New Folder',
-      callback: jest.fn()
+      handleClick: jest.fn()
     }
   ],
   pullRight: true
