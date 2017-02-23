@@ -21,6 +21,7 @@ const mockRedux = {
     switch (entity) {
       case 'storages':
         return fromJS([{
+          id: 1,
           name: 'Media Storage',
           group: 'Group A',
           originTo: 'mysite.com',
@@ -28,6 +29,7 @@ const mockRedux = {
           usage: '450 GB',
           files: 1404
         },{
+          id: 2,
           name: 'Bangkok Storage',
           group: 'Group B',
           originTo: 'foobar.com and 1 more',
@@ -35,6 +37,7 @@ const mockRedux = {
           usage: '1.2 TB',
           files: 28776
         },{
+          id: 3,
           name: 'Asia Storage',
           group: 'Group C',
           originTo: 'barfoo.com',
@@ -42,6 +45,7 @@ const mockRedux = {
           usage: '900 GB',
           files: 1404
         },{
+          id: 4,
           name: 'Dataphone Storage',
           group: 'Group D',
           originTo: 'mysite.com and 5 more',
@@ -171,16 +175,16 @@ class AccountManagementStorages extends Component {
               <TableSorter {...sorterProps} column="name">
                 <FormattedMessage id="portal.account.storages.table.name.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="name">
+              <TableSorter {...sorterProps} column="group">
                 <FormattedMessage id="portal.account.storages.table.group.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="name">
+              <TableSorter {...sorterProps} column="originTo">
                 <FormattedMessage id="portal.account.storages.table.originTo.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="name">
+              <TableSorter {...sorterProps} column="location">
                 <FormattedMessage id="portal.account.storages.table.location.text"/>
               </TableSorter>
-              <TableSorter {...sorterProps} column="name">
+              <TableSorter {...sorterProps} column="usage">
                 <FormattedMessage id="portal.account.storages.table.usage.text"/>
               </TableSorter>
               <th><FormattedMessage id="portal.account.storages.table.files.text"/></th>
