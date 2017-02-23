@@ -40,7 +40,7 @@ export const setTokenMeta = ( tokenMeta ) => {
  * @return {Object}
  */
 export const getTokenMeta = () => {
-  return JSON.parse( localStorage.getItem( LOCALSTORAGE_USER_TOKEN_META ) || {})
+  return JSON.parse( localStorage.getItem( LOCALSTORAGE_USER_TOKEN_META ) || '{}')
 }
 
 /**
