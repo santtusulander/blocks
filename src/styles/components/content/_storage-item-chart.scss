@@ -20,14 +20,14 @@ $storage-unit-horizontal-margin: 10px;
     }
   }
 
-  .location {
+  &-location {
     position: absolute;
     top: 15%;
     width: 100%;
     text-align: center;
   }
 
-  .info {
+  &-info {
     position: absolute;
     top: 35%;
     bottom: 0;
@@ -73,7 +73,7 @@ $storage-unit-horizontal-margin: 10px;
 
   .btn-toolbar {
     position: absolute;
-    top: 75%;
+    top: 80%;
     left: 50%;
     transform: translate(-50%, -100%);
 

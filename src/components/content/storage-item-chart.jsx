@@ -72,8 +72,8 @@ const StorageItemChart = (
           {pies}
         </PieChart>
 
-        <div className="location">{location}</div>
-        <div className="info">
+        <div className="storage-item-chart-location">{location}</div>
+        <div className="storage-item-chart-info">
           <div className="title">{name}</div>
           <div className="usage">
             <span className="usage-value">
@@ -83,7 +83,7 @@ const StorageItemChart = (
               {separateUnit(formatBytes(currentUsage, null, FORMAT)).unit}
             </span>
           </div>
-          <div className="estimate">of 250</div>
+          <div className="usage-estimate">of 250</div>
         </div>
 
         <ButtonToolbar>
