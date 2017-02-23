@@ -28,8 +28,6 @@ const DESTROY_STORE = 'DESTROY_STORE'
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
 
-//
-//const username = getUserName() || null
 const emptyUser = Map({
   allUsers: List(),
   currentUser: Map(),
