@@ -17,13 +17,14 @@ class MatchesSelection extends React.Component {
     super(props);
 
     this.setMatchField = this.setMatchField.bind(this)
-    this.setMatchFieldForContentTargeting = this.setMatchFieldForContentTargeting.bind(this)
+    //this.setMatchFieldForContentTargeting = this.setMatchFieldForContentTargeting.bind(this)
     this.setMatchFieldForFileExtension = this.setMatchFieldForFileExtension.bind(this)
   }
   setMatchField(field) {
-    if (field === 'content_targeting') {
-      return this.setMatchFieldForContentTargeting()
-    } else if (field === 'file_extension') {
+    // if (field === 'content_targeting') {
+    //   return this.setMatchFieldForContentTargeting()
+    // } else 
+    if (field === 'file_extension') {
       return this.setMatchFieldForFileExtension()
     }
     return e => {
@@ -31,26 +32,26 @@ class MatchesSelection extends React.Component {
       this.props.changeValue(this.props.path.concat(['field']), field)
     }
   }
-  setMatchFieldForContentTargeting() {
-    return e => {
-      e.preventDefault()
-      const match = Immutable.fromJS({
-        cases: [
-          [WILDCARD_REGEXP, [{
-            script_lua: {
-              target: {
-                geo: [{
-                  country: []
-                }]
-              }
-            }
-          }]]
-        ],
-        field: 'request_host'
-      })
-      this.props.changeValue(this.props.path, match)
-    }
-  }
+  // setMatchFieldForContentTargeting() {
+  //   return e => {
+  //     e.preventDefault()
+  //     const match = Immutable.fromJS({
+  //       cases: [
+  //         [WILDCARD_REGEXP, [{
+  //           script_lua: {
+  //             target: {
+  //               geo: [{
+  //                 country: []
+  //               }]
+  //             }
+  //           }
+  //         }]]
+  //       ],
+  //       field: 'request_host'
+  //     })
+  //     this.props.changeValue(this.props.path, match)
+  //   }
+  // }
   setMatchFieldForFileExtension() {
     return e => {
       e.preventDefault()

@@ -5,9 +5,7 @@ import Immutable from 'immutable'
 import Select from '../../select'
 import InputConnector from '../../input-connector'
 import {
-  matchFilterChildPaths,
-  getMatchFilterType,
-  WILDCARD_REGEXP
+  getMatchFilterType
 } from '../../../util/policy-config'
 
 import { FormattedMessage } from 'react-intl'
@@ -16,13 +14,14 @@ class Matcher extends React.Component {
   constructor(props) {
     super(props);
     const fieldDetail = props.match.get('field_detail')
-    const caseKey = props.match.getIn(['cases', 0, 0])
-    const containsVal = fieldDetail ? caseKey : ''
+    const value = props.match.get('value')
+    
+    const containsVal = fieldDetail ? value : ''
 
     this.state = {
       activeFilter: getMatchFilterType(props.match),
       containsVal: containsVal,
-      val: fieldDetail ? fieldDetail : caseKey
+      val: fieldDetail ? fieldDetail : value
     }
 
     this.handleValChange = this.handleValChange.bind(this)
@@ -34,12 +33,13 @@ class Matcher extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(!Immutable.is(nextProps.match, this.props.match)) {
       const fieldDetail = nextProps.match.get('field_detail')
-      const caseKey = nextProps.match.getIn(['cases', 0, 0])
-      const containsVal = fieldDetail ? caseKey : ''
+      const value = nextProps.match.get('value')
+      //const caseKey = nextProps.match.getIn(['cases', 0, 0])
+      const containsVal = fieldDetail ? value : ''
       this.setState({
         activeFilter: getMatchFilterType(nextProps.match),
         containsVal: containsVal,
-        val: fieldDetail ? fieldDetail : caseKey
+        val: fieldDetail ? fieldDetail : value
       })
     }
   }
@@ -73,63 +73,67 @@ class Matcher extends React.Component {
   saveChanges() {
     // matches with a contain value put val in field_detail and use containsVal
     // as child key
-    const children = this.props.match
-      .getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
+//    const children = this.props.match
+      //.getIn(matchFilterChildPaths[getMatchFilterType(this.props.match)])
     let newMatch = this.props.match
-    if(this.props.contains) {
+    if (this.props.contains) {
       newMatch = newMatch.set('field_detail', this.state.val)
-      switch (this.state.activeFilter) {
-        case 'exists':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [WILDCARD_REGEXP, children]
-            ]))
-            .delete('default')
-          break
-        case 'contains':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [this.state.containsVal, children]
-            ]))
-            .delete('default')
-          break
-        case 'does_not_exist':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [WILDCARD_REGEXP, []]
-            ]))
-            .set('default', children)
-          break
-        case 'does_not_contain':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [this.state.containsVal, []],
-              [WILDCARD_REGEXP, children]
-            ]))
-            .delete('default')
-          break
-      }
     }
+
+    switch (this.state.activeFilter) {
+      case 'exists':
+        newMatch = newMatch.set('type', 'exist')
+        break
+      case 'contains':
+        newMatch = newMatch.set('type', 'in')
+                           .set('value', this.state.containsVal)
+        break
+      case 'equals':
+        newMatch = newMatch.set('type', 'equals')
+                           .set('value', this.state.containsVal)
+        break
+      case 'empty':
+        newMatch = newMatch.set('type', 'empty')
+        break
+      case 'does_not_exist':
+        newMatch = newMatch.set('type', 'exist')
+                           .set('inverted', true)
+        break
+      case 'does_not_contain':
+        newMatch = newMatch.set('type', 'in')
+                           .set('value', this.state.containsVal)
+                           .set('inverted', true)
+        break
+      case 'does_not_equals':
+        newMatch = newMatch.set('type', 'equals')
+                           .set('inverted', true)
+        break
+      case 'does_not_empty':
+        newMatch = newMatch.set('type', 'empty')
+                           .set('inverted', true)
+        break
+    }
+    //}
     // if there's no contain value, use val as the child key
-    else {
-      newMatch = newMatch.delete('field_detail')
-      switch (this.state.activeFilter) {
-        case 'exists':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [this.state.val || WILDCARD_REGEXP, children]
-            ]))
-            .delete('default')
-          break
-        case 'does_not_exist':
-          newMatch = newMatch
-            .set('cases', Immutable.fromJS([
-              [this.state.val || WILDCARD_REGEXP, []]
-            ]))
-            .set('default', children)
-          break
-      }
-    }
+    // else {
+    //   newMatch = newMatch.delete('field_detail')
+    //   switch (this.state.activeFilter) {
+    //     case 'exists':
+    //       newMatch = newMatch
+    //         .set('cases', Immutable.fromJS([
+    //           [this.state.val || WILDCARD_REGEXP, children]
+    //         ]))
+    //         .delete('default')
+    //       break
+    //     case 'does_not_exist':
+    //       newMatch = newMatch
+    //         .set('cases', Immutable.fromJS([
+    //           [this.state.val || WILDCARD_REGEXP, []]
+    //         ]))
+    //         .set('default', children)
+    //       break
+    //   }
+    // }
     this.props.changeValue(this.props.path, newMatch)
     this.props.close()
   }

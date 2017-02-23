@@ -2,10 +2,17 @@ import Immutable from 'immutable'
 
 import { MEDIA_DELIVERY_CONTENT_TARGETTING, MEDIA_DELIVERY_TOKEN_AUTH } from './service-permissions'
 
-export const DEFAULT_MATCH_JS = {match: {field: null, cases: [['',[]]]}}
-export const DEFAULT_MATCH = Immutable.fromJS(DEFAULT_MATCH_JS)
+// export const DEFAULT_MATCH_JS = {match: {field: null, cases: [['',[]]]}}
+// export const DEFAULT_MATCH = Immutable.fromJS(DEFAULT_MATCH_JS)
 
-export const DEFAULT_ACTION_PATH = [0, 'match', 'cases', 0, 1]
+export const DEFAULT_CONDITION_JS = {
+  type: 'equals',
+  field: null,
+  field_detail: '',
+  value: '',
+  inverted: false
+}
+export const DEFAULT_CONDITION = Immutable.fromJS(DEFAULT_CONDITION_JS)
 
 export const POLICY_TYPES = {
   REQUEST: 'request_policy',

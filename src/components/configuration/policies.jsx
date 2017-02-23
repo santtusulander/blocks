@@ -57,7 +57,7 @@ class ConfigurationPolicies extends React.Component {
     const policyRules = this.props.config.getIn([policyType, 'policy_rules']).push(DEFAULT_MATCH)
     this.props.changeValue([policyType, 'policy_rules'], policyRules)
     this.props.activateRule([policyType, 'policy_rules', policyRules.size - 1])
-    this.props.activateMatch([policyType, 'policy_rules', policyRules.size - 1, 'match'])
+    //this.props.activateMatch([policyType, 'policy_rules', policyRules.size - 1, 'match'])
   }
   changeActiveRuleType(policyType) {
     if ([ POLICY_TYPES.REQUEST, POLICY_TYPES.FINAL_REQUEST, POLICY_TYPES.RESPONSE, POLICY_TYPES.FINAL_RESPONSE].indexOf(policyType) === -1) {
@@ -76,7 +76,7 @@ class ConfigurationPolicies extends React.Component {
       [[policyType, 'policy_rules'], newRuleset]
     ])
     this.props.activateRule([policyType, 'policy_rules', newRuleset.size - 1])
-    this.props.activateMatch([policyType, 'policy_rules', newRuleset.size - 1, 'match'])
+    //this.props.activateMatch([policyType, 'policy_rules', newRuleset.size - 1, 'match'])
   }
   changeActiveRuleMatchType(type) {
     let activeConfig = this.getActiveConfig()

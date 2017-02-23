@@ -84,37 +84,38 @@ class ConfigurationPolicyRules extends React.Component {
       let actionsLabel = ''
       const firstPolicy = rule.get('rule_body').first()
 
-      if(!firstPolicy.has('match')) {
-        return null
-      }
+      // if(!firstPolicy.has('match')) {
+      //   return null
+      // }
 
-      if ( matchIsContentTargeting(firstPolicy.get('match') )) {
-        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
-        actionsLabel = ''
+      // if ( matchIsContentTargeting(firstPolicy.get('match') )) {
+      //   matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
+      //   actionsLabel = ''
 
-        const scriptLua = getScriptLua( firstPolicy )
+      //   const scriptLua = getScriptLua( firstPolicy )
 
-        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
-        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
-        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
+      //   const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
+      //   const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
+      //   const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
 
-        let ctActionLabels = []
-        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
+      //   let ctActionLabels = []
+      //   if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
+      //   if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
+      //   if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
 
-        actionsLabel = ctActionLabels.join(' | ')
+      //   actionsLabel = ctActionLabels.join(' | ')
 
-      } else {
+      // } else {
         matchLabel = matches.map(match => match.field).join(', ')
         actionsLabel = sets.map(set => set.setkey).join(', ')
-      }
+      //}
 
       {/*
         TODO: remove UDN admin checks as part of UDNP-1713
         Allow CT / TA modification only for UDN Admin
       */}
-      const ruleNeedsAdmin = matchIsContentTargeting(firstPolicy.get('match')) || actionIsTokenAuth(sets)
+      //const ruleNeedsAdmin = matchIsContentTargeting(firstPolicy.get('match')) || actionIsTokenAuth(sets)
+      const ruleNeedsAdmin = actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}

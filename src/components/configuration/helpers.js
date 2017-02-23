@@ -26,7 +26,7 @@ import ConfigurationActionHeader from './actions/header'
 import ConfigurationContentTargetingAction from './actions/content-targeting'
 
 import {
-  matchIsContentTargeting,
+  //matchIsContentTargeting,
   matchIsFileExtension
 } from '../../util/policy-config'
 
@@ -47,9 +47,10 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
 
     if (matchIsFileExtension(activeMatch)) {
       matchType = 'file_extension'
-    } else if (matchIsContentTargeting(activeMatch)) {
-      matchType = 'content_targeting'
-    }
+    } 
+    // else if (matchIsContentTargeting(activeMatch)) {
+    //   matchType = 'content_targeting'
+    // }
 
     switch(matchType) {
       case 'request_header':
@@ -149,9 +150,10 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
     }
 
     let setType = setPath.last()
-    if (setPath.contains('script_lua')) {
-      setType = 'content_targeting'
-    }
+    //let setType = activeSet.keySeq().first()//setPath.last()
+    // if (setPath.contains('script_lua')) {
+    //   setType = 'content_targeting'
+    // }
 
     switch(setType) {
       case 'cache_name':
