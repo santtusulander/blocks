@@ -1,0 +1,101 @@
+$storage-unit-width: 24px;
+$storage-unit-horizontal-margin: 10px;
+
+.storage-item-chart {
+  position: relative;
+  width: 266px;
+  height: 266px;
+  stroke: none;
+
+  .recharts-surface {
+    width: 266px;
+    height: 266px;
+
+    path {
+      stroke: none;
+    }
+
+    .last-month {
+      opacity: 0.5;
+    }
+  }
+
+  .location {
+    position: absolute;
+    top: 15%;
+    width: 100%;
+    text-align: center;
+  }
+
+  .info {
+    position: absolute;
+    top: 35%;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+
+    .title {
+      margin-bottom: 8px;
+      overflow: hidden;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 1.1em;
+      color: $white;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      white-space: nowrap;
+    }
+
+    .usage {
+      position: relative;
+      margin-bottom: 8px;
+      margin-left: calc(#{$storage-unit-width} + #{$storage-unit-horizontal-margin});
+      overflow: hidden;
+      font-weight: bold;
+      color: $white;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      white-space: nowrap;
+
+      &-value {
+        font-size: 36px;
+        line-height: 1em;
+      }
+
+      &-unit {
+        width: $storage-unit-width;
+        margin-left: $storage-unit-horizontal-margin;
+      }
+
+    }
+
+  }
+
+  .btn-toolbar {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+
+    .btn {
+      background-color: rgba($black, 0.3);
+    }
+  }
+
+  &:hover {
+    .estimate {
+      opacity: 0;
+      transition: opacity 250ms;
+    }
+
+    .btn-toolbar .invisible {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 250ms;
+    }
+
+    .hover-info {
+      opacity: 1;
+    }
+  }
+}
