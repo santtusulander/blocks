@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
-import IconHeaderCaret from './icons/icon-header-caret'
-import StatusItem from './file-upload-status-item'
 import { Button, Panel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames'
+import IconHeaderCaret from './icons/icon-header-caret'
+import StatusItem from './file-upload-status-item'
 
 class FileUploadStatus extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class FileUploadStatus extends React.Component {
             onClick={this.toggleFilesList}
             >
             <IconHeaderCaret
-              className={`caret-icon ${!this.state.open && 'upward'}`} />
+              className={classNames('caret-icon', {'upward': !this.state.open})} />
           </Button>
         </div>
         <Panel collapsible={true} expanded={this.state.open} className='file-upload-status-body'>
