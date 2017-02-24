@@ -5,7 +5,15 @@ import { Map, List, fromJS } from 'immutable'
 import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
 import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
-import { getUserToken, setUserToken, deleteUserToken, setUserName, deleteUserName } from '../../util/local-storage'
+import {
+  getUserToken,
+  setUserToken,
+  deleteUserToken,
+  setTokenMeta,
+  deleteTokenMeta,
+  setUserName,
+  deleteUserName
+} from '../../util/local-storage'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -126,6 +134,7 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   deleteUserToken()
+  deleteTokenMeta()
 
   delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -168,6 +177,8 @@ export function deleteUserFailure(state) {
 export function userTokenChecked(state, action){
   if(action.payload && action.payload.token) {
     setUserToken(action.payload.token)
+    setTokenMeta(action.payload.tokenMeta)
+
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
@@ -356,10 +367,16 @@ export const checkToken = createAction(USER_TOKEN_CHECKED, () => {
       {headers: {'X-Auth-Token': token}}
     )
     .then(res => {
+      //TODO: UDNP-2357 Should we save services object?
       if(res) {
         return {
           token: token,
-          username: res.data.username
+          username: res.data.username,
+          tokenMeta: {
+            expires_at: res.data.expires_at,
+            issued_at: res.data.issued_at,
+            validity_duration: res.data.validity_duration
+          }
         }
       }
     })
