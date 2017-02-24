@@ -714,7 +714,7 @@ class Network extends React.Component {
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
               creationPermission={PERMISSIONS.CREATE_GROUP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.VIEW_GROUP)}
             />
 
             <EntityList
@@ -733,7 +733,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
               contentTextGenerator={entity => entity.get('description')}
               creationPermission={PERMISSIONS.CREATE_NETWORK}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
+              viewPermission={PERMISSIONS.VIEW_NETWORK}
             />
 
             <EntityList
@@ -752,7 +752,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
               contentTextGenerator={entity => entity.get('id')}
               creationPermission={PERMISSIONS.CREATE_POP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
+              viewPermission={PERMISSIONS.VIEW_POP}
             />
 
             <EntityList
@@ -773,7 +773,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
               contentTextGenerator={this.podContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_POD}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
+              viewPermission={PERMISSIONS.VIEW_POD}
             />
 
             <EntityList
@@ -794,7 +794,7 @@ class Network extends React.Component {
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
               contentTextGenerator={this.nodeContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_NODE}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
+              viewPermission={PERMISSIONS.VIEW_NODE}
             />
           </div>
         </PageContainer>

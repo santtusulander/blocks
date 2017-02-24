@@ -7,10 +7,12 @@ import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import IsAllowed from '../../is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
+import { DELETE_NETWORK, MODIFY_NETWORK } from '../../../constants/permissions'
 import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validate = ({ name, description }) => {
@@ -70,20 +72,22 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
 
       <FormFooterButtons>
         { edit &&
-          <ButtonDisableTooltip
-            id="delete-btn"
-            className="btn-danger pull-left"
-            disabled={hasPops}
-            onClick={handleSubmit(() => onDelete(initialValues.name))}
-            tooltipId="tooltip-help"
-            tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-            {
-              //Commented out: as submitting is also true when 'saving'.
-              //Should show DELETE -modal and ask for confirmation
-              //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
-            }
-            <FormattedMessage id="portal.button.delete"/>
-          </ButtonDisableTooltip>
+          <IsAllowed to={DELETE_NETWORK}>
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={hasPops}
+              onClick={handleSubmit(() => onDelete(initialValues.name))}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
+              {
+                //Commented out: as submitting is also true when 'saving'.
+                //Should show DELETE -modal and ask for confirmation
+                //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
+              }
+              <FormattedMessage id="portal.button.delete"/>
+            </ButtonDisableTooltip>
+          </IsAllowed>
         }
         <Button
           className="btn-secondary"
@@ -91,12 +95,14 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting}>
-          {actionButtonTitle}
-        </Button>
+        <IsAllowed to={MODIFY_NETWORK}>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}>
+            {actionButtonTitle}
+          </Button>
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )

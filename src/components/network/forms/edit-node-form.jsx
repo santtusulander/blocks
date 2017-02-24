@@ -15,9 +15,11 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
 import ButtonDisableTooltip from '../../button-disable-tooltip'
+import IsAllowed from '../../is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'
 
+import { MODIFY_NODE, DELETE_NODE } from '../../../constants/permissions'
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
   NODE_ENVIRONMENT_OPTIONS,
@@ -358,14 +360,16 @@ class NetworkEditNodeForm extends React.Component {
           {fields}
         </div>
         <FormFooterButtons>
-          <ButtonDisableTooltip
-            tooltipId="edit-node-form__delete-disabled-tooltip"
-            bsStyle="danger"
-            className='pull-left'
-            onClick={this.onDelete}
-          >
-            <FormattedMessage id="portal.common.button.delete" />
-          </ButtonDisableTooltip>
+          <IsAllowed to={DELETE_NODE}>
+            <ButtonDisableTooltip
+              tooltipId="edit-node-form__delete-disabled-tooltip"
+              bsStyle="danger"
+              className='pull-left'
+              onClick={this.onDelete}
+            >
+              <FormattedMessage id="portal.common.button.delete" />
+            </ButtonDisableTooltip>
+          </IsAllowed>
 
           <Button
             id="edit-node-form__cancel-btn"
@@ -373,12 +377,14 @@ class NetworkEditNodeForm extends React.Component {
             onClick={this.onCancel}>
             <FormattedMessage id="portal.common.button.cancel"/>
           </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={pristine||invalid||submitting}>
-            {submitButtonLabel}
-          </Button>
+          <IsAllowed to={MODIFY_NODE}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={pristine||invalid||submitting}>
+              {submitButtonLabel}
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
       </form>
     )

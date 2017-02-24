@@ -88,6 +88,10 @@ permissionMapping[PERMISSIONS.CREATE_GROUP] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'create', 'allowed'])
 permissionMapping[PERMISSIONS.MODIFY_GROUP] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'delete', 'allowed'])
+permissionMapping[PERMISSIONS.VIEW_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'show', 'allowed'])
 
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
@@ -144,6 +148,9 @@ permissionMapping[PERMISSIONS.MODIFY_NETWORK] =
 permissionMapping[PERMISSIONS.DELETE_NETWORK] =
   (role) => role.getIn(['permissions', 'north', 'networks', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_NETWORK] =
+  (role) => role.getIn(['permissions', 'north', 'networks', 'show', 'allowed'])
+
 // POP permissions
 permissionMapping[PERMISSIONS.CREATE_POP] =
   (role) => role.getIn(['permissions', 'north', 'pops', 'create', 'allowed'])
@@ -153,6 +160,9 @@ permissionMapping[PERMISSIONS.MODIFY_POP] =
 
 permissionMapping[PERMISSIONS.DELETE_POP] =
   (role) => role.getIn(['permissions', 'north', 'pops', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_POP] =
+  (role) => role.getIn(['permissions', 'north', 'pops', 'show', 'allowed'])
 
 // POD permissions
 permissionMapping[PERMISSIONS.CREATE_POD] =
@@ -164,6 +174,9 @@ permissionMapping[PERMISSIONS.MODIFY_POD] =
 permissionMapping[PERMISSIONS.DELETE_POD] =
   (role) => role.getIn(['permissions', 'north', 'pods', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_POD] =
+  (role) => role.getIn(['permissions', 'north', 'pods', 'show', 'allowed'])
+
 // Node permissions
 permissionMapping[PERMISSIONS.CREATE_NODE] =
   (role) => role.getIn(['permissions', 'north', 'nodes', 'create', 'allowed'])
@@ -174,6 +187,34 @@ permissionMapping[PERMISSIONS.MODIFY_NODE] =
 permissionMapping[PERMISSIONS.DELETE_NODE] =
   (role) => role.getIn(['permissions', 'north', 'nodes', 'delete', 'allowed'])
 
+permissionMapping[PERMISSIONS.VIEW_NODE] =
+  (role) => role.getIn(['permissions', 'north', 'nodes', 'show', 'allowed'])
+
+// Location permissions
+permissionMapping[PERMISSIONS.CREATE_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_LOCATION] =
+  (role) => role.getIn(['permissions', 'north', 'locations', 'show', 'allowed'])
+
+// Footprint permissions
+permissionMapping[PERMISSIONS.CREATE_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'create', 'allowed'])
+
+permissionMapping[PERMISSIONS.MODIFY_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'modify', 'allowed'])
+
+permissionMapping[PERMISSIONS.DELETE_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'delete', 'allowed'])
+
+permissionMapping[PERMISSIONS.VIEW_FOOTPRINT] =
+  (role) => role.getIn(['permissions', 'north', 'footprints', 'show', 'allowed'])
 
 /**
  * Determine if a user has a permission.

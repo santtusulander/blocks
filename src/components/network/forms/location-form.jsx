@@ -10,8 +10,10 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
+import IsAllowed from '../../is-allowed'
 
-import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
+import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
+import { isValidLatitude, isValidLongtitude , isValidTextField } from '../../../util/validators.js'
 
 import {LOCATION_NAME_MIN_LENGTH,
   LOCATION_NAME_MAX_LENGTH,
@@ -250,13 +252,15 @@ const NetworkLocationForm = (props) => {
 
       <FormFooterButtons>
         { edit &&
-        <Button
-          className="btn-danger pull-left"
-          disabled={submitting}
-          onClick={handleSubmit(() => onDelete(initialValues.name))}
-        >
-          <FormattedMessage id="portal.button.delete"/>
-        </Button>
+          <IsAllowed to={DELETE_LOCATION}>
+            <Button
+              className="btn-danger pull-left"
+              disabled={submitting}
+              onClick={handleSubmit(() => onDelete(initialValues.name))}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
+          </IsAllowed>
         }
         <Button
           className="btn-secondary"
@@ -264,13 +268,15 @@ const NetworkLocationForm = (props) => {
         >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting}
-        >
-          {actionButtonTitle}
-        </Button>
+        <IsAllowed to={MODIFY_LOCATION}>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting}
+          >
+            {actionButtonTitle}
+          </Button>
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )};

@@ -9,12 +9,13 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
-
+import IsAllowed from '../../is-allowed'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
 import { isValidTextField, isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
+import { MODIFY_FOOTPRINT } from '../../../constants/permissions'
 import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validateCIDRToken = (item) => {
@@ -209,13 +210,14 @@ class FootprintForm extends React.Component {
             onClick={onCancel}>
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
-
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || fetching}>
-            {submitButtonLabel}
-          </Button>
+          <IsAllowed to={MODIFY_FOOTPRINT}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting || fetching}>
+              {submitButtonLabel}
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
       </form>
     )

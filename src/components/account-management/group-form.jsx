@@ -7,7 +7,7 @@ import { List } from 'immutable'
 import { Button, Table } from 'react-bootstrap'
 
 import IconAdd from '../icons/icon-add'
-import UDNButton from '../button'
+import IconEdit from '../icons/icon-edit'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import ActionButtons from '../../components/action-buttons'
 import TruncatedTitle from '../../components/truncated-title'
@@ -17,6 +17,8 @@ import ServiceOptionSelector from './service-option-selector'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
 import HelpTooltip from '../../components/help-tooltip'
+import IsAllowed from '../../components/is-allowed'
+import { CREATE_LOCATION, VIEW_LOCATION, DELETE_GROUP, MODIFY_GROUP } from '../../constants/permissions'
 
 import {
   checkForErrors
@@ -97,10 +99,15 @@ const GroupForm = ({
                     <FormattedMessage id="portal.accountManagement.locations.tooltip.message" />
                   </HelpTooltip>
                 }
-                >
-                <UDNButton className="pull-right" bsStyle="success" icon={true} addNew={true} onClick={() => onShowLocation(null)}>
-                  <IconAdd/>
-                </UDNButton>
+              >
+                <IsAllowed to={CREATE_LOCATION}>
+                  <Button
+                    className="btn-icon btn-success pull-right"
+                    bsStyle="success"
+                    onClick={() => onShowLocation(null)}>
+                    <IconAdd />
+                  </Button>
+                </IsAllowed>
               </SectionHeader>
               {isFetchingEntities ? <LoadingSpinner/> :
                 !locations.isEmpty() ?
@@ -113,9 +120,14 @@ const GroupForm = ({
                               <h5><strong>{location.get('cityName')}</strong></h5>
                               <div className="text-sm">{location.get('iataCode')}</div>
                           </td>
-                          <td className="one-button-cell">
-                            <ActionButtons
-                              onEdit={() => onShowLocation(location.get('reduxId'))}/>
+                          <td className="one-button-cell action-buttons primary">
+                            <IsAllowed to={VIEW_LOCATION}>
+                              <Button
+                                className="btn btn-icon edit-button action-buttons primary"
+                                onClick={() => onShowLocation(location.get('reduxId'))}>
+                                <IconEdit />
+                              </Button>
+                            </IsAllowed>
                           </td>
                         </tr>
                       )
@@ -161,15 +173,17 @@ const GroupForm = ({
           }
         <FormFooterButtons>
           {(groupId && onDelete) &&
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger pull-left"
-              disabled={submitting || isFetchingEntities || hasNetworks}
-              onClick={onDelete}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
-              <FormattedMessage id="portal.button.delete"/>
-            </ButtonDisableTooltip>
+            <IsAllowed to={DELETE_GROUP}>
+              <ButtonDisableTooltip
+                id="delete-btn"
+                className="btn-danger pull-left"
+                disabled={submitting || isFetchingEntities || hasNetworks}
+                onClick={onDelete}
+                tooltipId="tooltip-help"
+                tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+                <FormattedMessage id="portal.button.delete"/>
+              </ButtonDisableTooltip>
+            </IsAllowed>
           }
 
           <Button
@@ -179,12 +193,14 @@ const GroupForm = ({
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || isFetchingEntities || (canSeeLocations && locations.isEmpty())}>
-            {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-          </Button>
+          <IsAllowed to={MODIFY_GROUP}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting || isFetchingEntities}>
+              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
     </form>
   )

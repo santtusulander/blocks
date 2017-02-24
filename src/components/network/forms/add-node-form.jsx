@@ -8,9 +8,11 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import IsAllowed from '../../is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isInt } from '../../../util/validators'
+import { CREATE_NODE } from '../../../constants/permissions'
 
 import {
   NODE_CLOUD_DRIVER_OPTIONS,
@@ -122,12 +124,14 @@ class NetworkAddNodeForm extends React.Component {
             onClick={() => this.toggleAddConfirm(false)}>
             <FormattedMessage id="portal.button.back"/>
           </Button>
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid||submitting}>
-            {submitButtonLabel}
-          </Button>
+          <IsAllowed to={CREATE_NODE}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid||submitting}>
+              {submitButtonLabel}
+            </Button>
+          </IsAllowed>
         </ButtonToolbar>
       </FormFooterButtons>)
     } else {
@@ -138,12 +142,14 @@ class NetworkAddNodeForm extends React.Component {
           onClick={this.onCancel}>
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid||submitting}>
-          <FormattedMessage id="portal.button.add" />
-        </Button>
+        <IsAllowed to={CREATE_NODE}>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid||submitting}>
+            <FormattedMessage id="portal.button.add" />
+          </Button>
+        </IsAllowed>
       </FormFooterButtons>)
     }
   }

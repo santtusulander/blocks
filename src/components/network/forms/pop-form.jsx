@@ -13,7 +13,9 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupNumber from '../../form/field-form-group-number'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import IsAllowed from '../../is-allowed'
 
+import { DELETE_POP, MODIFY_POP } from '../../../constants/permissions'
 import { POP_ID_MIN, POP_ID_MAX } from '../../../constants/network.js'
 
 const validate = ({ name, locationId, id }) => {
@@ -104,18 +106,20 @@ const NetworkPopForm = (props) => {
 
         <FormFooterButtons>
           { edit &&
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger pull-left"
-              disabled={hasPods}
-              onClick={handleSubmit(onDelete)}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
-              {
-                //TODO: delete modal with confirm
-                submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
-              }
-            </ButtonDisableTooltip>
+            <IsAllowed to={DELETE_POP}>
+              <ButtonDisableTooltip
+                id="delete-btn"
+                className="btn-danger pull-left"
+                disabled={hasPods}
+                onClick={handleSubmit(onDelete)}
+                tooltipId="tooltip-help"
+                tooltipMessage={{text :intl.formatMessage({id: "portal.network.popEditForm.delete.tooltip.message"})}}>
+                {
+                  //TODO: delete modal with confirm
+                  submitting ? <FormattedMessage id="portal.button.deleting"/>  : <FormattedMessage id="portal.button.delete"/>
+                }
+              </ButtonDisableTooltip>
+            </IsAllowed>
           }
 
           <Button
@@ -125,12 +129,14 @@ const NetworkPopForm = (props) => {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={invalid || submitting || (!dirty)}>
-            {actionButtonTitle}
-          </Button>
+          <IsAllowed to={MODIFY_POP}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={invalid || submitting || (!dirty)}>
+              {actionButtonTitle}
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
       </form>
   )
