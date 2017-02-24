@@ -28,9 +28,14 @@ const clusterSchema = new schema.Entity('cluster', {},{
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = () => {
-  return axios.get(baseUrl())
-    .then( ({data}) => {
-      return normalize(data, [ clusterSchema ])
-    })
+export const fetchAll = ({}) => {
+  return axios.get(baseUrl(), {
+    headers: {
+      'Content-Type': 'application/json',
+      'testHeader': 'testValue'
+    }
+  })
+  .then( ({data}) => {
+    return normalize(data, [ clusterSchema ])
+  })
 }

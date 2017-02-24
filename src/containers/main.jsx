@@ -13,6 +13,9 @@ import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
 import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
+import ingestPointActions from '../redux/modules/entities/CIS-ingest-points/actions'
+import clusterActions from '../redux/modules/entities/CIS-clusters/actions'
+
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
 import Footer from '../components/footer'
@@ -275,7 +278,11 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
+
+    fetchIngestPoints: (params) => dispatch( ingestPointActions.fetchAll(params) ),
+    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) )
+    //fetchWorkFlows: () => dispatch( workFlowActions.fetchAll() )
   }
 }
 

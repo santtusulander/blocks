@@ -1,8 +1,8 @@
 import moment from 'moment'
 
 
-// For authentication, account, group, user, role, permission management
-export const BASE_URL_CIS_SOUTH = '/ingest_points'
+// CIS
+export const BASE_URL_CIS_SOUTH = ''
 
 
 // For authentication, account, group, user, role, permission management
