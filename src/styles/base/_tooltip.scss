@@ -127,15 +127,18 @@
 
 .storage-item-tooltip {
   &.top {
-    min-width: 250px;
     padding: 0 0 30px;
   }
 
-  .storage-month-info {
-    margin-top: 18px;
+  .storage-item-inner-tooltip {
+    min-width: 250px;
 
-    .tooltip-storage-value {
-      float: right;
+    .storage-month-info {
+      margin-top: 18px;
+
+      .tooltip-storage-value {
+        float: right;
+      }
     }
   }
 
