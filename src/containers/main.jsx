@@ -19,6 +19,7 @@ import Footer from '../components/footer'
 
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
+import AsperaNotification from '../components/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import {
   ENTRY_ROUTE_ROOT,
@@ -36,6 +37,7 @@ export class Main extends React.Component {
     this.logOut = this.logOut.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.hideNotification = this.hideNotification.bind(this)
+    this.hideAsperaNotification = this.hideAsperaNotification.bind(this)
     this.notificationTimeout = null
   }
 
@@ -112,9 +114,15 @@ export class Main extends React.Component {
     this.notificationTimeout = setTimeout(
       this.props.uiActions.changeNotification, 10000)
   }
+
   hideNotification() {
     this.props.uiActions.changeNotification()
   }
+
+  hideAsperaNotification() {
+    this.props.uiActions.changeAsperaNotification()
+  }
+
   render() {
     if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
@@ -194,6 +202,24 @@ export class Main extends React.Component {
             : ''
           }
         </ReactCSSTransitionGroup>
+
+        <ReactCSSTransitionGroup
+          component="div"
+          className="aspera-notification-transition"
+          transitionName="aspera-notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.props.asperaNotification ?
+            <AsperaNotification
+              handleClose={this.hideAsperaNotification}
+              status={this.props.asperaNotification}
+            />
+            : ''
+          }
+        </ReactCSSTransitionGroup>
+
       </div>
     );
   }
@@ -206,6 +232,7 @@ Main.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
+  asperaNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
@@ -255,6 +282,7 @@ function mapStateToProps({entities, ...state}) {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
+    asperaNotification: state.ui.get('asperaNotification'),
     currentUser: state.user.get('currentUser'),
     fetching,
     notification: state.ui.get('notification'),
