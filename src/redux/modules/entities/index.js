@@ -17,62 +17,69 @@ export const actionTypes = {
 
 const locations =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('locations'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'locations' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const accounts =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('accounts'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'accounts' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const footprints = handleActions({
-  [actionTypes.RECEIVE] : receiveEntity('footprints'),
+  [actionTypes.RECEIVE] : receiveEntity({ key: 'footprints' }),
   [actionTypes.REMOVE] : removeEntity,
   [actionTypes.FAIL] : failEntity
 }, Map())
 
 const groups =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('groups'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'groups' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const nodes =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('nodes'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'nodes' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const properties =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('properties'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const pops =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('pops'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'pops' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const pods =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('pods'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'pods' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const networks =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('networks'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'networks' }),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+const storageMetrics =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
@@ -88,5 +95,6 @@ export default combineReducers({
   pods,
   locations,
   footprints,
+  storageMetrics,
   fetching: mapActionsToFetchingReducers(actionTypes)
 })

@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 
 /*Reducers*/
-export const receiveEntity = (key) => (state, action) => {
+export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) => {
   const { response = {}, payload } = action
 
   // TODO: remove me after the new Redux modules (with API-middleware) is implemented
@@ -10,7 +10,9 @@ export const receiveEntity = (key) => (state, action) => {
   }
 
   if (response.entities && response.entities[key]) {
-    return state.mergeDeep(state, fromJS(response.entities[key]))
+    return useMergeDeep
+      ? state.mergeDeep(state, fromJS(response.entities[key]))
+      : state.merge(state, fromJS(response.entities[key]))
   }
 
   return state
