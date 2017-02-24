@@ -5,7 +5,15 @@ import { Map, List, fromJS } from 'immutable'
 import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
 import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
-import { getUserToken, setUserToken, deleteUserToken, setUserName, deleteUserName } from '../../util/local-storage'
+import {
+  getUserToken,
+  setUserToken,
+  deleteUserToken,
+  setTokenMeta,
+  deleteTokenMeta,
+  setUserName,
+  deleteUserName
+} from '../../util/local-storage'
 
 const USER_LOGGED_IN = 'USER_LOGGED_IN'
 const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
@@ -126,7 +134,7 @@ export function fetchAllFailure(state) {
 
 export function userLoggedOutSuccess(state){
   deleteUserToken()
-  localStorage.removeItem('EricssonUDNUserTokenMeta')
+  deleteTokenMeta()
 
   delete axios.defaults.headers.common['X-Auth-Token']
 
@@ -169,7 +177,8 @@ export function deleteUserFailure(state) {
 export function userTokenChecked(state, action){
   if(action.payload && action.payload.token) {
     setUserToken(action.payload.token)
-    localStorage.setItem('EricssonUDNUserTokenMeta', JSON.stringify(action.payload.tokenMeta))
+    setTokenMeta(action.payload.tokenMeta)
+
     axios.defaults.headers.common['X-Auth-Token'] = action.payload.token
 
     return state.set('loggedIn', true)
