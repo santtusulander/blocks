@@ -1,4 +1,4 @@
-import getTokenMeta from './local-storage'
+import { getTokenMeta } from './local-storage'
 
 /**
  * Builds Select compatible option list from users roles.
