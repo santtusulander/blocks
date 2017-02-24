@@ -42,10 +42,10 @@ export const NODE_TYPE_OPTIONS = [
 ]
 
 export const NODE_ENVIRONMENT_OPTIONS = [
-  { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
-  { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
-  { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'production', cacheValue: 'cdx', label: 'Production' }
+  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: 'Development'  },
+  { value: 'cdx-test', cacheValue: 'cdx-test', label: 'Testing' },
+  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: 'Staging' },
+  { value: 'cdx', cacheValue: 'cdx', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [
