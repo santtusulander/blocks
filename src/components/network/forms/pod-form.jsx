@@ -11,9 +11,7 @@ import {
   Col
 } from 'react-bootstrap'
 
-import {
-  checkForErrors
-} from '../../../util/helpers'
+import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
@@ -23,7 +21,13 @@ import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
-import { POD_PROVIDER_WEIGHT_MIN } from '../../../constants/network'
+import {
+  POD_PROVIDER_WEIGHT_MIN,
+  LBMETHOD_OPTIONS,
+  POD_TYPE_OPTIONS,
+  REQUEST_FWD_TYPE_OPTIONS,
+  DISCOVERY_METHOD_OPTIONS
+} from '../../../constants/network'
 
 //TODO: If Ip list needed uncomment
 //import { isValidIPv4Address } from '../../../util/validators'
@@ -33,31 +37,11 @@ import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
 
-const LBMETHOD_OPTIONS = [
-  {value: 'gslb', label: 'GSLB'},
-  {value: 'lb', label: 'LB'},
-  {value: 'referral', label: 'REFERRAL'}
-]
-
-const POD_TYPE_OPTIONS = [
-  {value: 'core', label: 'Core'},
-  {value: 'sp_edge', label: 'SP Edge'}
-]
-
-const REQUEST_FWD_TYPE_OPTIONS = [
-  {value: 'gslb_referral', label: 'GSLB Referral'}
-]
-
-const DISCOVERY_METHOD_OPTIONS = [
-  {value: 'BGP', label: 'BGP'},
-  {value: 'footprints', label: 'Footprints'}
-]
-
 const validate = (values) => {
-  const { UIname, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
+  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
   const conditions = {
-    UIname: {
-      condition: !isValidTextField(UIname),
+    UIName: {
+      condition: !isValidTextField(UIName),
       errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
     },
     UIProviderWeight: {
@@ -67,7 +51,7 @@ const validate = (values) => {
   }
   return checkForErrors(
     {
-      UIname,
+      UIName,
       UILbMethod,
       pod_type,
       UIRequestFwdType,
@@ -78,7 +62,7 @@ const validate = (values) => {
     },
     conditions,
     {
-      UIname: <FormattedMessage id="portal.network.podForm.name.required.error"/>,
+      UIName: <FormattedMessage id="portal.network.podForm.name.required.error"/>,
       UILbMethod: <FormattedMessage id="portal.network.podForm.lb_method.required.error"/>,
       pod_type: <FormattedMessage id="portal.network.podForm.pod_type.required.error"/>,
       UIRequestFwdType: <FormattedMessage id="portal.network.podForm.requestForwardType.required.error"/>,
@@ -255,7 +239,7 @@ const PodForm = ({
         className="input-select"
         name="UILbMethod"
         component={FieldFormGroupSelect}
-        options={LBMETHOD_OPTIONS}
+        options={LBMETHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
         addonAfter={
           <HelpTooltip
@@ -269,7 +253,7 @@ const PodForm = ({
         name="pod_type"
         className="input-select"
         component={FieldFormGroupSelect}
-        options={POD_TYPE_OPTIONS}
+        options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
 
       <Field
@@ -291,7 +275,7 @@ const PodForm = ({
         className="input-select"
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
-        options={REQUEST_FWD_TYPE_OPTIONS}
+        options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
 
       <Field
@@ -320,7 +304,7 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         disabled={!discoveryMethodChangeAllowed}
-        options={DISCOVERY_METHOD_OPTIONS}
+        options={DISCOVERY_METHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
           <HelpTooltip

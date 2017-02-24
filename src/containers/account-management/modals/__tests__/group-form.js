@@ -30,6 +30,7 @@ function uiActionsMaker() {
 const props = {
   hostActions: hostActionsMaker(),
   fetchLocations: jest.fn(),
+  fetchServiceInfo: jest.fn(),
   uiActions: uiActionsMaker(),
   params: { brand: 'foo', account: 'bar', group: '123' }
 }
