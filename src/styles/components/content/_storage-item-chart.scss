@@ -5,18 +5,42 @@ $storage-unit-horizontal-margin: 10px;
   position: relative;
   width: 266px;
   height: 266px;
-  stroke: none;
 
   .recharts-surface {
     width: 266px;
     height: 266px;
 
-    path {
+    .current-month {
       stroke: none;
+      fill: none;
+
+      &-usage,
+      &-peak {
+        fill: $pale-blue;
+
+        &.exceeded {
+          fill: $yellow;
+        }
+      }
+
+      &-background {
+        fill: $black;
+      }
     }
 
     .last-month {
       opacity: 0.5;
+      stroke: none;
+      fill: none;
+
+      &-usage,
+      &-peak {
+        fill: $pale-blue;
+
+        &.exceeded {
+          fill: $yellow;
+        }
+      }
     }
   }
 
