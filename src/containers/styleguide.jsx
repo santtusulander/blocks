@@ -50,7 +50,8 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
-import FileUploadArea from '../components/file-upload.jsx'
+import FileUploadArea from '../components/file-upload'
+import AsperaUpload from '../components/aspera-upload'
 import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
@@ -991,6 +992,9 @@ class Styleguide extends React.Component {
             }}
             acceptFileTypes={["text/csv"]}
             uploadModalOnClick={true}/>
+
+          <h1 className="page-header">Aspera Upload</h1>
+          <AsperaUpload openUploadModalOnClick={true} />
 
           <h1 className="page-header">MapBox</h1>
 
