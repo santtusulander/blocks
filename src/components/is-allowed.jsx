@@ -8,12 +8,8 @@ class IsAllowed extends Component {
   render(){
     const { children,  to, not } = this.props;
     const { currentUser, roles } = this.context;
-    /*if (to === 'CREATE_LOCATION' || to === 'VIEW_LOCATION'|| to === 'EDIT_LOCATION') {
-      //debugger
-      console.info(to)
-    }*/
-    let isAllowed = checkPermissions(roles, currentUser, to)
 
+    let isAllowed = checkPermissions(roles, currentUser, to)
     if(not) {
       isAllowed = !isAllowed
     }
