@@ -5,12 +5,11 @@ import Immutable from 'immutable'
 import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
-import PolicyRuleMatchType from './policy-rule-match-type'
+
 import {
   parsePolicy,
   policyContainsSetComponent,
-  policyIsCompatibleWithAction,
-  getRuleMatchType
+  policyIsCompatibleWithAction
 } from '../../util/policy-config'
 import Select from '../select'
 import {
@@ -31,12 +30,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.addCondition = this.addCondition.bind(this)
     this.addAction = this.addAction.bind(this)
-   // this.addContentTargetingAction = this.addContentTargetingAction.bind(this)
     this.deleteMatch = this.deleteMatch.bind(this)
     this.deleteSet = this.deleteSet.bind(this)
-    //this.deleteContentTargetingSet = this.deleteContentTargetingSet.bind(this)
     this.moveSet = this.moveSet.bind(this)
-    //this.moveContentTargetingSet = this.moveContentTargetingSet.bind(this)
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
     this.submitForm = this.submitForm.bind(this)
@@ -112,17 +108,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
-  // deleteContentTargetingSet(path) {
-  //   return e => {
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //     const setIndex = path.last()
-  //     const setContainerPath = path.slice(0, -1)
-  //     const filtered = this.props.config.getIn(setContainerPath).delete(setIndex)
-  //     this.props.changeValue(setContainerPath, filtered)
-  //     this.props.activateSet(null)
-  //   }
-  // }
+
   moveSet(path, newIndex) {
     const flattenedPolicy = parsePolicy(this.props.rule, [])
     if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
@@ -140,82 +126,47 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateSet(null)
     }
   }
-  // moveContentTargetingSet(path, newIndex) {
-  //   return e => {
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //     const currentIndex = path.last()
-  //     const containerPath = path.slice(0, -1)
-  //     const set = this.props.config.getIn(path)
-  //     const updated = this.props.config
-  //       .getIn(containerPath)
-  //       .filterNot((val, i) => i === currentIndex)
-  //       .insert(newIndex, set)
-  //     this.props.changeValue(containerPath, updated)
-  //     this.props.activateSet(null)
-  //   }
-  // }
+
   activateMatch(newPath) {
     return () => this.props.activateMatch(newPath)
   }
+
   activateSet(newPath) {
     return () => this.props.activateSet(newPath)
   }
+
   submitForm(e) {
     e.preventDefault()
     this.props.hideAction()
   }
+
   render() {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
-    const ruleMatchType = getRuleMatchType(this.props.rule)
 
     const disableAddMatchButton = () => {
-      // token auth
       if (policyContainsSetComponent(flattenedPolicy, 'tokenauth')) {
         return true
-
-      // content targeting
       } 
 
       if (flattenedPolicy.sets.length === 0) {
         return true
       }
-      // else {
-      //   const config = this.props.config
-      //   const rootMatchInfo = flattenedPolicy.matches[0]
-
-      //   if (rootMatchInfo) {
-      //     const rootMatch = config.getIn(rootMatchInfo.path)
-
-      //     // if (rootMatch) {
-      //     //   return matchIsContentTargeting(rootMatch)
-      //     // }
-      //   }
-      // }
 
       return false
     }
-
-    // const disableAddActionButton = () => {
-    //   return !flattenedPolicy.matches[0].field ||
-    //           policyContainsSetComponent(flattenedPolicy, 'tokenauth')
-    // }
 
     const disableAddActionButton = () => {
       return policyContainsSetComponent(flattenedPolicy, 'tokenauth')
     }
 
     const disableButton = () => {
-
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
-        //!flattenedPolicy.matches[0].field ||
-        !flattenedPolicy.sets.length ||
-        flattenedPolicy.sets[0].setkey === '' ||
-        flattenedPolicy.sets[0].setkey == null
+        !flattenedPolicy.sets.length 
     }
 
     const ruleType = this.props.rulePath.get(0, null)
+    const ruleMatchType = this.props.rule.get('rule_body').get('match_type') || 'all';
 
     return (
       <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
@@ -324,20 +275,25 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               else if(match.filterType === 'does_not_contain') {
                 filterText = `Does not contain ${match.containsVal}`
               }
+              else if(match.filterType === 'equals') {
+                filterText = `Equals`
+              }
+              else if(match.filterType === 'does_not_equal') {
+                filterText = `Does not equal`
+              }
+              else if(match.filterType === 'empty') {
+                filterText = `Is empty`
+              }
+              else if(match.filterType === 'does_not_empty') {
+                filterText = `Is not empty`
+              }
 
               let matchName = (<div className="condition-name">
-                {match.field}
+                {match.field}&nbsp;:&nbsp;
                 <TruncatedTitle
                   content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
               </div>)
 
-              //const matchCondition = this.props.config.getIn(match.path)
-              //const isContentTargeting = matchCondition && matchIsContentTargeting(matchCondition)
-
-              // if (isContentTargeting) {
-              //   matchName = <div className="condition-name">Content Targeting</div>
-              //   filterText = null
-              // }
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
@@ -364,11 +320,20 @@ class ConfigurationPolicyRuleEdit extends React.Component {
             })}
           </div>
 
-          <PolicyRuleMatchType
-            ruleMatchType={ruleMatchType}
-            changeActiveRuleMatchType={this.props.changeActiveRuleMatchType}
-            disabled={flattenedPolicy.matches.length < 2}
-          />
+          <FormGroup>
+            <ControlLabel>
+              <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text"/>
+            </ControlLabel>
+            <Select
+              className="input-select"
+              onSelect={value => this.props.changeValue(this.props.rulePath.concat(['rule_body', 'match_type']), value)}
+              value={ruleMatchType}
+              disabled={flattenedPolicy.matches.length < 2}
+              options={[
+                {value: 'all', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
+                {value: 'any', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
+              ]}/>
+          </FormGroup>
 
           <ButtonToolbar className="text-right">
             <Button
@@ -397,7 +362,6 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
   activeSetPath: React.PropTypes.instanceOf(Immutable.List),
   cancelAction: React.PropTypes.func,
-  changeActiveRuleMatchType: React.PropTypes.func,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),

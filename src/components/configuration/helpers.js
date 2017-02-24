@@ -56,16 +56,15 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
 
     if (matchIsFileExtension(activeMatch)) {
       matchType = 'file_extension'
-    } 
-    // else if (matchIsContentTargeting(activeMatch)) {
-    //   matchType = 'content_targeting'
-    // }
+    }
 
     switch(matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasContains={true}
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHeader.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.header.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -76,6 +75,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_path':
         activeEditForm = (
           <ConfigurationMatcher
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.directoryPath.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -86,6 +87,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_host':
         activeEditForm = (
           <ConfigurationMatcher
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -96,6 +99,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_url':
         activeEditForm = (
           <ConfigurationMatcher
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
@@ -107,7 +112,9 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_cookie':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasContains={true}
+            hasEquals={true}
+            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchCookie.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.cookie.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -118,7 +125,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
-            contains={true}
+            hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -152,9 +159,6 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
   if(setPath) {
     const activeSet = config.getIn(setPath)
     let setKey = activeSet.keySeq().first()
-    // if (setPath.contains('script_lua')) {
-    //   setType = 'content_targeting'
-    // }
 
     const setterProps = {
       changeValue: changeValue,

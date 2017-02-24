@@ -77,14 +77,15 @@ export function policyContainsSetComponent(policy, setComponent) {
   return sets.filter(set => set.get('setkey') === setComponent).count() > 0
 }
 
-export function matchIsContentTargeting(match) {
-  return !!(match.get('field') === 'request_host'
-          && match.getIn(["cases", 0, 1, 0, "script_lua"]))
-}
+// export function matchIsContentTargeting(match) {
+//   return !!(match.get('field') === 'request_host'
+//           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
+// }
 
 export function matchIsFileExtension(match) {
   return !!((match.get('field') === 'request_url' || match.get('field') === 'request_path')
-          && FILE_EXTENSION_REGEXP.test(match.getIn(["cases", 0, 0])))
+          //&& FILE_EXTENSION_REGEXP.test(match.getIn(["cases", 0, 0])))
+          && FILE_EXTENSION_REGEXP.test(match.get('value')))
 }
 
 export function actionIsTokenAuth(sets) {
@@ -244,8 +245,4 @@ export const getTokenAuthRules = (properties) => {
  */
 export const isPolicyRuleEmpty = (config, rulePath) => {
   return !!config.getIn(rulePath).get('rule_body').get('actions').size
-}
-
-export const getRuleMatchType = (rule) => {
-  return rule.get('rule_body').get('match_type') || 'all';
 }

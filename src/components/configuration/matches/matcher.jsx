@@ -133,9 +133,19 @@ class Matcher extends React.Component {
       ['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>]
     ]
 
-    if(this.props.contains) {
+    if(this.props.hasContains) {
       matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
       matchOpts.push(['does_not_contain', <FormattedMessage id="portal.policy.edit.matcher.doesntContain.text"/>])
+    }
+
+    if(this.props.hasEquals) {
+      matchOpts.push(['equals', <FormattedMessage id="portal.policy.edit.matcher.equals.text"/>])
+      matchOpts.push(['does_not_equal', <FormattedMessage id="portal.policy.edit.matcher.doesntEqual.text"/>])
+    }
+
+    if(this.props.hasEmpty) {
+      matchOpts.push(['empty', <FormattedMessage id="portal.policy.edit.matcher.empty.text"/>])
+      matchOpts.push(['does_not_empty', <FormattedMessage id="portal.policy.edit.matcher.doesntEmpty.text"/>])
     }
 
     const isValid = this.validate()

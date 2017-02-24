@@ -7,14 +7,8 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 import {
-  getScriptLua,
-  matchIsContentTargeting,
   actionIsTokenAuth,
-  parsePolicy,
-  parseCountriesByResponseCodes,
-  ALLOW_RESPONSE_CODES,
-  DENY_RESPONSE_CODES,
-  REDIRECT_RESPONSE_CODES
+  parsePolicy
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
@@ -78,37 +72,8 @@ class ConfigurationPolicyRules extends React.Component {
   render() {
     const policyMapper = type => (rule, i) => {
       const { matches, sets } = parsePolicy(rule, [])
-
-      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
-      let matchLabel = ''
-      let actionsLabel = ''
-      //const firstPolicy = rule.get('rule_body').first()
-
-      // if(!firstPolicy.has('match')) {
-      //   return null
-      // }
-
-      // if ( matchIsContentTargeting(firstPolicy.get('match') )) {
-      //   matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
-      //   actionsLabel = ''
-
-      //   const scriptLua = getScriptLua( firstPolicy )
-
-      //   const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
-      //   const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
-      //   const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
-
-      //   let ctActionLabels = []
-      //   if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-      //   if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-      //   if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
-
-      //   actionsLabel = ctActionLabels.join(' | ')
-
-      // } else {
-        matchLabel = matches.map(match => match.field).join(', ')
-        actionsLabel = sets.map(set => set.setkey).join(', ')
-      //}
+      const matchLabel = matches.map(match => match.field).join(', ')
+      const actionsLabel = sets.map(set => set.setkey).join(', ')
 
       {/*
         TODO: remove UDN admin checks as part of UDNP-1713

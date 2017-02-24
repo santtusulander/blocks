@@ -32,7 +32,6 @@ class ConfigurationPolicies extends React.Component {
     this.handleHide = this.handleHide.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
     this.changeActiveRuleType = this.changeActiveRuleType.bind(this)
-    this.changeActiveRuleMatchType = this.changeActiveRuleMatchType.bind(this)
     this.cancelActiveMatchSetEditForm = this.cancelActiveMatchSetEditForm.bind(this)
   }
 
@@ -71,18 +70,13 @@ class ConfigurationPolicies extends React.Component {
     const oldRuleset = this.props.config.getIn([oldRuleType, 'policy_rules']).splice(oldRuleIndex, 1)
     const ruleName = this.props.config.getIn(oldRulePath).get('rule_name')
     const newMatch = ruleName ? DEFAULT_RULE.set('rule_name', ruleName) : DEFAULT_RULE
-    const newRuleset = this.props.config.getIn([policyType, 'policy_rules']).push(newMatch)
+    const newRuleset = this.props.config.getIn([policyType, 'policy_rules'], Immutable.List()).push(newMatch)
     this.props.changeValues([
       [[oldRuleType, 'policy_rules'], oldRuleset],
       [[policyType, 'policy_rules'], newRuleset]
     ])
     this.props.activateRule([policyType, 'policy_rules', newRuleset.size - 1])
     //this.props.activateMatch([policyType, 'policy_rules', newRuleset.size - 1, 'match'])
-  }
-  changeActiveRuleMatchType(type) {
-    let activeConfig = this.getActiveConfig()
-    console.log(activeConfig)
-    console.log('Configuration Component action: ', type)
   }
   deleteRule(policyType, index) {
     const newPolicies = this.props.config.get(policyType).get('policy_rules').splice(index, 1)
@@ -190,7 +184,6 @@ class ConfigurationPolicies extends React.Component {
                 rule={config.getIn(this.props.activeRule)}
                 rulePath={this.props.activeRule}
                 changeActiveRuleType={this.changeActiveRuleType}
-                changeActiveRuleMatchType={this.changeActiveRuleMatchType}
                 cancelAction={this.handleCancel}
                 hideAction={this.handleHide}
                 isEditingRule={this.state.isEditingRule}
@@ -214,7 +207,6 @@ ConfigurationPolicies.propTypes = {
   activeRule: React.PropTypes.instanceOf(Immutable.List),
   activeSet: React.PropTypes.instanceOf(Immutable.List),
   cancelEditPolicyRoute: React.PropTypes.func,
-  changeActiveRuleMatchType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   changeValues: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),

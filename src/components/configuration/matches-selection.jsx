@@ -32,36 +32,17 @@ class MatchesSelection extends React.Component {
       this.props.changeValue(this.props.path.concat(['field']), field)
     }
   }
-  // setMatchFieldForContentTargeting() {
-  //   return e => {
-  //     e.preventDefault()
-  //     const match = Immutable.fromJS({
-  //       cases: [
-  //         [WILDCARD_REGEXP, [{
-  //           script_lua: {
-  //             target: {
-  //               geo: [{
-  //                 country: []
-  //               }]
-  //             }
-  //           }
-  //         }]]
-  //       ],
-  //       field: 'request_host'
-  //     })
-  //     this.props.changeValue(this.props.path, match)
-  //   }
-  // }
+
   setMatchFieldForFileExtension() {
     return e => {
       e.preventDefault()
+      const rule = this.props.rule
+      const path = this.props.path
       const match = Immutable.fromJS({
-        cases: [
-          [FILE_EXTENSION_DEFAULT_CASE, []]
-        ],
+        value: FILE_EXTENSION_DEFAULT_CASE,
         field: 'request_url'
       })
-      this.props.changeValue(this.props.path, match)
+      this.props.changeValue(path, rule.getIn(path.slice(3)).merge(match))
     }
   }
   render() {
