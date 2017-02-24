@@ -67,7 +67,7 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
 
 export const NODE_TYPE_DEFAULT = 'udn_core'
 export const NODE_ROLE_DEFAULT = 'cache'
-export const NODE_ENVIRONMENT_DEFAULT = 'production'
+export const NODE_ENVIRONMENT_DEFAULT = 'cdx'
 export const NODE_CLOUD_DRIVER_DEFAULT = 6
 
 export const FOOTPRINT_UDN_TYPES = [
