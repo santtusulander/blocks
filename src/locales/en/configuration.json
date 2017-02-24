@@ -70,6 +70,8 @@
   "portal.policy.edit.cors.textPlain.text": "text/plain",
 
   "portal.configuration.details.deploymentMode.text": "Deployment Mode",
+  "portal.configuration.details.useUDNOrigin.text": "Use UDN Origin",
+  "portal.configuration.details.UDNOrigin.text": "UDN Origin (Storage)",
   "portal.configuration.details.deploymentMode.production": "Production",
   "portal.configuration.details.deploymentMode.trial": "Trial",
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
@@ -91,6 +93,8 @@
   "portal.configuration.details.enterHostnameValue.text": "Enter Hostname Value",
   "portal.configuration.details.targetCname.text": "Target CNAME",
   "portal.configuration.details.targetCname.help.text": "TODO",
+  "portal.configuration.details.UDNOrigin.help.text": "TODO",
+  "portal.configuration.details.UDNOrigin.storage.new.text": "New storage",
   "portal.configuration.details.customerOrigin.help.text": "Customer Origin is the publicly addressable Web server location where the UDN platform will fetch content for delivery to end users. This value can either be a Fully Qualified Domain Name (FQDN) or an IP address. Usually, the customer origin value is a subdomain of the delivery domain, e.g. origin.domain.com.",
   "portal.configuration.details.originPort.help.text": "Origin Port is the value of the port on your origin Web server that UDN will use to fetch content for delivery. By default, the UDN platform will use port 80 to fetch HTTP content. The default port for HTTPS content is 443.",
   "portal.configuration.details.hostHeaderValue.help.text": "Host Header Value is the value that the UDN server will submit to the origin hostname. There are 3 options that UDN allows: origin hostname value, published hostname value, or a custom hostname value. The value that UDN transmits is flexible to support how you have your origin Web server setup. Most origin Web servers use the origin hostname value.",

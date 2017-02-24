@@ -7,16 +7,21 @@ import classNames from 'classnames'
 import HelpTooltip from '../../components/help-tooltip'
 import InputConnector from '../../components/input-connector'
 import Select from '../../components/select'
+import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      useUDNOrigin : true
+    }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSave = this.handleSave.bind(this)
+    this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
     this.originHostValue = ''
   }
   handleChange(path) {
@@ -34,6 +39,11 @@ class ConfigurationDetails extends React.Component {
     e.preventDefault()
     this.props.saveChanges()
   }
+
+  toggleUDNOrigin(val) {
+    this.setState({ useUDNOrigin: val })
+  }
+
   render() {
     if(!this.props.edgeConfiguration) {
       return (
@@ -66,29 +76,81 @@ class ConfigurationDetails extends React.Component {
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
-                <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
+                <FormattedMessage id="portal.configuration.details.useUDNOrigin.text"/>
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  disabled={readOnly}
-                  value={this.props.edgeConfiguration.get('origin_host_name')}
-                  onChange={this.handleChange(
-                    ['edge_configuration', 'origin_host_name']
-                  )}/>
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_host_name"
-                    title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
-              </InputGroup>
+              <Toggle
+                readonly={readOnly}
+                value={this.state.useUDNOrigin}
+                changeValue={this.toggleUDNOrigin}
+              />
             </Col>
           </FormGroup>
         </Row>
+
+        { !this.state.useUDNOrigin &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    disabled={readOnly}
+                    value={this.props.edgeConfiguration.get('origin_host_name')}
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'origin_host_name']
+                    )}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_origin_host_name"
+                      title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
+
+        { this.state.useUDNOrigin &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.UDNOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <Select
+                    className="input-select"
+                    disabled={readOnly}
+                    onSelect={this.handleSelectChange(
+                      ['edge_configuration', 'origin_storage'])}
+                    value={this.props.edgeConfiguration.get('origin_storage')}
+                    options={[
+                      ['option_new_storage',
+                        <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
+                    ]}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_udn_origin"
+                      title={<FormattedMessage id="portal.configuration.details.UDNOrigin.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.UDNOrigin.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
 
         <Row>
           <FormGroup>
