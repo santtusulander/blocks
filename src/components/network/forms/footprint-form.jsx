@@ -18,7 +18,7 @@ import { checkForErrors } from '../../../util/helpers'
 import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validateCIDRToken = (item) => {
-  return item.label && isValidIPv4Address(item.label)
+  return item.label && isValidIPv4Address(item.label, true)
 }
 
 const validateASNToken = (item) => {

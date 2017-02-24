@@ -9,7 +9,7 @@ const subject = shallow(
 )
 
 describe('DefaultErrorBlock', () => {
- it('should exist', () => {
-   expect(subject.length).toBe(1)
- })
+  it('should exist', () => {
+    expect(subject.length).toBe(1)
+  })
 })

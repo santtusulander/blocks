@@ -104,6 +104,8 @@
 @import 'components/account-management/user-list';
 @import 'components/account-management/groups';
 @import 'components/account-management/user-edit';
+@import 'components/account-management/charge-numbers';
+@import 'components/account-management/service-option-selector';
 // Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
@@ -112,7 +114,6 @@
 @import 'components/analysis/horizontal-bar';
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
-@import 'components/analysis/contribution';
 //Charts
 @import 'components/charts/bar-chart';
 // Configuration

@@ -256,7 +256,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.group, ownProps.network)),
+    network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',

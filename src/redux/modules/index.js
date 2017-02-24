@@ -33,9 +33,6 @@ export const cache = require('./cache').default;
 //Security
 export const security = require('./security').default;
 
-//Properties
-export const properties = require('./properties').default
-
 //Entities
 export const entities = require('./entities').default
 
