@@ -1,7 +1,7 @@
 // import axios from 'axios'
 import { normalize, schema } from 'normalizr'
 
-// import { BASE_URL_NORTH, buildReduxId } from '../../../util'
+import { /*BASE_URL_NORTH,*/ buildReduxId } from '../../../util'
 
 const mockData = {
   status: "success",
