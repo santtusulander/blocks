@@ -33,6 +33,7 @@ import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
+import DashboardTabPanel from '../components/dashboard/dashboard-tab-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
 import IconCaretDown from '../components/icons/icon-caret-down'
 import IsAllowed from '../components/is-allowed'
@@ -283,7 +284,7 @@ export class Dashboard extends React.Component {
             <thead>
               <tr>
                 <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                <th width="35%" className="text-right traffic-label"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
               </tr>
             </thead>
             <tbody>
@@ -310,11 +311,11 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
-          <h2>fdafs</h2>
-        </DashboardPanel>
-        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
-          <h2>fdafs</h2>
+        <DashboardTabPanel threeItemPerRow={true} tabs={["OS","BROWSER","DEVICE"]}>
+          <h2>Lorem Ipsum</h2>
+        </DashboardTabPanel>
+        <DashboardPanel threeItemPerRow={true} title={"Lorem Ipsum"}>
+          <h2>Lorem Ipsum</h2>
         </DashboardPanel>
       </DashboardPanels>
     )

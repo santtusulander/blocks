@@ -31,6 +31,7 @@ DashboardPanel.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   noPadding: PropTypes.bool,
+  threeItemPerRow: PropTypes.bool,
   title: PropTypes.string
 }
 

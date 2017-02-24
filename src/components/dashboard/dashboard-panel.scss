@@ -8,6 +8,8 @@ $dashboard-panel-horizontal-padding: em(30px, $dashboard-panel-font-size);
 $dashboard-panel-vertical-padding: em(15px, $dashboard-panel-font-size);
 $dashboard-panel-bg: rgba($black, 0.3);
 $dashboard-panel-header-bg: rgba($black, 0.2);
+$dashboard-panel-mini-chart-width: 50%;
+$dashboard-panel-kpi-padding: 15px;
 
 .dashboard-panel {
   margin-bottom: $dashboard-panel-margin;
@@ -19,6 +21,9 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
     margin-right: $dashboard-panel-margin;
     &.threeItemPerRow:last-child{
       margin-right: 0px;
+    }
+    .traffic-label > span {
+      margin-right: calc(#{$dashboard-panel-mini-chart-width} + #{$dashboard-panel-kpi-padding});
     }
   }
 
@@ -69,6 +74,28 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
   }
 
   .dashboard-panel-header {
+
+    .dark-theme & {
+      background-color: $dashboard-panel-header-bg;
+    }
+
+    .light-theme & {
+      background-color: $white;
+      border-bottom: 1px solid $dashboard-panel-header-bg;
+    }
+  }
+
+  .dashboard-tab-panel-header {
+    box-shadow: inset 1px -50px 0px -47px #021422;
+    padding: 0px 30px;
+    h5 {
+      text-align: center;
+    }
+    .header-tab{
+      padding-top: 15px;
+      padding-bottom: 13px;
+      border-bottom: solid #021422;
+    }
 
     .dark-theme & {
       background-color: $dashboard-panel-header-bg;
