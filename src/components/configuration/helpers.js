@@ -190,7 +190,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
           <ConfigurationTokenAuthentication {...setterProps}/>
         )
         break
-      case 'content_targeting':
+      case 'reply':
         activeEditForm = (
           <ConfigurationContentTargetingAction {...setterProps}/>
         )

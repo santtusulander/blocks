@@ -111,9 +111,9 @@ class ConfigurationPolicyRuleEdit extends React.Component {
 
   moveSet(path, newIndex) {
     const flattenedPolicy = parsePolicy(this.props.rule, [])
-    if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
-      return this.moveContentTargetingSet(path, newIndex)
-    }
+    // if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
+    //   return this.moveContentTargetingSet(path, newIndex)
+    // }
     return e => {
       e.preventDefault()
       e.stopPropagation()

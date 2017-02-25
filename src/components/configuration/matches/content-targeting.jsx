@@ -62,22 +62,12 @@ class ContentTargeting extends React.Component {
     })
     const countries = includes.concat(excludes)
 
-    const newMatch = Immutable.fromJS({
-      cases: [
-        [WILDCARD_REGEXP, [{
-          script_lua: {
-            target: {
-              geo: [{
-                country: countries
-              }]
-            }
-          }
-        }]]
-      ],
-      field: 'request_host'
-    })
+    const newMatch = newMatch.set('value', countries)
+
     this.props.changeValue(this.props.path, newMatch)
-    this.props.close()
+    this.props.activateMatch(null)
+
+    //this.props.close()
   }
 
   render() {

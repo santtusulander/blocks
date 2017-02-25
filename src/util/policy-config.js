@@ -50,11 +50,11 @@ export function policyContainsMatchField(policy, field, count) {
 }
 
 export function policyIsCompatibleWithMatch(policy, match) {
-  switch (match) {
-    case 'content_targeting':
-      return policy.matches.length === 1
-              && policy.sets.length === 0
-  }
+  // switch (match) {
+  //   case 'content_targeting':
+  //     return policy.matches.length === 1
+  //             && policy.sets.length === 0
+  // }
   return true
 }
 
@@ -64,10 +64,10 @@ export function policyIsCompatibleWithAction(policy, action) {
       return policy.matches.length === 1
               && policy.sets.length === 1
               && policyContainsMatchField(policy, 'request_url', 1)
-    case 'content_targeting':
-      return policy.matches.length === 1
-              && policy.sets.length >= 1
-              && policy.sets[0].path.indexOf('script_lua') !== -1
+    // case 'content_targeting':
+    //   return policy.matches.length === 1
+    //           && policy.sets.length >= 1
+    //           && policy.sets[0].path.indexOf('script_lua') !== -1
   }
   return true
 }
@@ -84,7 +84,6 @@ export function policyContainsSetComponent(policy, setComponent) {
 
 export function matchIsFileExtension(match) {
   return !!((match.get('field') === 'request_url' || match.get('field') === 'request_path')
-          //&& FILE_EXTENSION_REGEXP.test(match.getIn(["cases", 0, 0])))
           && FILE_EXTENSION_REGEXP.test(match.get('value')))
 }
 

@@ -111,6 +111,13 @@ export const availableActions = [
     servicePermission: MEDIA_DELIVERY_TOKEN_AUTH
   },
   {
+    key: 'reply',
+    name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
+    compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
+    requiresAdmin: true,
+    servicePermission: MEDIA_DELIVERY_CONTENT_TARGETTING
+  },
+  {
     key: null,
     name: 'portal.policy.edit.actionSelection.redirection.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
