@@ -61,7 +61,7 @@ class AddChargeNumbersForm extends React.Component {
   }
 
   render() {
-    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid, dirty } = this.props
+    const { hasFlowDirection, hasGlobalBilling, hasRegionalBilling, onDisable, onCancel, regionsInfo, invalid } = this.props
 
     return (
       <form onSubmit={this.props.handleSubmit(this.onEnable)}>
