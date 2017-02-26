@@ -93,6 +93,7 @@ class AddChargeNumbersForm extends React.Component {
             component={FieldFormGroup}
             required={true}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.global_charge_number.title" />}
+            normalize={value => value.toUpperCase()}
           />
         }
 
@@ -123,7 +124,7 @@ class AddChargeNumbersForm extends React.Component {
           </Button>
           <Button
             id='submit-button'
-            disabled={invalid && dirty}
+            disabled={invalid}
             type='submit'
             bsStyle="primary"
           >
