@@ -58,8 +58,7 @@ export function getDefaultService (service_id) {
   const defaultObj = {
     service_id,
     billing_meta: {
-      flow_direction: [],
-      charge_number: ''
+      flow_direction: []
     },
     options: []
   }
