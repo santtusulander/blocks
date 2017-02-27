@@ -20,7 +20,7 @@ describe('FieldFormGroupCheckboxes', () => {
         },
         meta: {
           error: error,
-          touched: error ? true : false
+          dirty: error ? true : false
         }
       }
 
