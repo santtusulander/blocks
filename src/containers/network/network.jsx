@@ -376,13 +376,17 @@ class Network extends React.Component {
   }
 
   handleGroupDelete(group) {
-    return this.props.groupActions.deleteGroup(
+    const { groupActions: { deleteGroup } } = this.props
+    const url = getNetworkUrl('groups',   this.props.activeAccount.get('id'), this.props.params)
+
+    return deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
       group.get('id')
     ).then(response => {
       this.props.toggleDeleteConfirmationModal(null)
       this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+      this.props.router.push(url)
       response.error &&
         this.props.uiActions.showInfoDialog({
           title: 'Error',
