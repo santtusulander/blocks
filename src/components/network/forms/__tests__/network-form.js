@@ -18,11 +18,9 @@ describe('NetworkForm', () => {
   const onSave = jest.fn()
   let subject, error, props = null
   let touched = false
-  let networkPermissions = {}
 
   beforeEach(() => {
-    subject = (edit = false, permissions = {}) => {
-      networkPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
+    subject = (edit = false) => {
       props = {
         onCancel,
         onSave,
@@ -36,8 +34,7 @@ describe('NetworkForm', () => {
           name: { touched, error, value: '' },
           description: { touched, error, value: '' }
         },
-        edit: edit,
-        networkPermissions
+        edit: edit
       }
       return shallow(<NetworkForm {...props}/>)
     }
@@ -54,14 +51,6 @@ describe('NetworkForm', () => {
   it('should have 3 buttons on Edit', () => {
     expect(subject(true).find('Button').length).toBe(2)
     expect(subject(true).find('ButtonDisableTooltip').length).toBe(1)
-  })
-
-  it('should not have Save button if no modify permission', () => {
-    expect(subject(true, {modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0);
-  })
-
-  it('should not have Delete button if no delete permission', () => {
-    expect(subject(true, {deleteAllowed: false}).find('ButtonDisableTooltip').length).toBe(0);
   })
 
   it('should render an error message', () => {

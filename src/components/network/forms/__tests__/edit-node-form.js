@@ -37,7 +37,6 @@ const mockNodes = [
 
 describe('NetworkEditNodeForm', () => {
   let subject = null
-  let nodePermissions = {}
   const onCancel = jest.fn()
   const onSave = jest.fn()
   const handleSubmit = () => {
@@ -45,14 +44,13 @@ describe('NetworkEditNodeForm', () => {
   }
 
   beforeEach(() => {
-    subject = (permissions = {}) => {
+    subject = () => {
       const nodeValues = getNodeValues(mockNodes)
       const initialValues = {}
       for (let field in nodeValues) {
         const value = nodeValues[field]
         initialValues[field] = value === MULTIPLE_VALUE_INDICATOR ? null : value
       }
-      nodePermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions};
       const props = {
         show: true,
         onSave,
@@ -61,8 +59,7 @@ describe('NetworkEditNodeForm', () => {
         intl: intlMaker(),
         initialValues,
         nodes: mockNodes,
-        nodeValues,
-        nodePermissions
+        nodeValues
       }
 
       return shallow(<NetworkEditNodeForm {...props}/>)
@@ -90,11 +87,4 @@ describe('NetworkEditNodeForm', () => {
     expect(onSave).toBeCalled();
   })
 
-  it('should not have a Delete button if no delete permission', () => {
-    expect(subject({deleteAllowed: false}).find('ButtonDisableTooltip').length).toBe(0)
-  })
-
-  it('should not have Submit button if no modify permission', () => {
-    expect(subject({modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0);
-  })
 })

@@ -15,14 +15,12 @@ const intlMaker = () => {
 describe('FootprintForm', () => {
   let subject, error, props = null
   let touched = false
-  let footprintPermissions = {}
   const onCancel = jest.fn()
   const onSave = jest.fn()
   const handleSubmit = jest.fn()
 
   beforeEach(() => {
-    subject = (permissions) => {
-      footprintPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
+    subject = () => {
       props = {
         onCancel,
         onSave,
@@ -36,8 +34,7 @@ describe('FootprintForm', () => {
           footPrintName: { touched, error, value: '' },
           footPrintDescription: { touched, error, value: '' },
           UDNType: { touched, error, value: '' }
-        },
-        footprintPermissions
+        }
       }
       return shallow(<FootprintForm {...props}/>)
     }
@@ -56,7 +53,4 @@ describe('FootprintForm', () => {
     ).toBeTruthy()
   })
 
-  it('should not have Submit button if no modify permission', () => {
-    expect(subject({modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0);
-  })
 })
