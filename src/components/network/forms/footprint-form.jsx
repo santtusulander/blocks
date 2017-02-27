@@ -135,7 +135,7 @@ class FootprintForm extends React.Component {
       : <FormattedMessage id="portal.button.add"/>
 
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
-
+    const filteredUdnTypeOptions = dataType === 'ipv4cidr' ? udnTypeOptions.filter(({value}) => !value.includes('asn')) : udnTypeOptions
     return (
       <form className="sp-footprint-form" onSubmit={handleSubmit(onSave)}>
           <span className='submit-error'>
@@ -212,7 +212,7 @@ class FootprintForm extends React.Component {
             name="udn_type"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={udnTypeOptions}
+            options={filteredUdnTypeOptions}
             label={<FormattedMessage id="portal.network.footprintForm.UDNType.title.text"/>}
           />
         </div>
