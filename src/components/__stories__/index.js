@@ -7,8 +7,6 @@ import './delete-modal'
 //import './global-account-selector'
 //import './info-modal'
 import './inline-add'
-import './file-upload-status-container'
-import './file-upload-status-item'
 
 //account management
 import './account-management/sidebar'
@@ -44,3 +42,5 @@ import './network/form/routing-daemon-form'
 
 // storage
 import './storage/storage-form.js'
+import './storage/file-upload-status-container'
+import './storage/file-upload-status-item'

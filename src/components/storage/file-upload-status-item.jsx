@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
-import IconFile from './icons/icon-file'
-import IconClose from './icons/icon-close'
-import TruncatedTitle from './truncated-title'
 import { ProgressBar, Button } from 'react-bootstrap'
+import TruncatedTitle from '../truncated-title'
+import IconClose from '../icons/icon-close'
+import IconFile from '../icons/icon-file'
 
 const FileUploadStatusItem = ({name, progress, type}) => {
   return (

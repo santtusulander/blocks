@@ -1,8 +1,8 @@
 import React from 'react'
 import {storiesOf} from '@kadira/storybook'
 
-import FileUploadStatus from '../file-upload-status-container.jsx'
-import ThemeWrap from './theme-wrap.jsx'
+import FileUploadStatus from '../../storage/file-upload-status-container.jsx'
+import ThemeWrap from '../theme-wrap.jsx'
 
 const mockData = [
   {

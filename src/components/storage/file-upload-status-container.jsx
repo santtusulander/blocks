@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import { Button, Panel } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import classNames from 'classnames'
-import IconHeaderCaret from './icons/icon-header-caret'
 import StatusItem from './file-upload-status-item'
+import IconHeaderCaret from '../icons/icon-header-caret'
 
 class FileUploadStatus extends React.Component {
   constructor(props) {
