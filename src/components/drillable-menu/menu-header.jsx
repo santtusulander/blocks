@@ -3,7 +3,7 @@ import { FormControl } from 'react-bootstrap'
 
 import IconArrowLeft from '../icons/icon-arrow-left'
 
-export default ({ searchValue, onSearchChange, subtitle, parentId, showBackCaretPermission, activeNodeName, goToParent }) =>
+export default ({ searchValue, onSearchChange, subtitle, parentId, activeNodeName, goToParent }) =>
   <li className="action-container">
     <div>
       {parentId &&

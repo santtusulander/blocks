@@ -1,7 +1,7 @@
 import React from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
 
-export default ({ menuNodes = [], goToChild, searchValue, handleCaretClick, handleEntityClick }) => {
+export default ({ menuNodes = [], searchValue, handleCaretClick, handleEntityClick }) => {
 
   return (
     <li className="menu-container">
