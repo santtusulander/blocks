@@ -17,13 +17,13 @@ const mockData = [
   }
 ]
 
-storiesOf('File Upload Status', module)
+storiesOf('Storage', module)
   .addDecorator((story) => (
     <ThemeWrap>
       {story()}
     </ThemeWrap>
   ))
-  .add('Container', () => (
+  .add('File Upload Status Container', () => (
     <FileUploadStatus uploads={mockData}/>
   ))
 
