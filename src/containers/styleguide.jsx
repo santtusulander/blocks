@@ -50,7 +50,7 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
-import FileUploadArea from '../components/file-upload.jsx'
+import CsvUploadArea from '../components/network/csv-upload'
 import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
@@ -980,8 +980,8 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
-          <h1 className="page-header">Dropzone</h1>
-          <FileUploadArea
+          <h1 className="page-header">CsvUpload</h1>
+          <CsvUploadArea
             contentValidation={() => {
               return true
             }}

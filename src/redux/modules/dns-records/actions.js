@@ -57,8 +57,16 @@ export const fetchResourceDetails = createAction(DNS_RECORDS_RECEIVE_RESOURCE, (
 })
 
 export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource, data) => {
-  data.name = data.name.concat('.' + zone)
-  resource = resource.concat('.' + zone)
+
+  //If resource for NS record is empty - use zone as resource and record name
+  if (data.type === 'NS' && !resource) {
+    data.name = zone
+    resource = zone
+  } else {
+    data.name = data.name.concat('.' + zone)
+    resource = resource.concat('.' + zone)
+  }
+
   return dnsRecordsApi.create(zone, resource, data).then(resource => {
     resource.data.name = domainlessRecordName(zone, resource.data.name)
     return resource
@@ -66,18 +74,25 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
+  let isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone)
+  let recordName = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
+  resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
+
   const recordToDelete = {
-    name: data.name.concat('.' + zone),
+    name: recordName,
     type: data.type,
     value: data.value
   }
-  return dnsRecordsApi.remove(zone, resource.concat('.' + zone), recordToDelete)
+  return dnsRecordsApi.remove(zone, resource, recordToDelete)
 })
 
 export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
-  data.name = data.name.concat('.' + zone)
+  let isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone || data.type === 'NS' && data.name === '')
+  data.name = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
+  resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
+
   const { id, ...apiData } = data
-  return dnsRecordsApi.update(zone, resource.concat('.' + zone), apiData)
+  return dnsRecordsApi.update(zone, resource, apiData)
     .then(({ data }) => {
       data.name = domainlessRecordName(zone, data.name)
       return { data, id }
