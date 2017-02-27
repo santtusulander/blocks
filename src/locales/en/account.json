@@ -41,6 +41,8 @@
   "portal.account.properties.table.deployed.text": "Deployed",
   "portal.account.properties.table.noPropertiesFound.text": "No properties found with the search term {searchTerm}",
   "portal.account.properties.table.noProperties.text": "No properties",
+  "portal.account.properties.deploymentMode.trial": "Trial",
+  "portal.account.properties.deploymentMode.production": "Production",
 
   "portal.account.recordForm.newRecord.title": "New DNS Record",
   "portal.account.recordForm.editRecord.title": "Edit DNS Record",
