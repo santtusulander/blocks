@@ -31,6 +31,11 @@
   "portal.account.groups.table.noGroupsFound.text": "No groups found with the search term {searchTerm}",
   "portal.account.groups.modal.unsaved.content": "You have made changes to the Group(s), are you sure you want to exit without saving?",
 
+  "portal.account.storage.tooltip.currentUsage": "Current usage",
+  "portal.account.storage.tooltip.peakThisMonth": "Peak this month",
+  "portal.account.storage.tooltip.endOfLastMonth": "End of last month",
+  "portal.account.storage.tooltip.peakLastMonth": "Peak last month",
+
   "portal.account.storages.single.text": "Storage",
   "portal.account.storages.multiple.text": "Storages",
   "portal.account.storages.hidden.text": "hidden",
@@ -42,10 +47,6 @@
   "portal.account.storages.table.files.text": "Files",
   "portal.account.storages.table.noStoragesFound.text": "No storages found with the search term {searchTerm}",
   "portal.account.storages.deleteConfirmation.text": "Please confirm by writing \"delete\" below, and pressing the delete button. This storage will be removed from UDN immediately.",
-  "portal.account.storages.tooltip.currentUsage": "Current usage",
-  "portal.account.storages.tooltip.peakThisMonth": "Peak this month",
-  "portal.account.storages.tooltip.endOfLastMonth": "End of last month",
-  "portal.account.storages.tooltip.peakLastMonth": "Peak last month",
 
   "portal.account.recordForm.newRecord.title": "New DNS Record",
   "portal.account.recordForm.editRecord.title": "Edit DNS Record",
