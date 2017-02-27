@@ -266,7 +266,7 @@ class AccountManagementProperties extends React.Component {
       activeDirection: sortDir
     }
 
-    const filteredProperties = this.getFilteredData(search.toLowerCase())
+    const filteredProperties = this.getFilteredData(search)
     const sortedProperties = this.getSortedData(filteredProperties, sortBy, sortDir)
     const numHiddenProperties = properties.size - sortedProperties.size;
 
