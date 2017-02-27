@@ -91,7 +91,6 @@
 @import 'components/typeahead';
 @import 'components/truncated-title';
 @import 'components/map';
-@import 'components/file-upload';
 // Support
 @import 'components/support/ticket-form';
 @import 'components/support/ticket-modal';
@@ -141,6 +140,8 @@
 @import 'components/network/entity-list';
 @import 'components/network/network-item';
 @import 'components/network/network-forms';
+@import 'components/network/csv-upload';
+
 // Storage
 @import 'components/storage/storage-forms';
 
