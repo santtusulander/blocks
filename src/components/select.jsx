@@ -99,7 +99,7 @@ Select.displayName = 'Select'
 Select.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  emptyLabel: PropTypes.string,
+  emptyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.object]),
   numericValues: PropTypes.bool,
   onSelect: PropTypes.func,
   onTouch: PropTypes.func,
