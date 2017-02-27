@@ -63,7 +63,7 @@ const validate = (values) => {
       errorText: <FormattedMessage id="portal.network.podForm.ipList.invalid.error" />
     }
   }
-  return checkForErrors(
+  const errors =  checkForErrors(
     {
       UIName,
       UILbMethod,
@@ -84,10 +84,14 @@ const validate = (values) => {
       UIProviderWeight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
       UIDiscoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
       UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>,
-      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>,
-      UIIpList: <FormattedMessage id="portal.network.podForm.ipList.required.error"/>
+      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>
     }
   )
+
+  //Since checkForErrors function always make sure every Field validated is required, errors has to be tweaked like this
+  //for optional field to be validated
+  errors.UIIpList = errors.UIIpList === 'Required' ? null : errors.UIIpList
+  return errors
 }
 
 const asyncValidate = ({ UILocalAS }) => {
@@ -334,7 +338,7 @@ const PodForm = ({
         }/>
 
       <Field
-        required={true}
+        required={false}
         name="UIIpList"
         allowNew={true}
         component={FieldFormGroupTypeahead}

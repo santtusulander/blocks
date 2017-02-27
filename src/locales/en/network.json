@@ -113,7 +113,6 @@
   "portal.network.podForm.deletePod.title": "Delete POD?",
   "portal.network.podForm.deletePod.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This POD will be removed from UDN immediately.",
   "portal.network.podForm.ipList.label": "IP List",
-  "portal.network.podForm.ipList.required.error": "IP list is required",
   "portal.network.podForm.ipList.invalid.error": "IP list is invalid",
   "portal.network.podForm.localAS.asIsNotAnNumber.text": "Local AS must be an integer number",
   "portal.network.podForm.footprintSearch.placeholder": "No footprints",
