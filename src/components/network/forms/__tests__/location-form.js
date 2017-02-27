@@ -23,6 +23,7 @@ describe('NetworkLocationForm', () => {
     subject = (edit = false) => {
       const initialValues = edit ? {name: 'udn'} : {}
       props = {
+        edit,
         onCancel,
         onSave,
         handleSubmit: jest.fn(),
@@ -58,4 +59,5 @@ describe('NetworkLocationForm', () => {
         .at(0)
     ).toBeTruthy()
   })
+
 })

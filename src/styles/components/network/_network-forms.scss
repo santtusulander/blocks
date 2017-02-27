@@ -8,6 +8,7 @@ $number-addon-width: 19px;
 $number-input-width: 268px;
 $panel-vertical-padding: em(8px, 14px);
 $panel-horizontal-padding: em(18px, 14px);
+$typeahead-input-left-padding: 40px;
 
 .group-form,
 .sp-network-form,
@@ -82,29 +83,6 @@ $panel-horizontal-padding: em(18px, 14px);
 
 .sp-pod-form {
 
-  .dropdown-select,
-  .form-control {
-    width: $input-width;
-    height: $input-height;
-    margin-right: auto;
-  }
-
-  .input-group-addon {
-    .btn-icon {
-      width: $input-height;
-      height: $input-height;
-      margin: -5px 0 0 20px;
-      color: $white;
-      background-color: rgba($black, 0.2);
-      border-radius: 50%;
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-    }
-  }
-
   .discovery-section {
     margin: $bar-height 0;
 
@@ -120,9 +98,13 @@ $panel-horizontal-padding: em(18px, 14px);
       float: right;
     }
 
+    .bootstrap-typeahead-input-hint {
+      padding-left: $typeahead-input-left-padding;
+    }
+
     .bootstrap-typeahead-input-main {
       height: $btn-height;
-      padding-left: 40px;
+      padding-left: $typeahead-input-left-padding;
       background-position: 10px;
       background-repeat: no-repeat;
       background-size: 21px;
@@ -149,7 +131,7 @@ $panel-horizontal-padding: em(18px, 14px);
     list-style-type: none;
 
     > li {
-      padding: 0 $panel-vertical-padding;
+      padding: 5px 15px;
       margin-bottom: $panel-vertical-padding;
       font-weight: bold;
       line-height: em(36px, 14px);
@@ -162,6 +144,18 @@ $panel-horizontal-padding: em(18px, 14px);
 
         .icon {
           fill: $lt-text-color;
+        }
+      }
+
+      &.removed {
+        opacity: 0.6;
+
+        .col-xs-8 {
+          text-decoration: line-through;
+        }
+
+        .btn-undo {
+          text-transform: uppercase;
         }
       }
 
@@ -179,12 +173,40 @@ $panel-horizontal-padding: em(18px, 14px);
     width: $input-width - $number-input-btn-width;
   }
 
-  .as-num-input {
+  .as-num-input.form-control {
     width: $input-width - $number-input-btn-width - $number-addon-width;
   }
 
   .input-group-addon.addon-before {
     padding-top: 0;
+  }
+}
+
+.sp-pod-form,
+.sp-add-node-form,
+.sp-edit-node-form {
+
+  .dropdown-select,
+  .form-control {
+    width: $input-width;
+    height: $input-height;
+    margin-right: auto;
+  }
+
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
   }
 }
 
@@ -281,9 +303,17 @@ $panel-horizontal-padding: em(18px, 14px);
 //=================
 .sp-add-node-form {
 
-  .number-input-group {
-    width: $number-input-width;
-    margin: 7px 0 0;
+  .add-node-form__name-fqdn {
+    margin-bottom: 7px;
+  }
+
+  .number-input-group .number-input,
+  .add-node-form__name-fqdn+.form-group {
+    // Changed this as part of UDNP-2780 where we decided to make node name editable.
+    // After making that change, the width of the number input got messed up,
+    // so this was necessary. This might need to be reverted back in the future.
+    // width: $number-input-width;
+    width: 100%;
   }
 
   &__highlight-name {

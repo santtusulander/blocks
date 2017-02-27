@@ -132,7 +132,8 @@ class FootprintFormContainer extends React.Component {
       footprint,
       initialValues,
       intl,
-      onCancel
+      onCancel,
+      footprintPermissions
     } = this.props
 
     const edit = !!footprint && !footprint.isEmpty()
@@ -161,6 +162,7 @@ class FootprintFormContainer extends React.Component {
           onSave={(values) => this.onSave(edit, values)}
           onDelete={this.onDelete}
           onCancel={onCancel}
+          footprintPermissions={footprintPermissions}
         />
 
       </SidePanel>
@@ -179,6 +181,7 @@ FootprintFormContainer.propTypes = {
   addFootprintToPod: PropTypes.func,
   fetching: PropTypes.bool,
   footprint: PropTypes.instanceOf(Map),
+  footprintPermissions: PropTypes.object,
   initialValues: PropTypes.object,
   intl: PropTypes.object,
   location: PropTypes.string,
