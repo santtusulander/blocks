@@ -28,15 +28,7 @@ describe('NetworkAddNodeForm', () => {
         onToggleConfirm,
         handleSubmit,
         intl: intlMaker(),
-        nodeNameData: {
-          name: `udn_core1.pod1.cdx-dev.${NETWORK_DOMAIN_NAME}`,
-          props: {
-            nodeType: 'udn_core',
-            cacheEnv: 'cdx-dev',
-            location: 'pod1',
-            domain: NETWORK_DOMAIN_NAME
-          }
-        }
+        nodeName: `large.pod1.cache1.SFO.cdx-dev.${NETWORK_DOMAIN_NAME}`
       }
 
       return shallow(<NetworkAddNodeForm {...props}/>)
@@ -47,8 +39,8 @@ describe('NetworkAddNodeForm', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('should have 6 fields', () => {
-    expect(subject().find('Field').length).toBe(6)
+  it('should have 7 fields', () => {
+    expect(subject().find('Field').length).toBe(7)
   })
 
   it('should have 2 buttons', () => {
@@ -83,4 +75,5 @@ describe('NetworkAddNodeForm', () => {
     const cancelButton = subject.find('#cancel-confirm-btn')
     expect(cancelButton.length).toBe(1)
   })
+
 })
