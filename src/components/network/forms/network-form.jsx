@@ -37,8 +37,7 @@ const validate = ({ name, description }) => {
 }
 
 const NetworkForm = ({
-  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete,
-  networkPermissions: { deleteAllowed, modifyAllowed }
+  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete
 }) => {
   const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
@@ -74,7 +73,7 @@ const NetworkForm = ({
         label={<FormattedMessage id="portal.common.description" />} />
 
       <FormFooterButtons>
-        { edit && deleteAllowed &&
+        { edit &&
           <IsAllowed to={DELETE_NETWORK}>
           <ButtonDisableTooltip
             id="delete-btn"

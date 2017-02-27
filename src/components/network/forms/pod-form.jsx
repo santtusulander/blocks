@@ -145,7 +145,7 @@ renderFootprints.propTypes = {
 renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, deleteAllowed } }) => (
+const renderFootprint = ({ onEdit, input }) => (
   <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
@@ -183,7 +183,6 @@ const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, d
 )
 
 renderFootprint.propTypes = {
-  footprintPermissions: PropTypes.object,
   input: PropTypes.object,
   onEdit: PropTypes.func
 }
@@ -201,7 +200,6 @@ const PodForm = ({
   onSave,
   submitting,
   dirty,
-  podPermissions: { deleteAllowed, modifyAllowed },
   footprintPermissions,
 
   onShowFootprintModal,
@@ -462,7 +460,7 @@ const PodForm = ({
       }
 
       <FormFooterButtons>
-        {edit && deleteAllowed &&
+        {edit &&
           <IsAllowed to={DELETE_POD}>
             <ButtonDisableTooltip
               id="delete-btn"

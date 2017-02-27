@@ -57,8 +57,7 @@ const NetworkPopForm = (props) => {
     initialValues,
     hasPods,
     dirty,
-    handleSubmit,
-    popPermissions: { deleteAllowed, modifyAllowed }
+    handleSubmit
   } = props
 
   const edit = !!initialValues.id
@@ -114,7 +113,7 @@ const NetworkPopForm = (props) => {
         }
 
         <FormFooterButtons>
-          { edit && deleteAllowed &&
+          { edit &&
             <IsAllowed to={DELETE_POP}>
               <ButtonDisableTooltip
                 id="delete-btn"

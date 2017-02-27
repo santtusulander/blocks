@@ -124,7 +124,7 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   getFooterButtons() {
-    const { invalid, submitting, numNodes, nodePermissions: { modifyAllowed } } = this.props
+    const { invalid, submitting, numNodes } = this.props
     const { showAddConfirmation } = this.state
 
     const submitButtonLabel = submitting

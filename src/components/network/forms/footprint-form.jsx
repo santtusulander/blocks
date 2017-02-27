@@ -127,8 +127,7 @@ class FootprintForm extends React.Component {
       onCancel,
       onSave,
       submitting,
-      udnTypeOptions,
-      footprintPermissions: { modifyAllowed }
+      udnTypeOptions
     } = this.props
 
     const submitButtonLabel = editing

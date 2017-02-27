@@ -120,8 +120,7 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting,
-    locationPermissions: { modifyAllowed, deleteAllowed }
+    submitting
   } = props;
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
@@ -253,7 +252,7 @@ const NetworkLocationForm = (props) => {
       </Row>
 
       <FormFooterButtons>
-        { edit && deleteAllowed &&
+        { edit &&
           <IsAllowed to={DELETE_LOCATION}>
             <Button
               className="btn-danger pull-left"
