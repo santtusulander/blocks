@@ -15,13 +15,16 @@ import { FormattedMessage } from 'react-intl';
 import * as reducers from './redux/modules'
 import { showInfoDialog, hideInfoDialog } from './redux/modules/ui'
 import { logOut, destroyStore } from './redux/modules/user'
-import {SENTRY_DSN} from './constants/sentry'
-import './styles/style.scss'
+import { SENTRY_HOSTNAMES, SENTRY_DSN } from './constants/sentry'
 
+import { tokenDidExpire } from './util/user-helpers'
+
+import './styles/style.scss'
 
 import Root from './root'
 
-const useRaven = process.env.NODE_ENV === 'production'
+const useRaven = SENTRY_HOSTNAMES.includes( window.location.hostname )
+
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
   useRaven
@@ -62,6 +65,7 @@ if (module.hot) {
   });
 }
 
+
 // Set up axios defaultHeaders
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -82,16 +86,10 @@ axios.interceptors.response.use(function (response) {
         && !location.href.includes('/forgot-password')
         && !error.config.url.includes('/password')) {
 
-        const loggedIn = store.getState().user.get('loggedIn') === true
-        const method = error.config.method.toLowerCase()
-        const tokenDidExpire = loggedIn && method === 'get'
-
-        //If UI state == loggedIn, but getting 401s from API => token expired
-        //(NOTE: this might not be 100% true, might be eg. forbidden resource
-        //Should check expiration from  expires_at -key)
-        if (tokenDidExpire) {
+        //Check expiration from  expires_at -key)
+        if ( tokenDidExpire() ) {
           const returnPath = location.pathname
-          return store.dispatch( logOut(false) )
+          return store.dispatch( logOut() )
             .then( () => {
               // Token expired, redirect to login
               browserHistory.push({
@@ -102,6 +100,13 @@ axios.interceptors.response.use(function (response) {
                 }
               })
 
+              store.dispatch( destroyStore() )
+              return Promise.reject(error)
+            })
+        } else {
+          //Token is invalid and not expired => logout
+          return store.dispatch( logOut() )
+            .then( () => {
               store.dispatch( destroyStore() )
               return Promise.reject(error)
             })

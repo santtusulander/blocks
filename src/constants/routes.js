@@ -31,6 +31,7 @@ const ROUTES = {
   configurationTabDefaults: 'defaults',
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
+  configurationTabStreaming: 'streaming',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 
@@ -50,6 +51,7 @@ const ROUTES = {
   accountManagementTabSystemDNS: 'dns',
   accountManagementTabSystemRoles: 'roles',
   accountManagementTabSystemServices: 'services',
+  accountManagementTabSystemStorages: 'storages',
 
   services: '/services',
   servicesBrand: '/services/:brand',

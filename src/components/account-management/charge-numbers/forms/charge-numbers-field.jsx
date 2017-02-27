@@ -89,6 +89,7 @@ class ChargeNumbersField extends React.Component {
             name="billing_meta.charge_number"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.charge_number.title" />}
+            normalize={value => value.toUpperCase()}
             required={true}
           />
         }
