@@ -29,8 +29,8 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN
          } from '../../../constants/common'
 
-import { FOOTPRINT_FILE_TYPES, FOOTPRINT_FIELDS_NAME, 
-         FOOTPRINT_UND_TYPES_VALUES, FOOTPRINT_CSV_TEMPLATE 
+import { FOOTPRINT_FILE_TYPES, FOOTPRINT_FIELDS_NAME,
+         FOOTPRINT_UND_TYPES_VALUES, FOOTPRINT_CSV_TEMPLATE
          } from '../../../constants/network'
 
 const validateCIDRToken = (item) => {
@@ -143,13 +143,13 @@ class FootprintForm extends React.Component {
 
       // Validate footprint name
       const name = data[1][0]
-      if (!(isValidTextField(name))) {
+      if (!(isValidFootprintTextField(name))) {
         return cb(file)
       }
 
       // Validate footprint description
       const description = data[1][1]
-      if (!(isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN))) {
+      if (!(isValidFootprintDescription(description))) {
         return cb(file)
       }
 
