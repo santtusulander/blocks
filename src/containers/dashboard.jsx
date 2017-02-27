@@ -35,6 +35,7 @@ import Content from '../components/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
 import DashboardTabPanel from '../components/dashboard/dashboard-tab-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
+import DashboardTabContent from '../components/dashboard/dashboard-tab-content'
 import IconCaretDown from '../components/icons/icon-caret-down'
 import IsAllowed from '../components/is-allowed'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
@@ -311,8 +312,18 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        <DashboardTabPanel threeItemPerRow={true} tabs={["OS","BROWSER","DEVICE"]}>
-          <h2>Lorem Ipsum</h2>
+        <DashboardTabPanel threeItemPerRow={true} defaultTab={'OS'}>
+          <DashboardTabContent label={'OS'}>
+            <h2>OS</h2>
+          </DashboardTabContent>
+
+          <DashboardTabContent label={'BROWSER'}>
+            <h2>BROWSER</h2>
+          </DashboardTabContent>
+
+          <DashboardTabContent label={'DEVICE'}>
+            <h2>DEVICE</h2>
+          </DashboardTabContent>
         </DashboardTabPanel>
         <DashboardPanel threeItemPerRow={true} title={"Lorem Ipsum"}>
           <h2>Lorem Ipsum</h2>

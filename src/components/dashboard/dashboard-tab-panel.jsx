@@ -1,6 +1,6 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes, Component, Children } from 'react'
 import classNames from 'classnames'
-import {Row, Col, Tab} from 'react-bootstrap'
+import {Row, Col} from 'react-bootstrap'
 
 import './dashboard-panel.scss'
 
@@ -8,15 +8,23 @@ class DashboardTabPanel extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      openedTabID : ""
+      activeTab : this.props.defaultTab || ''
     }
   }
-  getContentComponent(){
 
+  handleClick(label) {
+    return () => {
+      this.setState({
+        activeTab : label
+      });
+    }
   }
   render(){
-    const { className, threeItemPerRow, noPadding, tabs} = this.props
+    const { className, threeItemPerRow, noPadding, children} = this.props
+    const tabs = Children.toArray(children)
     const tabLength = tabs.length ? 12/tabs.length : 12
+    const { activeTab } = this.state
+
     return (
       <div className={classNames(
         'dashboard-panel',
@@ -26,20 +34,30 @@ class DashboardTabPanel extends Component {
           'no-padding': noPadding
         }
       )}>
-        {tabs &&
+        {tabLength &&
           <div className="dashboard-tab-panel-header">
             <Row>
-            {tabs.map(tab => (
-              <Col xs={tabLength} className="header-tab" eventKey={tab}>
-                <h5>{tab}</h5>
+            {tabs.map(({ props : {label}}, index) => (
+              <Col xs={tabLength}
+                key={index}
+                className= {
+                  classNames(
+                    "header-tab",
+                    {"active-tab": activeTab === label}
+                  )
+                }
+                onClick={this.handleClick(label)}>
+                <h5>{label}</h5>
               </Col>)
             )}
             </Row>
           </div>
         }
+
         <div className="dashboard-panel-content">
-          {this.props.children}
+          {tabs.filter(({ props : {label} }) => label === this.state.activeTab)}
         </div>
+
       </div>
     )
   }
@@ -47,9 +65,10 @@ class DashboardTabPanel extends Component {
 
 DashboardTabPanel.displayName = "DashboardPanel"
 DashboardTabPanel.propTypes = {
+  children: PropTypes.node,
   className: PropTypes.string,
+  defaultTab: PropTypes.string,
   noPadding: PropTypes.bool,
-  tabs: PropTypes.array,
   threeItemPerRow: PropTypes.bool
 }
 

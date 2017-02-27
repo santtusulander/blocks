@@ -91,10 +91,14 @@ $dashboard-panel-kpi-padding: 15px;
     h5 {
       text-align: center;
     }
-    .header-tab{
+    .header-tab {
+      border-bottom: solid #021422;
+      cursor: pointer;
       padding-top: 15px;
       padding-bottom: 13px;
-      border-bottom: solid #021422;
+    }
+    .active-tab {
+      border-bottom: solid #00a8d4;
     }
 
     .dark-theme & {
