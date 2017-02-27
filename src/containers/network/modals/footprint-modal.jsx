@@ -1,10 +1,12 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { SubmissionError } from 'redux-form'
 import { Map } from 'immutable'
 import { injectIntl } from 'react-intl'
 
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
 
@@ -21,8 +23,11 @@ class FootprintFormContainer extends React.Component {
   constructor(props) {
     super(props)
 
+    this.notificationTimeout = null
     this.onSave = this.onSave.bind(this)
+    this.onCSVSave = this.onCSVSave.bind(this)
     this.onDelete = this.onDelete.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   /**
@@ -61,14 +66,36 @@ class FootprintFormContainer extends React.Component {
           throw new SubmissionError({ '_error': error.data.message })
         }
 
-        const { entities: { footprints } } = response
-
         //add new footprint to pod
         if (!edit) {
           //Grab the id from the response
-          finalValues.id = Number(Object.keys(footprints)[0])
+          finalValues.id = Number(Object.keys(response.entities.footprints)[0])
           this.props.addFootprintToPod(finalValues)
         }
+
+        return this.props.onCancel()
+      })
+  }
+
+  onCSVSave(csvValues) {
+    const finalValues = Object.assign({}, csvValues, {
+      location: this.props.location
+    })
+
+    const params = {
+      brand: 'udn',
+      account: this.props.accountId,
+      payload: finalValues
+    }
+
+    return this.props.onCreate(params)
+      .then(({ error, response }) => {
+        if (error) {
+          throw new SubmissionError({ '_error': error.data.message })
+        }
+
+        finalValues.id = Object.keys(response.entities.footprints)[0]
+        this.props.addFootprintToPod(finalValues)
 
         return this.props.onCancel()
       })
@@ -89,6 +116,12 @@ class FootprintFormContainer extends React.Component {
         }
         //return this.props.handleFootprintSaveResponse(res)
       })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeSidePanelNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
   }
 
   render() {
@@ -124,7 +157,8 @@ class FootprintFormContainer extends React.Component {
           ASNOptions={ASNOptions}
           CIDROptions={CIDROptions}
           udnTypeOptions={FOOTPRINT_UDN_TYPES}
-
+          showNotification={this.showNotification}
+          onCSVSave={this.onCSVSave}
           onSave={(values) => this.onSave(edit, values)}
           onDelete={this.onDelete}
           onCancel={onCancel}
@@ -154,18 +188,19 @@ FootprintFormContainer.propTypes = {
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
+  uiActions: PropTypes.object
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params, data) => dispatch(footprintActions.create({ ...params, data })),
     onUpdate: (params, data) => dispatch(footprintActions.update({ ...params, data })),
-    onDelete: (params) => dispatch(footprintActions.remove({ ...params }))
+    onDelete: (params) => dispatch(footprintActions.remove({ ...params })),
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   }
-
-
 }
+
 const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
