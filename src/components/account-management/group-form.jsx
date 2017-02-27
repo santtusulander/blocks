@@ -63,6 +63,16 @@ const GroupForm = ({
   showServiceItemForm,
   submitting
 }) => {
+
+  const tooltipHintId = hasNetworks ? "portal.network.groupForm.delete.tooltip.network.message"
+                                    : ((canSeeLocations && (!locations.isEmpty()))
+                                    ? "portal.network.groupForm.delete.tooltip.location.message" : null)
+
+  let actionButtonTitle = groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
+
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
       <Field
@@ -104,6 +114,8 @@ const GroupForm = ({
                   <Button
                     className="btn-icon btn-success pull-right"
                     bsStyle="success"
+                    icon={true}
+                    addNew={true}
                     onClick={() => onShowLocation(null)}>
                     <IconAdd />
                   </Button>
@@ -180,7 +192,7 @@ const GroupForm = ({
                 disabled={submitting || isFetchingEntities || hasNetworks}
                 onClick={onDelete}
                 tooltipId="tooltip-help"
-                tooltipMessage={{text :intl.formatMessage({id: "portal.network.groupForm.delete.tooltip.message"})}}>
+                tooltipMessage={tooltipHintId && {text: intl.formatMessage({id: tooltipHintId})}}>
                 <FormattedMessage id="portal.button.delete"/>
               </ButtonDisableTooltip>
             </IsAllowed>
@@ -198,7 +210,7 @@ const GroupForm = ({
               type="submit"
               bsStyle="primary"
               disabled={invalid || submitting || isFetchingEntities}>
-              {groupId ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
+              {actionButtonTitle}
             </Button>
           </IsAllowed>
         </FormFooterButtons>
@@ -220,6 +232,7 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
-import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+import { change, Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 
 import DefaultErrorBlock from '../../form/default-error-block'
@@ -9,9 +9,10 @@ import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import IsAllowed from '../../is-allowed'
+import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
-import { isInt } from '../../../util/validators'
+import { isInt, isValidFQDN } from '../../../util/validators'
 import { CREATE_NODE } from '../../../constants/permissions'
 
 import {
@@ -25,8 +26,15 @@ const isEmpty = function(value) {
   return !!value === false
 }
 
-const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) => {
+const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }) => {
+
   const conditions = {
+    node_name: [
+      {
+        condition: !isValidFQDN(node_name),
+        errorText: <FormattedMessage id="portal.validators.type.fqdn" values={{field: <FormattedMessage id="portal.common.name" /> }}/>
+      }
+    ],
     numNodes: [
       {
         condition: isEmpty(numNodes),
@@ -63,7 +71,7 @@ const validate = ({ numNodes, node_role, node_env, node_type, cloud_driver }) =>
     ]
   }
 
-  return checkForErrors({ numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
+  return checkForErrors({ node_name, numNodes, node_role, node_env, node_type, cloud_driver }, conditions)
 }
 
 class NetworkAddNodeForm extends React.Component {
@@ -79,8 +87,19 @@ class NetworkAddNodeForm extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { nodeName } = nextProps
+
+    // This will autogenerate the value of the node_name field if the nodeName prop changed
+    // See mapStateToProps in src/containers/network/modals/add-node-modal.jsx
+    if ( nodeName !== this.props.nodeName ) {
+      this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
+    }
+
+  }
+
   onSubmit(values) {
-    const { numNodes, nodeNameData } = this.props
+    const { numNodes } = this.props
     const { showAddConfirmation } = this.state
     if (!showAddConfirmation && numNodes > 1) {
       this.toggleAddConfirm(true)
@@ -88,7 +107,6 @@ class NetworkAddNodeForm extends React.Component {
     }
 
     const finalValues = {...values}
-    finalValues.node_name = nodeNameData.name
     return this.props.onSave(finalValues)
       .catch(error => {
         this.toggleAddConfirm(false)
@@ -106,7 +124,7 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   getFooterButtons() {
-    const { invalid, submitting, numNodes } = this.props
+    const { invalid, submitting, numNodes, nodePermissions: { modifyAllowed } } = this.props
     const { showAddConfirmation } = this.state
 
     const submitButtonLabel = submitting
@@ -128,7 +146,7 @@ class NetworkAddNodeForm extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={invalid||submitting}>
+              disabled={invalid || submitting}>
               {submitButtonLabel}
             </Button>
           </IsAllowed>
@@ -146,7 +164,7 @@ class NetworkAddNodeForm extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid||submitting}>
+            disabled={invalid || submitting}>
             <FormattedMessage id="portal.button.add" />
           </Button>
         </IsAllowed>
@@ -155,14 +173,14 @@ class NetworkAddNodeForm extends React.Component {
   }
 
   render() {
-    const { handleSubmit, nodeNameData, error } = this.props
+    const { handleSubmit, error } = this.props
     const footerButtons = this.getFooterButtons()
-    const nodeNameProps = nodeNameData.props
 
     return (
       <form className="sp-add-node-form" onSubmit={handleSubmit(this.onSubmit)}>
         <div className="form-input-container">
           {error && <DefaultErrorBlock error={error}/>}
+
           {/* <Row>
             <Col sm={3}>
               <Field
@@ -175,17 +193,27 @@ class NetworkAddNodeForm extends React.Component {
             </Col>
           </Row> */}
 
+          { /* Commented out because of UDNP-2780 - maybe needed in future
           <label><FormattedMessage id="portal.common.name" /></label>
           <div className="add-node-form__name-fqdn">
             {nodeNameProps.nodeType}<span className="sp-add-node-form__highlight-name">{nodeNameProps.nameCode}</span>.{nodeNameProps.location}.{nodeNameProps.cacheEnv}.{nodeNameProps.domain}
           </div>
+          */}
 
           <Field
             type="number"
-            name="nameCode"
+            name="serverNumber"
             min={0}
             max={99}
             component={FieldFormGroupNumber}
+            label="Node ID"
+          />
+
+          <Field
+            type="text"
+            name="node_name"
+            component={FieldFormGroup}
+            label={<FormattedMessage id="portal.common.name" />}
           />
 
           <Field
@@ -194,6 +222,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_ROLE_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.role.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.role.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.role.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -202,6 +237,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_ENVIRONMENT_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.environment.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.environment.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.environment.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -210,6 +252,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_TYPE_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.type.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.type.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.type.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -218,6 +267,13 @@ class NetworkAddNodeForm extends React.Component {
             component={FieldFormGroupSelect}
             options={NODE_CLOUD_DRIVER_OPTIONS}
             label={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.cloudDriver.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.cloudDriver.help.text" />
+              </HelpTooltip>
+            }
           />
 
           <Field
@@ -227,6 +283,13 @@ class NetworkAddNodeForm extends React.Component {
             className="input-textarea"
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.addNodeForm.grains.title" />}
+            addonAfter={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.network.addNodeForm.grains.title"/>}>
+                <FormattedMessage id="portal.network.nodeForm.grains.help.text" />
+              </HelpTooltip>
+            }
           />
         </div>
         {footerButtons}
@@ -239,7 +302,6 @@ NetworkAddNodeForm.displayName = 'NetworkAddNodeForm'
 NetworkAddNodeForm.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
-  nodeNameData: React.PropTypes.object,
   onCancel: React.PropTypes.func,
   onSave: React.PropTypes.func,
   onToggleConfirm: React.PropTypes.func,

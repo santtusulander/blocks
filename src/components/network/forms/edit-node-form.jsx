@@ -16,6 +16,7 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpPopover from '../../help-popover'
 import ButtonDisableTooltip from '../../button-disable-tooltip'
 import IsAllowed from '../../is-allowed'
+import HelpTooltip from '../../help-tooltip'
 
 import { checkForErrors } from '../../../util/helpers'
 
@@ -24,11 +25,12 @@ import {
   NODE_CLOUD_DRIVER_OPTIONS,
   NODE_ENVIRONMENT_OPTIONS,
   NODE_ROLE_OPTIONS,
-  NODE_TYPE_OPTIONS
+  NODE_TYPE_OPTIONS,
+  STATUS_OPTIONS
 } from '../../../constants/network'
 
 export const MULTIPLE_VALUE_INDICATOR = 'FIELD_HAS_MULTIPLE_VALUES'
-export const FORM_FIELDS = ['roles', 'env', 'type', 'cloud_driver', 'custom_grains']
+export const FORM_FIELDS = ['status', 'roles', 'env', 'type', 'cloud_driver', 'custom_grains']
 
 const multipleValuesText = <FormattedMessage id="portal.network.editNodeForm.multipleValues"/>
 
@@ -188,32 +190,46 @@ class NetworkEditNodeForm extends React.Component {
 
     const fields = [
       {
+        name: 'status',
+        component: FieldFormGroupSelect,
+        options: STATUS_OPTIONS.map(({value, label}) => ({ value, label: this.props.intl.formatMessage({id: label}) })),
+        labelId: 'portal.network.item.status.label'
+      },
+      {
         name: 'roles',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_ROLE_OPTIONS,
-        labelId: 'portal.network.addNodeForm.role.title'
+        labelId: 'portal.network.addNodeForm.role.title',
+        tooltipText: 'portal.network.nodeForm.role.help.text'
       },
       {
         name: 'env',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_ENVIRONMENT_OPTIONS,
-        labelId: 'portal.network.addNodeForm.environment.title'
+        labelId: 'portal.network.addNodeForm.environment.title',
+        tooltipText: 'portal.network.nodeForm.environment.help.text'
       },
       {
         name: 'type',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_TYPE_OPTIONS,
-        labelId: 'portal.network.addNodeForm.type.title'
+        labelId: 'portal.network.addNodeForm.type.title',
+        tooltipText: 'portal.network.nodeForm.type.help.text'
       },
       {
         name: 'cloud_driver',
         className: 'input-select',
         component: FieldFormGroupSelect,
+        disabled: true,
         options: NODE_CLOUD_DRIVER_OPTIONS,
-        labelId: 'portal.network.addNodeForm.cloudDriver.title'
+        labelId: 'portal.network.addNodeForm.cloudDriver.title',
+        tooltipText: 'portal.network.nodeForm.cloudDriver.help.text'
       },
       {
         name: 'custom_grains',
@@ -221,7 +237,8 @@ class NetworkEditNodeForm extends React.Component {
         disabled: true,
         className: 'input-textarea',
         component: FieldFormGroup,
-        labelId: 'portal.network.addNodeForm.grains.title'
+        labelId: 'portal.network.addNodeForm.grains.title',
+        tooltipText: 'portal.network.nodeForm.grains.help.text'
       }
     ]
 
@@ -272,7 +289,14 @@ class NetworkEditNodeForm extends React.Component {
           <label>{fieldLabelText}</label>
           {fieldToggle}
           <div className={isExpanded ? 'show' : 'hidden'}>
-            <Field {...fieldData} />
+            <Field {...fieldData}
+              addonAfter={fieldData.tooltipText &&
+                <HelpTooltip
+                  id="tooltip-help"
+                  title={<FormattedMessage id={fieldData.labelId}/>}>
+                  <FormattedMessage id={fieldData.tooltipText} />
+                </HelpTooltip>
+              }/>
             {helpMessage && <div className="edit-node-form__field-help">{helpMessage}</div>}
           </div>
         </FormGroup>
@@ -287,7 +311,8 @@ class NetworkEditNodeForm extends React.Component {
       nodes,
       pristine,
       submitting,
-      error
+      error,
+      nodePermissions: { deleteAllowed, modifyAllowed }
     } = this.props
 
     const { hasMultipleNodes } = this.state
@@ -381,7 +406,7 @@ class NetworkEditNodeForm extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={pristine||invalid||submitting}>
+              disabled={pristine || invalid || submitting}>
               {submitButtonLabel}
             </Button>
           </IsAllowed>

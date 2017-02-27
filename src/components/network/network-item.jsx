@@ -33,7 +33,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
 
       <TruncatedTitle className='network-item-content' content={content} />
 
-      {status &&
+      { status &&
         <div className={`status-indicator ${status}`}>
           <FormattedMessage id={`portal.network.item.status.${status}`} />
         </div>

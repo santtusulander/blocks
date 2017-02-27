@@ -12,11 +12,15 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import IsAllowed from '../../is-allowed'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
-import { isValidTextField, isValidIPv4Address, isValidASN } from '../../../util/validators'
+import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
 import { MODIFY_FOOTPRINT } from '../../../constants/permissions'
-import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
+         FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN
+         } from '../../../constants/common'
 
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label, true)
@@ -29,17 +33,15 @@ const validateASNToken = (item) => {
 const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist, udn_type }) => {
 
   const valueValidationTranslationId = data_type === 'ipv4cidr' ? 'portal.network.footprintForm.CIRD.required.text' : 'portal.network.footprintForm.ASN.required.text'
-
   const conditions = {
     name: {
-      condition: !isValidTextField(name),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.footprintForm.name.invalid.text"/>
-    },
-    description: {
-      condition: !isValidTextField(description, FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN),
-      errorText: <MultilineTextFieldError fieldLabel="portal.common.description"
-                                          minValue={FORM_DESCRIPTION_FIELD_MIN_LEN}
-                                          maxValue={FORM_DESCRIPTION_FIELD_MAX_LEN}/>
+      condition: !isValidFootprintTextField(name),
+      errorText: <MultilineTextFieldError
+                    fieldLabel="portal.network.footprintForm.name.invalid.text"
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
+                    minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
+                    maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
+                    />
     }
   }
 
@@ -75,15 +77,29 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
     ]
   }
 
-  return checkForErrors(
-    { name, description, data_type, udn_type, value_ipv4cidr, value_asnlist },
+  const errors = checkForErrors(
+    { name, data_type, udn_type, value_ipv4cidr, value_asnlist },
     conditions,
     {
       name: <FormattedMessage id="portal.network.footprintForm.name.required.text"/>,
-      description: <FormattedMessage id="portal.network.footprintForm.description.required.text"/>,
       [`value_${data_type}`]: <FormattedMessage id={valueValidationTranslationId}/>
     }
   )
+
+  /* TODO, refactor checkForErrors, so field which not required still able to check for conditions
+     UDNP-2772 Validation function does not support validation for optional fields */
+  if(description && !isValidFootprintDescription(description)) {
+    errors.description = (
+      <MultilineTextFieldError
+        fieldLabel="portal.common.description"
+        customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.all"
+        minValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN}
+        maxValue={FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN}
+      />
+    )
+  }
+
+  return errors
 }
 
 class FootprintForm extends React.Component {
@@ -111,7 +127,8 @@ class FootprintForm extends React.Component {
       onCancel,
       onSave,
       submitting,
-      udnTypeOptions
+      udnTypeOptions,
+      footprintPermissions: { modifyAllowed }
     } = this.props
 
     const submitButtonLabel = editing
@@ -159,6 +176,7 @@ class FootprintForm extends React.Component {
             placeholder={intl.formatMessage({ id: 'portal.network.footprintForm.description.placeholder.text' })}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.network.footprintForm.description.title.text"/>}
+            required={false}
           />
 
           <ControlLabel>
@@ -210,6 +228,7 @@ class FootprintForm extends React.Component {
             onClick={onCancel}>
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
+
           <IsAllowed to={MODIFY_FOOTPRINT}>
             <Button
               type="submit"

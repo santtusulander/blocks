@@ -36,8 +36,11 @@ const validate = ({ name, description }) => {
   )
 }
 
-const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, invalid, hasPops, onCancel, onSave, onDelete }) => {
-
+const NetworkForm = ({
+  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete,
+  networkPermissions: { deleteAllowed, modifyAllowed }
+}) => {
+  const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
   const edit = !!initialValues.name
 
@@ -71,22 +74,22 @@ const NetworkForm = ({ error, submitting, handleSubmit, intl, initialValues, inv
         label={<FormattedMessage id="portal.common.description" />} />
 
       <FormFooterButtons>
-        { edit &&
+        { edit && deleteAllowed &&
           <IsAllowed to={DELETE_NETWORK}>
-            <ButtonDisableTooltip
-              id="delete-btn"
-              className="btn-danger pull-left"
-              disabled={hasPops}
-              onClick={handleSubmit(() => onDelete(initialValues.name))}
-              tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
-              {
-                //Commented out: as submitting is also true when 'saving'.
-                //Should show DELETE -modal and ask for confirmation
-                //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
-              }
-              <FormattedMessage id="portal.button.delete"/>
-            </ButtonDisableTooltip>
+          <ButtonDisableTooltip
+            id="delete-btn"
+            className="btn-danger pull-left"
+            disabled={deleteButtonDisabled}
+            onClick={handleSubmit(() => onDelete(initialValues.name))}
+            tooltipId="tooltip-help"
+            tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
+            {
+              //Commented out: as submitting is also true when 'saving'.
+              //Should show DELETE -modal and ask for confirmation
+              //submitting ? <FormattedMessage id="portal.button.deleting"/>  :
+            }
+            <FormattedMessage id="portal.button.delete"/>
+          </ButtonDisableTooltip>
           </IsAllowed>
         }
         <Button
@@ -117,6 +120,7 @@ NetworkForm.propTypes = {
   hasPops: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  isFetching: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,

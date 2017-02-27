@@ -11,12 +11,12 @@ describe('NetworkItem', () => {
   const onSelect = jest.fn()
 
   beforeEach(() => {
-    subject = () => {
+    subject = (viewAllowed = true) => {
       props = {
         onEdit,
         onSelect,
         status: 'enabled',
-        isAllowedToConfigure: true
+        viewAllowed
       }
       return shallow(<NetworkItem {...props}/>)
     }
@@ -47,5 +47,9 @@ describe('NetworkItem', () => {
       preventDefault: jest.fn()
     })
     expect(onEdit.mock.calls.length).toBe(1)
+  })
+
+  it('should not have edit/view button if no view permission', () => {
+    expect(subject(false).find('Button').length).toBe(0)
   })
 })
