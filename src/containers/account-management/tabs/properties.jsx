@@ -67,7 +67,7 @@ class AccountManagementProperties extends React.Component {
       }
     } = this.props
 
-    if (!properties.toJS().length) {
+    if (properties.size === 0) {
       this.refreshData(brand, account)
     }
     router.setRouteLeaveHook(route, this.shouldLeave)
