@@ -288,22 +288,24 @@ class FootprintForm extends React.Component {
           {this.props.error}
           </span>
 
-        <Field
-          name="addFootprintMethod"
-          type="radio"
-          value="manual"
-          component={FieldRadio}
-          label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
-        />
-
         {!editing &&
-          <Field
-            name="addFootprintMethod"
-            type="radio"
-            value="addfile"
-            component={FieldRadio}
-            label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
-          />
+          <div>
+            <Field
+              name="addFootprintMethod"
+              type="radio"
+              value="manual"
+              component={FieldRadio}
+              label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.manual.text"/>}
+            />
+
+            <Field
+              name="addFootprintMethod"
+              type="radio"
+              value="addfile"
+              component={FieldRadio}
+              label={<FormattedMessage id="portal.network.footprintForm.checkbox.option.useCSV.text"/>}
+            />
+          </div>
         }
 
         { addFootprintMethod === 'manual' &&
