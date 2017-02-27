@@ -140,7 +140,7 @@ export class LoginForm extends Component {
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary"
                         className="pull-right"
-                        disabled={this.props.fetching}>
+                        disabled={this.props.fetching || !this.state.username || !this.state.password}>
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
                 <Link to={`/forgot-password`} className="btn btn-link pull-right">
@@ -167,7 +167,7 @@ export class LoginForm extends Component {
 LoginForm.displayName = "LoginForm"
 LoginForm.propTypes = {
   fetching: React.PropTypes.bool,
-  loginError: React.PropTypes.string,
+  loginError: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   onSubmit: React.PropTypes.func,
   sessionExpired: React.PropTypes.string,
   userName: React.PropTypes.string
