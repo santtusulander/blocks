@@ -1,11 +1,11 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../file-upload')
-import FileUploadArea from '../file-upload'
+jest.unmock('../csv-upload')
+import CsvUploadArea from '../csv-upload'
 
 const subject = shallow(
-  <FileUploadArea
+  <CsvUploadArea
     contentValidation={() => {
       return true
     }}
@@ -16,7 +16,7 @@ const subject = shallow(
     uploadModalOnClick={true}/>
 )
 
-describe('FileUploadArea', () => {
+describe('CsvUploadArea', () => {
   it('should exist', () => {
     expect(subject.length).toBe(1)
   })
