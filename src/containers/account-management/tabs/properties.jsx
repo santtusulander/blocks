@@ -7,9 +7,12 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { Field } from 'redux-form'
 
-import * as groupActionCreators from '../../../redux/modules/group'
-import * as propertyActionCreators from '../../../redux/modules/host'
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import propertyActions from '../../../redux/modules/entities/properties/actions'
 import * as uiActionCreators from '../../../redux/modules/ui'
+import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
+import { getByAccount as getPropertiesByAccount } from '../../../redux/modules/entities/properties/selectors'
+import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import FieldFormGroup from '../../../components/form/field-form-group'
 import PageContainer from '../../../components/layout/page-container'
@@ -26,6 +29,8 @@ import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_PROPERTY, CREATE_PROPERTY } from '../../../constants/permissions'
+
+const IS_FETCHING = 'PropertiesTabFetching'
 
 class AccountManagementProperties extends React.Component {
   constructor(props) {
@@ -76,9 +81,14 @@ class AccountManagementProperties extends React.Component {
   }
 
   refreshData(brand, account) {
-    return
-    const { propertyActions } = this.props
-    propertyActions.fetchProperties(brand, account);
+    const { fetchGroups, fetchPropertiesByIds } = this.props
+    fetchGroups({ brand, account }).then(groupData => {
+      for (let groupId in groupData.response.entities.groups) {
+        if (groupData.response.entities.groups.hasOwnProperty(groupId)) {
+          fetchPropertiesByIds({ brand, account, group: groupId })
+        }
+      }
+    })
   }
 
   cancelAdding() {
@@ -322,11 +332,13 @@ AccountManagementProperties.propTypes    = {
   addProperty: React.PropTypes.func,
   deleteProperty: React.PropTypes.func,
   editProperty: React.PropTypes.func,
-  groupActions: React.PropTypes.object,
+  fetchGroups: React.PropTypes.func,
+  fetchPropertiesByIds: React.PropTypes.func,
+  fetching: React.PropTypes.bool,
+  groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
-  propertyActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
   uiActions: React.PropTypes.object
@@ -336,16 +348,19 @@ AccountManagementProperties.defaultProps = {
   groups: Immutable.List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const { account } = ownProps.params
   return {
-    groups: state.group.get('allGroups')
+    fetching: getFetchingByTag(state, IS_FETCHING),
+    groups: getGroupsByAccount(state, account),
+    properties: getPropertiesByAccount(state, account)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
-    propertyActions: bindActionCreators(propertyActionCreators, dispatch),
+    fetchGroups: (params) => dispatch(groupActions.fetchAll({ ...params, requestTag: IS_FETCHING })),
+    fetchPropertiesByIds: (params) => propertyActions.fetchByIds(dispatch)({ ...params, requestTag: IS_FETCHING }),
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
