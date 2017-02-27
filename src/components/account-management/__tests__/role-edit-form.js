@@ -31,7 +31,10 @@ describe('RolesEditForm', () => {
         editPermsUI: Immutable.Map(),
         fields: fieldsMock,
         intl: intlMaker(),
-        params: { brand: 'foo', account: 'bar', group: 'zyx', property: 'qwe' }
+        params: { brand: 'foo', account: 'bar', group: 'zyx', property: 'qwe' },
+        initialValues: {
+          roleName: ''
+        }
       }
       return shallow(<RolesEditForm {...props}/>)
     }
