@@ -77,6 +77,9 @@ class AsperaUpload extends Component {
   }
 
   startTransfer(files) {
+    /*
+      TODO: UDNP-2867 Integrate Aspera component with the redux
+    */
     const connectSettings = {}
     const transferSpec = {
       "paths": [],
@@ -99,7 +102,7 @@ class AsperaUpload extends Component {
         })
       },
       error: () => {
-        /* TODO: error handling */
+        /* TODO: UDNP-2867 Integrate Aspera component with the redux */
       }
     }
 
@@ -116,7 +119,7 @@ class AsperaUpload extends Component {
         }
       },
       error: () => {
-        /* TODO: error handling */
+        /* TODO: UDNP-2867 Integrate Aspera component with the redux */
       }
     }, {
       allowMultipleSelection: this.props.multiple
