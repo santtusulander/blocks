@@ -23,6 +23,7 @@ import TableSorter from '../../../components/table-sorter'
 import InlineAdd from '../../../components/inline-add'
 import IsAllowed from '../../../components/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 import { formatUnixTimestamp} from '../../../util/helpers'
 import { checkForErrors } from '../../../util/helpers'
@@ -257,7 +258,7 @@ class AccountManagementProperties extends React.Component {
   }
 
   render() {
-    const { addProperty, deleteProperty, editProperty, intl, properties } = this.props
+    const { addProperty, deleteProperty, editProperty, intl, properties, fetching } = this.props
     const { adding, search, sortBy, sortDir } = this.state
 
     const sorterProps  = {
@@ -276,84 +277,88 @@ class AccountManagementProperties extends React.Component {
 
     return (
       <PageContainer className="account-management-account-properties">
-        <SectionHeader sectionHeaderTitle={headerText}>
-          <FormGroup className="search-input-group">
-            <FormControl
-              type="text"
-              className="search-input"
-              placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
-              value={search}
-              disabled={!properties.size}
-              onChange={this.changeSearch} />
-          </FormGroup>
-          <IsAllowed to={CREATE_PROPERTY}>
-            <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
-              <IconAdd />
-            </Button>
-          </IsAllowed>
-        </SectionHeader>
+        { fetching && <LoadingSpinner/> }
+        { !fetching &&
+        (<div>
+          <SectionHeader sectionHeaderTitle={headerText}>
+            <FormGroup className="search-input-group">
+              <FormControl
+                type="text"
+                className="search-input"
+                placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
+                value={search}
+                disabled={!properties.size}
+                onChange={this.changeSearch} />
+            </FormGroup>
+            <IsAllowed to={CREATE_PROPERTY}>
+              <Button bsStyle="success" className="btn-icon" onClick={this.addProperty}>
+                <IconAdd />
+              </Button>
+            </IsAllowed>
+          </SectionHeader>
 
-        <Table striped={true}>
-          <thead>
-          <tr>
-            <TableSorter {...sorterProps} column="name">
-              <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
-            </TableSorter>
-            <TableSorter {...sorterProps} column="group">
-              <FormattedMessage id="portal.account.groups.single.text"/>
-            </TableSorter>
-            <TableSorter {...sorterProps} column="deploymentMode">
-              <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
-            </TableSorter>
-            <TableSorter {...sorterProps} column="originHostname">
-              <FormattedMessage id="portal.account.properties.table.originHostname.text"/>
-            </TableSorter>
-            <TableSorter {...sorterProps} column="created">
-              <FormattedMessage id="portal.account.properties.table.deployed.text"/>
-            </TableSorter>
-            <th width="12%"/>
-          </tr>
-          </thead>
-          <tbody>
-          {adding && <InlineAdd
-            validate={this.validateInlineAdd}
-            inputs={this.getInlineAddInputs()}
-            unmount={this.cancelAdding}
-            save={addProperty}/>}
-          {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
-            return (
-              <tr key={i}>
-                <td>{property.get('published_host_id')}</td>
-                <td>{property.get('group')}</td>
-                <td>{property.get('deploymentMode')}</td>
-                <td>{property.get('originHostname')}</td>
-                <td>{formatUnixTimestamp(property.get('created'))}</td>
-                <td className="nowrap-column">
-                  <IsAllowed to={MODIFY_PROPERTY}>
-                    <ActionButtons onEdit={() => {editProperty(property)}} onDelete={() => {deleteProperty(property)}} />
-                  </IsAllowed>
+          <Table striped={true}>
+            <thead>
+            <tr>
+              <TableSorter {...sorterProps} column="published_host_id">
+                <FormattedMessage id="portal.account.properties.table.publishedHostname.text"/>
+              </TableSorter>
+              <TableSorter {...sorterProps} column="group">
+                <FormattedMessage id="portal.account.groups.single.text"/>
+              </TableSorter>
+              <TableSorter {...sorterProps} column="deploymentMode">
+                <FormattedMessage id="portal.account.properties.table.deploymentMode.text"/>
+              </TableSorter>
+              <TableSorter {...sorterProps} column="originHostname">
+                <FormattedMessage id="portal.account.properties.table.originHostname.text"/>
+              </TableSorter>
+              <TableSorter {...sorterProps} column="created">
+                <FormattedMessage id="portal.account.properties.table.deployed.text"/>
+              </TableSorter>
+              <th width="12%"/>
+            </tr>
+            </thead>
+            <tbody>
+            {adding && <InlineAdd
+              validate={this.validateInlineAdd}
+              inputs={this.getInlineAddInputs()}
+              unmount={this.cancelAdding}
+              save={addProperty}/>}
+            {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
+              return (
+                <tr key={i}>
+                  <td>{property.get('published_host_id')}</td>
+                  <td>{this.getGroupName(property.get('parentId'))}</td>
+                  <td>{this.getPropertyDeploymentMode(property)}</td>
+                  <td>{this.getPropertyOriginHostname(property)}</td>
+                  <td>{formatUnixTimestamp(property.get('created'))}</td>
+                  <td className="nowrap-column">
+                    <IsAllowed to={MODIFY_PROPERTY}>
+                      <ActionButtons onEdit={() => {editProperty(property)}} onDelete={() => {deleteProperty(property)}} />
+                    </IsAllowed>
+                  </td>
+                </tr>
+              )
+            })}
+            {
+              sortedProperties.size === 0 && search.length > 0 &&
+              <tr>
+                <td colSpan="6">
+                  <FormattedMessage id="portal.account.properties.table.noPropertiesFound.text" values={{searchTerm: search}}/>
                 </td>
               </tr>
-            )
-          })}
-          {
-            sortedProperties.size === 0 && search.length > 0 &&
-            <tr>
-              <td colSpan="6">
-                <FormattedMessage id="portal.account.properties.table.noPropertiesFound.text" values={{searchTerm: search}}/>
-              </td>
-            </tr>
-          }
-          {
-            properties.size === 0 &&
-            <tr>
-              <td colSpan="6">
-                <FormattedMessage id="portal.account.properties.table.noProperties.text" />
-              </td>
-            </tr>
-          }
-          </tbody>
-        </Table>
+            }
+            {
+              properties.size === 0 && fetching === false &&
+              <tr>
+                <td colSpan="6">
+                  <FormattedMessage id="portal.account.properties.table.noProperties.text" />
+                </td>
+              </tr>
+            }
+            </tbody>
+          </Table>
+        </div>)}
       </PageContainer>
     )
   }
