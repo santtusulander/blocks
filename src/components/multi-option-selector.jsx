@@ -62,7 +62,7 @@ class MultiOptionSelector extends React.Component {
   }
 
   render() {
-    const { field, intl, options } = this.props
+    const { disabled, field, intl, options } = this.props
     return (
       <div className="multi-option-selector">
         {options.map((option, i) => {
@@ -88,7 +88,8 @@ class MultiOptionSelector extends React.Component {
                     changeValue={() => this.handleToggleChange(option, optionValue, optionIndex, i, expanded)}
                     onText={intl.formatMessage({id: 'portal.common.ON.text'})}
                     offText={intl.formatMessage({id: 'portal.common.OFF.text'})}
-                    value={optionValue}/>
+                    value={optionValue}
+                    readonly={disabled}/>
                 </div>
               </div>
               <Panel collapsible={true} expanded={expanded}>
@@ -124,11 +125,13 @@ class MultiOptionSelector extends React.Component {
 
 MultiOptionSelector.displayName = 'MultiOptionSelector'
 MultiOptionSelector.propTypes = {
+  disabled: PropTypes.bool,
   field: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   options: PropTypes.array
 }
 MultiOptionSelector.defaultProps = {
+  disabled: false,
   options: []
 }
 

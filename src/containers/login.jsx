@@ -11,6 +11,7 @@ import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
 
+import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
 import { isValidEmail } from '../util/validators'
 
 export class Login extends React.Component {
@@ -35,7 +36,7 @@ export class Login extends React.Component {
   }
 
   componentDidMount(){
-    const token = localStorage.getItem('EricssonUDNUserToken')
+    const token = getUserToken()
     const redirect = this.props.location.query.redirect
     const expiry = this.props.location.query.sessionExpired
 
@@ -225,13 +226,13 @@ Login.propTypes = {
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
-    username: state.user.get('username') || localStorage.getItem('EricssonUDNUserName') || null
+    username: state.user.get('username') || getUserName() || null
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUiTheme: () => dispatch(changeTheme(localStorage.getItem('EricssonUDNUiTheme'))),
+    setUiTheme: () => dispatch(changeTheme( getUITheme() )),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
