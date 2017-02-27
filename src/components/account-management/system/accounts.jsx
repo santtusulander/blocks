@@ -16,11 +16,12 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 import * as accountActionCreators from '../../../redux/modules/account'
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import {getServices, getProviderTypes} from '../../../redux/modules/service-info/selectors'
+import {getServicesInfo, getProviderTypes} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
+import { getServicesIds } from '../../../util/services-helpers'
 
 import {FormattedMessage} from 'react-intl';
 
@@ -134,7 +135,7 @@ class AccountList extends Component {
     )
     const hiddenAccs = accounts.size - sortedAccounts.size
     const services = values => values.map( service => {
-      const serviceDetails = this.props.services.find( obj => obj.get('id') === service.get('id') )
+      const serviceDetails = this.props.servicesInfo.find( obj => obj.get('id') === service.get('id') )
       return serviceDetails && serviceDetails.get('name')
     }).toJS()
 
@@ -171,13 +172,15 @@ class AccountList extends Component {
           <tbody>
           {!sortedAccounts.isEmpty() ? sortedAccounts.map((account, index) => {
             const id = account.get('id')
+            const servicesIds = getServicesIds(account.get('services')) || List()
+
             return (
               <tr key={index}>
                 <td>{account.get('name')}</td>
                 <td>{account.get('provider_type_label')}</td>
                 <td>{id}</td>
                 <td>{brand}</td>
-                <ArrayCell items={services(account.get('services'))} maxItemsShown={2}/>
+                <ArrayCell items={services(servicesIds)} maxItemsShown={2}/>
                 <td className="nowrap-column">
                   <ActionButtons
                     onEdit={() => {this.props.editAccount(account)}}
@@ -212,7 +215,7 @@ AccountList.propTypes = {
   providerTypes: React.PropTypes.instanceOf(Map),
   route: React.PropTypes.object,
   router: React.PropTypes.object,
-  services: React.PropTypes.instanceOf(Map),
+  servicesInfo: React.PropTypes.instanceOf(Map),
   uiActions: React.PropTypes.object
 }
 
@@ -224,7 +227,7 @@ function mapStateToProps(state) {
   return {
     accounts: state.account.get('allAccounts'),
     providerTypes: getProviderTypes(state),
-    services: getServices(state)
+    servicesInfo: getServicesInfo(state)
   }
 }
 

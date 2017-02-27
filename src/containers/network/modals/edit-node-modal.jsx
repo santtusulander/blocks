@@ -22,8 +22,7 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
-
-const dateFormat = 'MM/DD/YYYY HH:mm'
+import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
 /**
  * build a subtitle for the modal using URL params
@@ -62,7 +61,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle, nodePermissions } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -74,7 +73,7 @@ class EditNodeFormContainer extends React.Component {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
         for (let dateProp in dateLists) {
-          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], dateFormat)}</td></tr>)
+          dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], NETWORK_DATE_FORMAT)}</td></tr>)
         }
       }
     }
@@ -90,7 +89,7 @@ class EditNodeFormContainer extends React.Component {
     const panelSubTitle2 = (
       <div>
         <span className="edit-node__dates edit-node__dates--created">
-          {createdText}:
+          {createdText}{": "}
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-created" buttonText={multipleValuesText} title={createdText} placement="bottom">
             <Table striped={true} condensed={true}>
@@ -103,10 +102,11 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.created}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.created, NETWORK_DATE_FORMAT)}</span>}
         </span>
+        {" | "}
         <span className="edit-node__dates edit-node__dates--updated">
-          {updatedText}:
+          {updatedText}{": "}
           {hasMultipleNodes &&
           <HelpPopover id="edit-node__tooltip-updated" buttonText={multipleValuesText} title={updatedText} placement="bottom">
             <Table striped={true} condensed={true}>
@@ -119,7 +119,7 @@ class EditNodeFormContainer extends React.Component {
               <tbody>{dateLists.updated}</tbody>
             </Table>
           </HelpPopover>}
-          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, dateFormat)}</span>}
+          {!hasMultipleNodes && <span className="edit-node__dates--single-date">{formatUnixTimestamp(firstNode.updated, NETWORK_DATE_FORMAT)}</span>}
         </span>
       </div>
     )
@@ -139,7 +139,8 @@ class EditNodeFormContainer extends React.Component {
       nodes,
       onCancel,
       onDelete: this.onToggleDeleteModal,
-      onSave
+      onSave,
+      nodePermissions
     }
 
     const deleteModalProps = {
@@ -148,6 +149,7 @@ class EditNodeFormContainer extends React.Component {
       verifyDelete: true,
       deleteButton: true,
       cancelButton: true,
+      className: 'modal-window-raised',
       cancel: () => this.onToggleDeleteModal(false),
       onSubmit: () => {
         return this.props.onDelete(this.props.nodes).catch(error => {
@@ -172,6 +174,7 @@ EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 EditNodeFormContainer.propTypes = {
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
+  nodePermissions: React.PropTypes.object,
   nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,

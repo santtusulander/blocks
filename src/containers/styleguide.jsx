@@ -50,7 +50,7 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
-import FileUploadArea from '../components/file-upload.jsx'
+import CsvUploadArea from '../components/network/csv-upload'
 import Typeahead from '../components/typeahead'
 
 import IconAccount       from '../components/icons/icon-account'
@@ -67,6 +67,9 @@ import IconArrowUp       from '../components/icons/icon-arrow-up'
 import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
+import IconCheck         from '../components/icons/icon-check'
+import IconChevronRight  from '../components/icons/icon-chevron-right'
+import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
 import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
@@ -977,8 +980,8 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
-          <h1 className="page-header">Dropzone</h1>
-          <FileUploadArea
+          <h1 className="page-header">CsvUpload</h1>
+          <CsvUploadArea
             contentValidation={() => {
               return true
             }}
@@ -1080,6 +1083,21 @@ class Styleguide extends React.Component {
             <IconChart />
             <br />
             IconChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCheck />
+            <br />
+            IconCheck
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRight />
+            <br />
+            IconChevronRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRightBold />
+            <br />
+            IconChevronRightBold
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconClose />

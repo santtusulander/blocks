@@ -15,8 +15,7 @@ describe('NetworkItem', () => {
       props = {
         onEdit,
         onSelect,
-        status: 'enabled',
-        isAllowedToConfigure: true
+        status: 'enabled'
       }
       return shallow(<NetworkItem {...props}/>)
     }
@@ -48,4 +47,5 @@ describe('NetworkItem', () => {
     })
     expect(onEdit.mock.calls.length).toBe(1)
   })
+
 })

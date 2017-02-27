@@ -8,11 +8,12 @@ describe('FieldFormGroupSelect', () => {
   let subject = null
 
   beforeEach(() => {
-    subject = (addonBefore = '', addonAfter = '', error = '', label = '') => {
+    subject = (addonAfter = '', addonBefore = '', error = '', label = '', addonAfterLabel = '') => {
       const props = {
         addonBefore,
         addonAfter,
         label,
+        addonAfterLabel,
         meta: {
           error: error,
           touched: error ? true : false
@@ -32,12 +33,20 @@ describe('FieldFormGroupSelect', () => {
     expect(subject().length).toBe(1)
   })
 
-  it('addonBefore should exist', () => {
+  it('AddonAfter should exist when it was given', () => {
+    expect(subject((<div id='addonAfter'></div>)).find('#addonAfter').length).toBe(1)
+  })
+
+  it('AddonAfter should not exist when it was not given', () => {
+    expect(subject('').find('#addonAfter').length).toBe(0)
+  })
+
+  it('AddonBefore should exist when it was given', () => {
     expect(subject((<div id='addonBefore'></div>)).find('#addonBefore').length).toBe(1)
   })
 
-  it('addonAfter should exist', () => {
-    expect(subject('', (<div id='addonAfter'></div>)).find('#addonAfter').length).toBe(1)
+  it('AddonBefore should not exist when it was not given', () => {
+    expect(subject('', '').find('#addonBefore').length).toBe(0)
   })
 
   it('error text should exist when error flags are true', () => {
@@ -54,5 +63,17 @@ describe('FieldFormGroupSelect', () => {
 
   it('label should not exist when it was not given', () => {
     expect(subject('', '', '', '').find('ControlLabel').length).toBe(0)
+  })
+
+  it('AddonAfterLabel should exist when it was given with the label', () => {
+    expect(subject('', '', '', 'label', (<div id='addonAfterLabel'></div>)).find('#addonAfterLabel').length).toBe(1)
+  })
+
+  it('AddonAfterLabel should not exist when label was not given', () => {
+    expect(subject('', '', '', null, (<div id='addonAfterLabel'></div>)).find('#addonAfterLabel').length).toBe(0)
+  })
+
+  it('AddonAfterLabel should not exist when it was not given', () => {
+    expect(subject('', '', '', 'label', '').find('.addonAfterLabel').length).toBe(0)
   })
 })

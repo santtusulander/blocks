@@ -18,6 +18,7 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
+import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -27,12 +28,12 @@ import PodForm from '../../../components/network/forms/pod-form'
 import FootprintFormContainer from './footprint-modal'
 import RoutingDaemonFormContainer from './routing-daemon-modal'
 
+import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
+
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
     this.notificationTimeout = null
-
-    this.checkforNodes = this.checkforNodes.bind(this)
 
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
@@ -47,6 +48,7 @@ class PodFormContainer extends React.Component {
 
     this.initFootprints = this.initFootprints.bind(this)
     this.addFootprintToPod = this.addFootprintToPod.bind(this)
+    this.refreshFootprints = this.refreshFootprints.bind(this)
 
     this.saveBGP = this.saveBGP.bind(this)
     this.clearBGP = this.clearBGP.bind(this)
@@ -100,6 +102,20 @@ class PodFormContainer extends React.Component {
       });
   }
 
+  refreshFootprints(){
+    const { UIFootprints, footprints, setFormVal } = this.props
+
+    const footprintIDs = UIFootprints.map(fp => fp.id)
+    const removedIDs = UIFootprints.filter(fp => fp.removed).map(fp => fp.id)
+
+    const initialFootprints = footprints.filter(fp => footprintIDs.includes(fp.id))
+    const newFootprints = initialFootprints.map(fp => {
+      const removedFootprint = Object.assign({}, fp, { removed: true})
+      return removedIDs.includes(fp.id) ? removedFootprint : fp
+    })
+    setFormVal('UIFootprints', newFootprints)
+  }
+
   addFootprintToPod(footprint) {
     const { pushFormVal } = this.props
     if (footprint) {
@@ -129,6 +145,7 @@ class PodFormContainer extends React.Component {
   }
 
   hideFootprintModal() {
+    this.refreshFootprints()
     this.setState({ showFootprintModal: false, footprintId: null })
   }
 
@@ -156,23 +173,22 @@ class PodFormContainer extends React.Component {
 
     const data = {
       pod_name: values.UIName,
-      pod_type: values.pod_type
+      pod_type: values.pod_type,
+      status: values.status
     }
 
     const service = {
-      cloud_lookup_id: values.UICloudLookUpId,
       lb_method: values.UILbMethod,
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
-      provider_weight: parseFloat(values.UIProviderWeight)
-      //TODO:find out if Ip List is needed
-      //ip_list: values.UIIpList.map( ip => ip.label )
+      provider_weight: parseFloat(values.UIProviderWeight),
+      ip_list: values.UIIpList.map( ip => ip.label )
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
       service.sp_bgp_router_ip = values.UIsp_bgp_router_ip
       service.sp_bgp_router_as = parseInt(values.UIsp_bgp_router_as) || 0
-      service.sp_bgp_router_password = values.UIp_bgp_router_password
+      service.sp_bgp_router_password = values.UIsp_bgp_router_password
 
       data.footprints = []
     } else {
@@ -235,17 +251,16 @@ class PodFormContainer extends React.Component {
           throw new SubmissionError({ '_error': resp.error.data.message })
         }
 
+        // Unselect POD item
+        if (this.props.selectedEntityId == podId) {
+          this.props.handleSelectedEntity(podId)
+        }
+        
         this.showNotification(<FormattedMessage id="portal.network.podForm.deletePod.status"/>)
 
         //Close modal
         this.props.onCancel();
       })
-  }
-
-  checkforNodes() {
-    //TODO: this should check weather the current POD has Nodes or not
-    // and return a boolean
-    return false
   }
 
   render() {
@@ -259,8 +274,11 @@ class PodFormContainer extends React.Component {
 
       group,
       //account,
+      hasNodes,
       network,
-      footprints
+      footprints,
+      podPermissions,
+      footprintPermissions
     } = this.props
 
     const {showDeleteModal} = this.state
@@ -284,7 +302,7 @@ class PodFormContainer extends React.Component {
 
           <PodForm
             footprints={footprints}
-            hasNodes={this.checkforNodes()}
+            hasNodes={hasNodes}
             initialValues={initialValues}
 
             onSave={(values) => this.onSave(edit, values)}
@@ -301,6 +319,8 @@ class PodFormContainer extends React.Component {
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
+            podPermissions={podPermissions}
+            footprintPermissions={footprintPermissions}
           />
 
         </SidePanel>
@@ -313,6 +333,7 @@ class PodFormContainer extends React.Component {
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
+          footprintPermissions={footprintPermissions}
         />
         }
 
@@ -326,6 +347,7 @@ class PodFormContainer extends React.Component {
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.podForm.deletePod.title"/>}
             verifyDelete={true}
             cancelButton={true}
@@ -359,9 +381,12 @@ PodFormContainer.propTypes = {
   fetchGroup: PropTypes.func,
   fetchNetwork: PropTypes.func,
   fetchPop: PropTypes.func,
+  footprintPermissions: PropTypes.object,
   footprints: PropTypes.array,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
+  handleSelectedEntity: PropTypes.func,
+  hasNodes: PropTypes.bool,
   initialValues: PropTypes.object,
   intl: intlShape.isRequired,
   network: PropTypes.instanceOf(Map),
@@ -371,12 +396,15 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  podPermissions: PropTypes.object,
   pop: PropTypes.instanceOf(Map),
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
+  selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setFormVal: PropTypes.func,
   showNotification: PropTypes.func
+
 }
 
 PodFormContainer.defaultProps = {
@@ -389,7 +417,6 @@ PodFormContainer.defaultProps = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
@@ -397,7 +424,14 @@ const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
   const pod = ownProps.podId && pop && getPodById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId))
-  const initialValues = edit && pod ? pod.toJS() : {}
+  const defaultValues = {
+    UIRequestFwdType: 'on_net',
+    UILbMethod: 'gslb',
+    pod_type: 'sp_edge',
+    UIProviderWeight: 0.5
+  }
+
+  const initialValues = edit && pod ? pod.toJS() : defaultValues
 
   const inititalUIFootprints = edit
     && initialValues
@@ -410,11 +444,14 @@ const mapStateToProps = (state, ownProps) => {
     })
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
+  initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map( ip => { return {id: ip, label: ip} } ).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     fetching: state.entities.fetching,
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
     pop,

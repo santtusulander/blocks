@@ -52,6 +52,10 @@
   "portal.configuration.policies.allowBlock.text": "Redirect",
   "portal.configuration.policies.accessControl.text": "Access Control",
   "portal.configuration.policies.errorResponse.text": "Error Response",
+  "portal.configuration.policies.requestFromClient.text": "Request from Client",
+  "portal.configuration.policies.requestToOrigin.text": "Request to Origin",
+  "portal.configuration.policies.responseFromOrigin.text": "Response from Origin",
+  "portal.configuration.policies.responseToClient.text": "Response to Client",
 
   "portal.policy.edit.cors.contentType.text": "Content-Type",
   "portal.policy.edit.cors.head.text": "HEAD",
@@ -69,6 +73,8 @@
   "portal.configuration.details.deploymentMode.production": "Production",
   "portal.configuration.details.deploymentMode.trial": "Trial",
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
+
+  "portal.configuration.streaming.VOD.label": "Enable VOD Streaming",
 
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
@@ -98,6 +104,7 @@
   "portal.configuration.policies.text": "Policies",
   "portal.configuration.performance.text": "Performance",
   "portal.configuration.security.text": "Security",
+  "portal.configuration.streaming.text": "Streaming",
   "portal.configuration.certificates.text": "Certificates",
   "portal.configuration.changeLog.text": "Change Log",
   "portal.configuration.changes.text": "{numChanges, plural, one {change} other{changes}}",

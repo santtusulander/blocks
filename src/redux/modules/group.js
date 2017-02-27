@@ -4,6 +4,7 @@ import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
 import {BASE_URL_AAA, mapReducers} from '../util'
+import { getServicePermissions } from '../../util/services-helpers'
 
 const GROUP_CREATED = 'GROUP_CREATED'
 const GROUP_DELETED = 'GROUP_DELETED'
@@ -16,7 +17,8 @@ const ACTIVE_GROUP_CHANGED = 'ACTIVE_GROUP_CHANGED'
 const emptyGroups = Immutable.Map({
   activeGroup: undefined,
   allGroups: Immutable.List(),
-  fetching: false
+  fetching: false,
+  servicePermissions: Immutable.List()
 })
 
 // REDUCERS
@@ -25,7 +27,8 @@ export function createSuccess(state, action) {
   const newGroup = Immutable.fromJS(action.payload)
   return state.merge({
     activeGroup: newGroup,
-    allGroups: state.get('allGroups').push(newGroup)
+    allGroups: state.get('allGroups').push(newGroup),
+    servicePermissions: getServicePermissions(newGroup)
   })
 }
 
@@ -43,21 +46,24 @@ export function deleteSuccess(state, action) {
 export function deleteFailure(state, action) {
   return state.merge({
     activeGroup: Immutable.fromJS(action.payload),
-    fetching: false
+    fetching: false,
+    servicePermissions: getServicePermissions(Immutable.fromJS(action.payload))
   })
 }
 
 export function fetchSuccess(state, action) {
   return state.merge({
     activeGroup: Immutable.fromJS(action.payload),
-    fetching: false
+    fetching: false,
+    servicePermissions: getServicePermissions(Immutable.fromJS(action.payload))
   })
 }
 
 export function fetchFailure(state) {
   return state.merge({
     activeGroup: null,
-    fetching: false
+    fetching: false,
+    servicePermissions: Immutable.List()
   })
 }
 
@@ -87,7 +93,8 @@ export function updateSuccess(state, action) {
   return state.merge({
     activeGroup: updatedGroup,
     allGroups: newAllGroups,
-    fetching: false
+    fetching: false,
+    servicePermissions: getServicePermissions(updatedGroup)
   })
 }
 

@@ -32,12 +32,12 @@ import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import AccountForm from '../../components/account-management/account-form.jsx'
-import GroupFormContainer from '../../containers/account-management/modals/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+
+import EntityEdit from '../../components/account-management/entity-edit'
 
 import SidePanel from '../side-panel'
 
@@ -282,7 +282,8 @@ class ContentItems extends React.Component {
       fetchingMetrics,
       showAnalyticsLink,
       viewingChart,
-      user
+      user,
+      locationPermissions
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -434,23 +435,26 @@ class ContentItems extends React.Component {
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
-            <AccountForm
-              id="account-form"
-              account={this.state.itemToEdit}
-              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            <EntityEdit
+              type='account'
+              entityToUpdate={this.state.itemToEdit}
+              currentUser={this.props.user.get('currentUser')}
               onCancel={this.hideModal}
-              show={true}/>
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            />
           }
           {this.state.showModal && this.getTier() === 'account' &&
-            <GroupFormContainer
-              id="group-form"
+            <EntityEdit
+              type='group'
+              entityToUpdate={this.state.itemToEdit}
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
-              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              locationPermissions={locationPermissions}
               onDelete={this.onItemDelete}
               onCancel={this.hideModal}
-              show={true}/>
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            />
           }
 
           {
@@ -495,6 +499,7 @@ ContentItems.propTypes = {
   hideInfoDialog: React.PropTypes.func,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
+  locationPermissions: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
