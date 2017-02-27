@@ -55,6 +55,7 @@ const GroupForm = ({
   locations,
   hasNetworks,
   onCancel,
+  onChangeServiceItem,
   onDelete,
   onDeleteHost,
   onShowLocation,
@@ -91,6 +92,7 @@ const GroupForm = ({
               name="services"
               component={ServiceOptionSelector}
               showServiceItemForm={showServiceItemForm}
+              onChangeServiceItem={onChangeServiceItem}
               options={serviceOptions}
               label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
             />
@@ -235,6 +237,7 @@ GroupForm.propTypes = {
   locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
+  onChangeServiceItem: PropTypes.func,
   onDelete: PropTypes.func,
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,

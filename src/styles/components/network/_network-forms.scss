@@ -227,6 +227,40 @@ $typeahead-input-left-padding: 40px;
       vertical-align: middle;
     }
   }
+
+  .csv-upload {
+    .upload-header {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      line-height: 35px;
+
+      .control-label {
+        margin-bottom: 0;
+      }
+    }
+
+    .input-group-addon {
+      display: inline;
+
+      .btn-icon {
+        width: $input-height;
+        height: $input-height;
+        margin-top: -6px;
+        color: $white;
+        background-color: rgba($black, 0.2);
+        border-radius: 50%;
+
+        &:hover,
+        &:focus {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .template-link {
+      margin-top: 10px;
+    }
+  }
 }
 
 .token {

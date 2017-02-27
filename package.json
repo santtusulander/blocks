@@ -32,7 +32,7 @@
     "json-loader": "^0.5.4",
     "nightwatch": "^0.9.1",
     "node-sass": "^4.3.0",
-    "papaparse": "^4.1.2",
+    "papaparse": "^4.1.4",
     "preprocess": "^3.1.0",
     "preprocess-loader": "^0.2.0",
     "react-addons-test-utils": "^15.4.2",
