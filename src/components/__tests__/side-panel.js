@@ -1,20 +1,28 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { SidePanelComponent as SidePanel } from '../side-panel.jsx'
+import SidePanel from '../side-panel.jsx'
 
 jest.unmock('../side-panel.jsx')
+jest.unmock('react-addons-css-transition-group')
+jest.unmock('../../decorators/key-stroke-decorator')
+jest.unmock('../../components/notification')
 
 describe('SidePanel', () => {
   let sidePanel = null
   beforeEach(() => {
     sidePanel = (props) => {
       let defaultProps = {
+        store: {},
         cancel: jest.fn(),
+        dim: false,
+        show: true,
         className:'testing',
-        title:'Side Panel'
+        title:'Side Panel',
+        notification: '',
+        uiActions: {changeSidePanelNotification: jest.fn()}
       }
       let finalProps = Object.assign({}, defaultProps, props)
-      return shallow(<SidePanel {...finalProps}/>)
+      return shallow(<SidePanel {...finalProps} />).shallow()
     }
   })
 
@@ -44,5 +52,13 @@ describe('SidePanel', () => {
 
   it('should not show subSubTitle without subSubTitle', () => {
     expect(sidePanel({subSubTitle: "subSubTitle"}).find('.sub-title-two-line').length).toBe(0)
+  });
+
+  it('should not show notification when it is not required', () => {
+    expect(sidePanel().find('Notification').length).toBe(0)
+  });
+
+  it('should show notification when it is required', () => {
+    expect(sidePanel({notification: 'test'}).find('Notification').length).toBe(1)
   });
 })

@@ -58,8 +58,8 @@ class GroupFormContainer extends React.Component {
   }
 
   componentWillMount() {
-    const { hostActions: { fetchHosts, startFetching }, params: { brand, account }, groupId, canSeeLocations, fetchServiceInfo } = this.props
-
+    const { hostActions: { fetchHosts, startFetching }, params: { brand, account },
+            groupId, canSeeLocations, canFetchNetworks, fetchServiceInfo } = this.props
     if (groupId && !accountIsServiceProviderType(this.props.account)) {
       startFetching()
       fetchHosts(brand, account, groupId)
@@ -71,7 +71,7 @@ class GroupFormContainer extends React.Component {
       this.props.fetchLocations(groupId)
     }
 
-    if (groupId) {
+    if (groupId && canFetchNetworks) {
       this.props.fetchNetworks(groupId)
     }
   }
@@ -220,6 +220,7 @@ class GroupFormContainer extends React.Component {
       invalid,
       networks,
       serviceOptions,
+      locationPermissions,
       showServiceItemForm
     } = this.props
 
@@ -277,8 +278,9 @@ class GroupFormContainer extends React.Component {
             onChangeServiceItem={onChangeServiceItem}
             onDelete={onDelete ? () => onDelete(this.props.group) : null}
             onDeleteHost={this.handleDeleteHost}
-            onShowLocation={this.showLocationForm}
             onSubmit={this.onSubmit}
+            onShowLocation={this.showLocationForm}
+            locationPermissions={locationPermissions}
             serviceOptions={serviceOptions}
             showServiceItemForm={showServiceItemForm}
           />
@@ -303,13 +305,14 @@ class GroupFormContainer extends React.Component {
           onSubmit={() => this.deleteHost(this.state.hostToDelete)}/>
       }
 
-      {canSeeLocations &&
+      {canSeeLocations && this.state.visibleLocationForm &&
         <NetworkLocationFormContainer
           params={this.props.params}
           groupId={this.props.groupId}
           onCancel={this.hideLocationForm}
-          show={this.state.visibleLocationForm}
+          show={true}
           locationId={this.state.selectedLocationId}
+          locationPermissions={locationPermissions}
         />
       }
 
@@ -324,6 +327,7 @@ GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
   canEditServices: PropTypes.bool,
+  canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
@@ -337,6 +341,7 @@ GroupFormContainer.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
+  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   networks: PropTypes.instanceOf(List),
@@ -367,11 +372,13 @@ const  mapStateToProps = (state, ownProps) => {
   const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
-
+  const canFetchNetworks = userIsServiceProvider(currentUser)
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
     canEditServices,
+    canSeeLocations,
+    canFetchNetworks,
     hosts: groupId && host.get('allHosts'),
     initialValues: {
       ...(groupId ? activeGroup.toJS() : {}),
@@ -382,7 +389,7 @@ const  mapStateToProps = (state, ownProps) => {
     locations: canSeeLocations && getLocationsByGroup(state, groupId) || List(),
     name: groupId ? group.getIn(['activeGroup', 'name']) : '',
     serviceOptions: allServiceOptions
-                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List())) 
+                    ? getServiceOptionsForGroup(allServiceOptions, activeAccount.get('services'), (activeGroup.get('services') || List()))
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,

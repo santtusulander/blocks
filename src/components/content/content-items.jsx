@@ -282,7 +282,8 @@ class ContentItems extends React.Component {
       fetchingMetrics,
       showAnalyticsLink,
       viewingChart,
-      user
+      user,
+      locationPermissions
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -449,6 +450,7 @@ class ContentItems extends React.Component {
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
+              locationPermissions={locationPermissions}
               onDelete={this.onItemDelete}
               onCancel={this.hideModal}
               onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
@@ -497,6 +499,7 @@ ContentItems.propTypes = {
   hideInfoDialog: React.PropTypes.func,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
+  locationPermissions: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
