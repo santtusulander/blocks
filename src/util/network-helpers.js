@@ -2,7 +2,11 @@ import axios from 'axios'
 
 import { parseResponseData, qsBuilder } from '../redux/util'
 import { MAPBOX_REVERSE_LOOKUP_ENDPOINT } from '../constants/mapbox.js'
-import { RIPE_STAT_DATA_API_ENDPOINT } from '../constants/network'
+import {
+  RIPE_STAT_DATA_API_ENDPOINT,
+  NODE_ENVIRONMENT_OPTIONS,
+  NETWORK_DOMAIN_NAME
+} from '../constants/network'
 
 const ripeInstance = axios.create({
   baseURL: RIPE_STAT_DATA_API_ENDPOINT
@@ -51,4 +55,38 @@ const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
   // const finalParams = Object.assign({}, params, { sourceapp: 'udnportal' })
   const query = qsBuilder(params)
   return ripeInstance.get(`/${dataCallName}/data.${format}${query}`).then(parseResponseData)
+}
+
+/**
+ * Generate nodename
+ * @param  {String} pod_id
+ * @param  {String} iata
+ * @param  {String} serverNumber
+ * @param  {String} node_role
+ * @param  {String} node_env
+ * @param  {String} domain
+ * @return {String}
+ */
+export const generateNodeName = ({ pod_id, iata, serverNumber, node_role, node_env, domain = NETWORK_DOMAIN_NAME }) => {
+  const cacheEnv = NODE_ENVIRONMENT_OPTIONS.find(obj => obj.value === node_env).cacheValue
+
+  let envDomain = `${cacheEnv}.${domain}`
+
+  //environment should be blank for prod
+  if (node_env === 'production') {
+    envDomain = `${domain}`
+  }
+
+  //make pod_id (=== pod_name) alphanumeric
+  const sanitizedPodId = String(pod_id).replace(/[^a-z0-9]/gi, '').toLowerCase()
+
+  if ( node_role === 'cache') {
+    return `large.${sanitizedPodId}.cache${serverNumber}.${iata}.${envDomain}`
+  } else if (node_role === 'gslb') {
+    return `gslb.${sanitizedPodId}.ns${serverNumber}.${iata}.${envDomain}`
+  } else if (node_role === 'slb') {
+    return `slb.${sanitizedPodId}.ns${serverNumber}.${iata}.${envDomain}`
+  }
+
+  return `unknown.${envDomain}`
 }

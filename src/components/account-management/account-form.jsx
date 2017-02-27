@@ -176,6 +176,7 @@ class AccountForm extends React.Component {
                 name="accountServices"
                 component={ServiceOptionSelector}
                 showServiceItemForm={this.props.showServiceItemForm}
+                onChangeServiceItem={this.props.onChangeServiceItem}
                 options={serviceOptions}
                 label={<FormattedMessage id="portal.account.groupForm.services_options.title" />}
                 required={false}
@@ -215,6 +216,7 @@ AccountForm.propTypes = {
   fetchServiceInfo: PropTypes.func,
   intl: PropTypes.object,
   onCancel: PropTypes.func,
+  onChangeServiceItem: PropTypes.func,
   onSave: PropTypes.func,
   providerTypes: PropTypes.array,
   ...reduxFormPropTypes,

@@ -10,10 +10,13 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
+import IsAllowed from '../../is-allowed'
 
-import { isValidLatitude, isValidLongtitude , isValidTextField} from '../../../util/validators.js'
+import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
+import { isValidLatitude, isValidLongitude, isValidTextField } from '../../../util/validators.js'
 
-import {LOCATION_NAME_MIN_LENGTH,
+import {
+  LOCATION_NAME_MIN_LENGTH,
   LOCATION_NAME_MAX_LENGTH,
   CLOUD_PROVIDER_REGION_MIN_LENGTH,
   CLOUD_PROVIDER_REGION_MAX_LENGTH,
@@ -53,7 +56,7 @@ const validate = ({
     ],
     longitude: [
       {
-        condition: ! isValidLongtitude(longitude),
+        condition: ! isValidLongitude(longitude),
         errorText: (
           <div>
             <FormattedMessage id='portal.network.locationForm.longitude.invalid.error' />
@@ -108,10 +111,10 @@ const NetworkLocationForm = (props) => {
     askForFetchLocation,
     cloudProvidersIdOptions,
     cloudProvidersOptions,
+    edit,
     error,
     handleSubmit,
     iataCodes,
-    initialValues,
     intl,
     invalid,
     isFetchingLocation,
@@ -119,8 +122,6 @@ const NetworkLocationForm = (props) => {
     onDelete,
     submitting
   } = props;
-
-  const edit = !!initialValues.name
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
     edit ? <FormattedMessage id="portal.button.save"/> :
@@ -218,7 +219,9 @@ const NetworkLocationForm = (props) => {
             className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
+            disabled={edit}
             required={false}
+            unselectedValue={null}
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderId.label'})}
           />
@@ -250,13 +253,15 @@ const NetworkLocationForm = (props) => {
 
       <FormFooterButtons>
         { edit &&
-        <Button
-          className="btn-danger pull-left"
-          disabled={submitting}
-          onClick={handleSubmit(() => onDelete(initialValues.name))}
-        >
-          <FormattedMessage id="portal.button.delete"/>
-        </Button>
+          <IsAllowed to={DELETE_LOCATION}>
+            <Button
+              className="btn-danger pull-left"
+              disabled={submitting}
+              onClick={handleSubmit(onDelete)}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
+          </IsAllowed>
         }
         <Button
           className="btn-secondary"
@@ -264,13 +269,15 @@ const NetworkLocationForm = (props) => {
         >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting}
-        >
-          {actionButtonTitle}
-        </Button>
+        <IsAllowed to={MODIFY_LOCATION}>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || isFetchingLocation}
+          >
+            {actionButtonTitle}
+          </Button>
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )};
