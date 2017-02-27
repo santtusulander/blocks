@@ -200,8 +200,8 @@ class AccountManagementProperties extends React.Component {
       [
         {
           input: <Field
-            name="name"
-            id="name"
+            name="published_host_id"
+            id="published_host_id"
             ErrorComponent={errorTooltip}
             placeholder={intl.formatMessage({id: 'portal.account.properties.table.publishedHostname.placeholder.text'})}
             component={FieldFormGroup}/>
