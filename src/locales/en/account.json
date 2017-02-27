@@ -79,8 +79,8 @@
   "portal.account.chargeNumbersForm.egress.title": "Egress",
   "portal.account.chargeNumbersForm.ingress.title": "Ingress",
   "portal.account.chargeNumbersForm.midgress.title": "Midgress",
-  "portal.account.chargeNumbersForm.charge_number.validationError": "Charge number format is invalid",
-  "portal.account.chargeNumbersForm.regions.validationError": "At least one of the regions contains invalid charge number",
+  "portal.account.chargeNumbersForm.charge_number.validationError": "Charge number format is invalid. Correct format is C-12345678",
+  "portal.account.chargeNumbersForm.regions.validationError": "At least one of the regions contains invalid charge number. Correct format is C-12345678",
 
   "portal.account.soaForm.validation.required": "Required",
   "portal.account.soaForm.validation.invalid": "Invalid input",
@@ -100,7 +100,6 @@
 
   "portal.account.roleEdit.roleNameRequired.text": "Role name is required",
   "portal.account.roleEdit.title": "Edit Role",
-  "portal.account.roleEdit.disclaimer.text": "Edit Role",
   "portal.account.roleEdit.enterRoleName.text": "Enter Role Name",
   "portal.account.roleEdit.name.text": "Name",
   "portal.account.roleEdit.permissions.label": "Permissions",

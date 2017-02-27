@@ -23,7 +23,7 @@ class ServiceOptionSelector extends React.Component {
   }
 
   changeOptionValue (serviceId, optionId, hasValue, serviceIndex, optionIndex) {
-    const { input } = this.props
+    const { input, onChangeServiceItem } = this.props
     const copy = input.value.toJS()
     const options = copy[serviceIndex].options
 
@@ -33,6 +33,7 @@ class ServiceOptionSelector extends React.Component {
       options.splice(optionIndex, 1)
     }
     input.onChange(fromJS(copy))
+    onChangeServiceItem(fromJS(copy))
   }
 
   handleOptionClick (option, serviceId, optionId, optionValue, serviceIndex, optionIndex, callback) {
@@ -155,6 +156,7 @@ ServiceOptionSelector.displayName = 'ServiceOptionSelector'
 ServiceOptionSelector.propTypes = {
   input: PropTypes.object.isRequired,
   label: PropTypes.object,
+  onChangeServiceItem: PropTypes.func,
   options: PropTypes.array,
   required: PropTypes.bool,
   showServiceItemForm: PropTypes.func
