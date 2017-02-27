@@ -10,8 +10,10 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
+import IsAllowed from '../../is-allowed'
 
-import { isValidLatitude, isValidLongitude , isValidTextField} from '../../../util/validators.js'
+import { DELETE_LOCATION, MODIFY_LOCATION } from '../../../constants/permissions'
+import { isValidLatitude, isValidLongitude, isValidTextField } from '../../../util/validators.js'
 
 import {
   LOCATION_NAME_MIN_LENGTH,
@@ -118,8 +120,7 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting,
-    locationPermissions: { modifyAllowed, deleteAllowed }
+    submitting
   } = props;
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
@@ -251,14 +252,16 @@ const NetworkLocationForm = (props) => {
       </Row>
 
       <FormFooterButtons>
-        { edit && deleteAllowed &&
-        <Button
-          className="btn-danger pull-left"
-          disabled={submitting}
-          onClick={handleSubmit(onDelete)}
-        >
-          <FormattedMessage id="portal.button.delete"/>
-        </Button>
+        { edit &&
+          <IsAllowed to={DELETE_LOCATION}>
+            <Button
+              className="btn-danger pull-left"
+              disabled={submitting}
+              onClick={handleSubmit(onDelete)}
+            >
+              <FormattedMessage id="portal.button.delete"/>
+            </Button>
+          </IsAllowed>
         }
         <Button
           className="btn-secondary"
@@ -266,7 +269,7 @@ const NetworkLocationForm = (props) => {
         >
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
-        { modifyAllowed &&
+        <IsAllowed to={MODIFY_LOCATION}>
           <Button
             type="submit"
             bsStyle="primary"
@@ -274,7 +277,7 @@ const NetworkLocationForm = (props) => {
           >
             {actionButtonTitle}
           </Button>
-        }
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )};

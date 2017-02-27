@@ -18,12 +18,10 @@ describe('NetworkLocationForm', () => {
   const onSave = jest.fn()
   let subject, error, props = null
   let touched = false
-  let locationPermissions = {}
 
   beforeEach(() => {
-    subject = (edit = false, permissions = {}) => {
+    subject = (edit = false) => {
       const initialValues = edit ? {name: 'udn'} : {}
-      locationPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
       props = {
         edit,
         onCancel,
@@ -35,8 +33,7 @@ describe('NetworkLocationForm', () => {
           name: { touched, error, value: '' },
           latitude: { touched, error, value: '' },
           cloudProviderLocationId: { touched, error, value: '' }
-        },
-        locationPermissions
+        }
       }
       return shallow(<NetworkLocationForm {...props}/>)
     }
@@ -63,11 +60,4 @@ describe('NetworkLocationForm', () => {
     ).toBeTruthy()
   })
 
-  it('should not have a Delete button if no delete permission', () => {
-    expect(subject('testId', {deleteAllowed: false}).find('ButtonDisableTooltip').length).toBe(0)
-  })
-
-  it('should not have Submit button if no modify permission', () => {
-    expect(subject('testId', {modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0);
-  })
 })

@@ -28,6 +28,11 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
 import {
+  DELETE_POD, MODIFY_POD,
+  CREATE_FOOTPRINT, VIEW_FOOTPRINT, DELETE_FOOTPRINT, MODIFY_FOOTPRINT
+} from '../../../constants/permissions'
+
+import {
   POD_PROVIDER_WEIGHT_MIN,
   LBMETHOD_OPTIONS,
   POD_TYPE_OPTIONS,
@@ -40,6 +45,7 @@ import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
+import IsAllowed from '../../is-allowed'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
@@ -139,7 +145,7 @@ renderFootprints.propTypes = {
 renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, deleteAllowed } }) => (
+const renderFootprint = ({ onEdit, input }) => (
   <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
@@ -147,15 +153,14 @@ const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, d
       </Col>
 
       <Col xs={4} className="action-buttons">
-
-        { !input.value.removed && viewAllowed &&
+        <IsAllowed to={VIEW_FOOTPRINT}>
           <Button
             className="btn btn-icon edit-button"
             onClick={() => onEdit(input.value.id)}>
             <IconEdit/>
           </Button>
-        }
-        { deleteAllowed &&
+        </IsAllowed>
+        <IsAllowed to={DELETE_FOOTPRINT}>
           <Button
             bsStyle="link"
             className="btn btn-icon delete-button btn-undo"
@@ -171,14 +176,13 @@ const renderFootprint = ({ onEdit, input, footprintPermissions: { viewAllowed, d
             }
 
           </Button>
-        }
+        </IsAllowed>
       </Col>
     </Row>
   </li>
 )
 
 renderFootprint.propTypes = {
-  footprintPermissions: PropTypes.object,
   input: PropTypes.object,
   onEdit: PropTypes.func
 }
@@ -196,7 +200,6 @@ const PodForm = ({
   onSave,
   submitting,
   dirty,
-  podPermissions: { deleteAllowed, modifyAllowed },
   footprintPermissions,
 
   onShowFootprintModal,
@@ -367,14 +370,14 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           </label>
-          { footprintPermissions.createAllowed &&
+          <IsAllowed to={CREATE_FOOTPRINT}>
             <UDNButton bsStyle="success"
                icon={true}
                addNew={true}
                onClick={onShowFootprintModal}>
               <IconAdd/>
             </UDNButton>
-          }
+          </IsAllowed>
         </div>
         {/* Footprints autocomplete */}
         <Field
@@ -412,13 +415,15 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
           </label>
-          <UDNButton bsStyle="success"
-                     icon={true}
-                     addNew={true}
-                     disabled={hasBGPRoutingDaemon}
-                     onClick={onShowRoutingDaemonModal}>
-            <IconAdd/>
-          </UDNButton>
+          <IsAllowed to={CREATE_FOOTPRINT}>
+            <UDNButton bsStyle="success"
+                       icon={true}
+                       addNew={true}
+                       disabled={hasBGPRoutingDaemon}
+                       onClick={onShowRoutingDaemonModal}>
+              <IconAdd/>
+            </UDNButton>
+          </IsAllowed>
         </div>
         {hasBGPRoutingDaemon &&
         <ul className="footprints">
@@ -429,19 +434,23 @@ const PodForm = ({
               </Col>
 
               <Col xs={4} className="action-buttons">
-                <Button
-                  className="btn btn-icon edit-button"
-                  onClick={onShowRoutingDaemonModal}>
-                  <IconEdit/>
-                </Button>
+                <IsAllowed to={VIEW_FOOTPRINT}>
+                  <Button
+                    className="btn btn-icon edit-button"
+                    onClick={onShowRoutingDaemonModal}>
+                    <IconEdit/>
+                  </Button>
+                </IsAllowed>
 
-                <Button
-                  bsStyle="link"
-                  className="btn btn-icon delete-button btn-undo"
-                  onClick={onDeleteRoutingDaemon}
-                >
-                  <IconClose/>
-                </Button>
+                <IsAllowed to={MODIFY_FOOTPRINT}>
+                  <Button
+                    bsStyle="link"
+                    className="btn btn-icon delete-button btn-undo"
+                    onClick={onDeleteRoutingDaemon}
+                  >
+                    <IconClose/>
+                  </Button>
+                </IsAllowed>
               </Col>
             </Row>
           </li>
@@ -451,16 +460,18 @@ const PodForm = ({
       }
 
       <FormFooterButtons>
-        {edit && deleteAllowed &&
-          <ButtonDisableTooltip
-            id="delete-btn"
-            className="btn-danger pull-left"
-            disabled={hasNodes}
-            onClick={onDelete}
-            tooltipId="tooltip-help"
-            tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
-            <FormattedMessage id="portal.button.delete"/>
-          </ButtonDisableTooltip>
+        {edit &&
+          <IsAllowed to={DELETE_POD}>
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={hasNodes}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
+              <FormattedMessage id="portal.button.delete"/>
+            </ButtonDisableTooltip>
+          </IsAllowed>
         }
         <Button
           id="cancel-btn"
@@ -469,14 +480,14 @@ const PodForm = ({
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        { modifyAllowed &&
+        <IsAllowed to={MODIFY_POD}>
           <Button
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
             {actionButtonTitle}
           </Button>
-        }
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )

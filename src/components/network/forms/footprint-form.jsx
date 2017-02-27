@@ -9,12 +9,13 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
-
+import IsAllowed from '../../is-allowed'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
 
 import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
 
+import { MODIFY_FOOTPRINT } from '../../../constants/permissions'
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN,
          FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
@@ -126,8 +127,7 @@ class FootprintForm extends React.Component {
       onCancel,
       onSave,
       submitting,
-      udnTypeOptions,
-      footprintPermissions: { modifyAllowed }
+      udnTypeOptions
     } = this.props
 
     const submitButtonLabel = editing
@@ -228,14 +228,14 @@ class FootprintForm extends React.Component {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          { modifyAllowed &&
+          <IsAllowed to={MODIFY_FOOTPRINT}>
             <Button
               type="submit"
               bsStyle="primary"
               disabled={invalid || submitting || fetching}>
               {submitButtonLabel}
             </Button>
-          }
+          </IsAllowed>
         </FormFooterButtons>
       </form>
     )

@@ -18,11 +18,9 @@ describe('NetworkPopForm', () => {
   const onSave = jest.fn()
   let subject, error, props = null
   let touched = false
-  let popPermissions = {}
 
   beforeEach(() => {
-    subject = (id = null, permissions) => {
-      popPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
+    subject = (id = null) => {
       props = {
         onCancel,
         onSave,
@@ -36,8 +34,7 @@ describe('NetworkPopForm', () => {
           name: { touched, error, value: '' },
           locationId: { touched, error, value: [] },
           popId: { touched, error, value: '' }
-        },
-        popPermissions
+        }
       }
       return shallow(<NetworkPopForm {...props}/>)
     }
@@ -65,11 +62,4 @@ describe('NetworkPopForm', () => {
     ).toBeTruthy()
   })
 
-  it('should not have a Delete button if no delete permission', () => {
-    expect(subject('testId', {deleteAllowed: false}).find('ButtonDisableTooltip').length).toBe(0)
-  })
-
-  it('should not have Submit button if no modify permission', () => {
-    expect(subject('testId', {modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0)
-  })
 })
