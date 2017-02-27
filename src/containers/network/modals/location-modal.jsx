@@ -137,7 +137,7 @@ class NetworkLocationFormContainer extends Component {
       account_id: Number(account),
       group_id: Number(groupId),
       cloud_name: values.cloudName,
-      cloud_region: values.cloudRegion || '',
+      cloud_region: values.cloudProviderRegion || '',
       cloud_location_id: values.cloudProviderLocationId,
       iata_code: values.iataCode[0].iata,
       city_name: addressData.city || '',
