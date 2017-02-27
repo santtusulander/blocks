@@ -333,7 +333,7 @@ class ContentItems extends React.Component {
     const addHostSubTitle = activeAccount && activeGroup
       ? `${activeAccount.get('name')} / ${activeGroup.get('name')}`
     : null
-
+console.log('TIER: ',this.getTier(),viewingChart)
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -371,7 +371,7 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && this.props.storageContentItems.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -380,11 +380,63 @@ class ContentItems extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
+              {this.getTier() === 'group' && !viewingChart &&
+                <div>STORAGES</div>}
               <div
                 key={viewingChart}
-                className={viewingChart ?
-                  'content-item-grid' :
-                  'content-item-lists'}>
+                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+                {contentItems.map(content => {
+                  const item = content.get('item')
+                  const id = item.get('id')
+                  const isTrialHost = item.get('isTrialHost')
+                  const name = item.get('name')
+                  const contentMetrics = content.get('metrics')
+                  const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
+                  const itemProps = {
+                    id,
+                    name,
+                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
+                    brightMode: isTrialHost,
+                    linkTo: this.props.nextPageURLBuilder(id, item),
+                    disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
+                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
+                    onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
+                      this.editItem(id)
+                    } : null,
+                    analyticsLink: this.props.analyticsURLBuilder(id),
+                    dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
+                    description: 'Desc',
+                    delete: this.props.deleteItem,
+                    primaryData: contentMetrics.get('traffic'),
+                    secondaryData: contentMetrics.get('historical_traffic'),
+                    differenceData: contentMetrics.get('historical_variance'),
+                    cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
+                    timeToFirstByte: contentMetrics.get('avg_ttfb'),
+                    maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
+                    minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
+                    avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
+                    fetchingMetrics: this.props.fetchingMetrics,
+                    chartWidth: scaledWidth.toString(),
+                    barMaxHeight: (scaledWidth / 7).toString(),
+                    showSlices: this.props.showSlices,
+                    isAllowedToConfigure: this.props.isAllowedToConfigure
+                  }
+
+                  return (
+                    <ContentItem key={`content-item-${id}`}
+                      isChart={viewingChart}
+                      itemProps={itemProps}
+                      scaledWidth={scaledWidth}
+                      deleteItem={this.props.deleteItem}/>
+                  )
+                })}
+              </div>
+
+              {this.getTier() === 'group' && !viewingChart &&
+                <div>PROPERTIES</div>}
+              <div
+                key={viewingChart}
+                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
@@ -514,6 +566,7 @@ ContentItems.propTypes = {
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -526,6 +579,7 @@ ContentItems.defaultProps = {
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
+  storageContentItems: Immutable.List(),
   user: Immutable.Map()
 }
 
