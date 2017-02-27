@@ -50,6 +50,8 @@ export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
 // AAA Group Permissions
 export const CREATE_GROUP = 'CREATE_GROUP'
 export const MODIFY_GROUP = 'MODIFY_GROUP'
+export const DELETE_GROUP = 'DELETE_GROUP'
+export const VIEW_GROUP = 'VIEW_GROUP'
 
 // AAA Users Permissions
 export const CREATE_USER = 'CREATE_USER'
@@ -77,18 +79,34 @@ export const DELETE_PROPERTY = 'DELETE_CERTIFICATE'
 export const CREATE_NETWORK = 'CREATE_NETWORK'
 export const MODIFY_NETWORK = 'MODIFY_NETWORK'
 export const DELETE_NETWORK = 'DELETE_NETWORK'
+export const VIEW_NETWORK = 'VIEW_NETWORK'
 
 // POP Permissions
 export const CREATE_POP = 'CREATE_POP'
 export const MODIFY_POP = 'MODIFY_POP'
 export const DELETE_POP = 'DELETE_POP'
+export const VIEW_POP = 'VIEW_POP'
 
 // POD Permissions
 export const CREATE_POD = 'CREATE_POD'
 export const MODIFY_POD = 'MODIFY_POD'
 export const DELETE_POD = 'DELETE_POD'
+export const VIEW_POD = 'VIEW_POD'
 
 // NODE Permissions
 export const CREATE_NODE = 'CREATE_NODE'
 export const MODIFY_NODE = 'MODIFY_NODE'
 export const DELETE_NODE = 'DELETE_NODE'
+export const VIEW_NODE = 'VIEW_NODE'
+
+// Location Permissions
+export const CREATE_LOCATION = 'CREATE_LOCATION'
+export const MODIFY_LOCATION = 'MODIFY_LOCATION'
+export const DELETE_LOCATION = 'DELETE_LOCATION'
+export const VIEW_LOCATION = 'VIEW_LOCATION'
+
+// Footprint Permissions
+export const CREATE_FOOTPRINT = 'CREATE_FOOTPRINT'
+export const MODIFY_FOOTPRINT = 'MODIFY_FOOTPRINT'
+export const DELETE_FOOTPRINT = 'DELETE_FOOTPRINT'
+export const VIEW_FOOTPRINT = 'VIEW_FOOTPRINT'
