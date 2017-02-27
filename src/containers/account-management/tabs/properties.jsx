@@ -188,8 +188,14 @@ class AccountManagementProperties extends React.Component {
   }
 
   getFilteredData(searchTerm) {
-    return this.props.properties.filter((property) => {
-      return property.get('name').toLowerCase().includes(searchTerm)
+    const { properties } = this.props
+    if (!searchTerm) {
+      return properties
+    }
+    const searchTermLowerCase = searchTerm.toLowerCase()
+    return properties.filter((property) => {
+      return property.get('published_host_id').toLowerCase().includes(searchTermLowerCase) ||
+        this.getPropertyOriginHostname(property).includes(searchTermLowerCase)
     })
   }
 
