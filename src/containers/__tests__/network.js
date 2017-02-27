@@ -4,6 +4,7 @@ import { shallow } from 'enzyme'
 
 jest.unmock('../network/network.jsx')
 jest.unmock('../../constants/routes')
+jest.unmock('../../util/permissions')
 
 import Network from '../network/network.jsx'
 

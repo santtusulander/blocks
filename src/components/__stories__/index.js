@@ -42,3 +42,4 @@ import './network/form/routing-daemon-form'
 
 // storage
 import './storage/storage-kpi'
+import './storage/storage-form.js'
