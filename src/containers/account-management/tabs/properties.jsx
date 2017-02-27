@@ -224,6 +224,32 @@ class AccountManagementProperties extends React.Component {
     ]
   }
 
+  getGroupName(groupId) {
+    const { groups } = this.props
+    const groupIdNumber = Number(groupId)
+    const group = groups.find(group => group.get('id') === groupIdNumber)
+    return group ? group.get('name') : ''
+  }
+
+  getPropertyDeploymentMode(property) {
+    const deploymentMode = property.get('services').first()
+      .get('deployment_mode')
+
+    if(deploymentMode === 'trial') {
+      return <FormattedMessage id="portal.account.properties.deploymentMode.trial"/>
+    } else if(deploymentMode === 'production') {
+      return <FormattedMessage id="portal.account.properties.deploymentMode.production" />
+    }
+    return deploymentMode
+  }
+
+  getPropertyOriginHostname(property) {
+    return property.get('services').first()
+      .get('configurations').first()
+      .get('edge_configuration')
+      .get('origin_host_name')
+  }
+
   render() {
     const { addProperty, deleteProperty, editProperty, intl, properties } = this.props
     const { adding, search, sortBy, sortDir } = this.state
