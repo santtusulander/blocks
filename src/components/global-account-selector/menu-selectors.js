@@ -2,15 +2,31 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
-import { getByGroup } from '../../redux/modules/entities/properties/selectors'
+import { getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
 import groupActions from '../../redux/modules/entities/groups/actions'
 import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 
 import { getByBrand } from '../../redux/modules/entities/accounts/selectors'
 
+const getStoragesByGroup = () => ([
+  {
+    "id": 'storage123',
+    "estimated_usage": 999999,
+    "usage": 2932224,
+    "clusters": ["strg0"]
+  }
+])
+
 const getGroupsForAccount = (state, parents, callBack) => getByAccount(state, parents.account).toJS().map(callBack)
 const getAccountsForBrand = (state, parents, callBack) => getByBrand(state, parents.brand).toJS().map(callBack)
+
+const getStoragesAndProperties = (state, parents) => {
+  return [
+    ...getProperties(state, parents),
+    ...getStorages(state, parents)
+  ]
+}
 
 /**
  * get groups from state, setting child nodes and defining a function to fetch child nodes for each one.
@@ -23,7 +39,7 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
 
   return callBack(state, parents, (group) => {
 
-    const nodes = levels.includes("group") && getProperties(state, { ...parents, group: group.id })
+    const nodes = levels.includes("group") && getStoragesAndProperties(state, { ...parents, group: group.id })
     const headerSubtitle = <FormattedMessage id="portal.common.property.multiple" values={{numProperties: nodes.length || 0}}/>
 
     return {
@@ -38,6 +54,7 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
     }
   })
 }
+
 /**
  * get properties from state
  * @param  {[type]} state   [description]
@@ -46,7 +63,7 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
  */
 export const getProperties = (state, parents) => {
 
-  return getByGroup(state, String(parents.group)).toJS().map((property) => {
+  return getPropertiesByGroup(state, String(parents.group)).toJS().map((property) => {
 
     return {
       ...property,
@@ -54,6 +71,27 @@ export const getProperties = (state, parents) => {
       labelKey: 'published_host_id',
       nodeInfo: {
         entityType: 'property',
+        parents
+      }
+    }
+  })
+}
+
+/**
+ * get storages from state
+ * @param  {[type]} state   [description]
+ * @param  {[type]} groupId [description]
+ * @return {[type]}         [description]
+ */
+export const getStorages = (state, parents) => {
+
+  return getStoragesByGroup(state, String(parents.group)).map((storage) => {
+
+    return {
+      ...storage,
+      labelKey: 'id',
+      nodeInfo: {
+        entityType: 'storage',
         parents
       }
     }
