@@ -29,7 +29,7 @@ import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
@@ -55,7 +55,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.sortedData = this.sortedData.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
@@ -129,24 +128,6 @@ export class AccountManagementAccountUsers extends React.Component {
       ]
     }
     return checkForErrors({ email, roles }, conditions)
-  }
-
-  sortedData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if(aVal < bVal) {
-        return -1 * sortDir
-      }
-      else if(aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
   }
 
   getRoleOptions(roleMapping, props) {
@@ -341,11 +322,7 @@ export class AccountManagementAccountUsers extends React.Component {
     const searchedUsers = filteredUsersByGroup.filter((user) => {
       return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
     })
-    const sortedUsers = this.sortedData(
-      searchedUsers,
-      this.state.sortBy,
-      this.state.sortDir
-    )
+    const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
     let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])

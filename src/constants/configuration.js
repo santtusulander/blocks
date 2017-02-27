@@ -3,3 +3,5 @@ export const deploymentModes = {
   trial: 'portal.configuration.details.deploymentMode.trial',
   unknown: 'portal.configuration.details.deploymentMode.unknown'
 }
+
+export const VOD_SERVICE_ID = 3

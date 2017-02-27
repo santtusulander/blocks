@@ -10,6 +10,7 @@ import password from './password.json'
 import security from './security.json'
 import services from './services.json'
 import support from './support.json'
+import storage from './storage.json'
 import user from './user.json'
 import validators from './validators.json';
 
@@ -29,6 +30,7 @@ export default Object.assign({},
   security,
   services,
   support,
+  storage,
   user,
   validators,
   en

@@ -32,7 +32,7 @@ import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
-import checkPermissions from '../util/permissions'
+import checkPermissions, { getLocationPermissions } from '../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -200,6 +200,7 @@ export class Groups extends React.Component {
           headerText={{ summary: headerText, label: breadcrumbs[0].label }}
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
           isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
+          locationPermissions={getLocationPermissions(roles, this.props.user.get('currentUser'))}
           metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
           selectionStartTier="group"

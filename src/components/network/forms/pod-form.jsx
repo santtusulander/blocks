@@ -10,39 +10,54 @@ import {
   Row,
   Col
 } from 'react-bootstrap'
+import classnames from 'classnames'
 
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isInt, isValidProviderWeight } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address } from '../../../util/validators'
 
-import HelpTooltip from '../../../components/help-tooltip'
+import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
+         FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
+         } from '../../../constants/common'
+
+
+import HelpTooltip from '../../help-tooltip'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
+
+import {
+  DELETE_POD, MODIFY_POD,
+  CREATE_FOOTPRINT, VIEW_FOOTPRINT, DELETE_FOOTPRINT, MODIFY_FOOTPRINT
+} from '../../../constants/permissions'
 
 import {
   POD_PROVIDER_WEIGHT_MIN,
   LBMETHOD_OPTIONS,
   POD_TYPE_OPTIONS,
   REQUEST_FWD_TYPE_OPTIONS,
-  DISCOVERY_METHOD_OPTIONS
+  DISCOVERY_METHOD_OPTIONS,
+  STATUS_OPTIONS
 } from '../../../constants/network'
-
-//TODO: If Ip list needed uncomment
-//import { isValidIPv4Address } from '../../../util/validators'
 
 import UDNButton from '../../button'
 import IconAdd from '../../icons/icon-add'
 import IconEdit from '../../icons/icon-edit'
 import IconClose from '../../icons/icon-close'
+import IsAllowed from '../../is-allowed'
 
 const validate = (values) => {
   const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints } = values
   const conditions = {
     UIName: {
-      condition: !isValidTextField(UIName),
-      errorText: <MultilineTextFieldError fieldLabel="portal.network.podForm.name.label" />
+      condition: !isValidFootprintTextField(UIName),
+      errorText: <MultilineTextFieldError
+                    fieldLabel="portal.network.podForm.name.label"
+                    customValidationErrorText="portal.common.textFieldMultilineValidation.allowedSpecialChars.limited"
+                    minValue={FORM_TEXT_FIELD_DEFAULT_MIN_LEN}
+                    maxValue={FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN}
+                />
     },
     UIProviderWeight: {
       condition: !isValidProviderWeight(UIProviderWeight),
@@ -99,15 +114,13 @@ const asyncValidate = ({ UILocalAS }) => {
     })
 }
 
-/** TODO: This is needed for IPList
 const validateCIDRToken = (item) => {
   return item.label && isValidIPv4Address(item.label)
 }
-*/
 
 
 /*eslint-disable react/no-multi-comp */
-const renderFootprints = ({ fields, onEdit }) => (
+const renderFootprints = ({ fields, onEdit, footprintPermissions }) => (
   <ul className="footprints">
     {
       fields.map(( footprint, index) =>
@@ -117,6 +130,7 @@ const renderFootprints = ({ fields, onEdit }) => (
           type="text"
           component={renderFootprint}
           onEdit={onEdit}
+          footprintPermissions={footprintPermissions}
         />
       )
     }
@@ -125,40 +139,44 @@ const renderFootprints = ({ fields, onEdit }) => (
 
 renderFootprints.propTypes = {
   fields: PropTypes.object,
+  footprintPermissions: PropTypes.object,
   onEdit: PropTypes.func
 }
 renderFootprints.displayName = 'renderFootprints'
 
 /*eslint-disable react/no-multi-comp */
 const renderFootprint = ({ onEdit, input }) => (
-  <li>
+  <li className={classnames({'removed': input.value.removed})}>
     <Row>
       <Col xs={8}>
         <span>{input.value.name}</span>
       </Col>
 
       <Col xs={4} className="action-buttons">
-        <Button
-          className="btn btn-icon edit-button"
-          onClick={() => onEdit(input.value.id)}>
-          <IconEdit/>
-        </Button>
+        <IsAllowed to={VIEW_FOOTPRINT}>
+          <Button
+            className="btn btn-icon edit-button"
+            onClick={() => onEdit(input.value.id)}>
+            <IconEdit/>
+          </Button>
+        </IsAllowed>
+        <IsAllowed to={DELETE_FOOTPRINT}>
+          <Button
+            bsStyle="link"
+            className="btn btn-icon delete-button btn-undo"
+            onClick={() => {
+              const newVal = { ...input.value, removed: !input.value.removed }
+              input.onChange(newVal)
+            }}
+          >
 
-        <Button
-          bsStyle="link"
-          className="btn btn-icon delete-button btn-undo"
-          onClick={() => {
-            const newVal = { ...input.value, removed: !input.value.removed }
-            input.onChange(newVal)
-          }}
-        >
+            { input.value.removed
+              ? <FormattedMessage id="portal.common.button.undo"/>
+              : <IconClose/>
+            }
 
-          { input.value.removed
-            ? <FormattedMessage id="portal.common.button.undo"/>
-            : <IconClose/>
-          }
-
-        </Button>
+          </Button>
+        </IsAllowed>
       </Col>
     </Row>
   </li>
@@ -182,6 +200,7 @@ const PodForm = ({
   onSave,
   submitting,
   dirty,
+  footprintPermissions,
 
   onShowFootprintModal,
   onEditFootprint,
@@ -210,14 +229,17 @@ const PodForm = ({
 
   const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
 
-  const hasFootprintsOrBGP = hasFootprints || hasBGPRoutingDaemon
-
   //change of method is allowed is no footprints / BGP's assigned
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints && !hasBGPRoutingDaemon
 
   //Filter out footprints that have been added to UIFootprints
   const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
   const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
+
+  let actionButtonTitle = edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
+  if (submitting) {
+    actionButtonTitle = <FormattedMessage id="portal.button.saving"/>
+  }
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
@@ -230,10 +252,14 @@ const PodForm = ({
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.name.label" />}/>
 
-      <div className="form-group">
-        <label>Cloud Lookup ID</label>
-        <div className="sub-title">{initialValues.UICloudLookUpId}</div>
-      </div>
+      {edit &&
+        <Field
+          name="status"
+          component={FieldFormGroupSelect}
+          options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+          label={<FormattedMessage id="portal.network.item.status.label" />}
+        />
+      }
 
       <Field
         className="input-select"
@@ -254,7 +280,14 @@ const PodForm = ({
         className="input-select"
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.type.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.type.label"/>}>
+            <FormattedMessage id="portal.network.podForm.type.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         type="text"
@@ -276,7 +309,14 @@ const PodForm = ({
         name="UIRequestFwdType"
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
-        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})} />
+        label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.requestForwardType.label"/>}>
+            <FormattedMessage id="portal.network.podForm.requestForwardType.help.text" />
+          </HelpTooltip>
+        }/>
 
       <Field
         min={POD_PROVIDER_WEIGHT_MIN}
@@ -284,9 +324,16 @@ const PodForm = ({
         name="UIProviderWeight"
         id="provider_weight-field"
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />} />
+        label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />}
+        addonAfter={
+          <HelpTooltip
+            id="tooltip-help"
+            title={<FormattedMessage id="portal.network.podForm.providerWeight.label"/>}>
+            <FormattedMessage id="portal.network.podForm.providerWeight.help.text" />
+          </HelpTooltip>
+        }/>
 
-      {/* TODO: IpList MIGHT be needed <Field
+      <Field
         required={true}
         name="UIIpList"
         allowNew={true}
@@ -295,7 +342,7 @@ const PodForm = ({
         options={[]}
         validation={validateCIDRToken}
         label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
-      />*/}
+      />
 
       <hr/>
 
@@ -321,12 +368,14 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.footprintApi.label"/>
           </label>
-          <UDNButton bsStyle="success"
-                     icon={true}
-                     addNew={true}
-                     onClick={onShowFootprintModal}>
-            <IconAdd/>
-          </UDNButton>
+          <IsAllowed to={CREATE_FOOTPRINT}>
+            <UDNButton bsStyle="success"
+               icon={true}
+               addNew={true}
+               onClick={onShowFootprintModal}>
+              <IconAdd/>
+            </UDNButton>
+          </IsAllowed>
         </div>
         {/* Footprints autocomplete */}
         <Field
@@ -350,7 +399,8 @@ const PodForm = ({
           name="UIFootprints"
           component={renderFootprints}
           props={{
-            onEdit: onEditFootprint
+            onEdit: onEditFootprint,
+            footprintPermissions
           }}
         />
       </div>
@@ -363,13 +413,15 @@ const PodForm = ({
           <label>
             <FormattedMessage id="portal.network.podForm.discoveryMethod.bgp.label"/>
           </label>
-          <UDNButton bsStyle="success"
-                     icon={true}
-                     addNew={true}
-                     disabled={hasBGPRoutingDaemon}
-                     onClick={onShowRoutingDaemonModal}>
-            <IconAdd/>
-          </UDNButton>
+          <IsAllowed to={CREATE_FOOTPRINT}>
+            <UDNButton bsStyle="success"
+                       icon={true}
+                       addNew={true}
+                       disabled={hasBGPRoutingDaemon}
+                       onClick={onShowRoutingDaemonModal}>
+              <IconAdd/>
+            </UDNButton>
+          </IsAllowed>
         </div>
         {hasBGPRoutingDaemon &&
         <ul className="footprints">
@@ -380,19 +432,23 @@ const PodForm = ({
               </Col>
 
               <Col xs={4} className="action-buttons">
-                <Button
-                  className="btn btn-icon edit-button"
-                  onClick={onShowRoutingDaemonModal}>
-                  <IconEdit/>
-                </Button>
+                <IsAllowed to={VIEW_FOOTPRINT}>
+                  <Button
+                    className="btn btn-icon edit-button"
+                    onClick={onShowRoutingDaemonModal}>
+                    <IconEdit/>
+                  </Button>
+                </IsAllowed>
 
-                <Button
-                  bsStyle="link"
-                  className="btn btn-icon delete-button btn-undo"
-                  onClick={onDeleteRoutingDaemon}
-                >
-                  <IconClose/>
-                </Button>
+                <IsAllowed to={MODIFY_FOOTPRINT}>
+                  <Button
+                    bsStyle="link"
+                    className="btn btn-icon delete-button btn-undo"
+                    onClick={onDeleteRoutingDaemon}
+                  >
+                    <IconClose/>
+                  </Button>
+                </IsAllowed>
               </Col>
             </Row>
           </li>
@@ -403,15 +459,17 @@ const PodForm = ({
 
       <FormFooterButtons>
         {edit &&
-          <ButtonDisableTooltip
-            id="delete-btn"
-            className="btn-danger pull-left"
-            disabled={hasNodes}
-            onClick={handleSubmit(onDelete)}
-            tooltipId="tooltip-help"
-            tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
-            <FormattedMessage id="portal.button.delete"/>
-          </ButtonDisableTooltip>
+          <IsAllowed to={DELETE_POD}>
+            <ButtonDisableTooltip
+              id="delete-btn"
+              className="btn-danger pull-left"
+              disabled={hasNodes}
+              onClick={onDelete}
+              tooltipId="tooltip-help"
+              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
+              <FormattedMessage id="portal.button.delete"/>
+            </ButtonDisableTooltip>
+          </IsAllowed>
         }
         <Button
           id="cancel-btn"
@@ -420,12 +478,14 @@ const PodForm = ({
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        <Button
-          type="submit"
-          bsStyle="primary"
-          disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
-          {edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />}
-        </Button>
+        <IsAllowed to={MODIFY_POD}>
+          <Button
+            type="submit"
+            bsStyle="primary"
+            disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
+            {actionButtonTitle}
+          </Button>
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )

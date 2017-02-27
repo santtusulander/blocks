@@ -12,10 +12,12 @@ function intlMaker() {
 
 describe('PodForm', () => {
   let subject, error, props = null
+  let podPermissions = {}
   let touched = false
 
   beforeEach(() => {
     subject = (pod_name = '', hasNodes = false, showFootprints = false) => {
+      podPermissions = {deleteAllowed: true, modifyAllowed: true}
       props = {
         hasNodes,
         showFootprints,
@@ -27,6 +29,7 @@ describe('PodForm', () => {
           pod_name
         },
         UIFootprints: [],
+        podPermissions,
         fields: {
           name: { touched, error, value: '' },
           locationId: { touched, error, value: [] },
