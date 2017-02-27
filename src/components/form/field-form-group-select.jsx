@@ -7,7 +7,7 @@ import { getReduxFormValidationState } from '../../util/helpers'
 const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
                                  input, options, numericValues, className,
                                  disabled, meta, meta: { touched, error },
-                                 label, emptyLabel, required = true }) => {
+                                 label, emptyLabel, required = true, unselectedValue }) => {
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
       {label &&
@@ -37,6 +37,7 @@ const FieldFormGroupSelect  = ({ addonAfter, addonAfterLabel, addonBefore,
           onTouch={e => input.onBlur(e)}
           options={options}
           emptyLabel={emptyLabel}
+          unselectedValue={unselectedValue}
         />
 
         { addonAfter &&
@@ -66,7 +67,8 @@ FieldFormGroupSelect.propTypes = {
   meta: PropTypes.object,
   numericValues: PropTypes.bool,
   options: PropTypes.array,
-  required: PropTypes.bool
+  required: PropTypes.bool,
+  unselectedValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 }
 
 export default FieldFormGroupSelect
