@@ -13,6 +13,8 @@ import {
   accountIsContentProviderType
 } from '../../util/helpers'
 
+import { getLocationPermissions } from '../../util/permissions'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -486,6 +488,7 @@ export class AccountManagement extends Component {
             type='group'
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.toggleEditGroupModal()}
