@@ -479,10 +479,16 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
     })
   } else {
     sortFunc = data.sort((a, b) => {
-      if (a.get(sortBy) < b.get(sortBy)) {
+      let aVal = a.get(sortBy)
+      let bVal = b.get(sortBy)
+      if(typeof a.get(sortBy) === 'string') {
+        aVal = aVal.toLowerCase()
+        bVal = bVal.toLowerCase()
+      }
+      if(aVal < bVal) {
         return -1 * sortDir
       }
-      else if (a.get(sortBy) > b.get(sortBy)) {
+      else if(aVal > bVal) {
         return 1 * sortDir
       }
       return 0

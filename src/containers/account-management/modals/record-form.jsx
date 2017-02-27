@@ -47,8 +47,12 @@ const validateIpAddress = (fields, intl) => {
   }
 }
 const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, props) => {
+
+  //Don't validate name for NS record
+  name = (type !== 'NS') ? name : null
   let filteredFields = filterFields({ type, value, name, ttl })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
+
   const conditions = {
     prio: {
       condition: !isInt(prio),
@@ -59,7 +63,7 @@ const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, pro
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.ttl.validationError'})
     },
     name: {
-      condition: !filteredFields.name,
+      condition: !filteredFields.name && type !== 'NS',
       errorText: props.intl.formatMessage({id: 'portal.account.recordForm.hostName.validationError'})
     },
     value: {
@@ -75,6 +79,7 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
     domain,
     edit,
     shouldShowField: isShown(recordType),
+    type: recordType,
     onSubmit: values => {
       const filteredValues = filterFields(values)
       let { ttl, prio } = filteredValues
@@ -124,15 +129,21 @@ function mapStateToProps(state, { edit }) {
   const getField = formValueSelector('record-edit')
   let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = {}
+  let domain = dns.get('activeDomain')
   if (activeRecord && edit) {
     initialValues = getRecordFormInitialValues(activeRecord.toJS())
+
+    //Clear name for NS records with same name as domain
+    if (initialValues.type === 'NS' && initialValues.name === domain) {
+      initialValues.name = ''
+    }
   }
   return {
     activeRecord,
     initialValues,
     recordName: getField(state, 'name'),
     recordType: getField(state, 'type'),
-    domain: dns.get('activeDomain'),
+    domain: domain,
     loading: dnsRecords.get('fetching')
   }
 }

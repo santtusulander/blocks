@@ -7,17 +7,17 @@ const StorageItemTooltip = ({ name, valuesFormat, currentUsage, peak, lastMonthU
   <div className="storage-item-inner-tooltip">
     <h3>{name}</h3>
     <div className="storage-month-info">
-      <FormattedMessage id="portal.account.storage.tooltip.currentUsage"/>
+      <FormattedMessage id="portal.account.storages.tooltip.currentUsage"/>
       <span className="tooltip-storage-value">{formatBytes(currentUsage, null, valuesFormat)}</span>
       <br />
-      <FormattedMessage id="portal.account.storage.tooltip.peakThisMonth"/>
+      <FormattedMessage id="portal.account.storages.tooltip.peakThisMonth"/>
       <span className="tooltip-storage-value">{formatBytes(peak, null, valuesFormat)}</span>
     </div>
     <div className="storage-month-info">
-      <FormattedMessage id="portal.account.storage.tooltip.endOfLastMonth"/>
+      <FormattedMessage id="portal.account.storages.tooltip.endOfLastMonth"/>
       <span className="tooltip-storage-value">{formatBytes(lastMonthUsage, null, valuesFormat)}</span>
       <br />
-      <FormattedMessage id="portal.account.storage.tooltip.peakLastMonth"/>
+      <FormattedMessage id="portal.account.storages.tooltip.peakLastMonth"/>
       <span className="tooltip-storage-value">{formatBytes(lastMonthPeak, null, valuesFormat)}</span>
     </div>
   </div>
