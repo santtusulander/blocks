@@ -9,7 +9,7 @@ import { getGroups, getBrands, getAccounts } from './selectors'
 import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 
-import { DENY_ALWAYS, VIEW_CONTENT_ACCOUNTS } from '../../constants/permissions'
+import { VIEW_CONTENT_ACCOUNTS, VIEW_CONTENT_GROUPS, VIEW_CONTENT_PROPERTIES } from '../../constants/permissions'
 import checkPermissions from '../../util/permissions'
 
 import Selector from './global-account-selector'
@@ -37,18 +37,23 @@ const adminAccountSelectorDispatchToProps = (dispatch, { params: { brand } }) =>
  * @param  {[type]} property [description]
  * @return {[type]}          [description]
  */
-const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property } }) => {
+const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property }, has = ['brand', 'account', 'group'] }) => {
 
   return {
     dispatch,
     fetchData: (user, roles) => {
-      const permissionToViewAccounts = checkPermissions(roles, user, VIEW_CONTENT_ACCOUNTS)
+      const canView = (permission) => checkPermissions(roles, user, permission)
 
       return Promise.all([
-        permissionToViewAccounts && dispatch(accountActions.fetchAll({ brand })),
-        !permissionToViewAccounts && dispatch(accountActions.fetchOne({ brand, id: account })),
-        account && dispatch(groupActions.fetchAll({ brand, account })),
-        property && dispatch(propertyActions.fetchAll({ brand, account, group }))
+
+        canView(VIEW_CONTENT_ACCOUNTS) && has.includes('brand') && dispatch(accountActions.fetchAll({ brand })),
+
+        !canView(VIEW_CONTENT_ACCOUNTS) && has.includes('brand') && dispatch(accountActions.fetchOne({ brand, id: account })),
+
+        canView(VIEW_CONTENT_GROUPS) && has.includes('account') && account && dispatch(groupActions.fetchAll({ brand, account })),
+
+        canView(VIEW_CONTENT_PROPERTIES) && has.includes('group') && property && propertyActions.fetchByIds(dispatch)({ brand, account, group })
+
       ])
     }
   }
@@ -63,9 +68,11 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
  */
 const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, has = ['brand', 'account', 'group'] }) => {
 
-  const hasBrand = has.includes('brand')
-  const hasAccount = has.includes('account')
-  const hasGroup = has.includes('group')
+  const canView = permission => checkPermissions(state.roles.get('roles'), state.user.get('currentUser'), permission)
+
+  const hasBrand = has.includes('brand') && canView(VIEW_CONTENT_ACCOUNTS)
+  const hasAccount = has.includes('account') && canView(VIEW_CONTENT_GROUPS)
+  const hasGroup = has.includes('group') && canView(VIEW_CONTENT_PROPERTIES)
 
   let activeNode = brand
   let tree = []
@@ -98,7 +105,7 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
 
 
   return {
-    activeNode: activeNode,
+    activeNode,
     tree
   }
 }
