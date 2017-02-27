@@ -168,7 +168,7 @@ class EntityList extends React.Component {
             active={isActive}
             content={contentText}
             onSelect={() => selectEntity(entityId)}
-            onDelet={() => deleteEntity(entityId)}
+            onDelete={() => deleteEntity(entityId)}
             status={status}
             extraClassName="entity-list-item"
             viewPermission={viewPermission}
