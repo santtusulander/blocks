@@ -89,8 +89,6 @@ class AsperaUpload extends Component {
       "destination_root": "Upload"
     }
 
-    console.log(files)
-
     const callbacks = {
       success: (data) => {
         const transferUuids = this.state.transferUuids.slice()
