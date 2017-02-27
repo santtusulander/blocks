@@ -92,7 +92,7 @@ export default class Selector extends Component {
               handleEntityClick={this.props.handleEntityClick}
               handleCaretClick={this.handleCaretClick}
               goToChild={this.changeActiveNode}
-              selectorNodes={nodeInfo.nodes}
+              menuNodes={nodeInfo.nodes}
               searchValue={this.state.search} />
           </Dropdown.Menu>
       )

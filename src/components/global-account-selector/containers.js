@@ -4,7 +4,7 @@ import propertyActions from '../../redux/modules/entities/properties/actions'
 import groupActions from '../../redux/modules/entities/groups/actions'
 import accountActions from '../../redux/modules/entities/accounts/actions'
 
-import { getGroups, getBrands, getAccounts } from './selectors'
+import { getGroups, getBrands, getAccounts } from './menu-selectors'
 
 import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
@@ -12,7 +12,7 @@ import { getById as getAccountById } from '../../redux/modules/entities/accounts
 import { VIEW_CONTENT_ACCOUNTS, VIEW_CONTENT_GROUPS, VIEW_CONTENT_PROPERTIES } from '../../constants/permissions'
 import checkPermissions from '../../util/permissions'
 
-import Selector from './global-account-selector'
+import Selector from '../drillable-menu'
 
 /**
  * dispatch to props for top header admin account selector.
