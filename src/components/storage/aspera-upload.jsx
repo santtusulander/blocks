@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Aspera, AW4 } from '../util/aspera-helpers.js'
+import { Aspera, AW4 } from '../../util/aspera-helpers.js'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as uiActionCreators from '../redux/modules/ui'
+import * as uiActionCreators from '../../redux/modules/ui'
 
 const DROP_EVENT_NAME = 'drop'
 const DRAG_OVER_EVENT_NAME = 'dragover'
