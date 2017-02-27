@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../file-upload')
+jest.unmock('../csv-upload')
 import CsvUploadArea from '../csv-upload'
 
 const subject = shallow(
