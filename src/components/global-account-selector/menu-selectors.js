@@ -19,11 +19,11 @@ const getAccountsForBrand = (state, parents, callBack) => getByBrand(state, pare
  * @param  {[type]} accountId [description]
  * @return {[type]}           [description]
  */
-export const getGroups = (state, parents, has, callBack = getGroupsForAccount) => {
+export const getGroups = (state, parents, levels, callBack = getGroupsForAccount) => {
 
   return callBack(state, parents, (group) => {
 
-    const nodes = has.includes("group") && getProperties(state, { ...parents, group: group.id })
+    const nodes = levels.includes("group") && getProperties(state, { ...parents, group: group.id })
     const headerSubtitle = <FormattedMessage id="portal.common.property.multiple" values={{numProperties: nodes.length || 0}}/>
 
     return {
@@ -67,10 +67,10 @@ export const getProperties = (state, parents) => {
  * @param  {Object} [hide={}] [description]
  * @return {[type]}           [description]
  */
-export const getAccounts = (state, parents, has, callBack = getAccountsForBrand) => {
+export const getAccounts = (state, parents, levels, callBack = getAccountsForBrand) => {
   return callBack(state, parents, account => {
 
-    const nodes = has.includes("account") && getGroups(state, { ...parents, account: account.id }, has)
+    const nodes = levels.includes("account") && getGroups(state, { ...parents, account: account.id }, levels)
 
     const headerSubtitle = <FormattedMessage id="portal.common.group.multiple" values={{numGroups: nodes.length || 0}}/>
 
@@ -87,9 +87,9 @@ export const getAccounts = (state, parents, has, callBack = getAccountsForBrand)
   })
 }
 
-export const getBrands = (state, brand, has) => {
+export const getBrands = (state, brand, levels) => {
 
-  const nodes = has.includes('brand') && getAccounts(state, { brand }, has)
+  const nodes = levels.includes('brand') && getAccounts(state, { brand }, levels)
   const headerSubtitle = <FormattedMessage id="portal.common.account.multiple" values={{numAccounts: nodes.length || 0}}/>
   return [{
     id: brand,

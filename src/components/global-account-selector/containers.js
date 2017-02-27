@@ -37,7 +37,7 @@ const adminAccountSelectorDispatchToProps = (dispatch, { params: { brand } }) =>
  * @param  {[type]} property [description]
  * @return {[type]}          [description]
  */
-const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property }, has = ['brand', 'account', 'group'] }) => {
+const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property }, levels = ['brand', 'account', 'group'] }) => {
 
   return {
     dispatch,
@@ -46,13 +46,13 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
       return Promise.all([
 
-        canView(VIEW_CONTENT_ACCOUNTS) && has.includes('brand') && dispatch(accountActions.fetchAll({ brand })),
+        canView(VIEW_CONTENT_ACCOUNTS) && levels.includes('brand') && dispatch(accountActions.fetchAll({ brand })),
 
-        !canView(VIEW_CONTENT_ACCOUNTS) && has.includes('brand') && dispatch(accountActions.fetchOne({ brand, id: account })),
+        !canView(VIEW_CONTENT_ACCOUNTS) && levels.includes('brand') && dispatch(accountActions.fetchOne({ brand, id: account })),
 
-        canView(VIEW_CONTENT_GROUPS) && has.includes('account') && account && dispatch(groupActions.fetchAll({ brand, account })),
+        canView(VIEW_CONTENT_GROUPS) && levels.includes('account') && account && dispatch(groupActions.fetchAll({ brand, account })),
 
-        canView(VIEW_CONTENT_PROPERTIES) && has.includes('group') && property && propertyActions.fetchByIds(dispatch)({ brand, account, group })
+        canView(VIEW_CONTENT_PROPERTIES) && levels.includes('group') && property && propertyActions.fetchByIds(dispatch)({ brand, account, group })
 
       ])
     }
@@ -66,13 +66,13 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
  * @param  {[type]} restrictions [description]
  * @return {[type]}              [description]
  */
-const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, has = ['brand', 'account', 'group'] }) => {
+const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
   const canView = permission => checkPermissions(state.roles.get('roles'), state.user.get('currentUser'), permission)
 
-  const hasBrand = has.includes('brand') && canView(VIEW_CONTENT_ACCOUNTS)
-  const hasAccount = has.includes('account') && canView(VIEW_CONTENT_GROUPS)
-  const hasGroup = has.includes('group') && canView(VIEW_CONTENT_PROPERTIES)
+  const hasBrand = levels.includes('brand') && canView(VIEW_CONTENT_ACCOUNTS)
+  const hasAccount = levels.includes('account') && canView(VIEW_CONTENT_GROUPS)
+  const hasGroup = levels.includes('group') && canView(VIEW_CONTENT_PROPERTIES)
 
   let activeNode = brand
   let tree = []
@@ -82,15 +82,15 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
 
   if (hasBrand) {
 
-    tree = getBrands(state, brand, has)
+    tree = getBrands(state, brand, levels)
 
   } else if (hasAccount) {
 
-    tree = getAccounts(state, { brand }, has, getSingleAccount)
+    tree = getAccounts(state, { brand }, levels, getSingleAccount)
 
   } else if (hasGroup) {
 
-    tree = getGroups(state, { brand, account }, has, getSingleGroup)
+    tree = getGroups(state, { brand, account }, levels, getSingleGroup)
   }
 
   if (hasBrand && brand) {
