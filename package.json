@@ -127,7 +127,8 @@
       ".*": "<rootDir>/node_modules/babel-jest"
     },
     "moduleNameMapper": {
-      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js",
+      "aspera-helpers.js": "<rootDir>/ExportsStub.js"
     },
     "setupFiles": [
       "<rootDir>/jest-env-setup.js"
