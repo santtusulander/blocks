@@ -16,8 +16,7 @@ import { getRegionsInfoOptions } from '../../../../util/services-helpers'
 
 import { FLOW_DIRECTION_TYPES } from '../../../../constants/account-management-options'
 
-
-const validate = ({ billing_meta: { charge_number = '', regions } }) => {
+const validate = ({ billing_meta: { charge_number = '', regions, flow_direction } }) => {
   const conditions = {
     charge_number: [
       {
@@ -37,7 +36,16 @@ const validate = ({ billing_meta: { charge_number = '', regions } }) => {
     ]
   }
 
-  const errors = checkForErrors({charge_number, regions}, conditions)
+  if (flow_direction) {
+    conditions.flow_direction = [
+      {
+        condition: !flow_direction.length,
+        errorText: <FormattedMessage id="portal.account.chargeNumbersForm.flow_direction.validationError" />
+      }
+    ]
+  }
+
+  const errors = checkForErrors({charge_number, regions, flow_direction}, conditions)
 
   //model can contains only one of [charge_number, regions] property
   regions && delete errors.charge_number
@@ -71,7 +79,7 @@ class AddChargeNumbersForm extends React.Component {
               name="billing_meta.flow_direction"
               component={FieldFormGroupCheckboxes}
               iterable={FLOW_DIRECTION_TYPES}
-              required={false}
+              required={true}
               label={<FormattedMessage id="portal.account.chargeNumbersForm.flow_direction.title" />}
             />
             <hr/>
