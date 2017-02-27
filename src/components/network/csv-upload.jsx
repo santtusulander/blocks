@@ -3,11 +3,11 @@ import { FormattedMessage } from 'react-intl'
 import Dropzone from 'react-dropzone'
 import moment from 'moment'
 
-import IconClose from './icons/icon-close'
-import IconFile from './icons/icon-file'
-import LoadingSpinnerSmall from './loading-spinner/loading-spinner-sm'
+import IconClose from '../icons/icon-close'
+import IconFile from '../icons/icon-file'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
-class FileUploadArea extends Component {
+class CsvUploadArea extends Component {
   constructor(props) {
     super(props)
 
@@ -191,8 +191,8 @@ class FileUploadArea extends Component {
   }
 }
 
-FileUploadArea.displayName = 'FileUploadArea'
-FileUploadArea.propTypes = {
+CsvUploadArea.displayName = 'CsvUploadArea'
+CsvUploadArea.propTypes = {
   acceptFileTypes: React.PropTypes.array,
   activeClassName: React.PropTypes.string,
   asyncValidation: React.PropTypes.bool,
@@ -204,7 +204,7 @@ FileUploadArea.propTypes = {
   onDropCompleted: React.PropTypes.func,
   uploadModalOnClick: React.PropTypes.bool
 }
-FileUploadArea.defaultProps = {
+CsvUploadArea.defaultProps = {
   acceptFileTypes: ["text/csv"],
   activeClassName: "drag-active",
   asyncValidation: false,
@@ -214,4 +214,4 @@ FileUploadArea.defaultProps = {
   uploadModalOnClick: false
 }
 
-export default FileUploadArea
+export default CsvUploadArea

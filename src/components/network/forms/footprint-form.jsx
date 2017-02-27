@@ -20,7 +20,7 @@ import MultilineTextFieldError from '../../shared/forms/multiline-text-field-err
 
 import { isValidFootprintTextField, isValidFootprintDescription , isValidIPv4Address, isValidASN } from '../../../util/validators'
 import { checkForErrors } from '../../../util/helpers'
-import FileUploadArea from '../../file-upload'
+import CsvUploadArea from '../csv-upload'
 
 import { MODIFY_FOOTPRINT } from '../../../constants/permissions'
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
@@ -246,7 +246,7 @@ class FootprintForm extends React.Component {
           </span>
         </div>
 
-        <FileUploadArea
+        <CsvUploadArea
           asyncValidation={true}
           acceptFileTypes={FOOTPRINT_FILE_TYPES}
           contentValidation={this.validateCSV}
