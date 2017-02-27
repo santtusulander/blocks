@@ -49,12 +49,16 @@ export default function apiMiddleware({ dispatch, getState }) {
     dispatch({ payload, type: requestType });
 
     return callApi().then(
-      response => dispatch({ payload, response, type: successType }),
+      response => {
+        dispatch({ payload, response, type: successType })
+        return response
+      },
       error => {
         if (!forceReload && cacheKey) {
           dispatch({ type: CACHE_REQUEST_CLEAR, payload: cacheKey })
         }
-        return dispatch({ payload, error, type: failureType })
+        dispatch({ payload, error, type: failureType })
+        return error
       }
     );
   };
