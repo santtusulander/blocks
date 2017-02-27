@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
-import { getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
+import { getByGroup as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
 import groupActions from '../../redux/modules/entities/groups/actions'
 import { getByAccount } from '../../redux/modules/entities/groups/selectors'
@@ -21,13 +21,6 @@ const getStoragesByGroup = () => ([
 const getGroupsForAccount = (state, parents, callBack) => getByAccount(state, parents.account).toJS().map(callBack)
 const getAccountsForBrand = (state, parents, callBack) => getByBrand(state, parents.brand).toJS().map(callBack)
 
-const getStoragesAndProperties = (state, parents) => {
-  return [
-    ...getProperties(state, parents),
-    ...getStorages(state, parents)
-  ]
-}
-
 /**
  * get groups from state, setting child nodes and defining a function to fetch child nodes for each one.
  * @param  {[type]} state     [description]
@@ -39,8 +32,7 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
 
   return callBack(state, parents, (group) => {
 
-    const nodes = levels.includes("group") && getStoragesAndProperties(state, { ...parents, group: group.id })
-    const headerSubtitle = <FormattedMessage id="portal.common.property.multiple" values={{numProperties: nodes.length || 0}}/>
+    const { nodes, headerSubtitle } = getStoragesAndProperties(state, levels, { ...parents, group: group.id })
 
     return {
       ...group,
@@ -137,4 +129,22 @@ export const getBrands = (state, brand, levels) => {
       nodes
     }
   }]
+}
+
+const getStoragesAndProperties = (state, levels, parents) => {
+  const properties = getProperties(state, parents)
+  const storages = getStorages(state, parents)
+
+  const nodes = levels.includes("group") && [
+    ...properties,
+    ...storages
+  ]
+
+  const headerSubtitle = (
+    <span>
+      <FormattedMessage id="portal.common.property.multiple" values={{numProperties: properties.length || 0}}/>, <FormattedMessage id="portal.common.storage.multiple" values={{numStorages: storages.length || 0}}/>
+    </span>
+  )
+
+  return { nodes, headerSubtitle }
 }

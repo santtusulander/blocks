@@ -2,10 +2,10 @@ import React, { PropTypes, Component } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { Map, List } from 'immutable'
 
-import ToggleElement from './toggle-element'
+import ToggleElement from '../global-account-selector/toggle-element'
 
-import SelectorItems from './selector-items'
-import SelectorHeader from './selector-header'
+import SelectorItems from './menu-items'
+import SelectorHeader from './menu-header'
 
 export default class Selector extends Component {
 
