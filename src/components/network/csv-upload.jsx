@@ -3,11 +3,11 @@ import { FormattedMessage } from 'react-intl'
 import Dropzone from 'react-dropzone'
 import moment from 'moment'
 
-import IconClose from './icons/icon-close'
-import IconFile from './icons/icon-file'
-import LoadingSpinnerSmall from './loading-spinner/loading-spinner-sm'
+import IconClose from '../icons/icon-close'
+import IconFile from '../icons/icon-file'
+import LoadingSpinnerSmall from '../loading-spinner/loading-spinner-sm'
 
-class FileUploadArea extends Component {
+class CsvUploadArea extends Component {
   constructor(props) {
     super(props)
 
@@ -22,6 +22,7 @@ class FileUploadArea extends Component {
     this.onDelete = this.onDelete.bind(this)
     this.renderFileList = this.renderFileList.bind(this)
     this.isValidFileType = this.isValidFileType.bind(this)
+    this.validationCallback = this.validationCallback.bind(this)
   }
 
   isValidFileType(fileType) {
@@ -31,7 +32,7 @@ class FileUploadArea extends Component {
   }
 
   onDrop(acceptedFiles) {
-    const { contentValidation, maxSize } = this.props
+    const { asyncValidation, contentValidation, maxSize } = this.props
     let validatedFiles = []
     let rejectedFiles = []
 
@@ -47,7 +48,7 @@ class FileUploadArea extends Component {
 
     acceptedFiles.map((file) => {
       // Include custom validation flags, so parent component can identify errors
-      file.isFileContentValid = contentValidation ? contentValidation(file) : true
+      file.isFileContentValid = contentValidation ? contentValidation(file, (asyncValidation ? this.validationCallback : null)) : true
       file.isFileTypeValid = this.isValidFileType(file.type)
       file.isFileSizeValid = (file.size > maxSize) ? false : true
 
@@ -55,6 +56,42 @@ class FileUploadArea extends Component {
         validatedFiles.push(file)
       } else {
         rejectedFiles.push(file)
+      }
+    })
+
+    this.setState({
+      validFiles: validatedFiles,
+      rejectedFiles: rejectedFiles
+    })
+
+    if (!asyncValidation) {
+      this.setState({ isValidationInProgress: false })
+      this.props.onDropCompleted(validatedFiles, rejectedFiles)
+    }
+  }
+
+  // Callback for async validation
+  validationCallback(files) {
+    let validatedFiles = this.state.validFiles.slice()
+    let rejectedFiles = this.state.rejectedFiles.slice()
+
+    // Expect one or more files here
+    if (!(files instanceof Array)) {
+      files = [files]
+    }
+
+    files.map((file) => {
+      // Process files after async validation and
+      // remove invalid files from validFiles array
+      if (!file.isFileContentValid) {
+        const indexToRemove = validatedFiles.findIndex((validFile) => {
+          return validFile.preview === file.preview
+        })
+
+        if (indexToRemove != -1) {
+          validatedFiles.splice(indexToRemove, 1);
+          rejectedFiles.push(file)
+        }
       }
     })
 
@@ -79,6 +116,8 @@ class FileUploadArea extends Component {
     this.setState({
       validFiles: newFiles
     })
+
+    this.props.onDeleteCompleted(newFiles)
   }
 
   renderFileList(filesCount) {
@@ -152,24 +191,27 @@ class FileUploadArea extends Component {
   }
 }
 
-FileUploadArea.displayName = 'FileUploadArea'
-FileUploadArea.propTypes = {
+CsvUploadArea.displayName = 'CsvUploadArea'
+CsvUploadArea.propTypes = {
   acceptFileTypes: React.PropTypes.array,
   activeClassName: React.PropTypes.string,
+  asyncValidation: React.PropTypes.bool,
   className: React.PropTypes.string,
   contentValidation: React.PropTypes.func,
   maxSize: React.PropTypes.number,
   multiple: React.PropTypes.bool,
+  onDeleteCompleted: React.PropTypes.func,
   onDropCompleted: React.PropTypes.func,
   uploadModalOnClick: React.PropTypes.bool
 }
-FileUploadArea.defaultProps = {
+CsvUploadArea.defaultProps = {
   acceptFileTypes: ["text/csv"],
   activeClassName: "drag-active",
+  asyncValidation: false,
   className: "filedrop-area",
   maxSize: Infinity,
   multiple: true,
   uploadModalOnClick: false
 }
 
-export default FileUploadArea
+export default CsvUploadArea
