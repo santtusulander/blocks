@@ -118,6 +118,7 @@ class EntityEdit extends React.Component {
           account={this.state.entityToUpdate}
           currentUser={currentUser}
           onCancel={onCancel}
+          onChangeServiceItem={this.onChangeServiceItem}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
@@ -129,6 +130,7 @@ class EntityEdit extends React.Component {
           params={params}
           groupId={this.state.entityToUpdate.get('id')}
           onCancel={onCancel}
+          onChangeServiceItem={this.onChangeServiceItem}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
