@@ -31,6 +31,7 @@ export default Object.assign({},
   services,
   storage,
   support,
+  storage,
   user,
   validators,
   en

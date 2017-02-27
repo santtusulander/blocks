@@ -35,8 +35,9 @@ class RegionsField extends React.Component {
     }
   }
 
-  handleChangeChargeNumber (region_code, charge_number, index) {
+  handleChangeChargeNumber (region_code, charge_num, index) {
     const { fields } = this.props
+    const charge_number = charge_num.toUpperCase()
 
     fields.remove(index)
     fields.insert(index, {region_code, charge_number})
