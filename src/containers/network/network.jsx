@@ -1012,8 +1012,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     uiActions: uiActions,
 
     fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
-    fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
-    fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
+    fetchNetworks: (params) => params.group && dispatch(networkActions.fetchAll(params)),
+    fetchPops: (params) => params.network && dispatch(popActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }
