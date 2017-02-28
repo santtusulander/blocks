@@ -114,7 +114,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/__stories__/",
-      "/src/locales/"
+      "/src/locales/",
+      "/src/assets/js/"
     ],
     "testPathDirs": [
       "src",
