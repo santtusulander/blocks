@@ -9,7 +9,7 @@ import InputConnector from '../../components/input-connector'
 import Select from '../../components/select'
 import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-
+import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 const mockStorage = [
   {
@@ -29,6 +29,7 @@ class ConfigurationDetails extends React.Component {
     super(props);
 
     this.state = {
+      showStorageModal: false,
       useUDNOrigin : true
     }
     this.handleChange = this.handleChange.bind(this)
@@ -38,6 +39,8 @@ class ConfigurationDetails extends React.Component {
     this.getStorageList = this.getStorageList.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
+    this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
+    this.save = this.save.bind(this)
     this.originHostValue = ''
   }
   handleChange(path) {
@@ -54,8 +57,7 @@ class ConfigurationDetails extends React.Component {
 
   handleUDNOriginSelection(value) {
     if(value === 'option_new_storage') {
-      // open new storage modal
-      // TODO: add callback to changeValues to new storage
+      this.toggleAddStorageModal()
     }
     else {
       const selectedStorage = this.props.storages.find(item => item.get('gateway') === value)
@@ -66,9 +68,16 @@ class ConfigurationDetails extends React.Component {
       ])
     }
   }
+
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges()
+  }
+
+  toggleAddStorageModal() {
+    this.setState({
+      showStorageModal : !this.state.showStorageModal
+    })
   }
 
   toggleUDNOrigin(val) {
@@ -88,6 +97,11 @@ class ConfigurationDetails extends React.Component {
     return [['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />], ...storageOptions]
   }
 
+  save() {
+    //TODO: add submit func for creating storage
+    this.toggleAddStorageModal()
+  }
+
   render() {
     if(!this.props.edgeConfiguration) {
       return (
@@ -102,7 +116,13 @@ class ConfigurationDetails extends React.Component {
       <form
         className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
-
+        <StorageFormContainer
+          show={this.state.showStorageModal}
+          editting={false}
+          fetching={false}
+          onCancel={this.toggleAddStorageModal}
+          onSubmit={this.save}
+        />
         <Row>
           <FormGroup>
             <Col xs={3}>
