@@ -170,7 +170,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
     return Promise.resolve([])
   }
 
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`)
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, {params: {page_size: -1}})
     .then(resp => resp.data.data.map(certificate => {
       return {
         group,
