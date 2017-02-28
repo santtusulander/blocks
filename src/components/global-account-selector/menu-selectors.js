@@ -142,9 +142,10 @@ export const getBrands = (state, brand, levels) => {
  */
 const getStoragesAndProperties = (state, levels, parents) => {
 
-  let nodes, headerSubtitle = null
+  let nodes, headerSubtitle = undefined
+  let activeAccount = getAccountById(state, parents.account)
 
-  if (!accountIsServiceProviderType(getAccountById(state, parents.account))) {
+  if (!accountIsServiceProviderType(activeAccount)) {
 
     const properties = getProperties(state, parents)
     const storages = getStorages(state, parents)
