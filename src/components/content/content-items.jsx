@@ -283,7 +283,8 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      locationPermissions
+      locationPermissions,
+      storageContentItems
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -333,7 +334,7 @@ class ContentItems extends React.Component {
     const addHostSubTitle = activeAccount && activeGroup
       ? `${activeAccount.get('name')} / ${activeGroup.get('name')}`
     : null
-console.log('TIER: ',this.getTier(),viewingChart)
+
     return (
       <Content>
         <PageHeader pageSubTitle={headerText.summary}>
@@ -371,7 +372,7 @@ console.log('TIER: ',this.getTier(),viewingChart)
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() && this.props.storageContentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -380,57 +381,46 @@ console.log('TIER: ',this.getTier(),viewingChart)
               transitionName="content-transition"
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
-              {this.getTier() === 'group' && !viewingChart &&
-                <div>STORAGES</div>}
-              <div
-                key={viewingChart}
-                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                {contentItems.map(content => {
-                  const item = content.get('item')
-                  const id = item.get('id')
-                  const isTrialHost = item.get('isTrialHost')
-                  const name = item.get('name')
-                  const contentMetrics = content.get('metrics')
-                  const scaledWidth = trafficScale(contentMetrics.get('totalTraffic') || 0)
-                  const itemProps = {
-                    id,
-                    name,
-                    ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
-                    brightMode: isTrialHost,
-                    linkTo: this.props.nextPageURLBuilder(id, item),
-                    disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
-                    configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
-                    onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-                      this.editItem(id)
-                    } : null,
-                    analyticsLink: this.props.analyticsURLBuilder(id),
-                    dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
-                    description: 'Desc',
-                    delete: this.props.deleteItem,
-                    primaryData: contentMetrics.get('traffic'),
-                    secondaryData: contentMetrics.get('historical_traffic'),
-                    differenceData: contentMetrics.get('historical_variance'),
-                    cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
-                    timeToFirstByte: contentMetrics.get('avg_ttfb'),
-                    maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
-                    minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
-                    avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
-                    fetchingMetrics: this.props.fetchingMetrics,
-                    chartWidth: scaledWidth.toString(),
-                    barMaxHeight: (scaledWidth / 7).toString(),
-                    showSlices: this.props.showSlices,
-                    isAllowedToConfigure: this.props.isAllowedToConfigure
-                  }
 
-                  return (
-                    <ContentItem key={`content-item-${id}`}
-                      isChart={viewingChart}
-                      itemProps={itemProps}
-                      scaledWidth={scaledWidth}
-                      deleteItem={this.props.deleteItem}/>
-                  )
-                })}
+              {!storageContentItems.isEmpty() &&
+                <div>
+                  {!viewingChart && <div>STORAGES</div>}
+                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+                    {storageContentItems.map(storage => {
+                      const id = storage.get('id')
+
+                      const itemProps = {
+                        id,
+                        name: storage.get('name'),
+                        location: storage.get('location'),
+                        linkTo: '',
+                        disableLinkTo: false,
+                        configurationLink: '',
+                        onConfiguration: () => {this.editItem(id)},
+                        analyticsLink: '',
+                        delete: this.props.deleteItem,
+                        primaryData: Immutable.List(),
+                        maxTransfer: storage.get('maxTransfer'),
+                        minTransfer: storage.get('minTransfer'),
+                        avgTransfer: storage.get('avgTransfer'),
+                        currentUsage: storage.get('currentUsage'),
+                        usageQuota: storage.get('usageQuota'),
+                        fetchingMetrics: this.props.fetchingMetrics,
+                        isAllowedToConfigure: this.props.isAllowedToConfigure,
+                        chartWidth: '500'
+                      }
+
+                      return (
+                        <ContentItem key={`content-item-${id}`}
+                          isChart={viewingChart}
+                          isStorage={true}
+                          itemProps={itemProps}
+                          deleteItem={this.props.deleteItem}/>
+                      )
+                    })}
+                  </div>
               </div>
+              }
 
               {this.getTier() === 'group' && !viewingChart &&
                 <div>PROPERTIES</div>}

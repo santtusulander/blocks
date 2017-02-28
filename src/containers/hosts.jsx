@@ -30,7 +30,7 @@ const mockRedux = {
           name: 'Media Storage',
           location: 'Frankfurt',
           currentUsage: '450 GB',
-          totalUsage: '900 GB',
+          usageQuota: '900 GB',
           maxTransfer: '75.00 TB',
           minTransfer: '11.00 TB',
           avgTransfer: '34.00 TB'
@@ -39,7 +39,7 @@ const mockRedux = {
           name: 'Bangkok Storage',
           location: 'San Jose',
           currentUsage: '1.2 TB',
-          totalUsage: '2 TB',
+          usageQuota: '2 TB',
           maxTransfer: '15.00 TB',
           minTransfer: '2.00 TB',
           avgTransfer: '7.00 TB'
@@ -48,7 +48,7 @@ const mockRedux = {
           name: 'Asia Storage',
           location: 'Hong Kong',
           currentUsage: '900 GB',
-          totalUsage: '3 TB',
+          usageQuota: '3 TB',
           maxTransfer: '10.00 TB',
           minTransfer: '3.00 TB',
           avgTransfer: '6.00 TB'
@@ -57,7 +57,7 @@ const mockRedux = {
           name: 'Dataphone Storage',
           location: 'San Jose, 2 copies',
           currentUsage: '2.3 TB',
-          totalUsage: '5 TB',
+          usageQuota: '5 TB',
           maxTransfer: '25.00 TB',
           minTransfer: '1.00 TB',
           avgTransfer: '13.00 TB'
