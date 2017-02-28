@@ -1,10 +1,21 @@
 import moment from 'moment'
 
+
+// CIS
+export const BASE_URL_CIS_SOUTH = ''
+
+
 // For authentication, account, group, user, role, permission management
 export const BASE_URL_AAA = '/v2'
 
 // For Content/Serivce Provider management and configuration
 export const BASE_URL_NORTH = '/VCDN/v2'
+
+export const PAGINATION_MOCK = {
+  params: {
+    page_size: -1
+  }
+}
 
 export const topoBase = () => {
   switch(process.env.NODE_ENV) {

@@ -62,7 +62,6 @@
 
 // Components
 // ==========
-
 @import 'components/account-sidebar';
 @import 'components/button-disable-tooltip';
 @import 'components/confirmation';
@@ -144,6 +143,7 @@
 
 // Storage
 @import 'components/storage/storage-forms';
+@import 'components/storage/aspera_connect';
 
 // Shared
 @import 'components/shared/action-items-container';
