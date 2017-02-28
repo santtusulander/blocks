@@ -151,7 +151,7 @@ StorageItemChart.propTypes = {
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
-  locations: PropTypes.array,
+  locations: PropTypes.array.isRequired,
   name: PropTypes.string,
   peak: PropTypes.number
 };
