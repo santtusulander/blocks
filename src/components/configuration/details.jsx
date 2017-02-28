@@ -10,6 +10,20 @@ import Select from '../../components/select'
 import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 
+
+const mockStorage = [
+  {
+    id: 1 ,
+    label: 'Storage 1',
+    gateway: '102.143.11.33'
+  },
+  {
+    id: 2,
+    label: 'Storage 2',
+    gateway: '192.168.1.140'
+  }
+] // TODO: remove mock, pass it as props
+
 class ConfigurationDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +34,8 @@ class ConfigurationDetails extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleUDNOriginSelection = this.handleUDNOriginSelection.bind(this)
+    this.getStorageList = this.getStorageList.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
     this.originHostValue = ''
@@ -35,13 +51,41 @@ class ConfigurationDetails extends React.Component {
       this.props.changeValue(path, value)
     }
   }
+
+  handleUDNOriginSelection(value) {
+    if(value === 'option_new_storage') {
+      // open new storage modal
+      // TODO: add callback to changeValues to new storage
+    }
+    else {
+      const selectedStorage = this.props.storages.find(item => item.get('gateway') === value)
+      this.props.changeValues([
+        [['edge_configuration', 'origin_host_name'], value],
+        [['edge_configuration', 'ingest_point_id'], selectedStorage.get('id')],
+        [['edge_configuration', 'origin_host_port'], 8082]
+      ])
+    }
+  }
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges()
   }
 
   toggleUDNOrigin(val) {
-    this.setState({ useUDNOrigin: val })
+    this.setState({ useUDNOrigin: val})
+    if(!val) {
+      this.props.resetConfigValues([
+        ['edge_configuration', 'origin_host_name'],
+        ['edge_configuration', 'ingest_point_id'],
+        ['edge_configuration', 'origin_host_port']
+      ])
+    }
+  }
+
+  getStorageList() {
+    const storageList = this.props.storages.map(storage => Immutable.fromJS({value: storage.get('gateway'), label: storage.get('label')}))
+    const storageOptions = storageList.toJS()
+    return [['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />], ...storageOptions]
   }
 
   render() {
@@ -132,13 +176,11 @@ class ConfigurationDetails extends React.Component {
                   <Select
                     className="input-select"
                     disabled={readOnly}
-                    onSelect={this.handleSelectChange(
-                      ['edge_configuration', 'origin_storage'])}
-                    value={this.props.edgeConfiguration.get('origin_storage')}
-                    options={[
-                      ['option_new_storage',
-                        <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
-                    ]}/>
+                    onSelect={this.handleUDNOriginSelection}
+                    value={this.props.edgeConfiguration.get('origin_host_name')}
+                    options={
+                      this.getStorageList()
+                    }/>
                   <InputGroup.Addon>
                     <HelpTooltip
                       id="tooltip_udn_origin"
@@ -163,7 +205,7 @@ class ConfigurationDetails extends React.Component {
               <InputGroup>
                 <FormControl
                   type="text"
-                  disabled={readOnly}
+                  disabled={readOnly || this.state.useUDNOrigin}
                   value={this.props.edgeConfiguration.get('origin_host_port')}
                   onChange={this.handleNumericChange(
                     ['edge_configuration', 'origin_host_port']
@@ -232,7 +274,13 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                  <InputGroup.Addon />
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_enter_host_name_value"
+                      title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -361,11 +409,18 @@ class ConfigurationDetails extends React.Component {
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
+  changeValues: React.PropTypes.func,
   deploymentMode: React.PropTypes.string,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
   intl: intlShape.isRequired,
   readOnly: React.PropTypes.bool,
-  saveChanges: React.PropTypes.func
+  resetConfigValues: React.PropTypes.func,
+  saveChanges: React.PropTypes.func,
+  storages: React.PropTypes.instanceOf(Immutable.List)
+}
+
+ConfigurationDetails.defaultProps = {
+  storages: Immutable.fromJS(mockStorage)
 }
 
 export default injectIntl(ConfigurationDetails)

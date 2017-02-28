@@ -56,6 +56,7 @@ export class Configuration extends React.Component {
     this.cancelEditPolicyRoute = this.cancelEditPolicyRoute.bind(this)
     this.changeValue = this.changeValue.bind(this)
     this.changeValues = this.changeValues.bind(this)
+    this.resetConfigValues = this.resetConfigValues.bind(this)
     this.saveActiveHostChanges = this.saveActiveHostChanges.bind(this)
     this.activateVersion = this.activateVersion.bind(this)
     this.cloneActiveVersion = this.cloneActiveVersion.bind(this)
@@ -122,6 +123,21 @@ export class Configuration extends React.Component {
     )
   }
 
+  resetConfigValues(paths) {
+    let activeConfig = this.getActiveConfig()
+
+    paths.map((path) =>{
+      let val = this.state.activeConfigOriginal.getIn(path);
+      activeConfig = val ? activeConfig.setIn(path, val) : activeConfig.deleteIn(path)
+    })
+
+    this.props.hostActions.changeActiveHost(
+      this.props.activeHost.setIn(
+        ['services', 0, 'configurations', this.state.activeConfig],
+        activeConfig
+      )
+    )
+  }
   /**
    * If URL has parameters for editing/deleting a policy, this function can be called to
    * strip away those parameters.
@@ -392,6 +408,7 @@ export class Configuration extends React.Component {
             activeSet: this.props.policyActiveSet,
             changeValue: this.changeValue,
             changeValues: this.changeValues,
+            resetConfigValues: this.resetConfigValues,
             config: activeConfig,
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
