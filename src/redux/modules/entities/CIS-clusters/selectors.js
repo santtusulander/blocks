@@ -7,7 +7,7 @@ import {getEntityById} from '../../entity/selectors'
  * @return {} Map
  */
 export const getById = (state, id) => {
-  return getEntityById(state, 'CISclusters', id)
+  return getEntityById(state, 'CISClusters', id)
 }
 
 /**
@@ -17,5 +17,5 @@ export const getById = (state, id) => {
  * @return List
  */
 export const getAll = (state) => {
-  return state.entities.CISclusters.toList()
+  return state.entities.CISClusters.toList()
 }

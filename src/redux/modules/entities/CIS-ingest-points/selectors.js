@@ -7,7 +7,7 @@ import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
  * @return {} Map
  */
 export const getById = (state, id) => {
-  return getEntityById(state, 'CISingestPoints', id)
+  return getEntityById(state, 'CISIngestPoints', id)
 }
 
 /**
@@ -17,5 +17,5 @@ export const getById = (state, id) => {
  * @return List
  */
 export const getByGroup = (state, groupId) => {
-  return getEntitiesByParent(state, 'ingestPoint', groupId)
+  return getEntitiesByParent(state, 'CISIngestPoints', groupId)
 }
