@@ -1,18 +1,4 @@
-
-/**
- * Builds Select compatible option list from users roles.
- * @param user
- * @returns {Array}
- */
-export function getRoleSelectOptions(user) {
-  let options = []
-
-  user.get('roles').forEach(role => {
-    options.push([role, role])
-  })
-
-  return options
-}
+import { getTokenMeta } from './local-storage'
 
 /**
  * Strip countryCode from the beginning of the phoneNumber
@@ -31,4 +17,19 @@ export const stripCountryCode = (phoneNumber, countryCode) => {
  */
 export const stripNonNumeric = (numStr) => {
   return numStr.replace(/\D/g,'')
+}
+
+
+/**
+ * Checks if currentUnixTime > token expires_at (from localStorage)
+ * @return {Boolean}
+ */
+export const tokenDidExpire = () => {
+  const tokenMeta = getTokenMeta()
+  const expiresAt = tokenMeta.expires_at
+  const currentUnixTime = Math.floor(Date.now() / 1000)
+
+  if (currentUnixTime < expiresAt) return false
+
+  return true
 }

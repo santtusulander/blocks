@@ -72,7 +72,7 @@ export const getServiceOptions = (state, providerType) => {
       value: service.get('id'),
       requires_charge_number: service.get('requires_charge_number'),
       supports_regional_billing: service.get('supports_regional_billing'),
-      options: service.get('options').reduce( (opts, option) => {
+      options: service.get('options').sortBy(option => option.get('name')).reduce( (opts, option) => {
         opts.push({
           label: option.get('name'),
           value: option.get('id'),

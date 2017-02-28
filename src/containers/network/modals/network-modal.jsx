@@ -134,7 +134,7 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel} = this.props
+    const { account, group, network, initialValues, isFetching, onCancel, networkPermissions} = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -151,6 +151,7 @@ class NetworkFormContainer extends React.Component {
           <NetworkForm
             hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
+            isFetching={isFetching}
             onSave={(values) => this.onSave(edit, values)}
             onDelete={(networkId) => {
               this.networkId = networkId
@@ -158,11 +159,13 @@ class NetworkFormContainer extends React.Component {
             }
             }
             onCancel={onCancel}
+            networkPermissions={networkPermissions}
           />
         </SidePanel>
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.networkForm.deleteNetwork.title"/>}
             verifyDelete={true}
             cancelButton={true}
@@ -192,8 +195,10 @@ NetworkFormContainer.propTypes = {
   groupId: PropTypes.string,
   handleSelectedEntity: PropTypes.func,
   initialValues: PropTypes.object,
+  isFetching: PropTypes.bool,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
+  networkPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
