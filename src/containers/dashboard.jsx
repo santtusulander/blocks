@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
+import classNames from 'classnames'
 import {
   accountIsContentProviderType,
   formatBitsPerSecond,
@@ -212,6 +213,8 @@ export class Dashboard extends React.Component {
     const topProvidersAccounts = filterOptions.getIn([isCP ? 'serviceProviders' : 'contentProviders'], List())
 
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
+    // check storage here
+    const hasStorage = true
 
     return (
       <DashboardPanels>
@@ -280,13 +283,16 @@ export class Dashboard extends React.Component {
               mapboxActions={this.props.mapboxActions}/>
           </div>
         </DashboardPanel>
-        <DashboardPanel threeItemPerRow={true} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+        <DashboardPanel threeItemPerRow={hasStorage} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
           <Table className="table-simple">
             <thead>
               <tr>
                 <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                <th width="35%" className="text-right traffic-label"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-              </tr>
+                <th width="35%" className={classNames({'text-right': hasStorage}, {'text-center': !hasStorage}, 'traffic-label')}><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                {!hasStorage &&
+                  <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
+                }
+            </tr>
             </thead>
             <tbody>
               {topProviders.map((provider, i) => {
@@ -302,6 +308,16 @@ export class Dashboard extends React.Component {
                         dataKey="bytes"
                         data={provider.get('detail').toJS()} />
                     </td>
+                    {!hasStorage &&
+                      <td>
+                        <MiniChart
+                          kpiRight={true}
+                          kpiValue={numeral(provider.get('percent_total')).format('0')}
+                          kpiUnit="%"
+                          dataKey="percent_of_timestamp"
+                          data={provider.get('detail').toJS()} />
+                      </td>
+                    }
                   </tr>
                 )
               })}
@@ -312,7 +328,8 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        <DashboardTabPanel threeItemPerRow={true} defaultTab={'OS'}>
+
+        <DashboardTabPanel threeItemPerRow={hasStorage} defaultTab={'OS'}>
           <DashboardTabContent label={'OS'}>
             <h2>OS</h2>
           </DashboardTabContent>
@@ -325,9 +342,13 @@ export class Dashboard extends React.Component {
             <h2>DEVICE</h2>
           </DashboardTabContent>
         </DashboardTabPanel>
-        <DashboardPanel threeItemPerRow={true} title={"Lorem Ipsum"}>
-          <h2>Lorem Ipsum</h2>
-        </DashboardPanel>
+        {
+          hasStorage &&
+          <DashboardPanel threeItemPerRow={hasStorage} title={"Storage"}>
+            <h2>Lorem Ipsum</h2>
+          </DashboardPanel>
+        }
+
       </DashboardPanels>
     )
   }
