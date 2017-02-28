@@ -41,6 +41,7 @@ import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 import EntityEdit from '../../components/account-management/entity-edit'
 
 import SidePanel from '../side-panel'
+import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 
 const rangeMin = 400
@@ -76,6 +77,7 @@ class ContentItems extends React.Component {
     this.state = {
       saving: false,
       showModal: false,
+      showStorageModal: false,
       itemToEdit: undefined
     }
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
@@ -86,6 +88,7 @@ class ContentItems extends React.Component {
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
+    this.hideStorageModal = this.hideStorageModal.bind(this)
   }
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
@@ -213,6 +216,11 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  hideStorageModal() {
+    this.setState({
+      showStorageModal : false
+    });
+  }
   getTagText(isCloudProvider, providerType, trialMode) {
     let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
     if (isCloudProvider && !trialMode) {
@@ -238,7 +246,9 @@ class ContentItems extends React.Component {
         {
           label:'New Storage',
           handleClick: () => {
-            //integrate CIS Storage configuration here
+            this.setState({
+              showStorageModal: true
+            });
           }
         }
       ]
@@ -494,6 +504,17 @@ class ContentItems extends React.Component {
                 cancelChanges={this.hideModal}
               />
               </SidePanel>
+          }
+
+          {
+            this.state.showStorageModal && this.getTier() === 'group' &&
+            <StorageFormContainer
+              show= {true}
+              editing={false}
+              fetching={false}
+              onCancel={this.hideStorageModal}
+              onSubmit={()=>{/* onsubmit here */}}
+            />
           }
         </PageContainer>
       </Content>
