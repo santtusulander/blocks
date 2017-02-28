@@ -384,7 +384,7 @@ class ContentItems extends React.Component {
 
               {!storageContentItems.isEmpty() &&
                 <div>
-                  {!viewingChart && <div>STORAGES</div>}
+                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                     {storageContentItems.map(storage => {
                       const id = storage.get('id')
@@ -407,7 +407,7 @@ class ContentItems extends React.Component {
                         usageQuota: storage.get('usageQuota'),
                         fetchingMetrics: this.props.fetchingMetrics,
                         isAllowedToConfigure: this.props.isAllowedToConfigure,
-                        chartWidth: '500'
+                        chartWidth: '450'
                       }
 
                       return (
@@ -419,11 +419,11 @@ class ContentItems extends React.Component {
                       )
                     })}
                   </div>
-              </div>
-              }
+                  <br /><br />
+                </div>}
 
               {this.getTier() === 'group' && !viewingChart &&
-                <div>PROPERTIES</div>}
+                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
               <div
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>

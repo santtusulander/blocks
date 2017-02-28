@@ -72,7 +72,7 @@ class StorageItemList extends React.Component {
       })
     }
     return (
-      <div className="content-item-list">
+      <div className="content-item-list storage-item-list">
         <div className="content-item-list-section section-lg">
           <LinkWrapper className="content-item-list-link" disableLinkTo={disableLinkTo} linkTo={linkTo}>
             <div className="content-item-details">
@@ -109,7 +109,8 @@ class StorageItemList extends React.Component {
 
             <div className="content-item-list-section section-lg">
               <Row>
-                <div> {`${currentUsage} / ${usageQuota}`}</div>
+                <h1>{currentUsage}<span className="heading-suffix">/ {usageQuota}</span></h1>
+                <p className="text-sm"><FormattedMessage id="portal.common.current" /></p>
               </Row>
             </div>
           </div>
@@ -150,6 +151,7 @@ StorageItemList.propTypes = {
   fetchingMetrics: PropTypes.bool,
   isAllowedToConfigure: PropTypes.bool,
   linkTo: PropTypes.string,
+  location: PropTypes.string,
   maxTransfer:PropTypes.string,
   minTransfer:PropTypes.string,
   name: PropTypes.string,
