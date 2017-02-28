@@ -77,7 +77,7 @@ export const FOOTPRINT_UDN_TYPES = [
 ]
 
 export const FOOTPRINT_FILE_TYPES = ['text/csv']
-export const FOOTPRINT_CSV_TEMPLATE = "/assets/template.csv"
+export const FOOTPRINT_CSV_TEMPLATE_PATH = "/assets/template.csv"
 export const FOOTPRINT_FIELDS_NAME = ['name', 'description', 'data_type', 'value', 'udn_type']
 export const FOOTPRINT_UND_TYPES_VALUES = ['billing_asn', 'on_net', 'off_net']
 export const FOOTPRINT_DEFAULT_DATA_TYPE = 'ipv4cidr'
