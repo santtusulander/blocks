@@ -40,7 +40,10 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
       ...group,
       nodeInfo: {
         headerSubtitle,
-        fetchChildren: () => propertyActions.fetchAll({ ...parents, group: group.id }),
+        fetchChildren: () => Promise.all([
+          propertyActions.fetchAll({ ...parents, group: group.id })
+          // storageActions.fetchAll({ ...parents, group: group.id })
+        ]),
         entityType: 'group',
         parents,
         nodes

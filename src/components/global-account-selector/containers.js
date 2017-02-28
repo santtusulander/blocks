@@ -37,7 +37,7 @@ const adminAccountSelectorDispatchToProps = (dispatch, { params: { brand } }) =>
  * @param  {[type]} property [description]
  * @return {[type]}          [description]
  */
-const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property }, levels = ['brand', 'account', 'group'] }) => {
+const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property, storage }, levels = ['brand', 'account', 'group'] }) => {
 
   return {
     dispatch,
@@ -52,7 +52,9 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
         canView(VIEW_CONTENT_GROUPS) && levels.includes('account') && account && dispatch(groupActions.fetchAll({ brand, account })),
 
-        canView(VIEW_CONTENT_PROPERTIES) && levels.includes('group') && property && propertyActions.fetchByIds(dispatch)({ brand, account, group })
+        canView(VIEW_CONTENT_PROPERTIES) && levels.includes('group') && property || storage && propertyActions.fetchByIds(dispatch)({ brand, account, group })
+
+        // canView(VIEW_CONTENT_STORAGES) && levels.includes('group') && property || storage && dispatch(storageActions.fetchAll({ brand, account, group }))
 
       ])
     }
