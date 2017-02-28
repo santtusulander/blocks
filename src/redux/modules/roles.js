@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { mapReducers, parseResponseData, BASE_URL_AAA } from '../util'
+import { mapReducers, parseResponseData, BASE_URL_AAA, PAGINATION_MOCK } from '../util'
 
 const ROLES_FETCHED = 'ROLES_FETCHED'
 
@@ -26,8 +26,8 @@ export default handleActions({
 
 // ACTIONS
 export const fetchRoles = createAction(ROLES_FETCHED, () => {
-  return axios.get(`${BASE_URL_AAA}/roles`)
-    .then(parseResponseData)
+  return axios.get(`${BASE_URL_AAA}/roles`, PAGINATION_MOCK)
+    .then(parseResponseData ? parseResponseData.data : null)
     .then(roles => Promise.all(roles.map(role => {
       return axios.get(`${BASE_URL_AAA}/roles/${role.id}/services`)
         .then(parseResponseData)
