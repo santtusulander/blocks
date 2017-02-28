@@ -21,6 +21,7 @@ describe('AddChargeNumbersForm', () => {
       props = {
         handleSubmit,
         hasFlowDirection: false,
+        hasGlobalBilling: true,
         hasRegionalBilling: false,
         intl: intlMaker()
       }
