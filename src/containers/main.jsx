@@ -275,7 +275,7 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch),
+    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
   }
 }
 
