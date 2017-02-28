@@ -8,6 +8,7 @@ const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
 const UI_CHANGE_NOTIFICATION = 'UI_CHANGE_NOTIFICATION'
+const UI_CHANGE_SIDE_PANEL_NOTIFICATION = 'UI_CHANGE_SIDE_PANEL_NOTIFICATION'
 const UI_ANALYSIS_SERVICE_TYPE_TOGGLED = 'UI_ANALYSIS_SERVICE_TYPE_TOGGLED'
 const UI_ANALYSIS_STATUS_CODE_TOGGLED = 'UI_ANALYSIS_STATUS_CODE_TOGGLED'
 const UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED = 'UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED'
@@ -92,6 +93,10 @@ export function chartViewToggled(state) {
 
 export function notificationChanged(state, action) {
   return state.set('notification', action.payload)
+}
+
+export function sidePanelNotificationChanged(state, action) {
+  return state.set('sidePanelNotification', action.payload)
 }
 
 export function analysisServiceTypeToggled(state, action) {
@@ -184,6 +189,7 @@ export default handleActions({
   UI_THEME_CHANGED: themeChanged,
   UI_CHART_VIEW_TOGGLED: chartViewToggled,
   UI_CHANGE_NOTIFICATION: notificationChanged,
+  UI_CHANGE_SIDE_PANEL_NOTIFICATION: sidePanelNotificationChanged,
   UI_ANALYSIS_SERVICE_TYPE_TOGGLED: analysisServiceTypeToggled,
   UI_ANALYSIS_ON_OFF_NET_CHART_CHANGED: analysisOnOffNetChartChanged,
   UI_ANALYSIS_SP_CHART_CHANGED: analysisSPChartChanged,
@@ -205,6 +211,7 @@ export const setLoginUrl = createAction(UI_LOGIN_URL_SET)
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
 export const changeNotification = createAction(UI_CHANGE_NOTIFICATION)
+export const changeSidePanelNotification = createAction(UI_CHANGE_SIDE_PANEL_NOTIFICATION)
 export const toggleAccountManagementModal = createAction(UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED)
 export const toggleNetworkModal = createAction(UI_NETWORK_MODAL_TOGGLED)
 export const toggleAnalysisStatusCode = createAction(UI_ANALYSIS_STATUS_CODE_TOGGLED)
