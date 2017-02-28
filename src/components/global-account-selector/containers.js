@@ -77,8 +77,8 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
   let activeNode = brand
   let tree = []
 
-  const getSingleGroup = (state, parents, callBack) => ([ getGroupById(state, group).toJS() ].map(callBack))
-  const getSingleAccount = (state, parents, callBack) => ([ getAccountById(state, account).toJS() ].map(callBack))
+  const getSingleGroup = (state, parents, callBack) => ([ callBack(getGroupById(state, group).toJS()) ])
+  const getSingleAccount = (state, parents, callBack) => ([ callBack(getAccountById(state, account).toJS()) ])
 
   if (hasBrand) {
 
