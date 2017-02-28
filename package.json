@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.4.0-b5",
+  "version": "1.4.0-b6",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -56,6 +56,7 @@
     "d3": "^3.5.14",
     "dotenv": "^2.0.0",
     "downloadjs": "^1.4.2",
+    "exports-loader": "^0.6.3",
     "filesize": "^3.3.0",
     "html-webpack-plugin": "^2.16.0",
     "immutable": "^3.7.6",
@@ -113,7 +114,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/__stories__/",
-      "/src/locales/"
+      "/src/locales/",
+      "/src/assets/js/"
     ],
     "testPathDirs": [
       "src",
@@ -126,7 +128,8 @@
       ".*": "<rootDir>/node_modules/babel-jest"
     },
     "moduleNameMapper": {
-      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js"
+      "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js",
+      "aspera-helpers": "<rootDir>/AsperaStub.js"
     },
     "setupFiles": [
       "<rootDir>/jest-env-setup.js"
