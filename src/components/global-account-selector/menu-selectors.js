@@ -7,7 +7,9 @@ import { getByGroup as getPropertiesByGroup } from '../../redux/modules/entities
 import groupActions from '../../redux/modules/entities/groups/actions'
 import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 
-import { getByBrand } from '../../redux/modules/entities/accounts/selectors'
+import { getByBrand, getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+
+import { accountIsServiceProviderType } from '../../util/helpers'
 
 const getStoragesByGroup = () => ([
   {
@@ -131,20 +133,35 @@ export const getBrands = (state, brand, levels) => {
   }]
 }
 
+/**
+ * If active account is of service provider type, it should not have a group level.
+ * @param  {[type]} state   [description]
+ * @param  {[type]} levels  [description]
+ * @param  {[type]} parents [description]
+ * @return {[type]}         [description]
+ */
 const getStoragesAndProperties = (state, levels, parents) => {
-  const properties = getProperties(state, parents)
-  const storages = getStorages(state, parents)
 
-  const nodes = levels.includes("group") && [
-    ...properties,
-    ...storages
-  ]
+  let nodes, headerSubtitle = null
 
-  const headerSubtitle = (
-    <span>
-      <FormattedMessage id="portal.common.property.multiple" values={{numProperties: properties.length || 0}}/>, <FormattedMessage id="portal.common.storage.multiple" values={{numStorages: storages.length || 0}}/>
-    </span>
-  )
+  if (!accountIsServiceProviderType(getAccountById(state, parents.account))) {
+
+    const properties = getProperties(state, parents)
+    const storages = getStorages(state, parents)
+
+    nodes = levels.includes("group") && [
+      ...properties,
+      ...storages
+    ]
+
+    headerSubtitle = (
+      <span>
+        <FormattedMessage id="portal.common.property.multiple" values={{numProperties: properties.length || 0}}/>, <FormattedMessage id="portal.common.storage.multiple" values={{numStorages: storages.length || 0}}/>
+      </span>
+    )
+
+  }
+
 
   return { nodes, headerSubtitle }
 }
