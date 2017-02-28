@@ -51,6 +51,7 @@ const ROUTES = {
   accountManagementTabSystemDNS: 'dns',
   accountManagementTabSystemRoles: 'roles',
   accountManagementTabSystemServices: 'services',
+  accountManagementTabSystemStorages: 'storages',
 
   services: '/services',
   servicesBrand: '/services/:brand',
