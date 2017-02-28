@@ -58,8 +58,7 @@ export function getDefaultService (service_id) {
   const defaultObj = {
     service_id,
     billing_meta: {
-      flow_direction: [],
-      charge_number: ''
+      flow_direction: []
     },
     options: []
   }
@@ -74,9 +73,7 @@ export function getDefaultService (service_id) {
 export function getDefaultOption (option_id) {
   return fromJS({
     option_id,
-    billing_meta: {
-      charge_number: ''
-    }
+    billing_meta: {}
   })
 }
 

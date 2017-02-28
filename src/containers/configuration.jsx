@@ -19,7 +19,7 @@ import checkPermissions from '../util/permissions'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
-import { deploymentModes } from '../constants/configuration'
+import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -355,6 +355,14 @@ export class Configuration extends React.Component {
             </li>
           }
 
+          { this.props.hasVODSupport &&
+            <li data-eventKey='streaming'>
+              <Link to={baseUrl + '/streaming'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.streaming.text"/>
+              </Link>
+            </li>
+          }
+
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -465,6 +473,7 @@ Configuration.propTypes = {
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
+  hasVODSupport: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
   notification: React.PropTypes.string,
@@ -486,6 +495,17 @@ Configuration.defaultProps = {
 }
 
 function mapStateToProps(state) {
+  const { group } = state
+  const activeGroup = group.get('activeGroup') || Immutable.Map()
+  const enabledServices = activeGroup.get('services') || Immutable.List()
+  let hasVODSupport = false
+
+  enabledServices.forEach((service) => {
+    if (service.get('service_id') === VOD_SERVICE_ID) {
+      hasVODSupport = true
+    }
+  })
+
   return {
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
@@ -495,6 +515,7 @@ function mapStateToProps(state) {
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
+    hasVODSupport: hasVODSupport,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
   };
