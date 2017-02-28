@@ -61,9 +61,9 @@ class FootprintFormContainer extends React.Component {
     }
 
     return save(params)
-      .then(({ error, response }) => {
-        if (error) {
-          throw new SubmissionError({ '_error': error.data.message })
+      .then((response) => {
+        if (response.data && response.data.message) {
+          throw new SubmissionError({ '_error': response.data.message })
         }
 
         //add new footprint to pod
@@ -89,9 +89,9 @@ class FootprintFormContainer extends React.Component {
     }
 
     return this.props.onCreate(params)
-      .then(({ error, response }) => {
-        if (error) {
-          throw new SubmissionError({ '_error': error.data.message })
+      .then((response) => {
+        if (response.data && response.data.message) {
+          throw new SubmissionError({ '_error': response.data.message })
         }
 
         finalValues.id = Object.keys(response.entities.footprints)[0]

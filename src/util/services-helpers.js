@@ -73,9 +73,7 @@ export function getDefaultService (service_id) {
 export function getDefaultOption (option_id) {
   return fromJS({
     option_id,
-    billing_meta: {
-      charge_number: ''
-    }
+    billing_meta: {}
   })
 }
 
