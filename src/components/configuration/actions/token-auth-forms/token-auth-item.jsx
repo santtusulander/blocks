@@ -1,36 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, Fields, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import { checkForErrors } from '../../../util/helpers'
-import { isBase64 } from '../../../util/validators'
+import { checkForErrors } from '../../../../util/helpers'
+import { isBase64 } from '../../../../util/validators'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import TokenAuthItem from './token-auth-forms/token-auth-item'
-import FieldFormGroup from '../../form/field-form-group'
-import FieldFormGroupSelect from '../../form/field-form-group-select'
-import FormFooterButtons from '../../form/form-footer-buttons'
+import FieldFormGroup from '../../../form/field-form-group'
+import FieldFormGroupSelect from '../../../form/field-form-group-select'
+import FormFooterButtons from '../../../form/form-footer-buttons'
 
-const tokenAuthTypes = [
-  {label: 'Standard', value: 'standard'},
-  {label: 'Streaming', value: 'on_demand_hls'}
-]
-const staticEncryptionOptions = [
-  {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
-  {label: 'HMAC-SHA256', value: 'HMAC_SHA256'},
-  {label: 'HMAC-MD5', value: 'HMAC_MD5'},
-  {label: 'MD5', value: 'MD5'}
-]
-const streamingEncryptionOptions = [
-  {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
-  {label: 'HMAC-SHA256', value: 'HMAC_SHA256'}
-]
-// const placeholderEncryptionValue = placeholderEncryptionOptions[0].value
-//const placeholderSchemaOptions = [{label: "URL", value: "url"}]
-// const placeholderSchemaValue = placeholderSchemaOptions[0].value
+const placeholderEncryptionOptions = [{label: "SHA1", value: "HMAC-SHA1", selected: "true"}]
+const placeholderEncryptionValue = placeholderEncryptionOptions[0].value
+const placeholderSchemaOptions = [{label: "URL", value: "url"}]
+const placeholderSchemaValue = placeholderSchemaOptions[0].value
 
 const validate = ({ sharedKey }) => {
   const conditions = {
@@ -48,7 +34,7 @@ const validate = ({ sharedKey }) => {
   return checkForErrors({ sharedKey }, conditions)
 }
 
-export class TokenAuthentication extends React.Component {
+export class TokenAuthItem extends React.Component {
   constructor(props) {
     super(props);
 
@@ -63,8 +49,8 @@ export class TokenAuthentication extends React.Component {
     const { set } = this.props
 
     this.props.change('sharedKey', set.get('shared_key'))
-    // this.props.change('schema', placeholderSchemaValue)
-    // this.props.change('encryption', placeholderEncryptionValue)
+    this.props.change('schema', placeholderSchemaValue)
+    this.props.change('encryption', placeholderEncryptionValue)
   }
 
   saveChanges() {
@@ -77,7 +63,7 @@ export class TokenAuthentication extends React.Component {
   }
 
   render() {
-    const { close, intl: { formatMessage }, invalid, submitting, type } = this.props
+    const { close, intl: { formatMessage }, invalid, submitting } = this.props
 
     return (
       <div>
@@ -87,30 +73,23 @@ export class TokenAuthentication extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-        <Field
-          name="type"
-          component={FieldFormGroupSelect}
-          options={tokenAuthTypes}
-          label={'Token Authentication Type'}
-        />
-
-        {type === 'standard' &&
-          <Fields
-            names={[ 'encryption', 'schema', 'ttl' ]}
-            component={TokenAuthItem}
-            encryptionOptions={staticEncryptionOptions}
-          />
-        }
-
-        {type === 'on_demand_hls' &&
-          <Fields
-            names={[ 'encryption', 'schema', 'ttl', 'streaming_encryption', 'streaming_schema', 'streaming_ttl' ]}
+          {/* This component is mostly for display purposes only until this functionality
+            * is flushed out on the backend. The backend doesn't currently support
+            * user-configuration of this value. */}
+          <Field
+            required={false}
+            disabled={true}
+            name="encryption"
+            className="input-select"
             component={FieldFormGroupSelect}
-            encryptionOptions={streamingEncryptionOptions}
+            options={placeholderEncryptionOptions}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.encryption.text" />}
           />
-        }
 
-          {/*<Field
+          {/* This component is mostly for display purposes only until this functionality
+            * is flushed out on the backend. The backend doesn't currently support
+            * user-configuration of this value. */}
+          <Field
             required={false}
             disabled={true}
             name="schema"
@@ -118,7 +97,7 @@ export class TokenAuthentication extends React.Component {
             component={FieldFormGroupSelect}
             options={placeholderSchemaOptions}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
-          />*/}
+          />
 
           <Field
             type="text"
@@ -150,8 +129,8 @@ export class TokenAuthentication extends React.Component {
   }
 }
 
-TokenAuthentication.displayName = 'TokenAuthentication'
-TokenAuthentication.propTypes = {
+TokenAuthItem.displayName = 'TokenAuthItem'
+TokenAuthItem.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: React.PropTypes.object,
@@ -163,11 +142,11 @@ TokenAuthentication.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'token-authentication',
+  form: 'token-auth-item',
   validate
-})(TokenAuthentication)
+})(TokenAuthItem)
 
-const selector = formValueSelector('token-authentication')
+const selector = formValueSelector('token-auth-item')
 export default connect(state => ({
-  type: selector(state, 'type')
+  sharedKey: selector(state, 'sharedKey')
 }))(injectIntl(form))
