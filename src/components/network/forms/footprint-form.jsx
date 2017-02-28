@@ -240,7 +240,8 @@ class FootprintForm extends React.Component {
             <UDNButton bsStyle="success"
                        icon={true}
                        addNew={true}
-                       onClick={this.onShowFileUploadDialog}>
+                       onClick={this.onShowFileUploadDialog}
+                       disabled={!(_.isEmpty(this.state.csvValues))}>
               <IconAdd/>
             </UDNButton>
           </span>
