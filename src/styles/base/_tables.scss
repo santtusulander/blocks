@@ -156,16 +156,16 @@
     }
   }
 
+  &.fixed-layout {
+    table-layout: fixed;
+  }
+
   .nowrap-column {
     white-space: nowrap;
   }
 
   .one-button-cell {
     width: $btn-height * 2;
-  }
-
-  &.fixed-layout {
-    table-layout: fixed;
   }
 }
 
