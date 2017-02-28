@@ -28,6 +28,7 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import ButtonDropdown from '../button-dropdown'
 import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
@@ -226,6 +227,27 @@ class ContentItems extends React.Component {
     }
     return { tagText: tagText }
   }
+
+  renderAddButton () {
+    if(this.getTier() === 'group'){
+      const options = [
+        {
+          label:'New Property',
+          handleClick: this.addItem
+        },
+        {
+          label:'New Storage',
+          handleClick: () => {
+            //integrate CIS Storage configuration here
+          }
+        }
+      ]
+      return <ButtonDropdown bsStyle={'success'} disabled={false} options={options}/>
+    }
+
+    return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+  }
+
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -343,7 +365,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+                {this.renderAddButton()}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
