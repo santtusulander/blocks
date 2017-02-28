@@ -1,125 +1,173 @@
 $storage-unit-width: 24px;
 $storage-unit-horizontal-margin: 10px;
 
-.storage-item-chart {
-  position: relative;
-  width: 266px;
-  height: 266px;
+.storage-item-chart-wrapper {
+  min-width: 240px;
+  margin: 20px;
 
-  .recharts-surface {
-    width: 266px;
-    height: 266px;
+  .storage-item-chart {
+    position: relative;
+    width: 100% !important;
+    border-radius: 50%;
 
-    .current-month {
-      stroke: none;
-      fill: none;
+    &::after {
+      display: block;
+      padding-bottom: 100%;
+      content: '';
+    }
 
-      &-usage,
-      &-peak {
-        fill: $pale-blue;
+    .dark-theme & {
+      background-color: rgba($black, 0.25);
+      background-image: radial-gradient(circle, rgba($purple, 0), rgba($purple, 0.05)), linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.05));
+    }
 
-        &.exceeded {
-          fill: $yellow;
+    .light-theme & {
+      background-color: $white;
+    }
+
+    .recharts-wrapper {
+      position: absolute !important;
+      width: 100% !important;
+      height: 100% !important;
+
+      .recharts-surface {
+        width: 100%;
+        height: 100%;
+
+        .current-month {
+          stroke: none;
+          fill: none;
+
+          &-usage,
+          &-peak {
+            fill: $pale-blue;
+
+            &.exceeded {
+              fill: $yellow;
+            }
+          }
+
+          &-background {
+            fill: $black;
+
+            &.exceeded {
+              fill: transparent;
+            }
+          }
         }
       }
 
-      &-background {
-        fill: $black;
-      }
-    }
+      .last-month {
+        opacity: 0.5;
+        stroke: none;
+        fill: none;
 
-    .last-month {
-      opacity: 0.5;
-      stroke: none;
-      fill: none;
+        &-usage,
+        &-peak {
+          fill: $pale-blue;
 
-      &-usage,
-      &-peak {
-        fill: $pale-blue;
-
-        &.exceeded {
-          fill: $yellow;
+          &.exceeded {
+            fill: $yellow;
+          }
         }
       }
     }
-  }
 
-  &-location {
-    position: absolute;
-    top: 15%;
-    width: 100%;
-    text-align: center;
-  }
-
-  &-info {
-    position: absolute;
-    top: 35%;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-
-    .title {
-      margin-bottom: 8px;
-      overflow: hidden;
-      font-size: 24px;
-      font-weight: bold;
-      line-height: 1.1em;
-      color: $white;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      white-space: nowrap;
+    &-location {
+      position: absolute;
+      top: 15%;
+      width: 100%;
+      text-align: center;
     }
 
-    .usage {
-      position: relative;
-      margin-bottom: 8px;
-      margin-left: calc(#{$storage-unit-width} + #{$storage-unit-horizontal-margin});
-      overflow: hidden;
-      font-weight: bold;
-      color: $white;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      white-space: nowrap;
+    &-info {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      padding: 0 40px;
+      text-align: center;
+      transform: translate(0, -50%);
 
-      &-value {
-        font-size: 36px;
-        line-height: 1em;
+      .title {
+        margin-bottom: 8px;
+        overflow: hidden;
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 1.1em;
+        white-space: nowrap;
+
+        .dark-theme & {
+          color: $white;
+        }
       }
 
-      &-unit {
-        width: $storage-unit-width;
-        margin-left: $storage-unit-horizontal-margin;
+      .usage {
+        position: relative;
+        margin-bottom: 8px;
+        margin-left: calc(#{$storage-unit-width} + #{$storage-unit-horizontal-margin});
+        overflow: hidden;
+        font-weight: bold;
+
+        &-value {
+          font-size: 36px;
+          line-height: 1em;
+        }
+
+        &-unit {
+          width: $storage-unit-width;
+          margin-left: $storage-unit-horizontal-margin;
+        }
+
+        .dark-theme & {
+          color: $white;
+        }
       }
-
     }
 
-  }
-
-  .btn-toolbar {
-    position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -100%);
-
-    .btn {
-      background-color: rgba($black, 0.3);
-    }
-  }
-
-  &:hover {
     .usage-estimate {
-      opacity: 0;
-      transition: opacity 250ms;
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, 0);
     }
 
-    .btn-toolbar .invisible {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 250ms;
+    .content-item-toolbar {
+      position: absolute;
+      top: 75%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      .btn-icon {
+        .icon {
+          width: 44px;
+          height: 44px;
+        }
+      }
     }
 
-    .hover-info {
-      opacity: 1;
+    &:hover {
+      .dark-theme & {
+        background-color: rgba($black, 0.5);
+      }
+
+      .light-theme & {
+        background-image: linear-gradient(rgba($pale-blue, 0.15), rgba($pale-blue, 0.15));
+      }
+
+      .usage-estimate {
+        opacity: 0;
+        transition: opacity 250ms;
+      }
+
+      .btn-toolbar .invisible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 250ms;
+      }
+
+      .hover-info {
+        opacity: 1;
+      }
     }
   }
 }
