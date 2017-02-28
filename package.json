@@ -129,7 +129,7 @@
     },
     "moduleNameMapper": {
       "^.*[.](jpg|JPG|gif|GIF|png|PNG|scss)$": "<rootDir>/SCSSStub.js",
-      "aspera-helpers": "<rootDir>/ExportsStub.js"
+      "aspera-helpers": "<rootDir>/AsperaStub.js"
     },
     "setupFiles": [
       "<rootDir>/jest-env-setup.js"
