@@ -184,7 +184,7 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, data, addUsers, deleteUsers) {
+  editGroupInActiveAccount({groupId, data, addUsers, deleteUsers}) {
     const groupIdsByEmail = email => this.props.users
       .find(user => user.get('email') === email)
       .get('group_id')
