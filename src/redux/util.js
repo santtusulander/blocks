@@ -1,5 +1,10 @@
 import moment from 'moment'
 
+
+// CIS
+export const BASE_URL_CIS_SOUTH = ''
+
+
 // For authentication, account, group, user, role, permission management
 export const BASE_URL_AAA = '/v2'
 
