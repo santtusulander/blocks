@@ -1,11 +1,10 @@
 import React from 'react'
-import { Tooltip, FormControl, FormGroup, Table, Button } from 'react-bootstrap'
+import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { Field } from 'redux-form'
 
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
@@ -14,13 +13,13 @@ import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entit
 import { getByAccount as getPropertiesByAccount } from '../../../redux/modules/entities/properties/selectors'
 import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
-import FieldFormGroup from '../../../components/form/field-form-group'
+import withPagination from '../../../decorators/pagination-hoc'
+
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
 import ActionButtons from '../../../components/action-buttons'
 import IconAdd from '../../../components/icons/icon-add'
 import TableSorter from '../../../components/table-sorter'
-import InlineAdd from '../../../components/inline-add'
 import IsAllowed from '../../../components/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
@@ -56,6 +55,10 @@ class AccountManagementProperties extends React.Component {
     this.shouldLeave     = this.shouldLeave.bind(this)
     this.validateInlineAdd = this.validateInlineAdd.bind(this)
     this.isLeaving       = false;
+
+    const { params: { account, brand }, pagination } = this.props
+
+    pagination.registerSubscriber((pagingParams) => this.refreshData(brand, account, pagingParams))
   }
   componentWillMount() {
     const {
@@ -69,24 +72,25 @@ class AccountManagementProperties extends React.Component {
     } = this.props
 
     if (properties.isEmpty()) {
-      this.refreshData(brand, account)
+      const { pagination: { getQueryParams } } = this.props
+      this.refreshData(brand, account, getQueryParams())
     }
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.params.account !== this.props.params.account) {
-      const { brand, account } = nextProps.params
-      this.refreshData(brand, account)
+      const { brand, account, pagination: { getQueryParams } } = nextProps.params
+      this.refreshData(brand, account, getQueryParams())
     }
   }
 
-  refreshData(brand, account) {
+  refreshData(brand, account, pagingParams) {
     const { fetchGroups, fetchPropertiesByIds } = this.props
     fetchGroups({ brand, account }).then(groupData => {
       for (let groupId in groupData.response.entities.groups) {
         if (groupData.response.entities.groups.hasOwnProperty(groupId)) {
-          fetchPropertiesByIds({ brand, account, group: groupId })
+          fetchPropertiesByIds({ brand, account, group: groupId, ...pagingParams })
         }
       }
     })
@@ -102,8 +106,7 @@ class AccountManagementProperties extends React.Component {
   addProperty(e) {
     e.stopPropagation()
     this.setState({
-      adding: true,
-      newUsers: Immutable.List()
+      adding: true
     })
   }
 
@@ -200,37 +203,6 @@ class AccountManagementProperties extends React.Component {
     })
   }
 
-  getInlineAddInputs() {
-    const { intl } = this.props
-    const errorTooltip = ({ error, active }) => !active && <Tooltip placement="bottom" className="in" id="tooltip-bottom">{error}</Tooltip>
-    return [
-      [
-        {
-          input: <Field
-            name="published_host_id"
-            id="published_host_id"
-            ErrorComponent={errorTooltip}
-            placeholder={intl.formatMessage({id: 'portal.account.properties.table.publishedHostname.placeholder.text'})}
-            component={FieldFormGroup}/>
-        }
-      ],
-      [
-        {
-          input: <Field
-            name="group"
-            id="group"
-            ErrorComponent={errorTooltip}
-            placeholder={intl.formatMessage({id: 'portal.account.properties.table.publishedHostname.placeholder.text'})}
-            component={FieldFormGroup}/>
-        }
-      ],
-      [],
-      [],
-      [],
-      []
-    ]
-  }
-
   getGroupName(groupId) {
     const { groups } = this.props
     const groupIdNumber = Number(groupId)
@@ -319,11 +291,6 @@ class AccountManagementProperties extends React.Component {
             </tr>
             </thead>
             <tbody>
-            {adding && <InlineAdd
-              validate={this.validateInlineAdd}
-              inputs={this.getInlineAddInputs()}
-              unmount={this.cancelAdding}
-              save={addProperty}/>}
             {sortedProperties.size > 0 && sortedProperties.map((property, i) => {
               return (
                 <tr key={i}>
@@ -374,6 +341,12 @@ AccountManagementProperties.propTypes    = {
   fetching: React.PropTypes.bool,
   groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
+  pagination: React.PropTypes.shape({
+    filtering: React.PropTypes.object,
+    paging: React.PropTypes.object,
+    sorting: React.PropTypes.object,
+    registerSubscriber: React.PropTypes.func
+  }).isRequired,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   route: React.PropTypes.object,
@@ -383,6 +356,11 @@ AccountManagementProperties.propTypes    = {
 AccountManagementProperties.defaultProps = {
   properties: Immutable.List(),
   groups: Immutable.List()
+}
+
+const paginationConfig = {
+  fields: [],
+  page_size: 5
 }
 
 function mapStateToProps(state, ownProps) {
@@ -402,4 +380,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(AccountManagementProperties)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withRouter(withPagination(AccountManagementProperties, paginationConfig))))
