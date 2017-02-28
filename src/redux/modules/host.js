@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {BASE_URL_NORTH, mapReducers, parseResponseData} from '../util'
+import {BASE_URL_NORTH, PAGINATION_MOCK, mapReducers, parseResponseData} from '../util'
 import {getConfiguredName} from '../../util/helpers'
 
 const HOST_CREATED = 'HOST_CREATED'
@@ -210,12 +210,12 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 })
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
   .then(parseResponseData);
 })
 
 export const fetchConfiguredHostNames = createAction(HOST_NAMES_FETCHED_ALL, (brand, account, group) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`)
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
     .then(action => Promise.all(action.data.map(
       property => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}`)
     )))
