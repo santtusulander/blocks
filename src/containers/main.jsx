@@ -19,7 +19,7 @@ import Footer from '../components/footer'
 
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
-import AsperaNotification from '../components/aspera-notification'
+import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import {
   ENTRY_ROUTE_ROOT,

@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { FormattedMessage } from 'react-intl'
-import { AW4, ASPERA_TROUBLESHOOT_URL, ASPERA_DOWNLOAD_URL } from '../util/aspera-helpers'
+import { AW4, ASPERA_TROUBLESHOOT_URL, ASPERA_DOWNLOAD_URL } from '../../util/aspera-helpers'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 
-import IconInfo from '../components/icons/icon-info'
-import IconTask from '../components/icons/icon-task'
-import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-sm'
+import IconInfo from '../../components/icons/icon-info'
+import IconTask from '../../components/icons/icon-task'
+import LoadingSpinnerSmall from '../../components/loading-spinner/loading-spinner-sm'
 
 class AsperaNotification extends React.Component {
   constructor(props) {
