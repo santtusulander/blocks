@@ -3,6 +3,10 @@ import { CACHE_REQUEST, CACHE_REQUEST_CLEAR } from '../modules/cache'
 
 const CACHE_EXPIRATION_TIME = 300000
 
+const cacheIsValid = requestDate => {
+  return ((Date.now() - requestDate) < CACHE_EXPIRATION_TIME)
+}
+
 /**
  *
  * @param {function} dispatch
@@ -32,12 +36,12 @@ export default function apiMiddleware({ dispatch, getState }) {
       throw new Error('Expected `callApi` to be a function.');
     }
 
-    if (!forceReload && getState().cache[cacheKey] > CACHE_EXPIRATION_TIME) {
+    if (!forceReload && cacheIsValid(getState().cache[cacheKey])) {
       return Promise.resolve();
     }
 
-    if (cacheKey) {
-      dispatch({ type: CACHE_REQUEST, payload: { [cacheKey]: Math.floor(Date.now() / 1000) } })
+    if (!forceReload && cacheKey) {
+      dispatch({ type: CACHE_REQUEST, payload: { [cacheKey]: Date.now() } })
     }
 
     const [ requestType, successType, failureType ] = types;
@@ -45,12 +49,16 @@ export default function apiMiddleware({ dispatch, getState }) {
     dispatch({ payload, type: requestType });
 
     return callApi().then(
-      response => dispatch({ payload, response, type: successType }),
+      response => {
+        dispatch({ payload, response, type: successType })
+        return response
+      },
       error => {
-        if (cacheKey) {
+        if (!forceReload && cacheKey) {
           dispatch({ type: CACHE_REQUEST_CLEAR, payload: cacheKey })
         }
-        return dispatch({ payload, error, type: failureType })
+        dispatch({ payload, error, type: failureType })
+        return error
       }
     );
   };
