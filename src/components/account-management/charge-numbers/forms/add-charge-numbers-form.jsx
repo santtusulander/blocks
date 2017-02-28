@@ -31,16 +31,7 @@ const validate = ({ billing_meta: { charge_number = '', regions, flow_direction 
     regions: [
       {
         condition: regions && !(regions.reduce((acc, {charge_number}) => acc && isValidChargeNumber(charge_number), true)),
-        errorText: {_error: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />}
-      }
-    ]
-  }
-
-  if (flow_direction) {
-    conditions.flow_direction = [
-      {
-        condition: !flow_direction.length,
-        errorText: <FormattedMessage id="portal.account.chargeNumbersForm.flow_direction.validationError" />
+        errorText: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />
       }
     ]
   }
@@ -50,6 +41,11 @@ const validate = ({ billing_meta: { charge_number = '', regions, flow_direction 
   //model can contains only one of [charge_number, regions] property
   regions && delete errors.charge_number
   charge_number && delete errors.regions
+  !flow_direction && delete errors.flow_direction
+
+  if (errors.regions) {
+    errors.regions = { _error: errors.regions }
+  }
 
   return Object.keys(errors).length ? { billing_meta: {...errors} } : {}
 }
@@ -94,7 +90,7 @@ class AddChargeNumbersForm extends React.Component {
           />
         }
 
-        { !hasRegionalBilling && 
+        { !hasRegionalBilling && hasGlobalBilling &&
           <Field
             type="text"
             name="billing_meta.charge_number"
@@ -105,13 +101,13 @@ class AddChargeNumbersForm extends React.Component {
           />
         }
 
-        { !hasGlobalBilling && 
+        { !hasGlobalBilling && hasRegionalBilling &&
           <FieldArray
             name="billing_meta.regions"
             component={RegionsField}
             iterable={getRegionsInfoOptions(regionsInfo)}
             label={<FormattedMessage id="portal.account.chargeNumbersForm.regions.title"/>}
-            required={false}
+            required={true}
           />
         }
 
