@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { mapReducers, parseResponseData, BASE_URL_AAA, PAGINATION_MOCK } from '../util'
+import { mapReducers, BASE_URL_AAA, PAGINATION_MOCK } from '../util'
 
 const ROLES_FETCHED = 'ROLES_FETCHED'
 
