@@ -7,7 +7,29 @@ import ToggleElement from '../global-account-selector/toggle-element'
 import SelectorItems from './menu-items'
 import SelectorHeader from './menu-header'
 
-export default class Selector extends Component {
+export default class DrillableMenu extends Component {
+
+  static get displayName() {
+    return 'DrillableMenu'
+  }
+
+  static get contextTypes() {
+    return {
+      currentUser: PropTypes.instanceOf(Map),
+      roles: PropTypes.instanceOf(List)
+    }
+  }
+
+  static get propTypes() {
+    return {
+      activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+      dispatch: PropTypes.func,
+      fetchData: PropTypes.func,
+      tree: PropTypes.array,
+      handleEntityClick: PropTypes.func,
+      children: PropTypes.node
+    }
+  }
 
   state = {
     open: false,
@@ -110,9 +132,4 @@ export default class Selector extends Component {
       </Dropdown>
     )
   }
-}
-
-Selector.contextTypes = {
-  currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(List)
 }
