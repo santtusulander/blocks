@@ -63,6 +63,18 @@ class AsperaNotification extends React.Component {
               <IconInfo />
               <FormattedMessage id="portal.aspera.connect.installer.outdated"/>
             </span>
+            <div className="pull-right">
+              <ButtonToolbar>
+                <Button className="btn-secondary" onClick={this.props.handleClose}>
+                  <FormattedMessage id="portal.aspera.connect.installer.cancel"/>
+                </Button>
+                <Link to={ASPERA_DOWNLOAD_URL} className="download-btn" target="_blank">
+                  <Button className="btn-secondary">
+                      <FormattedMessage id="portal.aspera.connect.installer.download"/>
+                  </Button>
+                </Link>
+              </ButtonToolbar>
+            </div>
           </div>
         )
 
