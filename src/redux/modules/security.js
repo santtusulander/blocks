@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH } from '../util'
+import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH, PAGINATION_MOCK } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_SSL_CERTIFICATE_FETCH = 'SECURITY_SSL_CERTIFICATE_FETCH'
@@ -170,7 +170,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
     return Promise.resolve([])
   }
 
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, {params: {page_size: -1}})
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, PAGINATION_MOCK)
     .then(resp => resp.data.data.map(certificate => {
       return {
         group,
