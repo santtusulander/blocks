@@ -99,7 +99,7 @@ class StorageFormContainer extends React.Component {
         this.props.onCancel()
       }).catch(resp => {
 
-        throw new SubmissionError({'_error': resp.error.data.message})
+        throw new SubmissionError({'_error': resp.data.message})
 
       })
   }
