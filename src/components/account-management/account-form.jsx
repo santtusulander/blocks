@@ -92,13 +92,13 @@ class AccountForm extends React.Component {
     let providerTypeLabel = ''
     const { accountType, providerTypes, serviceOptions, invalid, submitting,
             initialValues: { accountBrand }, show, onCancel } = this.props
-    const isEditting = this.props.account.get('name')
-    const title = isEditting
+    const isEditing = this.props.account.get('name')
+    const title = isEditing
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
-    const subTitle = isEditting ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
+    const subTitle = isEditing ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
 
-    const submitButtonLabel = isEditting
+    const submitButtonLabel = isEditing
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
