@@ -2,7 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
-import {BASE_URL_AAA, mapReducers, parseResponseData} from '../util'
+import { BASE_URL_AAA, PAGINATION_MOCK, mapReducers, parseResponseData } from '../util'
 import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
 
 import {
@@ -400,12 +400,12 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
     query = `?brand_id=${brandId}`
   }
 
-  return axios.get(`${BASE_URL_AAA}/users${query}`)
+  return axios.get(`${BASE_URL_AAA}/users${query}`, PAGINATION_MOCK)
     .then(parseResponseData)
 })
 
 export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
-  return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`)
+  return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`, PAGINATION_MOCK)
     .then(parseResponseData)
   ))
   .then(allUsers => fromJS(allUsers).flatten(true))
