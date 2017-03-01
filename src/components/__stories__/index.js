@@ -45,5 +45,3 @@ import './storage/storage-form.js'
 import './storage/file-upload-status-container'
 import './storage/file-upload-status-item'
 import './button-dropdown'
-
->>>>>>> 69bf3c1eeda50756d4cdf8a3c4d3e77720c41c43
