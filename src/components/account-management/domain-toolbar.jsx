@@ -29,7 +29,7 @@ const DomainToolbar = ({ activeDomain, changeActiveDomain, domains, onAddDomain,
         <DomainSelector
           id="domain-selector"
           items={sortedDomains.map(domain => [domain.id, domain.id])}
-          onItemClick={changeActiveDomain}
+          handleEntityClick={changeActiveDomain}
           searchValue={searchValue}
           onSearch={searchFunc}>
             <div className="dropdown-toggle header-toggle">

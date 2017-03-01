@@ -4,10 +4,12 @@ import { Map, List } from 'immutable'
 
 import ToggleElement from '../global-account-selector/toggle-element'
 
+import autoClose from '../../decorators/select-auto-close'
+
 import SelectorItems from './menu-items'
 import SelectorHeader from './menu-header'
 
-export default class DrillableMenu extends Component {
+class DrillableMenu extends Component {
 
   static get displayName() {
     return 'DrillableMenu'
@@ -32,7 +34,6 @@ export default class DrillableMenu extends Component {
   }
 
   state = {
-    open: false,
     activeNode: this.props.activeNode,
     search: ''
   }
@@ -56,7 +57,7 @@ export default class DrillableMenu extends Component {
   }
 
   handleCaretClick = (fetchChildren, nodeId) => {
-    this.props.dispatch(fetchChildren())
+    fetchChildren(this.props.dispatch)
       .then(() => this.changeActiveNode(nodeId))
   }
 
@@ -64,7 +65,10 @@ export default class DrillableMenu extends Component {
     this.setState({ activeNode, search: '' })
   }
 
-  toggleMenu = () => this.setState({ open: !this.state.open, search: '' })
+  toggleMenu = () => {
+    this.props.toggle()
+    this.setState({ search: '' })
+  }
 
   findActiveNode = (tree = [], parentNodeId) => {
 
@@ -122,7 +126,7 @@ export default class DrillableMenu extends Component {
   }
 
   render() {
-    const { props: { children }, state: { open } } = this
+    const { props: { children, open } } = this
     return (
       <Dropdown id="" open={open} onToggle={() => {/*noop*/}} className="selector-component">
         <ToggleElement bsRole="toggle" toggle={this.toggleMenu}>
@@ -133,3 +137,5 @@ export default class DrillableMenu extends Component {
     )
   }
 }
+
+export default autoClose(DrillableMenu)

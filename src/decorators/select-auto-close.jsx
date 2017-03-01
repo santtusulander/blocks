@@ -13,6 +13,7 @@ export default function(WrappedSelect) {
       this.state = {
         open: false
       }
+      
       this.close = this.close.bind(this)
       this.handleClick = this.handleClick.bind(this)
     }
@@ -47,8 +48,8 @@ export default function(WrappedSelect) {
       let newProps = {}
       if (this.props.open === undefined) {
         newProps.open = this.state.open
-        newProps.onItemClick = value => {
-          this.props.onItemClick(value)
+        newProps.handleEntityClick = value => {
+          this.props.handleEntityClick(value)
           this.close()
         }
       }
@@ -62,7 +63,7 @@ export default function(WrappedSelect) {
   AutoClose.displayName = WrappedSelect.displayName ? `autoClose(${WrappedSelect.displayName})` : 'AutoClose'
   AutoClose.propTypes = {
     close: PropTypes.func,
-    onItemClick: PropTypes.func,
+    handleEntityClick: PropTypes.func,
     open: PropTypes.bool,
     toggle: PropTypes.func
   }
