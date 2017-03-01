@@ -3,7 +3,7 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_CIS_SOUTH, buildReduxId } from '../../../util'
+import { BASE_URL_CIS_NORTH, buildReduxId } from '../../../util'
 
 const mock = {
   "estimated_usage": 999999,
