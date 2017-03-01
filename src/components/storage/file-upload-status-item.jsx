@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { ProgressBar, Button } from 'react-bootstrap'
 import TruncatedTitle from '../truncated-title'
+import IconFolder from '../icons/icon-folder'
 import IconClose from '../icons/icon-close'
 import IconFile from '../icons/icon-file'
 
@@ -9,7 +10,7 @@ const FileUploadStatusItem = ({name, progress, type}) => {
     <div className='file-upload-status-item'>
       <div className='file-upload-status-type-icon'>
         {(type === 'file') && <IconFile />}
-        {(type === 'directory') && <IconFile />}
+        {(type === 'directory') && <IconFolder />}
       </div>
       <div className='file-update-status-item-info'>
         <TruncatedTitle className='file-upload-status-item-name' content={name} />
