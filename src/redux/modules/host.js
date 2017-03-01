@@ -211,15 +211,12 @@ export const fetchHost = createAction(HOST_FETCHED, (brand, account, group, id) 
 
 export const fetchHosts = createAction(HOST_FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
-  .then(parseResponseData);
+    .then(resp => resp.data.data);
 })
 
 export const fetchConfiguredHostNames = createAction(HOST_NAMES_FETCHED_ALL, (brand, account, group) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts`, PAGINATION_MOCK)
-    .then(action => Promise.all(action.data.map(
-      property => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}`)
-    )))
-    .then(resp => resp.map(property => getConfiguredName(Immutable.fromJS(property.data))));
+    .then(resp => resp.data.data.map(property => getConfiguredName(Immutable.fromJS(property))))
 })
 
 export const updateHost = createAction(HOST_UPDATED, (brand, account, group, id, host) => {

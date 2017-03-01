@@ -88,14 +88,11 @@ class NetworkFormContainer extends React.Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
+      .then(() => {
         // Close modal
         this.props.onCancel();
+      }).catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
       })
   }
 
@@ -111,18 +108,15 @@ class NetworkFormContainer extends React.Component {
     }
 
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
+      .then(() => {
         // Unselect network item
         if (this.props.selectedEntityId == this.networkId) {
           this.props.handleSelectedEntity(this.networkId)
         }
         // Close modal
         this.props.onCancel()
+      }).catch(resp => {
+        throw new SubmissionError({ _error: resp.data.message })
       })
   }
 
