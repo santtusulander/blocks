@@ -10,7 +10,7 @@ import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidTextField, isValidIPv4Address, isInt } from '../../../util/validators'
+import { isValidTextField, isValidIP, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
 import { MODIFY_POD } from '../../../constants/permissions'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
@@ -18,7 +18,7 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 const validate = ({ bgp_as_name, bgp_router_ip }) => {
   const conditions = {
     bgp_router_ip: {
-      condition: !isValidIPv4Address(bgp_router_ip),
+      condition: !isValidIP(bgp_router_ip),
       errorText: <FormattedMessage id="portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.validation.text"/>
     },
     bgp_as_name: {
