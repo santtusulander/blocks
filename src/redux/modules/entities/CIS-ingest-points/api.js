@@ -29,7 +29,7 @@ const mockArray = [
 
 
 const baseUrl = ({ group, id }) => {
-  return `${BASE_URL_CIS_SOUTH}/ingest_points/${id}?group_id=${group}`
+  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}`
 }
 
 /* We only need profile_id -> set entity name to workflowsDummy so workflow doesn't go into redux */
