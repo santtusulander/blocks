@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { BASE_URL_NORTH }  from '../../util.js'
+import { BASE_URL_NORTH, PAGINATION_MOCK }  from '../../util.js'
 
 /* CRUD OPERATIONS FOR DNS Resource Records */
 
 export const fetchAll = ( zone ) => {
-  return axios.get(`${BASE_URL_NORTH}/brands/udn/zones/${zone}/rr?format=detailed`)
+  return axios.get(`${BASE_URL_NORTH}/brands/udn/zones/${zone}/rr?format=detailed`, PAGINATION_MOCK)
     .then( ({data})  => ({ data, zone }))
 }
 
