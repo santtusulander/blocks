@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage  } from 'react-intl'
 import { connect } from 'react-redux'
-import { Map, fromJS } from 'immutable'
+import { Map, fromJS, List } from 'immutable'
 
 import SidePanel from '../../../components/side-panel'
 import ChargeNumbersForm from '../../../components/account-management/charge-numbers/forms/add-charge-numbers-form'
@@ -76,6 +76,7 @@ AddChargeNumbersModal.propTypes = {
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
   onSubmit: PropTypes.func,
+  regionsInfo: PropTypes.instanceOf(List),
   servicesInfo: PropTypes.object,
   show: PropTypes.bool
 }
