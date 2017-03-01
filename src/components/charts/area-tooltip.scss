@@ -37,26 +37,51 @@
   }
 }
 
-.legend-icon {
-  &.http {
-    color: $pale-blue;
-  }
-
-  &.https {
-    color: $green;
-  }
-
-  &.comparison_http {
-    color: $purple;
-  }
-
-  &.comparison_https {
-    color: $yellow;
-  }
-}
-
 .bar-chart-legend {
   @extend %chart-legend;
   top: 0;
   right: 0;
+}
+
+/**
+ * Color setting for stacked area chart
+ */
+
+.two-stacked-comparison {
+  .legend-icon {
+
+    &.comparison_http {
+      color: $purple;
+    }
+
+    &.comparison_https {
+      color: $yellow;
+    }
+  }
+}
+
+.stacked,
+.non-stacked,
+.two-stacked-comparison {
+  .legend-icon {
+    &.http {
+      color: $pale-blue;
+    }
+
+    &.https {
+      color: $gradient-teal;
+    }
+  }
+}
+
+.comparison {
+  .legend-icon {
+    &.http {
+      color: $yellow;
+    }
+
+    &.comparison_http {
+      color: $pale-blue;
+    }
+  }
 }

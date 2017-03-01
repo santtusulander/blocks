@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react'
 
 import { formatBitsPerSecond, formatUnixTimestamp} from '../../util/helpers'
-
+import classNames from 'classnames'
 import './area-tooltip.scss'
 
 /* eslint-disable react/no-multi-comp  */
-const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond }) => {
+const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
   const currentPayload = payload.filter( ({dataKey}) => !dataKey.includes('comparison_'))
   const comparisonPayload = payload.filter( ({dataKey}) => dataKey.includes('comparison_'))
 
   const normalPayload = comparisonPayload.length === 1 ? [...comparisonPayload, ...currentPayload] : currentPayload;   // combine payload if they're 1:1 comparison
   return (
-    <div className="area-chart-tooltip">
+    <div className={classNames('area-chart-tooltip', className)}>
       <div className="normal-data">
         <TooltipDataset
           iconClass={iconClass}
@@ -37,6 +37,7 @@ const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSe
 AreaTooltip.displayName = 'AreaTooltip'
 
 AreaTooltip.propTypes = {
+  className: PropTypes.string,
   iconClass: PropTypes.func,
   payload: PropTypes.array,
   valueFormatter: PropTypes.func

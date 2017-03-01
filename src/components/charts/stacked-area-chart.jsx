@@ -6,6 +6,8 @@ import { orderBy } from 'lodash'
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
 import StackAreaCustomTick from './stacked-area-chart-tick'
+
+import { black } from '../../constants/colors'
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
 
 
@@ -37,6 +39,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
 
   let dateFormat = "MM/DD"
   const customLegendAreas = orderBy(areas, 'stackId', 'asc')
+  const chartClassName = getChartClassName(areas)
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
 
@@ -61,7 +64,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
     <div className="stacked-area-chart-container">
       <span id="stacked-area-chart-label" className="stacked-area-chart-label">{chartLabel}</span>
       <ResponsiveContainer minHeight={300} aspect={2}>
-        <AreaChart data={data} margin={{left:50, bottom: 30, top: 100}} className={getChartClassName(areas)}>
+        <AreaChart data={data} margin={{left:50, bottom: 30, top: 100}} className={chartClassName}>
           { renderAreas(areas) }
 
           <XAxis dataKey='timestamp' ticks={getTicks(data)} tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)} tickLine={false} tick={{ transform: 'translate(0, 20)' }} axisLine={false} />
@@ -75,10 +78,12 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
 
           <Tooltip
             animationEasing="linear"
+            cursor={{stroke: black}}
             content={
               <AreaTooltip
                 iconClass={() => 'tooltip-class'}
                 valueFormatter={valueFormatter}
+                className={chartClassName}
               />
             }
           />
