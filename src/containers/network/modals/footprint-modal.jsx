@@ -92,7 +92,7 @@ class FootprintFormContainer extends React.Component {
     return this.props.onCreate(params)
       .then((response) => {
 
-        finalValues.id = Object.keys(response.entities.footprints)[0]
+        finalValues.id = Number(Object.keys(response.entities.footprints)[0])
         this.props.addFootprintToPod(finalValues)
 
         return this.props.onCancel()
