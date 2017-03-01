@@ -40,9 +40,9 @@ export const getGroups = (state, parents, levels, callBack = getGroupsForAccount
       ...group,
       nodeInfo: {
         headerSubtitle,
-        fetchChildren: () => Promise.all([
-          propertyActions.fetchAll({ ...parents, group: group.id })
-          // storageActions.fetchAll({ ...parents, group: group.id })
+        fetchChildren: (dispatch) => Promise.all([
+          dispatch(propertyActions.fetchAll({ ...parents, group: group.id }))
+          // dispatch(storageActions.fetchAll({ ...parents, group: group.id }))
         ]),
         entityType: 'group',
         parents,
@@ -113,7 +113,7 @@ export const getAccounts = (state, parents, levels, callBack = getAccountsForBra
       ...account,
       nodeInfo: {
         headerSubtitle,
-        fetchChildren: () => groupActions.fetchAll({ ...parents, account: account.id }),
+        fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: account.id })),
         entityType: 'account',
         parents,
         nodes
