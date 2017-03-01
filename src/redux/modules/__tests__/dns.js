@@ -81,7 +81,8 @@ describe('DNS Module', () => {
 
   it('should handle fetchedAllDomainsSuccess', () => {
     const newDomains = [ 'qq', 'ww', 'ee' ]
-    const newState = fetchedAllDomainsSuccess(state, { payload: [ 'qq', 'ww', 'ee' ] })
+    const payload = [ {dns_zone_id: 'qq'}, {dns_zone_id: 'ww'}, {dns_zone_id: 'ee'} ]
+    const newState = fetchedAllDomainsSuccess(state, { payload })
     const expectedState = state.merge({
       domains: fromJS(newDomains.map(domain => ({ id: domain }))),
       activeDomain: 'qq',
