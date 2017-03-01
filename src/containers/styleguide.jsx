@@ -106,7 +106,6 @@ import IconFolder        from '../components/icons/icon-folder'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, formatBitsPerSecond, separateUnit } from '../util/helpers'
-import { paleblue, black20, darkblue, tealgreen, yellow, purple } from '../constants/colors'
 import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
@@ -1332,7 +1331,7 @@ class Styleguide extends React.Component {
       }
     ]
 
-    const stackAreaChartWithComparisonAreas = [
+    const twoStackedAreaComparisonDatasets = [
       {
         "dataKey": "comparison_http",
         "name": "Comparison HTTP",
@@ -1359,22 +1358,6 @@ class Styleguide extends React.Component {
       }
     ]
 
-    const areaColors = {
-      http: {
-        background: paleblue
-      },
-      https: {
-        background: tealgreen
-      },
-      comparison_http: {
-        stroke: purple,
-        background: darkblue
-      },
-      comparison_https: {
-        stroke: yellow,
-        background: black20
-      }
-    }
     const AreaChartArea = [
       {
         "dataKey": "http",
@@ -1736,7 +1719,6 @@ class Styleguide extends React.Component {
                   areas={AreaChartArea}
                   data={stackAreaChartWithComparisonData}
                   valueFormatter={formatBitsPerSecond}
-                  areaColors={areaColors}
                 />
               </SectionContainer>
             </Row>
@@ -1751,7 +1733,6 @@ class Styleguide extends React.Component {
                   areas={stackAreaChartAreas}
                   data={stackAreaChartWithComparisonData}
                   valueFormatter={formatBitsPerSecond}
-                  areaColors={areaColors}
                 />
               </SectionContainer>
             </Row>
@@ -1765,7 +1746,6 @@ class Styleguide extends React.Component {
                   areas={ComparisonAreaChartAreas}
                   data={stackAreaChartWithComparisonData}
                   valueFormatter={formatBitsPerSecond}
-                  areaColors={areaColors}
                 />
               </SectionContainer>
             </Row>
@@ -1776,10 +1756,9 @@ class Styleguide extends React.Component {
               <SectionContainer className="analysis-by-time">
                 <StackedAreaChart
                   chartLabel="Oct 2016 Month To Date"
-                  areas={stackAreaChartWithComparisonAreas}
+                  areas={twoStackedAreaComparisonDatasets}
                   data={stackAreaChartWithComparisonData}
                   valueFormatter={formatBitsPerSecond}
-                  areaColors={areaColors}
                 />
               </SectionContainer>
             </Row>

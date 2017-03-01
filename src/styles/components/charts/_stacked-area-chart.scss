@@ -1,15 +1,80 @@
 @import '../../base/colors';
 
-.stacked-area-chart-container{
-  .recharts-area {
-      &.https_bits_per_second {
-        path.recharts-curve {
-          stroke: $green;
-        }
-        path.recharts-area-area {
-          fill: $green;
+.stacked-area-chart-container {
+  .stacked,
+  .non-stacked,
+  .two-stacked-comparison {
+    .http {
+      path {
+        &:last-child {
+          fill: $pale-blue;
         }
       }
+    }
+
+    .https {
+      path {
+        &:last-child {
+          fill: $gradient-teal;
+        }
+      }
+    }
+  }
+
+  .comparison {
+    .http {
+      path {
+        &:first-child {
+          stroke: $yellow;
+          stroke-width: 4px;
+        }
+
+        &:last-child {
+          fill: $dark-blue;
+        }
+      }
+    }
+
+    .comparison_http {
+      path {
+        &:first-child {
+          stroke: $pale-blue;
+          stroke-width: 2px;
+        }
+
+        &:last-child {
+          fill: $black-20;
+        }
+      }
+    }
+  }
+
+  .two-stacked-comparison {
+    .comparison_http {
+      path {
+        &:first-child {
+          stroke: $purple;
+          stroke-width: 2px;
+        }
+
+        &:last-child {
+          fill: $dark-blue;
+        }
+      }
+    }
+
+    .comparison_https {
+      path {
+        &:first-child {
+          stroke: $yellow;
+          stroke-width: 2px;
+        }
+
+        &:last-child {
+          fill: $black-20;
+        }
+      }
+    }
   }
 
   .stacked-area-chart-label {
