@@ -66,7 +66,7 @@ class AccountForm extends React.Component {
   }
 
   onSubmit(values, dispatch, { account, accountType, onSave }){
-    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER 
+    const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER
                      ? values.accountServices.toJS()
                      : getServicesFromIds(values.accountServicesIds)
 
@@ -92,12 +92,13 @@ class AccountForm extends React.Component {
     let providerTypeLabel = ''
     const { accountType, providerTypes, serviceOptions, invalid, submitting,
             initialValues: { accountBrand }, show, onCancel } = this.props
-    const title = this.props.account
+    const title = this.props.account.get('name')
       ? <FormattedMessage id="portal.account.manage.editAccount.title" />
       : <FormattedMessage id="portal.account.manage.newAccount.title" />
-    const subTitle = this.props.account ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
+    const isEditting = this.props.account.get('name')
+    const subTitle = isEditting ? `${accountBrand} / ${this.props.account.get('name')}` : 'udn'
 
-    const submitButtonLabel = this.props.account
+    const submitButtonLabel = isEditting
       ? <FormattedMessage id="portal.button.save" />
       : <FormattedMessage id="portal.button.add" />
 
