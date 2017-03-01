@@ -240,11 +240,11 @@ class ContentItems extends React.Component {
     if(this.getTier() === 'group'){
       const options = [
         {
-          label:'New Property',
+          label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
           handleClick: this.addItem
         },
         {
-          label:'New Storage',
+          label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
           handleClick: () => {
             this.setState({
               showStorageModal: true
