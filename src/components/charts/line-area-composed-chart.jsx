@@ -1,10 +1,11 @@
 import React, {PropTypes} from 'react';
 import { ComposedChart, Line, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 import d3 from 'd3'
+import classNames from 'classnames'
 
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
-import { black, green, darkblue, paleblue, darkgreen, grey } from '../../constants/colors'
+import { black } from '../../constants/colors'
 import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
@@ -40,13 +41,10 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
         {chartLabel}
       </span>
         <ResponsiveContainer minHeight={300} aspect={2}>
-          <ComposedChart data={data} margin={{left:50, bottom: 30, top: 100}}>
+          <ComposedChart data={data} margin={{left:50, bottom: 30, top: 100}} className={classNames({'comparison': isComparison}, {'non-stacked': !isComparison})}>
             <Area
               isAnimationActive={false}
-              stroke={green}
-              strokeWidth='2'
               fillOpacity={0.9}
-              fill={darkblue}
               dataKey="storage"
               stackId="1"
               name="Storage"
@@ -55,10 +53,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             { isComparison &&
               <Area
                 isAnimationActive={false}
-                stroke={paleblue}
-                strokeWidth='2'
                 fillOpacity={0.9}
-                fill={darkgreen}
                 dataKey="comparison_storage"
                 stackId="2"
                 name="Comparison Storage"
@@ -66,7 +61,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
               />
             }
             { haveEstimate &&
-              <Line dataKey="estimate" name="Estimate" className="estimate" stroke={grey} strokeWidth="2" dot={false} />
+              <Line dataKey="estimate" name="Estimate" className="estimate" dot={false} />
             }
             <XAxis dataKey='timestamp'
                    ticks={getTicks(data)}
@@ -85,8 +80,6 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             />
 
             <Tooltip
-              animationEasing="linear"
-              fill={black}
               cursor={{stroke: black}}
               content={
                 <AreaTooltip
