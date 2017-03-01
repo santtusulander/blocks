@@ -3,7 +3,7 @@ import axios from 'axios'
 import {handleActions} from 'redux-actions'
 import Immutable from 'immutable'
 
-import {BASE_URL_AAA, mapReducers} from '../util'
+import {BASE_URL_AAA, PAGINATION_MOCK, mapReducers} from '../util'
 import { getServicePermissions } from '../../util/services-helpers'
 
 const GROUP_CREATED = 'GROUP_CREATED'
@@ -150,7 +150,7 @@ export const fetchGroup = createAction(GROUP_FETCHED, (brand, account, id) => {
 })
 
 export const fetchGroups = createAction(GROUP_FETCHED_ALL, (brand, account) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
   .then((res) => {
     if(res) {
       return res.data;
