@@ -212,14 +212,8 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/
   const updateNode = ({ reduxId, parentId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
-    .catch(response => {
-      return Promise.reject(new SubmissionError({ _error: response.data.message }))
-    })
 
   const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
-    .catch(response => {
-      return Promise.reject(new SubmissionError({ _error: response.data.message }))
-    })
 
   return {
 
@@ -232,6 +226,10 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
           }
         )
       ).then(() => onCancel())
+
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
+      })
     },
 
     onDelete: nodes => {
@@ -240,6 +238,10 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
           ({ id }) => deleteNode(id)
         )
       ).then(() => onCancel())
+
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
+      })
     }
   }
 }
