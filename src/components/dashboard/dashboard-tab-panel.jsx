@@ -24,7 +24,6 @@ class DashboardTabPanel extends Component {
     const tabs = Children.toArray(children)
     const tabLength = tabs.length ? 12/tabs.length : 12
     const { activeTab } = this.state
-
     return (
       <div className={classNames(
         'dashboard-panel',
@@ -67,7 +66,7 @@ DashboardTabPanel.displayName = "DashboardPanel"
 DashboardTabPanel.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  defaultTab: PropTypes.string,
+  defaultTab: React.PropTypes.string,
   noPadding: PropTypes.bool,
   threeItemPerRow: PropTypes.bool
 }

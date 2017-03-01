@@ -329,16 +329,16 @@ export class Dashboard extends React.Component {
             </div>}
         </DashboardPanel>
 
-        <DashboardTabPanel threeItemPerRow={hasStorage} defaultTab={'OS'}>
-          <DashboardTabContent label={'OS'}>
+        <DashboardTabPanel threeItemPerRow={hasStorage} defaultTab={intl.formatMessage({id: "portal.dashboard.tab.os"})}>
+          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.os"})}>
             <h2>OS</h2>
           </DashboardTabContent>
 
-          <DashboardTabContent label={'BROWSER'}>
+          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.browser"})}>
             <h2>BROWSER</h2>
           </DashboardTabContent>
 
-          <DashboardTabContent label={'DEVICE'}>
+          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.device"})}>
             <h2>DEVICE</h2>
           </DashboardTabContent>
         </DashboardTabPanel>

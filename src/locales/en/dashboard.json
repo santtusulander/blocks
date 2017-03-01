@@ -11,5 +11,8 @@
   "portal.dashboard.connectionsPerSec.title": "Connections / sec",
   "portal.dashboard.avgCacheHitRate.title": "Avg Cache Hit Rate",
 
-  "portal.dashboard.selectAccount.text": "Please select an account{br}from top left to see dashboard"
+  "portal.dashboard.selectAccount.text": "Please select an account{br}from top left to see dashboard",
+  "portal.dashboard.tab.os":"OS",
+  "portal.dashboard.tab.browser":"BROWSER",
+  "portal.dashboard.tab.device":"DEVICE"
 }
