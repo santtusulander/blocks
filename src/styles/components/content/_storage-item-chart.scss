@@ -99,6 +99,7 @@ $storage-unit-horizontal-margin: 10px;
         font-size: 24px;
         font-weight: bold;
         line-height: 1.1em;
+        text-overflow: ellipsis;
         white-space: nowrap;
 
         .dark-theme & {
