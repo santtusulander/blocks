@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import { checkForErrors } from '../../../util/helpers'
 
 import { fetchASOverview } from '../../../util/network-helpers'
-import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIPv4Address, isInvalidIPListWithoutSubnet } from '../../../util/validators'
+import { isValidFootprintTextField, isInt, isValidProviderWeight, isValidIP } from '../../../util/validators'
 
 import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_TEXT_FIELD_MAX_LEN
@@ -65,7 +65,7 @@ const validate = (values) => {
       errorText: <FormattedMessage id="portal.network.podForm.provider_weight.range.error" />
     },
     UIIpList: {
-      condition: isInvalidIPListWithoutSubnet(IPList),
+      condition: !isValidIP(IPList),
       errorText: <FormattedMessage id="portal.network.podForm.ipList.invalid.error" />
     }
   }
@@ -126,7 +126,7 @@ const asyncValidate = ({ UILocalAS }) => {
 }
 
 const validateCIDRToken = (item) => {
-  return item.label && isValidIPv4Address(item.label, false, true)
+  return item.label && isValidIP(item.label)
 }
 
 /*eslint-disable react/no-multi-comp */

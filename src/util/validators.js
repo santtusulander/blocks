@@ -47,25 +47,28 @@ export function isValidFloat(str) {
 
 
 /**
- * Check if valid IP list when subnet is banned
- * @param array
- * @returns {*}
+ * Check if valid IP or IP list when subnet mask is not allowed
+ * @param array or string
+ * @returns {boolean}
  */
-export function isInvalidIPListWithoutSubnet(addresses) {
-  const invalidAddresses = addresses.filter(address => !isValidIPv4Address(address, false, true))
-  return !!invalidAddresses.length
+export function isValidIP(addresses, IPversion = 4) {
+  if(Array.isArray(addresses)) {
+    const hasInvalidIP = addresses.some(address => !validator.isIP(address, IPversion))
+    return !hasInvalidIP
+  }
+  return !!addresses && validator.isIP(addresses, IPversion)
 }
+
 
 /**
  * Check if valid IPv4 address
  * @param address
  * @returns {*}
  */
-export function isValidIPv4Address(address, onlyCIDR, subnetIsBanned) {
-
+export function isValidIPv4Address(address, onlyCIDR) {
   const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  if(!subnetIsBanned && (splitAddr.length > 1 || onlyCIDR) ) {
+  if(splitAddr.length > 1 || onlyCIDR) {
     const cidr = Number(splitAddr[1])
     return validator.isIP(splitAddr[0], 4) && ( (cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32 )
   }
