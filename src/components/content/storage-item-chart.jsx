@@ -8,7 +8,6 @@ import { FormattedMessage } from 'react-intl'
 import StorageItemTooltip from './storage-item-tooltip'
 import IconConfiguration from '../icons/icon-configuration'
 import IconChart from '../icons/icon-chart'
-import TruncatedTitle  from '../truncated-title'
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 const FORMAT = '0,0.0'
@@ -108,7 +107,7 @@ const StorageItemChart = (
           </div>
 
           <div className="storage-item-chart-info">
-            <TruncatedTitle className="title" content={name} />
+            <div className="title" >{name}</div>
             <div className="usage">
               <span className="usage-value">
                 {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).value}
