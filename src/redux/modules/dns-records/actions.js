@@ -103,6 +103,7 @@ export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DE
     .then((response) => {
       let responseData = response.data.data
 
+      // UDNP-2883:
       // Since records data model that comes from back-end was changed - convert it to previous
       // structure to avoid lot of refactoring/fixes (it can be done in the future)
       responseData.forEach((item) => {
