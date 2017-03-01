@@ -2,7 +2,7 @@ import {createAction, handleActions} from 'redux-actions'
 import axios from 'axios'
 import Immutable from 'immutable'
 
-import { BASE_URL_AAA, mapReducers, parseResponseData } from '../util'
+import { BASE_URL_AAA, PAGINATION_MOCK, mapReducers, parseResponseData } from '../util'
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED'
 const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
@@ -149,7 +149,7 @@ export const fetchAccount = createAction(ACCOUNT_FETCHED, (brand, id) => {
 })
 
 export const fetchAccounts = createAction(ACCOUNT_FETCHED_ALL, (brand) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts`, PAGINATION_MOCK)
   .then(parseResponseData);
 })
 

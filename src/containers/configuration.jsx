@@ -18,7 +18,8 @@ import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
-import { deploymentModes } from '../constants/configuration'
+import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
+import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -62,6 +63,7 @@ export class Configuration extends React.Component {
     this.togglePublishModal = this.togglePublishModal.bind(this)
     this.toggleVersionModal = this.toggleVersionModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.hasSecurityServicePermission = this.hasSecurityServicePermission.bind(this)
     this.notificationTimeout = null
   }
   componentWillMount() {
@@ -94,6 +96,10 @@ export class Configuration extends React.Component {
 
   isReadOnly() {
     return !checkPermissions(this.props.roles, this.props.currentUser, MODIFY_PROPERTY)
+  }
+
+  hasSecurityServicePermission() {
+    return this.props.servicePermissions.contains(VIEW_CONFIGURATION_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -341,11 +347,21 @@ export class Configuration extends React.Component {
             <FormattedMessage id="portal.configuration.policies.text"/>
             </Link>
           </li>
-          <li data-eventKey='security'>
-            <Link to={baseUrl + '/security'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.security.text"/>
-            </Link>
-          </li>
+          {this.hasSecurityServicePermission() &&
+            <li data-eventKey='security'>
+              <Link to={baseUrl + '/security'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.security.text"/>
+              </Link>
+            </li>
+          }
+
+          { this.props.hasVODSupport &&
+            <li data-eventKey='streaming'>
+              <Link to={baseUrl + '/streaming'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.streaming.text"/>
+              </Link>
+            </li>
+          }
 
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
@@ -457,6 +473,7 @@ Configuration.propTypes = {
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
+  hasVODSupport: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
   notification: React.PropTypes.string,
@@ -467,15 +484,28 @@ Configuration.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   securityActions: React.PropTypes.object,
+  servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
   activeHost: Immutable.Map(),
+  servicePermissions: Immutable.List(),
   sslCertificates: Immutable.List()
 }
 
 function mapStateToProps(state) {
+  const { group } = state
+  const activeGroup = group.get('activeGroup') || Immutable.Map()
+  const enabledServices = activeGroup.get('services') || Immutable.List()
+  let hasVODSupport = false
+
+  enabledServices.forEach((service) => {
+    if (service.get('service_id') === VOD_SERVICE_ID) {
+      hasVODSupport = true
+    }
+  })
+
   return {
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
@@ -485,6 +515,8 @@ function mapStateToProps(state) {
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
+    hasVODSupport: hasVODSupport,
+    servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
   };
 }

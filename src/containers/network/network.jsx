@@ -724,7 +724,7 @@ class Network extends React.Component {
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
               creationPermission={PERMISSIONS.CREATE_GROUP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.VIEW_GROUP)}
             />
 
             <EntityList
@@ -743,7 +743,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
               contentTextGenerator={entity => entity.get('description')}
               creationPermission={PERMISSIONS.CREATE_NETWORK}
-              viewAllowed={networkPermissions.viewAllowed}
+              viewPermission={PERMISSIONS.VIEW_NETWORK}
             />
 
             <EntityList
@@ -762,7 +762,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
               contentTextGenerator={entity => entity.get('id')}
               creationPermission={PERMISSIONS.CREATE_POP}
-              viewAllowed={popPermissions.viewAllowed}
+              viewPermission={PERMISSIONS.VIEW_POP}
             />
 
             <EntityList
@@ -783,7 +783,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
               contentTextGenerator={this.podContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_POD}
-              viewAllowed={podPermissions.viewAllowed}
+              viewPermission={PERMISSIONS.VIEW_POD}
             />
 
             <EntityList
@@ -804,7 +804,7 @@ class Network extends React.Component {
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
               contentTextGenerator={this.nodeContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_NODE}
-              viewAllowed={nodePermissions.viewAllowed}
+              viewPermission={PERMISSIONS.VIEW_NODE}
             />
           </div>
         </PageContainer>
@@ -1012,8 +1012,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     uiActions: uiActions,
 
     fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
-    fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
-    fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
+    fetchNetworks: (params) => params.group && dispatch(networkActions.fetchAll(params)),
+    fetchPops: (params) => params.network && dispatch(popActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }

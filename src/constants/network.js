@@ -42,10 +42,10 @@ export const NODE_TYPE_OPTIONS = [
 ]
 
 export const NODE_ENVIRONMENT_OPTIONS = [
-  { value: 'dev', cacheValue: 'cdx-dev', label: 'Development'  },
-  { value: 'test', cacheValue: 'cdx-test', label: 'Testing' },
-  { value: 'staging', cacheValue: 'cdx-stag', label: 'Staging' },
-  { value: 'production', cacheValue: 'cdx', label: 'Production' }
+  { value: 'cdx-dev', cacheValue: 'cdx-dev', label: 'Development'  },
+  { value: 'cdx-test', cacheValue: 'cdx-test', label: 'Testing' },
+  { value: 'cdx-stag', cacheValue: 'cdx-stag', label: 'Staging' },
+  { value: 'cdx', cacheValue: 'cdx', label: 'Production' }
 ]
 
 export const NODE_ROLE_OPTIONS = [
@@ -67,7 +67,7 @@ export const NODE_CLOUD_DRIVER_OPTIONS = [
 
 export const NODE_TYPE_DEFAULT = 'udn_core'
 export const NODE_ROLE_DEFAULT = 'cache'
-export const NODE_ENVIRONMENT_DEFAULT = 'production'
+export const NODE_ENVIRONMENT_DEFAULT = 'cdx'
 export const NODE_CLOUD_DRIVER_DEFAULT = 6
 
 export const FOOTPRINT_UDN_TYPES = [
@@ -76,6 +76,10 @@ export const FOOTPRINT_UDN_TYPES = [
   { value: 'off_net', label: 'Off Net' }
 ]
 
+export const FOOTPRINT_FILE_TYPES = ['text/csv']
+export const FOOTPRINT_CSV_TEMPLATE_PATH = "/assets/template.csv"
+export const FOOTPRINT_FIELDS_NAME = ['name', 'description', 'data_type', 'value', 'udn_type']
+export const FOOTPRINT_UND_TYPES_VALUES = ['billing_asn', 'on_net', 'off_net']
 export const FOOTPRINT_DEFAULT_DATA_TYPE = 'ipv4cidr'
 
 export const DISCOVERY_METHOD_TYPE = Immutable.fromJS([

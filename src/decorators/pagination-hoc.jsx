@@ -99,7 +99,7 @@ export const withPagination = (WrappedComponent, config = {}) => {
       return Map([
         [
           'sort_order',
-          (v) => v === 'asc' ? -1 : v === 'desc' ? 1 : v === -1 ? 'asc' : v === 1 ? 'desc' : v
+          (v) => v === 'asc' ? 1 : v === 'desc' ? -1 : v === 1 ? 'asc' : v === -1 ? 'desc' : v
         ],
         [
           'fields',

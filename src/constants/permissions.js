@@ -50,6 +50,8 @@ export const MODIFY_ACCOUNTS = 'MODIFY_ACCOUNTS'
 // AAA Group Permissions
 export const CREATE_GROUP = 'CREATE_GROUP'
 export const MODIFY_GROUP = 'MODIFY_GROUP'
+export const DELETE_GROUP = 'DELETE_GROUP'
+export const VIEW_GROUP = 'VIEW_GROUP'
 
 // AAA Users Permissions
 export const CREATE_USER = 'CREATE_USER'

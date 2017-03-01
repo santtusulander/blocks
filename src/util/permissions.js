@@ -88,6 +88,10 @@ permissionMapping[PERMISSIONS.CREATE_GROUP] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'create', 'allowed'])
 permissionMapping[PERMISSIONS.MODIFY_GROUP] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'delete', 'allowed'])
+permissionMapping[PERMISSIONS.VIEW_GROUP] =
+  (role) => role.getIn(['permissions', 'aaa', 'groups', 'show', 'allowed'])
 
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =

@@ -7,10 +7,12 @@ import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ButtonDisableTooltip from '../../../components/button-disable-tooltip'
 import MultilineTextFieldError from '../../shared/forms/multiline-text-field-error'
+import IsAllowed from '../../is-allowed'
 
 import { checkForErrors } from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
+import { DELETE_NETWORK, MODIFY_NETWORK } from '../../../constants/permissions'
 import { FORM_DESCRIPTION_FIELD_MIN_LEN, FORM_DESCRIPTION_FIELD_MAX_LEN } from '../../../constants/common'
 
 const validate = ({ name, description }) => {
@@ -35,8 +37,7 @@ const validate = ({ name, description }) => {
 }
 
 const NetworkForm = ({
-  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete,
-  networkPermissions: { deleteAllowed, modifyAllowed }
+  error, submitting, handleSubmit, intl, initialValues, isFetching, invalid, hasPops, onCancel, onSave, onDelete
 }) => {
   const deleteButtonDisabled = isFetching || hasPops
   //simple way to check if editing -> no need to pass 'edit' - prop
@@ -72,7 +73,8 @@ const NetworkForm = ({
         label={<FormattedMessage id="portal.common.description" />} />
 
       <FormFooterButtons>
-        { edit && deleteAllowed &&
+        { edit &&
+          <IsAllowed to={DELETE_NETWORK}>
           <ButtonDisableTooltip
             id="delete-btn"
             className="btn-danger pull-left"
@@ -87,6 +89,7 @@ const NetworkForm = ({
             }
             <FormattedMessage id="portal.button.delete"/>
           </ButtonDisableTooltip>
+          </IsAllowed>
         }
         <Button
           className="btn-secondary"
@@ -94,14 +97,14 @@ const NetworkForm = ({
           <FormattedMessage id="portal.button.cancel"/>
         </Button>
 
-        { modifyAllowed &&
+        <IsAllowed to={MODIFY_NETWORK}>
           <Button
             type="submit"
             bsStyle="primary"
             disabled={invalid || submitting}>
             {actionButtonTitle}
           </Button>
-        }
+        </IsAllowed>
       </FormFooterButtons>
     </form>
   )

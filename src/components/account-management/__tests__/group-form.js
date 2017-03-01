@@ -21,6 +21,7 @@ describe('GroupForm', () => {
       locationPermissions = {createAllowed: true, deleteAllowed: true, modifyAllowed: true, ...permissions}
       props = {
         accountIsServiceProviderType: false,
+        accountIsContentProviderType: true,
         handleSubmit: jest.genMockFunction(),
         intl: intlMaker(),
         locationPermissions

@@ -7,6 +7,8 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          FORM_FOOTPRINT_DESCRIPTION_FIELD_MIN_LEN,
          FORM_FOOTPRINT_DESCRIPTION_FIELD_MAX_LEN } from '../constants/common'
 
+import { STORAGE_ESTIMATE_MIN } from '../constants/storage'
+
 import { ASN_MIN,
          ASN_MAX,
          ASN_RESERVED,
@@ -295,4 +297,43 @@ export function isValidProviderWeight(str) {
   }
   const providerWeight = parseFloat(str)
   return providerWeight >= POD_PROVIDER_WEIGHT_MIN && providerWeight <= POD_PROVIDER_WEIGHT_MAX
+}
+
+/**
+ * Check if valid charge number
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidChargeNumber(str) {
+  return matchesRegexp(str, /^C-[0-9]{8}$/)
+}
+
+/**
+ * Check if estimated usage
+ * @param  str
+ * @return {Boolean}
+ */
+export function isValidEstimatedUsage(str) {
+  if (!isInt(str)) {
+    return false
+  }
+
+  return (parseInt(str) >= STORAGE_ESTIMATE_MIN)
+}
+
+/**
+ * Check if valid host-name
+ * @param hostName
+ * @returns {boolean|*}
+ */
+export function isValidStorageName(storageName) {
+  /* Validation rules:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-zA-Z0-9-];
+    - doesn't begin or end with a hyphen;
+  */
+  if (storageName.length > 255) return false
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*?$/)
 }

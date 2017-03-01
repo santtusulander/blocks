@@ -5,13 +5,14 @@ import { Button } from 'react-bootstrap'
 
 import FieldFormGroup from '../../form/field-form-group'
 import FormFooterButtons from '../../form/form-footer-buttons'
-
+import IsAllowed from '../../is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
 import { checkForErrors } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isValidIPv4Address, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
+import { MODIFY_POD } from '../../../constants/permissions'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
 const validate = ({ bgp_as_name, bgp_router_ip }) => {
@@ -205,12 +206,14 @@ class RoutingDaemonForm extends React.Component {
             <FormattedMessage id="portal.button.cancel"/>
           </Button>
 
-          <Button
-            type="submit"
-            bsStyle="primary"
-            disabled={(invalid || submitting || isFetchingBGPName || (!dirty) || (!!errorMsgASNum))}>
-            <FormattedMessage id="portal.button.save"/>
-          </Button>
+          <IsAllowed to={MODIFY_POD}>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              disabled={(invalid || submitting || isFetchingBGPName || (!dirty) || (!!errorMsgASNum))}>
+              <FormattedMessage id="portal.button.save"/>
+            </Button>
+          </IsAllowed>
         </FormFooterButtons>
       </form>
     )

@@ -15,15 +15,14 @@ const intlMaker = () => {
 describe('FootprintForm', () => {
   let subject, error, props = null
   let touched = false
-  let footprintPermissions = {}
   const onCancel = jest.fn()
   const onSave = jest.fn()
   const handleSubmit = jest.fn()
 
   beforeEach(() => {
-    subject = (permissions) => {
-      footprintPermissions = {deleteAllowed: true, modifyAllowed: true, ...permissions}
+    subject = (editing = false, addFootprintMethod = 'manual') => {
       props = {
+        addFootprintMethod,
         onCancel,
         onSave,
         handleSubmit,
@@ -36,8 +35,7 @@ describe('FootprintForm', () => {
           footPrintName: { touched, error, value: '' },
           footPrintDescription: { touched, error, value: '' },
           UDNType: { touched, error, value: '' }
-        },
-        footprintPermissions
+        }
       }
       return shallow(<FootprintForm {...props}/>)
     }
@@ -56,7 +54,19 @@ describe('FootprintForm', () => {
     ).toBeTruthy()
   })
 
-  it('should not have Submit button if no modify permission', () => {
-    expect(subject({modifyAllowed: false}).find('Button[type="submit"]').length).toBe(0);
+  it('should have 2 buttons on Add', () => {
+    expect(subject().find('Button').length).toBe(2)
+  })
+
+  it('should have 2 buttons on Edit', () => {
+    expect(subject(true).find('Button').length).toBe(2)
+  })
+
+  it('should not show file upload form when method is manual', () => {
+    expect(subject(true).find('.csv-upload').length).toBe(0)
+  })
+
+  it('should show file upload form when method is addfile', () => {
+    expect(subject(true, 'addfile').find('.csv-upload').length).toBe(1)
   })
 })

@@ -3,10 +3,10 @@ import { FormattedMessage } from 'react-intl'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import classNames from 'classnames'
 import TruncatedTitle from '../truncated-title'
-
+import IsAllowed from '../is-allowed'
 import IconConfiguration from '../icons/icon-configuration'
 
-const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, viewAllowed }) => {
+const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraClassName, viewPermission }) => {
 
   const handleEdit = e => {
     e.preventDefault()
@@ -38,7 +38,8 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
           <FormattedMessage id={`portal.network.item.status.${status}`} />
         </div>
       }
-      { viewAllowed &&
+
+      <IsAllowed to={viewPermission}>
         <ButtonToolbar>
           <Button
             bsStyle="primary"
@@ -47,7 +48,7 @@ const NetworkItem = ({ active, content, onEdit, onSelect, status, title, extraCl
             <IconConfiguration />
           </Button>
         </ButtonToolbar>
-      }
+      </IsAllowed>
     </div>
   )
 }
@@ -61,7 +62,7 @@ NetworkItem.propTypes = {
   onSelect: PropTypes.func,
   status: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  viewAllowed: PropTypes.bool
+  viewPermission: PropTypes.string
 }
 
 export default NetworkItem

@@ -62,7 +62,6 @@
 
 // Components
 // ==========
-
 @import 'components/account-sidebar';
 @import 'components/button-disable-tooltip';
 @import 'components/confirmation';
@@ -91,7 +90,6 @@
 @import 'components/typeahead';
 @import 'components/truncated-title';
 @import 'components/map';
-@import 'components/file-upload';
 // Support
 @import 'components/support/ticket-form';
 @import 'components/support/ticket-modal';
@@ -104,6 +102,8 @@
 @import 'components/account-management/user-list';
 @import 'components/account-management/groups';
 @import 'components/account-management/user-edit';
+@import 'components/account-management/charge-numbers';
+@import 'components/account-management/service-option-selector';
 // Analysis
 @import 'components/analysis/by-location';
 @import 'components/analysis/by-time';
@@ -112,7 +112,6 @@
 @import 'components/analysis/horizontal-bar';
 @import 'components/analysis/file-error';
 @import 'components/analysis/export-panel';
-@import 'components/analysis/contribution';
 //Charts
 @import 'components/charts/bar-chart';
 // Configuration
@@ -140,6 +139,11 @@
 @import 'components/network/entity-list';
 @import 'components/network/network-item';
 @import 'components/network/network-forms';
+@import 'components/network/csv-upload';
+
+// Storage
+@import 'components/storage/storage-forms';
+@import 'components/storage/aspera_connect';
 
 // Shared
 @import 'components/shared/action-items-container';

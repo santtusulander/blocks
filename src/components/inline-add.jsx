@@ -12,7 +12,7 @@ import { FormattedMessage } from 'react-intl'
 const getClassNames = (touched, error, className) =>
   classnames(className, { 'has-error': error && touched })
 
-const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMetaData }) =>
+const InlineAdd = ({ inputs, invalid, unmount, formValues, save, handleSubmit, errors, getMetaData }) =>
   <tr className="inline-add-row">
 
       {inputs.map((cell, index) =>
@@ -33,7 +33,7 @@ const InlineAdd = ({ inputs, invalid, unmount, formValues, save, errors, getMeta
 
           {index === inputs.length - 1 &&
           <ButtonToolbar className="pull-right">
-            <UDNButton disabled={invalid} onClick={() => save(formValues)}>
+            <UDNButton disabled={invalid} onClick={handleSubmit(() => save(formValues))}>
               <FormattedMessage id="portal.button.SAVE"/>
             </UDNButton>
             <UDNButton bsStyle="primary" onClick={unmount} icon={true}>

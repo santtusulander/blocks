@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react'
+import { findDOMNode } from 'react-dom'
 
 export default function(WrappedSelect) {
   class AutoClose extends Component {
@@ -23,7 +24,8 @@ export default function(WrappedSelect) {
     }
 
     handleClick(event) {
-      if (this.node && this.node.contains(event.target)) {
+      const element = findDOMNode(this)
+      if (element && element.contains(event.target)) {
         return
       }
       this.close()
@@ -46,17 +48,14 @@ export default function(WrappedSelect) {
       if (this.props.open || this.state.open) {
         if (this.props.close) {
           this.props.close()
-        } else {
-          this.setState({ open: false })
         }
+        this.setState({ open: false })
       }
     }
 
     render() {
       return (
-        <span className="select-auto-close" ref={(node) => {this.node = node}}>
-          <WrappedSelect {...this.props} onItemClick={this.onItemClick} toggle={this.onToggle}/>
-        </span>
+        <WrappedSelect {...this.props} open={this.state.open} onItemClick={this.onItemClick} toggle={this.onToggle}/>
       )
     }
   }

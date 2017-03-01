@@ -46,3 +46,14 @@ if (console) {
     }
   }
 }
+
+// global mock for localStorage
+localStorage = (() => {
+  let store = {}
+  return {
+    getItem: key => store[key] == null ? null : store[key],
+    setItem: (key, value) => { store[key] = value.toString() },
+    removeItem: (key) => { delete store[key] },
+    clear: () => { store = {} }
+  }
+})()

@@ -277,8 +277,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 value={ruleType}
                 onSelect={this.props.changeActiveRuleType}
                 options={[
-                  { label: 'Request', value: POLICY_TYPES.REQUEST },
-                  { label: 'Response', value: POLICY_TYPES.RESPONSE }
+                  { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
+                  { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
+                  { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
+                  { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
                 ]}
               />
             </FormGroup>

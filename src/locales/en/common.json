@@ -8,6 +8,8 @@
   "portal.common.button.ok": "OK",
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
+  "portal.common.button.enable": "Enable",
+  "portal.common.button.disable": "Disable",
   "portal.common.search.text": "Search",
   "portal.common.button.apply": "Apply",
   "portal.common.button.none": "None",

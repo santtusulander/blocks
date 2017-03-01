@@ -148,6 +148,11 @@
   "portal.network.footprintForm.CIRD.invalid.text": "You should remove all invalid IPV4 CIDR items",
   "portal.network.footprintForm.ASN.required.text": "At least one valid ASN is required",
   "portal.network.footprintForm.ASN.invalid.text": "You should remove all invalid ASN items",
+  "portal.network.footprintForm.file.label": "CSV File",
+  "portal.network.footprintForm.file.help.label": "CSV File",
+  "portal.network.footprintForm.file.help.text": "Adding to Footprint from a CSV file - What fields can I import? \n\nAll required fields shown in the upload template must be provided. The first row in your CSV file must contain the name of the field that is contained in that column. \n\nThe available fields are listed below: \nname, description, data_type, value, udn_type \n\ne.g. net1, Specific Network, ipv4cidr, '10.10.10.0/24,11.11.11.0/24', on_net_off_net",
+  "portal.network.footprintForm.file.download.text": "Download template",
+  "portal.network.footprintForm.file.invalid.text": "Couldn't add a Footprint. Not a valid CSV file.",
 
   "portal.network.locationForm.newLocation.title": "Add Location",
   "portal.network.locationForm.editLocation.title": "Edit Location",

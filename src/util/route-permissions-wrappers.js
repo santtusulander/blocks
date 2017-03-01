@@ -1,6 +1,7 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
+import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 
 const authSelector = state => state.user.get('currentUser')
@@ -13,6 +14,14 @@ const permissionChecker = (permission, store) => user => {
     user,
     permission
   )
+}
+
+const servicePermissionChecker = (permission) => permissions => {
+  if(!permission || !permissions || !permissions.size) {
+    return true
+  }
+
+  return permissions.contains(permission)
 }
 
 export const UserHasPermission = (permission, store) => UserAuthWrapper({
@@ -130,6 +139,20 @@ export const UserCanViewAccountDetail = (store) => {
     },
     wrapperDisplayName: 'UserCanViewAccountDetail',
     predicate: permissionChecker(PERMISSIONS.VIEW_ACCOUNT_DETAIL, store),
+    allowRedirectBack: false
+  })
+}
+
+export const CanViewConfigurationSecurity = (store) => {
+  return UserAuthWrapper({
+    authSelector: state => state.group.get('servicePermissions'),
+    failureRedirectPath: (state, ownProps) => {
+      const path = ownProps.location.pathname.replace(/\/security/, '')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'CanViewConfigurationSecurity',
+    predicate: servicePermissionChecker(VIEW_CONFIGURATION_SECURITY, store),
     allowRedirectBack: false
   })
 }
