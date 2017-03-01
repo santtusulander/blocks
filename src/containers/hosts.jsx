@@ -20,7 +20,8 @@ import checkPermissions from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-
+// TODO UNDP-2906
+// Remove this in scope of integration with redux
 const mockRedux = {
   get: function(entity) {
     switch (entity) {

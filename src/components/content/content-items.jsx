@@ -389,6 +389,8 @@ class ContentItems extends React.Component {
                     {storageContentItems.map(storage => {
                       const id = storage.get('id')
 
+                      // TODO UNDP-2906
+                      // Fix this in scope of integration with create/edit forms task, analytics
                       const itemProps = {
                         id,
                         name: storage.get('name'),
