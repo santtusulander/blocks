@@ -22,9 +22,10 @@ label {
 }
 
 .dark-theme {
-  input[disabled] {
+  input[disabled], textarea[disabled] {
     background-color: rgba($black, 0.1);
     user-select: none;
+    opacity: 0.6;
 
     &:active {
       color: $dt-text-color;
@@ -34,9 +35,10 @@ label {
 }
 
 .light-theme {
-  input[disabled] {
+  input[disabled], textarea[disabled] {
     color: rgba($lt-text-color, 0.2);
     user-select: none;
+    opacity: 0.6;
 
     &:active {
       box-shadow: 0 0 0 1px rgba($black, 0.1);

@@ -2,3 +2,4 @@
 **/__stories__/*
 **/__tests__/coverage/*
 webpack/*.js
+src/assets/js/*.js
