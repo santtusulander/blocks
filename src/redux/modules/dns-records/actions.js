@@ -3,7 +3,6 @@ import { fromJS } from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
 
 import { mapReducers } from '../../util'
-import { flatten } from '../../../util/helpers'
 
 export const DNS_RECORDS_CREATED = 'DNS_RECORDS_CREATED'
 export const DNS_RECORDS_RECEIVE_RESOURCES = 'DNS_RECORDS_RECEIVE_RESOURCES'
@@ -101,16 +100,20 @@ export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource,
 
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
   return dnsRecordsApi.fetchAll(zone)
-    .then(({ data }) => {
-      let recArray = []
+    .then((response) => {
+      let responseData = response.data.data
 
-      Object.keys(data).map(key => {
-        recArray.push( data[key] )
+      // UDNP-2883:
+      // Since records data model that comes from back-end was changed - convert it to previous
+      // structure to avoid lot of refactoring/fixes (it can be done in the future)
+      responseData.forEach((item) => {
+        Object.assign(item, item.entries[0])
+        delete item.entries
       })
 
-      return flatten(recArray).map( record => {
+      return responseData.map( record => {
         record.id = uniqid()
-        record.name = domainlessRecordName(zone, record.name)
+        record.name = domainlessRecordName(zone, record.dns_record_id)
         return record
       })
     })

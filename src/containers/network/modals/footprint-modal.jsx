@@ -94,7 +94,7 @@ class FootprintFormContainer extends React.Component {
           throw new SubmissionError({ '_error': response.data.message })
         }
 
-        finalValues.id = Object.keys(response.entities.footprints)[0]
+        finalValues.id = Number(Object.keys(response.entities.footprints)[0])
         this.props.addFootprintToPod(finalValues)
 
         return this.props.onCancel()
