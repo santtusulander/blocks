@@ -681,7 +681,6 @@ class Network extends React.Component {
               ref={accounts => this.entityList.accountList = accounts}
               entities={params.account && Immutable.List([activeAccount])}
               addEntity={() => null}
-              deleteEntity={() => null}
               editEntity={this.handleAccountEdit}
               selectEntity={this.handleAccountClick}
               selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
@@ -709,7 +708,6 @@ class Network extends React.Component {
               ref={groups => this.entityList.groupList = groups}
               entities={groups}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-              deleteEntity={() => null}
               editEntity={this.handleGroupEdit}
               selectEntity={this.handleGroupClick}
               selectedEntityId={`${params.group}`}
@@ -738,7 +736,6 @@ class Network extends React.Component {
               ref={networkListRef => this.entityList.networkList = networkListRef}
               entities={params.group && networks}
               addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-              deleteEntity={() => () => null}
               editEntity={this.handleNetworkEdit}
               selectEntity={this.handleNetworkClick}
               selectedEntityId={`${params.network}`}
@@ -757,7 +754,6 @@ class Network extends React.Component {
               ref={pops => this.entityList.popList = pops}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
-              deleteEntity={() => () => null}
               editEntity={this.handlePopEdit}
               selectEntity={this.handlePopClick}
               selectedEntityId={`${params.pop}`}
@@ -777,7 +773,6 @@ class Network extends React.Component {
               entityIdKey='pod_name'
               titleGenerator={entity => entity.get('pod_name')}
               addEntity={() => this.addEntity(ADD_EDIT_POD)}
-              deleteEntity={() => () => null}
               editEntity={this.handlePodEdit}
               entities={params.pop && pods}
               selectEntity={this.handlePodClick}
@@ -797,7 +792,6 @@ class Network extends React.Component {
               ref={nodes => this.entityList.nodeList = nodes}
               entities={params.pod && nodes}
               addEntity={() => this.addEntity(ADD_NODE)}
-              deleteEntity={() => () => null}
               editEntity={this.handleNodeEdit}
               selectEntity={() => null}
               title={<FormattedMessage id='portal.network.nodes.title'/>}
