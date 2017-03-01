@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react'
 import {AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, Legend} from 'recharts'
 
 import d3 from 'd3'
-import { orderBy } from 'lodash'
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
 import StackAreaCustomTick from './stacked-area-chart-tick'
@@ -38,7 +37,7 @@ const getChartClassName = (areas) => {
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, chartLabel}) => {
 
   let dateFormat = "MM/DD"
-  const customLegendAreas = orderBy(areas, 'stackId', 'asc')
+  const customLegendAreas = areas.length > 1 ? areas.sort((area1, area2) => area2.stackId - area1.stackId) : areas
   const chartClassName = getChartClassName(areas)
   const getTicks = (data) => {
     if (!data || !data.length ) {return [];}
@@ -71,7 +70,7 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
           <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
           <Legend
-            wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
+            wrapperStyle={{top: 20, right: 20, left: 'auto', width: 'auto'}}
             margin={{top: 0, left: 0, right: 0, bottom: 0}}
             content={<CustomLegend data={customLegendAreas}/>}
           />
