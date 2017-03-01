@@ -166,12 +166,14 @@ class NetworkLocationFormContainer extends Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
+      .then(() => {
 
         this.onCancel()
+
+      }).catch(resp => {
+
+        throw new SubmissionError({'_error': resp.data.message})
+
       })
   }
 
@@ -190,12 +192,14 @@ class NetworkLocationFormContainer extends Component {
       id: locationId
     }
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          throw new SubmissionError({_error: resp.error.data.message})
-        }
+      .then(() => {
 
         this.onCancel()
+
+      }).catch(resp => {
+
+        throw new SubmissionError({_error: resp.data.message})
+
       })
   }
 

@@ -212,17 +212,13 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/
   const updateNode = ({ reduxId, parentId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
-    .then(({ error }) => {
-      if (error) {
-        return Promise.reject(new SubmissionError({ _error: error.data.message }))
-      }
+    .catch(response => {
+      return Promise.reject(new SubmissionError({ _error: response.data.message }))
     })
 
   const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
-    .then(({ error }) => {
-      if (error) {
-        return Promise.reject(new SubmissionError({ _error: error.data.message }))
-      }
+    .catch(response => {
+      return Promise.reject(new SubmissionError({ _error: response.data.message }))
     })
 
   return {
