@@ -1,5 +1,6 @@
 import account from './account.json'
 import analytics from './analytics.json'
+import aspera from './aspera.json'
 import common from './common.json'
 import configuration from './configuration.json'
 import content from './content.json'
@@ -20,6 +21,7 @@ import en from './en.js'
 export default Object.assign({},
   account,
   analytics,
+  aspera,
   common,
   configuration,
   content,

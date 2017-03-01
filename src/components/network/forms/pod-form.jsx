@@ -229,8 +229,6 @@ const PodForm = ({
 
   const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
 
-  const hasFootprintsOrBGP = hasFootprints || hasBGPRoutingDaemon
-
   //change of method is allowed is no footprints / BGP's assigned
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints && !hasBGPRoutingDaemon
 
@@ -484,7 +482,7 @@ const PodForm = ({
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting || (!!asyncValidating) || (!dirty) || (!hasFootprintsOrBGP)}>
+            disabled={invalid || submitting || (!!asyncValidating) || (!dirty)}>
             {actionButtonTitle}
           </Button>
         </IsAllowed>
