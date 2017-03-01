@@ -74,7 +74,7 @@ import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
 import AddNodeContainer from './modals/add-node-modal'
 import EditNodeContainer from './modals/edit-node-modal'
-import AccountForm from '../../components/account-management/account-form'
+import EntityEdit from '../../components/account-management/entity-edit'
 
 import { sortByKey } from '../../util/helpers'
 import checkPermissions, {
@@ -810,12 +810,12 @@ class Network extends React.Component {
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
 
         {networkModal === ADD_EDIT_ACCOUNT &&
-          <AccountForm
-            id="account-form"
-            onSave={this.handleAccountSave}
-            account={activeAccount}
+          <EntityEdit
+            type='account'
+            entityToUpdate={activeAccount}
+            currentUser={this.props.currentUser}
             onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
-            show={true}
+            onSave={this.handleAccountSave}
           />
         }
 
