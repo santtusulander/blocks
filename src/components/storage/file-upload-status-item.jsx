@@ -32,7 +32,7 @@ FileUploadStatusItem.displayName = "FileUploadStatusItem"
 FileUploadStatusItem.propTypes = {
   name: PropTypes.string,
   progress: PropTypes.number,
-  type: PropTypes.string
+  type: PropTypes.oneOf(["file", "directory"])
 }
 
 export default FileUploadStatusItem
