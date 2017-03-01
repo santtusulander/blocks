@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { normalize, schema } from 'normalizr'
 
-import { BASE_URL_AAA } from '../../../util.js'
+import { BASE_URL_AAA, PAGINATION_MOCK } from '../../../util.js'
 
 const accountSchema = new schema.Entity('accounts', {}, {
   processStrategy: (value, parent) => {
@@ -41,7 +41,7 @@ export const fetch = ({brand, id }) => {
  * @return {[type]}         [description]
  */
 export const fetchAll = ({ brand }) => {
-  return axios.get(baseURL(brand))
+  return axios.get(baseURL(brand), PAGINATION_MOCK)
     .then( ({data}) => {
 
       const brandAccounts = {

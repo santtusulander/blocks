@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, ControlLabel, InputGroup } from 'react-bootstrap'
@@ -30,7 +29,7 @@ import { FORM_TEXT_FIELD_DEFAULT_MIN_LEN,
          } from '../../../constants/common'
 
 import { FOOTPRINT_FILE_TYPES, FOOTPRINT_FIELDS_NAME,
-         FOOTPRINT_UND_TYPES_VALUES, FOOTPRINT_CSV_TEMPLATE
+         FOOTPRINT_UND_TYPES_VALUES, FOOTPRINT_CSV_TEMPLATE_PATH
          } from '../../../constants/network'
 
 const validateCIDRToken = (item) => {
@@ -219,7 +218,9 @@ class FootprintForm extends React.Component {
   renderFileUpload() {
     const templateLink = _.isEmpty(this.state.csvValues) ? (
       <div className="template-link">
-        <Link to={FOOTPRINT_CSV_TEMPLATE}><FormattedMessage id="portal.network.footprintForm.file.download.text"/></Link>
+        <a href={FOOTPRINT_CSV_TEMPLATE_PATH} download={true}>
+          <FormattedMessage id="portal.network.footprintForm.file.download.text"/>
+        </a>
       </div>
     ) : null
 
@@ -240,7 +241,8 @@ class FootprintForm extends React.Component {
             <UDNButton bsStyle="success"
                        icon={true}
                        addNew={true}
-                       onClick={this.onShowFileUploadDialog}>
+                       onClick={this.onShowFileUploadDialog}
+                       disabled={!(_.isEmpty(this.state.csvValues))}>
               <IconAdd/>
             </UDNButton>
           </span>
@@ -281,7 +283,7 @@ class FootprintForm extends React.Component {
       : <FormattedMessage id="portal.button.add"/>
 
     const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
-
+    const filteredUdnTypeOptions = dataType === 'ipv4cidr' ? udnTypeOptions.filter(({value}) => !value.includes('asn')) : udnTypeOptions
     return (
       <form className="sp-footprint-form" onSubmit={(addFootprintMethod === 'manual') ? handleSubmit(onSave) : handleSubmit(() => onCSVSave(this.state.csvValues))}>
           <span className='submit-error'>
@@ -361,7 +363,7 @@ class FootprintForm extends React.Component {
             name="udn_type"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={udnTypeOptions}
+            options={filteredUdnTypeOptions}
             label={<FormattedMessage id="portal.network.footprintForm.UDNType.title.text"/>}
           />
         </div>
