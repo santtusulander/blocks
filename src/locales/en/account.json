@@ -93,6 +93,7 @@
   "portal.account.chargeNumbersForm.midgress.title": "Midgress",
   "portal.account.chargeNumbersForm.charge_number.validationError": "Charge number format is invalid. Correct format is C-12345678",
   "portal.account.chargeNumbersForm.regions.validationError": "At least one of the regions contains invalid charge number. Correct format is C-12345678",
+  "portal.account.chargeNumbersForm.flow_direction.validationError": "At least one of the flow directions should be checked",
 
   "portal.account.soaForm.validation.required": "Required",
   "portal.account.soaForm.validation.invalid": "Invalid input",
