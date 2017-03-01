@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { BASE_URL_NORTH, parseResponseData, mapReducers, PAGINATION_MOCK } from '../util'
+import { BASE_URL_NORTH, mapReducers, PAGINATION_MOCK } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_DELETED = 'DOMAIN_DELETED'
