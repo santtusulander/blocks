@@ -67,8 +67,8 @@ export function editDomainFailure(state) {
 
 export function fetchedAllDomainsSuccess(state, { payload }) {
   return state.merge({
-    domains: fromJS(payload.data.map(domain => ({ id: domain }))),
-    activeDomain: state.get('activeDomain') || payload[0],
+    domains: fromJS(payload.map(domain => ({ id: domain.dns_zone_id }))),
+    activeDomain: state.get('activeDomain') || payload[0].dns_zone_id,
     fetching: false
   })
 }
@@ -104,7 +104,7 @@ export default handleActions({
 // ACTIONS
 export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
   axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones`, PAGINATION_MOCK)
-    .then(parseResponseData)
+    .then((res) => res.data.data)
 )
 
 export const fetchDomain = createAction(DOMAIN_EDITED_OR_FETCHED,

@@ -85,7 +85,7 @@ class AccountManagementSystemDNS extends Component {
       loadingDomains,
       activeModal,
       toggleModal } = this.props
-console.log('DOMAINS====', domains)
+
     const { domainSearch, recordSearch, recordToDelete } = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
     const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
@@ -106,7 +106,7 @@ console.log('DOMAINS====', domains)
       onDeleteDomain: (activeDomain) => {
         this.showDeleteModal(activeDomain)
       },
-      domains: domains && domains.filter(domain => domain.dns_zone_id.includes(domainSearch)),
+      domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       emptyDomainsTxt: loadingDomains ? 'portal.loading.text' : 'portal.account.manage.system.empty.domain',
       searchValue: domainSearch,
       searchFunc: e => setSearchValue(e, 'domainSearch')
