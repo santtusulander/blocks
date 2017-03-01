@@ -114,7 +114,7 @@ class FootprintFormContainer extends React.Component {
         //return this.props.handleFootprintSaveResponse(res)
       }).catch(res => {
 
-        throw new SubmissionError({ '_error': res.error.data.message })
+        throw new SubmissionError({ '_error': res.data.message })
 
       })
   }
