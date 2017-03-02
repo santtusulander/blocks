@@ -315,7 +315,8 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      locationPermissions
+      locationPermissions,
+      storageContentItems
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -403,7 +404,7 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -412,11 +413,54 @@ class ContentItems extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
+
+              {!storageContentItems.isEmpty() &&
+                <div>
+                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
+                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+                    {storageContentItems.map(storage => {
+                      const id = storage.get('id')
+
+                      // TODO UNDP-2906
+                      // Fix this in scope of integration with create/edit forms task, analytics
+                      const itemProps = {
+                        id,
+                        name: storage.get('name'),
+                        location: storage.get('location'),
+                        linkTo: '',
+                        disableLinkTo: false,
+                        configurationLink: '',
+                        onConfiguration: () => {this.editItem(id)},
+                        analyticsLink: '',
+                        delete: this.props.deleteItem,
+                        primaryData: Immutable.List(),
+                        maxTransfer: storage.get('maxTransfer'),
+                        minTransfer: storage.get('minTransfer'),
+                        avgTransfer: storage.get('avgTransfer'),
+                        currentUsage: storage.get('currentUsage'),
+                        usageQuota: storage.get('usageQuota'),
+                        fetchingMetrics: this.props.fetchingMetrics,
+                        isAllowedToConfigure: this.props.isAllowedToConfigure,
+                        chartWidth: '450'
+                      }
+
+                      return (
+                        <ContentItem key={`content-item-${id}`}
+                          isChart={viewingChart}
+                          isStorage={true}
+                          itemProps={itemProps}
+                          deleteItem={this.props.deleteItem}/>
+                      )
+                    })}
+                  </div>
+                  <br /><br />
+                </div>}
+
+              {this.getTier() === 'group' && !viewingChart &&
+                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
               <div
                 key={viewingChart}
-                className={viewingChart ?
-                  'content-item-grid' :
-                  'content-item-lists'}>
+                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
@@ -557,6 +601,7 @@ ContentItems.propTypes = {
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -569,6 +614,7 @@ ContentItems.defaultProps = {
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
+  storageContentItems: Immutable.List(),
   user: Immutable.Map()
 }
 
