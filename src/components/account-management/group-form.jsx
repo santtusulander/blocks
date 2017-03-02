@@ -115,9 +115,6 @@ const GroupForm = ({
                 <IsAllowed to={CREATE_LOCATION}>
                   <Button
                     className="btn-icon btn-success pull-right"
-                    bsStyle="success"
-                    icon={true}
-                    addNew={true}
                     onClick={() => onShowLocation(null)}>
                     <IconAdd />
                   </Button>
