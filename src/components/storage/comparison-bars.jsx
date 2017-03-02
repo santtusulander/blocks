@@ -1,15 +1,18 @@
 import React, { PropTypes } from 'react'
 
 const ComparisonBars = ({currentValue, referenceValue}) => {
-  let referenceWidth, currentWidth = 1
-  if (currentValue > referenceValue) {
-    currentWidth = 100
-    referenceWidth = 100 * referenceValue / currentValue
-  } else {
-    referenceWidth = 100
-    currentWidth = 100 * currentValue / referenceValue
+  let referenceWidth = 1, currentWidth = 1
+  if (!(currentValue === 0 && referenceValue === 0)) {
+    if (currentValue > referenceValue) {
+      currentWidth = 100
+      referenceWidth = 100 * referenceValue / currentValue
+    } else {
+      referenceWidth = 100
+      currentWidth = 100 * currentValue / referenceValue
+    }
   }
-  if (currentWidth === 0) currentWidth = 1
+  currentWidth = Math.max(currentWidth, 1)
+  referenceWidth = Math.max(referenceWidth, 1)
 
   return (
     <div className='comparison-bars-container'>
