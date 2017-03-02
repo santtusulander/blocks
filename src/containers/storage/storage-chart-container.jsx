@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -24,27 +24,31 @@ const getStorageMetrics = () =>
   }
 })
 
-class StorageChartContainer extends Component {
+const StorageChartContainer = props => {
 
-  render() {
+  const { clusters, id, estimated_usage } = props.entity
+  const { bytes, historical_bytes } = props.entityMetrics
 
-    const { clusters, id, estimated_usage } = this.props.entity
-    const { bytes, historical_bytes } = this.props.entityMetrics
+  return (
+    <StorageItemChart
+      analyticsLink='#'
+      configurationLink='#'
+      name={id}
+      locations={clusters}
+      currentUsage={bytes.average}
+      estimate={estimated_usage}
+      peak={bytes.peak}
+      lastMonthUsage={historical_bytes.average}
+      lastMonthEstimate={estimated_usage}
+      lastMonthPeak={historical_bytes.peak} />
+  )
+}
 
-    return (
-      <StorageItemChart
-        analyticsLink='#'
-        configurationLink='#'
-        name={id}
-        locations={clusters}
-        currentUsage={bytes.average}
-        estimate={estimated_usage}
-        peak={bytes.peak}
-        lastMonthUsage={historical_bytes.average}
-        lastMonthEstimate={estimated_usage}
-        lastMonthPeak={historical_bytes.peak} />
-    )
-  }
+StorageChartContainer.displayName = 'StorageChartContainers'
+
+StorageChartContainer.propTypes = {
+  entity: PropTypes.object,
+  entityMetrics: PropTypes.object
 }
 
 const stateToProps = (state, { id, params: { group } }) => {
