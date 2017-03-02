@@ -112,11 +112,7 @@ class PopFormContainer extends Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
+      .then( () => {
 
         const message = edit ? <FormattedMessage id="portal.network.popEditForm.updatePop.status"/> :
          <FormattedMessage id="portal.network.popEditForm.createPop.status"/>
@@ -124,6 +120,10 @@ class PopFormContainer extends Component {
 
         //Close modal
         this.props.onCancel();
+      }).catch(resp => {
+
+        throw new SubmissionError({'_error': resp.data.message})
+
       })
   }
 
@@ -141,19 +141,17 @@ class PopFormContainer extends Component {
     }
 
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-        this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)
-
+      .then(() => {
         // Unselect POP item
         if (this.props.selectedEntityId == popId) {
           this.props.handleSelectedEntity(popId)
         }
+        this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)
         //Close modal
         this.props.onCancel();
+      }).catch(resp => {
+        // Throw error => will be shown inside form
+        throw new SubmissionError({'_error': resp.data.message})
       })
   }
 

@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 import axios from 'axios'
 
-import { BASE_URL_NORTH, parseResponseData, mapReducers } from '../util'
+import { BASE_URL_NORTH, mapReducers, PAGINATION_MOCK } from '../util'
 
 const SOA_RECORD_EDITED = 'SOA_RECORD_EDITED'
 const DOMAIN_DELETED = 'DOMAIN_DELETED'
@@ -67,8 +67,8 @@ export function editDomainFailure(state) {
 
 export function fetchedAllDomainsSuccess(state, { payload }) {
   return state.merge({
-    domains: fromJS(payload.map(domain => ({ id: domain }))),
-    activeDomain: state.get('activeDomain') || payload[0],
+    domains: fromJS(payload.map(domain => ({ id: domain.dns_zone_id }))),
+    activeDomain: state.get('activeDomain') || payload[0].dns_zone_id,
     fetching: false
   })
 }
@@ -103,7 +103,9 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDomains = createAction(DOMAIN_FETCHED_ALL, brand =>
-  axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones`).then(parseResponseData))
+  axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones`, PAGINATION_MOCK)
+    .then((res) => res.data.data)
+)
 
 export const fetchDomain = createAction(DOMAIN_EDITED_OR_FETCHED,
   (brand, domain) => axios.get(`${BASE_URL_NORTH}/brands/${brand}/zones/${domain}`)

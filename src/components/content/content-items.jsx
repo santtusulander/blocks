@@ -28,6 +28,7 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import ButtonDropdown from '../button-dropdown'
 import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
@@ -40,6 +41,7 @@ import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 import EntityEdit from '../../components/account-management/entity-edit'
 
 import SidePanel from '../side-panel'
+import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 
 const rangeMin = 400
@@ -75,6 +77,7 @@ class ContentItems extends React.Component {
     this.state = {
       saving: false,
       showModal: false,
+      showStorageModal: false,
       itemToEdit: undefined
     }
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
@@ -85,6 +88,16 @@ class ContentItems extends React.Component {
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
+    this.showStorageModal = this.showStorageModal.bind(this)
+    this.hideStorageModal = this.hideStorageModal.bind(this)
+
+    this.addButtonOptions = [{
+      label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
+      handleClick: this.addItem
+    }, {
+      label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
+      handleClick: this.showStorageModal
+    }]
   }
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
@@ -212,6 +225,16 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  showStorageModal() {
+    this.setState({
+      showStorageModal : true
+    });
+  }
+  hideStorageModal() {
+    this.setState({
+      showStorageModal : false
+    });
+  }
   getTagText(isCloudProvider, providerType, trialMode) {
     let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
     if (isCloudProvider && !trialMode) {
@@ -226,6 +249,15 @@ class ContentItems extends React.Component {
     }
     return { tagText: tagText }
   }
+
+  renderAddButton () {
+    if(this.getTier() === 'group'){
+      return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+    }
+
+    return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+  }
+
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -343,7 +375,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+                {this.renderAddButton()}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -472,6 +504,17 @@ class ContentItems extends React.Component {
                 cancelChanges={this.hideModal}
               />
               </SidePanel>
+          }
+
+          {
+            this.state.showStorageModal && this.getTier() === 'group' &&
+            <StorageFormContainer
+              show= {true}
+              editing={false}
+              fetching={false}
+              onCancel={this.hideStorageModal}
+              onSubmit={()=>{/* onsubmit here */}}
+            />
           }
         </PageContainer>
       </Content>

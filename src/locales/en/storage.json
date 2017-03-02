@@ -1,4 +1,10 @@
 {
+  "portal.storage.kpi.gain.title": "Gain",
+  "portal.storage.kpi.peak.title": "Peak",
+  "portal.storage.kpi.current.title": "Current",
+  "portal.storage.kpi.location.title": "Location",
+  "portal.storage.kpi.note.thisMonth": "(this month)",
+
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
 

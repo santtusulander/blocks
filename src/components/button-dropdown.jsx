@@ -28,7 +28,7 @@ ButtonDropdown.propTypes = {
   disabled: PropTypes.bool,
   options: PropTypes.arrayOf(
     React.PropTypes.shape({
-      label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number ]).isRequired,
+      label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number, React.PropTypes.node ]).isRequired,
       handleClick: React.PropTypes.func.isRequired
     })
   ).isRequired,

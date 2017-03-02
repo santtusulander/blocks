@@ -213,18 +213,8 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
 
   /* eslint-disable no-unused-vars*/
   const updateNode = ({ reduxId, parentId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
-    .then(({ error }) => {
-      if (error) {
-        return Promise.reject(new SubmissionError({ _error: error.data.message }))
-      }
-    })
 
   const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
-    .then(({ error }) => {
-      if (error) {
-        return Promise.reject(new SubmissionError({ _error: error.data.message }))
-      }
-    })
   const showNotification = (message) => dispatch(changeNotification(message))
 
   return {
@@ -242,6 +232,10 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         setTimeout(showNotification, 10000)
         onCancel()
       })
+
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
+      })
     },
 
     onDelete: nodes => {
@@ -253,6 +247,9 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         showNotification(<FormattedMessage id="portal.network.editNodeForm.deleteNode.status"/>)
         setTimeout(showNotification, 10000)
         onCancel()
+      })
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
       })
     }
   }

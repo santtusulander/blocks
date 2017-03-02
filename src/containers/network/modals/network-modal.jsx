@@ -90,18 +90,14 @@ class NetworkFormContainer extends React.Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
+      .then(() => {
         const message = edit ? <FormattedMessage id="portal.network.networkForm.updateNetwork.status"/> :
          <FormattedMessage id="portal.network.networkForm.createNetwork.status"/>
         this.showNotification(message)
-
-        // Close modal
         this.props.onCancel();
+      })
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
       })
   }
 
@@ -123,19 +119,17 @@ class NetworkFormContainer extends React.Component {
     }
 
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-        this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
-
+      .then(() => {
         // Unselect network item
         if (this.props.selectedEntityId == this.networkId) {
           this.props.handleSelectedEntity(this.networkId)
         }
+        this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
         // Close modal
         this.props.onCancel()
+      })
+      .catch(resp => {
+        throw new SubmissionError({ _error: resp.data.message })
       })
   }
 

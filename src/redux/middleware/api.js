@@ -53,12 +53,12 @@ export default function apiMiddleware({ dispatch, getState }) {
         dispatch({ payload, response, type: successType })
         return response
       },
-      error => {
+      response => {
         if (!forceReload && cacheKey) {
           dispatch({ type: CACHE_REQUEST_CLEAR, payload: cacheKey })
         }
-        dispatch({ payload, error, type: failureType })
-        return error
+        dispatch({ payload, error: response, type: failureType })
+        throw response
       }
     );
   };
