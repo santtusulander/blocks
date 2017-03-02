@@ -171,11 +171,10 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
   onSave: node => {
 
     return dispatch(nodeActions.create({ ...params, payload: node }))
-      .then(({ error }) => {
-        if (error) {
-          return Promise.reject(new SubmissionError({ _error: error.data.message }))
-        }
+      .then(() => {
         onCancel()
+      }).catch(response => {
+        throw new SubmissionError({ '_error': response.data.message })
       })
   }
 })
