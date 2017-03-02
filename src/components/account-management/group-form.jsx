@@ -171,10 +171,10 @@ const GroupForm = ({
                     {hosts.map((host, i) => {
                       return (
                         <tr key={i}>
-                              <td><TruncatedTitle content={host} /></td>
+                              <td><TruncatedTitle content={host.get('published_host_id')} /></td>
                           <td>
                             <ActionButtons
-                              onDelete={() => onDeleteHost(host)}/>
+                              onDelete={() => onDeleteHost(host.get('published_host_id'))}/>
                           </td>
                         </tr>
                       )
