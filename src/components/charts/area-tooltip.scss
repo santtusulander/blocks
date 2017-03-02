@@ -125,38 +125,67 @@
 .stacked,
 .non-stacked,
 .two-stacked-comparison {
-  .legend-icon {
-    &.http {
-      color: $pale-blue;
-    }
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
+      &.http {
+        color: $pale-blue;
+      }
 
-    &.https {
-      color: $gradient-teal;
+      &.https {
+        color: $gradient-teal;
+      }
+
+      &.storage {
+        color: $pale-blue;
+      }
+
+      &.estimate {
+        color: $grey;
+      }
     }
   }
 }
 
 .comparison {
-  .legend-icon {
-    &.http {
-      color: $yellow;
-    }
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
+      &.http {
+        color: $yellow;
+      }
 
-    &.comparison_http {
-      color: $pale-blue;
+      &.comparison_http {
+        color: $pale-blue;
+      }
+
+      &.storage {
+        color: $green;
+      }
+
+      &.comparison_storage {
+        color: $pale-blue;
+      }
+
+      &.estimate {
+        color: $grey;
+      }
     }
   }
 }
 
 .two-stacked-comparison {
-  .legend-icon {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
 
-    &.comparison_http {
-      color: $purple;
-    }
+      &.comparison_http {
+        color: $purple;
+      }
 
-    &.comparison_https {
-      color: $yellow;
+      &.comparison_https {
+        color: $yellow;
+      }
     }
   }
 }
