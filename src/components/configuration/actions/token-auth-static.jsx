@@ -9,6 +9,8 @@ import { isBase64 } from '../../../util/validators'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
+import FieldSortableMultiSelector from '../../form/field-sortable-multi-selector'
+
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -19,7 +21,7 @@ const staticEncryptionOptions = [
   {label: 'HMAC-MD5', value: 'HMAC-MD5'},
   {label: 'MD5', value: 'MD5'}
 ]
-const schemaOptions = [//["IP", "URL", "REFERRER", "USER_AGENT", "EXPIRES"]
+const schemaOptions = [//"IP", "URL", "REFERRER", "USER_AGENT", "EXPIRES"]
   {label: 'IP', value: 'IP'},
   {label: 'URL', value: 'URL'},
   {label: 'REFERRER', value: 'REFERRER'},
@@ -76,8 +78,8 @@ export class TokenAuthStatic extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.tokenauth.header"/></h1>
-          <p><FormattedMessage id="portal.policy.edit.tokenauth.subheader"/></p>
+          <h1><FormattedMessage id="portal.policy.edit.tokenauthStatic.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.tokenauthStatic.subheader"/></p>
         </Modal.Header>
         <Modal.Body>
 
@@ -98,11 +100,9 @@ export class TokenAuthStatic extends React.Component {
           />
 
           <Field
-            required={false}
-            disabled={true}
             name="schema"
             className="input-select"
-            component={FieldFormGroupSelect}
+            component={FieldSortableMultiSelector}
             options={schemaOptions}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
           />

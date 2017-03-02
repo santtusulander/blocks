@@ -90,14 +90,14 @@ export const availableActions = [
   },
   {
     key: 'tokenauth-static',
-    name: 'portal.policy.edit.actionSelection.tokenauth.text',
+    name: 'portal.policy.edit.actionSelection.tokenauthStatic.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true,
     servicePermission: MEDIA_DELIVERY_TOKEN_AUTH
   },
   {
     key: 'tokenauth-streaming',
-    name: 'portal.policy.edit.actionSelection.tokenauth.text',
+    name: 'portal.policy.edit.actionSelection.tokenauthStreaming.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true,
     servicePermission: MEDIA_DELIVERY_TOKEN_AUTH
