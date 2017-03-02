@@ -1020,7 +1020,7 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Storage</h1>
 
-          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{height: '600px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'

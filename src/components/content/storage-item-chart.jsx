@@ -83,6 +83,9 @@ const StorageItemChart = (
       cy="50%"
       startAngle={90}
       endAngle={-270}
+      //The width of the outer chart is 10 the padding between the outer and the inner charts is 3
+      //hence we subtract 13 from the diameter.
+      //The width of the inner chart is 5
       innerRadius={i < 2? (diameter / 2) - 10: (diameter / 2) - 18}
       outerRadius={i < 2? (diameter / 2)     : (diameter / 2) - 13} />
   )
@@ -96,47 +99,45 @@ const StorageItemChart = (
 
   return (
     <OverlayTrigger placement="top" overlay={tooltip}>
-      <div className="storage-item-chart-wrapper">
-        <div className="storage-item-chart">
-          <PieChart width={diameter} height={diameter} >
-            {pies}
-          </PieChart>
+      <div className="storage-item-chart" style={{width: diameter, height: diameter}}>
+        <PieChart width={diameter} height={diameter} >
+          {pies}
+        </PieChart>
 
-          <div className="storage-item-chart-location">
-            {storageLocations}
-          </div>
+        <div className="storage-item-chart-location">
+          {storageLocations}
+        </div>
 
-          <div className="storage-item-chart-info">
-            <div className="title" >{name}</div>
-            <div className="usage">
-              <span className="usage-value">
-                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).value}
-              </span>
-              <span className="usage-unit">
-                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).unit}
-              </span>
-            </div>
-          </div>
-
-          <div className="usage-estimate">
-            {<FormattedMessage id="portal.common.of.value.text"
-              values={{ value: formatBytes(estimate, 1e12) }}/>}
-          </div>
-
-          <div className="content-item-chart content-item-toolbar">
-            <ButtonToolbar>
-              <Link to={analyticsLink}
-                className="btn btn-icon btn-round invisible">
-                <IconChart/>
-              </Link>
-              <Link to={configurationLink}
-                className="btn btn-icon btn-round invisible">
-                <IconConfiguration/>
-              </Link>
-            </ButtonToolbar>
+        <div className="storage-item-chart-info">
+          <div className="title" >{name}</div>
+          <div className="usage">
+            <span className="usage-value">
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).value}
+            </span>
+            <span className="usage-unit">
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).unit}
+            </span>
           </div>
         </div>
-      </div>
+
+        <div className="usage-estimate">
+          {<FormattedMessage id="portal.common.of.value.text"
+            values={{ value: formatBytes(estimate, 1e12) }}/>}
+        </div>
+
+        <div className="content-item-chart content-item-toolbar">
+          <ButtonToolbar>
+            <Link to={analyticsLink}
+              className="btn btn-icon btn-round invisible">
+              <IconChart/>
+            </Link>
+            <Link to={configurationLink}
+              className="btn btn-icon btn-round invisible">
+              <IconConfiguration/>
+            </Link>
+          </ButtonToolbar>
+        </div>
+        </div>
     </OverlayTrigger>
   )
 }
