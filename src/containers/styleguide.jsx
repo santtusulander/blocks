@@ -54,6 +54,7 @@ import CsvUploadArea from '../components/network/csv-upload'
 import AsperaUpload from '../components/storage/aspera-upload'
 import Typeahead from '../components/typeahead'
 import StorageKPI from '../components/storage/storage-kpi'
+import StorageItemChart from '../components/content/storage-item-chart'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -1007,7 +1008,6 @@ class Styleguide extends React.Component {
             height={600}
             />
 
-
           <h1 className="page-header">Network</h1>
 
           <NetworkItem
@@ -1016,6 +1016,71 @@ class Styleguide extends React.Component {
             status="enabled"
             onSelect={() => null}
             onEdit={() => null} />
+
+          <h1 className="page-header">Storage</h1>
+
+          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 01"
+              locations={["Hong Kong"]}
+              currentUsage = {0}
+              estimate = {100e12}
+              peak = {0}
+              lastMonthUsage = {0}
+              lastMonthEstimate = {0}
+              lastMonthPeak = {0} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 02"
+              locations={["Hong Kong"]}
+              currentUsage = {80.2e12}
+              estimate = {250e12}
+              peak = {160e12}
+              lastMonthUsage = {100e12}
+              lastMonthEstimate = {210e12}
+              lastMonthPeak = {160e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage very very very long name"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage = {270e12}
+              estimate = {300e12}
+              peak = {380e12}
+              lastMonthUsage = {240e12}
+              lastMonthEstimate = {250e12}
+              lastMonthPeak = {260e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 04"
+              locations={["Hong Kong", "Finland", "United States"]}
+              currentUsage = {520e12}
+              estimate = {500e12}
+              peak = {600e12}
+              lastMonthUsage = {470e12}
+              lastMonthEstimate = {450e12}
+              lastMonthPeak = {480e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 05"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage = {270e12}
+              estimate = {300e12}
+              peak = {380e12}
+              lastMonthUsage = {240e12}
+              lastMonthEstimate = {250e12}
+              lastMonthPeak = {260e12} />
+
+          </div>
 
           <h1 className="page-header">Storage KPI</h1>
 

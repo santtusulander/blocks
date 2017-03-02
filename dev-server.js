@@ -33,17 +33,19 @@ var server = new WebpackDevServer(compiler, {
       target: 'https://saltmaster.cdx-dev.unifieddeliverynetwork.net',
       secure: false
     },
-    '/workflows': {
+    '/cis_north': {
       target: 'http://cis-us-dal-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
-      secure: false
+      secure: false,
+      pathRewrite: {
+        '/cis_north' : ''
+      }
     },
-    '/ingest_points': {
-      target: 'http://cis-us-dal-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
-      secure: false
-    },
-    '/clusters': {
+    '/cis_south': {
       target: 'http://cis-us-dal-srvc0-south0.cdx-dev.unifieddeliverynetwork.net:8080',
-      secure: false
+      secure: false,
+      pathRewrite: {
+        '/cis_south' : ''
+      }
     },
     '/analytics': {
       target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030'
