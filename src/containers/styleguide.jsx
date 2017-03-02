@@ -1079,7 +1079,8 @@ class Styleguide extends React.Component {
               peak = {380e12}
               lastMonthUsage = {240e12}
               lastMonthEstimate = {250e12}
-              lastMonthPeak = {260e12} />
+              lastMonthPeak = {260e12}
+              diameter={300} />
 
           </div>
 

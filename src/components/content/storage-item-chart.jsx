@@ -11,11 +11,12 @@ import IconChart from '../icons/icon-chart'
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 const FORMAT = '0,0.0'
-const diameter = 240
+const defaultDiameter = 240
 
 const StorageItemChart = (
   { analyticsLink,
     configurationLink,
+    diameter,
     name,
     locations,
     estimate,
@@ -64,6 +65,8 @@ const StorageItemChart = (
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthPeak,  className: 'last-month'}]]
 
+  const minDiameter = diameter > defaultDiameter ? diameter : defaultDiameter
+
   const tooltip = (<Tooltip id='tooltip-storage' className="storage-item-tooltip">
       <StorageItemTooltip
         name={name}
@@ -84,10 +87,10 @@ const StorageItemChart = (
       startAngle={90}
       endAngle={-270}
       //The width of the outer chart is 10 the padding between the outer and the inner charts is 3
-      //hence we subtract 13 from the diameter.
+      //hence we subtract 13 from the minDiameter.
       //The width of the inner chart is 5
-      innerRadius={i < 2? (diameter / 2) - 10: (diameter / 2) - 18}
-      outerRadius={i < 2? (diameter / 2)     : (diameter / 2) - 13} />
+      innerRadius={i < 2? (minDiameter / 2) - 10: (minDiameter / 2) - 18}
+      outerRadius={i < 2? (minDiameter / 2)     : (minDiameter / 2) - 13} />
   )
 
   //TODO: replace storageLocations when the api is ready
@@ -99,8 +102,8 @@ const StorageItemChart = (
 
   return (
     <OverlayTrigger placement="top" overlay={tooltip}>
-      <div className="storage-item-chart" style={{width: diameter, height: diameter}}>
-        <PieChart width={diameter} height={diameter} >
+      <div className="storage-item-chart" style={{width: minDiameter, height: minDiameter}}>
+        <PieChart width={minDiameter} height={minDiameter} >
           {pies}
         </PieChart>
 
@@ -147,6 +150,7 @@ StorageItemChart.propTypes = {
   analyticsLink: PropTypes.string,
   configurationLink: PropTypes.string,
   currentUsage: PropTypes.number,
+  diameter: PropTypes.number,
   estimate: PropTypes.number,
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
