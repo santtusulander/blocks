@@ -3,7 +3,7 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_CIS_SOUTH, buildReduxId } from '../../../util'
+import { BASE_URL_CIS_NORTH, buildReduxId } from '../../../util'
 
 const mock = {
   "estimated_usage": 999999,
@@ -29,7 +29,7 @@ const mockArray = [
 
 
 const baseUrl = ({ group, id }) => {
-  return `${BASE_URL_CIS_SOUTH}/ingest_points/${id}?group_id=${group}`
+  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}`
 }
 
 /* We only need profile_id -> set entity name to workflowsDummy so workflow doesn't go into redux */
@@ -60,7 +60,7 @@ const groupIngestPoints = new schema.Entity('groupIngestPoints', {
  * @return {Object} normalizr ingestPoints
  */
 export const fetch = ({id, ...params}) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [mock] }, groupIngestPoints) )
+  return Promise.resolve( normalize({ id: params.group, ingestPoints: [ { id, ...mock} ] }, groupIngestPoints) )
 
   // return axios.get(`${baseUrl(params)}/${id}`)
   //   .then( ({data}) => {
@@ -88,7 +88,7 @@ export const fetchAll = ( params = {}) => {
  * @return {[type]} normalizr ingestPoint
  */
 export const create = ({ payload, ...params }) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [mock] }, groupIngestPoints) )
+  return Promise.resolve( normalize({ id: params.group, ingestPoints: [{ id: 'new-storage', ...mock}] }, groupIngestPoints) )
 
   // return axios.post(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
   //   .then(({ data }) => {
@@ -106,7 +106,7 @@ export const create = ({ payload, ...params }) => {
  */
 export const update = ({ id, payload, ...params }) => {
 
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [mock] }, groupIngestPoints) )
+  return Promise.resolve( normalize({ id: params.group, ingestPoints: [{ id, ...mock}] }, groupIngestPoints) )
 
   // return axios.put(`${baseUrl(params)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
   //   .then(({ data }) => {
@@ -121,7 +121,7 @@ export const update = ({ id, payload, ...params }) => {
  * @return {[type]}               [description]
  */
 export const remove = ({ id, ...params }) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [mock] }, groupIngestPoints) )
+  return Promise.resolve({ id: buildReduxId(params.group, id) })
 
   // return axios.delete(`${baseUrl(params)}/${id}`)
   //   .then(() => ({ id: buildReduxId(params.group, id) }))
