@@ -190,7 +190,8 @@ class PodFormContainer extends React.Component {
       service.sp_bgp_router_password = undefined
 
       //Get footprint IDs
-      data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
+      const UIFootprints = values.UIFootprints || []
+      data.footprints = UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
     }
 
     data.services = [service]
