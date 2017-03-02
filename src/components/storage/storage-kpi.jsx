@@ -1,14 +1,29 @@
 import React, { PropTypes } from 'react'
-import { injectIntl, intlShape} from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import MiniChart from '../mini-chart'
 import ComparisonBars from './comparison-bars'
+
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/display-name */
+const KPIFormattedMessage = ({id, type}) => (
+  <FormattedMessage id={id}>
+    {(formattedTitle) => (
+      <span className={`storage-kpi-item-${type}`}>{formattedTitle}</span>
+    )}
+  </FormattedMessage>
+)
+
+KPIFormattedMessage.propTypes = {
+  id: PropTypes.string,
+  type: PropTypes.oneOf(['title', 'note'])
+}
+
 
 const StorageKPI = ({
   chartData,
   chartDataKey,
   currentValue,
   gainPercentage,
-  intl,
   locations,
   peakValue,
   referenceValue,
@@ -17,9 +32,7 @@ const StorageKPI = ({
   return (
     <div>
       <div className='storage-kpi-item'>
-        <span className='storage-kpi-item-title'>
-          {intl.formatMessage({id: 'portal.storage.kpi.current.title'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.current.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <span className='value'>{currentValue}</span>
@@ -35,23 +48,17 @@ const StorageKPI = ({
         </div>
       </div>
       <div className='storage-kpi-item'>
-        <span className='storage-kpi-item-title'>
-          {intl.formatMessage({id: 'portal.storage.kpi.peak.title'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.peak.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <span className='value'>{peakValue}</span>
             <span className='suffix'>{valuesUnit.toUpperCase()}</span>
           </div>
         </div>
-        <span className='storage-kpi-item-note'>
-          {intl.formatMessage({id: 'portal.storage.kpi.note.thisMonth'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
       </div>
       <div className='storage-kpi-item'>
-        <span className='storage-kpi-item-title'>
-          {intl.formatMessage({id: 'portal.storage.kpi.gain.title'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.gain.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
             <span className='value'>
@@ -65,14 +72,10 @@ const StorageKPI = ({
               />
           </div>
         </div>
-        <span className='storage-kpi-item-note'>
-          {intl.formatMessage({id: 'portal.storage.kpi.note.thisMonth'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.note.thisMonth' type='note' />
       </div>
       <div className='storage-kpi-item'>
-        <span className='storage-kpi-item-title'>
-          {intl.formatMessage({id: 'portal.storage.kpi.location.title'})}
-        </span>
+        <KPIFormattedMessage id='portal.storage.kpi.location.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-text'>{locations.join(', ')}</div>
         </div>
@@ -87,10 +90,9 @@ StorageKPI.propTypes = {
   chartDataKey: PropTypes.string,
   currentValue: PropTypes.number,
   gainPercentage: PropTypes.number,
-  intl: intlShape,
   locations: PropTypes.array,
   peakValue: PropTypes.number,
   referenceValue: PropTypes.number,
   valuesUnit: PropTypes.string
 }
-export default injectIntl(StorageKPI)
+export default StorageKPI
