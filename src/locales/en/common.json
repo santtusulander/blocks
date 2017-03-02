@@ -47,6 +47,7 @@
   "portal.common.textFieldMultilineValidation.allowedSpecialChars.all": "allowed all character",
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
+  "portal.common.of.value.text": "of {value}",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",

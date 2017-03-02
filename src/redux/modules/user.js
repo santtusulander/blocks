@@ -401,12 +401,12 @@ export const fetchUsers = createAction(USER_FETCHED_ALL, (brandId = null, accoun
   }
 
   return axios.get(`${BASE_URL_AAA}/users${query}`, PAGINATION_MOCK)
-    .then(parseResponseData)
+    .then(resp => resp.data.data)
 })
 
 export const fetchUsersForMultipleAccounts = createAction(USER_FETCHED_ALL, (brandId, accounts) => {
   return Promise.all(accounts.map(account => axios.get(`${BASE_URL_AAA}/users?brand_id=${brandId}&account_id=${account.get('id')}`, PAGINATION_MOCK)
-    .then(parseResponseData)
+    .then(resp => resp.data.data)
   ))
   .then(allUsers => fromJS(allUsers).flatten(true))
 })

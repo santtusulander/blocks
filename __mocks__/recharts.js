@@ -5,5 +5,7 @@ export default jest.mock('recharts', () => ({
   YAxis: 'YAxis',
   Tooltip: 'Tooltip',
   Legend: 'Legend',
-  ResponsiveContainer: 'ResponsiveContainer'
+  ResponsiveContainer: 'ResponsiveContainer',
+  Pie: 'Pie',
+  PieChart: 'PieChart'
 }))
