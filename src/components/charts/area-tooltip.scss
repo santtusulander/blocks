@@ -44,21 +44,83 @@
 }
 
 /**
- * Color setting for stacked area chart
+ * Fallback color setting for unknown dataset
  */
-
-.two-stacked-comparison {
+.non-stacked {
   .legend-icon {
+    color: $pale-blue;
+  }
+}
 
-    &.comparison_http {
-      color: $purple;
+.stacked,
+.two-stacked-comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    &:first-of-type {
+      .legend-icon {
+        color: $pale-blue;
+      }
     }
 
-    &.comparison_https {
-      color: $yellow;
+    &:nth-of-type(2) {
+      .legend-icon {
+        color: $gradient-teal;
+      }
     }
   }
 }
+
+.comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    &:first-of-type {
+      .legend-icon {
+        color: $yellow;
+      }
+    }
+
+    &:nth-of-type(2) {
+      .legend-icon {
+        color: $pale-blue;
+      }
+    }
+  }
+}
+
+.two-stacked-comparison {
+  .bar-chart-legend-item {
+    &:nth-of-type(3) {
+      .legend-icon {
+        color: $purple;
+      }
+    }
+
+    &:nth-of-type(4) {
+      .legend-icon {
+        color: $yellow;
+      }
+    }
+  }
+
+  .comparison-data {
+    .tooltip-item {
+      &:first-of-type {
+        .legend-icon {
+          color: $purple;
+        }
+      }
+
+      &:nth-of-type(2) {
+        .legend-icon {
+          color: $yellow;
+        }
+      }
+    }
+  }
+}
+/**
+ * Color setting for defined dataset
+ */
 
 .stacked,
 .non-stacked,
@@ -82,6 +144,19 @@
 
     &.comparison_http {
       color: $pale-blue;
+    }
+  }
+}
+
+.two-stacked-comparison {
+  .legend-icon {
+
+    &.comparison_http {
+      color: $purple;
+    }
+
+    &.comparison_https {
+      color: $yellow;
     }
   }
 }

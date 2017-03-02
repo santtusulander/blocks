@@ -1,81 +1,188 @@
 @import '../../base/colors';
 
 .stacked-area-chart-container {
-  .stacked,
-  .non-stacked,
+
+/**
+ * Fallback color for unknown dataset
+ */
+
+.non-stacked {
+   .recharts-area {
+     path {
+       &:last-child {
+         fill: $pale-blue;
+       }
+     }
+   }
+ }
+
+ .stacked,
+ .two-stacked-comparison {
+    .recharts-area {
+      &:first-of-type {
+        path {
+          &:last-child {
+            fill: $gradient-teal;
+          }
+        }
+      }
+
+      &:nth-of-type(2) {
+        path {
+          &:last-child {
+            fill: $pale-blue;
+          }
+        }
+      }
+    }
+  }
+
+.comparison {
+    .recharts-area {
+      &:first-of-type {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 4px;
+          }
+
+          &:last-child {
+            fill: $dark-blue;
+          }
+        }
+      }
+
+      &:nth-of-type(2) {
+        path {
+          &:first-child {
+            stroke: $pale-blue;
+            stroke-width: 2px;
+          }
+
+          &:last-child {
+            fill: $black-20;
+          }
+        }
+      }
+    }
+  }
+
   .two-stacked-comparison {
-    .http {
-      path {
-        &:last-child {
-          fill: $pale-blue;
+    .recharts-area {
+      &:nth-of-type(3) {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 2px;
+          }
+
+          &:last-child {
+            fill: $black-20;
+          }
         }
       }
-    }
 
-    .https {
-      path {
-        &:last-child {
-          fill: $gradient-teal;
+      &:nth-of-type(4) {
+        path {
+          &:first-child {
+            stroke: $purple;
+            stroke-width: 4px;
+          }
+
+          &:last-child {
+            fill: $dark-blue;
+          }
         }
       }
-    }
-  }
 
-  .comparison {
-    .http {
-      path {
-        &:first-child {
-          stroke: $yellow;
-          stroke-width: 4px;
-        }
-
-        &:last-child {
-          fill: $dark-blue;
-        }
-      }
-    }
-
-    .comparison_http {
-      path {
-        &:first-child {
-          stroke: $pale-blue;
-          stroke-width: 2px;
-        }
-
-        &:last-child {
-          fill: $black-20;
-        }
-      }
     }
   }
 
-  .two-stacked-comparison {
-    .comparison_http {
-      path {
-        &:first-child {
-          stroke: $purple;
-          stroke-width: 4px;
-        }
+  /**
+   * Defined color for analytic area chart
+   */
 
-        &:last-child {
-          fill: $dark-blue;
-        }
-      }
-    }
+   .stacked,
+   .non-stacked,
+   .two-stacked-comparison {
+     .recharts-area {
+       &.http {
+         path {
+           &:last-child {
+             fill: $pale-blue;
+           }
+         }
+       }
 
-    .comparison_https {
-      path {
-        &:first-child {
-          stroke: $yellow;
-          stroke-width: 2px;
-        }
+       &.https {
+         path {
+           &:last-child {
+             fill: $gradient-teal;
+           }
+         }
+       }
+     }
+   }
 
-        &:last-child {
-          fill: $black-20;
-        }
-      }
-    }
-  }
+   .comparison {
+     .recharts-area {
+       &.http {
+         path {
+           &:first-child {
+             stroke: $yellow;
+             stroke-width: 4px;
+           }
+
+           &:last-child {
+             fill: $dark-blue;
+           }
+         }
+       }
+
+       &.comparison_http {
+         path {
+           &:first-child {
+             stroke: $pale-blue;
+             stroke-width: 2px;
+           }
+
+           &:last-child {
+             fill: $black-20;
+           }
+         }
+       }
+     }
+   }
+
+   .two-stacked-comparison {
+     .recharts-area {
+       &.comparison_http {
+         path {
+           &:first-child {
+             stroke: $purple;
+             stroke-width: 4px;
+           }
+
+           &:last-child {
+             fill: $dark-blue;
+           }
+         }
+       }
+
+       &.comparison_https {
+         path {
+           &:first-child {
+             stroke: $yellow;
+             stroke-width: 2px;
+           }
+
+           &:last-child {
+             fill: $black-20;
+           }
+         }
+       }
+     }
+   }
 
   .stacked-area-chart-label {
     position: absolute;
