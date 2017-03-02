@@ -212,7 +212,7 @@ export class Dashboard extends React.Component {
 
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
     // check storage here
-    const hasStorage = false
+    const hasStorage = true
 
     return (
       <DashboardPanels>
