@@ -12,6 +12,8 @@ import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
+
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
@@ -27,7 +29,7 @@ const mockRedux = {
     switch (entity) {
       case 'storages':
         return Immutable.fromJS([{
-          id: 1,
+          id: 'storage1',
           name: 'Media Storage',
           location: 'Frankfurt',
           currentUsage: '450 GB',
@@ -36,7 +38,7 @@ const mockRedux = {
           minTransfer: '11.00 TB',
           avgTransfer: '34.00 TB'
         },{
-          id: 2,
+          id: 'storage2',
           name: 'Bangkok Storage',
           location: 'San Jose',
           currentUsage: '1.2 TB',
@@ -44,24 +46,6 @@ const mockRedux = {
           maxTransfer: '15.00 TB',
           minTransfer: '2.00 TB',
           avgTransfer: '7.00 TB'
-        },{
-          id: 3,
-          name: 'Asia Storage',
-          location: 'Hong Kong',
-          currentUsage: '900 GB',
-          usageQuota: '3 TB',
-          maxTransfer: '10.00 TB',
-          minTransfer: '3.00 TB',
-          avgTransfer: '6.00 TB'
-        },{
-          id: 4,
-          name: 'Dataphone Storage',
-          location: 'San Jose, 2 copies',
-          currentUsage: '2.3 TB',
-          usageQuota: '5 TB',
-          maxTransfer: '25.00 TB',
-          minTransfer: '1.00 TB',
-          avgTransfer: '13.00 TB'
         }])
 
       default:
@@ -272,7 +256,8 @@ function mapDispatchToProps(dispatch, ownProps) {
       accountActions.fetchAccount(brand, account),
       groupActions.fetchGroup(brand, account, group),
       hostActions.fetchHosts(brand, account, group),
-      hostActions.fetchConfiguredHostNames(brand, account, group)
+      hostActions.fetchConfiguredHostNames(brand, account, group),
+      dispatch(storageActions.fetchAll({ group }))
     ])
   }
   const fetchMetricsData = () => {

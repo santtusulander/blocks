@@ -425,6 +425,7 @@ class ContentItems extends React.Component {
                       // Fix this in scope of integration with create/edit forms task, analytics
                       const itemProps = {
                         id,
+                        params: this.props.params,
                         name: storage.get('name'),
                         location: storage.get('location'),
                         linkTo: '',
