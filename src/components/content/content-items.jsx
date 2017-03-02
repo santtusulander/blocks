@@ -88,7 +88,16 @@ class ContentItems extends React.Component {
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
+    this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
+
+    this.addButtonOptions = [{
+      label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
+      handleClick: this.addItem
+    }, {
+      label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
+      handleClick: this.showStorageModal
+    }]
   }
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
@@ -216,6 +225,11 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  showStorageModal() {
+    this.setState({
+      showStorageModal : true
+    });
+  }
   hideStorageModal() {
     this.setState({
       showStorageModal : false
@@ -238,21 +252,7 @@ class ContentItems extends React.Component {
 
   renderAddButton () {
     if(this.getTier() === 'group'){
-      const options = [
-        {
-          label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
-          handleClick: this.addItem
-        },
-        {
-          label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
-          handleClick: () => {
-            this.setState({
-              showStorageModal: true
-            });
-          }
-        }
-      ]
-      return <ButtonDropdown bsStyle={'success'} disabled={false} options={options}/>
+      return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
     }
 
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
