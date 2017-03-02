@@ -61,7 +61,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
               />
             }
             { haveEstimate &&
-              <Line dataKey="estimate" name="Estimate" className="estimate" dot={false} />
+              <Line dataKey="estimate" name="Estimate" isAnimationActive={false} className="estimate" dot={false} />
             }
             <XAxis dataKey='timestamp'
                    ticks={getTicks(data)}
@@ -74,7 +74,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
 
             <Legend
-              wrapperStyle={{top: 0, right: 0, left: 'auto', width: 'auto'}}
+              wrapperStyle={{top: 20, right: 20, left: 'auto', width: 'auto'}}
               margin={{top: 0, left: 0, right: 0, bottom: 0}}
               content={<CustomLegend />}
             />
