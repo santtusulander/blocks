@@ -99,7 +99,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: (params) => dispatch( accountActions.fetchOne({...params, requestTag: REQUEST_TAG}) ),
     fetchGroups: (params) => dispatch( groupActions.fetchAll({...params, requestTag: REQUEST_TAG}) ),
-    fetchProperties: (params) => propertyActions.fetchByIds(dispatch)({...params, requestTag: REQUEST_TAG})
+    fetchProperties: (params) => dispatch( propertyActions.fetchAll({...params, requestTag: REQUEST_TAG} ))
   }
 }
 
