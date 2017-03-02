@@ -1,4 +1,7 @@
 {
+  "portal.storage.uploadContent.uploading.text": "Uploading {number} items",
+  "portal.storage.uploadContent.cancel.text": "Cancel All",
+
   "portal.storage.kpi.gain.title": "Gain",
   "portal.storage.kpi.peak.title": "Peak",
   "portal.storage.kpi.current.title": "Current",

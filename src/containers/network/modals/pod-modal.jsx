@@ -92,7 +92,7 @@ class PodFormContainer extends React.Component {
       .then(() => {
         const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
           const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: unknown.toLower(), name: unknown }
+          return fp ? fp : { id: `unknown-${id}`, name: unknown }
         })
 
         reinitForm({
@@ -197,7 +197,8 @@ class PodFormContainer extends React.Component {
       service.sp_bgp_router_password = undefined
 
       //Get footprint IDs
-      data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
+      const UIFootprints = values.UIFootprints || []
+      data.footprints = UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
     }
 
     data.services = [service]
