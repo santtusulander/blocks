@@ -133,6 +133,7 @@
 @import 'components/content/content-item';
 @import 'components/content/content-item-chart';
 @import 'components/content/content-item-list';
+@import 'components/content/storage-item-chart';
 // SP Dashboard
 @import 'components/stacked-by-time-summary';
 // Network
@@ -146,6 +147,8 @@
 @import 'components/storage/storage-forms';
 @import 'components/storage/file-upload-status-container';
 @import 'components/storage/file-upload-status-item';
+@import 'components/storage/comparison-bars';
+@import 'components/storage/storage-kpi';
 @import 'components/storage/aspera_connect';
 
 // Shared

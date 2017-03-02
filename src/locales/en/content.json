@@ -12,6 +12,8 @@
   "portal.content.property.tabs.purgeStatus.label": "Purge Status",
 
   "portal.content.property.header.add.label": "Add Property",
+  "portal.content.property.header.addProperty.label": "New Property",
+  "portal.content.property.header.addStorage.label": "New Storage",
   "portal.content.property.header.purge.label": "Purge",
 
   "portal.content.property.summary.requestFailed.label": "Purge request failed: {reason}",
