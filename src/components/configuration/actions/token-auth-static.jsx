@@ -4,20 +4,28 @@ import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } 
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-import { checkForErrors } from '../../../../util/helpers'
-import { isBase64 } from '../../../../util/validators'
+import { checkForErrors } from '../../../util/helpers'
+import { isBase64 } from '../../../util/validators'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import FieldFormGroup from '../../../form/field-form-group'
-import FieldFormGroupSelect from '../../../form/field-form-group-select'
-import FormFooterButtons from '../../../form/form-footer-buttons'
+import FieldFormGroup from '../../form/field-form-group'
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FormFooterButtons from '../../form/form-footer-buttons'
 
-const placeholderEncryptionOptions = [{label: "SHA1", value: "HMAC-SHA1", selected: "true"}]
-const placeholderEncryptionValue = placeholderEncryptionOptions[0].value
-const placeholderSchemaOptions = [{label: "URL", value: "url"}]
-const placeholderSchemaValue = placeholderSchemaOptions[0].value
-
+const staticEncryptionOptions = [
+  {label: 'HMAC-SHA1', value: 'HMAC-SHA1'},
+  {label: 'HMAC-SHA256', value: 'HMAC-SHA256'},
+  {label: 'HMAC-MD5', value: 'HMAC-MD5'},
+  {label: 'MD5', value: 'MD5'}
+]
+const schemaOptions = [//["IP", "URL", "REFERRER", "USER_AGENT", "EXPIRES"]
+  {label: 'IP', value: 'IP'},
+  {label: 'URL', value: 'URL'},
+  {label: 'REFERRER', value: 'REFERRER'},
+  {label: 'USER_AGENT', value: 'USER_AGENT'},
+  {label: 'EXPIRES', value: 'EXPIRES'}
+]
 const validate = ({ sharedKey }) => {
   const conditions = {
     sharedKey: [
@@ -34,7 +42,7 @@ const validate = ({ sharedKey }) => {
   return checkForErrors({ sharedKey }, conditions)
 }
 
-export class TokenAuthItem extends React.Component {
+export class TokenAuthStatic extends React.Component {
   constructor(props) {
     super(props);
 
@@ -49,8 +57,8 @@ export class TokenAuthItem extends React.Component {
     const { set } = this.props
 
     this.props.change('sharedKey', set.get('shared_key'))
-    this.props.change('schema', placeholderSchemaValue)
-    this.props.change('encryption', placeholderEncryptionValue)
+    this.props.change('schema', set.get('schema'))
+    this.props.change('encryption', set.get('encryption'))
   }
 
   saveChanges() {
@@ -73,30 +81,12 @@ export class TokenAuthItem extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-          {/* This component is mostly for display purposes only until this functionality
-            * is flushed out on the backend. The backend doesn't currently support
-            * user-configuration of this value. */}
           <Field
-            required={false}
-            disabled={true}
             name="encryption"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={placeholderEncryptionOptions}
-            label={<FormattedMessage id="portal.policy.edit.tokenauth.encryption.text" />}
-          />
-
-          {/* This component is mostly for display purposes only until this functionality
-            * is flushed out on the backend. The backend doesn't currently support
-            * user-configuration of this value. */}
-          <Field
-            required={false}
-            disabled={true}
-            name="schema"
-            className="input-select"
-            component={FieldFormGroupSelect}
-            options={placeholderSchemaOptions}
-            label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
+            options={staticEncryptionOptions}
+            label={'Hash function'}
           />
 
           <Field
@@ -105,6 +95,16 @@ export class TokenAuthItem extends React.Component {
             placeholder={formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
+          />
+
+          <Field
+            required={false}
+            disabled={true}
+            name="schema"
+            className="input-select"
+            component={FieldFormGroupSelect}
+            options={schemaOptions}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
           />
 
           <FormFooterButtons>
@@ -129,8 +129,8 @@ export class TokenAuthItem extends React.Component {
   }
 }
 
-TokenAuthItem.displayName = 'TokenAuthItem'
-TokenAuthItem.propTypes = {
+TokenAuthStatic.displayName = 'TokenAuthStatic'
+TokenAuthStatic.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: React.PropTypes.object,
@@ -142,11 +142,11 @@ TokenAuthItem.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'token-auth-item',
+  form: 'token-auth-static',
   validate
-})(TokenAuthItem)
+})(TokenAuthStatic)
 
-const selector = formValueSelector('token-auth-item')
+const selector = formValueSelector('token-auth-static')
 export default connect(state => ({
   sharedKey: selector(state, 'sharedKey')
 }))(injectIntl(form))

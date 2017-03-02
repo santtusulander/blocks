@@ -9,15 +9,11 @@ import { isBase64 } from '../../../util/validators'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import TokenAuthItem from './token-auth-forms/token-auth-item'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const tokenAuthTypes = [
-  {label: 'Standard', value: 'standard'},
-  {label: 'Streaming', value: 'on_demand_hls'}
-]
+
 const staticEncryptionOptions = [
   {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
   {label: 'HMAC-SHA256', value: 'HMAC_SHA256'},
@@ -48,7 +44,7 @@ const validate = ({ sharedKey }) => {
   return checkForErrors({ sharedKey }, conditions)
 }
 
-export class TokenAuthentication extends React.Component {
+export class TokenAuthStreaming extends React.Component {
   constructor(props) {
     super(props);
 
@@ -87,38 +83,17 @@ export class TokenAuthentication extends React.Component {
         </Modal.Header>
         <Modal.Body>
 
-        <Field
-          name="type"
-          component={FieldFormGroupSelect}
-          options={tokenAuthTypes}
-          label={'Token Authentication Type'}
-        />
 
-        {type === 'standard' &&
-          <Fields
-            names={[ 'encryption', 'schema', 'ttl' ]}
-            component={TokenAuthItem}
-            encryptionOptions={staticEncryptionOptions}
-          />
-        }
 
-        {type === 'on_demand_hls' &&
-          <Fields
-            names={[ 'encryption', 'schema', 'ttl', 'streaming_encryption', 'streaming_schema', 'streaming_ttl' ]}
-            component={FieldFormGroupSelect}
-            encryptionOptions={streamingEncryptionOptions}
-          />
-        }
-
-          {/*<Field
+         <Field
             required={false}
             disabled={true}
             name="schema"
             className="input-select"
             component={FieldFormGroupSelect}
-            options={placeholderSchemaOptions}
+            options={staticEncryptionOptions}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
-          />*/}
+          />
 
           <Field
             type="text"
@@ -150,8 +125,8 @@ export class TokenAuthentication extends React.Component {
   }
 }
 
-TokenAuthentication.displayName = 'TokenAuthentication'
-TokenAuthentication.propTypes = {
+TokenAuthStreaming.displayName = 'TokenAuthStreaming'
+TokenAuthStreaming.propTypes = {
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: React.PropTypes.object,
@@ -163,11 +138,11 @@ TokenAuthentication.propTypes = {
 }
 
 const form = reduxForm({
-  form: 'token-authentication',
+  form: 'token-auth-streaming',
   validate
-})(TokenAuthentication)
+})(TokenAuthStreaming)
 
-const selector = formValueSelector('token-authentication')
+const selector = formValueSelector('token-auth-streaming')
 export default connect(state => ({
   type: selector(state, 'type')
 }))(injectIntl(form))
