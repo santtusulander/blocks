@@ -34,9 +34,7 @@ import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
 import Content from '../components/layout/content'
 import DashboardPanel from '../components/dashboard/dashboard-panel'
-import DashboardTabPanel from '../components/dashboard/dashboard-tab-panel'
 import DashboardPanels from '../components/dashboard/dashboard-panels'
-import DashboardTabContent from '../components/dashboard/dashboard-tab-content'
 import IconCaretDown from '../components/icons/icon-caret-down'
 import IsAllowed from '../components/is-allowed'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
@@ -214,7 +212,7 @@ export class Dashboard extends React.Component {
 
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
     // check storage here
-    const hasStorage = true
+    const hasStorage = false
 
     return (
       <DashboardPanels>
@@ -329,19 +327,10 @@ export class Dashboard extends React.Component {
             </div>}
         </DashboardPanel>
 
-        <DashboardTabPanel threeItemPerRow={hasStorage} defaultTab={intl.formatMessage({id: "portal.dashboard.tab.os"})}>
-          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.os"})}>
-            <h2>OS</h2>
-          </DashboardTabContent>
+        <DashboardPanel threeItemPerRow={hasStorage} title={"Lorem ipsum"}>
+          <h2>Lorem Ipsum</h2>
+        </DashboardPanel>
 
-          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.browser"})}>
-            <h2>BROWSER</h2>
-          </DashboardTabContent>
-
-          <DashboardTabContent label={intl.formatMessage({id: "portal.dashboard.tab.device"})}>
-            <h2>DEVICE</h2>
-          </DashboardTabContent>
-        </DashboardTabPanel>
         {
           hasStorage &&
           <DashboardPanel threeItemPerRow={hasStorage} title={"Storage"}>

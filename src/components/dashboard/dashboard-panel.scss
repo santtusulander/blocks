@@ -85,29 +85,4 @@ $dashboard-panel-kpi-padding: 15px;
     }
   }
 
-  .dashboard-tab-panel-header {
-    box-shadow: inset 1px -50px 0px -47px #021422;
-    padding: 0px 30px;
-    h5 {
-      text-align: center;
-    }
-    .header-tab {
-      border-bottom: solid #021422;
-      cursor: pointer;
-      padding-top: 15px;
-      padding-bottom: 13px;
-    }
-    .active-tab {
-      border-bottom: solid #00a8d4;
-    }
-
-    .dark-theme & {
-      background-color: $dashboard-panel-header-bg;
-    }
-
-    .light-theme & {
-      background-color: $white;
-      border-bottom: 1px solid $dashboard-panel-header-bg;
-    }
-  }
 }
