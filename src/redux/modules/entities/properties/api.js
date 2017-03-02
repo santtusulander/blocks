@@ -20,21 +20,15 @@ const groupPropertiesSchema = new schema.Entity('grpProperties', { properties: [
 export const fetch = ({ brand, account, group, id }) => {
   return axios.get(`${baseURL(brand, account, group)}/${id}`)
     .then(({ data }) => {
-      return normalize({ id: group, properties: [ data ] }, groupPropertiesSchema)
+      return normalize({ id: group, properties: [ data.data ] }, groupPropertiesSchema)
     })
 }
 
 export const fetchAll = ({ brand, account, group }) => {
   return axios.get(baseURL(brand, account, group), PAGINATION_MOCK)
-    .then(({data: { data }}) =>
-      data.reduce((object, id) => {
-
-        object.entities.properties[id] = { parentId: group, published_host_id: id }
-
-        return object
-
-      }, { entities: { properties: {} } })
-    )
+    .then(({data}) => {
+      return normalize({ id: group, properties: data.data }, groupPropertiesSchema)
+    })
 }
 
 export const fetchIds = ({ brand, account, group }) => {

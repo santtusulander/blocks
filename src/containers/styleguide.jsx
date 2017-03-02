@@ -100,6 +100,7 @@ import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
 import IconFile          from '../components/icons/icon-file'
+import IconFolder        from '../components/icons/icon-folder'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -1329,6 +1330,11 @@ class Styleguide extends React.Component {
             <IconFile />
             <br />
             IconFile
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFolder />
+            <br />
+            IconFolder
           </span>
         </div>
 
