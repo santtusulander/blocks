@@ -45,13 +45,27 @@ export function isValidFloat(str) {
   return matchesRegexp(str, /^\d*\.?\d+$/)
 }
 
+
+/**
+ * Check if valid IP or IP list when subnet mask is not allowed
+ * @param array or string
+ * @returns {boolean}
+ */
+export function isValidIP(addresses, IPversion = 4) {
+  if(Array.isArray(addresses)) {
+    const hasInvalidIP = addresses.some(address => !validator.isIP(address, IPversion))
+    return !hasInvalidIP
+  }
+  return !!addresses && validator.isIP(addresses, IPversion)
+}
+
+
 /**
  * Check if valid IPv4 address
  * @param address
  * @returns {*}
  */
 export function isValidIPv4Address(address, onlyCIDR) {
-
   const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
   if(splitAddr.length > 1 || onlyCIDR) {
