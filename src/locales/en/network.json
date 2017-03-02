@@ -89,7 +89,7 @@
   "portal.network.podForm.localAS.help.label": "Local AS",
   "portal.network.podForm.localAS.help.text": "The UDN uses two AS numbers for routing. The Local AS announces UDN-owned CIDRs by service. For example, HTTP, HTTPS, GSLB, etc. It is also used for public peering in the UDN Core.",
   "portal.network.podForm.requestForwardType.label": "Request Forward Type",
-  "portal.network.podForm.requestForwardType.help.text": "Defines what type of traffic will be served by this PoD (e.g. on-net - only on-net traffic, public - all traffic)",
+  "portal.network.podForm.requestForwardType.help.text": "Defines what type of traffic will be served by this PoD (e.g. On-Net - only On-Net traffic, Cache - all traffic)",
   "portal.network.podForm.providerWeight.label": "Provider Weight",
   "portal.network.podForm.providerWeight.help.text": "Defines priority of POD. e.g. If provider weight is set to 0 for UDN and 1 for SP Edge, this informs the system to prefer SP edge nodes over a UDN core",
   "portal.network.podForm.discoveryMethod.label": "Discovery Method",
