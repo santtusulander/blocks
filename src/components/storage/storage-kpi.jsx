@@ -18,7 +18,6 @@ KPIFormattedMessage.propTypes = {
   type: PropTypes.oneOf(['title', 'note'])
 }
 
-
 const StorageKPI = ({
   chartData,
   chartDataKey,
@@ -95,4 +94,5 @@ StorageKPI.propTypes = {
   referenceValue: PropTypes.number,
   valuesUnit: PropTypes.string
 }
+
 export default StorageKPI
