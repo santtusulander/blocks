@@ -90,6 +90,7 @@
 @import 'components/typeahead';
 @import 'components/truncated-title';
 @import 'components/map';
+
 // Support
 @import 'components/support/ticket-form';
 @import 'components/support/ticket-modal';
@@ -144,6 +145,10 @@
 
 // Storage
 @import 'components/storage/storage-forms';
+@import 'components/storage/file-upload-status-container';
+@import 'components/storage/file-upload-status-item';
+@import 'components/storage/comparison-bars';
+@import 'components/storage/storage-kpi';
 @import 'components/storage/aspera_connect';
 
 // Shared

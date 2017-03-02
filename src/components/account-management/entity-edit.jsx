@@ -108,7 +108,7 @@ class EntityEdit extends React.Component {
   }
 
   render() {
-    const { currentUser, params, type, onSave, onCancel } = this.props
+    const { currentUser, params, type, onSave, onCancel, onDelete } = this.props
 
     return (
       <div>
@@ -131,6 +131,7 @@ class EntityEdit extends React.Component {
           groupId={this.state.entityToUpdate.get('id')}
           onCancel={onCancel}
           onChangeServiceItem={this.onChangeServiceItem}
+          onDelete={onDelete}
           onSave={onSave}
           showServiceItemForm={this.showServiceItemForm}
           show={true}
@@ -158,6 +159,7 @@ EntityEdit.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
   entityToUpdate: PropTypes.instanceOf(Map),
   onCancel: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   params: PropTypes.object,
   type: PropTypes.string
