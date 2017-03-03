@@ -134,8 +134,7 @@ class AccountManagementStorages extends Component {
     const sortedStorages = getSortData(filteredStorages, this.state.sortBy, this.state.sortDir)
 
     const numHiddenStorages = storages.size - sortedStorages.size
-    const storageText = (sortedStorages.size === 1) ? ` ${intl.formatMessage({id: 'portal.account.storages.single.text'})}` :
-                                                      ` ${intl.formatMessage({id: 'portal.account.storages.multiple.text'})}`
+    const storageText = ` ${intl.formatMessage({id: 'portal.account.storages.text'})}`
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storages.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 

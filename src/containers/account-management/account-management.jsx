@@ -307,6 +307,7 @@ export class AccountManagement extends Component {
       toggleModal,
       onDelete,
       activeAccount,
+      activeGroup,
       router
       //dnsData
     } = this.props
@@ -369,7 +370,7 @@ export class AccountManagement extends Component {
       users: this.props.users,
       currentUser: this.props.currentUser
     }
-
+console.log('activeGroup=',activeGroup.toJS())
     return (
       <Content>
         <PageHeader pageSubTitle={<FormattedMessage id="portal.account.manage.accountManagement.title"/>}>
@@ -417,7 +418,7 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
-         {accountIsContentProviderType(activeAccount) &&
+         {accountIsContentProviderType(activeAccount) && !activeGroup.isEmpty() &&
            <li>
              <Link to={baseUrl + '/storages'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
            </li>}
@@ -507,6 +508,7 @@ AccountManagement.propTypes = {
   accountManagementModal: PropTypes.string,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
   // activeRecordType: PropTypes.string,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -546,7 +548,8 @@ function mapStateToProps(state) {
     roles: state.roles.get('roles'),
     soaFormData: state.form.soaEditForm,
     users: state.user.get('allUsers'),
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    activeGroup: state.group.get('activeGroup') || Map({})
   };
 }
 

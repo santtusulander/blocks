@@ -36,8 +36,7 @@
   "portal.account.storage.tooltip.endOfLastMonth": "End of last month",
   "portal.account.storage.tooltip.peakLastMonth": "Peak last month",
 
-  "portal.account.storages.single.text": "Storage",
-  "portal.account.storages.multiple.text": "Storages",
+  "portal.account.storages.text": "Storage",
   "portal.account.storages.hidden.text": "hidden",
   "portal.account.storages.table.name.text": "Name",
   "portal.account.storages.table.group.text": "Group",
@@ -45,7 +44,7 @@
   "portal.account.storages.table.location.text": "Location",
   "portal.account.storages.table.usage.text": "Usage",
   "portal.account.storages.table.files.text": "Files",
-  "portal.account.storages.table.noStoragesFound.text": "No storages found with the search term {searchTerm}",
+  "portal.account.storages.table.noStoragesFound.text": "No storage found with the search term {searchTerm}",
   "portal.account.storages.deleteConfirmation.text": "Please confirm by writing \"delete\" below, and pressing the delete button. This storage will be removed from UDN immediately.",
 
   "portal.account.recordForm.newRecord.title": "New DNS Record",
