@@ -91,6 +91,7 @@
     "redux-auth-wrapper": "^0.9.0",
     "redux-form": "^6.5.0",
     "redux-promise": "^0.5.1",
+    "reselect": "^2.5.4",
     "topojson": "^1.6.22",
     "topojson-client": "^2.1.0",
     "uniqid": "^4.1.1",
