@@ -12,7 +12,7 @@ import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi
 
 import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
-import { STORAGE_LOCATIONS, STORAGE_ESTIMATE_UNITS, STORAGE_ABR_PROFILES,
+import { STORAGE_ESTIMATE_UNITS, STORAGE_ABR_PROFILES,
          STORAGE_ESTIMATE_UNITS_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
          STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
 
@@ -46,7 +46,7 @@ class StorageForm extends React.Component {
   componentDidMount() {
     const { initialValues, dispatch } = this.props
     const edit = !!initialValues.name
-    const estimate = separateUnit(formatBytes(initialValues.estimate))
+    const estimate = separateUnit(formatBytes(initialValues.estimate, undefined, "0"))
 
     if (!edit) {
       dispatch(change('storageForm', 'abr', STORAGE_ABR_DEFAULT))
@@ -60,7 +60,7 @@ class StorageForm extends React.Component {
 
   render() {
     const { error, submitting, handleSubmit, intl, initialValues,
-            invalid, onCancel, onSave, onDelete, abrToggle } = this.props
+            invalid, onCancel, onSave, onDelete, abrToggle, locationOptions } = this.props
 
     const edit = !!initialValues.name
 
@@ -93,7 +93,7 @@ class StorageForm extends React.Component {
           className="multi-option-selector-fields"
           name="locations"
           component={FieldFormGroupMultiOptionSelector}
-          options={STORAGE_LOCATIONS}
+          options={locationOptions}
           label={<FormattedMessage id="portal.storage.storageForm.locations.label" />}
           disabled={edit ? true : false}
           required={edit ? false : true}
@@ -193,6 +193,7 @@ StorageForm.propTypes = {
   fetching: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
+  locationOptions: PropTypes.array,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
