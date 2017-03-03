@@ -1,5 +1,9 @@
+import React from 'react'
+
 const Storage = () => {
-  return null
+  return <div>Storage!</div>
 }
+
+Storage.displayName = 'Storage'
 
 export default Storage

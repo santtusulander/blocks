@@ -23,6 +23,7 @@ const ROUTES = {
   contentGroup: '/content/:brand/:account/groups/:group',
   contentProperty: '/content/:brand/:account/groups/:group/:property',
   contentPropertyConfiguration: '/content/:brand/:account/groups/:group/:property/configuration',
+  contentStorage: '/content/:brand/:account/groups/:group/storage/:storage',
 
   contentPropertyTabSummary: 'summary',
   contentPropertyTabPurgeStatus: 'purge-status',
