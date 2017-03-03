@@ -23,7 +23,13 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, handleEntityCli
                 <a onClick={() => handleEntityClick(node)}>{nodeName}</a>
 
                 {nodes &&
-                  <a className="caret-container" onClick={() => handleCaretClick(fetchChildren, nodeId)} tabIndex="-1">
+                  <a
+                    className="caret-container"
+                    tabIndex="-1"
+                    onClick={event => {
+                      event.nativeEvent.stopImmediatePropagation()
+                      handleCaretClick(fetchChildren, nodeId)
+                    }}>
                     <IconArrowRight />
                   </a>
                 }
