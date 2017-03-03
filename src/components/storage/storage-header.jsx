@@ -1,7 +1,8 @@
 import React from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import { ButtonToolbar } from 'react-bootstrap'
-import { Link } from 'react-router'
+import { Link, withRouter } from 'react-router'
+import { Map } from 'immutable'
 
 import PageHeader from '../layout/page-header'
 import AccountSelector from '../global-account-selector/global-account-selector'
@@ -11,10 +12,18 @@ import IconChart from '../icons/icon-chart.jsx'
 import IconCaretDown from '../icons/icon-caret-down'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 
-import { getContentUrl } from '../../util/routes.js'
+import {
+  getContentUrl,
+  getNetworkUrl
+} from '../../util/routes.js'
+import { userIsCloudProvider } from '../../util/helpers'
 
-const StorageHeader = ({ intl, router }) => {
-
+const StorageHeader = ({
+  currentUser,
+  intl,
+  params,
+  router
+}) => {
   const itemSelectorTexts = {
     storage: intl.formatMessage({ id: 'portal.storage.topBar.storage.label' }),
     group: intl.formatMessage({ id: 'portal.storage.topBar.group.label' }),
@@ -39,35 +48,29 @@ const StorageHeader = ({ intl, router }) => {
   }
 
   return (
-    <PageHeader pageSubtitle={<FormattedMessage id="portal.storage.summaryPage.title"/>}>
+    <PageHeader pageSubTitle={<FormattedMessage id="portal.storage.summaryPage.title"/>}>
       <AccountSelector
         as="storageSummary"
-        // params={params}
+        params={params}
         topBarTexts={itemSelectorTexts}
         topBarAction={itemSelectorTopBarAction}
-        // onSelect={(...params) => {
-          // This check is done to prevent UDN admin from accidentally hitting
-          // the account detail endpoint, which they don't have permission for
-          // if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
-            // params[0] = 'groups'
-          // }
+        onSelect={(...params) => {
+          // the code for this function is copied from property-header.jsx file!
+          if (params[0] === 'account' && userIsCloudProvider(currentUser)) {
+            params[0] = 'groups'
+          }
 
-          // const url = router.isActive('network')
-            // ? getNetworkUrl(...params)
-            // : getContentUrl(...params)
+          const url = router.isActive('network')
+            ? getNetworkUrl(...params)
+            : getContentUrl(...params)
 
-          // const isOnPropertyTier = params[0] === 'property'
-          // We perform this check to prevent routing to unsupported routes
-          // For example, prevent clicking to SP group route (not yet supported)
-          // if (url) {
-            // router.push(isOnPropertyTier ? `${url}/${currentTab}` : url)
-          // }
-        // }}>
-        >
+          if (url) {
+            router.push(url)
+          }
+        }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
-            <TruncatedTitle content={{}}
-                            // content={params.property}
+            <TruncatedTitle content={params.property}
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>
@@ -75,12 +78,12 @@ const StorageHeader = ({ intl, router }) => {
         </div>
       </AccountSelector>
       <ButtonToolbar>
-        <Link className="btn btn-success btn-icon"
+        <Link className="btn btn-primary btn-icon"
               // to={`${getAnalyticsUrl('property', params.property, params)}`}>
               to='#'>
           <IconChart/>
         </Link>
-        <Link className="btn btn-success btn-icon"
+        <Link className="btn btn-primary btn-icon"
               // to={`${getContentUrl('property', params.property, params)}/configuration`}>
               to='#'>
           <IconConfiguration/>
@@ -93,8 +96,10 @@ const StorageHeader = ({ intl, router }) => {
 StorageHeader.displayName = 'StorageHeader'
 
 StorageHeader.propTypes = {
+  currentUser: React.PropTypes.instanceOf(Map),
   intl: intlShape,
+  params: React.PropTypes.object,
   router: React.PropTypes.object
 }
 
-export default injectIntl(StorageHeader)
+export default withRouter(injectIntl(StorageHeader))
