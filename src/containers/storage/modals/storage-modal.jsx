@@ -167,14 +167,7 @@ StorageFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   show: PropTypes.bool,
   storage: PropTypes.instanceOf(Map),
-  // eslint-disable-next-line react/no-unused-prop-types
   storageId: PropTypes.string
-}
-
-StorageFormContainer.defaultProps = {
-  account: Map(),
-  group: Map(),
-  show: true
 }
 
 const formSelector = formValueSelector('storageForm')
