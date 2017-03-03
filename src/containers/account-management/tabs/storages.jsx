@@ -207,7 +207,7 @@ class AccountManagementStorages extends Component {
            cancel={() => toggleModal(null)}
            onSubmit={() => this.deleteStorage()} />}
 
-        {/* TODO: UDNP-2906 Integrate storage group list view with redux, create/edit forms, analytics chart */}
+        {/* TODO: UDNP-2849: Integrate List Storage Items in storage tab with redux and create/edit/delete forms */}
         {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
           <StorageFormContainer
             show={true}
