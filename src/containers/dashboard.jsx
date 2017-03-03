@@ -325,7 +325,7 @@ export class Dashboard extends React.Component {
             </div>}
         </DashboardPanel>
         { this.isCPAccount &&
-          <DashboardPanel title={"Storage"}>
+          <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
             <h2>Lorem Ipsum</h2>
           </DashboardPanel>
         }
