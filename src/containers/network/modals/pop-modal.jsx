@@ -13,6 +13,7 @@ import locationActions from '../../../redux/modules/entities/locations/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -35,6 +36,7 @@ import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/ne
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
+    this.notificationTimeout = null
     this.state = {
       showDeleteModal : false
     }
@@ -75,6 +77,12 @@ class PopFormContainer extends Component {
     this.setState({ showDeleteModal })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
+  }
+
   /**
    * hander for save
    */
@@ -106,6 +114,10 @@ class PopFormContainer extends Component {
     return save(params)
       .then( () => {
 
+        const message = edit ? <FormattedMessage id="portal.network.popEditForm.updatePop.status"/> :
+         <FormattedMessage id="portal.network.popEditForm.createPop.status"/>
+        this.showNotification(message)
+
         //Close modal
         this.props.onCancel();
       }).catch(resp => {
@@ -130,18 +142,16 @@ class PopFormContainer extends Component {
 
     return this.props.onDelete(params)
       .then(() => {
-
         // Unselect POP item
         if (this.props.selectedEntityId == popId) {
           this.props.handleSelectedEntity(popId)
         }
+        this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)
         //Close modal
         this.props.onCancel();
       }).catch(resp => {
-
         // Throw error => will be shown inside form
         throw new SubmissionError({'_error': resp.data.message})
-
       })
   }
 
@@ -231,7 +241,8 @@ PopFormContainer.propTypes = {
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   popPermissions: PropTypes.object,
-  selectedEntityId: PropTypes.string
+  selectedEntityId: PropTypes.string,
+  showNotification: PropTypes.func
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
@@ -283,7 +294,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
     fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
-    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) )
+    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
+
+    showNotification: (message) => dispatch( changeNotification(message) )
   }
 }
 

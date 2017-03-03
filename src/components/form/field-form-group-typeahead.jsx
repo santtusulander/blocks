@@ -14,7 +14,7 @@ const FieldFormGroupTypeahead = ({
   input,
   intl,
   label,
-  meta, meta: { dirty, error },
+  meta, meta: { dirty, error, touched },
   multiple = false,
   newSelectionPrefix,
   options,
@@ -45,7 +45,7 @@ const FieldFormGroupTypeahead = ({
       className={classNames('typeahead-form-group', {'has-error': error && dirty})}
       controlId={input.name}
       validationState={getReduxFormValidationState(meta)}>
-      
+
       {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
 
       <Typeahead
@@ -66,7 +66,7 @@ const FieldFormGroupTypeahead = ({
         renderToken={renderToken}
       />
 
-    {error &&
+    {error && touched &&
       <HelpBlock className='error-msg'>{error}</HelpBlock>
       }
     </FormGroup>
