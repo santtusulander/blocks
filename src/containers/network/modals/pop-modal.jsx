@@ -13,6 +13,7 @@ import locationActions from '../../../redux/modules/entities/locations/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -30,11 +31,12 @@ import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
 import { POP_FORM_NAME } from '../../../components/network/forms/pop-form.jsx'
-import { NETWORK_DATE_FORMAT } from '../../../constants/network'
+import { NETWORK_DATE_FORMAT, STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
 class PopFormContainer extends Component {
   constructor(props) {
     super(props)
+    this.notificationTimeout = null
     this.state = {
       showDeleteModal : false
     }
@@ -75,13 +77,20 @@ class PopFormContainer extends Component {
     this.setState({ showDeleteModal })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
+  }
+
   /**
    * hander for save
    */
   onSave(edit, values) {
 
     const data = {
-      name: values.name
+      name: values.name,
+      status: values.status
     }
 
     // add id if create new
@@ -103,14 +112,18 @@ class PopFormContainer extends Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
+      .then( () => {
+
+        const message = edit ? <FormattedMessage id="portal.network.popEditForm.updatePop.status"/> :
+         <FormattedMessage id="portal.network.popEditForm.createPop.status"/>
+        this.showNotification(message)
 
         //Close modal
         this.props.onCancel();
+      }).catch(resp => {
+
+        throw new SubmissionError({'_error': resp.data.message})
+
       })
   }
 
@@ -128,18 +141,17 @@ class PopFormContainer extends Component {
     }
 
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
+      .then(() => {
         // Unselect POP item
         if (this.props.selectedEntityId == popId) {
           this.props.handleSelectedEntity(popId)
         }
+        this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)
         //Close modal
         this.props.onCancel();
+      }).catch(resp => {
+        // Throw error => will be shown inside form
+        throw new SubmissionError({'_error': resp.data.message})
       })
   }
 
@@ -148,14 +160,7 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const {
-      initialValues,
-      iata,
-      onCancel,
-      group,
-      network,
-      popId
-    } = this.props
+    const { initialValues, iata, onCancel, group, network, popId, popPermissions } = this.props
 
     const { showDeleteModal } = this.state
 
@@ -189,12 +194,14 @@ class PopFormContainer extends Component {
             onDelete={() => this.onToggleDeleteModal(true)}
             onSave={(values) => this.onSave(edit, values)}
             onCancel={() => onCancel()}
+            popPermissions={popPermissions}
           />
 
         </SidePanel>
 
         {edit && showDeleteModal &&
           <ModalWindow
+            className='modal-window-raised'
             title={<FormattedMessage id="portal.network.popEditForm.deletePop.title"/>}
             verifyDelete={true}
             cancelButton={true}
@@ -233,7 +240,9 @@ PopFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  selectedEntityId: PropTypes.string
+  popPermissions: PropTypes.object,
+  selectedEntityId: PropTypes.string,
+  showNotification: PropTypes.func
 }
 
 const formSelector = formValueSelector(POP_FORM_NAME)
@@ -268,7 +277,8 @@ const mapStateToProps = (state, ownProps) => {
       updatedDate: edit && pop ? pop.get('updated') : '',
       locationOptions: locationOptions,
       iata: edit && pop ? pop.get('iata') : '',
-      locationId: edit && pop ? pop.get('location_id') : ''
+      locationId: edit && pop ? pop.get('location_id') : '',
+      status: edit && pop ? pop.get('status') : STATUS_VALUE_DEFAULT
     }
   }
 }
@@ -284,7 +294,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
     fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
-    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) )
+    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
+
+    showNotification: (message) => dispatch( changeNotification(message) )
   }
 }
 

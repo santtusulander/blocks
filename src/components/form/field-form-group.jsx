@@ -4,12 +4,22 @@ import { ControlLabel, FormGroup, FormControl, InputGroup } from 'react-bootstra
 import { getReduxFormValidationState } from '../../util/helpers'
 import DefaultErrorBlock from './default-error-block'
 
-const FieldFormGroup = ({ addonAfter, addonBefore, input, placeholder, type, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
+const FieldFormGroup = ({ addonAfter, addonAfterLabel, addonBefore, input, placeholder,
+                          type, label, inputRef, meta, ErrorComponent, className, disabled, required }) => {
 
   const componentClass = type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input'
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
-      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+      {label &&
+        <ControlLabel>
+          {label}{required && ' *'}
+          {addonAfterLabel &&
+            <InputGroup.Addon className="addon-after-label">
+              {addonAfterLabel}
+            </InputGroup.Addon>
+          }
+        </ControlLabel>
+      }
 
       <InputGroup>
 
@@ -52,6 +62,7 @@ FieldFormGroup.defaultProps = {
 FieldFormGroup.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,

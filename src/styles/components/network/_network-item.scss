@@ -144,6 +144,10 @@ $connector-offset: 2px;
     &.provisioning::before {
       background-color: $yellow;
     }
+
+    &.destroying::before {
+      background-color: $red;
+    }
   }
 
   .btn-toolbar {

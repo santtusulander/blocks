@@ -5,6 +5,9 @@ import { shallow } from 'enzyme'
 jest.unmock('../groups.jsx')
 import Groups from '../groups.jsx'
 
+jest.unmock('../../../../util/helpers.js')
+import { getSortData } from '../../../../util/helpers.js'
+
 jest.unmock('../../../__mocks__/promisify');
 import { promisify } from '../../../__mocks__/promisify'
 
@@ -70,9 +73,9 @@ describe('AccountManagementAccountGroups', () => {
       groupsElem
     )
 
-    const sortedData = groups.instance().sortedData(fakeGroups, 'name', 1)
+    const sortedData = getSortData(fakeGroups, 'name', 1)
     expect(sortedData.first().get('name')).toBe('aaa')
-    const sortedData2 = groups.instance().sortedData(fakeGroups, 'name', -1)
+    const sortedData2 = getSortData(fakeGroups, 'name', -1)
     expect(sortedData2.first().get('name')).toBe('ccc')
 
   })
@@ -81,9 +84,9 @@ describe('AccountManagementAccountGroups', () => {
     const groups = shallow(
       groupsElem
     )
-    const sortedData = groups.instance().sortedData(fakeGroups, 'created', 1)
+    const sortedData = getSortData(fakeGroups, 'created', 1)
     expect(sortedData.first().get('name')).toBe('bbb')
-    const sortedData2 = groups.instance().sortedData(fakeGroups, 'created', -1)
+    const sortedData2 = getSortData(fakeGroups, 'created', -1)
     expect(sortedData2.first().get('name')).toBe('ccc')
 
   })

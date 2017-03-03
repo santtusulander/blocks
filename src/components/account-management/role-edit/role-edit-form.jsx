@@ -45,7 +45,10 @@ class RoleEditForm extends React.Component {
       permissions,
       show,
       submitting,
-      editPermsUI
+      editPermsUI,
+      initialValues: {
+        roleName
+      }
     } = this.props
 
     // TODO: Enable in the future when roles are editable, after 0.8
@@ -64,7 +67,7 @@ class RoleEditForm extends React.Component {
       <SidePanel
         show={show}
         title={intl.formatMessage({ id: 'portal.account.roleEdit.title' })}
-        subTitle={intl.formatMessage({ id: 'portal.account.roleEdit.disclaimer.text' })}
+        subTitle={roleName}
         cancel={onCancel}
       >
         <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -145,6 +148,7 @@ RoleEditForm.propTypes = {
   dirty: PropTypes.bool,
   editPermsUI: PropTypes.instanceOf(Immutable.Map),
   handleSubmit: PropTypes.func,
+  initialValues: PropTypes.object,
   intl: PropTypes.object,
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,

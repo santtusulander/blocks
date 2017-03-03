@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 import { changeTheme } from '../redux/modules/ui'
@@ -11,6 +12,7 @@ import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-co
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
 
 import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
+import { isValidEmail } from '../util/validators'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -69,6 +71,13 @@ export class Login extends React.Component {
       password: password,
       rememberUser: rememberUser
     })
+
+    if (!isValidEmail(username)) {
+      this.setState({
+        loginError: <FormattedMessage id="portal.common.error.invalid.email.text"/>
+      })
+      return
+    }
     this.props.userActions.startFetching()
     this.props.userActions.logIn(username, password).then(action => {
 

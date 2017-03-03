@@ -9,8 +9,11 @@ import { Button } from 'react-bootstrap'
 import { getRoute } from '../../util/routes'
 
 import {
-  accountIsServiceProviderType
+  accountIsServiceProviderType,
+  accountIsContentProviderType
 } from '../../util/helpers'
+
+import { getLocationPermissions } from '../../util/permissions'
 
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
@@ -181,7 +184,7 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, data, addUsers, deleteUsers) {
+  editGroupInActiveAccount({groupId, data, addUsers, deleteUsers}) {
     const groupIdsByEmail = email => this.props.users
       .find(user => user.get('email') === email)
       .get('group_id')
@@ -242,7 +245,7 @@ export class AccountManagement extends Component {
 
   showAccountForm(account) {
     this.setState({ accountToUpdate: account })
-    
+
     this.props.toggleModal(ADD_ACCOUNT)
   }
 
@@ -414,6 +417,10 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
+         {accountIsContentProviderType(activeAccount) &&
+           <li>
+             <Link to={baseUrl + '/storages'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
+           </li>}
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">
@@ -481,6 +488,7 @@ export class AccountManagement extends Component {
             type='group'
             entityToUpdate={this.state.groupToUpdate}
             canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.toggleEditGroupModal()}
