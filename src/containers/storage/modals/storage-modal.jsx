@@ -14,8 +14,11 @@ import groupActions from '../../../redux/modules/entities/groups/actions'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getStorageById } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
-import { getLocationOptions, getSelectedLocationOptions } from '../../../redux/modules/entities/CIS-clusters/selectors'
+import { getLocationOptions, getSelectedLocationOptions, getClustersByLocations } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getABRProfilesOptions } from '../../../redux/modules/entities/CIS-workflow-profiles/selectors'
+
+import { STORAGE_WORKFLOW_DEFAULT } from '../../../constants/storage'
+import { convertToBytes } from '../../../util/helpers.js'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -49,62 +52,62 @@ class StorageFormContainer extends React.Component {
   }
 
   onSave(edit, values) {
-    /*
-      TODO: fix onSave function in scope of
-      UDNP-2832 - Integrate CIS Storage configuration form with the redux
+    const { brand, accountId, groupId, selectedClusters } = this.props
 
-      Don't forget to conver estimated usage value to bytes.
-    */
+    const workflow = values.abr ? {
+      id: STORAGE_WORKFLOW_DEFAULT,
+      profile_id: values.abrProfile
+    } : {}
 
-    const params = {
-      brand: 'udn',
-      account: this.props.accountId,
-      group: this.props.groupId,
-      payload: {}
+    const data = {
+      estimated_usage: convertToBytes(values.estimate, values.estimate_unit),
+      workflow: workflow,
+      clusters: selectedClusters
     }
 
-    if (edit) params.id = values.name;
+    const params = {
+      brand: brand,
+      account: accountId,
+      group: groupId,
+      payload: data
+    }
+
+    if (!edit) {
+      data.id = values.name
+    }
+
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
-        // Close modal
+      .then(() => {
         this.props.onCancel();
+      }).catch(resp => {
+        throw new SubmissionError({ _error: resp.data.message })
       })
   }
 
-  onDelete(storageId){
-    /*
-      TODO: fix onDelete function in scope of
-      UDNP-2832 - Integrate CIS Storage configuration form with the redux
-    */
+  onDelete() {
+    const { brand, accountId, groupId, storageId } = this.props
+
     const params = {
-      brand: 'udn',
-      account: this.props.accountId,
-      group: this.props.groupId,
+      brand: brand,
+      account: accountId,
+      group: groupId,
       id: storageId
     }
 
     return this.props.onDelete(params)
-      .then((resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
-        // Close modal
+      .then(() => {
         this.props.onCancel()
+      }).catch(resp => {
+        throw new SubmissionError({ _error: resp.data.message })
       })
   }
 
   render() {
-    const { account, abrProfileOptions, group, storage, initialValues, onCancel, abrToggle, show, locationOptions } = this.props
-    const { showDeleteModal } = this.state
+    const { account, abrProfileOptions, group, storage,
+            initialValues, onCancel, abrToggle,
+            show, locationOptions } = this.props
 
     const edit = !!initialValues.name
 
@@ -128,7 +131,7 @@ class StorageFormContainer extends React.Component {
           />
         </SidePanel>
 
-        {edit && showDeleteModal &&
+        {edit && this.state.showDeleteModal &&
           <ModalWindow
             title={<FormattedMessage id="portal.storage.storageForm.deleteModal.title"/>}
             verifyDelete={true}
@@ -165,15 +168,23 @@ StorageFormContainer.propTypes = {
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
+  selectedClusters: PropTypes.array,
   show: PropTypes.bool,
   storage: PropTypes.instanceOf(Map),
   storageId: PropTypes.string
+}
+
+StorageFormContainer.defaultProps = {
+  account: Map(),
+  group: Map(),
+  storage: Map()
 }
 
 const formSelector = formValueSelector('storageForm')
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.storageId
   const isABRSelected = formSelector(state, 'abr')
+  const selectedLocations = formSelector(state, 'locations')
 
   const storageId = ownProps.storageId && buildReduxId(ownProps.groupId, ownProps.storageId)
   const storage = ownProps.storageId && getStorageById(state, storageId)
@@ -188,6 +199,7 @@ const mapStateToProps = (state, ownProps) => {
     storage: storage ? storage : Map(),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
+    selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',
