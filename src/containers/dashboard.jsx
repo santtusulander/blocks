@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
-import classNames from 'classnames'
+
 import {
   accountIsContentProviderType,
   formatBitsPerSecond,
@@ -60,6 +60,7 @@ export class Dashboard extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
+    this.isCPAccount = false
   }
 
   componentWillMount() {
@@ -108,7 +109,8 @@ export class Dashboard extends React.Component {
         : ACCOUNT_TYPE_SERVICE_PROVIDER
       const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-      const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
+      this.isCPAccount = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
+      const fetchProviders = this.isCPAccount
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
@@ -211,8 +213,6 @@ export class Dashboard extends React.Component {
     const topProvidersAccounts = filterOptions.getIn([isCP ? 'serviceProviders' : 'contentProviders'], List())
 
     const topProviderTitleId = isCP ? 'portal.dashboard.topSP.title' : 'portal.dashboard.topCP.title'
-    // check storage here
-    const hasStorage = true
 
     return (
       <DashboardPanels>
@@ -281,15 +281,13 @@ export class Dashboard extends React.Component {
               mapboxActions={this.props.mapboxActions}/>
           </div>
         </DashboardPanel>
-        <DashboardPanel threeItemPerRow={hasStorage} title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
+        <DashboardPanel title={intl.formatMessage({ id: topProviderTitleId }, { amount: TOP_PROVIDER_LENGTH })}>
           <Table className="table-simple">
             <thead>
               <tr>
                 <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
-                <th width="35%" className={classNames({'text-right': hasStorage}, {'text-center': !hasStorage}, 'traffic-label')}><FormattedMessage id="portal.dashboard.traffic.title" /></th>
-                {!hasStorage &&
-                  <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
-                }
+                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
+                <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
             </tr>
             </thead>
             <tbody>
@@ -306,16 +304,16 @@ export class Dashboard extends React.Component {
                         dataKey="bytes"
                         data={provider.get('detail').toJS()} />
                     </td>
-                    {!hasStorage &&
-                      <td>
-                        <MiniChart
-                          kpiRight={true}
-                          kpiValue={numeral(provider.get('percent_total')).format('0')}
-                          kpiUnit="%"
-                          dataKey="percent_of_timestamp"
-                          data={provider.get('detail').toJS()} />
-                      </td>
-                    }
+
+                    <td>
+                      <MiniChart
+                        kpiRight={true}
+                        kpiValue={numeral(provider.get('percent_total')).format('0')}
+                        kpiUnit="%"
+                        dataKey="percent_of_timestamp"
+                        data={provider.get('detail').toJS()} />
+                    </td>
+
                   </tr>
                 )
               })}
@@ -326,14 +324,8 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-
-        <DashboardPanel threeItemPerRow={hasStorage} title={"Lorem ipsum"}>
-          <h2>Lorem Ipsum</h2>
-        </DashboardPanel>
-
-        {
-          hasStorage &&
-          <DashboardPanel threeItemPerRow={hasStorage} title={"Storage"}>
+        { this.isCPAccount &&
+          <DashboardPanel title={"Storage"}>
             <h2>Lorem Ipsum</h2>
           </DashboardPanel>
         }

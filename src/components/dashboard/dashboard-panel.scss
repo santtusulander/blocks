@@ -14,19 +14,6 @@ $dashboard-panel-kpi-padding: 15px;
 .dashboard-panel {
   margin-bottom: $dashboard-panel-margin;
 
-  &.threeItemPerRow {
-    .dashboard-panels & {
-      width: calc((100% - 2 * (#{$dashboard-panel-margin}))/3);
-    }
-    margin-right: $dashboard-panel-margin;
-    &.threeItemPerRow:last-child{
-      margin-right: 0px;
-    }
-    .traffic-label > span {
-      margin-right: calc(#{$dashboard-panel-mini-chart-width} + #{$dashboard-panel-kpi-padding});
-    }
-  }
-
   .dashboard-panels & {
     width: calc(50% - (#{$dashboard-panel-margin} / 2));
 
