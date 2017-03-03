@@ -62,9 +62,6 @@ class FootprintFormContainer extends React.Component {
 
     return save(params)
       .then((response) => {
-        if (response.data && response.data.message) {
-          throw new SubmissionError({ '_error': response.data.message })
-        }
 
         //add new footprint to pod
         if (!edit) {
@@ -74,6 +71,10 @@ class FootprintFormContainer extends React.Component {
         }
 
         return this.props.onCancel()
+      }).catch(response => {
+
+        throw new SubmissionError({ '_error': response.data.message })
+
       })
   }
 
@@ -90,14 +91,13 @@ class FootprintFormContainer extends React.Component {
 
     return this.props.onCreate(params)
       .then((response) => {
-        if (response.data && response.data.message) {
-          throw new SubmissionError({ '_error': response.data.message })
-        }
 
         finalValues.id = Number(Object.keys(response.entities.footprints)[0])
         this.props.addFootprintToPod(finalValues)
 
         return this.props.onCancel()
+      }).catch(response => {
+        throw new SubmissionError({ '_error': response.data.message })
       })
   }
 
@@ -110,11 +110,12 @@ class FootprintFormContainer extends React.Component {
     }
 
     return this.props.onDelete(params)
-      .then(res => {
-        if (res.error) {
-          throw new SubmissionError({ '_error': res.error.data.message })
-        }
+      .then(() => {
         //return this.props.handleFootprintSaveResponse(res)
+      }).catch(res => {
+
+        throw new SubmissionError({ '_error': res.data.message })
+
       })
   }
 

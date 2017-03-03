@@ -7,14 +7,12 @@ import EntityList from '../entity-list'
 describe('EntityList', () => {
   let subject, error, props = null
   const addEntity = jest.fn()
-  const deleteEntity = jest.fn()
   const editEntity = jest.fn()
 
   beforeEach(() => {
     subject = () => {
       props = {
         addEntity,
-        deleteEntity,
         editEntity
       }
       return shallow(<EntityList {...props}/>)
