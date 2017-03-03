@@ -47,6 +47,7 @@
   "portal.common.textFieldMultilineValidation.allowedSpecialChars.all": "allowed all character",
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
+  "portal.common.of.value.text": "of {value}",
 
   "portal.common.account.multiple": "{numAccounts, number} {numAccounts, plural, one {Account} other {Accounts}}",
   "portal.common.storage.multiple": "{numStorages, number} {numStorages, plural, one {Storage} other {Storages}}",
@@ -130,5 +131,6 @@
 
   "portal.common.typeahead.emptyLabel": "Add values by typing",
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
-  "portal.common.search.no-results.text": "No results found."
+  "portal.common.search.no-results.text": "No results found.",
+  "portal.common.current": "Current"
 }

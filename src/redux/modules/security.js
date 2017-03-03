@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH } from '../util'
+import { mapReducers, BASE_URL_AAA, BASE_URL_NORTH, PAGINATION_MOCK } from '../util'
 
 const SECURITY_SSL_CERTIFICATES_FETCH = 'SECURITY_SSL_CERTIFICATES_FETCH'
 const SECURITY_SSL_CERTIFICATE_FETCH = 'SECURITY_SSL_CERTIFICATE_FETCH'
@@ -170,16 +170,13 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
     return Promise.resolve([])
   }
 
-  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`)
-    .then(action => Promise.all(action.data.map(
-      cn => axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs/${cn}`)
-    )))
-    .then(resp => resp.map(certificate => {
+  return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/certs`, PAGINATION_MOCK)
+    .then(resp => resp.data.data.map(certificate => {
       return {
         group,
-        cn: certificate.data.cn,
-        title: certificate.data.title,
-        date_not_valid_after: certificate.data.date_not_valid_after,
+        cn: certificate.cn,
+        title: certificate.title,
+        date_not_valid_after: certificate.date_not_valid_after,
         account
       }
     }))

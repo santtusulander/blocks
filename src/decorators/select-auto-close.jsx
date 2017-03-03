@@ -1,10 +1,5 @@
-/* eslint-disable react/no-find-dom-node */
-// It is acceptible to use ReactDOM.findDOMNode, since it is not deprecated.
-// react/no-find-dom-node is designed to avoid use of React.findDOMNode and
-// Component.getDOMNode
-
-import { findDOMNode } from 'react-dom'
 import React, { PropTypes, Component } from 'react'
+import { findDOMNode } from 'react-dom'
 
 export default function(WrappedSelect) {
   class AutoClose extends Component {
@@ -13,50 +8,57 @@ export default function(WrappedSelect) {
       this.state = {
         open: false
       }
-      
+
       this.close = this.close.bind(this)
       this.handleClick = this.handleClick.bind(this)
+      this.handleEntityClick = this.handleEntityClick.bind(this)
+      this.onToggle = this.onToggle.bind(this)
     }
 
-    componentWillMount() {
-      document.addEventListener('click', this.handleClick, false)
+    componentDidMount() {
+      document.addEventListener('click', this.handleClick)
     }
 
     componentWillUnmount() {
-      document.removeEventListener('click', this.handleClick, false)
+      document.removeEventListener('click', this.handleClick)
       this.props.close && this.props.close()
     }
 
-    handleClick(e) {
-      if (findDOMNode(this).contains(e.target)) {
+    handleClick(event) {
+      event.stopImmediatePropagation()
+      const element = findDOMNode(this)
+      if (element && element.contains(event.target)) {
         return
       }
       this.close()
+    }
+
+    handleEntityClick(value) {
+      const { handleEntityClick } = this.props
+      if (handleEntityClick) {
+        handleEntityClick(value)
+      }
+      this.close()
+    }
+
+    onToggle() {
+      this.props.toggle && this.props.toggle()
+      this.setState({ open: !this.state.open })
     }
 
     close() {
       if (this.props.open || this.state.open) {
         if (this.props.close) {
           this.props.close()
-        } else {
-          this.setState({ open: !this.state.open })
         }
+        this.setState({ open: false })
       }
     }
 
     render() {
-      let newProps = {}
-      if (this.props.open === undefined) {
-        newProps.open = this.state.open
-        newProps.handleEntityClick = value => {
-          this.props.handleEntityClick(value)
-          this.close()
-        }
-      }
-      if (!this.props.toggle) {
-        newProps.toggle = () => this.setState({ open: !this.state.open })
-      }
-      return (<WrappedSelect {...this.props}{...newProps}/>)
+      return (
+        <WrappedSelect {...this.props} open={this.state.open} handleEntityClick={this.handleEntityClick} toggle={this.onToggle}/>
+      )
     }
   }
 
@@ -66,6 +68,9 @@ export default function(WrappedSelect) {
     handleEntityClick: PropTypes.func,
     open: PropTypes.bool,
     toggle: PropTypes.func
+  }
+  AutoClose.defaultProps = {
+    open: false
   }
 
   return AutoClose

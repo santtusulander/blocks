@@ -16,7 +16,7 @@ const SelectorComponent = ({
   searchValue,
   onSearch,
   onCaretClick,
-  onItemClick,
+  handleEntityClick,
   onTopbarClick }) =>
   <Dropdown id="" onSelect={onSelect} open={open} onToggle={() => {/*noop*/}} className="selector-component">
     <ToggleElement bsRole="toggle" toggle={toggle}>{children}</ToggleElement>
@@ -34,7 +34,7 @@ const SelectorComponent = ({
           {topBarText && <MenuItem onClick={onTopbarClick}><span className="top-bar-link">{topBarText}</span></MenuItem>}
           {items.map((option, i) =>
             <li key={i} role="presentation">
-              <a id="menu-item" role="menu-item" onClick={() => onItemClick(option[0])} tabIndex="-1">
+              <a id="menu-item" role="menu-item" onClick={() => handleEntityClick(option[0])} tabIndex="-1">
                 <span id="name" className="name">{option[1]}</span>
               </a>
               {drillable &&
@@ -54,7 +54,7 @@ SelectorComponent.propTypes = {
   drillable: PropTypes.bool,
   items: PropTypes.array,
   onCaretClick: PropTypes.func,
-  onItemClick: PropTypes.func,
+  handleEntityClick: PropTypes.func,
   onSearch: PropTypes.func,
   onSelect: PropTypes.func,
   onTopbarClick: PropTypes.func,

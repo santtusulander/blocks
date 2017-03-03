@@ -12,7 +12,7 @@ describe('SelectorComponent', () => {
 
   const children = React.createElement('div', null, 'Test')
   const onCaretClick = jest.genMockFunction()
-  const onItemClick = jest.genMockFunction()
+  const handleEntityClick = jest.genMockFunction()
   const onSearch = jest.genMockFunction()
   const onSelect = jest.genMockFunction()
   const onTopbarClick = jest.genMockFunction()
@@ -33,7 +33,7 @@ describe('SelectorComponent', () => {
          searchValue,
          onSearch,
          onCaretClick,
-         onItemClick,
+         handleEntityClick,
          onTopbarClick
        }
        return shallow(<SelectorComponent {...props}/>).shallow()
