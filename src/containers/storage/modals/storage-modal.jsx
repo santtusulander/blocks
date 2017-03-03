@@ -24,6 +24,7 @@ import { convertToBytes } from '../../../util/helpers.js'
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import StorageForm from '../../../components/storage/forms/storage-form'
+import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
 class StorageFormContainer extends React.Component {
   constructor(props) {
@@ -121,15 +122,18 @@ class StorageFormContainer extends React.Component {
     return (
       <div>
         <SidePanel show={show} title={title} subTitle={subTitle} cancel={onCancel}>
-          {!this.props.isFetching && <StorageForm
-            initialValues={initialValues}
-            onSave={(values) => this.onSave(edit, values)}
-            onDelete={() => this.onToggleDeleteModal(true)}
-            onCancel={onCancel}
-            abrToggle={abrToggle}
-            locationOptions={locationOptions}
-            abrProfileOptions={abrProfileOptions}
-          />}
+          {!this.props.isFetching
+           ? <StorageForm
+               initialValues={initialValues}
+               onSave={(values) => this.onSave(edit, values)}
+               onDelete={() => this.onToggleDeleteModal(true)}
+               onCancel={onCancel}
+               abrToggle={abrToggle}
+               locationOptions={locationOptions}
+               abrProfileOptions={abrProfileOptions}
+             />
+           : <LoadingSpinner/>
+          }
         </SidePanel>
 
         {edit && this.state.showDeleteModal &&
