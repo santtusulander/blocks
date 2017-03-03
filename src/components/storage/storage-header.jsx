@@ -34,7 +34,7 @@ const StorageHeader = ({
   const itemSelectorTopBarAction = (tier, fetchItems, IDs) => {
     const { account } = IDs
     switch (tier) {
-      case 'storage':
+      case 'property':
         fetchItems('group', 'udn', account)
         break
       case 'group':
@@ -70,7 +70,7 @@ const StorageHeader = ({
         }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1>
-            <TruncatedTitle content={params.property}
+            <TruncatedTitle content={params.storage}
                             tooltipPlacement="bottom"
                             className="account-property-title"/>
           </h1>
@@ -79,13 +79,15 @@ const StorageHeader = ({
       </AccountSelector>
       <ButtonToolbar>
         <Link className="btn btn-primary btn-icon"
-              // to={`${getAnalyticsUrl('property', params.property, params)}`}>
-              to='#'>
+              // to prop should be uncommented when analytics page is ready
+              // to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
+              >
           <IconChart/>
         </Link>
         <Link className="btn btn-primary btn-icon"
+              // to prop should be uncommented when configuration page is ready
               // to={`${getContentUrl('property', params.property, params)}/configuration`}>
-              to='#'>
+              >
           <IconConfiguration/>
         </Link>
       </ButtonToolbar>
