@@ -17,6 +17,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { getSortData } from '../../../util/helpers'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
+import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 
 // TODO Remove this in scope of UDNP-2849 when redux will be ready
 const mockRedux = {
@@ -24,7 +25,7 @@ const mockRedux = {
     switch (entity) {
       case 'storages':
         return fromJS([{
-          id: 1,
+          id: 'storage1',
           name: 'Media Storage',
           group: 'Group A',
           originTo: 'mysite.com',
@@ -32,7 +33,7 @@ const mockRedux = {
           usage: '450 GB',
           files: 1404
         },{
-          id: 2,
+          id: 'storage2',
           name: 'Bangkok Storage',
           group: 'Group B',
           originTo: 'foobar.com and 1 more',
@@ -40,7 +41,7 @@ const mockRedux = {
           usage: '1.2 TB',
           files: 28776
         },{
-          id: 3,
+          id: 'storage3',
           name: 'Asia Storage',
           group: 'Group C',
           originTo: 'barfoo.com',
@@ -48,7 +49,7 @@ const mockRedux = {
           usage: '900 GB',
           files: 1404
         },{
-          id: 4,
+          id: 'storage4',
           name: 'Dataphone Storage',
           group: 'Group D',
           originTo: 'mysite.com and 5 more',
@@ -188,7 +189,7 @@ class AccountManagementStorages extends Component {
                   <td>{storage.get('usage')}</td>
                   <td>{storage.get('files')}</td>
                   <td className="nowrap-column">
-                  <ActionButtons onEdit={() => {this.editStorage(storage)}} onDelete={() => {this.toggleDeleteConfirmationModal(storage)}} />
+                  <ActionButtons onEdit={() => {this.editStorage(storage.get('id'))}} onDelete={() => {this.toggleDeleteConfirmationModal(storage)}} />
                   </td>
                 </tr>
               )
@@ -205,6 +206,20 @@ class AccountManagementStorages extends Component {
            cancelButton={true}
            cancel={() => toggleModal(null)}
            onSubmit={() => this.deleteStorage()} />}
+
+        {/* TODO: UDNP-2906 Integrate storage group list view with redux, create/edit forms, analytics chart */}
+        {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
+          <StorageFormContainer
+            show={true}
+            brand={"udn"}
+            accountId={"238"}
+            storageId={(accountManagementModal === EDIT_STORAGE) ? "storage1" : ''}
+            groupId={"339"}
+            fetching={false}
+            onCancel={() => this.props.toggleModal()}
+            onSubmit={() => {/* noop */}}
+          />
+        }
 
         {sortedStorages.size === 0 && this.state.search.length > 0 &&
          <div className="text-center">
