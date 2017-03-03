@@ -32,6 +32,7 @@
 
   "portal.storage.summaryPage.title": "SUMMARY",
   "portal.storage.summaryPage.dropzone.noFiles.title": "No Files",
+  "portal.storage.summaryPage.dropzone.asperaToggle.title": "Aspera Upload",
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",
