@@ -23,7 +23,12 @@ describe('StorageFormContainer', () => {
         intl: intlMaker(),
         initialValues: {
           name: 'test network'
-        }
+        },
+        fetchAccount: jest.fn(),
+        fetchClusters: jest.fn(),
+        fetchGroup: jest.fn(),
+        fetchStorage: jest.fn(),
+        fetchWorkflows: jest.fn()
       }
       return shallow(<StorageFormContainer {...props}/>)
     }
