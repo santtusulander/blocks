@@ -16,6 +16,7 @@ import { getById as getGroupById } from '../../../redux/modules/entities/groups/
 import { getById as getStorageById } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getLocationOptions, getSelectedLocationOptions, getClustersByLocations } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getABRProfilesOptions } from '../../../redux/modules/entities/CIS-workflow-profiles/selectors'
+import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { STORAGE_WORKFLOW_DEFAULT } from '../../../constants/storage'
 import { convertToBytes } from '../../../util/helpers.js'
@@ -120,7 +121,7 @@ class StorageFormContainer extends React.Component {
     return (
       <div>
         <SidePanel show={show} title={title} subTitle={subTitle} cancel={onCancel}>
-          <StorageForm
+          {!this.props.isFetching && <StorageForm
             initialValues={initialValues}
             onSave={(values) => this.onSave(edit, values)}
             onDelete={() => this.onToggleDeleteModal(true)}
@@ -128,7 +129,7 @@ class StorageFormContainer extends React.Component {
             abrToggle={abrToggle}
             locationOptions={locationOptions}
             abrProfileOptions={abrProfileOptions}
-          />
+          />}
         </SidePanel>
 
         {edit && this.state.showDeleteModal &&
@@ -196,6 +197,7 @@ const mapStateToProps = (state, ownProps) => {
     abrToggle: isABRSelected,
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    isFetching: getGlobalFetching(state),
     storage: storage ? storage : Map(),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
