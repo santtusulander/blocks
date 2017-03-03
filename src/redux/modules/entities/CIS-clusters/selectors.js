@@ -64,3 +64,25 @@ export const getSelectedLocationOptions = (state, clusters) => {
 
   return locationOptions
 }
+
+/***
+ * Get cluster by location
+ *
+ * @param {} state from redux
+ * @param [] Array of objects
+ *
+ * @return []
+ */
+export const getClustersByLocations = (state, locations) => {
+  let selectedClusters = []
+
+  locations.forEach((location) => {
+    state.entities.CISClusters.forEach((cluster) => {
+      if (cluster.get('geolocation') === location.id) {
+        selectedClusters.push(cluster.get('name'))
+      }
+    })
+  })
+
+  return selectedClusters
+}
