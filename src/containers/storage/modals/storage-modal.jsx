@@ -164,6 +164,7 @@ StorageFormContainer.propTypes = {
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
+  isFetching: PropTypes.bool,
   locationOptions: PropTypes.array,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
