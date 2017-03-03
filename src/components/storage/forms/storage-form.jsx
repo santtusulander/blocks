@@ -12,8 +12,8 @@ import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi
 
 import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
-import { STORAGE_ESTIMATE_UNITS, STORAGE_ABR_PROFILES,
-         STORAGE_ESTIMATE_UNITS_DEFAULT, STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
+import { STORAGE_ESTIMATE_UNITS,  STORAGE_ESTIMATE_UNITS_DEFAULT,
+         STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
          STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
 
 const validate = ({ name, locations, estimate, estimate_unit, abr, abrProfile }) => {
@@ -59,7 +59,7 @@ class StorageForm extends React.Component {
   }
 
   render() {
-    const { error, submitting, handleSubmit, intl, initialValues,
+    const { error, submitting, handleSubmit, intl, initialValues, abrProfileOptions,
             invalid, onCancel, onSave, onDelete, abrToggle, locationOptions } = this.props
 
     const edit = !!initialValues.name
@@ -152,7 +152,7 @@ class StorageForm extends React.Component {
             className="abr-profile-field"
             component={FieldFormGroupSelect}
             emptyLabel={<FormattedMessage id="portal.storage.storageForm.abrProfile.placeholder" />}
-            options={STORAGE_ABR_PROFILES}
+            options={abrProfileOptions}
             disabled={edit ? true : false}
             required={edit ? false : true}
           />
@@ -189,6 +189,7 @@ class StorageForm extends React.Component {
 StorageForm.displayName = "StorageForm"
 
 StorageForm.propTypes = {
+  abrProfileOptions: PropTypes.array,
   abrToggle: PropTypes.bool,
   fetching: PropTypes.bool,
   intl: intlShape.isRequired,
