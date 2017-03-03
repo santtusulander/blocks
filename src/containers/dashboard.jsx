@@ -288,7 +288,7 @@ export class Dashboard extends React.Component {
                 <th width="30%"><FormattedMessage id="portal.dashboard.provider.title" /></th>
                 <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.traffic.title" /></th>
                 <th width="35%" className="text-center"><FormattedMessage id="portal.dashboard.trafficPercentage.title" /></th>
-            </tr>
+              </tr>
             </thead>
             <tbody>
               {topProviders.map((provider, i) => {
@@ -304,7 +304,6 @@ export class Dashboard extends React.Component {
                         dataKey="bytes"
                         data={provider.get('detail').toJS()} />
                     </td>
-
                     <td>
                       <MiniChart
                         kpiRight={true}
@@ -313,7 +312,6 @@ export class Dashboard extends React.Component {
                         dataKey="percent_of_timestamp"
                         data={provider.get('detail').toJS()} />
                     </td>
-
                   </tr>
                 )
               })}

@@ -8,8 +8,6 @@ $dashboard-panel-horizontal-padding: em(30px, $dashboard-panel-font-size);
 $dashboard-panel-vertical-padding: em(15px, $dashboard-panel-font-size);
 $dashboard-panel-bg: rgba($black, 0.3);
 $dashboard-panel-header-bg: rgba($black, 0.2);
-$dashboard-panel-mini-chart-width: 50%;
-$dashboard-panel-kpi-padding: 15px;
 
 .dashboard-panel {
   margin-bottom: $dashboard-panel-margin;
@@ -71,5 +69,4 @@ $dashboard-panel-kpi-padding: 15px;
       border-bottom: 1px solid $dashboard-panel-header-bg;
     }
   }
-
 }
