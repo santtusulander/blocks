@@ -1,3 +1,4 @@
+export const STORAGE_WORKFLOW_DEFAULT = 'abr'
 export const STORAGE_ABR_DEFAULT = false
 export const STORAGE_ESTIMATE_DEFAULT = 100
 export const STORAGE_ESTIMATE_MIN = 1
