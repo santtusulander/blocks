@@ -28,5 +28,12 @@
   "portal.storage.storageForm.estimate.help.label": "Estimated Usage",
   "portal.storage.storageForm.estimate.help.text": "By setting this value the user will be able to track their actual usage against their estimated usage across the UDN portal in analytics. The value entered here doesn't serve as a quota or a cap for actual usage.",
   "portal.storage.storageForm.abrProfile.help.label": "ABR Workflow",
-  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest."
+  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest.",
+
+  "portal.storage.summaryPage.title": "SUMMARY",
+
+  "portal.storage.topBar.storage.label": "Back to Groups",
+  "portal.storage.topBar.group.label": "Back to Accounts",
+  "portal.storage.topBar.account.label": "UDN Admin",
+  "portal.storage.topBar.brand.label": "UDN Admin"
 }
