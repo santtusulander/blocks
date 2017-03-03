@@ -8,12 +8,14 @@ import { buildReduxId } from '../../../redux/util'
 import accountActions from '../../../redux/modules/entities/accounts/actions'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
+import workflowActions from '../../../redux/modules/entities/CIS-workflow-profiles/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getById as getStorageById } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getLocationOptions, getSelectedLocationOptions } from '../../../redux/modules/entities/CIS-clusters/selectors'
+import { getABRProfilesOptions } from '../../../redux/modules/entities/CIS-workflow-profiles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -37,10 +39,9 @@ class StorageFormContainer extends React.Component {
 
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
-    if (storageId) {
-      this.props.fetchStorage({ group: groupId, id: storageId })
-      this.props.fetchClusters({})
-    }
+    storageId && this.props.fetchStorage({ group: groupId, id: storageId })
+    this.props.fetchClusters({})
+    this.props.fetchWorkflows({})
   }
 
   onToggleDeleteModal(showDeleteModal) {
@@ -102,7 +103,7 @@ class StorageFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, storage, initialValues, onCancel, abrToggle, show, locationOptions } = this.props
+    const { account, abrProfileOptions, group, storage, initialValues, onCancel, abrToggle, show, locationOptions } = this.props
     const { showDeleteModal } = this.state
 
     const edit = !!initialValues.name
@@ -123,6 +124,7 @@ class StorageFormContainer extends React.Component {
             onCancel={onCancel}
             abrToggle={abrToggle}
             locationOptions={locationOptions}
+            abrProfileOptions={abrProfileOptions}
           />
         </SidePanel>
 
@@ -145,6 +147,7 @@ class StorageFormContainer extends React.Component {
 
 StorageFormContainer.displayName = "StorageFormContainer"
 StorageFormContainer.propTypes = {
+  abrProfileOptions: PropTypes.array,
   abrToggle: PropTypes.bool,
   account: PropTypes.instanceOf(Map),
   accountId: PropTypes.string,
@@ -153,6 +156,7 @@ StorageFormContainer.propTypes = {
   fetchClusters: PropTypes.func,
   fetchGroup: PropTypes.func,
   fetchStorage: PropTypes.func,
+  fetchWorkflows: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.string,
   initialValues: PropTypes.object,
@@ -170,7 +174,6 @@ StorageFormContainer.propTypes = {
 StorageFormContainer.defaultProps = {
   account: Map(),
   group: Map(),
-  storage: Map(),
   show: true
 }
 
@@ -189,8 +192,9 @@ const mapStateToProps = (state, ownProps) => {
     abrToggle: isABRSelected,
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
-    storage: storage,
+    storage: storage ? storage : Map(),
     locationOptions: getLocationOptions(state),
+    abrProfileOptions: getABRProfilesOptions(state),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',
@@ -211,7 +215,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
-    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) )
+    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchWorkflows: (params) => dispatch( workflowActions.fetchAll(params) )
   }
 }
 
