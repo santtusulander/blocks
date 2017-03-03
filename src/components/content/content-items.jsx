@@ -454,7 +454,7 @@ class ContentItems extends React.Component {
                       )
                     })}
                   </div>
-                  <br /><br />
+                  {!viewingChart && [ <br />, <br /> ]}
                 </div>}
 
               {this.getTier() === 'group' && !viewingChart &&

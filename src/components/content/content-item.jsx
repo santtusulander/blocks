@@ -8,7 +8,7 @@ import StorageItemList from './storage/storage-item-list'
 const ContentItem = ({ deleteItem, isChart, isStorage, itemProps }) => {
   if (isChart) {
     if (isStorage) {
-      return <StorageChartContainer id={itemProps.id} params={itemProps.params} />
+      return <StorageChartContainer storageId={itemProps.id} params={itemProps.params} />
     }
     return (
       <ContentItemChart {...itemProps} delete={deleteItem} />
