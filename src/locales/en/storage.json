@@ -31,6 +31,7 @@
   "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest.",
 
   "portal.storage.summaryPage.title": "SUMMARY",
+  "portal.storage.summaryPage.dropzone.noFiles.title": "No Files",
 
   "portal.storage.topBar.storage.label": "Back to Groups",
   "portal.storage.topBar.group.label": "Back to Accounts",
