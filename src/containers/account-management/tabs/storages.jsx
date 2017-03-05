@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import {fromJS, List} from 'immutable'
+import { List} from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -13,56 +13,16 @@ import ActionButtons from '../../../components/action-buttons'
 import ModalWindow from '../../../components/modal'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
+import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
+import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 
-import { getSortData } from '../../../util/helpers'
+import { getSortData, formatBytes } from '../../../util/helpers'
+import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
+import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 
-// TODO Remove this in scope of UDNP-2849 when redux will be ready
-const mockRedux = {
-  get: function(entity) {
-    switch (entity) {
-      case 'storages':
-        return fromJS([{
-          id: 'storage1',
-          name: 'Media Storage',
-          group: 'Group A',
-          originTo: 'mysite.com',
-          location: 'Frankfurt',
-          usage: '450 GB',
-          files: 1404
-        },{
-          id: 'storage2',
-          name: 'Bangkok Storage',
-          group: 'Group B',
-          originTo: 'foobar.com and 1 more',
-          location: 'San Jose',
-          usage: '1.2 TB',
-          files: 28776
-        },{
-          id: 'storage3',
-          name: 'Asia Storage',
-          group: 'Group C',
-          originTo: 'barfoo.com',
-          location: 'Hong Kong',
-          usage: '900 GB',
-          files: 1404
-        },{
-          id: 'storage4',
-          name: 'Dataphone Storage',
-          group: 'Group D',
-          originTo: 'mysite.com and 5 more',
-          location: 'San Jose, 2 copies',
-          usage: '2.3 TB',
-          files: 1404
-        }])
-
-      default:
-        return null
-    }
-  }
-}
 
 class AccountManagementStorages extends Component {
   constructor(props) {
@@ -72,7 +32,7 @@ class AccountManagementStorages extends Component {
       storageToDelete: null,
       storageToEdit: null,
       search: '',
-      sortBy: 'name',
+      sortBy: 'id',
       sortDir: 1
     }
 
@@ -81,6 +41,14 @@ class AccountManagementStorages extends Component {
     this.addStorage = this.addStorage.bind(this)
     this.editStorage = this.editStorage.bind(this)
     this.deleteStorage = this.deleteStorage.bind(this)
+    this.formatLocations = this.formatLocations.bind(this)
+  }
+
+  componentWillMount() {
+    this.props.groups.map( group => {
+      this.props.fetchStorages({group: group.get('id') })
+    })
+    this.props.fetchClusters({})
   }
 
   changeSearch(e) {
@@ -116,14 +84,22 @@ class AccountManagementStorages extends Component {
     //   .then(() => this.props.toggleModal(null))
   }
 
-  filterData( storageName ) {
+  filterData(storageName) {
     return this.props.storages.filter((storage) => {
-      return storage.get('name').toLowerCase().includes(storageName)
+      return storage.get('id').toLowerCase().includes(storageName)
     })
   }
 
+  formatLocations(locations) {
+    if (locations.length === 1) {
+      return locations[0]
+    } else {
+      return <FormattedMessage id="portal.common.andMore" values={{firstItem: locations[0], count: locations.length-1}} />
+    }
+  }
+
   render() {
-    const { storages, accountManagementModal, toggleModal, intl } = this.props
+    const {groups, storages, clusters, accountManagementModal, toggleModal, intl } = this.props
 
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -158,7 +134,7 @@ class AccountManagementStorages extends Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="name">
+              <TableSorter {...sorterProps} column="id">
                 <FormattedMessage id="portal.account.storages.table.name.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="group">
@@ -179,13 +155,23 @@ class AccountManagementStorages extends Component {
           </thead>
           <tbody>
             {sortedStorages.map((storage, i) => {
+              const storageGroupId = storage.get('parentId')
+              const groupName = groups.find((group) => (group.get('id') === storageGroupId)).get('name')
+
+              let locations = []
+              storage.get('clusters').forEach(clusterId => {
+                const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
+                const clusterLocation = clusterData && clusterData.get('description')
+                locations.push(clusterLocation)
+              })
+
               return (
                 <tr key={i}>
-                  <td>{storage.get('name')}</td>
-                  <td>{storage.get('group')}</td>
+                  <td>{storage.get('id')}</td>
+                  <td>{groupName}</td>
                   <td>{storage.get('originTo')}</td>
-                  <td>{storage.get('location')}</td>
-                  <td>{storage.get('usage')}</td>
+                  <td>{locations.length && this.formatLocations(locations)}</td>
+                  <td>{formatBytes(storage.get('usage'))}</td>
                   <td>{storage.get('files')}</td>
                   <td className="nowrap-column">
                   <ActionButtons onEdit={() => {this.editStorage(storage.get('id'))}} onDelete={() => {this.toggleDeleteConfirmationModal(storage)}} />
@@ -232,6 +218,10 @@ class AccountManagementStorages extends Component {
 AccountManagementStorages.displayName = 'AccountManagementStorages'
 AccountManagementStorages.propTypes = {
   accountManagementModal: PropTypes.string,
+  clusters: PropTypes.instanceOf(List),
+  fetchClusters: PropTypes.func,
+  fetchStorages: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
   intl: PropTypes.object,
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
@@ -243,9 +233,14 @@ AccountManagementStorages.defaultProps = {
 
 
 function mapStateToProps(state) {
+  const account = state.account.get('activeAccount')
+  const groups = state.group.get('allGroups')
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    storages: mockRedux.get('storages')
+    activeAccount: account,
+    groups: groups,
+    storages: getStoragesByGroups(state, groups),
+    clusters: getAllClusters(state)
   }
 }
 
@@ -253,7 +248,9 @@ function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   return {
-    toggleModal: uiActions.toggleAccountManagementModal
+    toggleModal: uiActions.toggleAccountManagementModal,
+    fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
+    fetchClusters: (params) => dispatch(clusterActions.fetchAll(params))
   };
 }
 

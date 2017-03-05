@@ -1,3 +1,4 @@
+import { List } from 'immutable'
 import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
@@ -18,4 +19,19 @@ export const getById = (state, id) => {
  */
 export const getByGroup = (state, groupId) => {
   return getEntitiesByParent(state, 'CISIngestPoints', groupId)
+}
+
+/**
+ * Get IngestPoints By Groups
+ * @param  {} state
+ * @param  {List} list of groups
+ * @return List
+ */
+export const getByGroups = (state, groups) => {
+  if (groups && groups.size > 0) {
+    return groups.reduce((acc, g) => {
+      const groupStorages = getByGroup(state, g.get('id'))
+      return acc.merge(groupStorages)
+    }, List())
+  }
 }
