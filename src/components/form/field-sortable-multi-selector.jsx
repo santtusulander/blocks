@@ -4,8 +4,7 @@ import SortableMultiSelector from '../sortable-multi-selector'
 import { getReduxFormValidationState } from '../../util/helpers'
 
 const FieldSortableMultiSelector  = ({ input, options, meta: { touched, error },
-                                        className, label, required = true,
-                                        disabled = false}) => {
+                                       className, label, required}) => {
   return (
     <FormGroup
       className={className}
@@ -15,7 +14,6 @@ const FieldSortableMultiSelector  = ({ input, options, meta: { touched, error },
       <SortableMultiSelector
         required={required}
         label={label}
-        disabled={disabled}
         options={options}
         {...input}
       />
@@ -30,12 +28,16 @@ const FieldSortableMultiSelector  = ({ input, options, meta: { touched, error },
 FieldSortableMultiSelector.displayName = 'FieldSortableMultiSelector'
 FieldSortableMultiSelector.propTypes = {
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   input: PropTypes.object,
   label: PropTypes.object,
   meta: PropTypes.object,
   options: PropTypes.array,
   required: PropTypes.bool
+}
+
+FieldSortableMultiSelector.defaultProps = {
+  required: false,
+  options: []
 }
 
 export default FieldSortableMultiSelector
