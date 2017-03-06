@@ -4,7 +4,13 @@ import { Aspera, AW4 } from '../../util/aspera-helpers.js'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
+import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
+         ASPERA_DEFAULT_PATH, ASPERA_DEFAULT_DESTINATION_ROOT
+       } from '../../constants/storage'
+
 import * as uiActionCreators from '../../redux/modules/ui'
+import * as userActionCreators from '../../redux/modules/user'
 
 const DROP_EVENT_NAME = 'drop'
 const DRAG_OVER_EVENT_NAME = 'dragover'
@@ -20,6 +26,8 @@ class AsperaUpload extends Component {
 
     this.state = {
       isDragActive: false,
+      accessKey: null,
+      asperaError: null,
       transferUuids: []
     }
 
@@ -36,6 +44,24 @@ class AsperaUpload extends Component {
     this.onDrop = this.onDrop.bind(this)
 
     this.showNotification = this.showNotification.bind(this)
+  }
+
+  componentWillMount() {
+    const { storageId } = this.props
+
+    this.props.userActions.getAccessKeyByToken(storageId).then((res) => {
+      if (res.error) {
+        this.setState({
+          asperaError: res.payload,
+          accessKey: null
+        })
+      } else {
+        this.setState({
+          asperaError: null,
+          accessKey: res.payload
+        })
+      }
+    })
   }
 
   componentDidMount() {
@@ -77,19 +103,15 @@ class AsperaUpload extends Component {
   }
 
   startTransfer(files) {
-    /*
-      TODO: UDNP-2867 Integrate Aspera component with the redux
-    */
     const connectSettings = {}
     const transferSpec = {
       "paths": [],
-      "remote_host": "demo.asperasoft.com",
-      "remote_user": "aspera",
-      "remote_password": "demoaspera",
-      "direction": "send",
-      "target_rate_kbps" : 5000,
-      "resume" : "sparse_checksum",
-      "destination_root": "Upload"
+      "remote_host": this.props.asperaGetaway,
+      "remote_user": this.state.accessKey,
+      "remote_password": this.state.accessKey,
+      "direction": ASPERA_DEFAULT_PATH,
+      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
+      "ssh_port": ASPERA_DEFAULT_PORT
     }
 
     const callbacks = {
@@ -98,11 +120,14 @@ class AsperaUpload extends Component {
         transferUuids.push(data.transfer_specs[0].uuid)
 
         this.setState({
-          transferUuids
+          transferUuids: transferUuids,
+          asperaError: null
         })
       },
-      error: () => {
-        /* TODO: UDNP-2867 Integrate Aspera component with the redux */
+      error: (res) => {
+        this.setState({
+          asperaError: res.error.internal_message
+        })
       }
     }
 
@@ -118,8 +143,10 @@ class AsperaUpload extends Component {
           this.startTransfer(files)
         }
       },
-      error: () => {
-        /* TODO: UDNP-2867 Integrate Aspera component with the redux */
+      error: (res) => {
+        this.setState({
+          asperaError: res.error.internal_message
+        })
       }
     }, {
       allowMultipleSelection: this.props.multiple
@@ -182,41 +209,54 @@ class AsperaUpload extends Component {
       { "drag-active": this.state.isDragActive }
     )
 
-    return (
-      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
-        <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
-             onClick={openUploadModalOnClick ? this.onClick : null} >
+    if (!this.state.asperaError) {
+      return (
+        <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+          <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
+               onClick={openUploadModalOnClick ? this.onClick : null} >
 
-          <div className={classNames}>
-            <div className="welcome-text">
-              { openUploadModalOnClick
-                ? <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
-                : <FormattedMessage id="portal.fileInput.dropFile.text"/>
-              }
+            <div className={classNames}>
+              <div className="welcome-text">
+                { openUploadModalOnClick
+                  ? <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
+                  : <FormattedMessage id="portal.fileInput.dropFile.text"/>
+                }
+              </div>
             </div>
-          </div>
 
+          </div>
         </div>
-      </div>
-    );
+      )
+    } else {
+      return (
+        <div>
+          {this.state.asperaError}
+        </div>
+      )
+    }
   }
 }
 
 AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
+  asperaGetaway: React.PropTypes.string,
   multiple: React.PropTypes.bool,
   openUploadModalOnClick: React.PropTypes.bool,
-  uiActions: React.PropTypes.object
+  storageId: React.PropTypes.string,
+  uiActions: React.PropTypes.object,
+  userActions: React.PropTypes.object
 }
+
 AsperaUpload.defaultProps = {
+  asperaGetaway: ASPERA_DEFAULT_HOST,
   multiple: true,
   openUploadModalOnClick: false
 }
 
-
 function mapDispatchToProps(dispatch) {
   return {
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
   }
 }
 
