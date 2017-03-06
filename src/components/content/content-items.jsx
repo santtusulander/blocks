@@ -28,18 +28,20 @@ import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
 import Select from '../select'
 import IconAdd from '../icons/icon-add.jsx'
+import ButtonDropdown from '../button-dropdown'
 import IconCaretDown from '../icons/icon-caret-down.jsx'
 import IconItemList from '../icons/icon-item-list.jsx'
 import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
-import AccountForm from '../../components/account-management/account-form.jsx'
-import GroupFormContainer from '../../containers/account-management/modals/group-form.jsx'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
+import EntityEdit from '../../components/account-management/entity-edit'
+
 import SidePanel from '../side-panel'
+import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
 
 const rangeMin = 400
@@ -75,6 +77,7 @@ class ContentItems extends React.Component {
     this.state = {
       saving: false,
       showModal: false,
+      showStorageModal: false,
       itemToEdit: undefined
     }
     this.itemSelectorTopBarAction = this.itemSelectorTopBarAction.bind(this)
@@ -85,6 +88,16 @@ class ContentItems extends React.Component {
     this.addItem = this.addItem.bind(this)
     this.editItem = this.editItem.bind(this)
     this.hideModal = this.hideModal.bind(this)
+    this.showStorageModal = this.showStorageModal.bind(this)
+    this.hideStorageModal = this.hideStorageModal.bind(this)
+
+    this.addButtonOptions = [{
+      label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
+      handleClick: this.addItem
+    }, {
+      label: <FormattedMessage id="portal.content.property.header.addStorage.label"/>,
+      handleClick: this.showStorageModal
+    }]
   }
   getMetrics(item) {
     return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
@@ -212,6 +225,16 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
+  showStorageModal() {
+    this.setState({
+      showStorageModal : true
+    });
+  }
+  hideStorageModal() {
+    this.setState({
+      showStorageModal : false
+    });
+  }
   getTagText(isCloudProvider, providerType, trialMode) {
     let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
     if (isCloudProvider && !trialMode) {
@@ -226,6 +249,15 @@ class ContentItems extends React.Component {
     }
     return { tagText: tagText }
   }
+
+  renderAddButton () {
+    if(this.getTier() === 'group'){
+      return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+    }
+
+    return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+  }
+
   renderAccountSelector(props, itemSelectorTopBarAction) {
     if (props.selectionDisabled === true) {
       return (
@@ -282,7 +314,9 @@ class ContentItems extends React.Component {
       fetchingMetrics,
       showAnalyticsLink,
       viewingChart,
-      user
+      user,
+      locationPermissions,
+      storageContentItems
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -342,7 +376,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
+                {this.renderAddButton()}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -370,7 +404,7 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -379,11 +413,54 @@ class ContentItems extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
+
+              {!storageContentItems.isEmpty() &&
+                <div>
+                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
+                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+                    {storageContentItems.map(storage => {
+                      const id = storage.get('id')
+
+                      // TODO UNDP-2906
+                      // Fix this in scope of integration with create/edit forms task, analytics
+                      const itemProps = {
+                        id,
+                        name: storage.get('name'),
+                        location: storage.get('location'),
+                        linkTo: '',
+                        disableLinkTo: false,
+                        configurationLink: '',
+                        onConfiguration: () => {this.editItem(id)},
+                        analyticsLink: '',
+                        delete: this.props.deleteItem,
+                        primaryData: Immutable.List(),
+                        maxTransfer: storage.get('maxTransfer'),
+                        minTransfer: storage.get('minTransfer'),
+                        avgTransfer: storage.get('avgTransfer'),
+                        currentUsage: storage.get('currentUsage'),
+                        usageQuota: storage.get('usageQuota'),
+                        fetchingMetrics: this.props.fetchingMetrics,
+                        isAllowedToConfigure: this.props.isAllowedToConfigure,
+                        chartWidth: '450'
+                      }
+
+                      return (
+                        <ContentItem key={`content-item-${id}`}
+                          isChart={viewingChart}
+                          isStorage={true}
+                          itemProps={itemProps}
+                          deleteItem={this.props.deleteItem}/>
+                      )
+                    })}
+                  </div>
+                  <br /><br />
+                </div>}
+
+              {this.getTier() === 'group' && !viewingChart &&
+                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
               <div
                 key={viewingChart}
-                className={viewingChart ?
-                  'content-item-grid' :
-                  'content-item-lists'}>
+                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
@@ -434,23 +511,26 @@ class ContentItems extends React.Component {
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
-            <AccountForm
-              id="account-form"
-              account={this.state.itemToEdit}
-              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            <EntityEdit
+              type='account'
+              entityToUpdate={this.state.itemToEdit}
+              currentUser={this.props.user.get('currentUser')}
               onCancel={this.hideModal}
-              show={true}/>
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            />
           }
           {this.state.showModal && this.getTier() === 'account' &&
-            <GroupFormContainer
-              id="group-form"
+            <EntityEdit
+              type='group'
+              entityToUpdate={this.state.itemToEdit}
               params={this.props.params}
               canSeeLocations={false}
               groupId={this.state.itemToEdit && this.state.itemToEdit.get('id')}
-              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+              locationPermissions={locationPermissions}
               onDelete={this.onItemDelete}
               onCancel={this.hideModal}
-              show={true}/>
+              onSave={this.state.itemToEdit ? this.onItemSave : this.onItemAdd}
+            />
           }
 
           {
@@ -468,6 +548,17 @@ class ContentItems extends React.Component {
                 cancelChanges={this.hideModal}
               />
               </SidePanel>
+          }
+
+          {
+            this.state.showStorageModal && this.getTier() === 'group' &&
+            <StorageFormContainer
+              show= {true}
+              editing={false}
+              fetching={false}
+              onCancel={this.hideStorageModal}
+              onSubmit={()=>{/* onsubmit here */}}
+            />
           }
         </PageContainer>
       </Content>
@@ -495,6 +586,7 @@ ContentItems.propTypes = {
   hideInfoDialog: React.PropTypes.func,
   ifNoContent: React.PropTypes.string,
   isAllowedToConfigure: React.PropTypes.bool,
+  locationPermissions: React.PropTypes.object,
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
@@ -509,6 +601,7 @@ ContentItems.propTypes = {
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -521,6 +614,7 @@ ContentItems.defaultProps = {
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
+  storageContentItems: Immutable.List(),
   user: Immutable.Map()
 }
 

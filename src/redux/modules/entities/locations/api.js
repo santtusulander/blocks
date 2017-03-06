@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { normalize, schema } from 'normalizr'
 
-import { BASE_URL_NORTH, buildReduxId } from '../../../util'
+import { BASE_URL_NORTH, PAGINATION_MOCK, buildReduxId } from '../../../util'
 
 const baseUrl = ({ brand, account, group }) =>
   `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/locations`
@@ -43,14 +43,14 @@ export const fetch = ({ id, ...params }) =>
     })
 
 export const fetchIds = ( params ) => {
-  return axios.get(baseUrl(params))
-  .then( ({data}) => {
-    return data
-  })
+  return axios.get(baseUrl(params), PAGINATION_MOCK)
+    .then(({data}) => {
+      return data
+    })
 }
 
 export const fetchAll = ( params ) =>
-  axios.get(baseUrl(params))
+  axios.get(baseUrl(params), PAGINATION_MOCK)
     .then(({ data }) => {
       return normalize(data.data, [ locationSchema ])
     })

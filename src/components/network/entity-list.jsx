@@ -8,7 +8,7 @@ import NetworkItem from './network-item'
 import ContentItemChart from '../content/content-item-chart'
 
 const numericStatusToStringStatus = n => (
-  n === 1 ? 'enabled' : n === 2 ? 'disabled' : n === 3 ? 'provisioning' : null
+  n === 1 ? 'provisioning' : n === 2 ? 'disabled' : n === 3 ? 'enabled' : n === 4 ? 'destroying' : null
 )
 
 class EntityList extends React.Component {
@@ -136,7 +136,6 @@ class EntityList extends React.Component {
     const {
       editEntity,
       selectEntity,
-      deleteEntity,
       selectedEntityId,
       multiColumn,
       numOfColumns,
@@ -149,7 +148,8 @@ class EntityList extends React.Component {
       entities,
       contentTextGenerator,
       titleGenerator,
-      isAllowedToConfigure
+      isAllowedToConfigure,
+      viewPermission
     } = this.props
     if (entities.size && entities.first().get(entityIdKey)) {
       const entityList = entities.map(entity => {
@@ -167,10 +167,9 @@ class EntityList extends React.Component {
             active={isActive}
             content={contentText}
             onSelect={() => selectEntity(entityId)}
-            onDelet={() => deleteEntity(entityId)}
             status={status}
             extraClassName="entity-list-item"
-            isAllowedToConfigure={isAllowedToConfigure}
+            viewPermission={viewPermission}
             />
         )
 
@@ -340,7 +339,6 @@ EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   contentTextGenerator: PropTypes.func,
   creationPermission: PropTypes.string,
-  deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),
@@ -360,7 +358,8 @@ EntityList.propTypes = {
   showButtons: PropTypes.bool,
   starburstData: PropTypes.object,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  titleGenerator: PropTypes.func
+  titleGenerator: PropTypes.func,
+  viewPermission: PropTypes.string
 }
 EntityList.defaultProps = {
   disableButtons: false,

@@ -6,33 +6,58 @@ import { filterNeedsReload } from '../constants/filters.js'
 import filesize from 'filesize'
 import PROVIDER_TYPES from '../constants/provider-types.js'
 import { TOP_URLS_MAXIMUM_NUMBER } from '../constants/url-report.js'
-import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER } from '../constants/account-management-options'
+import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROVIDER, ACCOUNT_TYPE_CLOUD_PROVIDER } from '../constants/account-management-options'
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
 
 const BYTE_BASE = 1000
 
-export function formatBytes(bytes, setMax) {
-  let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format('0,0') + ' PB'
+export function formatBytes(bytes, setMax, customFormat) {
+  let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format(customFormat || '0,0') + ' PB'
   bytes         = bytes || 0
 
   if((setMax || bytes) < BYTE_BASE) {
-    formatted = numeral(bytes).format('0,0') + ' B'
+    formatted = numeral(bytes).format(customFormat || '0,0') + ' B'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
-    formatted = numeral(bytes / BYTE_BASE).format('0,0') + ' KB'
+    formatted = numeral(bytes / BYTE_BASE).format(customFormat || '0,0') + ' KB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format('0,0') + ' MB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format(customFormat || '0,0') + ' MB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format('0,0') + ' GB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format(customFormat || '0,0') + ' GB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format('0,0') + ' TB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format(customFormat || '0,0') + ' TB'
   }
   return formatted
+}
+
+export function convertToBytes(value, units) {
+  switch (units.toLowerCase()) {
+    case 'pb':
+      return numeral(value * Math.pow(BYTE_BASE, 5)).format('0')
+
+    case 'tb':
+      return numeral(value * Math.pow(BYTE_BASE, 4)).format('0')
+
+    case 'gb':
+      return numeral(value * Math.pow(BYTE_BASE, 3)).format('0')
+
+    case 'mb':
+      return numeral(value * Math.pow(BYTE_BASE, 2)).format('0')
+
+    case 'kb':
+      return numeral(value * Math.pow(BYTE_BASE, 1)).format('0')
+
+    case 'b':
+      return value
+
+    default:
+      return value
+  }
 }
 
 export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
@@ -294,7 +319,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @returns {*}
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
-  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : unix
+  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : formatDate(unix, format)
 }
 
 /**
@@ -426,6 +451,10 @@ export function accountIsContentProviderType(account) {
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
+export function accountIsCloudProviderType(account) {
+  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
+}
+
 export function getAccountByID(accounts, ids) {
   if (Array.isArray(ids)) {
     let accountsArray = []
@@ -475,10 +504,16 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
     })
   } else {
     sortFunc = data.sort((a, b) => {
-      if (a.get(sortBy) < b.get(sortBy)) {
+      let aVal = a.get(sortBy)
+      let bVal = b.get(sortBy)
+      if(typeof a.get(sortBy) === 'string') {
+        aVal = aVal.toLowerCase()
+        bVal = bVal.toLowerCase()
+      }
+      if(aVal < bVal) {
         return -1 * sortDir
       }
-      else if (a.get(sortBy) > b.get(sortBy)) {
+      else if(aVal > bVal) {
         return 1 * sortDir
       }
       return 0

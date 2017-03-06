@@ -8,6 +8,7 @@ import accountActions from '../../../redux/modules/entities/accounts/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -17,12 +18,18 @@ import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entitie
 import { buildReduxId } from '../../../redux/util'
 
 import SidePanel from '../../../components/side-panel'
+import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
 class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
+    this.networkId = null
+    this.notificationTimeout = null
+    this.state = {
+      showDeleteModal : false
+    }
   }
 
   componentWillMount(){
@@ -54,6 +61,10 @@ class NetworkFormContainer extends React.Component {
 
   }
 
+  onToggleDeleteModal(showDeleteModal) {
+    this.setState({ showDeleteModal })
+  }
+
   /**
    * hander for save
    */
@@ -79,43 +90,46 @@ class NetworkFormContainer extends React.Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
-        // Close modal
+      .then(() => {
+        const message = edit ? <FormattedMessage id="portal.network.networkForm.updateNetwork.status"/> :
+         <FormattedMessage id="portal.network.networkForm.createNetwork.status"/>
+        this.showNotification(message)
         this.props.onCancel();
       })
+      .catch(response => {
+        throw new SubmissionError({ _error: response.data.message })
+      })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
   }
 
   /**
    * Handler for Delete
    */
-  onDelete(networkId) {
-
+  onDelete(){
     const params = {
       brand: 'udn',
       account: this.props.accountId,
       group: this.props.groupId,
-      id: networkId
+      id: this.networkId
     }
 
     return this.props.onDelete(params)
-      .then( (resp) => {
-        if (resp.error) {
-          // Throw error => will be shown inside form
-          throw new SubmissionError({'_error': resp.error.data.message})
-        }
-
+      .then(() => {
         // Unselect network item
-        if (this.props.selectedEntityId == networkId) {
-          this.props.handleSelectedEntity(networkId)
+        if (this.props.selectedEntityId == this.networkId) {
+          this.props.handleSelectedEntity(this.networkId)
         }
-
+        this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
         // Close modal
         this.props.onCancel()
+      })
+      .catch(resp => {
+        throw new SubmissionError({ _error: resp.data.message })
       })
   }
 
@@ -127,8 +141,8 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, onCancel } = this.props
-
+    const { account, group, network, initialValues, isFetching, onCancel, networkPermissions} = this.props
+    const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
 
@@ -144,11 +158,31 @@ class NetworkFormContainer extends React.Component {
           <NetworkForm
             hasPops={this.hasChildren(edit)}
             initialValues={initialValues}
+            isFetching={isFetching}
             onSave={(values) => this.onSave(edit, values)}
-            onDelete={(networkId) => this.onDelete(networkId)}
+            onDelete={(networkId) => {
+              this.networkId = networkId
+              this.onToggleDeleteModal(true)
+            }
+            }
             onCancel={onCancel}
+            networkPermissions={networkPermissions}
           />
         </SidePanel>
+
+        {edit && showDeleteModal &&
+          <ModalWindow
+            className='modal-window-raised'
+            title={<FormattedMessage id="portal.network.networkForm.deleteNetwork.title"/>}
+            verifyDelete={true}
+            cancelButton={true}
+            deleteButton={true}
+            cancel={() => this.onToggleDeleteModal(false)}
+            onSubmit={() => this.onDelete()}>
+            <p>
+             <FormattedMessage id="portal.network.networkForm.deleteNetwork.confirmation.text"/>
+            </p>
+          </ModalWindow>}
       </div>
     )
   }
@@ -168,14 +202,17 @@ NetworkFormContainer.propTypes = {
   groupId: PropTypes.string,
   handleSelectedEntity: PropTypes.func,
   initialValues: PropTypes.object,
+  isFetching: PropTypes.bool,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
+  networkPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   pops: PropTypes.instanceOf(List),
-  selectedEntityId: PropTypes.string
+  selectedEntityId: PropTypes.string,
+  showNotification: PropTypes.func
 }
 
 NetworkFormContainer.defaultProps = {
@@ -187,8 +224,9 @@ NetworkFormContainer.defaultProps = {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const network = ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId))
-  const pops = ownProps.networkId && getPopsByNetwork(state, ownProps.networkId)
+  const networkId = buildReduxId(ownProps.groupId, ownProps.networkId)
+  const network = ownProps.networkId && getNetworkById(state, networkId)
+  const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
 
   return {
@@ -213,8 +251,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
     fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPops: (params) => dispatch( popActions.fetchAll(params) )
+    fetchPops: (params) => dispatch( popActions.fetchAll(params) ),
 
+    showNotification: (message) => dispatch( changeNotification(message) )
   }
 }
 

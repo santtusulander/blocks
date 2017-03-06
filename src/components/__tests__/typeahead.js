@@ -7,11 +7,13 @@ import Typeahead from '../typeahead'
 describe('Typeahead', () => {
   let subject, error, props = null
   const onChangeMock = jest.fn()
+  const onBlurMock = jest.fn()
 
   beforeEach(() => {
     subject = () => {
       props = {
         allowNew: true,
+        onBlur: onBlurMock,
         onChange: onChangeMock,
         options: [],
         multiple: true

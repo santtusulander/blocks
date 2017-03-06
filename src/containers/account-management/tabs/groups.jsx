@@ -23,8 +23,7 @@ import ArrayTd from '../../../components/array-td/array-td'
 import IsAllowed from '../../../components/is-allowed'
 import MultilineTextFieldError from '../../../components/shared/forms/multiline-text-field-error'
 
-import { formatUnixTimestamp} from '../../../util/helpers'
-import { checkForErrors } from '../../../util/helpers'
+import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
@@ -46,7 +45,6 @@ class AccountManagementAccountGroups extends React.Component {
     this.changeSort      = this.changeSort.bind(this)
     this.deleteGroup     = this.deleteGroup.bind(this)
     this.editGroup       = this.editGroup.bind(this)
-    this.sortedData      = this.sortedData.bind(this)
     this.saveEditedGroup = this.saveEditedGroup.bind(this)
     this.saveNewGroup    = this.saveNewGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
@@ -141,24 +139,6 @@ class AccountManagementAccountGroups extends React.Component {
       .then(this.cancelAdding)
   }
 
-  sortedData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if(aVal < bVal) {
-        return -1 * sortDir
-      }
-      else if(aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
-  }
-
   changeSearch(e) {
     this.setState({
       search: e.target.value
@@ -202,11 +182,7 @@ class AccountManagementAccountGroups extends React.Component {
     }
     const filteredGroups = this.filteredData(this.state.search.toLowerCase())
 
-    const sortedGroups = this.sortedData(
-      filteredGroups,
-      this.state.sortBy,
-      this.state.sortDir
-    )
+    const sortedGroups = getSortData(filteredGroups, this.state.sortBy, this.state.sortDir)
     const numHiddenGroups = this.props.groups.size - sortedGroups.size;
     const errorTooltip = ({ error, active }) =>
       !active &&

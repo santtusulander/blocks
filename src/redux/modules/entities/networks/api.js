@@ -1,23 +1,28 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_NORTH, buildReduxId } from '../../../util'
+import { BASE_URL_NORTH, PAGINATION_MOCK, buildReduxId } from '../../../util'
 
 const baseUrl = ({ brand, account, group }) => {
   return `${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/networks`
 }
 
-const networkSchema = new schema.Entity('networks', {},{
-  idAttribute: (network, group) => buildReduxId(group.id, network.id),
-  processStrategy: (value, parent) => {
-    return {
-      ...value,
-      parentId: parent.id,
+const networkSchema = new schema.Entity(
+  'networks',
+  {},
+  {
+    idAttribute: (network, group) => buildReduxId(group.id, network.id),
+    processStrategy: (value, parent) => {
+      return {
+        ...value,
+        parentId: parent.id,
 
-      //UI expects name key
-      name: value.id}
+        //UI expects name key
+        name: value.id
+      }
+    }
   }
-})
+)
 
 const groupNetworks = new schema.Entity('groupNetworks', { networks: [ networkSchema ] })
 
@@ -29,7 +34,7 @@ const groupNetworks = new schema.Entity('groupNetworks', { networks: [ networkSc
  */
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
     })
 }
@@ -41,8 +46,8 @@ export const fetch = ({id, ...params}) => {
 * @return {[type]}         [description]
 */
 export const fetchIds = ( params ) => {
-  return axios.get(baseUrl(params))
-   .then( ({data}) => {
+  return axios.get(baseUrl(params), PAGINATION_MOCK)
+   .then(({data}) => {
      return data
    })
 }
@@ -54,9 +59,9 @@ export const fetchIds = ( params ) => {
  * @return {[type]}         [description]
  */
 export const fetchAll = ( params ) => {
-  return axios.get(baseUrl(params))
-    .then( ({data}) => {
-      return normalize({ id: params.group, networks: [ data ] }, groupNetworks)
+  return axios.get(baseUrl(params), PAGINATION_MOCK)
+    .then(({data}) => {
+      return normalize({ id: params.group, networks: data.data }, groupNetworks)
     })
 }
 

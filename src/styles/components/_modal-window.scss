@@ -10,6 +10,7 @@ $modal-body-max-height: rem(390px);
 $modal-footer-vertical-padding: rem(24px);
 $dt-modal-bg-color: $medium-blue;
 $lt-modal-bg-color: $white;
+$form-error-color: $red;
 
 .modal-dialog {
   width: $modal-width;
@@ -98,6 +99,25 @@ $lt-modal-bg-color: $white;
 
     .light-theme & {
       background: rgba($black, 0.04);
+    }
+  }
+
+  &.modal-window-raised {
+    .modal-content {
+      padding: 2px;
+
+      .dark-theme & {
+        box-shadow: inset 0 0 0 2px rgba($black, 0.2);
+      }
+
+      .light-theme & {
+        box-shadow: inset 0 0 0 2px rgba($black, 0.04);
+      }
+
+      .error-msg {
+        color: $form-error-color;
+      }
+
     }
   }
 }

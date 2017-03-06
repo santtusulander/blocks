@@ -3,6 +3,7 @@
 
 $network-item-padding-horizontal: 12px;
 $network-item-padding-vertical: 16px;
+$network-item-title-width: 225px;
 $network-item-status-indicator-width: 8px;
 $network-item-connector-line-offset: rem(32px);
 $connector-offset: 2px;
@@ -27,6 +28,11 @@ $connector-offset: 2px;
 
     &.active::after {
       left: calc(100% + #{$connector-offset});
+    }
+
+    .truncated-title {
+      width: $network-item-title-width;
+      white-space: nowrap;
     }
   }
 
@@ -100,7 +106,6 @@ $connector-offset: 2px;
   }
 
   .network-item-title {
-    max-width: $md-sidebar-width - 40px;
     white-space: nowrap;
   }
 
@@ -138,6 +143,10 @@ $connector-offset: 2px;
 
     &.provisioning::before {
       background-color: $yellow;
+    }
+
+    &.destroying::before {
+      background-color: $red;
     }
   }
 

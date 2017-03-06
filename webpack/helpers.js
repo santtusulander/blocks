@@ -41,7 +41,10 @@ module.exports = {
       {from: 'src/assets/topo/states_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/topo/cities_usa.topo.json', to: 'assets/topo'},
       {from: 'src/assets/img/logo-udn-dark.png', to: 'assets/img'},
-      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'}
+      {from: 'src/assets/icons/favicon.ico', to: 'assets/icons'},
+      {from: 'src/assets/js/asperaweb-4.min.js', to: 'assets/js'},
+      {from: 'src/assets/js/connectinstaller-4.min.js', to: 'assets/js'},
+      {from: 'src/assets/template.csv', to: 'assets/template.csv'}
     ])
   ]
 }

@@ -13,6 +13,8 @@ import {
   accountIsContentProviderType
 } from '../../util/helpers'
 
+import { getLocationPermissions } from '../../util/permissions'
+
 import * as accountActionCreators from '../../redux/modules/account'
 import * as dnsActionCreators from '../../redux/modules/dns'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -25,14 +27,14 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import Content from '../../components/layout/content'
 import PageHeader from '../../components/layout/page-header'
 import ModalWindow from '../../components/modal'
-import AccountForm from '../../components/account-management/account-form'
-import GroupFormContainer from '../../containers/account-management/modals/group-form'
 import AccountSelector from '../../components/global-account-selector/global-account-selector'
 import IsAllowed from '../../components/is-allowed'
 import TruncatedTitle from '../../components/truncated-title'
 import IconCaretDown from '../../components/icons/icon-caret-down'
 import IconEdit from '../../components/icons/icon-edit'
 import MultilineTextFieldError from '../../components/shared/forms/multiline-text-field-error'
+
+import EntityEdit from '../../components/account-management/entity-edit'
 
 import Tabs from '../../components/tabs'
 
@@ -54,9 +56,10 @@ export class AccountManagement extends Component {
   constructor(props) {
     super(props)
     this.userToDelete = ''
-    this.accountToDelete = null
-    this.accountToUpdate = null
+
     this.state = {
+      accountToDelete: null,
+      accountToUpdate: null,
       groupToDelete: null,
       groupToUpdate: null
     }
@@ -127,7 +130,6 @@ export class AccountManagement extends Component {
 
   changeActiveAccount(account) {
     this.setState({ activeAccount: account })
-    //this.props.fetchAccountData(account)
   }
 
   dnsEditOnSave() {
@@ -147,7 +149,7 @@ export class AccountManagement extends Component {
   }
 
   showDeleteAccountModal(account) {
-    this.accountToDelete = account
+    this.setState({ accountToDelete: account })
     this.props.toggleModal(DELETE_ACCOUNT);
   }
 
@@ -182,7 +184,7 @@ export class AccountManagement extends Component {
     })
   }
 
-  editGroupInActiveAccount(groupId, data, addUsers, deleteUsers) {
+  editGroupInActiveAccount({groupId, data, addUsers, deleteUsers}) {
     const groupIdsByEmail = email => this.props.users
       .find(user => user.get('email') === email)
       .get('group_id')
@@ -219,7 +221,7 @@ export class AccountManagement extends Component {
       toggleModal()
     } else {
       fetchGroup(brand, account, group.get('id')).then(() => {
-        this.setState({ groupToUpdate: group.get('id') })
+        this.setState({ groupToUpdate: group })
         toggleModal(EDIT_GROUP)
       })
     }
@@ -242,7 +244,8 @@ export class AccountManagement extends Component {
   }
 
   showAccountForm(account) {
-    this.accountToUpdate = account
+    this.setState({ accountToUpdate: account })
+
     this.props.toggleModal(ADD_ACCOUNT)
   }
 
@@ -324,7 +327,7 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancelButton: true,
           cancel: () => toggleModal(null),
-          onSubmit: () => onDelete(brand, this.accountToDelete, router)
+          onSubmit: () => onDelete(brand, this.state.accountToDelete, router)
         }
         break
       case DELETE_GROUP:
@@ -414,6 +417,10 @@ export class AccountManagement extends Component {
           <li data-eventKey="users">
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
+         {accountIsContentProviderType(activeAccount) &&
+           <li>
+             <Link to={baseUrl + '/storages'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
+           </li>}
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">
@@ -447,13 +454,14 @@ export class AccountManagement extends Component {
           Add Account
         */}
         {accountManagementModal === ADD_ACCOUNT &&
-        <AccountForm
-          id="account-form"
-          onSave={this.editAccount}
-          account={this.accountToUpdate}
-          currentUser={this.props.currentUser}
-          onCancel={() => toggleModal(null)}
-          show={true}/>}
+          <EntityEdit
+            type='account'
+            entityToUpdate={this.state.accountToUpdate}
+            currentUser={this.props.currentUser}
+            onCancel={() => toggleModal(null)}
+            onSave={this.editAccount}
+          />
+        }
 
         { /* Delete Modal */}
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
@@ -476,18 +484,18 @@ export class AccountManagement extends Component {
 
         { /* Edit Group */}
         {accountManagementModal === EDIT_GROUP && this.state.groupToUpdate &&
-        <GroupFormContainer
-          id="group-form"
-          params={this.props.params}
-          groupId={this.state.groupToUpdate}
-          onSave={({groupId, data, addUsers, deleteUsers}) => this.editGroupInActiveAccount(groupId, data, addUsers, deleteUsers)}
-          onDelete={(group) => this.showDeleteGroupModal(group)}
-          onCancel={() => this.toggleEditGroupModal()}
-          show={true}
-          canEditBilling={accountIsContentProviderType(this.props.activeAccount)}
-          canSeeBilling={accountIsContentProviderType(this.props.activeAccount)}
-          canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
-        />}
+          <EntityEdit
+            type='group'
+            entityToUpdate={this.state.groupToUpdate}
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
+            currentUser={this.props.currentUser}
+            params={this.props.params}
+            onCancel={() => this.toggleEditGroupModal()}
+            onDelete={(group) => this.showDeleteGroupModal(group)}
+            onSave={this.editGroupInActiveAccount}
+          />
+        }
       </Content>
     )
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { fromJS } from 'immutable'
 import { shallow } from 'enzyme'
 
 jest.unmock('../token-authentication.jsx');
@@ -14,9 +15,7 @@ describe('TabTokenAuthentication', function() {
       props = {
         fetchProperties: jest.fn(),
         params,
-        properties: {
-          id: 1
-        }
+        properties: fromJS([{id: 1}])
       }
       return shallow(<TabTokenAuthentication {...props} />)
     }

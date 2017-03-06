@@ -50,8 +50,11 @@ import LoadingSpinnerSmall from '../components/loading-spinner/loading-spinner-s
 import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
-import FileUploadArea from '../components/file-upload.jsx'
+import CsvUploadArea from '../components/network/csv-upload'
 import Typeahead from '../components/typeahead'
+import StorageKPI from '../components/storage/storage-kpi'
+import StorageItemChart from '../components/content/storage-item-chart'
+import SortableMultiSelector from '../components/sortable-multi-selector'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -67,6 +70,9 @@ import IconArrowUp       from '../components/icons/icon-arrow-up'
 import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
+import IconCheck         from '../components/icons/icon-check'
+import IconChevronRight  from '../components/icons/icon-chevron-right'
+import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
 import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
@@ -94,6 +100,7 @@ import IconSupport       from '../components/icons/icon-support'
 import IconTask          from '../components/icons/icon-task'
 import IconTrash         from '../components/icons/icon-trash'
 import IconFile          from '../components/icons/icon-file'
+import IconFolder        from '../components/icons/icon-folder'
 import Mapbox            from '../components/map/mapbox'
 
 import { formatBytes, separateUnit } from '../util/helpers'
@@ -138,7 +145,8 @@ class Styleguide extends React.Component {
         'link9'
       ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
-      numberInputValue: 100
+      numberInputValue: 100,
+      sortableMultiSelectorItems: Immutable.List([1, 2])
     }
   }
 
@@ -977,8 +985,8 @@ class Styleguide extends React.Component {
           <h1 className="page-header">Pagination</h1>
           <Pagination items={10} maxButtons={5} activePage={5} prev={true} next={true} first={true} last={true} ellipsis={true} />
 
-          <h1 className="page-header">Dropzone</h1>
-          <FileUploadArea
+          <h1 className="page-header">CsvUpload</h1>
+          <CsvUploadArea
             contentValidation={() => {
               return true
             }}
@@ -999,7 +1007,6 @@ class Styleguide extends React.Component {
             height={600}
             />
 
-
           <h1 className="page-header">Network</h1>
 
           <NetworkItem
@@ -1009,6 +1016,114 @@ class Styleguide extends React.Component {
             onSelect={() => null}
             onEdit={() => null} />
 
+          <h1 className="page-header">Storage</h1>
+
+          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 01"
+              locations={["Hong Kong"]}
+              currentUsage = {0}
+              estimate = {100e12}
+              peak = {0}
+              lastMonthUsage = {0}
+              lastMonthEstimate = {0}
+              lastMonthPeak = {0} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 02"
+              locations={["Hong Kong"]}
+              currentUsage = {80.2e12}
+              estimate = {250e12}
+              peak = {160e12}
+              lastMonthUsage = {100e12}
+              lastMonthEstimate = {210e12}
+              lastMonthPeak = {160e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage very very very long name"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage = {270e12}
+              estimate = {300e12}
+              peak = {380e12}
+              lastMonthUsage = {240e12}
+              lastMonthEstimate = {250e12}
+              lastMonthPeak = {260e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 04"
+              locations={["Hong Kong", "Finland", "United States"]}
+              currentUsage = {520e12}
+              estimate = {500e12}
+              peak = {600e12}
+              lastMonthUsage = {470e12}
+              lastMonthEstimate = {450e12}
+              lastMonthPeak = {480e12} />
+
+            <StorageItemChart
+              analyticsLink='#'
+              configurationLink='#'
+              name="Storage 05"
+              locations={["Hong Kong", "Finland"]}
+              currentUsage = {270e12}
+              estimate = {300e12}
+              peak = {380e12}
+              lastMonthUsage = {240e12}
+              lastMonthEstimate = {250e12}
+              lastMonthPeak = {260e12} />
+
+          </div>
+
+          <h1 className="page-header">Storage KPI</h1>
+
+          <StorageKPI
+            chartData={[
+              {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
+              {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
+              {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
+              {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
+              {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
+              {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
+              {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
+              {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
+            ]}
+            chartDataKey='bytes'
+            currentValue={112}
+            gainPercentage={0.2}
+            locations={['San Jose', 'Frankfurt']}
+            peakValue={120}
+            referenceValue={100}
+            valuesUnit='tb'
+          />
+
+          <h1 className="page-header">Sortable Multi Selector</h1>
+
+          <SortableMultiSelector
+            label={'Items'}
+            options={[
+              {
+                label: 'Item 1',
+                value: 1
+              },
+              {
+                label: 'Item 2',
+                value: 2
+              },
+              {
+                label: 'Item 3',
+                value: 3
+              }
+            ]}
+            onChange={val => this.setState({ sortableMultiSelectorItems: Immutable.List(val) })}
+            value={this.state.sortableMultiSelectorItems}
+          />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
@@ -1080,6 +1195,21 @@ class Styleguide extends React.Component {
             <IconChart />
             <br />
             IconChart
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconCheck />
+            <br />
+            IconCheck
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRight />
+            <br />
+            IconChevronRight
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconChevronRightBold />
+            <br />
+            IconChevronRightBold
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconClose />
@@ -1220,6 +1350,11 @@ class Styleguide extends React.Component {
             <IconFile />
             <br />
             IconFile
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconFolder />
+            <br />
+            IconFolder
           </span>
         </div>
 

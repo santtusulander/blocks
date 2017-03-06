@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
+import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../redux/modules/user'
 import { changeTheme } from '../redux/modules/ui'
@@ -9,6 +10,9 @@ import { changeTheme } from '../redux/modules/ui'
 import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
+
+import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
+import { isValidEmail } from '../util/validators'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -32,7 +36,7 @@ export class Login extends React.Component {
   }
 
   componentDidMount(){
-    const token = localStorage.getItem('EricssonUDNUserToken')
+    const token = getUserToken()
     const redirect = this.props.location.query.redirect
     const expiry = this.props.location.query.sessionExpired
 
@@ -67,6 +71,13 @@ export class Login extends React.Component {
       password: password,
       rememberUser: rememberUser
     })
+
+    if (!isValidEmail(username)) {
+      this.setState({
+        loginError: <FormattedMessage id="portal.common.error.invalid.email.text"/>
+      })
+      return
+    }
     this.props.userActions.startFetching()
     this.props.userActions.logIn(username, password).then(action => {
 
@@ -215,13 +226,13 @@ Login.propTypes = {
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
-    username: state.user.get('username') || localStorage.getItem('EricssonUDNUserName') || null
+    username: state.user.get('username') || getUserName() || null
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUiTheme: () => dispatch(changeTheme(localStorage.getItem('EricssonUDNUiTheme'))),
+    setUiTheme: () => dispatch(changeTheme( getUITheme() )),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }
