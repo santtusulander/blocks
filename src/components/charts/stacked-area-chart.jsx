@@ -7,9 +7,8 @@ import CustomLegend from './custom-legend'
 import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import { black } from '../../constants/colors'
+import { defaultTickDateFormat, dayInMilliSeconds } from '../../constants/chart'
 import { formatBitsPerSecond, formatUnixTimestamp, unixTimestampToDate } from '../../util/helpers'
-
-
 
 
 const renderAreas = (areas) => {
@@ -36,7 +35,7 @@ const getChartClassName = (areas) => {
 
 const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, chartLabel}) => {
 
-  let dateFormat = "MM/DD"
+  let dateFormat = defaultTickDateFormat
   const customLegendAreas = areas.length > 1 ? areas.concat().sort((area1, area2) => area1.stackId - area2.stackId) : areas
   const chartClassName = getChartClassName(areas)
   const getTicks = (data) => {
@@ -45,9 +44,9 @@ const StackedAreaChart = ({data, areas, valueFormatter = formatBitsPerSecond, ch
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()
 
-    const steps = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? d3.time.hour.utc : d3.time.day.utc
+    const steps = ( (end - start) <= dayInMilliSeconds ) ? d3.time.hour.utc : d3.time.day.utc
 
-    dateFormat = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? dateFormat = "HH:mm" : "MMM DD"
+    dateFormat = ( (end - start) <= dayInMilliSeconds ) ? dateFormat = "HH:mm" : "MMM DD"
 
     const scale = d3.time
                     .scale
