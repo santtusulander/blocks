@@ -24,6 +24,11 @@ export default Immutable.fromJS([
     permission: PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION
   },
   {
+    key: 'storage',
+    filters: ['dateRange', 'includeComparison', 'storageType'],
+    permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
+  },
+  {
     key: 'visitors',
     filters: ['customDateRange'],
     permission: PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS
