@@ -8,6 +8,8 @@
   "portal.common.button.ok": "OK",
   "portal.common.button.continue": "Continue",
   "portal.common.button.stay": "Stay",
+  "portal.common.button.enable": "Enable",
+  "portal.common.button.disable": "Disable",
   "portal.common.search.text": "Search",
   "portal.common.button.apply": "Apply",
   "portal.common.button.none": "None",
@@ -38,11 +40,14 @@
   "portal.common.name": "Name",
   "portal.common.description": "Description",
   "portal.common.invalid": "Invalid",
-  "portal.common.textFieldMultilineValidation.line1.text": "Requirements:",
-  "portal.common.textFieldMultilineValidation.line2.text": "minimum of {minValue} and maximum of {maxValue} characters",
-  "portal.common.textFieldMultilineValidation.line3.text": "allowed special characters: _ . , - & ( ) [ ]",
+  "portal.common.textFieldMultilineValidation.heading": "Requirements:",
+  "portal.common.textFieldMultilineValidation.length": "minimum of {minValue} and maximum of {maxValue} characters",
+  "portal.common.textFieldMultilineValidation.allowedSpecialChars.default": "allowed special characters: _ . , - & ( ) [ ]",
+  "portal.common.textFieldMultilineValidation.allowedSpecialChars.limited": "allowed special characters: _ .",
+  "portal.common.textFieldMultilineValidation.allowedSpecialChars.all": "allowed all character",
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
+  "portal.common.of.value.text": "of {value}",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
@@ -121,5 +126,6 @@
 
   "portal.common.typeahead.emptyLabel": "Add values by typing",
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
-  "portal.common.search.no-results.text": "No results found."
+  "portal.common.search.no-results.text": "No results found.",
+  "portal.common.current": "Current"
 }

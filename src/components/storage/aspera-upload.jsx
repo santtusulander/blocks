@@ -1,0 +1,268 @@
+import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Aspera, AW4 } from '../../util/aspera-helpers.js'
+import classnames from 'classnames'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
+         ASPERA_DEFAULT_PATH, ASPERA_DEFAULT_DESTINATION_ROOT
+       } from '../../constants/storage'
+
+import * as uiActionCreators from '../../redux/modules/ui'
+import * as userActionCreators from '../../redux/modules/user'
+
+const DROP_EVENT_NAME = 'drop'
+const DRAG_OVER_EVENT_NAME = 'dragover'
+const DRAG_ENTER_EVENT_NAME = 'dragenter'
+const DRAG_LEAVE_EVENT_NAME = 'dragleave'
+const ASPERA_UPLOAD_CONTAINER_ID = 'asperaUploadArea'
+const ASPERA_DRAG_N_DROP_CONTAINER_ID = 'asperaDragNDropArea'
+const IS_DRAG_N_DROP_ENABLED = true
+
+class AsperaUpload extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isDragActive: false,
+      accessKey: null,
+      asperaError: null,
+      transferUuids: []
+    }
+
+    this.aspera = null
+    this.notificationTimeout = null
+
+    this.initAspera = this.initAspera.bind(this)
+    this.startTransfer = this.startTransfer.bind(this)
+    this.asperaListener = this.asperaListener.bind(this)
+    this.displayInsideDropZone = this.displayInsideDropZone.bind(this)
+
+    this.onClick = this.onClick.bind(this)
+    this.onDragEnter = this.onDragEnter.bind(this)
+    this.onDragLeave = this.onDragLeave.bind(this)
+    this.onDragOver = this.onDragOver.bind(this)
+    this.onDrop = this.onDrop.bind(this)
+
+    this.showNotification = this.showNotification.bind(this)
+  }
+
+  componentWillMount() {
+    const { storageId } = this.props
+
+    this.props.userActions.getAccessKeyByToken(storageId).then((res) => {
+      if (res.error) {
+        this.setState({
+          asperaError: res.payload.data.message,
+          accessKey: null
+        })
+      } else {
+        this.setState({
+          asperaError: null,
+          accessKey: res.payload
+        }, this.initAspera)
+      }
+    })
+  }
+
+  componentWillUnmount(){
+    this.aspera.asperaDeInitConnect()
+    clearTimeout(this.notificationTimeout)
+  }
+
+  initAspera() {
+    const statusFunctions = {
+      showLaunching: () => {
+        return this.showNotification(AW4.Connect.STATUS.INITIALIZING)
+      },
+      showDownload: () => {
+        return this.showNotification(AW4.Connect.STATUS.FAILED)
+      },
+      showUpdate: () => {
+        return this.showNotification(AW4.Connect.STATUS.OUTDATED)
+      },
+      connected: () => {
+        return this.showNotification(AW4.Connect.STATUS.RUNNING)
+      }
+    }
+
+    this.aspera = new Aspera(ASPERA_UPLOAD_CONTAINER_ID, IS_DRAG_N_DROP_ENABLED)
+
+    this.aspera.asperaInitConnect(statusFunctions)
+
+    this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
+                                       this.asperaListener)
+  }
+
+  showNotification(code) {
+    clearTimeout(this.notificationTimeout)
+
+    this.props.uiActions.changeAsperaNotification(code)
+    if (code === AW4.Connect.STATUS.RUNNING) {
+      this.notificationTimeout = setTimeout(this.props.uiActions.changeAsperaNotification, 10000)
+    }
+  }
+
+  startTransfer(files) {
+    const connectSettings = {}
+    const transferSpec = {
+      "paths": [],
+      "remote_host": this.props.asperaGetaway,
+      "remote_user": this.state.accessKey,
+      "remote_password": this.state.accessKey,
+      "direction": ASPERA_DEFAULT_PATH,
+      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
+      "ssh_port": ASPERA_DEFAULT_PORT
+    }
+
+    const callbacks = {
+      success: (data) => {
+        const transferUuids = this.state.transferUuids.slice()
+        transferUuids.push(data.transfer_specs[0].uuid)
+
+        this.setState({
+          transferUuids: transferUuids,
+          asperaError: null
+        })
+      },
+      error: (res) => {
+        this.setState({
+          asperaError: res.error.internal_message
+        })
+      }
+    }
+
+    this.aspera.asperaStartTransfer(transferSpec, connectSettings, callbacks, files)
+  }
+
+  onClick(e) {
+    e.stopPropagation();
+    this.aspera.asperaShowSelectFileDialog({
+      success: (data) => {
+        const files = data.dataTransfer.files
+        if (files.length > 0) {
+          this.startTransfer(files)
+        }
+      },
+      error: (res) => {
+        this.setState({
+          asperaError: res.error.internal_message
+        })
+      }
+    }, {
+      allowMultipleSelection: this.props.multiple
+    })
+  }
+
+  onDragEnter() {
+    this.setState({
+      isDragActive: true
+    })
+  }
+
+  onDragLeave() {
+    this.setState({
+      isDragActive: false
+    })
+  }
+
+  onDragOver() {
+    this.setState({
+      isDragActive: true
+    })
+  }
+
+  onDrop(event, data) {
+    this.setState({
+      isDragActive: false
+    })
+
+    this.startTransfer(data.dataTransfer.files)
+  }
+
+  asperaListener({event, files}) {
+    switch (event.type) {
+      case DRAG_ENTER_EVENT_NAME:
+        this.onDragEnter()
+        break;
+
+      case DRAG_LEAVE_EVENT_NAME:
+        this.onDragLeave()
+        break;
+
+      case DRAG_OVER_EVENT_NAME:
+        this.onDragOver()
+        break;
+
+      case DROP_EVENT_NAME:
+        this.onDrop(event, files)
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  displayInsideDropZone() {
+    if (this.state.asperaError) {
+      /* TODO: UDNP-2928 - Improve way of displaying error messages for file upload components */
+      return this.state.asperaError
+    } else {
+      if (this.props.openUploadModalOnClick) {
+        return <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
+      } else {
+        return <FormattedMessage id="portal.fileInput.dropFile.text"/>
+      }
+    }
+  }
+
+  render() {
+    const { openUploadModalOnClick } = this.props
+    const classNames = classnames(
+      "filedrop-area",
+      { "drag-active": this.state.isDragActive },
+      { "error": this.state.asperaError },
+    )
+
+    return (
+      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+        <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
+             onClick={openUploadModalOnClick ? this.onClick : null} >
+
+          <div className={classNames}>
+            <div className="welcome-text">
+              { this.displayInsideDropZone() }
+            </div>
+          </div>
+
+        </div>
+      </div>
+    )
+  }
+}
+
+AsperaUpload.displayName = 'AsperaUpload'
+AsperaUpload.propTypes = {
+  asperaGetaway: React.PropTypes.string,
+  multiple: React.PropTypes.bool,
+  openUploadModalOnClick: React.PropTypes.bool,
+  storageId: React.PropTypes.string,
+  uiActions: React.PropTypes.object,
+  userActions: React.PropTypes.object
+}
+
+AsperaUpload.defaultProps = {
+  asperaGetaway: ASPERA_DEFAULT_HOST,
+  multiple: true,
+  openUploadModalOnClick: false
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    userActions: bindActionCreators(userActionCreators, dispatch)
+  }
+}
+
+export default connect(null, mapDispatchToProps)(AsperaUpload)

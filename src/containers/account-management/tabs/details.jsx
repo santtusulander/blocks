@@ -2,14 +2,16 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {FormattedMessage} from 'react-intl'
 
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 
-import {getProviderTypes, getServices, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
+import {getProviderTypes, getServicesInfo, getProviderTypeName, getOptionName, getServiceName} from '../../../redux/modules/service-info/selectors'
 import {fetchAll as serviceInfofetchAll} from '../../../redux/modules/service-info/actions'
 import {fetchAccount, startFetching as accountStartFetching, getById as getAccountById, isFetching as accountsFetching} from '../../../redux/modules/account'
+
+import { getServicesIds } from '../../../util/services-helpers'
 
 class AccountDetails extends React.Component {
   constructor(props) {
@@ -33,7 +35,8 @@ class AccountDetails extends React.Component {
   }
 
   render() {
-    const { providerTypes, services, account, accountIsFetching } = this.props
+    const { providerTypes, servicesInfo, account, accountIsFetching } = this.props
+    const servicesIds = account && account.get('services') ? getServicesIds(account.get('services')) : List()
 
     return (
       <PageContainer className="account-management-account-details">
@@ -54,7 +57,7 @@ class AccountDetails extends React.Component {
                 { /* List of Services (and options) */}
                 <ul className='services-list'>
                   {
-                    account && account.get('services') && account.get('services').map( (service,i) => {
+                    servicesIds.size && servicesIds.map( (service,i) => {
                       const options = service.get('options')
                       let optionList;
 
@@ -62,7 +65,7 @@ class AccountDetails extends React.Component {
                         optionList = (
                           <ul>
                             {options.map( (optionId, i) => {
-                              return <li key={i}>{getOptionName(services, service.get('id'), optionId)}</li>
+                              return <li key={i}>{getOptionName(servicesInfo, service.get('id'), optionId)}</li>
                             })}
                           </ul>
                         );
@@ -70,7 +73,7 @@ class AccountDetails extends React.Component {
 
                       return (
                         <li key={i}>
-                          {getServiceName(services, service.get('id'))}
+                          {getServiceName(servicesInfo, service.get('id'))}
                           {optionList}
                         </li>
                       )
@@ -93,14 +96,14 @@ AccountDetails.propTypes = {
   fetchServiceInfo: PropTypes.func,
   params: PropTypes.object,
   providerTypes: PropTypes.instanceOf(Map),
-  services: PropTypes.instanceOf(Map)
+  servicesInfo: PropTypes.instanceOf(Map)
 
 }
 
 AccountDetails.defaultProps = {
   account: Map(),
   providerTypes: Map(),
-  services: Map()
+  servicesInfo: Map()
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -108,7 +111,7 @@ const mapStateToProps = (state, ownProps) => {
     account: getAccountById(state, ownProps.params.account),
     accountIsFetching: accountsFetching(state),
     providerTypes: getProviderTypes(state),
-    services: getServices(state)
+    servicesInfo: getServicesInfo(state)
   }
 }
 

@@ -20,6 +20,56 @@ import checkPermissions from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
+// TODO UNDP-2906
+// Remove this in scope of integration with redux
+const mockRedux = {
+  get: function(entity) {
+    switch (entity) {
+      case 'storages':
+        return Immutable.fromJS([{
+          id: 1,
+          name: 'Media Storage',
+          location: 'Frankfurt',
+          currentUsage: '450 GB',
+          usageQuota: '900 GB',
+          maxTransfer: '75.00 TB',
+          minTransfer: '11.00 TB',
+          avgTransfer: '34.00 TB'
+        },{
+          id: 2,
+          name: 'Bangkok Storage',
+          location: 'San Jose',
+          currentUsage: '1.2 TB',
+          usageQuota: '2 TB',
+          maxTransfer: '15.00 TB',
+          minTransfer: '2.00 TB',
+          avgTransfer: '7.00 TB'
+        },{
+          id: 3,
+          name: 'Asia Storage',
+          location: 'Hong Kong',
+          currentUsage: '900 GB',
+          usageQuota: '3 TB',
+          maxTransfer: '10.00 TB',
+          minTransfer: '3.00 TB',
+          avgTransfer: '6.00 TB'
+        },{
+          id: 4,
+          name: 'Dataphone Storage',
+          location: 'San Jose, 2 copies',
+          currentUsage: '2.3 TB',
+          usageQuota: '5 TB',
+          maxTransfer: '25.00 TB',
+          minTransfer: '1.00 TB',
+          avgTransfer: '13.00 TB'
+        }])
+
+      default:
+        return null
+    }
+  }
+}
+
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -121,6 +171,7 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
+        storageContentItems={this.props.storages}
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteHost}
@@ -166,6 +217,7 @@ Hosts.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  storages: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
@@ -179,6 +231,7 @@ Hosts.defaultProps = {
   propertyNames: Immutable.List(),
   roles: Immutable.List(),
   sortValuePath: Immutable.List(),
+  storages: Immutable.List(),
   user: Immutable.Map()
 }
 
@@ -190,6 +243,7 @@ function mapStateToProps(state) {
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
+    storages: mockRedux.get('storages'),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),

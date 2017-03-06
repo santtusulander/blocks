@@ -2,6 +2,10 @@ import React, { PropTypes } from 'react'
 import {Link} from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
+
+import IsAllowed from '../is-allowed'
+import { MODIFY_PROPERTY } from '../../constants/permissions'
+
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 
@@ -15,7 +19,9 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.schema.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.sharedSecretValue.text"/></th>
             <th width="19%"><FormattedMessage id="portal.security.tokenAuth.created.text"/></th>
-            <th width="1%" />
+            <IsAllowed to={MODIFY_PROPERTY}>
+              <th width="1%" />
+            </IsAllowed>
           </tr>
 
         </thead>
@@ -31,14 +37,18 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
                 <td>{rule.schema}</td>
                 <td>**********</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
-                <td className="nowrap-column action-buttons primary">
-                    <Link
-                      to={routeTo('edit')}
-                      className='btn btn-icon'>
-                      <IconEdit />
-                    </Link>
-                    <Link to={routeTo('delete')} className='btn btn-icon'><IconTrash /></Link>
-                </td>
+                <IsAllowed to={MODIFY_PROPERTY}>
+                  <td className="nowrap-column action-buttons primary">
+                    <div>
+                      <Link
+                        to={routeTo('edit')}
+                        className='btn btn-icon'>
+                        <IconEdit />
+                      </Link>
+                      <Link to={routeTo('delete')} className='btn btn-icon'><IconTrash /></Link>
+                    </div>
+                  </td>
+                </IsAllowed>
               </tr>
             )
           })}

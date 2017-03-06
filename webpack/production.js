@@ -35,6 +35,7 @@ module.exports = Object.assign({}, {
       // Polyfill here
     }),
     new ExtractTextPlugin('style.[hash].css'),
+    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendors',
       minChunks: module => isExternal(module)

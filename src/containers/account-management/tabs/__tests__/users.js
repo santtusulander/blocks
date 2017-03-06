@@ -6,6 +6,9 @@ import TestUtils from 'react-addons-test-utils'
 jest.unmock('../users.jsx');
 import Users from '../users.jsx'
 
+jest.unmock('../../../../util/helpers.js')
+import { getSortData } from '../../../../util/helpers.js'
+
 jest.unmock('../../../__mocks__/gen-async');
 import { genAsyncMock } from '../../../__mocks__/gen-async'
 

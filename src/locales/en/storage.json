@@ -1,0 +1,35 @@
+{
+  "portal.storage.uploadContent.uploading.text": "Uploading {number} items",
+  "portal.storage.uploadContent.cancel.text": "Cancel All",
+
+  "portal.storage.kpi.gain.title": "Gain",
+  "portal.storage.kpi.peak.title": "Peak",
+  "portal.storage.kpi.current.title": "Current",
+  "portal.storage.kpi.location.title": "Location",
+  "portal.storage.kpi.note.thisMonth": "(this month)",
+
+  "portal.storage.storageForm.add.title": "New Storage",
+  "portal.storage.storageForm.edit.title": "Edit Storage",
+
+  "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
+  "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
+  "portal.storage.storageForm.name.required.error": "Storage name is required",
+  "portal.storage.storageForm.name.placeholder": "Enter Storage Name",
+  "portal.storage.storageForm.name.validation.error": "Storage Name is invalid",
+  "portal.storage.storageForm.locations.label": "Locations",
+  "portal.storage.storageForm.locations.required.error": "At least one location is required",
+  "portal.storage.storageForm.estimate.label": "Estimated Usage",
+  "portal.storage.storageForm.estimate.validation.error": "Estimated Usage must be an integer number and be greater than 0",
+  "portal.storage.storageForm.estimate.required.error": "Estimated Usage is required",
+  "portal.storage.storageForm.abr.label": "Enable ABR Workflow",
+  "portal.storage.storageForm.abr.required.error": "ABR Workflow is required",
+  "portal.storage.storageForm.abrProfile.placeholder": "Please select ABR Profile",
+  "portal.storage.storageForm.abrProfile.required.error": "ABR Profile is required",
+
+  "portal.storage.storageForm.locations.help.label": "Locations",
+  "portal.storage.storageForm.locations.help.text": "By selecting a location the user is opting for the ingest point to use that location as the storage point. By selecting multiple locations the user is opting to utilize our geo-replication service to ingest copies of the content in multiple locations.",
+  "portal.storage.storageForm.estimate.help.label": "Estimated Usage",
+  "portal.storage.storageForm.estimate.help.text": "By setting this value the user will be able to track their actual usage against their estimated usage across the UDN portal in analytics. The value entered here doesn't serve as a quota or a cap for actual usage.",
+  "portal.storage.storageForm.abrProfile.help.label": "ABR Workflow",
+  "portal.storage.storageForm.abrProfile.help.text": "The user must enable ABR workflow to utilize one of our preset workflows to transform their content upon ingest."
+}

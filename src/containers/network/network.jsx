@@ -74,10 +74,13 @@ import PopFormContainer from './modals/pop-modal'
 import PodFormContainer from './modals/pod-modal'
 import AddNodeContainer from './modals/add-node-modal'
 import EditNodeContainer from './modals/edit-node-modal'
-import AccountForm from '../../components/account-management/account-form'
+import EntityEdit from '../../components/account-management/entity-edit'
 
-import checkPermissions from '../../util/permissions'
 import { sortByKey } from '../../util/helpers'
+import checkPermissions, {
+  getLocationPermissions, getNetworkPermissions, getNODEPermissions,
+  getPODPermissions, getPOPPermissions, getFootprintsPermissions
+} from '../../util/permissions'
 
 class Network extends React.Component {
   constructor(props) {
@@ -373,13 +376,17 @@ class Network extends React.Component {
   }
 
   handleGroupDelete(group) {
-    return this.props.groupActions.deleteGroup(
+    const { groupActions: { deleteGroup } } = this.props
+    const url = getNetworkUrl('groups',   this.props.activeAccount.get('id'), this.props.params)
+
+    return deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
       group.get('id')
     ).then(response => {
       this.props.toggleDeleteConfirmationModal(null)
       this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+      this.props.router.push(url)
       response.error &&
         this.props.uiActions.showInfoDialog({
           title: 'Error',
@@ -441,7 +448,7 @@ class Network extends React.Component {
     const podDiscoveryMethod = entity.get('UIDiscoveryMethod')
     const UIType = POD_TYPE_OPTIONS.filter(({value}) => value === podType)[0]
     const UIDiscoveryMethod = DISCOVERY_METHOD_OPTIONS.filter(({value}) => value === podDiscoveryMethod)[0]
-    return `${formatMessage({id: UIType.label})}, ${formatMessage({id: UIDiscoveryMethod.label})}`
+    return `${UIType ? formatMessage({id: UIType.label}) : 'Unknown type'}, ${UIDiscoveryMethod ? formatMessage({id: UIDiscoveryMethod.label}) : 'Unknown discovery method'}`
   }
 
   /* ==== Node Handlers ==== */
@@ -454,8 +461,8 @@ class Network extends React.Component {
     const nodeRole = entity.getIn(['roles', '0'])
     const nodeEnv = entity.get('env')
     const UIRole = NODE_ROLE_OPTIONS.filter(({value}) => value === nodeRole)[0]
-    const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value}) => value === nodeEnv)[0]
-    return `${UIRole.label}, ${UIEnv.label}`
+    const UIEnv = NODE_ENVIRONMENT_OPTIONS.filter(({value, cacheValue}) => (value === nodeEnv || cacheValue === nodeEnv))[0]
+    return `${UIRole ? UIRole.label : 'Unknown role'}, ${UIEnv ? UIEnv.label : 'Unknown environment'}`
   }
 
   showNotification(message) {
@@ -649,6 +656,13 @@ class Network extends React.Component {
         break
     }
 
+    const locationPermissions = getLocationPermissions(roles, currentUser)
+    const networkPermissions = getNetworkPermissions(roles, currentUser)
+    const popPermissions = getPOPPermissions(roles, currentUser)
+    const podPermissions = getPODPermissions(roles, currentUser)
+    const nodePermissions = getNODEPermissions(roles, currentUser)
+    const footprintPermissions = getFootprintsPermissions(roles, currentUser)
+
     return (
       <Content className="network-content">
 
@@ -667,7 +681,6 @@ class Network extends React.Component {
               ref={accounts => this.entityList.accountList = accounts}
               entities={params.account && Immutable.List([activeAccount])}
               addEntity={() => null}
-              deleteEntity={() => null}
               editEntity={this.handleAccountEdit}
               selectEntity={this.handleAccountClick}
               selectedEntityId={this.hasGroupsInUrl() ? `${params.account}` : ''}
@@ -693,9 +706,8 @@ class Network extends React.Component {
               fetching={groupsFetching}
               isParentSelected={!!this.props.params.account}
               ref={groups => this.entityList.groupList = groups}
-              entities={this.hasGroupsInUrl() ? groups : Immutable.List()}
+              entities={groups}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
-              deleteEntity={() => null}
               editEntity={this.handleGroupEdit}
               selectEntity={this.handleGroupClick}
               selectedEntityId={`${params.group}`}
@@ -714,7 +726,7 @@ class Network extends React.Component {
               params={params}
               nextEntityList={this.entityList.networkList && this.entityList.networkList.entityListItems}
               creationPermission={PERMISSIONS.CREATE_GROUP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP)}
+              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.VIEW_GROUP)}
             />
 
             <EntityList
@@ -724,7 +736,6 @@ class Network extends React.Component {
               ref={networkListRef => this.entityList.networkList = networkListRef}
               entities={params.group && networks}
               addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
-              deleteEntity={() => () => null}
               editEntity={this.handleNetworkEdit}
               selectEntity={this.handleNetworkClick}
               selectedEntityId={`${params.network}`}
@@ -733,7 +744,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.popList && this.entityList.popList.entityListItems}
               contentTextGenerator={entity => entity.get('description')}
               creationPermission={PERMISSIONS.CREATE_NETWORK}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK)}
+              viewPermission={PERMISSIONS.VIEW_NETWORK}
             />
 
             <EntityList
@@ -743,7 +754,6 @@ class Network extends React.Component {
               ref={pops => this.entityList.popList = pops}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
-              deleteEntity={() => () => null}
               editEntity={this.handlePopEdit}
               selectEntity={this.handlePopClick}
               selectedEntityId={`${params.pop}`}
@@ -752,18 +762,17 @@ class Network extends React.Component {
               nextEntityList={this.entityList.podList && this.entityList.podList.entityListItems}
               contentTextGenerator={entity => entity.get('id')}
               creationPermission={PERMISSIONS.CREATE_POP}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP)}
+              viewPermission={PERMISSIONS.VIEW_POP}
             />
 
             <EntityList
-              fetching={isFetching('pod')}
+              fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
               ref={pods => this.entityList.podList = pods}
               entityIdKey='pod_name'
               titleGenerator={entity => entity.get('pod_name')}
               addEntity={() => this.addEntity(ADD_EDIT_POD)}
-              deleteEntity={() => () => null}
               editEntity={this.handlePodEdit}
               entities={params.pop && pods}
               selectEntity={this.handlePodClick}
@@ -773,7 +782,7 @@ class Network extends React.Component {
               nextEntityList={this.entityList.nodeList && this.entityList.nodeList.entityListItems}
               contentTextGenerator={this.podContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_POD}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD)}
+              viewPermission={PERMISSIONS.VIEW_POD}
             />
 
             <EntityList
@@ -783,7 +792,6 @@ class Network extends React.Component {
               ref={nodes => this.entityList.nodeList = nodes}
               entities={params.pod && nodes}
               addEntity={() => this.addEntity(ADD_NODE)}
-              deleteEntity={() => () => null}
               editEntity={this.handleNodeEdit}
               selectEntity={() => null}
               title={<FormattedMessage id='portal.network.nodes.title'/>}
@@ -794,7 +802,7 @@ class Network extends React.Component {
               itemsPerColumn={NETWORK_NODES_PER_COLUMN}
               contentTextGenerator={this.nodeContentTextGenerator}
               creationPermission={PERMISSIONS.CREATE_NODE}
-              isAllowedToConfigure={checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE)}
+              viewPermission={PERMISSIONS.VIEW_NODE}
             />
           </div>
         </PageContainer>
@@ -802,12 +810,12 @@ class Network extends React.Component {
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
 
         {networkModal === ADD_EDIT_ACCOUNT &&
-          <AccountForm
-            id="account-form"
-            onSave={this.handleAccountSave}
-            account={activeAccount}
+          <EntityEdit
+            type='account'
+            entityToUpdate={activeAccount}
+            currentUser={this.props.currentUser}
             onCancel={() => this.handleCancel(ADD_EDIT_ACCOUNT)}
-            show={true}
+            onSave={this.handleAccountSave}
           />
         }
 
@@ -823,6 +831,7 @@ class Network extends React.Component {
             onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.handleGroupSave}
             show={true}
+            locationPermissions={locationPermissions}
           />
         }
 
@@ -834,7 +843,9 @@ class Network extends React.Component {
             brand={params.brand}
             groupId={params.group}
             networkId={this.state.networkId}
+            isFetching ={isFetching('pop')}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
+            networkPermissions={networkPermissions}
           />
         }
 
@@ -848,12 +859,15 @@ class Network extends React.Component {
             networkId={params.network}
             popId={this.state.popId}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
+            popPermissions={popPermissions}
           />
         }
 
         {networkModal === ADD_EDIT_POD &&
           <PodFormContainer
             id="pod-form"
+            handleSelectedEntity={this.handlePodClick}
+            selectedEntityId={`${params.pod}`}
             accountId={params.account}
             brand={params.brand}
             groupId={params.group}
@@ -861,6 +875,8 @@ class Network extends React.Component {
             popId={params.pop}
             podId={this.state.podId}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
+            podPermissions={podPermissions}
+            footprintPermissions={footprintPermissions}
           />
         }
 
@@ -871,6 +887,7 @@ class Network extends React.Component {
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
+            nodePermissions={nodePermissions}
           />
         }
 
@@ -881,6 +898,7 @@ class Network extends React.Component {
             params={params}
             onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
+            nodePermissions={nodePermissions}
           />
         }
       </Content>
@@ -992,8 +1010,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     uiActions: uiActions,
 
     fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
-    fetchNetworks: (params) => params.group && networkActions.fetchByIds(dispatch)(params),
-    fetchPops: (params) => params.network && dispatch( popActions.fetchAll(params)),
+    fetchNetworks: (params) => params.group && dispatch(networkActions.fetchAll(params)),
+    fetchPops: (params) => params.network && dispatch(popActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))
   }
 }

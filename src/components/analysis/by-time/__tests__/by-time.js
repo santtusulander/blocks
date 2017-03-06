@@ -64,7 +64,7 @@ describe('AnalysisByTime', () => {
         padding: 40,
         dataKey: 'bytes',
         dataSets: datasets,
-        yAxisCustomFormat: (val, setMax) => formatBytes(val, false, setMax),
+        yAxisCustomFormat: (val, setMax) => formatBytes(val, setMax),
         width: 100,
         height: 100 / 3,
         showLegend: true,

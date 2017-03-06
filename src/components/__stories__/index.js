@@ -39,3 +39,10 @@ import './network/add-node-form'
 import './network/edit-node-form'
 import './network/footprint-form'
 import './network/form/routing-daemon-form'
+
+// storage
+import './storage/storage-kpi'
+import './storage/storage-form.js'
+import './storage/file-upload-status-container'
+import './storage/file-upload-status-item'
+import './button-dropdown'

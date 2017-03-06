@@ -34,7 +34,7 @@ describe('NetworkPopForm', () => {
           name: { touched, error, value: '' },
           locationId: { touched, error, value: [] },
           popId: { touched, error, value: '' }
-        },
+        }
       }
       return shallow(<NetworkPopForm {...props}/>)
     }
@@ -61,4 +61,5 @@ describe('NetworkPopForm', () => {
         .at(0)
     ).toBeTruthy()
   })
+
 })

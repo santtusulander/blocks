@@ -4,7 +4,7 @@ import { Panel, PanelGroup, Table, Button, FormGroup, FormControl, Tooltip } fro
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
-import { change, focus, Field } from 'redux-form'
+import { change, Field, SubmissionError } from 'redux-form'
 import { FormattedMessage } from 'react-intl'
 
 import * as userActionCreators from '../../../redux/modules/user'
@@ -29,7 +29,7 @@ import ModalWindow from '../../../components/modal'
 
 import { ROLES_MAPPING } from '../../../constants/account-management-options'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, getSortData } from '../../../util/helpers'
 
 import IsAllowed from '../../../components/is-allowed'
 import { MODIFY_USER, CREATE_USER } from '../../../constants/permissions'
@@ -46,9 +46,7 @@ export class AccountManagementAccountUsers extends React.Component {
       showEditModal: false,
       showPermissionsModal: false,
       addingNew: false,
-      usersGroups: List(),
-      existingMail: null,
-      existingMailMsg: null
+      usersGroups: List()
     }
 
     this.notificationTimeout = null
@@ -57,7 +55,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.sortedData = this.sortedData.bind(this)
     this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
@@ -103,7 +100,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   newUser({ email, roles }) {
-    const { userActions: { createUser }, params: { brand, account }, formFieldFocus } = this.props
+    const { userActions: { createUser }, params: { brand, account } } = this.props
     const requestBody = {
       email,
       roles: [roles],
@@ -111,13 +108,11 @@ export class AccountManagementAccountUsers extends React.Component {
       account_id: Number(account),
       group_id: this.state.usersGroups.toJS()
     }
-    createUser(requestBody).then(res => {
+    return createUser(requestBody).then(res => {
       if(res.error){
-        this.setState({
-          existingMail: requestBody.email,
-          existingMailMsg: res.payload.message
-        }, () => formFieldFocus('inlineAdd', 'email'))
-      } else {
+        throw new SubmissionError({email: res.payload.message})
+      }
+      else {
         this.toggleInlineAdd()
       }
     })
@@ -127,34 +122,12 @@ export class AccountManagementAccountUsers extends React.Component {
     const conditions = {
       email: [
         {
-          condition: email === this.state.existingMail,
-          errorText: this.state.existingMailMsg
-        },
-        {
           condition: !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i.test(email),
           errorText: 'Invalid Email.'
         }
       ]
     }
     return checkForErrors({ email, roles }, conditions)
-  }
-
-  sortedData(data, sortBy, sortDir) {
-    return data.sort((a, b) => {
-      let aVal = a.get(sortBy)
-      let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
-        aVal = aVal.toLowerCase()
-        bVal = bVal.toLowerCase()
-      }
-      if(aVal < bVal) {
-        return -1 * sortDir
-      }
-      else if(aVal > bVal) {
-        return 1 * sortDir
-      }
-      return 0
-    })
   }
 
   getRoleOptions(roleMapping, props) {
@@ -349,11 +322,7 @@ export class AccountManagementAccountUsers extends React.Component {
     const searchedUsers = filteredUsersByGroup.filter((user) => {
       return this.getEmailForUser(user).toLowerCase().includes(this.state.search.toLowerCase())
     })
-    const sortedUsers = this.sortedData(
-      searchedUsers,
-      this.state.sortBy,
-      this.state.sortDir
-    )
+    const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
     let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
@@ -507,7 +476,6 @@ AccountManagementAccountUsers.propTypes = {
   account: React.PropTypes.instanceOf(Map),
   currentUser: React.PropTypes.string,
   deleteUser: React.PropTypes.func,
-  formFieldFocus: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(List),
   params: React.PropTypes.object,
@@ -539,8 +507,7 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch),
-    formFieldFocus: (form, field) => dispatch(focus(form, field))
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
 
