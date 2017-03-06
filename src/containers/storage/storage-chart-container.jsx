@@ -4,7 +4,6 @@ import { createSelectorCreator, defaultMemoize } from 'reselect'
 import { is, Map } from 'immutable'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
-import { buildReduxId } from '../../redux/util'
 
 import StorageItemChart from '../../components/content/storage-item-chart'
 
@@ -25,11 +24,11 @@ const mockMetrics = {
   }
 }
 
-//TODO: replace this with redux selector once storage metrics redux is ready
+//TODO: replace this with redux selector once storage metrics redux is ready in UDNP-2932
 const getStorageMetricsById = () => Map(mockMetrics)
 
 /**
- * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file
+ * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
  */
 const createDeepEqualSelector = createSelectorCreator(
   defaultMemoize,
@@ -38,7 +37,7 @@ const createDeepEqualSelector = createSelectorCreator(
 
 /**
  * Make an own metrics-selector for every instance of this component to cache selector results per instance
- * TODO: Move this into the storage metrics redux selectors-file
+ * TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
  * @return {[function]} a function that when called, returns a memoized selector
  */
 const makeGetMetrics = () => createDeepEqualSelector(
@@ -48,13 +47,13 @@ const makeGetMetrics = () => createDeepEqualSelector(
 
 const StorageChartContainer = props => {
 
-  const { clusters, id, estimated_usage } = props.entity.toJS()
+  const { clusters, ingest_point_id, estimated_usage } = props.entity.toJS()
   const { bytes, historical_bytes } = props.entityMetrics.toJS()
   return (
     <StorageItemChart
-      analyticsLink='#'
-      configurationLink='#'
-      name={id}
+      analyticsLink={/*TODO: UDNP-2932*/'#'}
+      configurationLink={/*TODO: UDNP-2932*/'#'}
+      name={ingest_point_id}
       locations={clusters}
       currentUsage={bytes.average}
       estimate={estimated_usage}
@@ -81,12 +80,10 @@ const makeStateToProps = () => {
 
   const getMetrics = makeGetMetrics()
 
-  const stateToProps = (state, { storageId, params: { group } }) => {
-
-    const reduxId = buildReduxId(group, storageId)
+  const stateToProps = (state, { storageId }) => {
 
     return {
-      entity: getStorageById(state, reduxId),
+      entity: getStorageById(state, storageId),
       entityMetrics: getMetrics()
     }
   }
