@@ -158,6 +158,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
+  'portal.analytics.tabs.storage.label': 'Storage',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
