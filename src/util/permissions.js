@@ -93,6 +93,11 @@ permissionMapping[PERMISSIONS.DELETE_GROUP] =
 permissionMapping[PERMISSIONS.VIEW_GROUP] =
   (role) => role.getIn(['permissions', 'aaa', 'groups', 'show', 'allowed'])
 
+// Storage Permissions
+permissionMapping[PERMISSIONS.VIEW_ANALYTICS_STORAGE] =
+  //TODO: return the corrent permissions once the api is ready
+  () => true
+
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
   (role) => role.getIn(['permissions', 'aaa', 'users', 'create', 'allowed'])
