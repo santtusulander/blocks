@@ -13,6 +13,7 @@ import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
+import { getIdsByGroup as getStorageIdsByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import ContentItems from '../components/content/content-items'
 
@@ -155,7 +156,8 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
-        storageContentItems={this.props.storages}
+        storageIds={this.props.storageIds}
+        storageContentItems={mockRedux.get('storages')}
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteHost}
@@ -201,7 +203,7 @@ Hosts.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storages: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
@@ -219,7 +221,7 @@ Hosts.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { params: { group } }) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
@@ -227,7 +229,7 @@ function mapStateToProps(state) {
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
-    storages: mockRedux.get('storages'),
+    storageIds: getStorageIdsByGroup(state, group),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),

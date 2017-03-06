@@ -23,6 +23,7 @@ import UDNButton from '../button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
+import StorageChartContainer from '../../containers/storage/storage-chart-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -315,6 +316,8 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
+      storageIds,
+      params,
       locationPermissions,
       storageContentItems
     } = this.props
@@ -418,14 +421,13 @@ class ContentItems extends React.Component {
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                    {storageContentItems.map(storage => {
+                    {!viewingChart && storageContentItems.map(storage => {
                       const id = storage.get('id')
 
                       // TODO UNDP-2906
                       // Fix this in scope of integration with create/edit forms task, analytics
                       const itemProps = {
                         id,
-                        params: this.props.params,
                         name: storage.get('name'),
                         location: storage.get('location'),
                         linkTo: '',
@@ -454,7 +456,8 @@ class ContentItems extends React.Component {
                       )
                     })}
                   </div>
-                  {!viewingChart && [ <br />, <br /> ]}
+                  <br />
+                  <br />
                 </div>}
 
               {this.getTier() === 'group' && !viewingChart &&
@@ -462,6 +465,9 @@ class ContentItems extends React.Component {
               <div
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+
+                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
@@ -616,6 +622,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
+  storageIds: Immutable.List(),
   user: Immutable.Map()
 }
 

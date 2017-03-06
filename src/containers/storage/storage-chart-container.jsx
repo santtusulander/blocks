@@ -50,17 +50,17 @@ const StorageChartContainer = props => {
   const { clusters, ingest_point_id, estimated_usage } = props.entity.toJS()
   const { bytes, historical_bytes } = props.entityMetrics.toJS()
   return (
-    <StorageItemChart
-      analyticsLink={/*TODO: UDNP-2932*/'#'}
-      configurationLink={/*TODO: UDNP-2932*/'#'}
-      name={ingest_point_id}
-      locations={clusters}
-      currentUsage={bytes.average}
-      estimate={estimated_usage}
-      peak={bytes.peak}
-      lastMonthUsage={historical_bytes.average}
-      lastMonthEstimate={estimated_usage}
-      lastMonthPeak={historical_bytes.peak} />
+      <StorageItemChart
+        analyticsLink={/*TODO: UDNP-2932*/'#'}
+        configurationLink={/*TODO: UDNP-2932*/'#'}
+        name={ingest_point_id}
+        locations={clusters}
+        currentUsage={bytes.average}
+        estimate={estimated_usage}
+        peak={bytes.peak}
+        lastMonthUsage={historical_bytes.average}
+        lastMonthEstimate={estimated_usage}
+        lastMonthPeak={historical_bytes.peak} />
   )
 }
 

@@ -115,17 +115,17 @@ const StorageItemChart = (
           <div className="title" >{name}</div>
           <div className="usage">
             <span className="usage-value">
-              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).value}
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).value}
             </span>
             <span className="usage-unit">
-              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).unit}
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).unit}
             </span>
           </div>
         </div>
 
         <div className="usage-estimate">
           {<FormattedMessage id="portal.common.of.value.text"
-            values={{ value: formatBytes(estimate, 1e12) }}/>}
+            values={{ value: formatBytes(estimate, null) }}/>}
         </div>
 
         <div className="content-item-chart content-item-toolbar">
