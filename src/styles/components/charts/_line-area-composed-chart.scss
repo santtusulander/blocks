@@ -15,7 +15,7 @@
     .storage {
       path {
         &:first-child {
-          stroke: $green;
+          stroke: $dark-green;
           stroke-width: 4px;
         }
 
@@ -43,7 +43,7 @@
   .comparison {
     .estimate {
       path {
-        stroke: $grey;
+        stroke: $grey-40;
         stroke-width: 2px;
       }
     }
