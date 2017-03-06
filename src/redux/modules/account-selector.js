@@ -22,7 +22,7 @@ export function fetchItemsSuccess(state, action) {
   const items = data.map(
     item => item.id ?
       (item.provider_type ? [item.id, item.name, item.provider_type] : [item.id, item.name]) :
-      [item, item]
+  [item.published_host_id, item.published_host_id]
   )
   return state.merge({
     items: Immutable.fromJS(items)

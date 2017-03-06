@@ -154,10 +154,10 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       setType = 'content_targeting'
     }
     if(setType === 'tokenauth') {
-      if(activeSet.get('type') === 'standard') {
-        setType = 'tokenauth-static'
-      } else {
+      if(activeSet.get('type') === 'on_demand_hls') {
         setType = 'tokenauth-streaming'
+      } else {
+        setType = 'tokenauth-static'
       }
     }
 

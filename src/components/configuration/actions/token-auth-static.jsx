@@ -10,7 +10,6 @@ import { isBase64 } from '../../../util/validators'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import FieldSortableMultiSelector from '../../form/field-sortable-multi-selector'
-
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -21,13 +20,14 @@ const staticEncryptionOptions = [
   {label: 'HMAC-MD5', value: 'HMAC-MD5'},
   {label: 'MD5', value: 'MD5'}
 ]
-const schemaOptions = [//"IP", "URL", "REFERRER", "USER_AGENT", "EXPIRES"]
-  {label: 'IP', value: 'IP'},
+const schemaOptions = [
+  {label: 'IP address', value: 'IP'},
   {label: 'URL', value: 'URL'},
-  {label: 'REFERRER', value: 'REFERRER'},
-  {label: 'USER_AGENT', value: 'USER_AGENT'},
-  {label: 'EXPIRES', value: 'EXPIRES'}
+  {label: 'Referrer', value: 'REFERRER'},
+  {label: 'User agent', value: 'USER_AGENT'},
+  {label: 'Expires', value: 'EXPIRES'}
 ]
+
 const validate = ({ sharedKey }) => {
   const conditions = {
     sharedKey: [
@@ -46,11 +46,7 @@ const validate = ({ sharedKey }) => {
 
 export class TokenAuthStatic extends React.Component {
   constructor(props) {
-    super(props);
-
-    // this.state = {
-    //   activeFilter: 'tokenauth'
-    // }
+    super(props)
 
     this.saveChanges = this.saveChanges.bind(this)
   }
@@ -59,14 +55,18 @@ export class TokenAuthStatic extends React.Component {
     const { set } = this.props
 
     this.props.change('sharedKey', set.get('shared_key'))
-    this.props.change('schema', set.get('schema'))
+    this.props.change('schema', set.get('schema') || Immutable.List())
     this.props.change('encryption', set.get('encryption'))
   }
 
   saveChanges() {
-    const { close, invalid, changeValue, path, sharedKey } = this.props
+    const { close, invalid, changeValue, path, sharedKey, schema, encryption } = this.props
     if (!invalid) {
-      const newSet = Immutable.fromJS({ shared_key: sharedKey })
+      const newSet = Immutable.fromJS({
+        shared_key: sharedKey,
+        schema,
+        encryption
+      })
       changeValue(path, newSet)
       close()
     }
@@ -119,7 +119,7 @@ export class TokenAuthStatic extends React.Component {
                 type="submit"
                 bsStyle="primary"
                 onClick={this.saveChanges}
-                disabled={invalid||submitting}>
+                disabled={invalid || submitting}>
                 <FormattedMessage id="portal.button.saveAction"/>
               </Button>
             </FormFooterButtons>
@@ -148,5 +148,7 @@ const form = reduxForm({
 
 const selector = formValueSelector('token-auth-static')
 export default connect(state => ({
-  sharedKey: selector(state, 'sharedKey')
+  sharedKey: selector(state, 'sharedKey'),
+  schema: selector(state, 'schema'),
+  encryption: selector(state, 'encryption')
 }))(injectIntl(form))

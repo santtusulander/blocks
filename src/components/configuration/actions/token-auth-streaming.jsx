@@ -78,12 +78,10 @@ export class TokenAuthStreaming extends React.Component {
     return (
       <div>
         <Modal.Header>
-          <h1><FormattedMessage id="portal.policy.edit.tokenauth.header"/></h1>
-          <p><FormattedMessage id="portal.policy.edit.tokenauth.subheader"/></p>
+          <h1><FormattedMessage id="portal.policy.edit.tokenauthStreaming.header"/></h1>
+          <p><FormattedMessage id="portal.policy.edit.tokenauthStreaming.subheader"/></p>
         </Modal.Header>
         <Modal.Body>
-
-
 
          <Field
             required={false}
