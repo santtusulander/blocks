@@ -6,12 +6,13 @@ import classNames from 'classnames'
 import AreaTooltip from './area-tooltip'
 import CustomLegend from './custom-legend'
 import { black } from '../../constants/colors'
+import { defaultTickDateFormat, dayInMilliSeconds } from '../../constants/chart'
 import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
 
 const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPerSecond}) => {
-  let dateFormat = "MM/DD"
+  let dateFormat = defaultTickDateFormat
   const haveEstimate = data && data[0] && data[0].estimate
   const isComparison = data && data[0] && data[0].comparison_storage
   const getTicks = (data) => {
@@ -20,9 +21,9 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()
 
-    const steps = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? d3.time.hour.utc : d3.time.day.utc
+    const steps = ( (end - start) <= dayInMilliSeconds ) ? d3.time.hour.utc : d3.time.day.utc
 
-    dateFormat = ( (end - start) <= 60 * 60 * 24 * 1000 ) ? dateFormat = "HH:mm" : "MMM DD"
+    dateFormat = ( (end - start) <= dayInMilliSeconds ) ? dateFormat = "HH:mm" : "MMM DD"
 
     const scale = d3.time
                     .scale
