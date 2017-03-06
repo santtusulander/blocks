@@ -42,6 +42,7 @@ class ConfigurationDetails extends React.Component {
     this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
     this.save = this.save.bind(this)
     this.originHostValue = ''
+    console.log(this.props.edgeConfiguration.get('origin_type'))
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
@@ -98,7 +99,6 @@ class ConfigurationDetails extends React.Component {
   }
 
   save() {
-    //TODO: add submit func for creating storage
     this.toggleAddStorageModal()
   }
 
@@ -153,36 +153,6 @@ class ConfigurationDetails extends React.Component {
           </FormGroup>
         </Row>
 
-        { !this.state.useUDNOrigin &&
-          <Row>
-            <FormGroup>
-              <Col xs={3}>
-                <ControlLabel>
-                  <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
-                </ControlLabel>
-              </Col>
-              <Col xs={9}>
-                <InputGroup>
-                  <FormControl
-                    type="text"
-                    disabled={readOnly}
-                    value={this.props.edgeConfiguration.get('origin_host_name')}
-                    onChange={this.handleChange(
-                      ['edge_configuration', 'origin_host_name']
-                    )}/>
-                  <InputGroup.Addon>
-                    <HelpTooltip
-                      id="tooltip_origin_host_name"
-                      title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
-                      <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
-                    </HelpTooltip>
-                  </InputGroup.Addon>
-                </InputGroup>
-              </Col>
-            </FormGroup>
-          </Row>
-        }
-
         { this.state.useUDNOrigin &&
           <Row>
             <FormGroup>
@@ -214,33 +184,65 @@ class ConfigurationDetails extends React.Component {
           </Row>
         }
 
-        <Row>
-          <FormGroup>
-            <Col xs={3}>
-              <ControlLabel>
-                <FormattedMessage id="portal.configuration.details.originPort.text"/>
-              </ControlLabel>
-            </Col>
-            <Col xs={9}>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  disabled={readOnly || this.state.useUDNOrigin}
-                  value={this.props.edgeConfiguration.get('origin_host_port')}
-                  onChange={this.handleNumericChange(
-                    ['edge_configuration', 'origin_host_port']
-                  )}/>
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_host_port"
-                    title={<FormattedMessage id="portal.configuration.details.originPort.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.originPort.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
-              </InputGroup>
-            </Col>
-          </FormGroup>
-        </Row>
+        { !this.state.useUDNOrigin &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    disabled={readOnly}
+                    value={this.props.edgeConfiguration.get('origin_host_name')}
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'origin_host_name']
+                    )}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_origin_host_name"
+                      title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
+
+        { !this.state.useUDNOrigin &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.originPort.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    disabled={readOnly}
+                    value={this.props.edgeConfiguration.get('origin_host_port')}
+                    onChange={this.handleNumericChange(
+                      ['edge_configuration', 'origin_host_port']
+                    )}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_origin_host_port"
+                      title={<FormattedMessage id="portal.configuration.details.originPort.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.originPort.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
 
         <Row className="form-groups">
           <InputConnector
