@@ -206,6 +206,7 @@ class AsperaUpload extends Component {
 
   displayInsideDropZone() {
     if (this.state.asperaError) {
+      /* TODO: UDNP-2928 - Improve way of displaying error messages for file upload components */
       return this.state.asperaError
     } else {
       if (this.props.openUploadModalOnClick) {
