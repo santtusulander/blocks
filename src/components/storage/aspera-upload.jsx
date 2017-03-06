@@ -37,6 +37,7 @@ class AsperaUpload extends Component {
     this.initAspera = this.initAspera.bind(this)
     this.startTransfer = this.startTransfer.bind(this)
     this.asperaListener = this.asperaListener.bind(this)
+    this.displayInsideDropZone = this.displayInsideDropZone.bind(this)
 
     this.onClick = this.onClick.bind(this)
     this.onDragEnter = this.onDragEnter.bind(this)
@@ -93,7 +94,7 @@ class AsperaUpload extends Component {
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
   }
-  
+
   showNotification(code) {
     clearTimeout(this.notificationTimeout)
 
@@ -203,38 +204,40 @@ class AsperaUpload extends Component {
     }
   }
 
+  displayInsideDropZone() {
+    if (this.state.asperaError) {
+      return this.state.asperaError
+    } else {
+      if (this.props.openUploadModalOnClick) {
+        return <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
+      } else {
+        return <FormattedMessage id="portal.fileInput.dropFile.text"/>
+      }
+    }
+  }
+
   render() {
     const { openUploadModalOnClick } = this.props
     const classNames = classnames(
       "filedrop-area",
-      { "drag-active": this.state.isDragActive }
+      { "drag-active": this.state.isDragActive },
+      { "error": this.state.asperaError },
     )
 
-    if (!this.state.asperaError) {
-      return (
-        <div id={ASPERA_UPLOAD_CONTAINER_ID}>
-          <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
-               onClick={openUploadModalOnClick ? this.onClick : null} >
+    return (
+      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+        <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
+             onClick={openUploadModalOnClick ? this.onClick : null} >
 
-            <div className={classNames}>
-              <div className="welcome-text">
-                { openUploadModalOnClick
-                  ? <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
-                  : <FormattedMessage id="portal.fileInput.dropFile.text"/>
-                }
-              </div>
+          <div className={classNames}>
+            <div className="welcome-text">
+              { this.displayInsideDropZone() }
             </div>
-
           </div>
+
         </div>
-      )
-    } else {
-      return (
-        <div>
-          {this.state.asperaError}
-        </div>
-      )
-    }
+      </div>
+    )
   }
 }
 
