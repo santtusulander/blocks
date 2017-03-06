@@ -95,7 +95,7 @@ permissionMapping[PERMISSIONS.VIEW_GROUP] =
 
 // Storage Permissions
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_STORAGE] =
-  //TODO: return the corrent permissions once the api is ready
+  //TODO: UDNP-2872 - return the corrent permissions once the api is ready
   () => true
 
 // Users Permissions
