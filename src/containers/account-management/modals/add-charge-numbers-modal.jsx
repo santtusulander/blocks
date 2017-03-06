@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, FormattedMessage  } from 'react-intl'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, fromJS, List } from 'immutable'
 
 import SidePanel from '../../../components/side-panel'
 import ChargeNumbersForm from '../../../components/account-management/charge-numbers/forms/add-charge-numbers-form'
+import { getRegionsInfo } from '../../../redux/modules/service-info/selectors'
 
 import { getServiceById, getServiceByOptionId } from '../../../util/services-helpers'
 import { MEDIA_DELIVERY_SERVICE_ID } from '../../../constants/account-management-options'
@@ -15,7 +16,7 @@ class AddChargeNumbersModal extends React.Component {
   }
 
   render() {
-    const { activeServiceItem, onSubmit, onDisable, onCancel, servicesInfo, show, initialValues } = this.props
+    const { activeServiceItem, onSubmit, onDisable, onCancel, servicesInfo, show, initialValues, regionsInfo } = this.props
     let itemDetails = Map()
     let isService = null
     let hasFlowDirection = null
@@ -55,7 +56,7 @@ class AddChargeNumbersModal extends React.Component {
               onCancel={onCancel}
               onDisable={onDisable}
               onSubmit={onSubmit}
-              regionsInfo={serviceInfoItem.get('regions')}
+              regionsInfo={serviceInfoItem.get('regions').size ? serviceInfoItem.get('regions') : regionsInfo}
             />
           </SidePanel>
         }
@@ -75,6 +76,7 @@ AddChargeNumbersModal.propTypes = {
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
   onSubmit: PropTypes.func,
+  regionsInfo: PropTypes.instanceOf(List),
   servicesInfo: PropTypes.object,
   show: PropTypes.bool
 }
@@ -85,7 +87,8 @@ function mapStateToProps(state, props) {
       billing_meta: props.activeServiceItem && props.activeServiceItem.get('billing_meta')
                     && props.activeServiceItem.get('billing_meta').toJS()
     },
-    servicesInfo: state.serviceInfo && state.serviceInfo.services
+    servicesInfo: state.serviceInfo && state.serviceInfo.services,
+    regionsInfo: fromJS(getRegionsInfo(state))
   }
 }
 

@@ -87,6 +87,19 @@ export const getServiceOptions = (state, providerType) => {
   }, [])
 }
 
+/***
+ * Get common regions for all services
+ * @param  {} state from redux
+ * @return []
+ */
+export const getRegionsInfo = (state) => {
+  return state.serviceInfo.regions.reduce( (acc, region) => {
+    acc.push(region.toJS())
+
+    return acc
+  }, [])
+}
+
 /* HELPERS */
 export const getProviderTypeName = (providerTypes, id ) => {
   if (!id) return;
