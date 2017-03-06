@@ -45,7 +45,6 @@
     json-stringify-safe "^5.0.1"
     keycode "^2.1.1"
     lodash.pick "^4.2.1"
-    lodash.sortby "^4.7.0"
     mantra-core "^1.7.0"
     podda "^1.2.1"
     qs "^6.2.0"
@@ -5361,7 +5360,7 @@ pako@~0.2.0:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/pako/-/pako-0.2.9.tgz#f3f7522f4ef782348da8161bad9ecfd51bf83a75"
 
-papaparse@^4.1.2:
+papaparse@^4.1.4:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.1.4.tgz#57b224621762da0f943d95b82a8e82c3b4b331a2"
 
@@ -6392,7 +6391,7 @@ recharts-scale@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/recharts-scale/-/recharts-scale-0.2.1.tgz#378f543ed17c3245e4d9afb10aaf6298240d2fcb"
 
-recharts@^0.20.8:
+recharts@^0.20.2:
   version "0.20.8"
   resolved "https://registry.yarnpkg.com/recharts/-/recharts-0.20.8.tgz#7675c6c75c4888a577063679273508bd79d007f4"
   dependencies:
@@ -7032,15 +7031,15 @@ source-map-support@^0.4.2:
   dependencies:
     source-map "^0.5.3"
 
-source-map@0.5.x, "source-map@>= 0.1.2", source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.0, source-map@~0.5.1, source-map@~0.5.3:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
-
-source-map@^0.1.34, source-map@~0.1.33:
+source-map@0.1.x, source-map@^0.1.34, source-map@~0.1.33:
   version "0.1.43"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
   dependencies:
     amdefine ">=0.0.4"
+
+source-map@0.5.x, "source-map@>= 0.1.2", source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.0, source-map@~0.5.1, source-map@~0.5.3:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
 
 source-map@^0.4.4, source-map@~0.4.1:
   version "0.4.4"

@@ -114,7 +114,8 @@ import { stackedBarChartData,
          nonStackedAreaDataset,
          stackedAreaDataset,
          comparisonAreaDataset,
-         twoStackedAreaDataset
+         twoStackedAreaDataset,
+         composedChartData
   } from './__mocks__/chart-data'
 import DateRanges from '../constants/date-ranges'
 
