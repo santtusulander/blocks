@@ -20,3 +20,16 @@ export const getEntitiesByParent = ( state, entityType, parentId, parentIdKey = 
 
   return result;
 }
+
+/**
+ * Get entity keys by parent id
+ * @param  {[type]} state
+ * @param  {[type]} entityType
+ * @param  {[type]} parentId
+ * @param  {String} parentIdKey
+ * @return {[array]}
+ */
+export const getEntityIdsByParent = (state, entityType, parentId, parentIdKey = 'parentId') => {
+  return state.entities[entityType].filter((entity) => String(entity.get(parentIdKey)) === String(parentId))
+    .keySeq()
+}
