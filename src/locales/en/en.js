@@ -130,6 +130,10 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.visitors.grid.percentage.header': '% of Visitors',
   'portal.analytics.visitors.grid.periodTrend.header': 'Period Trend',
 
+  'portal.analytics.storage.usage.text': 'Usage',
+  'portal.analytics.storage.files.text': 'Files',
+  'portal.analytics.storage.usageByTime.text': 'USAGE BY TIME',
+
   'portal.analytics.noServiceTypeSelected.text': 'There must be at least one service type selected.',
   'portal.analytics.noServiceTypeSelected.title': 'Error',
 
@@ -182,6 +186,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
+  'portal.analysis.filters.storageType.title': 'Show as',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
