@@ -1,0 +1,37 @@
+.sortable-item {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-height: $bar-height;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  &-name {
+    margin-left: 10px;
+  }
+
+  &-actions {
+    margin-left: auto;
+  }
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    background-color: rgba($white, 0.1);
+  }
+}
+
+.sortable-list {
+  margin-top: 10px;
+}
+
+.sortable-helper {
+  z-index: 10000!important;
+}
+
+.sortable-handle {
+  cursor: pointer;
+}
