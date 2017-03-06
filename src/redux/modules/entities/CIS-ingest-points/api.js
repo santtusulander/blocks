@@ -32,6 +32,12 @@ const baseUrl = ({ group, id }) => {
   return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}`
 }
 
+const baseListUrl = ({ group }) => {
+  return `${BASE_URL_CIS_NORTH}/ingest_points?group_id=${group}&format=brief`
+}
+
+
+
 /* We only need profile_id -> set entity name to workflowsDummy so workflow doesn't go into redux */
 const workflowSchema = new schema.Entity('workflowsDummy', {},{
   idAttribute: 'profile_id'
@@ -40,7 +46,7 @@ const workflowSchema = new schema.Entity('workflowsDummy', {},{
 const ingestPointSchema = new schema.Entity('ingestPoints', {
   workflow: workflowSchema
 },{
-  idAttribute: (ingestPoint, group) => buildReduxId(group.id, ingestPoint.id),
+  idAttribute: (ingestPoint, group) => buildReduxId(group.id, ingestPoint.ingest_point_id),
   processStrategy: (value, parent) => {
     return {
       ...value,
@@ -59,13 +65,11 @@ const groupIngestPoints = new schema.Entity('groupIngestPoints', {
  * @param  {String} id
  * @return {Object} normalizr ingestPoints
  */
-export const fetch = ({id, ...params}) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [ { id, ...mock} ] }, groupIngestPoints) )
-
-  // return axios.get(`${baseUrl(params)}/${id}`)
-  //   .then( ({data}) => {
-  //     return normalize({ id: params.group, ingestPoints: [ data ] }, groupIngestPoints)
-  //   })
+export const fetch = (params) => {
+  return axios.get(`${baseUrl(params)}`)
+    .then( ({data}) => {
+      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
+    })
 }
 
 /**
@@ -74,12 +78,10 @@ export const fetch = ({id, ...params}) => {
  * @return {Object} normalizr ingestPoints
  */
 export const fetchAll = ( params = {}) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: mockArray }, groupIngestPoints) )
-
-  // return axios.get(baseUrl(params))
-  //   .then( ({data}) => {
-  //     return normalize({ id: params.group, ingestPoints: [ data ] }, [ingestPointSchema])
-  //   })
+  return axios.get(baseListUrl(params))
+    .then( ({data}) => {
+      return normalize({ id: params.group, ingestPoints: data }, groupIngestPoints)
+    })
 }
 
 /**
@@ -88,12 +90,10 @@ export const fetchAll = ( params = {}) => {
  * @return {[type]} normalizr ingestPoint
  */
 export const create = ({ payload, ...params }) => {
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [{ id: 'new-storage', ...mock}] }, groupIngestPoints) )
-
-  // return axios.post(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
-  //   .then(({ data }) => {
-  //     return normalize({ id: params.group, ingestPoints: [ mock ] }, groupIngestPoints)
-  //   })
+  return axios.post(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
+    .then(({ data }) => {
+      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
+    })
 }
 
 
@@ -104,13 +104,18 @@ export const create = ({ payload, ...params }) => {
  * @param  {[type]} params [description]
  * @return {[type]}               [description]
  */
-export const update = ({ id, payload, ...params }) => {
+export const update = ({ payload, ...params }) => {
+  /*eslint-disable no-console */
+  console.warn('Update endpoint not implemented in API')
+  return Promise.reject()
+  /*eslint-enable no-console */
 
-  return Promise.resolve( normalize({ id: params.group, ingestPoints: [{ id, ...mock}] }, groupIngestPoints) )
-
-  // return axios.put(`${baseUrl(params)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } })
+  // TODO: When API supports PUT
+  // https://vidscale.atlassian.net/browse/CIS-322
+  //
+  // return axios.put(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
   //   .then(({ data }) => {
-  //     return normalize({ id: params.group, ingestPoints: [ mock ] }, groupIngestPoints)
+  //     return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
   //   })
 }
 
@@ -120,9 +125,7 @@ export const update = ({ id, payload, ...params }) => {
  * @param  {[type]} baseUrlParams [description]
  * @return {[type]}               [description]
  */
-export const remove = ({ id, ...params }) => {
-  return Promise.resolve({ id: buildReduxId(params.group, id) })
-
-  // return axios.delete(`${baseUrl(params)}/${id}`)
-  //   .then(() => ({ id: buildReduxId(params.group, id) }))
+export const remove = (params) => {
+  return axios.delete( baseUrl(params) )
+    .then(() => ({ id: buildReduxId(params.group, params.id) }))
 }

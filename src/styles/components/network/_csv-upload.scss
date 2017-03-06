@@ -95,6 +95,11 @@ $filedrop-min-height: 200px;
   border-color: $pale-blue !important;
 }
 
+.filedrop-area.error {
+  color: $red !important;
+  border-color: $red !important;
+}
+
 .filedrop-area.files-inside {
   border-color: transparent;
   border-width: 0;
