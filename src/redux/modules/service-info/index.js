@@ -34,8 +34,18 @@ const providerTypes =
     [actionTypes.UPDATE]:  mapReducers(receiveEntity('provider_types'), failEntity)
   }, Map())
 
+const regions =
+  handleActions({
+    [actionTypes.CREATE]:  mapReducers(receiveEntity('regions'), failEntity),
+    [actionTypes.FETCH]:  mapReducers(receiveEntity('regions'), failEntity),
+    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('regions'), failEntity),
+    [actionTypes.REMOVE]:  mapReducers(removeEntity, failEntity),
+    [actionTypes.UPDATE]:  mapReducers(receiveEntity('regions'), failEntity)
+  }, Map())
+
 export default combineReducers({
   services,
-  providerTypes
+  providerTypes,
+  regions
   //fetching: createFetchingReducers( actionTypes, 'serviceInfo')
 })
