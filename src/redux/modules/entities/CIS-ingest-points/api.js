@@ -105,10 +105,7 @@ export const create = ({ payload, ...params }) => {
  * @return {[type]}               [description]
  */
 export const update = ({ payload, ...params }) => {
-  /*eslint-disable no-console */
-  console.warn('Update endpoint not implemented in API')
-  return Promise.reject()
-  /*eslint-enable no-console */
+  return Promise.reject({ data: { message: 'Update endpoint not implemented in API' } })
 
   // TODO: When API supports PUT
   // https://vidscale.atlassian.net/browse/CIS-322
