@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { List} from 'immutable'
+import { Map, List} from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -31,8 +31,9 @@ class AccountManagementStorages extends Component {
     this.state = {
       storageToDelete: null,
       storageToEdit: null,
+      storageGroupToEdit: null,
       search: '',
-      sortBy: 'id',
+      sortBy: 'ingest_point_id',
       sortDir: 1
     }
 
@@ -41,7 +42,7 @@ class AccountManagementStorages extends Component {
     this.addStorage = this.addStorage.bind(this)
     this.editStorage = this.editStorage.bind(this)
     this.deleteStorage = this.deleteStorage.bind(this)
-    this.formatLocations = this.formatLocations.bind(this)
+    this.formatOrigins = this.formatOrigins.bind(this)
   }
 
   componentWillMount() {
@@ -64,13 +65,12 @@ class AccountManagementStorages extends Component {
     })
   }
 
-  // TODO Integrate storage add/edit/delete functionality in scope of UDNP-2849 when forms and redux will be ready
   addStorage() {
     this.props.toggleModal(ADD_STORAGE);
   }
 
-  editStorage(storage) {
-    this.setState({ storageToEdit: storage });
+  editStorage(storageId, groupId) {
+    this.setState({ storageToEdit: storageId, storageGroupToEdit: groupId });
     this.props.toggleModal(EDIT_STORAGE);
   }
 
@@ -80,26 +80,26 @@ class AccountManagementStorages extends Component {
   }
 
   deleteStorage() {
-    // return this.props.storageActions.deleteStorage(this.storageToDelete)
+    // return this.props.storageActions.remove(this.state.storageToDelete)
     //   .then(() => this.props.toggleModal(null))
   }
 
   filterData(storageName) {
     return this.props.storages.filter((storage) => {
-      return storage.get('id').toLowerCase().includes(storageName)
+      return storage.get('ingest_point_id').toLowerCase().includes(storageName)
     })
   }
 
-  formatLocations(locations) {
-    if (locations.length === 1) {
-      return locations[0]
+  formatOrigins(origins) {
+    if (origins.length === 1) {
+      return origins[0]
     } else {
-      return <FormattedMessage id="portal.common.andMore" values={{firstItem: locations[0], count: locations.length-1}} />
+      return <FormattedMessage id="portal.common.andMore" values={{firstItem: origins[0], count: origins.length-1}} />
     }
   }
 
   render() {
-    const {groups, storages, clusters, accountManagementModal, toggleModal, intl } = this.props
+    const {account, group, groups, storages, clusters, accountManagementModal, toggleModal, intl } = this.props
 
     const sorterProps  = {
       activateSort: this.changeSort,
@@ -134,7 +134,7 @@ class AccountManagementStorages extends Component {
         <Table striped={true}>
           <thead>
             <tr>
-              <TableSorter {...sorterProps} column="id">
+              <TableSorter {...sorterProps} column="ingest_point_id">
                 <FormattedMessage id="portal.account.storages.table.name.text"/>
               </TableSorter>
               <TableSorter {...sorterProps} column="group">
@@ -156,7 +156,8 @@ class AccountManagementStorages extends Component {
           <tbody>
             {sortedStorages.map((storage, i) => {
               const storageGroupId = storage.get('parentId')
-              const groupName = groups.find((group) => (group.get('id') === storageGroupId)).get('name')
+              const storageGroup = groups.find((group) => (group.get('id') === storageGroupId))
+              const groupName = storageGroup.get('name')
 
               let locations = []
               storage.get('clusters').forEach(clusterId => {
@@ -164,17 +165,19 @@ class AccountManagementStorages extends Component {
                 const clusterLocation = clusterData && clusterData.get('description')
                 locations.push(clusterLocation)
               })
+              const locationsString = locations.join(', ')
 
               return (
                 <tr key={i}>
-                  <td>{storage.get('id')}</td>
+                  <td>{storage.get('ingest_point_id')}</td>
                   <td>{groupName}</td>
-                  <td>{storage.get('originTo')}</td>
-                  <td>{locations.length && this.formatLocations(locations)}</td>
+                  <td>-</td>
+                  <td>{locationsString}</td>
                   <td>{formatBytes(storage.get('usage'))}</td>
-                  <td>{storage.get('files')}</td>
+                  <td>-</td>
                   <td className="nowrap-column">
-                  <ActionButtons onEdit={() => {this.editStorage(storage.get('id'))}} onDelete={() => {this.toggleDeleteConfirmationModal(storage)}} />
+                  <ActionButtons onEdit={() => {this.editStorage(storage.get('ingest_point_id'), storageGroup.get('id'))}}
+                                 onDelete={() => {this.toggleDeleteConfirmationModal(storage)}} />
                   </td>
                 </tr>
               )
@@ -192,17 +195,15 @@ class AccountManagementStorages extends Component {
            cancel={() => toggleModal(null)}
            onSubmit={() => this.deleteStorage()} />}
 
-        {/* TODO: UDNP-2849: Integrate List Storage Items in storage tab with redux and create/edit/delete forms */}
         {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
           <StorageFormContainer
             show={true}
-            brand={"udn"}
-            accountId={"238"}
-            storageId={(accountManagementModal === EDIT_STORAGE) ? "storage1" : ''}
-            groupId={"339"}
+            brand={account.get('brand_id')}
+            accountId={account.get('id')}
+            storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+            groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroupToEdit : group.get('id')}
             fetching={false}
             onCancel={() => this.props.toggleModal()}
-            onSubmit={() => {/* noop */}}
           />
         }
 
@@ -217,10 +218,12 @@ class AccountManagementStorages extends Component {
 
 AccountManagementStorages.displayName = 'AccountManagementStorages'
 AccountManagementStorages.propTypes = {
+  account: PropTypes.instanceOf(Map),
   accountManagementModal: PropTypes.string,
   clusters: PropTypes.instanceOf(List),
   fetchClusters: PropTypes.func,
   fetchStorages: PropTypes.func,
+  group: PropTypes.instanceOf(Map),
   groups: PropTypes.instanceOf(List),
   intl: PropTypes.object,
   storages: PropTypes.instanceOf(List),
@@ -233,12 +236,12 @@ AccountManagementStorages.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    activeAccount: account,
+    account: state.account.get('activeAccount'),
     groups: groups,
+    group: state.group.get('activeGroup'),
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state)
   }
