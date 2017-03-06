@@ -62,20 +62,22 @@ class StorageFormContainer extends React.Component {
     } : {}
 
     const data = {
-      estimated_usage: convertToBytes(values.estimate, values.estimate_unit),
+      estimated_usage: Number(convertToBytes(values.estimate, values.estimate_unit)),
       workflow: workflow,
       clusters: selectedClusters
     }
 
+    // Remove workflow property if ABR disabled.
+    if (!values.abr) {
+      delete data.workflow
+    }
+
     const params = {
+      id: values.name,
       brand: brand,
       account: accountId,
       group: groupId,
       payload: data
-    }
-
-    if (!edit) {
-      data.id = values.name
     }
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
