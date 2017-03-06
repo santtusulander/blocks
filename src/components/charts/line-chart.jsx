@@ -3,11 +3,13 @@ import { paleblue, black } from '../../constants/colors'
 import CustomTooltip from './line-chart-tooltip'
 import { formatBitsPerSecond } from '../../util/helpers.js'
 
-import {LineChart as ReactLineCharts, ResponsiveContainer, /* XAxis, YAxis, */ Tooltip, Line} from 'recharts'
+import {LineChart as ReactLineCharts, ResponsiveContainer, Tooltip, Line} from 'recharts'
 
 const LineChart = ({data, dataKey, valueFormatter = formatBitsPerSecond}) => {
   //if No data found
-  if (!data || !data[0][dataKey]) return <div>-</div>
+  if (!data || !data[0][dataKey]) {
+    return <div>-</div>
+  }
   return (
     <ResponsiveContainer height={50} width={'100%'}>
       <ReactLineCharts data={data} >
