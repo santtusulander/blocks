@@ -11,6 +11,7 @@ class Typeahead extends React.Component {
   }
 
   handleBlur(e) {
+    if (this.props.onBlur) this.props.onBlur()
     e.target.removeEventListener('keydown', this.handleKeyDown)
   }
 
@@ -55,7 +56,8 @@ class Typeahead extends React.Component {
 Typeahead.displayName = 'Typeahead'
 Typeahead.propTypes = {
   allowNew: PropTypes.bool,
-  minLength: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
+  minLength: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+  onBlur: PropTypes.func
 }
 
 export default Typeahead
