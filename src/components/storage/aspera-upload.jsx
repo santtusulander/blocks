@@ -34,6 +34,7 @@ class AsperaUpload extends Component {
     this.aspera = null
     this.notificationTimeout = null
 
+    this.initAspera = this.initAspera.bind(this)
     this.startTransfer = this.startTransfer.bind(this)
     this.asperaListener = this.asperaListener.bind(this)
 
@@ -52,19 +53,24 @@ class AsperaUpload extends Component {
     this.props.userActions.getAccessKeyByToken(storageId).then((res) => {
       if (res.error) {
         this.setState({
-          asperaError: res.payload,
+          asperaError: res.payload.data.message,
           accessKey: null
         })
       } else {
         this.setState({
           asperaError: null,
           accessKey: res.payload
-        })
+        }, this.initAspera)
       }
     })
   }
 
-  componentDidMount() {
+  componentWillUnmount(){
+    this.aspera.asperaDeInitConnect()
+    clearTimeout(this.notificationTimeout)
+  }
+
+  initAspera() {
     const statusFunctions = {
       showLaunching: () => {
         return this.showNotification(AW4.Connect.STATUS.INITIALIZING)
@@ -87,12 +93,7 @@ class AsperaUpload extends Component {
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
   }
-
-  componentWillUnmount(){
-    this.aspera.asperaDeInitConnect()
-    clearTimeout(this.notificationTimeout)
-  }
-
+  
   showNotification(code) {
     clearTimeout(this.notificationTimeout)
 
