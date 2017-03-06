@@ -14,15 +14,13 @@ import {
 
 import checkPermissions from '../../util/permissions'
 
-import Selector from '../drillable-menu'
+import Selector from './'
 
 /**
  * dispatch to props for all the other selectors in the app.
  * @param  {[type]} dispatch [description]
  * @param  {[type]} params   [description]
- * @param  {[type]} account  [description]
- * @param  {[type]} group    [description]
- * @param  {[type]} property [description]
+ * @param  {[type]} levels   [description]
  * @return {[type]}          [description]
  */
 const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, group, property, storage }, levels = ['brand', 'account', 'group'] }) => {
@@ -48,18 +46,24 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
   }
 }
 
-/**
- * state to props for the account selector
- * @param  {[type]} state        [description]
- * @param  {[type]} params       [description]
- * @param  {[type]} restrictions [description]
- * @return {[type]}              [description]
- */
+ /**
+  * state to props for the account selector
+  * @param  {[type]} state             [description]
+  * @param  {[type]} params            [description]
+  * @param  {[type]} levels            which levels are set for an instance of the GAS
+  * @return {[type]}                   [description]
+  */
 const accountSelectorStateToProps = (state, { params: { property, group, account, brand }, levels = ['brand', 'account', 'group'] }) => {
 
   const roles = state.roles.get('roles')
   const user = state.user.get('currentUser')
 
+  /**
+   * Run a permission check for a desired level from levels-prop to determine whether the tree
+   * passed to the menu component contains entities for that level.
+   * @param  {[string]} permission    A permission to check against.
+   * @return {[boolean]}
+   */
   const canView = permission => {
     let hasLevel = false
 
