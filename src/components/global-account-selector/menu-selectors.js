@@ -27,11 +27,11 @@ const getStoragesByGroup = () => ([
 ])
 
 /**
- * get groups from state, set child nodes and defining a function to fetch child nodes for each one.
- * @param  {[type]} state     [description]
- * @param  {[type]} brandId   [description]
- * @param  {[type]} accountId [description]
- * @return {[type]}           [description]
+ * get groups from state, set child nodes and define a function to fetch child nodes for each one.
+ * @param  {[type]} state   [description]
+ * @param  {[type]} parents [description]
+ * @param  {[type]} canView [description]
+ * @return {[type]}         [description]
  */
 export const getGroups = (state, parents, canView) => {
 
@@ -58,7 +58,7 @@ export const getGroups = (state, parents, canView) => {
 /**
  * get properties from state
  * @param  {[type]} state   [description]
- * @param  {[type]} groupId [description]
+ * @param  {[type]} parents [description]
  * @return {[type]}         [description]
  */
 export const getProperties = (state, parents) => {
@@ -99,11 +99,11 @@ export const getStorages = (state, parents) => {
 }
 
 /**
- * get accounts from state, set child nodes and defining a function to fetch child nodes for each one.
- * @param  {[type]} state     [description]
- * @param  {[type]} parents   [description]
- * @param  {Object} [hide={}] [description]
- * @return {[type]}           [description]
+ * get accounts from state, set child nodes and define a function to fetch child nodes for each one.
+ * @param  {[type]} state   [description]
+ * @param  {[type]} parents [description]
+ * @param  {[type]} canView [description]
+ * @return {[type]}         [description]
  */
 export const getAccounts = (state, parents, canView) => {
 
