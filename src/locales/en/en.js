@@ -509,6 +509,7 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.dns.text': 'DNS',
   'portal.accountManagement.roles.text': 'ROLES',
   'portal.accountManagement.storages.text': 'STORAGES',
+  'portal.accountManagement.properties.text': 'PROPERTIES',
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',

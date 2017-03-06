@@ -9,7 +9,15 @@ import { BASE_URL_CIS_SOUTH } from '../../../util'
 const mock = {
   "geolocation": "us",
   "storage_type": "ssd",
-  "name": "strg0"
+  "name": "str0",
+  "description": "San Jose, California, USA"
+}
+
+const mock1 = {
+  "geolocation": "ger",
+  "storage_type": "ssd",
+  "name": "str1",
+  "description": "Frankfurkt, Germany"
 }
 
 const mockArray = [
@@ -18,7 +26,7 @@ const mockArray = [
     name: "strg0"
   },
   {
-    ...mock,
+    ...mock1,
     name: "strg1"
   }
 ]
