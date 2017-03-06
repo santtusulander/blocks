@@ -39,13 +39,22 @@ const mockData = {
         percent_change: 50.00
       }
     },
-    detail: [{
-      timestamp: 1465862400,
-      bytes: 108000497044939,
-      file_count: 5000,
-      historical_bytes: 71963080986145,
-      historical_file_count: 5000
-    }]
+    details: {
+      "cis-us-sjc-strg0": [{
+        timestamp: 1465862400,
+        bytes: 108000497044939,
+        file_count: 5000,
+        historical_bytes: 71963080986145,
+        historical_file_count: 5000
+      }],
+      "cis-fi-sjc-strg1": [{
+        timestamp: 1465862400,
+        bytes: 108000497044939,
+        file_count: 5000,
+        historical_bytes: 71963080986145,
+        historical_file_count: 5000
+      }]
+    }
   }]
 }
 
