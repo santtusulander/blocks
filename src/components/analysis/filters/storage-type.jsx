@@ -10,14 +10,14 @@ const FilterStorageType = ({ storageType = '', toggleStorageType }) => (
         <Radio
           checked={storageType.includes('usage')}
           onChange={() => toggleStorageType('usage')}>
-          <span>Usage</span>
+          <span>{<FormattedMessage id="portal.analysis.filters.storageType.usage.title"/>}</span>
         </Radio>
       </FormGroup>
       <FormGroup>
         <Radio
           checked={storageType.includes('files')}
           onChange={() => toggleStorageType('files')}>
-         <span>Files</span>
+         <span>{<FormattedMessage id="portal.analysis.filters.storageType.files.title"/>}</span>
         </Radio>
       </FormGroup>
     </div>

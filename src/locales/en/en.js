@@ -187,6 +187,8 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
   'portal.analysis.filters.storageType.title': 'Show as',
+  'portal.analysis.filters.storageType.usage.title': 'Usage',
+  'portal.analysis.filters.storageType.files.title': 'Files',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
