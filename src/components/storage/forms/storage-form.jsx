@@ -59,7 +59,7 @@ class StorageForm extends React.Component {
   }
 
   render() {
-    const { error, submitting, handleSubmit, intl, initialValues, abrProfileOptions,
+    const { error, submitting, handleSubmit, intl, initialValues, abrProfileOptions, dirty,
             invalid, onCancel, onSave, onDelete, abrToggle, locationOptions } = this.props
 
     const edit = !!initialValues.name
@@ -177,7 +177,7 @@ class StorageForm extends React.Component {
           <Button
             type="submit"
             bsStyle="primary"
-            disabled={invalid || submitting}>
+            disabled={invalid || submitting || (!dirty)}>
             {actionButtonTitle}
           </Button>
         </FormFooterButtons>

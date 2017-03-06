@@ -55,7 +55,6 @@ class StorageFormContainer extends React.Component {
 
   onSave(edit, values) {
     const { brand, accountId, groupId, selectedClusters } = this.props
-
     const workflow = values.abr ? {
       id: STORAGE_WORKFLOW_DEFAULT,
       profile_id: values.abrProfile
@@ -109,7 +108,7 @@ class StorageFormContainer extends React.Component {
   }
 
   render() {
-    const { account, abrProfileOptions, group, storage,
+    const { account, abrProfileOptions, group, storageId,
             initialValues, onCancel, abrToggle,
             show, locationOptions } = this.props
 
@@ -118,7 +117,7 @@ class StorageFormContainer extends React.Component {
     const title = edit ? <FormattedMessage id="portal.storage.storageForm.edit.title"/>
                        : <FormattedMessage id="portal.storage.storageForm.add.title"/>
 
-    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${storage.get('id')}`
+    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${storageId}`
                           : `${account.get('name')} / ${group.get('name')}`
 
     return (
@@ -178,14 +177,12 @@ StorageFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   selectedClusters: PropTypes.array,
   show: PropTypes.bool,
-  storage: PropTypes.instanceOf(Map),
   storageId: PropTypes.string
 }
 
 StorageFormContainer.defaultProps = {
   account: Map(),
-  group: Map(),
-  storage: Map()
+  group: Map()
 }
 
 const formSelector = formValueSelector('storageForm')
@@ -205,7 +202,6 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     isFetching: getGlobalFetching(state),
-    storage: storage ? storage : Map(),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
