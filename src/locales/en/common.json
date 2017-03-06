@@ -47,6 +47,7 @@
   "portal.common.textFieldMultilineValidation.allowedSpecialChars.all": "allowed all character",
   "portal.common.noAvailabe.text": "No {label}",
   "portal.common.add.label.text": "Add {label}",
+  "portal.common.of.value.text": "of {value}",
 
   "portal.common.statusCode.100": "Continue",
   "portal.common.statusCode.101": "Switching Protocols",
@@ -125,5 +126,6 @@
 
   "portal.common.typeahead.emptyLabel": "Add values by typing",
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
-  "portal.common.search.no-results.text": "No results found."
+  "portal.common.search.no-results.text": "No results found.",
+  "portal.common.current": "Current"
 }

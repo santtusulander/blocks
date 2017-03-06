@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {normalize, schema} from 'normalizr'
 
-import { BASE_URL_AAA }  from '../../../util.js'
+import { BASE_URL_AAA, PAGINATION_MOCK }  from '../../../util.js'
 
 const groupSchema = new schema.Entity('groups', {}, {
   processStrategy: (value, parent) => {
@@ -29,7 +29,7 @@ export const fetch = ({brand, account, id}) => {
 }
 
 export const fetchAll = ({ brand, account }) => {
-  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
+  return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`, PAGINATION_MOCK)
     .then( ({data}) => {
 
       const accountGroups = {

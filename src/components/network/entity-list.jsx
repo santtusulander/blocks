@@ -136,7 +136,6 @@ class EntityList extends React.Component {
     const {
       editEntity,
       selectEntity,
-      deleteEntity,
       selectedEntityId,
       multiColumn,
       numOfColumns,
@@ -168,7 +167,6 @@ class EntityList extends React.Component {
             active={isActive}
             content={contentText}
             onSelect={() => selectEntity(entityId)}
-            onDelet={() => deleteEntity(entityId)}
             status={status}
             extraClassName="entity-list-item"
             viewPermission={viewPermission}
@@ -341,7 +339,6 @@ EntityList.propTypes = {
   addEntity: PropTypes.func.isRequired,
   contentTextGenerator: PropTypes.func,
   creationPermission: PropTypes.string,
-  deleteEntity: PropTypes.func.isRequired,
   disableButtons: PropTypes.bool,
   editEntity: PropTypes.func.isRequired,
   entities: PropTypes.instanceOf(Immutable.List),

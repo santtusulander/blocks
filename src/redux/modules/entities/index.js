@@ -77,11 +77,34 @@ const networks =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const CISIngestPoints =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('ingestPoints'),
+    [actionTypes.REMOVE] : removeEntity,
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+const CISClusters =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('clusters'),
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+const CISWorkflowProfiles =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity('workflowProfiles'),
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+
 export default combineReducers({
   accounts,
   nodes,
   groups,
   iataCodes,
+  CISIngestPoints,
+  CISClusters,
+  CISWorkflowProfiles,
   properties,
   pops,
   networks,

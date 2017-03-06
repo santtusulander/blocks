@@ -27,8 +27,7 @@ import NetworkLocationFormContainer from '../../network/modals/location-modal'
 
 import {
   accountIsContentProviderType,
-  accountIsServiceProviderType,
-  userIsServiceProvider
+  accountIsServiceProviderType
 } from '../../../util/helpers'
 
 import GroupForm from '../../../components/account-management/group-form'
@@ -371,8 +370,8 @@ const  mapStateToProps = (state, ownProps) => {
   const activeAccount = account.get('activeAccount')
   const activeGroup = group.get('activeGroup') || Map()
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
-  const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : userIsServiceProvider(currentUser)
-  const canFetchNetworks = userIsServiceProvider(currentUser)
+  const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
+  const canFetchNetworks = accountIsServiceProviderType(activeAccount)
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -400,7 +399,7 @@ const  mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ brand, account, group }),
+    fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

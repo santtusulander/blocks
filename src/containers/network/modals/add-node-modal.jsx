@@ -13,6 +13,8 @@ import { getById as getPodById } from '../../../redux/modules/entities/pods/sele
 import { buildReduxId } from '../../../redux/util'
 
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
+import { changeNotification } from '../../../redux/modules/ui'
+
 import SidePanel from '../../../components/side-panel'
 import NetworkAddNodeForm from '../../../components/network/forms/add-node-form'
 import { ADD_NODE_FORM_NAME } from '../../../components/network/forms/add-node-form'
@@ -171,11 +173,13 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
   onSave: node => {
 
     return dispatch(nodeActions.create({ ...params, payload: node }))
-      .then(({ error }) => {
-        if (error) {
-          return Promise.reject(new SubmissionError({ _error: error.data.message }))
-        }
+      .then(() => {
+        const showNotification = (message) => dispatch( changeNotification(message) )
+        showNotification(<FormattedMessage id="portal.network.addNodeForm.createNode.status"/>)
+        setTimeout(showNotification, 10000)
         onCancel()
+      }).catch(response => {
+        throw new SubmissionError({ '_error': response.data.message })
       })
   }
 })
