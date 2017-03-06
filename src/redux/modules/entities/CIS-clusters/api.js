@@ -5,55 +5,21 @@ import {normalize, schema} from 'normalizr'
 
 import { BASE_URL_CIS_SOUTH } from '../../../util'
 
-
-const mock = {
-  "geolocation": "us",
-  "storage_type": "ssd",
-  "name": "str0",
-  "description": "San Jose, California, USA"
-}
-
-const mock1 = {
-  "geolocation": "ger",
-  "storage_type": "ssd",
-  "name": "str1",
-  "description": "Frankfurkt, Germany"
-}
-
-const mockArray = [
-  {
-    ...mock,
-    name: "strg0"
-  },
-  {
-    ...mock1,
-    name: "strg1"
-  }
-]
-
-
 const baseUrl = () => {
-  return `${BASE_URL_CIS_SOUTH}/clusters`
+  return `${BASE_URL_CIS_SOUTH}/clusters?format=brief`
 }
 
 const clusterSchema = new schema.Entity('clusters', {},{
   idAttribute: 'name'
 })
 
-
-
 /**
  * Fetch list of Clusters (Locations)
- * @param  {[type]} brand   [description]
- * @param  {[type]} account [description]
- * @return {[type]}         [description]
+ * @return {Object} normalzed list of clusters
  */
 export const fetchAll = ({}) => {
-  return Promise.resolve( normalize(mockArray, [ clusterSchema ]) )
-
-  // TODO: UDNP-2873 Uncomment when API is fixed
-  // return axios.get(baseUrl())
-  // .then( ({data}) => {
-  //   return normalize(data, [ clusterSchema ])
-  // })
+  return axios.get(baseUrl())
+  .then( ({data}) => {
+    return normalize(data, [ clusterSchema ])
+  })
 }
