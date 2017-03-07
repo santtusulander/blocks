@@ -86,13 +86,13 @@ class ConfigurationDetails extends React.Component {
   }
 
   getStorageList() {
-    const newStorage = ['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
-    if(this.props.storages && this.props.storages.length) {
+    let newStorage = ['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
+    if(this.props.storages && !this.props.storages.isEmpty()) {
       const storageList = this.props.storages.map(storage => Immutable.fromJS({value: storage.getIn(['gateway','hostname']), label: storage.get('ingest_point_id')}))
       const storageOptions = storageList.toJS()
       return [newStorage, ...storageOptions]
     }
-    return newStorage;
+    return [newStorage];
   }
 
   save() {
