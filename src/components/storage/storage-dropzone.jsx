@@ -1,12 +1,12 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Button, Col, FormGroup } from 'react-bootstrap'
+import { Col, FormGroup } from 'react-bootstrap'
 
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
 import AsperaUpload from '../storage/aspera-upload'
+import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
-import IconAdd from '../icons/icon-add'
 
 const StorageDropzone = () => {
   return (
@@ -26,13 +26,20 @@ const StorageDropzone = () => {
             />
           </Col>
         </FormGroup>
-        <Button
-          className="btn-icon btn-success pull-right"
+        <ButtonDropdown
           bsStyle="success"
-          icon={true}
-          onClick={() => {}}>
-          <IconAdd />
-        </Button>
+          pullRight={true}
+          options={[
+            {
+              label: <FormattedMessage id='portal.storage.summaryPage.dropzone.newFile.label' />,
+              handleClick: () => {}
+            },
+            {
+              label: <FormattedMessage id='portal.storage.summaryPage.dropzone.newFolder.label' />,
+              handleClick: () => {}
+            }
+          ]}
+        />
       </SectionHeader>
       <AsperaUpload />
     </SectionContainer>
