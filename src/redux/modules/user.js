@@ -1,9 +1,11 @@
-import {createAction, handleActions} from 'redux-actions'
+import { createAction, handleActions } from 'redux-actions'
 import axios from 'axios'
 import { Map, List, fromJS } from 'immutable'
 
-import { BASE_URL_AAA, PAGINATION_MOCK, mapReducers, parseResponseData } from '../util'
-import {UDN_ADMIN_ROLE_ID} from '../../constants/roles'
+import { BASE_URL_AAA, BASE_URL_CIS_NORTH,
+         PAGINATION_MOCK, mapReducers,
+         parseResponseData } from '../util'
+import { UDN_ADMIN_ROLE_ID } from '../../constants/roles'
 
 import {
   getUserToken,
@@ -32,6 +34,7 @@ const USER_PASSWORD_RESET_TOKEN_INFO = 'USER_PASSWORD_RESET_TOKEN_INFO'
 const PASSWORD_UPDATED = 'PASSWORD_UPDATED'
 const SET_LOGIN = 'user/SET_LOGIN'
 const DESTROY_STORE = 'DESTROY_STORE'
+const USER_ACCESS_KEY_RECEIVED = 'USER_ACCESS_KEY_RECEIVED'
 
 // Create an axios instance that doesn't use defaults to test credentials
 const loginAxios = axios.create()
@@ -241,6 +244,14 @@ export function resetPasswordTokenInfoFailure(state) {
   })
 }
 
+export function getAccessKeySuccess(state, action) {
+  return state.set('storageAccessToken', action.payload)
+}
+
+export function getAccessKeyFailure(state) {
+  return state.set('storageAccessToken', null)
+}
+
 export default handleActions({
   USER_LOGGED_IN: mapReducers( userLoggedInSuccess, userLoggedInFailure ),
   USER_LOGGED_OUT: userLoggedOutSuccess,
@@ -257,7 +268,8 @@ export default handleActions({
   [SET_LOGIN]: setLoggedIn,
   USER_PASSWORD_RESET_REQUESTED: mapReducers(requestPasswordResetSuccess, requestPasswordResetFailure),
   USER_PASSWORD_RESET: mapReducers(resetPasswordSuccess, resetPasswordFailure),
-  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure)
+  USER_PASSWORD_RESET_TOKEN_INFO: mapReducers(resetPasswordTokenInfoSuccess, resetPasswordTokenInfoFailure),
+  USER_ACCESS_KEY_RECEIVED: mapReducers(getAccessKeySuccess, getAccessKeyFailure)
 }, emptyUser)
 
 /*
@@ -353,6 +365,20 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
     return loginAxios.delete(`${BASE_URL_AAA}/tokens/${token}`,
       {headers: {'X-Auth-Token': token}}
     )
+  }
+})
+
+export const getAccessKeyByToken = createAction(USER_ACCESS_KEY_RECEIVED, (storageId) => {
+  const token = getUserToken()
+  const axiosInstanse = axios.create({
+    headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
+  })
+
+  if (storageId && token) {
+    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys`)
+                        .then(parseResponseData)
+  } else {
+    return Promise.reject({ data: { message: "No token" } })
   }
 })
 

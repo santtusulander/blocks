@@ -1,6 +1,6 @@
 {
   "name": "ericsson-udn-portal",
-  "version": "1.4.0-b9",
+  "version": "1.4.0-b10",
   "description": "This is a portal for administering the Ericsson UDN.",
   "main": "dist/js/app.js",
   "author": "Idean",
@@ -84,6 +84,7 @@
     "react-mapbox-gl": "^0.25.0",
     "react-redux": "^5.0.1",
     "react-router": "^2.5.2",
+    "react-sortable-hoc": "^0.5.0",
     "react-telephone-input": "^3.5.0",
     "recharts": "^0.20.2",
     "redux": "^3.3.1",
@@ -91,6 +92,7 @@
     "redux-auth-wrapper": "^0.9.0",
     "redux-form": "^6.5.0",
     "redux-promise": "^0.5.1",
+    "reselect": "^2.5.4",
     "topojson": "^1.6.22",
     "topojson-client": "^2.1.0",
     "uniqid": "^4.1.1",

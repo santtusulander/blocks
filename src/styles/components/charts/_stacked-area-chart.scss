@@ -1,0 +1,194 @@
+@import '../../base/colors';
+
+.stacked-area-chart-container {
+
+/**
+ * Fallback color for unknown dataset
+ */
+
+.non-stacked {
+   .recharts-area {
+     path {
+       &:last-child {
+         fill: $pale-blue;
+       }
+     }
+   }
+ }
+
+ .stacked,
+ .two-stacked-comparison {
+    .recharts-area {
+      &:first-of-type {
+        path {
+          &:last-child {
+            fill: $gradient-teal;
+          }
+        }
+      }
+
+      &:nth-of-type(2) {
+        path {
+          &:last-child {
+            fill: $pale-blue;
+          }
+        }
+      }
+    }
+  }
+
+.comparison {
+    .recharts-area {
+      &:first-of-type {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 4px;
+          }
+
+          &:last-child {
+            fill: $dark-blue;
+          }
+        }
+      }
+
+      &:nth-of-type(2) {
+        path {
+          &:first-child {
+            stroke: $pale-blue;
+            stroke-width: 2px;
+          }
+
+          &:last-child {
+            fill: $black-20;
+          }
+        }
+      }
+    }
+  }
+
+  .two-stacked-comparison {
+    .recharts-area {
+      &:nth-of-type(3) {
+        path {
+          &:first-child {
+            stroke: $yellow;
+            stroke-width: 2px;
+          }
+
+          &:last-child {
+            fill: $black-20;
+          }
+        }
+      }
+
+      &:nth-of-type(4) {
+        path {
+          &:first-child {
+            stroke: $purple;
+            stroke-width: 4px;
+          }
+
+          &:last-child {
+            fill: $dark-blue;
+          }
+        }
+      }
+
+    }
+  }
+
+  /**
+   * Defined color for analytic area chart
+   */
+
+   .stacked,
+   .non-stacked,
+   .two-stacked-comparison {
+     .recharts-area {
+       &.http {
+         path {
+           &:last-child {
+             fill: $pale-blue;
+           }
+         }
+       }
+
+       &.https {
+         path {
+           &:last-child {
+             fill: $gradient-teal;
+           }
+         }
+       }
+     }
+   }
+
+   .comparison {
+     .recharts-area {
+       &.http {
+         path {
+           &:first-child {
+             stroke: $yellow;
+             stroke-width: 4px;
+           }
+
+           &:last-child {
+             fill: $dark-blue;
+           }
+         }
+       }
+
+       &.comparison_http {
+         path {
+           &:first-child {
+             stroke: $pale-blue;
+             stroke-width: 2px;
+           }
+
+           &:last-child {
+             fill: $black-20;
+           }
+         }
+       }
+     }
+   }
+
+   .two-stacked-comparison {
+     .recharts-area {
+       &.comparison_http {
+         path {
+           &:first-child {
+             stroke: $purple;
+             stroke-width: 4px;
+           }
+
+           &:last-child {
+             fill: $dark-blue;
+           }
+         }
+       }
+
+       &.comparison_https {
+         path {
+           &:first-child {
+             stroke: $yellow;
+             stroke-width: 2px;
+           }
+
+           &:last-child {
+             fill: $black-20;
+           }
+         }
+       }
+     }
+   }
+
+  .stacked-area-chart-label {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-weight: bold;
+  }
+
+}
