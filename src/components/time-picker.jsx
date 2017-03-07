@@ -22,7 +22,7 @@ export class TimePicker extends React.Component {
             className="has-left-icon"
             noCaret={true}
           >
-            <IconClock className="left" />
+            <IconClock className="left"/>
             {value}
             <IconSelectCaret/>
           </Dropdown.Toggle>
@@ -46,8 +46,8 @@ TimePicker.propTypes = {
   onChange: React.PropTypes.func,
   time: React.PropTypes.instanceOf(moment)
 }
-// TimePicker.defaultProps = {
-//   date: moment().utc().startOf('month').format('X')
-// }
+TimePicker.defaultProps = {
+  time: moment().utc()
+}
 
 export default TimePicker
