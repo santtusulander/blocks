@@ -12,6 +12,9 @@ import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
+import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
+import { getIdsByGroup as getStorageIdsByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
@@ -19,6 +22,38 @@ import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
 import checkPermissions from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
+
+// TODO UNDP-2906
+// Remove this in scope of integration with redux
+const mockRedux = {
+  get: function(entity) {
+    switch (entity) {
+      case 'storages':
+        return Immutable.fromJS([{
+          id: 'storage1',
+          name: 'Media Storage',
+          location: 'Frankfurt',
+          currentUsage: '450 GB',
+          usageQuota: '900 GB',
+          maxTransfer: '75.00 TB',
+          minTransfer: '11.00 TB',
+          avgTransfer: '34.00 TB'
+        },{
+          id: 'storage2',
+          name: 'Bangkok Storage',
+          location: 'San Jose',
+          currentUsage: '1.2 TB',
+          usageQuota: '2 TB',
+          maxTransfer: '15.00 TB',
+          minTransfer: '2.00 TB',
+          avgTransfer: '7.00 TB'
+        }])
+
+      default:
+        return null
+    }
+  }
+}
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -121,6 +156,8 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
+        storageIds={this.props.storageIds}
+        storageContentItems={mockRedux.get('storages')}
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteHost}
@@ -166,6 +203,7 @@ Hosts.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
@@ -179,10 +217,11 @@ Hosts.defaultProps = {
   propertyNames: Immutable.List(),
   roles: Immutable.List(),
   sortValuePath: Immutable.List(),
+  storages: Immutable.List(),
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { params: { group } }) {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
@@ -190,6 +229,7 @@ function mapStateToProps(state) {
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
+    storageIds: getStorageIdsByGroup(state, group),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
@@ -218,7 +258,8 @@ function mapDispatchToProps(dispatch, ownProps) {
       accountActions.fetchAccount(brand, account),
       groupActions.fetchGroup(brand, account, group),
       hostActions.fetchHosts(brand, account, group),
-      hostActions.fetchConfiguredHostNames(brand, account, group)
+      hostActions.fetchConfiguredHostNames(brand, account, group),
+      dispatch(storageActions.fetchAll({ group }))
     ])
   }
   const fetchMetricsData = () => {

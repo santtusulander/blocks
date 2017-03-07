@@ -7,6 +7,7 @@ import { SubmissionError } from 'redux-form'
 
 import { getById as getNodeById } from '../../../redux/modules/entities/nodes/selectors'
 import nodeActions from '../../../redux/modules/entities/nodes/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -214,6 +215,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
   const updateNode = ({ reduxId, parentId, ...node }) => dispatch(nodeActions.update({ ...params, id: node.id, payload: node }))
 
   const deleteNode = id => dispatch(nodeActions.remove({ ...params, id }))
+  const showNotification = (message) => dispatch(changeNotification(message))
 
   return {
 
@@ -225,7 +227,11 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
             return updateNode(node)
           }
         )
-      ).then(() => onCancel())
+      ).then(() => {
+        showNotification(<FormattedMessage id="portal.network.editNodeForm.updateNode.status"/>)
+        setTimeout(showNotification, 10000)
+        onCancel()
+      })
 
       .catch(response => {
         throw new SubmissionError({ _error: response.data.message })
@@ -237,8 +243,11 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => {
         nodes.map(
           ({ id }) => deleteNode(id)
         )
-      ).then(() => onCancel())
-
+      ).then(() => {
+        showNotification(<FormattedMessage id="portal.network.editNodeForm.deleteNode.status"/>)
+        setTimeout(showNotification, 10000)
+        onCancel()
+      })
       .catch(response => {
         throw new SubmissionError({ _error: response.data.message })
       })

@@ -10,6 +10,7 @@ import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
 import footprintActions from '../../../redux/modules/entities/footprints/actions'
+import { changeNotification } from '../../../redux/modules/ui'
 
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
@@ -32,6 +33,7 @@ import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
+    this.notificationTimeout = null
 
     // Footprints
     this.showFootprintModal = this.showFootprintModal.bind(this)
@@ -90,7 +92,7 @@ class PodFormContainer extends React.Component {
       .then(() => {
         const UIFootprints = initialValues && initialValues.footprints && initialValues.footprints.map(id => {
           const fp = this.props.footprints.find(footp => footp.id === id)
-          return fp ? fp : { id: unknown.toLower(), name: unknown }
+          return fp ? fp : { id: `unknown-${id}`, name: unknown }
         })
 
         reinitForm({
@@ -159,6 +161,11 @@ class PodFormContainer extends React.Component {
     this.setState({ showDeleteModal })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.showNotification(message)
+    this.notificationTimeout = setTimeout(this.props.showNotification, 10000)
+  }
   /**
    * hander for save
    */
@@ -190,7 +197,8 @@ class PodFormContainer extends React.Component {
       service.sp_bgp_router_password = undefined
 
       //Get footprint IDs
-      data.footprints = values.UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
+      const UIFootprints = values.UIFootprints || []
+      data.footprints = UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
     }
 
     data.services = [service]
@@ -210,6 +218,10 @@ class PodFormContainer extends React.Component {
 
     return save(params)
       .then(() => {
+
+        const message = edit ? <FormattedMessage id="portal.network.podForm.updatePod.status"/> :
+         <FormattedMessage id="portal.network.podForm.createPod.status"/>
+        this.showNotification(message)
 
         //Close modal
         this.props.onCancel();
@@ -241,6 +253,9 @@ class PodFormContainer extends React.Component {
         if (this.props.selectedEntityId === podId) {
           this.props.handleSelectedEntity(podId)
         }
+        
+        this.showNotification(<FormattedMessage id="portal.network.podForm.deletePod.status"/>)
+
         //Close modal
         this.props.onCancel();
       },
@@ -389,7 +404,9 @@ PodFormContainer.propTypes = {
   pushFormVal: PropTypes.func,
   reinitForm: PropTypes.func,
   selectedEntityId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  setFormVal: PropTypes.func
+  setFormVal: PropTypes.func,
+  showNotification: PropTypes.func
+
 }
 
 PodFormContainer.defaultProps = {
@@ -464,6 +481,7 @@ const mapDispatchToProps = (dispatch) => {
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
     setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
+    showNotification: (message) => dispatch( changeNotification(message) ),
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }

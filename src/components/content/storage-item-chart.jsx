@@ -11,11 +11,12 @@ import IconChart from '../icons/icon-chart'
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 const FORMAT = '0,0.0'
-const diameter = 240
+const defaultDiameter = 240
 
 const StorageItemChart = (
   { analyticsLink,
     configurationLink,
+    diameter,
     name,
     locations,
     estimate,
@@ -64,6 +65,8 @@ const StorageItemChart = (
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthPeak,  className: 'last-month'}]]
 
+  const minDiameter = diameter > defaultDiameter ? diameter : defaultDiameter
+
   const tooltip = (<Tooltip id='tooltip-storage' className="storage-item-tooltip">
       <StorageItemTooltip
         name={name}
@@ -83,8 +86,11 @@ const StorageItemChart = (
       cy="50%"
       startAngle={90}
       endAngle={-270}
-      innerRadius={i < 2? (diameter / 2) - 10: (diameter / 2) - 18}
-      outerRadius={i < 2? (diameter / 2)     : (diameter / 2) - 13} />
+      //The width of the outer chart is 10 the padding between the outer and the inner charts is 3
+      //hence we subtract 13 from the minDiameter.
+      //The width of the inner chart is 5
+      innerRadius={i < 2? (minDiameter / 2) - 10: (minDiameter / 2) - 18}
+      outerRadius={i < 2? (minDiameter / 2)     : (minDiameter / 2) - 13} />
   )
 
   //TODO: replace storageLocations when the api is ready
@@ -96,47 +102,45 @@ const StorageItemChart = (
 
   return (
     <OverlayTrigger placement="top" overlay={tooltip}>
-      <div className="storage-item-chart-wrapper">
-        <div className="storage-item-chart">
-          <PieChart width={diameter} height={diameter} >
-            {pies}
-          </PieChart>
+      <div className="storage-item-chart" style={{width: minDiameter, height: minDiameter}}>
+        <PieChart width={minDiameter} height={minDiameter} >
+          {pies}
+        </PieChart>
 
-          <div className="storage-item-chart-location">
-            {storageLocations}
-          </div>
+        <div className="storage-item-chart-location">
+          {storageLocations}
+        </div>
 
-          <div className="storage-item-chart-info">
-            <div className="title" >{name}</div>
-            <div className="usage">
-              <span className="usage-value">
-                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).value}
-              </span>
-              <span className="usage-unit">
-                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, 1e12, FORMAT)).unit}
-              </span>
-            </div>
-          </div>
-
-          <div className="usage-estimate">
-            {<FormattedMessage id="portal.common.of.value.text"
-              values={{ value: formatBytes(estimate, 1e12) }}/>}
-          </div>
-
-          <div className="content-item-chart content-item-toolbar">
-            <ButtonToolbar>
-              <Link to={analyticsLink}
-                className="btn btn-icon btn-round invisible">
-                <IconChart/>
-              </Link>
-              <Link to={configurationLink}
-                className="btn btn-icon btn-round invisible">
-                <IconConfiguration/>
-              </Link>
-            </ButtonToolbar>
+        <div className="storage-item-chart-info">
+          <div className="title" >{name}</div>
+          <div className="usage">
+            <span className="usage-value">
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).value}
+            </span>
+            <span className="usage-unit">
+              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).unit}
+            </span>
           </div>
         </div>
-      </div>
+
+        <div className="usage-estimate">
+          {<FormattedMessage id="portal.common.of.value.text"
+            values={{ value: formatBytes(estimate, null) }}/>}
+        </div>
+
+        <div className="content-item-chart content-item-toolbar">
+          <ButtonToolbar>
+            <Link to={analyticsLink}
+              className="btn btn-icon btn-round invisible">
+              <IconChart/>
+            </Link>
+            <Link to={configurationLink}
+              className="btn btn-icon btn-round invisible">
+              <IconConfiguration/>
+            </Link>
+          </ButtonToolbar>
+        </div>
+        </div>
     </OverlayTrigger>
   )
 }
@@ -146,6 +150,7 @@ StorageItemChart.propTypes = {
   analyticsLink: PropTypes.string,
   configurationLink: PropTypes.string,
   currentUsage: PropTypes.number,
+  diameter: PropTypes.number,
   estimate: PropTypes.number,
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,

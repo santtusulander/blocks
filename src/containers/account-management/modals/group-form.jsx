@@ -399,7 +399,7 @@ const  mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
-    fetchNetworks: (group) => group && networkActions.fetchByIds(dispatch)({ brand, account, group }),
+    fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )

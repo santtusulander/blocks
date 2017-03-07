@@ -21,8 +21,10 @@ export function fetchItemsSuccess(state, action) {
   const data = action.payload.data || action.payload
   const items = data.map(
     item => item.id ?
+      //check if account
       (item.provider_type ? [item.id, item.name, item.provider_type] : [item.id, item.name]) :
-      [item, item]
+      //check if item is property => use published_host_id as name & value
+      item.published_host_id ? [item.published_host_id, item.published_host_id] : [item, item]
   )
   return state.merge({
     items: Immutable.fromJS(items)
