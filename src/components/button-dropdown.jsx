@@ -14,8 +14,8 @@ const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (
       </CustomToggle>
       <Dropdown.Menu className="button-dropdown-menu">
         {
-          options.map(({label, handleClick}, index)=>(
-            <MenuItem key={index} onClick={handleClick}> {label} </MenuItem>
+          options.map(({value, label, handleClick}, index)=>(
+            <MenuItem key={index} onClick={() => handleClick(value)}> {label} </MenuItem>
           ))
         }
       </Dropdown.Menu>

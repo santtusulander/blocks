@@ -54,6 +54,7 @@ import CsvUploadArea from '../components/network/csv-upload'
 import Typeahead from '../components/typeahead'
 import StorageKPI from '../components/storage/storage-kpi'
 import StorageItemChart from '../components/content/storage-item-chart'
+import SortableMultiSelector from '../components/sortable-multi-selector'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -144,7 +145,8 @@ class Styleguide extends React.Component {
         'link9'
       ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
-      numberInputValue: 100
+      numberInputValue: 100,
+      sortableMultiSelectorItems: Immutable.List([1, 2])
     }
   }
 
@@ -1016,7 +1018,7 @@ class Styleguide extends React.Component {
 
           <h1 className="page-header">Storage</h1>
 
-          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+          <div style={{height: '600px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
             <StorageItemChart
               analyticsLink='#'
               configurationLink='#'
@@ -1075,7 +1077,8 @@ class Styleguide extends React.Component {
               peak = {380e12}
               lastMonthUsage = {240e12}
               lastMonthEstimate = {250e12}
-              lastMonthPeak = {260e12} />
+              lastMonthPeak = {260e12}
+              diameter={300} />
 
           </div>
 
@@ -1099,6 +1102,28 @@ class Styleguide extends React.Component {
             peakValue={120}
             referenceValue={100}
             valuesUnit='tb'
+          />
+
+          <h1 className="page-header">Sortable Multi Selector</h1>
+
+          <SortableMultiSelector
+            label={'Items'}
+            options={[
+              {
+                label: 'Item 1',
+                value: 1
+              },
+              {
+                label: 'Item 2',
+                value: 2
+              },
+              {
+                label: 'Item 3',
+                value: 3
+              }
+            ]}
+            onChange={val => this.setState({ sortableMultiSelectorItems: Immutable.List(val) })}
+            value={this.state.sortableMultiSelectorItems}
           />
 
           <h1 className="page-header">Icons</h1>

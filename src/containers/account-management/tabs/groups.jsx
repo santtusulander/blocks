@@ -110,10 +110,6 @@ class AccountManagementAccountGroups extends React.Component {
     const conditions = {
       name: [
         {
-          condition: this.props.groups.findIndex(account => account.get('name') === name) > -1,
-          errorText: <FormattedMessage id="portal.account.groups.name.error.exists"/>
-        },
-        {
           condition: !isValidTextField(name),
           errorText: <MultilineTextFieldError fieldLabel="portal.account.groupForm.name.label" />
         }
