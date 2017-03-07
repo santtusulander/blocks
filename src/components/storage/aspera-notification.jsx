@@ -26,7 +26,14 @@ class AsperaNotification extends React.Component {
           <div>
             <span id="update-container-text" className="text">
               <IconInfo />
-              <FormattedMessage id="portal.aspera.error.transfer"/>
+              <FormattedMessage id="portal.aspera.error.transfer"
+                                values={{
+                                  troubleshoot: (
+                                    <Link to={ASPERA_TROUBLESHOOT_URL} target="_blank">
+                                      <FormattedMessage id="portal.aspera.connect.installer.troubleshoot"/>
+                                    </Link>
+                                  )
+                                }}/>
             </span>
           </div>
         )

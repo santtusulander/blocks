@@ -9,6 +9,6 @@
   "portal.aspera.connect.installer.download": "DOWNLOAD LATEST VERSION",
   "portal.aspera.connect.installer.try_again": "REFRESH?",
 
-  "portal.aspera.error.transfer": "Error has been occurredduring transfer. Need to {troubleshoot}?",
+  "portal.aspera.error.transfer": "Error has been occurred during transfer. Need to {troubleshoot}?",
   "portal.aspera.error.access_code": "Your upload session has timed out. Please refresh page to continue file upload."
 }
