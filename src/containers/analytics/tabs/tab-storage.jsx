@@ -71,6 +71,7 @@ const mapStateToProps = () => {
 
 const  mapDispatchToProps = () => {
   //TODO: Needs to be changed when integrating with redux
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabStorage);
