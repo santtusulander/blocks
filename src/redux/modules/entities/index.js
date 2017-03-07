@@ -77,12 +77,6 @@ const networks =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
-const storageMetrics =
-  handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
-  }, Map())
 
 const CISIngestPoints =
   handleActions({
@@ -103,6 +97,11 @@ const CISWorkflowProfiles =
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const storageMetrics =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
+    [actionTypes.FAIL] : failEntity
+  }, Map())
 
 export default combineReducers({
   accounts,
