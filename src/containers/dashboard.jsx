@@ -60,7 +60,6 @@ export class Dashboard extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this)
     this.measureContainersTimeout = null
     this.getCityData = this.getCityData.bind(this)
-    this.isCPAccount = false
   }
 
   componentWillMount() {
@@ -109,8 +108,7 @@ export class Dashboard extends React.Component {
         : ACCOUNT_TYPE_SERVICE_PROVIDER
       const providerOpts = buildAnalyticsOptsForContribution(params, filters, accountType)
 
-      this.isCPAccount = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
-      const fetchProviders = this.isCPAccount
+      const fetchProviders = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
@@ -322,7 +320,7 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        { this.isCPAccount &&
+        { isCP &&
           <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
             <h2>Lorem Ipsum</h2>
           </DashboardPanel>
