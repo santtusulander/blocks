@@ -17,7 +17,7 @@ class ConfigurationDetails extends React.Component {
 
     this.state = {
       showStorageModal: false,
-      useUDNOrigin : this.props.edgeConfiguration.get('origin_type') === 'cis'
+      useUDNOrigin : true
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
@@ -30,6 +30,15 @@ class ConfigurationDetails extends React.Component {
     this.save = this.save.bind(this)
     this.originHostValue = ''
   }
+
+  componentWillMount() {
+    if(this.props.edgeConfiguration) {
+      this.setState({
+        useUDNOrigin : this.props.edgeConfiguration.get('origin_type') === 'cis'
+      })
+    }
+  }
+
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
   }
@@ -69,11 +78,7 @@ class ConfigurationDetails extends React.Component {
   toggleUDNOrigin(val) {
     this.setState({ useUDNOrigin: val})
     if(!val) {
-      this.props.resetConfigValues([
-        ['edge_configuration', 'origin_host_name'],
-        ['edge_configuration', 'origin_host_port'],
-        ['edge_configuration', 'origin_type']
-      ])
+      this.props.changeValue(['edge_configuration', 'origin_type'], 'custom')
     }
   }
 
@@ -417,7 +422,6 @@ ConfigurationDetails.propTypes = {
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
   intl: intlShape.isRequired,
   readOnly: React.PropTypes.bool,
-  resetConfigValues: React.PropTypes.func,
   saveChanges: React.PropTypes.func,
   storages: React.PropTypes.instanceOf(Immutable.List)
 }
