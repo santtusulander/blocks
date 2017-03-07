@@ -4,7 +4,7 @@ import {Map} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -13,6 +13,11 @@ export const actionTypes = {
   RECEIVE: 'entities/RECEIVE',
   REMOVE: 'entities/REMOVE',
   FAIL: 'entities/FAIL'
+}
+
+export const metricsActionTypes = {
+  RECEIVE_METRICS: 'metrics/RECEIVE',
+  RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
 const locations =
@@ -99,9 +104,10 @@ const CISWorkflowProfiles =
 
 const storageMetrics =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'storageMetrics', useMergeDeep: false }),
+    [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
+    [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
     [actionTypes.FAIL] : failEntity
-  }, Map())
+  }, Map({ comparisonData: Map(), data: Map() }))
 
 export default combineReducers({
   accounts,
@@ -118,5 +124,5 @@ export default combineReducers({
   locations,
   footprints,
   storageMetrics,
-  fetching: mapActionsToFetchingReducers(actionTypes)
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
 })

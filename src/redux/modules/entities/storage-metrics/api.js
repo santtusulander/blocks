@@ -16,16 +16,7 @@ const storageMetricsSchema = new schema.Entity('storageMetrics',
   { idAttribute: ({ group, ingest_point }) => buildReduxId(group, ingest_point) }
 )
 
-/**
- * Normalization schema for comparison metrics data. Injects the word 'comparison' to each data block's redux ID.
- * @type {schema}
- */
-const storageComparisonMetricsSchema = new schema.Entity('storageMetrics',
-  {},
-  { idAttribute: ({ group, ingest_point }) => buildReduxId('comparison', group, ingest_point) }
-)
-
-export const fetch = (urlParams, comparison) =>
+export const fetch = (urlParams) =>
   axios.get(URL(urlParams)).then(({ data }) => {
-    return normalize(data.data, [ comparison ? storageComparisonMetricsSchema : storageMetricsSchema ])
+    return normalize(data.data, [ storageMetricsSchema ])
   })
