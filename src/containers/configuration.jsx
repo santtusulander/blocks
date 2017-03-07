@@ -13,6 +13,8 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
+import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
+import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
@@ -74,6 +76,7 @@ export class Configuration extends React.Component {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
+    this.props.fetchStorage(group)
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
@@ -276,7 +279,6 @@ export class Configuration extends React.Component {
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
-
     return (
       <Content>
         {/*<AddConfiguration createConfiguration={this.createNewConfiguration}/>*/}
@@ -413,7 +415,8 @@ export class Configuration extends React.Component {
             deploymentMode: deploymentModeText,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             saveChanges: this.saveActiveHostChanges,
-            sslCertificates: this.props.sslCertificates
+            sslCertificates: this.props.sslCertificates,
+            storages: this.props.storages
           })}
           </PageContainer>
 
@@ -488,6 +491,7 @@ Configuration.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
   hasVODSupport: React.PropTypes.bool,
@@ -503,6 +507,7 @@ Configuration.propTypes = {
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
+  storages: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
 Configuration.defaultProps = {
@@ -522,10 +527,10 @@ function mapStateToProps(state) {
       hasVODSupport = true
     }
   })
-
   return {
     activeHost: state.host.get('activeHost'),
     currentUser: state.user.get('currentUser'),
+    storages: getByGroup(state, activeGroup.get('id')),
     fetching: state.host.get('fetching'),
     notification: state.ui.get('notification'),
     policyActiveMatch: state.ui.get('policyActiveMatch'),
@@ -544,7 +549,8 @@ function mapDispatchToProps(dispatch) {
     groupActions: bindActionCreators(groupActionCreators, dispatch),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    fetchStorage : (group) => dispatch(storageActions.fetchAll({ group }))
   };
 }
 

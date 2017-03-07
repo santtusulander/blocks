@@ -11,26 +11,13 @@ import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
 
-const mockStorage = [
-  {
-    id: 1 ,
-    label: 'Storage 1',
-    gateway: '102.143.11.33'
-  },
-  {
-    id: 2,
-    label: 'Storage 2',
-    gateway: '192.168.1.140'
-  }
-] // TODO: remove mock, pass it as props
-
 class ConfigurationDetails extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       showStorageModal: false,
-      useUDNOrigin : true
+      useUDNOrigin : !!this.props.edgeConfiguration.get('origin_type')
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
@@ -42,7 +29,6 @@ class ConfigurationDetails extends React.Component {
     this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
     this.save = this.save.bind(this)
     this.originHostValue = ''
-    console.log(this.props.edgeConfiguration.get('origin_type'))
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
@@ -439,10 +425,6 @@ ConfigurationDetails.propTypes = {
   resetConfigValues: React.PropTypes.func,
   saveChanges: React.PropTypes.func,
   storages: React.PropTypes.instanceOf(Immutable.List)
-}
-
-ConfigurationDetails.defaultProps = {
-  storages: Immutable.fromJS(mockStorage)
 }
 
 export default injectIntl(ConfigurationDetails)
