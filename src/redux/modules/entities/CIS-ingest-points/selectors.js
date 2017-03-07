@@ -1,4 +1,4 @@
-import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
+import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
 
 /**
  * Get IngestPoint by ID
@@ -18,4 +18,14 @@ export const getById = (state, id) => {
  */
 export const getByGroup = (state, groupId) => {
   return getEntitiesByParent(state, 'CISIngestPoints', groupId)
+}
+
+/**
+ * Get IngestPoint IDs by Group
+ * @param  {[type]} state   [description]
+ * @param  {[type]} groupId [description]
+ * @return {[type]}         [description]
+ */
+export const getIdsByGroup = (state, groupId) => {
+  return getEntityIdsByParent(state, 'CISIngestPoints', groupId)
 }

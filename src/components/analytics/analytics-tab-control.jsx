@@ -40,6 +40,11 @@ const AnalyticsTabControl = (props) => {
       permission: PERMISSIONS.ALLOW_ALWAYS
     },
     {
+      key: 'storage',
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.label'}),
+      permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
+    },
+    {
       key: 'file-error',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.label'}),
       propertyOnly: true,

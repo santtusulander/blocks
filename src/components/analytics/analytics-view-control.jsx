@@ -76,6 +76,17 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
+      key: 'storage',
+      label: 'storage',
+      hideHierarchy: true,
+      permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE,
+      titles: {
+        property: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.propertyTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.accountTitle'})
+      }
+    },
+    {
       key: 'file-error',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.fileError.label'}),
       propertyOnly: true,
