@@ -8,6 +8,9 @@ import IconInfo from '../../components/icons/icon-info'
 import IconTask from '../../components/icons/icon-task'
 import LoadingSpinnerSmall from '../../components/loading-spinner/loading-spinner-sm'
 
+export const ASPERA_STATUS_TRANSFER_ERROR = 'ASPERA_STATUS_TRANSFER_ERROR'
+export const ASPERA_STATUS_ACCESS_CODE_ERROR = 'ASPERA_STATUS_ACCESS_CODE_ERROR'
+
 class AsperaNotification extends React.Component {
   constructor(props) {
     super(props)
@@ -17,6 +20,37 @@ class AsperaNotification extends React.Component {
 
   renderNotification() {
     switch (this.props.status) {
+
+      case ASPERA_STATUS_TRANSFER_ERROR:
+        return (
+          <div>
+            <span id="update-container-text" className="text">
+              <IconInfo />
+              <FormattedMessage id="portal.aspera.error.transfer"/>
+            </span>
+          </div>
+        )
+
+      case ASPERA_STATUS_ACCESS_CODE_ERROR:
+        return (
+          <div>
+            <span id="download-container-text" className="text">
+              <IconInfo />
+              <FormattedMessage id="portal.aspera.error.access_code"/>
+            </span>
+            <div className="pull-right">
+              <ButtonToolbar>
+                {/* Using hard reload to reset Aspera */}
+                <a href={window.location.pathname} className="download-btn">
+                  <Button className="btn-secondary">
+                      <FormattedMessage id="portal.aspera.connect.installer.try_again"/>
+                  </Button>
+                </a>
+              </ButtonToolbar>
+            </div>
+          </div>
+        )
+
       case AW4.Connect.STATUS.INITIALIZING:
         return (
           <div>
@@ -111,7 +145,7 @@ class AsperaNotification extends React.Component {
 AsperaNotification.displayName = 'AsperaNotification'
 AsperaNotification.propTypes = {
   handleClose: React.PropTypes.func,
-  status:  React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+  status: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
 }
 
 export default AsperaNotification
