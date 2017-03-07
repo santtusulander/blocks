@@ -33,3 +33,32 @@ export const getEntityIdsByParent = (state, entityType, parentId, parentIdKey = 
   return state.entities[entityType].filter((entity) => String(entity.get(parentIdKey)) === String(parentId))
     .keySeq()
 }
+
+/**
+ * get a group of entities' metrics data
+ * @param  {[type]} state                    [description]
+ * @param  {[type]} entityType               [description]
+ * @param  {[type]} parentId                 [description]
+ * @param  {[type]} comparison               if getting comparison metrics
+ * @param  {String} [parentIdKey='parentId'] [description]
+ * @return {[type]}                          [description]
+ */
+export const getEntityMetricsByParent = ( state, entityType, parentId, parentIdKey = 'parentId', comparison) => {
+  const result = state.entities[entityType].get(comparison ? 'comparisonData' : 'data')
+
+    .filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } ).toList()
+
+  return result;
+}
+
+/**
+ * Get an entity's metrics data from state by Id
+ * @param  {[type]} state      [description]
+ * @param  {[type]} entityType [description]
+ * @param  {[type]} id         [description]
+ * @param  {[type]} comparison if getting comparison metrics
+ * @return {[type]}            [description]
+ */
+export const getEntityMetricsById = (state, entityType, id, comparison) => {
+  return state.entities[entityType].getIn([comparison ? 'comparisonData' : 'data', String(id)])
+}
