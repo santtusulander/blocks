@@ -1,0 +1,24 @@
+.time-picker {
+  .rdtPicker {
+    padding: 10px;
+    width: auto;
+
+    table {
+      width: 100%;
+    }
+  }
+
+  .rdtCounters {
+    display: flex;
+    align-items: center;
+  }
+
+  .rdtCounter {
+    flex: 1 0 0;
+    text-align: center;
+  }
+
+  .rdtBtn {
+    cursor: pointer;
+  }
+}

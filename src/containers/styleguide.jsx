@@ -54,6 +54,7 @@ import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
 import CsvUploadArea from '../components/network/csv-upload'
+import TimePicker from '../components/time-picker'
 import Typeahead from '../components/typeahead'
 import StorageKPI from '../components/storage/storage-kpi'
 import StorageItemChart from '../components/content/storage-item-chart'
@@ -159,7 +160,8 @@ class Styleguide extends React.Component {
       ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
       numberInputValue: 100,
-      sortableMultiSelectorItems: Immutable.List([1, 2])
+      sortableMultiSelectorItems: Immutable.List([1, 2]),
+      timePickerTime: moment().utc()
     }
   }
 
@@ -961,6 +963,19 @@ class Styleguide extends React.Component {
             </Col>
             <Col xs={4}>
               <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Time Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <TimePicker
+                time={this.state.timePickerTime}
+                onChange={(time) => this.setState({ timePickerTime: time })} />
+            </Col>
+            <Col xs={8}>
+              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
             </Col>
           </Row>
 
