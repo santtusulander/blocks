@@ -49,7 +49,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
       startDate: fetchOpts.startDate,
       endDate: fetchOpts.endDate,
       service_type: fetchOpts.service_type,
-      field_filter: 'chit_ratio',
+      field_filters: 'timestamp,chit_ratio',
       granularity: 'day'
     }
 
