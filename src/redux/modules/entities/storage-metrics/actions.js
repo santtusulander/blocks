@@ -18,9 +18,8 @@ export const fetchMetrics = ({ requestTag = 'storageMetrics', ...requestParams }
 })
 
 /**
- * Action for fetching metrics for storages
+ * Action for fetching comparison metrics for storages
  * @param  {String} [requestTag='storageMetrics'] request tag for tracking the request
- * @param  {[boolean]} comparison                 true if fetching for comparison data. Results in a 'comparison' prefix in redux ID.
  * @param  {[object]} requestParams               parameters for the request.
  * @return {[object]}                             action object
  */
