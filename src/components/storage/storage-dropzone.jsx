@@ -13,7 +13,7 @@ const StorageDropzone = () => {
     <SectionContainer>
       <SectionHeader
         sectionHeaderTitle={<FormattedMessage id='portal.storage.summaryPage.dropzone.noFiles.title' />}>
-        <FormGroup className="search-input-group">
+        <FormGroup className="upload-toggle-group">
           <Col className="pull-left">
             <FormattedMessage id='portal.storage.summaryPage.dropzone.asperaToggle.title' />
           </Col>
