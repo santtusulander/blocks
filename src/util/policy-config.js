@@ -91,6 +91,10 @@ export function actionIsTokenAuth(sets) {
   return sets.some( set => (set.setkey === 'tokenauth') )
 }
 
+// const getTokenAuthType = (action) => {
+//   return action.get('tokenauth').get('type') === 'standard' ? 'tokenauth-static' : 'tokenauth-streaming'
+// }
+
 export function parsePolicy(policy, path) {
   // if this is a match
   if(policy && policy.has('match')) {
@@ -125,6 +129,20 @@ export function parsePolicy(policy, path) {
   }
   // if this is a set
   else if(policy && policy.has('set')) {
+    // if (policy.get('set').has('tokenauth')) {
+    //   const action = policy.get('set')
+
+    //   return {
+    //     matches: [],
+    //     sets: action.keySeq().toArray().map((key) => {
+    //       return {
+    //         setkey: getTokenAuthType(action),
+    //         name: key,
+    //         path: path.concat(['set', key])
+    //       }
+    //     })
+    //   }
+    // }
     // sets are the deepest level, so just return data about the sets
     return {
       matches: [],
