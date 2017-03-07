@@ -84,6 +84,7 @@
 @import 'components/react-telephone-input';
 @import 'components/select';
 @import 'components/side-panel';
+@import 'components/sortable-multi-selector';
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
@@ -115,6 +116,8 @@
 @import 'components/analysis/export-panel';
 //Charts
 @import 'components/charts/bar-chart';
+@import 'components/charts/stacked-area-chart';
+@import 'components/charts/line-area-composed-chart';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
