@@ -1,4 +1,4 @@
-import { List } from 'immutable'
+import { fromJS } from 'immutable'
 import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
@@ -29,9 +29,13 @@ export const getByGroup = (state, groupId) => {
  */
 export const getByGroups = (state, groups) => {
   if (groups && groups.size > 0) {
-    return groups.reduce((acc, g) => {
-      const groupStorages = getByGroup(state, g.get('id'))
-      return acc.merge(groupStorages)
-    }, List())
+    let storages = []
+    groups.forEach(group => {
+      const groupStorages = getByGroup(state, group.get('id'))
+      groupStorages.forEach( storage => {
+        storages.push(storage)
+      })
+    })
+    return fromJS(storages)
   }
 }
