@@ -44,7 +44,9 @@ export const getEntityIdsByParent = (state, entityType, parentId, parentIdKey = 
  * @return {[type]}                          [description]
  */
 export const getEntityMetricsByParent = ( state, entityType, parentId, parentIdKey = 'parentId', comparison) => {
-  const result = state.entities[entityType].get(comparison ? 'comparisonData' : 'data')
+  const metricsObject = comparison ? 'comparisonData' : 'data'
+
+  const result = state.entities[entityType].get(metricsObject)
 
     .filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } ).toList()
 
@@ -60,5 +62,7 @@ export const getEntityMetricsByParent = ( state, entityType, parentId, parentIdK
  * @return {[type]}            [description]
  */
 export const getEntityMetricsById = (state, entityType, id, comparison) => {
-  return state.entities[entityType].getIn([comparison ? 'comparisonData' : 'data', String(id)])
+  const metricsObject = comparison ? 'comparisonData' : 'data'
+
+  return state.entities[entityType].getIn([metricsObject, String(id)])
 }

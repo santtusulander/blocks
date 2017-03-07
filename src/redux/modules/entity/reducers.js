@@ -31,10 +31,10 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
  */
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
 
-  const metricsObjectName = comparison ? 'comparisonData' : 'data'
+  const metricsObject = comparison ? 'comparisonData' : 'data'
 
   if (response.entities && response.entities[key]) {
-    return state.merge(fromJS({ [metricsObjectName]: response.entities[key] }))
+    return state.merge(fromJS({ [metricsObject]: response.entities[key] }))
   }
 
   return state
