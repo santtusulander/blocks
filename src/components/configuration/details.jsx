@@ -17,7 +17,7 @@ class ConfigurationDetails extends React.Component {
 
     this.state = {
       showStorageModal: false,
-      useUDNOrigin : true
+      useUDNOrigin : false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
@@ -31,10 +31,10 @@ class ConfigurationDetails extends React.Component {
     this.originHostValue = ''
   }
 
-  componentWillMount() {
-    if(this.props.edgeConfiguration) {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.edgeConfiguration) {
       this.setState({
-        useUDNOrigin : this.props.edgeConfiguration.get('origin_type') === 'cis'
+        useUDNOrigin : nextProps.edgeConfiguration.get('origin_type') === 'cis'
       })
     }
   }
@@ -77,15 +77,22 @@ class ConfigurationDetails extends React.Component {
 
   toggleUDNOrigin(val) {
     this.setState({ useUDNOrigin: val})
-    if(!val) {
+    if(val) {
+      this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
+    }
+    else {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'custom')
     }
   }
 
   getStorageList() {
-    const storageList = this.props.storages.map(storage => Immutable.fromJS({value: storage.getIn(['gateway','hostname']), label: storage.get('ingest_point_id')}))
-    const storageOptions = storageList.toJS()
-    return [['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />], ...storageOptions]
+    const newStorage = ['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
+    if(this.props.storages && this.props.storages.length) {
+      const storageList = this.props.storages.map(storage => Immutable.fromJS({value: storage.getIn(['gateway','hostname']), label: storage.get('ingest_point_id')}))
+      const storageOptions = storageList.toJS()
+      return [newStorage, ...storageOptions]
+    }
+    return newStorage;
   }
 
   save() {
