@@ -35,6 +35,31 @@ export function formatBytes(bytes, setMax, customFormat) {
   return formatted
 }
 
+export function convertToBytes(value, units) {
+  switch (units.toLowerCase()) {
+    case 'pb':
+      return numeral(value * Math.pow(BYTE_BASE, 5)).format('0')
+
+    case 'tb':
+      return numeral(value * Math.pow(BYTE_BASE, 4)).format('0')
+
+    case 'gb':
+      return numeral(value * Math.pow(BYTE_BASE, 3)).format('0')
+
+    case 'mb':
+      return numeral(value * Math.pow(BYTE_BASE, 2)).format('0')
+
+    case 'kb':
+      return numeral(value * Math.pow(BYTE_BASE, 1)).format('0')
+
+    case 'b':
+      return value
+
+    default:
+      return value
+  }
+}
+
 export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
   const digits    = decimals ? '0,0.00' : '0,0'
   bits_per_second = bits_per_second || 0

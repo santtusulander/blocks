@@ -19,6 +19,7 @@ import FilterVideo from '../analysis/filters/video.jsx'
 import FilterRecordType from '../analysis/filters/record-type.jsx'
 import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 import StatusCodes from './analytics-status-codes'
+import FilterStorageType from '../analysis/filters/storage-type'
 
 function getToggledValues( currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
@@ -180,6 +181,19 @@ const AnalyticsFilters = (props) => {
             options={props.filterOptions.get('statusCodes')}
             values={props.filters.get('statusCodes')}
             onChange={values => props.onFilterChange('statusCodes', values.toJS())}/>
+        </div>
+      }
+
+      {props.showFilters.includes('storageType') &&
+        <div className='action'>
+          <FilterStorageType
+            storageType={props.filters.get('storageType')}
+            toggleStorageType={val => {
+              props.onFilterChange(
+                'storageType', val
+              )
+            }}
+          />
         </div>
       }
 
