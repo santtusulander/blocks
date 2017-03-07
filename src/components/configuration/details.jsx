@@ -58,8 +58,7 @@ class ConfigurationDetails extends React.Component {
     else {
       this.props.changeValues([
         [['edge_configuration', 'origin_host_name'], value],
-        [['edge_configuration', 'origin_host_port'], 8082],
-        [['edge_configuration', 'origin_type'], 'cis']
+        [['edge_configuration', 'origin_host_port'], 8082]
       ])
     }
   }

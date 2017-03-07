@@ -34,7 +34,7 @@ describe('ConfigurationDetails', () => {
         })}/>
     );
     let inputs = details.find('FormControl')
-    inputs.at(0).simulate('change', { target: { value: "new" } })
+    inputs.at(0).simulate('change', { target: { value: 'new' } })
     expect(changeValue.mock.calls[0][0]).toEqual(
       ['edge_configuration', 'origin_host_name']
     )
