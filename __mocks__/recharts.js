@@ -1,4 +1,6 @@
 export default jest.mock('recharts', () => ({
+  AreaChart: 'AreaChart',
+  Area: 'Area',
   BarChart: 'BarChart',
   Bar: 'Bar',
   XAxis: 'XAxis',
@@ -6,6 +8,10 @@ export default jest.mock('recharts', () => ({
   Tooltip: 'Tooltip',
   Legend: 'Legend',
   ResponsiveContainer: 'ResponsiveContainer',
+  Text: 'Text',
   Pie: 'Pie',
-  PieChart: 'PieChart'
+  PieChart: 'PieChart',
+  ReactLineCharts: 'ReactLineCharts',
+  Line: 'Line',
+  ComposedChart: 'ComposedChart'
 }))
