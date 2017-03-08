@@ -8,10 +8,8 @@ const DashboardPanel = (props) => {
   return (
     <div className={classNames(
       'dashboard-panel',
-      {
-        className,
-        'no-padding': noPadding
-      }
+      className,
+      { 'no-padding': noPadding }
     )}>
       {title &&
         <div className="dashboard-panel-header">

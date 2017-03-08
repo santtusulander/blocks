@@ -345,12 +345,15 @@ export class Dashboard extends React.Component {
             </div>}
         </DashboardPanel>
         { isCP &&
-          <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
-            <StorageChartContainer
-              params={this.props.params}
-              storageId={'339-mikko-storage2'}
-              entitySelector={getStorageEstimateByAccount}
-              metricsSelector={getStorageMetricsByAccount}/>
+          <DashboardPanel
+            title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
+            <div className="storage-chart-panel">
+              <StorageChartContainer
+                params={this.props.params}
+                storageId={'339-mikko-storage2'}
+                entitySelector={getStorageEstimateByAccount}
+                metricsSelector={getStorageMetricsByAccount}/>
+          </div>
           </DashboardPanel>
         }
 

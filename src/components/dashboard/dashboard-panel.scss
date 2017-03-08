@@ -12,6 +12,11 @@ $dashboard-panel-header-bg: rgba($black, 0.2);
 .dashboard-panel {
   margin-bottom: $dashboard-panel-margin;
 
+  & .storage-chart-panel {
+    display: flex;
+    justify-content: center;
+  }
+
   .dashboard-panels & {
     width: calc(50% - (#{$dashboard-panel-margin} / 2));
 
