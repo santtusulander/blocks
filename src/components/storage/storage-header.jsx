@@ -79,13 +79,13 @@ const StorageHeader = ({
       </AccountSelector>
       <ButtonToolbar>
         <Link className="btn btn-primary btn-icon"
-              // to prop should be uncommented when analytics page is ready
+              // to prop should be uncommented when (UNDP-2932) finishes
               // to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
               >
           <IconChart/>
         </Link>
         <Link className="btn btn-primary btn-icon"
-              // to prop should be uncommented when configuration page is ready
+              // to prop should be uncommented when (UNDP-2932) finishes
               // to={`${getContentUrl('property', params.property, params)}/configuration`}>
               >
           <IconConfiguration/>
