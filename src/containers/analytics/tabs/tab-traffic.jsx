@@ -61,7 +61,6 @@ class AnalyticsTabTraffic extends React.Component {
 
     this.props.trafficActions.fetchByTime(byTimeOpts)
     this.props.trafficActions.fetchByCountry(fetchOpts)
-    this.props.trafficActions.fetchTotalEgress(fetchOpts)
 
     if (this.props.mapZoom >= MAPBOX_CITY_LEVEL_ZOOM && this.props.mapBounds.size) {
       this.props.trafficActions.startFetching()
@@ -170,7 +169,6 @@ class AnalyticsTabTraffic extends React.Component {
         peakTraffic={this.formatTotals(peakTraffic)}
         recordType={this.props.filters.get('recordType')}
         serviceTypes={this.props.filters.get('serviceTypes')}
-        totalEgress={this.props.totalEgress}
         getCityData={this.getCityData}
         theme={this.props.theme}
         mapBounds={this.props.mapBounds}
@@ -190,7 +188,6 @@ AnalyticsTabTraffic.propTypes = {
   mapboxActions: React.PropTypes.object,
   params: React.PropTypes.object,
   theme: React.PropTypes.string,
-  totalEgress: React.PropTypes.number,
   totals: React.PropTypes.instanceOf(Immutable.Map),
   trafficActions: React.PropTypes.object,
   trafficByCity: React.PropTypes.instanceOf(Immutable.List),
@@ -218,7 +215,6 @@ function mapStateToProps(state) {
     trafficByTimeComparison: state.traffic.getIn(['byTimeComparison', 'details']),
     trafficByCity: state.traffic.get('byCity'),
     trafficByCountry: state.traffic.get('byCountry'),
-    totalEgress: state.traffic.get('totalEgress'),
     theme: state.ui.get('theme'),
     mapBounds: state.mapbox.get('mapBounds'),
     mapZoom: state.mapbox.get('mapZoom')
