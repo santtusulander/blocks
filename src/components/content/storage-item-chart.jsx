@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import { PieChart, Pie } from 'recharts'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import LinkWrapper from './link-wrapper'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
+import LinkWrapper from './link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
 import IconConfiguration from '../icons/icon-configuration'
 import IconChart from '../icons/icon-chart'
