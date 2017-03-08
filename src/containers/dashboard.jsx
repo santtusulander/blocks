@@ -29,6 +29,13 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+
+import { getAggregatedBytesByAccountId } from '../redux/modules/entities/storage-metrics/selectors'
+import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+
+import StorageChartContainer from './storage-chart-container/storage-chart-container'
+import { getStorageMetricsByAccount } from './storage-chart-container/selectors'
+
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'
 import AnalyticsFilters from '../components/analytics/analytics-filters'
@@ -115,7 +122,8 @@ export class Dashboard extends React.Component {
       return Promise.all([
         this.props.dashboardActions.startFetching(),
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-        fetchProviders
+        fetchProviders,
+        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER && this.props.fetchStorageMetrics(providerOpts)
       ]).then(this.props.dashboardActions.finishFetching)
     }
   }
@@ -322,7 +330,11 @@ export class Dashboard extends React.Component {
         </DashboardPanel>
         { isCP &&
           <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
-            <h2>Lorem Ipsum</h2>
+            <StorageChartContainer
+              params={this.props.params}
+              storageId={'339-mikko-storage2'}
+              metricsSelector={getStorageMetricsByAccount}
+              />
           </DashboardPanel>
         }
 
@@ -433,6 +445,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
