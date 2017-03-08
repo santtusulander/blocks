@@ -41,7 +41,7 @@ const StorageDropzone = ({ asperaUpload, onMethodToggle }) => {
           ]}
         />
       </SectionHeader>
-      <AsperaUpload />
+      { asperaUpload ? <AsperaUpload /> : 'http upload' }
     </SectionContainer>
   )
 }

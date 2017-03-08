@@ -65,7 +65,6 @@ class Storage extends Component {
       </Content>
     )
   }
-
 }
 
 Storage.displayName = 'Storage'
