@@ -20,13 +20,24 @@ class Storage extends Component {
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
   }
 
+  componentWillMount() {
+    this.props.fetchStorageMetrics()
+  }
+
   toggleUploadMehtod(asperaUpload) {
     this.setState({ asperaUpload })
   }
 
   render() {
-    const { currentUser, params } = this.props
-
+    const {
+      currentUser,
+      params,
+      storageMetrics: {
+        chartData,
+        values,
+        gain,
+        locations
+      }} = this.props
     return (
       <Content>
         <StorageHeader
@@ -36,23 +47,14 @@ class Storage extends Component {
 
         <PageContainer>
           <StorageKPI
-            chartData={[
-            {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
-            {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
-            {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
-            {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
-            {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
-            {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
-            {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
-            {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
-            ]}
-            chartDataKey='bytes'
-            currentValue={112}
-            gainPercentage={0.2}
-            locations={['San Jose', 'Frankfurt']}
-            peakValue={120}
-            referenceValue={100}
-            valuesUnit='tb'
+            chartData={chartData.data}
+            chartDataKey={chartData.key}
+            currentValue={values.current}
+            gainPercentage={gain}
+            locations={locations}
+            peakValue={values.peak}
+            referenceValue={values.reference}
+            valuesUnit={values.unit}
           />
 
           <StorageDropzone
@@ -69,14 +71,47 @@ class Storage extends Component {
 Storage.displayName = 'Storage'
 
 Storage.propTypes = {
-  currentUser: React.PropTypes.instanceOf(Map),
-  params: PropTypes.object
+  currentUser: PropTypes.instanceOf(Map),
+  fetchStorageMetrics: PropTypes.func,
+  params: PropTypes.object,
+  storageMetrics: PropTypes.object
 }
+
+const getMockMetrics = () => ({
+  chartData: {
+    data: [
+      {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
+      {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
+      {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
+      {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
+      {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
+      {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
+      {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
+      {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
+    ],
+    key: 'bytes'
+  },
+  values: {
+    current: 112,
+    peak: 120,
+    reference: 100,
+    unit: 'tb'
+  },
+  gain: 0.2,
+  locations: ['San Jose', 'Frankfurt']
+})
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.user.get('currentUser')
+    currentUser: state.user.get('currentUser'),
+    storageMetrics: getMockMetrics()
   }
 }
 
-export default connect(mapStateToProps, null)(Storage)
+function mapDispatchToProps() {
+  return {
+    fetchStorageMetrics: () => {}
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Storage)
