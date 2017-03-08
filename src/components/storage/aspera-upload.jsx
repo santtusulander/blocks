@@ -12,6 +12,10 @@ import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
 import * as uiActionCreators from '../../redux/modules/ui'
 import * as userActionCreators from '../../redux/modules/user'
 
+import { ASPERA_STATUS_TRANSFER_ERROR,
+         ASPERA_STATUS_ACCESS_CODE_ERROR
+       } from './aspera-notification'
+
 const DROP_EVENT_NAME = 'drop'
 const DRAG_OVER_EVENT_NAME = 'dragover'
 const DRAG_ENTER_EVENT_NAME = 'dragenter'
@@ -26,6 +30,7 @@ class AsperaUpload extends Component {
 
     this.state = {
       isDragActive: false,
+      isAsperaInitialized: false,
       accessKey: null,
       asperaError: null,
       transferUuids: []
@@ -57,6 +62,8 @@ class AsperaUpload extends Component {
           asperaError: res.payload.data.message,
           accessKey: null
         })
+
+        this.showNotification(ASPERA_STATUS_ACCESS_CODE_ERROR)
       } else {
         this.setState({
           asperaError: null,
@@ -67,8 +74,10 @@ class AsperaUpload extends Component {
   }
 
   componentWillUnmount(){
-    this.aspera.asperaDeInitConnect()
-    clearTimeout(this.notificationTimeout)
+    if (this.state.isAsperaInitialized) {
+      this.aspera.asperaDeInitConnect()
+      clearTimeout(this.notificationTimeout)
+    }
   }
 
   initAspera() {
@@ -93,13 +102,16 @@ class AsperaUpload extends Component {
 
     this.aspera.asperaDragAndDropSetup(`#${ASPERA_DRAG_N_DROP_CONTAINER_ID}`,
                                        this.asperaListener)
+
+    this.setState({ isAsperaInitialized: true })
   }
 
   showNotification(code) {
     clearTimeout(this.notificationTimeout)
 
     this.props.uiActions.changeAsperaNotification(code)
-    if (code === AW4.Connect.STATUS.RUNNING) {
+
+    if ((this.state.isAsperaInitialized) && (code === AW4.Connect.STATUS.RUNNING)) {
       this.notificationTimeout = setTimeout(this.props.uiActions.changeAsperaNotification, 10000)
     }
   }
@@ -130,6 +142,8 @@ class AsperaUpload extends Component {
         this.setState({
           asperaError: res.error.internal_message
         })
+
+        this.showNotification(ASPERA_STATUS_TRANSFER_ERROR)
       }
     }
 
@@ -149,6 +163,8 @@ class AsperaUpload extends Component {
         this.setState({
           asperaError: res.error.internal_message
         })
+
+        this.showNotification(ASPERA_STATUS_TRANSFER_ERROR)
       }
     }, {
       allowMultipleSelection: this.props.multiple
@@ -205,9 +221,8 @@ class AsperaUpload extends Component {
   }
 
   displayInsideDropZone() {
-    if (this.state.asperaError) {
-      /* TODO: UDNP-2928 - Improve way of displaying error messages for file upload components */
-      return this.state.asperaError
+    if (this.state.asperaError && (!this.state.isAsperaInitialized)) {
+      return <FormattedMessage id="portal.aspera.error.access_code"/>
     } else {
       if (this.props.openUploadModalOnClick) {
         return <FormattedMessage id="portal.fileInput.dropFileOrClick.text"/>
@@ -227,7 +242,8 @@ class AsperaUpload extends Component {
 
     return (
       <div id={ASPERA_UPLOAD_CONTAINER_ID}>
-        <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID} className="filedrop-container"
+        <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
+             className="filedrop-container"
              onClick={openUploadModalOnClick ? this.onClick : null} >
 
           <div className={classNames}>
