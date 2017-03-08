@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 
-import { makeGetMetrics } from '../../redux/modules/entities/storage-metrics/selectors'
+import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
 import { defaultStorageSelector, defaultStorageMetricsSelector } from './selectors'
 
@@ -41,7 +41,8 @@ StorageChartContainer.propTypes = {
  */
 const makeStateToProps = () => {
 
-  const getMetrics = makeGetMetrics()
+  const getMetrics = makeMemoizedSelector()
+  const getEntity = makeMemoizedSelector()
 
   const stateToProps = (state, ownProps) => {
 
@@ -51,7 +52,7 @@ const makeStateToProps = () => {
     } = ownProps
 
     return {
-      entity: entitySelector(state, ownProps) || Map(),
+      entity: getEntity(state, ownProps, entitySelector) || Map(),
       entityMetrics: getMetrics(state, ownProps, metricsSelector) || Map()
     }
   }
