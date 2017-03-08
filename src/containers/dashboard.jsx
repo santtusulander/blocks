@@ -29,12 +29,13 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+import groupActions from '../redux/modules/entities/groups/actions'
+import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 
-import { getAggregatedBytesByAccountId } from '../redux/modules/entities/storage-metrics/selectors'
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
 
 import StorageChartContainer from './storage-chart-container/storage-chart-container'
-import { getStorageMetricsByAccount } from './storage-chart-container/selectors'
+import { getStorageMetricsByAccount, getStorageEstimateByAccount } from './storage-chart-container/selectors'
 
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -119,11 +120,26 @@ export class Dashboard extends React.Component {
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
+      const fetchAggregateStorageData = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+
+        this.props.fetchGroups({ brand: urlParams.brand, account: urlParams.account }).then((response) => {
+          if (response) {
+
+            const groupIds = Object.keys(response.entities.groups)
+
+            return Promise.all(
+
+              groupIds.map(id => this.props.fetchStorages({ brand: urlParams, account: urlParams.account, group: id }))
+
+            )
+          }
+        }).then(() => this.props.fetchStorageMetrics(providerOpts))
+
       return Promise.all([
         this.props.dashboardActions.startFetching(),
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
         fetchProviders,
-        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER && this.props.fetchStorageMetrics(providerOpts)
+        fetchAggregateStorageData
       ]).then(this.props.dashboardActions.finishFetching)
     }
   }
@@ -333,8 +349,8 @@ export class Dashboard extends React.Component {
             <StorageChartContainer
               params={this.props.params}
               storageId={'339-mikko-storage2'}
-              metricsSelector={getStorageMetricsByAccount}
-              />
+              entitySelector={getStorageEstimateByAccount}
+              metricsSelector={getStorageMetricsByAccount}/>
           </DashboardPanel>
         }
 
@@ -445,6 +461,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
+    fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
