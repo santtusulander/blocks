@@ -79,6 +79,10 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
                      scale="point"
                     />
             }
+            {
+              isMiniChart &&
+              <XAxis hide={true} scale="point" />
+            }
             { !isMiniChart &&
               <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
             }

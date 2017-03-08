@@ -109,8 +109,6 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
               {!fetchingMetrics ?
                 // TODO : UDNP-2938 | replace storage mock data with redux
-                //
-                // TODO: fix left right margin cause by bar in composed chart in Recharts, open issue here https://github.com/recharts/recharts/issues/547
                 <LineAreaComposedChart isMiniChart={true} data={fakeData} valueFormatter={formatBitsPerSecond} width={this.state.byTimeWidth} height={this.state.byTimeHeight}/>
               : ''}
             </ReactCSSTransitionGroup>
