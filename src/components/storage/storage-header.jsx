@@ -84,10 +84,9 @@ const StorageHeader = ({
               >
           <IconChart/>
         </Link>
-        <Link className="btn btn-primary btn-icon"
-              // to prop should be uncommented when (UNDP-2932) finishes
-              // to={`${getContentUrl('property', params.property, params)}/configuration`}>
-              >
+        <Link
+          className="btn btn-primary btn-icon"
+          to={`${getContentUrl('storageConfiguration', params.storage, params)}`}>
           <IconConfiguration/>
         </Link>
       </ButtonToolbar>
