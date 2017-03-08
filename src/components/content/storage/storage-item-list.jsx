@@ -5,14 +5,14 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
-import AnalysisByTime from '../../analysis/by-time'
+import LineAreaComposedChart from '../../charts/line-area-composed-chart'
 import IconChart from '../../icons/icon-chart.jsx'
 import IconConfiguration from '../../icons/icon-configuration.jsx'
 import { formatBitsPerSecond } from '../../../util/helpers'
 import TruncatedTitle from '../../truncated-title'
-import { paleblue } from '../../../constants/colors'
 import LinkWrapper from '../link-wrapper'
 
+import { composedChartData as fakeData } from '../../../containers/__mocks__/chart-data'
 class StorageItemList extends React.Component {
   constructor(props) {
     super(props);
@@ -53,24 +53,9 @@ class StorageItemList extends React.Component {
       avgTransfer,
       currentUsage,
       usageQuota,
-      primaryData,
       fetchingMetrics
     } = this.props
 
-    const datasets = []
-    if(primaryData.size) {
-      datasets.push({
-        area: true,
-        color: paleblue,
-        comparisonData: false,
-        data: primaryData.toJS().reverse(),
-        id: '',
-        label: '',
-        line: true,
-        stackedAgainst: false,
-        xAxisFormatter: false
-      })
-    }
     return (
       <div className="content-item-list storage-item-list">
         <div className="content-item-list-section section-lg">
@@ -123,14 +108,10 @@ class StorageItemList extends React.Component {
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
               {!fetchingMetrics ?
-                <AnalysisByTime
-                  axes={false}
-                  padding={0}
-                  dataKey="bytes"
-                  dataSets={datasets}
-                  width={this.state.byTimeWidth}
-                  height={this.state.byTimeHeight}
-                  yAxisCustomFormat={formatBitsPerSecond}/>
+                // TODO : UDNP-2938 | replace storage mock data with redux
+                //
+                // TODO: fix left right margin cause by bar in composed chart in Recharts, open issue here https://github.com/recharts/recharts/issues/547
+                <LineAreaComposedChart isMiniChart={true} data={fakeData} valueFormatter={formatBitsPerSecond} width={this.state.byTimeWidth} height={this.state.byTimeHeight}/>
               : ''}
             </ReactCSSTransitionGroup>
           </div>
@@ -156,7 +137,6 @@ StorageItemList.propTypes = {
   minTransfer:PropTypes.string,
   name: PropTypes.string,
   onConfiguration: PropTypes.func,
-  primaryData: PropTypes.instanceOf(Immutable.List),
   usageQuota: PropTypes.string
 }
 StorageItemList.defaultProps = {
