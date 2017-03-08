@@ -10,14 +10,14 @@ import Select from '../../components/select'
 import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
+import { CIS_ORIGIN_HOST_PORT } from '../../constants/configuration'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showStorageModal: false,
-      useUDNOrigin : false
+      showStorageModal: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
@@ -27,18 +27,15 @@ class ConfigurationDetails extends React.Component {
     this.handleSave = this.handleSave.bind(this)
     this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
     this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
-    this.save = this.save.bind(this)
     this.originHostValue = ''
+    this.storageList = this.getStorageList()
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.edgeConfiguration) {
-      this.setState({
-        useUDNOrigin : nextProps.edgeConfiguration.get('origin_type') === 'cis'
-      })
+    if(!Immutable.is(this.props.storages, nextProps.storages)) {
+      this.storageList = this.getStorageList()
     }
   }
-
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
   }
@@ -58,7 +55,7 @@ class ConfigurationDetails extends React.Component {
     else {
       this.props.changeValues([
         [['edge_configuration', 'origin_host_name'], value],
-        [['edge_configuration', 'origin_host_port'], 8082]
+        [['edge_configuration', 'origin_host_port'], CIS_ORIGIN_HOST_PORT]
       ])
     }
   }
@@ -75,7 +72,6 @@ class ConfigurationDetails extends React.Component {
   }
 
   toggleUDNOrigin(val) {
-    this.setState({ useUDNOrigin: val})
     if(val) {
       this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
     }
@@ -85,17 +81,14 @@ class ConfigurationDetails extends React.Component {
   }
 
   getStorageList() {
-    let newStorage = ['option_new_storage', <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />]
+    let options = [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
     if(this.props.storages && !this.props.storages.isEmpty()) {
-      const storageList = this.props.storages.map(storage => Immutable.fromJS({value: storage.getIn(['gateway','hostname']), label: storage.get('ingest_point_id')}))
-      const storageOptions = storageList.toJS()
-      return [newStorage, ...storageOptions]
+      options = this.props.storages.toJS().reduce((opt, storage) => opt.concat({
+        value: storage.gateway.hostname,
+        label: storage.ingest_point_id
+      }), options)
     }
-    return [newStorage];
-  }
-
-  save() {
-    this.toggleAddStorageModal()
+    return options;
   }
 
   render() {
@@ -105,6 +98,7 @@ class ConfigurationDetails extends React.Component {
       )
     }
     const { readOnly } = this.props
+    const isCIS = this.props.edgeConfiguration.get('origin_type') === 'cis'
     const isOtherHostHeader = ['option_origin_host_name', 'option_published_name'].indexOf(
         this.props.edgeConfiguration.get('host_header')
       ) === -1;
@@ -117,7 +111,6 @@ class ConfigurationDetails extends React.Component {
           editting={false}
           fetching={false}
           onCancel={this.toggleAddStorageModal}
-          onSubmit={this.save}
         />
         <Row>
           <FormGroup>
@@ -142,14 +135,14 @@ class ConfigurationDetails extends React.Component {
             <Col xs={9}>
               <Toggle
                 readonly={readOnly}
-                value={this.state.useUDNOrigin}
+                value={isCIS}
                 changeValue={this.toggleUDNOrigin}
               />
             </Col>
           </FormGroup>
         </Row>
 
-        { this.state.useUDNOrigin &&
+        { isCIS &&
           <Row>
             <FormGroup>
               <Col xs={3}>
@@ -164,7 +157,7 @@ class ConfigurationDetails extends React.Component {
                     disabled={readOnly}
                     onSelect={this.handleUDNOriginSelection}
                     value={this.props.edgeConfiguration.get('origin_host_name')}
-                    options={this.getStorageList()}/>
+                    options={this.storageList}/>
                   <InputGroup.Addon>
                     <HelpTooltip
                       id="tooltip_udn_origin"
@@ -178,7 +171,7 @@ class ConfigurationDetails extends React.Component {
           </Row>
         }
 
-        { !this.state.useUDNOrigin &&
+        { !isCIS &&
           <Row>
             <FormGroup>
               <Col xs={3}>
@@ -219,8 +212,8 @@ class ConfigurationDetails extends React.Component {
               <InputGroup>
                 <FormControl
                   type="text"
-                  disabled={readOnly || this.state.useUDNOrigin}
-                  value={this.state.useUDNOrigin ? 8080 : this.props.edgeConfiguration.get('origin_host_port')}
+                  disabled={readOnly || isCIS}
+                  value={isCIS ? CIS_ORIGIN_HOST_PORT : this.props.edgeConfiguration.get('origin_host_port')}
                   onChange={this.handleNumericChange(
                     ['edge_configuration', 'origin_host_port']
                   )}/>
