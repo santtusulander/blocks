@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 
-import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
+import { getById as getStorageById, getAggregatedEstimatesByAccount } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAggregatedBytesByAccountId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 const mockMetrics = {
@@ -33,13 +33,16 @@ export const defaultStorageMetricsSelector = (state, { storageId }) => getStorag
 export const defaultStorageSelector = (state, { storageId }) => getStorageById(state, storageId)
 
 /**
- * selector that accepts an entire prop-object and passes only desired data to general selector
+ * selectors that accept an entire props-object and pass only the needed data to a store selector
  * @param  {[type]} state
  * @param  {[type]} params   URL params
- * @return {[Immutable Map]} Aggregated byte data of all storages in an account
+ * @return {[Immutable Map]} Aggregated byte/estimate data of all storages in an account
  */
 export const getStorageMetricsByAccount = (state, { params: { /*account*/ } }) => {
-
   return getAggregatedBytesByAccountId(state, 20005)
+}
+
+export const getStorageEstimateByAccount = (state, { params: { account } }) => {
+  return getAggregatedEstimatesByAccount(state, account)
 
 }
