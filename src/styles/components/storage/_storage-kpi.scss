@@ -8,7 +8,7 @@ $storage-kpi-comparison-bars-width: rem(120px);
   display: inline-block;
   vertical-align: top;
 
-  &:not(last-child) {
+  &:not(:last-child) {
     margin-right: $storage-kpi-item-margin;
   }
 }
