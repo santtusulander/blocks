@@ -412,7 +412,9 @@ class ConfigurationDetails extends React.Component {
     )
   }
 }
-// TODO: Provide help text for origin test path, target cname
+
+// TODO: UDNP-2945 | Add missing help text for new configuration details field
+
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
