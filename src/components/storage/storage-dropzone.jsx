@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Col, FormGroup } from 'react-bootstrap'
 
@@ -8,7 +8,7 @@ import AsperaUpload from '../storage/aspera-upload'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageDropzone = () => {
+const StorageDropzone = ({ asperaUpload, onMethodToggle }) => {
   return (
     <SectionContainer>
       <SectionHeader
@@ -19,10 +19,10 @@ const StorageDropzone = () => {
           </Col>
           <Col xs={6} className="pull-right">
             <Toggle
-              value={true}
+              value={asperaUpload}
               onText='ON'
               offText='OFF'
-              valueChange={() => {}}
+              changeValue={onMethodToggle}
             />
           </Col>
         </FormGroup>
@@ -47,5 +47,10 @@ const StorageDropzone = () => {
 }
 
 StorageDropzone.displayName = 'StorageDropzone'
+
+StorageDropzone.propTypes = {
+  asperaUpload: PropTypes.bool,
+  onMethodToggle: PropTypes.func
+}
 
 export default StorageDropzone
