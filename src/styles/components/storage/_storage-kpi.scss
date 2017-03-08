@@ -57,6 +57,10 @@ $storage-kpi-comparison-bars-width: rem(120px);
   height: 0.4 * $storage-kpi-item-height;
   margin: 0 0 rem(5px) $storage-kpi-content-margin;
   align-self: flex-end;
+
+  .comparison-bar.reference {
+    background-color: $silver-80;
+  }
 }
 
 .storage-kpi-number {
@@ -70,7 +74,7 @@ $storage-kpi-comparison-bars-width: rem(120px);
     }
 
     .light-theme & {
-      color: $black;
+      color: $grey-80;
     }
   }
 
