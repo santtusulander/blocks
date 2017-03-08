@@ -70,7 +70,7 @@ const mapStateToProps = () => {
 }
 
 const  mapDispatchToProps = () => {
-  //TODO: Needs to be changed when integrating with redux
+  //TODO: Needs to be changed when integrating with redux in UDNP-2938
   return {}
 }
 
