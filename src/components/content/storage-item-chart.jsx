@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { PieChart, Pie } from 'recharts'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { Link } from 'react-router'
+import LinkWrapper from './link-wrapper'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
@@ -103,9 +103,13 @@ const StorageItemChart = (
   return (
     <OverlayTrigger placement="top" overlay={tooltip}>
       <div className="storage-item-chart" style={{width: minDiameter, height: minDiameter}}>
-        <PieChart width={minDiameter} height={minDiameter} >
-          {pies}
-        </PieChart>
+        <LinkWrapper
+          className="storage-item-chart-link"
+          linkTo={'/content'}>
+          <PieChart width={minDiameter} height={minDiameter} >
+            {pies}
+          </PieChart>
+
 
         <div className="storage-item-chart-location">
           {storageLocations}
@@ -127,20 +131,23 @@ const StorageItemChart = (
           {<FormattedMessage id="portal.common.of.value.text"
             values={{ value: formatBytes(estimate, null) }}/>}
         </div>
+        </LinkWrapper>
 
         <div className="content-item-chart content-item-toolbar">
           <ButtonToolbar>
-            <Link to={analyticsLink}
+            <LinkWrapper
+              linkTo={analyticsLink}
               className="btn btn-icon btn-round invisible">
               <IconChart/>
-            </Link>
-            <Link to={configurationLink}
+            </LinkWrapper>
+            <LinkWrapper
+              linkTo={configurationLink}
               className="btn btn-icon btn-round invisible">
               <IconConfiguration/>
-            </Link>
+            </LinkWrapper>
           </ButtonToolbar>
         </div>
-        </div>
+      </div>
     </OverlayTrigger>
   )
 }
