@@ -12,6 +12,7 @@ const ROUTES = {
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabContribution: 'contribution',
+  analyticsStorage: 'storage',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',

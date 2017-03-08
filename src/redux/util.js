@@ -29,10 +29,10 @@ export const topoBase = () => {
   }
 }
 
-export const analyticsBase = () => {
+export const analyticsBase = ({legacy = true} = {}) => {
   switch(process.env.NODE_ENV) {
     case 'development':
-      return ANALYTICS_BASE_URI_DEVELOPMENT
+      return legacy ? ANALYTICS_BASE_URI_DEVELOPMENT_LEGACY : ANALYTICS_BASE_URI_DEVELOPMENT
     case 'production':
       return ANALYTICS_BASE_URI_PRODUCTION
     default:

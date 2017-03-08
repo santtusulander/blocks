@@ -33,6 +33,9 @@ import {
 import SectionContainer from '../components/layout/section-container'
 import SelectWrapper from '../components/select-wrapper'
 import BarChart from '../components/charts/bar-chart'
+import StackedAreaChart from '../components/charts/stacked-area-chart'
+import LineAreaComposedChart from '../components/charts/line-area-composed-chart'
+import LineChart from '../components/charts/line-chart'
 import FilterChecklistDropdown from '../components/filter-checklist-dropdown/filter-checklist-dropdown.jsx'
 import SelectorComponent from '../components/global-account-selector/selector-component'
 import Tabs from '../components/tabs'
@@ -103,7 +106,17 @@ import IconFile          from '../components/icons/icon-file'
 import IconFolder        from '../components/icons/icon-folder'
 import Mapbox            from '../components/map/mapbox'
 
-import { formatBytes, separateUnit } from '../util/helpers'
+import { formatBytes, formatBitsPerSecond, separateUnit } from '../util/helpers'
+import { stackedBarChartData,
+         singleBarChartData,
+         lineChartData,
+         twoStackedComparisonAreaData as AreaChartData,
+         nonStackedAreaDataset,
+         stackedAreaDataset,
+         comparisonAreaDataset,
+         twoStackedAreaDataset,
+         composedChartData
+  } from './__mocks__/chart-data'
 import DateRanges from '../constants/date-ranges'
 
 const filterCheckboxOptions = Immutable.fromJS([
@@ -208,79 +221,6 @@ class Styleguide extends React.Component {
         ]
       }
     }
-
-    const stackedBarChartData = [
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905,
-        "onNetHttps": 27260875504858,
-        "offNetHttp": 16598076780724,
-        "offNetHttps": 6941781887919
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422,
-        "onNetHttps": 4324269843760,
-        "offNetHttp": 2297510618946,
-        "offNetHttps": 1090755001954
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893,
-        "onNetHttps": 8905041306312,
-        "offNetHttp": 4413020296483,
-        "offNetHttps": 2063509423994
-      }
-    ]
-
-    const singleBarChartData = [
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "Datafone Inc.",
-        "onNetHttp": 9149792187422
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      },
-      {
-        "name": "QXT",
-        "onNetHttp": 17640581263893
-      },
-      {
-        "name": "AsiaNet",
-        "onNetHttp": 58034767339905
-      }
-    ]
 
     const datasetA = spDashboardData.traffic.detail.map(datapoint => {
       return {
@@ -405,7 +345,9 @@ class Styleguide extends React.Component {
                 ]}/>}
             </SectionContainer>
             </Row>
+
             <hr />
+
             <Row>
               <label>Normal barchart</label>
               <SectionContainer className="analysis-chart-container">
@@ -416,6 +358,84 @@ class Styleguide extends React.Component {
               </SectionContainer>
             </Row>
 
+            <hr/>
+
+            <Row>
+              <label>Line chart</label>
+              <SectionContainer className="analysis-by-time">
+                <LineChart
+                  data={lineChartData}
+                  dataKey="bits_per_second"
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={nonStackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Stacked area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={stackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison area chart</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={comparisonAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+            <Row>
+              <label>Comparison chart for two stacked area</label>
+              <SectionContainer className="analysis-by-time">
+                <StackedAreaChart
+                  chartLabel="Oct 2016 Month To Date"
+                  areas={twoStackedAreaDataset}
+                  data={AreaChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
+
+            <hr/>
+
+            <Row>
+              <label>Comparison chart composed with line chart </label>
+              <SectionContainer className="analysis-by-time">
+                <LineAreaComposedChart
+                  chartLabel="Oct 2016 Month To Date"
+                  data={composedChartData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              </SectionContainer>
+            </Row>
           <h1 className="page-header">Tabs</h1>
 
           <Tabs
