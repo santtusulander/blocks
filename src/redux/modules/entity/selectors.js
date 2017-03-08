@@ -48,7 +48,7 @@ export const getEntityMetricsByParent = ( state, entityType, parentId, parentIdK
 
   const result = state.entities[entityType].get(metricsObject)
 
-    .filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } ).toList()
+    .filter( entity => { return String(entity.get(parentIdKey)) === String(parentId) } )
 
   return result;
 }
