@@ -13,7 +13,6 @@ const TRAFFIC_BY_TIME_FETCHED = 'TRAFFIC_BY_TIME_FETCHED'
 const TRAFFIC_BY_TIME_COMPARISON_FETCHED = 'TRAFFIC_BY_TIME_COMPARISON_FETCHED'
 const TRAFFIC_BY_COUNTRY_FETCHED = 'TRAFFIC_BY_COUNTRY_FETCHED'
 const TRAFFIC_BY_CITY_FETCHED = 'TRAFFIC_BY_CITY_FETCHED'
-const TRAFFIC_TOTAL_EGRESS_FETCHED = 'TRAFFIC_TOTAL_EGRESS_FETCHED'
 const TRAFFIC_ON_OFF_NET_FETCHED = 'TRAFFIC_ON_OFF_NET_FETCHED'
 const TRAFFIC_ON_OFF_NET_TODAY_FETCHED = 'TRAFFIC_ON_OFF_NET_TODAY_FETCHED'
 const TRAFFIC_SERVICE_PROVIDERS_FETCHED = 'TRAFFIC_SERVICE_PROVIDERS_FETCHED'
@@ -50,8 +49,7 @@ const emptyTraffic = Immutable.Map({
     total: 0
   }),
   contribution: Immutable.Map(),
-  storage: Immutable.List(),
-  totalEgress: 0
+  storage: Immutable.List()
 })
 
 // REDUCERS
@@ -145,18 +143,6 @@ export function trafficByCityFailure(state){
   })
 }
 
-export function trafficTotalEgressSuccess(state, action){
-  return state.merge({
-    totalEgress: Immutable.fromJS(action.payload.data.bytes)
-  })
-}
-
-export function trafficTotalEgressFailure(state){
-  return state.merge({
-    totalEgress: 0
-  })
-}
-
 export function trafficOnOffNetSuccess(state, action){
   action.payload.data.detail = action.payload.data.detail.map(datapoint => {
     datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
@@ -237,7 +223,6 @@ export default handleActions({
   TRAFFIC_BY_TIME_COMPARISON_FETCHED: mapReducers(trafficByTimeComparisonSuccess, trafficByTimeComparisonFailure),
   TRAFFIC_BY_COUNTRY_FETCHED: mapReducers(trafficByCountrySuccess, trafficByCountryFailure),
   TRAFFIC_BY_CITY_FETCHED: mapReducers(trafficByCitySuccess, trafficByCityFailure),
-  TRAFFIC_TOTAL_EGRESS_FETCHED: mapReducers(trafficTotalEgressSuccess, trafficTotalEgressFailure),
   TRAFFIC_ON_OFF_NET_FETCHED: mapReducers(trafficOnOffNetSuccess, trafficOnOffNetFailure),
   TRAFFIC_ON_OFF_NET_TODAY_FETCHED: mapReducers(trafficOnOffNetTodaySuccess, trafficOnOffNetTodayFailure),
   TRAFFIC_SERVICE_PROVIDERS_FETCHED: mapReducers(trafficServiceProvidersSuccess, trafficServiceProvidersFailure),
@@ -275,11 +260,6 @@ export const fetchByCountry = createAction(TRAFFIC_BY_COUNTRY_FETCHED, (opts) =>
 
 export const fetchByCity = createAction(TRAFFIC_BY_CITY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/traffic/city${qsBuilder(opts)}`)
-  .then(parseResponseData);
-})
-
-export const fetchTotalEgress = createAction(TRAFFIC_TOTAL_EGRESS_FETCHED, (opts) => {
-  return axios.get(`${analyticsBase()}/traffic/total${qsBuilder(opts)}`)
   .then(parseResponseData);
 })
 
