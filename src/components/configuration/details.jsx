@@ -106,12 +106,14 @@ class ConfigurationDetails extends React.Component {
       <form
         className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
-        <StorageFormContainer
-          show={this.state.showStorageModal}
-          editting={false}
-          fetching={false}
-          onCancel={this.toggleAddStorageModal}
-        />
+        { this.state.showStorageModal &&
+          <StorageFormContainer
+            show={true}
+            editting={false}
+            fetching={false}
+            onCancel={this.toggleAddStorageModal}
+          />
+        }
         <Row>
           <FormGroup>
             <Col xs={3}>
