@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formValueSelector, SubmissionError } from 'redux-form'
 
-
 import { List, Map } from 'immutable'
 import moment from 'moment'
 
@@ -13,8 +12,10 @@ import locationActions from '../../../redux/modules/entities/locations/actions'
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import popActions from '../../../redux/modules/entities/pops/actions'
 import podActions from '../../../redux/modules/entities/pods/actions'
+import { getRegionsInfo } from '../../../redux/modules/service-info/selectors'
 import { changeNotification } from '../../../redux/modules/ui'
 
+import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-info/actions'
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
@@ -53,7 +54,7 @@ class PopFormContainer extends Component {
     popId && this.props.fetchPop({brand, account: accountId, group: groupId, network: networkId, id: popId})
     popId && this.props.fetchPods({brand, account: accountId, group: groupId, network: networkId, pop: popId})
 
-
+    this.props.fetchServiceInfo()
   }
 
   componentWillReceiveProps(nextProps){
@@ -96,9 +97,11 @@ class PopFormContainer extends Component {
     // add id if create new
     if (!edit) {
       data.id = this.props.iata + values.id
-      data.iata = this.props.iata
+      data.iata = this.props.iata.toLowerCase()
       data.location_id = `${values.locationId}`
     }
+
+    data.billing_region = values.billing_region
 
     const params = {
       brand: 'udn',
@@ -227,6 +230,7 @@ PopFormContainer.propTypes = {
   fetchNetwork: PropTypes.func,
   fetchPods: PropTypes.func,
   fetchPop: PropTypes.func,
+  fetchServiceInfo: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handleSelectedEntity: PropTypes.func,
@@ -262,6 +266,11 @@ const mapStateToProps = (state, ownProps) => {
     label: location.get('iataCode') + (location.get('cityName') ? `, ${location.get('cityName')}` : '')
   })).toJS()
 
+  const billingRegionOptions = getRegionsInfo(state).map(region => ({
+    value: region.region_code,
+    label: region.description
+  }))
+
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
@@ -276,8 +285,10 @@ const mapStateToProps = (state, ownProps) => {
       createdDate: edit && pop ? pop.get('created') : '',
       updatedDate: edit && pop ? pop.get('updated') : '',
       locationOptions: locationOptions,
+      billingRegionOptions: billingRegionOptions,
       iata: edit && pop ? pop.get('iata') : '',
       locationId: edit && pop ? pop.get('location_id') : '',
+      billing_region: edit && pop ? pop.get('billing_region') : '',
       status: edit && pop ? pop.get('status') : STATUS_VALUE_DEFAULT
     }
   }
@@ -295,6 +306,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
     fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
     fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
+    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
 
     showNotification: (message) => dispatch( changeNotification(message) )
   }
