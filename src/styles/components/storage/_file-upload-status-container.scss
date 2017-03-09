@@ -11,6 +11,7 @@ $upload-status-body-paddings: rem(10px) rem(14px);
   bottom: $upload-status-offset;
   z-index: 1000;
   width: $upload-status-width;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .file-upload-status-header {
@@ -19,6 +20,10 @@ $upload-status-body-paddings: rem(10px) rem(14px);
   font-weight: bold;
   color: $dt-text-color;
   background-color: $pale-blue;
+
+  .light-theme & {
+    color: $white;
+  }
 }
 
 .file-upload-status-header-caret {
@@ -29,6 +34,10 @@ $upload-status-body-paddings: rem(10px) rem(14px);
     width: rem(16px);
     height: rem(16px);
     fill: $dt-text-color !important;
+
+    .light-theme & {
+      fill: $white !important;
+    }
   }
 
   > .caret-icon {
@@ -59,7 +68,7 @@ $upload-status-body-paddings: rem(10px) rem(14px);
   }
 
   .light-theme & {
-    background-color: $white-20;
+    background-color: $white;
   }
 }
 

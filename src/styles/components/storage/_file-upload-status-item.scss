@@ -22,7 +22,8 @@ $upload-status-item-icon-width: rem(45px);
   }
 
   .light-theme & {
-    background-color: rgba($black, 0.1);
+    background-color: $white;
+    border: 1px solid $silver-80;
   }
 
 }
