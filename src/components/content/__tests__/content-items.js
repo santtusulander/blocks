@@ -87,6 +87,12 @@ const fakeStorageItems = Immutable.fromJS([{
   avgTransfer: '6.00 TB'
 }])
 
+const fakeParams = {
+  brand: 'brand',
+  account: 'account',
+  group: 'group'
+}
+
 
 describe('ContentItems', () => {
   it('should exist', () => {
@@ -111,6 +117,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.is('Content')).toBeTruthy();
@@ -137,6 +144,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('AnalyticsLink').length).toBe(1);
@@ -162,6 +170,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('AnalyticsLink').length).toBe(0);
@@ -186,6 +195,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('NoContentItems').length).toBe(1);
@@ -210,6 +220,7 @@ describe('ContentItems', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.find('ContentItem').first().prop('isChart')).toBe(true);
@@ -240,6 +251,7 @@ describe('ContentItems with Storages', () => {
         sortItems={jest.fn()}
         toggleChartView={jest.fn()}
         type='property'
+        params={fakeParams}
         viewingChart={true}/>
     );
     expect(contentItems.is('Content')).toBeTruthy();
