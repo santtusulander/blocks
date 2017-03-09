@@ -130,17 +130,20 @@ const StorageItemChart = (
 
         <div className="content-item-chart content-item-toolbar">
           <ButtonToolbar>
-            <Link to={analyticsLink}
-              className="btn btn-icon btn-round invisible">
-              <IconChart/>
-            </Link>
-            <Link to={configurationLink}
-              className="btn btn-icon btn-round invisible">
-              <IconConfiguration/>
-            </Link>
+            {analyticsLink &&
+                <Link to={analyticsLink}
+                  className="btn btn-icon btn-round invisible">
+                  <IconChart/>
+              </Link>
+            }
+            {configurationLink &&
+              <Link to={configurationLink}
+                className="btn btn-icon btn-round invisible">
+                <IconConfiguration/>
+            </Link>}
           </ButtonToolbar>
         </div>
-        </div>
+      </div>
     </OverlayTrigger>
   )
 }
@@ -156,7 +159,7 @@ StorageItemChart.propTypes = {
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
   locations: PropTypes.array.isRequired,
-  name: PropTypes.string,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   peak: PropTypes.number
 };
 
