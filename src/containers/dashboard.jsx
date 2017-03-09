@@ -122,8 +122,14 @@ export class Dashboard extends React.Component {
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
+      /**
+       * If user has permission to list storages, view their analytics and if the active account is a content provider:
+       * fetch all groups and storage metrics of this account, all storages of each group.
+       * @type {[Promise]}
+       */
       const fetchAggregateStorageData =
         checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
         accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
 
         this.props.fetchGroups(params).then((response) => {
@@ -133,7 +139,7 @@ export class Dashboard extends React.Component {
 
             return Promise.all([
               ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
-              this.props.fetchStorageMetrics(providerOpts)
+              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined })
             ])
           }
         })
