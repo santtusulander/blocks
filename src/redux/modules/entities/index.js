@@ -4,7 +4,7 @@ import {Map} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -15,87 +15,99 @@ export const actionTypes = {
   FAIL: 'entities/FAIL'
 }
 
+export const metricsActionTypes = {
+  RECEIVE_METRICS: 'metrics/RECEIVE',
+  RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
+}
+
 const locations =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('locations'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'locations' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const accounts =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('accounts'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'accounts' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const footprints = handleActions({
-  [actionTypes.RECEIVE] : receiveEntity('footprints'),
+  [actionTypes.RECEIVE] : receiveEntity({ key: 'footprints' }),
   [actionTypes.REMOVE] : removeEntity,
   [actionTypes.FAIL] : failEntity
 }, Map())
 
 const groups =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('groups'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'groups' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const nodes =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('nodes'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'nodes' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const properties =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('properties'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const pops =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('pops'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'pops' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const pods =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('pods'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'pods' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const networks =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('networks'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'networks' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+
 const CISIngestPoints =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('ingestPoints'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'ingestPoints' }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const CISClusters =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('clusters'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'clusters' }),
     [actionTypes.FAIL] : failEntity
   }, Map())
 
 const CISWorkflowProfiles =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity('workflowProfiles'),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'workflowProfiles' }),
     [actionTypes.FAIL] : failEntity
   }, Map())
 
+const storageMetrics =
+  handleActions({
+    [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
+    [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
+    [actionTypes.FAIL] : failEntity
+  }, Map({ comparisonData: Map(), data: Map() }))
 
 export default combineReducers({
   accounts,
@@ -111,5 +123,6 @@ export default combineReducers({
   pods,
   locations,
   footprints,
-  fetching: mapActionsToFetchingReducers(actionTypes)
+  storageMetrics,
+  fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
 })

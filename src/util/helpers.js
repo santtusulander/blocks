@@ -323,6 +323,16 @@ export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
 }
 
 /**
+ * Format unix timestamp to Date (moment)
+ * @param unix
+ * @param format
+ * @returns {moment}
+ */
+export function unixTimestampToDate(unix) {
+  return moment.unix(unix).utc().isValid() ? moment.unix(unix).utc() : undefined
+}
+
+/**
  * Format a date string to desired format
  * @param date
  * @param format

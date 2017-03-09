@@ -1,0 +1,191 @@
+@import '../../styles/base/colors';
+@import '../../styles/base/chart-legend';
+
+.area-chart-tooltip {
+  background-color: transparent;
+
+  hr {
+    opacity: 0.5;
+  }
+
+  .normal-data,
+  .comparison-data {
+    @extend %chart-legend;
+    position: relative;
+    top: auto;
+    right: auto;
+    padding: 8px 20px;
+
+    .dark-theme & {
+      background-color: rgba($black, 0.8);
+    }
+  }
+
+  .tooltip-metric-item {
+    .legend-label {
+      margin-left: -15px;
+    }
+  }
+
+  .comparison-data {
+    margin-top: 10px;
+  }
+
+  .tooltip-item {
+    @extend %legend-item;
+    padding: 0 8px;
+  }
+}
+
+.bar-chart-legend {
+  @extend %chart-legend;
+  top: 0;
+  right: 0;
+}
+
+/**
+ * Fallback color setting for unknown dataset
+ */
+.non-stacked {
+  .legend-icon {
+    color: $pale-blue;
+  }
+}
+
+.stacked,
+.two-stacked-comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    &:first-of-type {
+      .legend-icon {
+        color: $pale-blue;
+      }
+    }
+
+    &:nth-of-type(2) {
+      .legend-icon {
+        color: $gradient-teal;
+      }
+    }
+  }
+}
+
+.comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    &:first-of-type {
+      .legend-icon {
+        color: $yellow;
+      }
+    }
+
+    &:nth-of-type(2) {
+      .legend-icon {
+        color: $pale-blue;
+      }
+    }
+  }
+}
+
+.two-stacked-comparison {
+  .bar-chart-legend-item {
+    &:nth-of-type(3) {
+      .legend-icon {
+        color: $purple;
+      }
+    }
+
+    &:nth-of-type(4) {
+      .legend-icon {
+        color: $yellow;
+      }
+    }
+  }
+
+  .comparison-data {
+    .tooltip-item {
+      &:first-of-type {
+        .legend-icon {
+          color: $purple;
+        }
+      }
+
+      &:nth-of-type(2) {
+        .legend-icon {
+          color: $yellow;
+        }
+      }
+    }
+  }
+}
+/**
+ * Color setting for defined dataset
+ */
+
+.stacked,
+.non-stacked,
+.two-stacked-comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
+      &.http {
+        color: $pale-blue;
+      }
+
+      &.https {
+        color: $gradient-teal;
+      }
+
+      &.storage {
+        color: $pale-blue;
+      }
+
+      &.estimate {
+        color: $grey-40;
+      }
+    }
+  }
+}
+
+.comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
+      &.http {
+        color: $yellow;
+      }
+
+      &.comparison_http {
+        color: $pale-blue;
+      }
+
+      &.storage {
+        color: $dark-green;
+      }
+
+      &.comparison_storage {
+        color: $pale-blue;
+      }
+
+      &.estimate {
+        color: $grey-40;
+      }
+    }
+  }
+}
+
+.two-stacked-comparison {
+  .tooltip-item,
+  .bar-chart-legend-item {
+    .legend-icon {
+
+      &.comparison_http {
+        color: $purple;
+      }
+
+      &.comparison_https {
+        color: $yellow;
+      }
+    }
+  }
+}
