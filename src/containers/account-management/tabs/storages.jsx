@@ -18,11 +18,13 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
+import {fetchMetrics} from '../../../redux/modules/entities/storage-metrics/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getByGroups as getPropetiesByGroups } from '../../../redux/modules/entities/properties/selectors'
+import { getByAccountId as getMetricsByAccountId } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
@@ -52,11 +54,18 @@ class AccountManagementStorages extends Component {
   componentWillMount() {
     this.props.groups.map( group => {
       const account = this.props.account
+      const metricsStartDate = new Date()
+
       this.props.fetchStorages({ group: group.get('id') })
       this.props.fetchProperties({
         brand: account.get('brand_id'),
         account: account.get('id'),
-        group:group.get('id')
+        group: group.get('id')
+      })
+      this.props.fetchMetrics({
+        start: metricsStartDate.getTime(),
+        account: account.get('id'),
+        group: group.get('id')
       })
     })
     this.props.fetchClusters({})
@@ -109,7 +118,7 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, groups, storages, clusters, properties,
+    const { account, group, groups, storages, clusters, properties, metrics,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
     const sorterProps  = {
@@ -189,9 +198,11 @@ class AccountManagementStorages extends Component {
                   storage.get('clusters').forEach(clusterId => {
                     const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
                     const clusterLocation = clusterData && clusterData.get('description')
-                    locations.push(clusterLocation)
+                    locations.push(clusterLocation.split(',')[0])
                   })
                   const locationsString = locations.join(', ')
+                  const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
+                  const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
 
                   return (
                     <tr key={i}>
@@ -199,8 +210,8 @@ class AccountManagementStorages extends Component {
                       <td>{groupName}</td>
                       <td>{originsString}</td>
                       <td>{locationsString}</td>
-                      <td>{formatBytes(storage.get('usage'))}</td>
-                      <td>-</td>
+                      <td>{formatBytes(usage)}</td>
+                      <td>{fileCount}</td>
                       <td className="nowrap-column">
                       <ActionButtons onEdit={() => {this.editStorage(storageId, storageGroupId)}}
                                      onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storageGroupId)}} />
@@ -251,12 +262,14 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
+  fetchMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groups: PropTypes.instanceOf(List),
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
+  metrics: PropTypes.instanceOf(List),
   properties: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
@@ -268,16 +281,21 @@ AccountManagementStorages.defaultProps = {
 
 
 function mapStateToProps(state) {
+  const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
+  // TODO Account Id to select metrics mock data
+  // Should be removed when metrics API will be ready
+  const metricsAccountId = '20005'
 
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    account: state.account.get('activeAccount'),
+    account: account,
     groups: groups,
     group: state.group.get('activeGroup'),
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
+    metrics: getMetricsByAccountId(state, metricsAccountId),
     isFetching: getGlobalFetching(state)
   }
 }
@@ -290,7 +308,9 @@ function mapDispatchToProps(dispatch) {
     deleteStorage: (params) => dispatch( storageActions.remove(params)),
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
-    fetchProperties: (params) => dispatch(propertyActions.fetchAll(params))
+    fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
+    fetchMetrics: (params) => dispatch(fetchMetrics(params))
+
   };
 }
 
