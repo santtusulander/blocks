@@ -20,6 +20,7 @@ var plugins = [
   new webpack.DefinePlugin(Object.assign({}, {
       'process.env.NODE_ENV': '"development"',
       'process.env.PUBLIC_URL': `"${publicUrl}"`,
+      'ANALYTICS_BASE_URI_DEVELOPMENT_LEGACY': `"${publicUrl}analytics-legacy"`,
       'ANALYTICS_BASE_URI_DEVELOPMENT': `"${publicUrl}analytics"`,
       'TOPO_BASE_URI_DEVELOPMENT': `"${publicUrl}assets/topo"`,
       'GOOGLE_SITE_KEY': `"${googleSiteKey}"`,

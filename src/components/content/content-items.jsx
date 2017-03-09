@@ -23,6 +23,7 @@ import UDNButton from '../button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
+import StorageChartContainer from '../../containers/storage/storage-chart-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -315,6 +316,8 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
+      storageIds,
+      params,
       locationPermissions,
       storageContentItems
     } = this.props
@@ -418,7 +421,7 @@ class ContentItems extends React.Component {
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                    {storageContentItems.map(storage => {
+                    {!viewingChart && storageContentItems.map(storage => {
                       const id = storage.get('id')
 
                       // TODO UNDP-2906
@@ -453,7 +456,8 @@ class ContentItems extends React.Component {
                       )
                     })}
                   </div>
-                  <br /><br />
+                  <br />
+                  <br />
                 </div>}
 
               {this.getTier() === 'group' && !viewingChart &&
@@ -461,6 +465,9 @@ class ContentItems extends React.Component {
               <div
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+
+                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+
                 {contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
@@ -602,6 +609,7 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -615,6 +623,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
+  storageIds: Immutable.Iterable(),
   user: Immutable.Map()
 }
 
