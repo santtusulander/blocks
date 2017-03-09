@@ -14,7 +14,7 @@ const AnalysisStorage = (props) => {
   return (
     <div className="analysis-storage">
       <SectionHeader
-        sectionHeaderTitle={props.storageType === 'usage'
+        sectionHeaderTitle={props.storageType === 'bytes'
           ? <FormattedMessage id="portal.analytics.storage.usage.text"/>
           : <FormattedMessage id="portal.analytics.storage.files.text"/>} />
       <SectionContainer className="analysis-data-box wide">
