@@ -7,17 +7,33 @@ import classNames from 'classnames'
 import HelpTooltip from '../../components/help-tooltip'
 import InputConnector from '../../components/input-connector'
 import Select from '../../components/select'
+import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
+import StorageFormContainer from '../../containers/storage/modals/storage-modal'
+import { CIS_ORIGIN_HOST_PORT } from '../../constants/configuration'
 
 class ConfigurationDetails extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      showStorageModal: false
+    }
     this.handleChange = this.handleChange.bind(this)
     this.handleNumericChange = this.handleNumericChange.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleUDNOriginSelection = this.handleUDNOriginSelection.bind(this)
     this.handleSave = this.handleSave.bind(this)
+    this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
+    this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
     this.originHostValue = ''
+    this.storageListOptions = this.generateStorageListOptions(props.storages)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(!Immutable.is(this.props.storages, nextProps.storages)) {
+      this.storageListOptions = this.generateStorageListOptions(nextProps.storages)
+    }
   }
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
@@ -30,17 +46,58 @@ class ConfigurationDetails extends React.Component {
       this.props.changeValue(path, value)
     }
   }
+
+  handleUDNOriginSelection(value) {
+    if(value === 'option_new_storage') {
+      this.toggleAddStorageModal()
+    }
+    else {
+      this.props.changeValues([
+        [['edge_configuration', 'origin_host_name'], value],
+        [['edge_configuration', 'origin_host_port'], CIS_ORIGIN_HOST_PORT]
+      ])
+    }
+  }
+
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges()
   }
+
+  toggleAddStorageModal() {
+    this.setState({
+      showStorageModal : !this.state.showStorageModal
+    })
+  }
+
+  toggleUDNOrigin(val) {
+    if(val) {
+      this.props.changeValue(['edge_configuration', 'origin_type'], 'cis')
+    }
+    else {
+      this.props.changeValue(['edge_configuration', 'origin_type'], 'custom')
+    }
+  }
+
+  generateStorageListOptions(storages) {
+    let options = [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
+    if(!storages.isEmpty()) {
+      options = storages.reduce((opt, storage) => opt.concat({
+        value: storage.getIn(['gateway', 'hostname']),
+        label: storage.get('ingest_point_id')
+      }), options)
+    }
+    return options;
+  }
+
   render() {
     if(!this.props.edgeConfiguration) {
       return (
         <LoadingSpinner/>
       )
     }
-    const { readOnly } = this.props
+    const { readOnly, params: { brand, account, group } } = this.props
+    const isCIS = this.props.edgeConfiguration.get('origin_type') === 'cis'
     const isOtherHostHeader = ['option_origin_host_name', 'option_published_name'].indexOf(
         this.props.edgeConfiguration.get('host_header')
       ) === -1;
@@ -48,7 +105,17 @@ class ConfigurationDetails extends React.Component {
       <form
         className="configuration-details form-horizontal"
         onSubmit={this.handleSave}>
-
+        { this.state.showStorageModal &&
+          <StorageFormContainer
+            brand={brand}
+            accountId={account}
+            groupId={group}
+            show={true}
+            editting={false}
+            fetching={false}
+            onCancel={this.toggleAddStorageModal}
+          />
+        }
         <Row>
           <FormGroup>
             <Col xs={3}>
@@ -66,29 +133,77 @@ class ConfigurationDetails extends React.Component {
           <FormGroup>
             <Col xs={3}>
               <ControlLabel>
-                <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
+                <FormattedMessage id="portal.configuration.details.useUDNOrigin.text"/>
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  disabled={readOnly}
-                  value={this.props.edgeConfiguration.get('origin_host_name')}
-                  onChange={this.handleChange(
-                    ['edge_configuration', 'origin_host_name']
-                  )}/>
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_host_name"
-                    title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
-              </InputGroup>
+              <Toggle
+                readonly={readOnly}
+                value={isCIS}
+                changeValue={this.toggleUDNOrigin}
+              />
             </Col>
           </FormGroup>
         </Row>
+
+        { isCIS &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.UDNOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <Select
+                    className="input-select"
+                    disabled={readOnly}
+                    onSelect={this.handleUDNOriginSelection}
+                    value={this.props.edgeConfiguration.get('origin_host_name')}
+                    options={this.storageListOptions}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_udn_origin"
+                      title={<FormattedMessage id="portal.configuration.details.UDNOrigin.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.UDNOrigin.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
+
+        { !isCIS &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.customerOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    disabled={readOnly}
+                    value={this.props.edgeConfiguration.get('origin_host_name')}
+                    onChange={this.handleChange(
+                      ['edge_configuration', 'origin_host_name']
+                    )}/>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_origin_host_name"
+                      title={<FormattedMessage id="portal.configuration.details.customerOrigin.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.customerOrigin.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
+                </InputGroup>
+              </Col>
+            </FormGroup>
+          </Row>
+        }
 
         <Row>
           <FormGroup>
@@ -101,8 +216,8 @@ class ConfigurationDetails extends React.Component {
               <InputGroup>
                 <FormControl
                   type="text"
-                  disabled={readOnly}
-                  value={this.props.edgeConfiguration.get('origin_host_port')}
+                  disabled={readOnly || isCIS}
+                  value={isCIS ? CIS_ORIGIN_HOST_PORT : this.props.edgeConfiguration.get('origin_host_port')}
                   onChange={this.handleNumericChange(
                     ['edge_configuration', 'origin_host_port']
                   )}/>
@@ -170,7 +285,13 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                  <InputGroup.Addon />
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_enter_host_name_value"
+                      title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -222,7 +343,13 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'origin_test_path']
                   )}
                 />
-                <InputGroup.Addon />
+                <InputGroup.Addon>
+                  <HelpTooltip
+                    id="tooltip_origin_test_path"
+                    title={<FormattedMessage id="portal.configuration.details.originTestPath.text"/>}>
+                    <FormattedMessage id="portal.configuration.details.originTestPath.help.text" />
+                  </HelpTooltip>
+                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -273,7 +400,13 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'customer_cname']
                   )}
                 />
-                <InputGroup.Addon />
+                <InputGroup.Addon>
+                  <HelpTooltip
+                    id="tooltip_origin_target_cname"
+                    title={<FormattedMessage id="portal.configuration.details.targetCname.text"/>}>
+                    <FormattedMessage id="portal.configuration.details.targetCname.help.text" />
+                  </HelpTooltip>
+                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -284,14 +417,22 @@ class ConfigurationDetails extends React.Component {
   }
 }
 
+// TODO: UDNP-2945 | Add missing help text for new configuration details field
+
 ConfigurationDetails.displayName = 'ConfigurationDetails'
 ConfigurationDetails.propTypes = {
   changeValue: React.PropTypes.func,
+  changeValues: React.PropTypes.func,
   deploymentMode: React.PropTypes.string,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
   intl: intlShape.isRequired,
+  params: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
-  saveChanges: React.PropTypes.func
+  saveChanges: React.PropTypes.func,
+  storages: React.PropTypes.instanceOf(Immutable.List)
+}
+ConfigurationDetails.defaultProps = {
+  storages: Immutable.List()
 }
 
 export default injectIntl(ConfigurationDetails)

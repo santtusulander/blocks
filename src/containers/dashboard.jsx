@@ -123,7 +123,7 @@ export class Dashboard extends React.Component {
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
       const fetchAggregateStorageData =
-        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.ALLOW_ALWAYS) &&
+        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
         accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
 
         this.props.fetchGroups(params).then((response) => {
@@ -347,7 +347,9 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        <IsAllowed to={PERMISSIONS.ALLOW_ALWAYS}>
+
+        { isCP &&
+        <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
           <DashboardPanel
             title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}
             contentClassName="storage-chart-panel">
@@ -357,7 +359,7 @@ export class Dashboard extends React.Component {
                 entitySelector={getStorageEstimateByAccount}
                 metricsSelector={getStorageMetricsByAccount}/>
           </DashboardPanel>
-        </IsAllowed>
+        </IsAllowed>}
 
       </DashboardPanels>
     )
