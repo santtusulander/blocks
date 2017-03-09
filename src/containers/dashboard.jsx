@@ -123,7 +123,7 @@ export class Dashboard extends React.Component {
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
       /**
-       * If user has permission to list storages, view their analytics and if the active account is a content provider:
+       * If user has permission to list storages and view storage analytics and if the active account is a content provider:
        * fetch all groups and storage metrics of this account, all storages of each group.
        * @type {[Promise]}
        */
