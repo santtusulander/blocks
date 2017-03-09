@@ -478,7 +478,7 @@ const TRANSLATED_MESSAGES = {
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
   'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
-  'portal.errorModal.errorOccured.text': 'An error occured',
+  'portal.errorModal.errorOccured.text': 'An error occurred',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
 
   'portal.exportEmail.oneTime.text': 'One-time, send now',
@@ -575,7 +575,7 @@ const TRANSLATED_MESSAGES = {
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
+  'portal.purge.purgeSubmitted.text': 'Purge request successfully submitted',
 
   'portal.notFound.pageNotFound.text': 'We couldn\'t find the page you were looking for',
 
