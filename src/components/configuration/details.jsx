@@ -96,7 +96,7 @@ class ConfigurationDetails extends React.Component {
         <LoadingSpinner/>
       )
     }
-    const { readOnly } = this.props
+    const { readOnly, params: { brand, account, group } } = this.props
     const isCIS = this.props.edgeConfiguration.get('origin_type') === 'cis'
     const isOtherHostHeader = ['option_origin_host_name', 'option_published_name'].indexOf(
         this.props.edgeConfiguration.get('host_header')
@@ -107,6 +107,9 @@ class ConfigurationDetails extends React.Component {
         onSubmit={this.handleSave}>
         { this.state.showStorageModal &&
           <StorageFormContainer
+            brand={brand}
+            accountId={account}
+            groupId={group}
             show={true}
             editting={false}
             fetching={false}
@@ -423,6 +426,7 @@ ConfigurationDetails.propTypes = {
   deploymentMode: React.PropTypes.string,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
   intl: intlShape.isRequired,
+  params: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   storages: React.PropTypes.instanceOf(Immutable.List)
