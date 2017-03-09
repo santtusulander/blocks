@@ -52,7 +52,7 @@ AnalyticsTabStorage.defaultProps = {
 }
 
 const mapStateToProps = () => {
-  //TODO: Mock date needs to be removed after integration with redux
+  //TODO: Mock data needs to be removed after integration with redux UDNP-2938
   return {
     totals: Immutable.fromJS({
       usage: {
@@ -70,7 +70,8 @@ const mapStateToProps = () => {
 }
 
 const  mapDispatchToProps = () => {
-  //TODO: Needs to be changed when integrating with redux
+  //TODO: Needs to be changed when integrating with redux in UDNP-2938
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabStorage);
