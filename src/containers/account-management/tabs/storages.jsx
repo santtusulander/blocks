@@ -103,8 +103,8 @@ class AccountManagementStorages extends Component {
       .then(() => this.props.toggleModal(null))
   }
 
-  filterData(storageName) {
-    return this.props.storages.filter((storage) => {
+  filterData(storages, storageName) {
+    return storages.filter((storage) => {
       return storage.get('ingest_point_id').toLowerCase().includes(storageName)
     })
   }
@@ -127,10 +127,46 @@ class AccountManagementStorages extends Component {
       activeDirection: this.state.sortDir
     }
 
-    const filteredStorages = this.filterData(this.state.search.toLowerCase())
+    const storagesFullData = storages.map(storage => {
+      const storageGroupId = storage.get('parentId')
+      const storageGroup = groups.find(group => (group.get('id') === storageGroupId))
+      const groupName = storageGroup && storageGroup.get('name')
+
+      let origins = []
+      const storageGatewayHost = storage.getIn(['gateway','hostname'])
+      const originsData = properties.filter(property => {
+        const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
+        return propertyEdgeConfig.get('origin_type') === 'cis' &&
+               propertyEdgeConfig.get('origin_host_name') === storageGatewayHost
+      })
+      originsData.forEach(origin => {
+        origins.push(origin.get('published_host_id'))
+      })
+
+      let locations = []
+      storage.get('clusters').forEach(clusterId => {
+        const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
+        if (clusterData) {
+          const clusterLocation = clusterData && clusterData.get('description').split(',')
+          locations.push(clusterLocation[0])
+        }
+      })
+      const locationsString = locations.join(', ')
+
+      const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
+      const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
+
+      return storage.setIn(['group_name'], groupName)
+                    .setIn(['origins'], origins)
+                    .setIn(['locations'], locationsString)
+                    .setIn(['usage'], usage)
+                    .setIn(['file_count'], fileCount)
+    })
+
+    const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
     const sortedStorages = getSortData(filteredStorages, this.state.sortBy, this.state.sortDir)
 
-    const numHiddenStorages = storages.size - sortedStorages.size
+    const numHiddenStorages = storagesFullData.size - sortedStorages.size
     const storageText = ` ${intl.formatMessage({id: 'portal.account.storages.text'})}`
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storages.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
@@ -159,13 +195,13 @@ class AccountManagementStorages extends Component {
                   <TableSorter {...sorterProps} column="ingest_point_id">
                     <FormattedMessage id="portal.account.storages.table.name.text"/>
                   </TableSorter>
-                  <TableSorter {...sorterProps} column="group">
+                  <TableSorter {...sorterProps} column="group_name">
                     <FormattedMessage id="portal.account.storages.table.group.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="originTo">
                     <FormattedMessage id="portal.account.storages.table.originTo.text"/>
                   </TableSorter>
-                  <TableSorter {...sorterProps} column="location">
+                  <TableSorter {...sorterProps} column="locations">
                     <FormattedMessage id="portal.account.storages.table.location.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="usage">
@@ -177,44 +213,21 @@ class AccountManagementStorages extends Component {
               </thead>
               <tbody>
                 {sortedStorages.map((storage, i) => {
-                  const storageGroupId = storage.get('parentId')
-                  const storageGroup = groups.find(group => (group.get('id') === storageGroupId))
-                  const groupName = storageGroup.get('name')
                   const storageId = storage.get('ingest_point_id')
-
-                  let origins = []
-                  const storageGatewayHost = storage.getIn(['gateway','hostname'])
-                  const originsData = properties.filter(property => {
-                    const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
-                    return propertyEdgeConfig.get('origin_type') === 'cis' &&
-                           propertyEdgeConfig.get('origin_host_name') === storageGatewayHost
-                  })
-                  originsData.forEach(origin => {
-                    origins.push(origin.get('published_host_id'))
-                  })
+                  const origins = storage.get('origins')
                   const originsString = origins.length ? this.formatOrigins(origins) : '-'
-
-                  let locations = []
-                  storage.get('clusters').forEach(clusterId => {
-                    const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
-                    const clusterLocation = clusterData && clusterData.get('description')
-                    locations.push(clusterLocation.split(',')[0])
-                  })
-                  const locationsString = locations.join(', ')
-                  const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
-                  const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
 
                   return (
                     <tr key={i}>
                       <td>{storageId}</td>
-                      <td>{groupName}</td>
+                      <td>{storage.get('group_name')}</td>
                       <td>{originsString}</td>
-                      <td>{locationsString}</td>
-                      <td>{formatBytes(usage)}</td>
-                      <td>{fileCount}</td>
+                      <td>{storage.get('locations')}</td>
+                      <td>{formatBytes(storage.get('usage'))}</td>
+                      <td>{storage.get('file_count')}</td>
                       <td className="nowrap-column">
-                      <ActionButtons onEdit={() => {this.editStorage(storageId, storageGroupId)}}
-                                     onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storageGroupId)}} />
+                      <ActionButtons onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
+                                     onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                       </td>
                     </tr>
                   )

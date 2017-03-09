@@ -68,6 +68,31 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
+const fakefullStorage = Immutable.fromJS([
+  {
+   ingest_point_id: 'USA Storage',
+   group_name: 'Group A',
+   parentId: 1,
+   clusters: ['cis-apac-syd-strg0', 'cis-us-sjc-strg0'],
+   origins: ['usa.storage.gateway.host.net', 'china.storage.gateway.host.net'],
+   locations: 'Syndey, San Jose',
+   gateway: {hostname: 'usa.storage.gateway.host.net'},
+   usage: 108000497044939,
+   file_count: 5000
+  },
+  {
+   ingest_point_id: 'China Storage',
+   group_name: 'Group B',
+   parentId: 2,
+   clusters: ['cis-apac-syd-strg0'],
+   origins: ['usa.storage.gateway.host.net'],
+   locations: 'Syndey',
+   gateway: {hostname: 'china.storage.gateway.host.net'},
+   usage: 108000497044939,
+   file_count: 5000
+  }
+])
+
 const storagesComponent =
   <Storages
     account={fakeAccount}
@@ -116,7 +141,7 @@ describe('AccountManagementStorages', () => {
 
   it('should search storage', () => {
     const storages = shallow(storagesComponent)
-    const filteredData = storages.instance().filterData('c')
+    const filteredData = storages.instance().filterData(fakefullStorage, 'c')
     expect(filteredData.count()).toBe(1)
     expect(filteredData.first().get('ingest_point_id')).toBe('China Storage')
   })
