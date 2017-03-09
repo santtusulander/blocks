@@ -1,6 +1,33 @@
 $storage-unit-width: 24px;
 $storage-unit-horizontal-margin: 10px;
 
+.aggregate-storage-starburst-wrapper {
+  display: inline-flex;
+
+  .storage-item-chart {
+    margin: 0;
+  }
+
+  & #storage-item-peak-info > .usage {
+
+    display: inline-flex;
+
+    & > {
+      h2 {
+        line-height: 1;
+        align-self: flex-end;
+      }
+
+      h5 {
+        margin-left: 5px;
+        font-weight: bold;
+        align-self: flex-end;
+      }
+
+    }
+  }
+}
+
 .storage-item-chart {
   position: relative;
   display: inline-block;
