@@ -38,6 +38,7 @@ const initialState = Immutable.fromJS({
     onOffNet: ['on', 'off'],
     errorCodes: Immutable.List(),
     statusCodes: Immutable.List(),
+    storageType: 'bytes',
     video: '/elephant/169ar/elephant_master.m3u8'
   },
   filterOptions: {
