@@ -18,12 +18,16 @@ import IsAllowed from '../../is-allowed'
 import { DELETE_POP, MODIFY_POP } from '../../../constants/permissions'
 import { POP_ID_MIN, POP_ID_MAX, STATUS_OPTIONS } from '../../../constants/network.js'
 
-const validate = ({ name, locationId, id }) => {
+const validate = ({ name, billing_region, locationId, id }) => {
 
   const customConditions = {
     name: {
       condition: !isValidTextField(name),
       errorText: <MultilineTextFieldError fieldLabel="portal.common.name" />
+    },
+    billing_region: {
+      condition: !billing_region,
+      errorText: <FormattedMessage id='portal.network.popEditForm.billing_region.validation.error.text'/>
     },
     locationId: {
       condition: !locationId,
@@ -37,11 +41,12 @@ const validate = ({ name, locationId, id }) => {
 
   const requiredTexts = {
     name: <FormattedMessage id='portal.network.popEditForm.popName.validation.required.text'/>,
+    billing_region: <FormattedMessage id='portal.network.popEditForm.billing_region.validation.required.text'/>,
     locationId: <FormattedMessage id='portal.network.popEditForm.locationId.validation.required.text'/>,
     id: <FormattedMessage id='portal.network.popEditForm.popId.validation.required.text'/>
   }
 
-  return checkForErrors({ name, locationId, id }, customConditions, requiredTexts)
+  return checkForErrors({ name, locationId, billing_region, id }, customConditions, requiredTexts)
 }
 
 const NetworkPopForm = (props) => {
@@ -90,6 +95,13 @@ const NetworkPopForm = (props) => {
             label={<FormattedMessage id="portal.network.item.status.label" />}
           />
         }
+
+        <Field
+          name="billing_region"
+          className="input-select"
+          component={FieldFormGroupSelect}
+          options={initialValues.billingRegionOptions}
+          label={<FormattedMessage id="portal.network.popEditForm.billing_region.label" />} />
 
         <Field
           name="locationId"

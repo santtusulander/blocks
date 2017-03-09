@@ -260,6 +260,7 @@ describe('Configuration', () => {
         accountActions={accountActionsMaker()}
         groupActions={groupActionsMaker()}
         securityActions={securityActionsMaker()}
+        fetchStorage={() => Promise.resolve()}
         activeHost={fakeHost}
         params={urlParams}
         fetching={true}
