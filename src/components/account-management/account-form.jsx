@@ -239,10 +239,10 @@ const mapStateToProps = (state, ownProps) => {
     accountType,
     initialValues: {
       accountBrand: 'udn',
-      accountName: ownProps.account && ownProps.account.has('name') && ownProps.account.get('name'),
-      accountType: ownProps.account && ownProps.account.has('provider_type') && ownProps.account.get('provider_type'),
-      accountServices: ownProps.account && ownProps.account.has('services') && ownProps.account.get('services') || List(),
-      accountServicesIds: ownProps.account && ownProps.account.has('services') && ownProps.account.get('services') && getServicesIds(ownProps.account.get('services')).toJS() || []
+      accountName: ownProps.account && ownProps.account.get('name'),
+      accountType: ownProps.account && ownProps.account.get('provider_type'),
+      accountServices: ownProps.account && ownProps.account.get('services') || List(),
+      accountServicesIds: ownProps.account && ownProps.account.get('services') && getServicesIds(ownProps.account.get('services')).toJS() || []
     },
     invalid: isInvalid('accountForm')(state),
     providerTypes: getProviderTypeOptions(state),
