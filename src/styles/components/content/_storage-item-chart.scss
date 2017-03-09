@@ -190,4 +190,19 @@ $storage-unit-horizontal-margin: 10px;
       opacity: 1;
     }
   }
+  .storage-item-chart-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    border-radius: 50%;
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
+    }
+  }
 }

@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import './dashboard-panel.scss'
 
 const DashboardPanel = (props) => {
-  const { children, className, noPadding, title } = props
+  const { children, className, contentClassName, noPadding, title } = props
   return (
     <div className={classNames(
       'dashboard-panel',
@@ -16,7 +16,7 @@ const DashboardPanel = (props) => {
           <h5>{title}</h5>
         </div>
       }
-      <div className="dashboard-panel-content">
+      <div className={classNames("dashboard-panel-content", contentClassName)}>
         {children}
       </div>
     </div>

@@ -4,6 +4,11 @@ import { FormattedMessage } from 'react-intl'
 
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
+import LineAreaComposedChart from '../../components/charts/line-area-composed-chart'
+import { formatBitsPerSecond } from '../../util/helpers'
+
+//TODO: remove mock data when integrating with redux in UDNP-2938
+import {composedChartData } from '../../containers/__mocks__/chart-data'
 
 const AnalysisStorage = (props) => {
   return (
@@ -31,9 +36,12 @@ const AnalysisStorage = (props) => {
 
       <SectionHeader
         sectionHeaderTitle={<FormattedMessage id="portal.analytics.storage.usageByTime.text"/>} />
-      <SectionContainer>
-        {/*TODO: Use the line chart component implemented in UDNP-2798 when it's ready*/}
-        Usage By Time Chart
+      <SectionContainer className="analysis-by-time">
+        <LineAreaComposedChart
+          chartLabel="Oct 2016 Month To Date"
+          data={composedChartData}
+          valueFormatter={formatBitsPerSecond}
+        />
       </SectionContainer>
     </div>
   )

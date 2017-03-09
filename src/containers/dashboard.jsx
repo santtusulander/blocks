@@ -21,6 +21,8 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../constants/account-management-options'
 import { getDashboardUrl } from '../util/routes'
+
+import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -120,20 +122,21 @@ export class Dashboard extends React.Component {
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
-      const fetchAggregateStorageData = accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+      const fetchAggregateStorageData =
+        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.ALLOW_ALWAYS) &&
+        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
 
-        this.props.fetchGroups({ brand: urlParams.brand, account: urlParams.account }).then((response) => {
+        this.props.fetchGroups(params).then((response) => {
           if (response) {
 
-            const groupIds = Object.keys(response.entities.groups)
+            const groupIds = Object.keys(response.entities.groups) || []
 
-            return Promise.all(
-
-              groupIds.map(id => this.props.fetchStorages({ brand: urlParams, account: urlParams.account, group: id }))
-
-            )
+            return Promise.all([
+              ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
+              this.props.fetchStorageMetrics(providerOpts)
+            ])
           }
-        }).then(() => this.props.fetchStorageMetrics(providerOpts))
+        })
 
       return Promise.all([
         this.props.dashboardActions.startFetching(),
@@ -344,18 +347,17 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
-        { isCP &&
+        <IsAllowed to={PERMISSIONS.ALLOW_ALWAYS}>
           <DashboardPanel
-            title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
-            <div className="storage-chart-panel">
+            title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}
+            contentClassName="storage-chart-panel">
               <StorageChartContainer
                 showingAggregate={true}
                 params={this.props.params}
                 entitySelector={getStorageEstimateByAccount}
                 metricsSelector={getStorageMetricsByAccount}/>
-          </div>
           </DashboardPanel>
-        }
+        </IsAllowed>
 
       </DashboardPanels>
     )
@@ -426,6 +428,9 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
+  fetchGroups: PropTypes.func,
+  fetchStorageMetrics: PropTypes.func,
+  fetchStorages: PropTypes.func,
   fetching: PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
@@ -439,6 +444,11 @@ Dashboard.propTypes = {
   theme: PropTypes.string,
   trafficActions: PropTypes.object,
   user: PropTypes.instanceOf(Map)
+}
+
+Dashboard.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
 }
 
 Dashboard.defaultProps = {

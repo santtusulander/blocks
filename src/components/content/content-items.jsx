@@ -319,7 +319,8 @@ class ContentItems extends React.Component {
       storageIds,
       params,
       locationPermissions,
-      storageContentItems
+      storageContentItems,
+      params: { brand, account, group }
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -560,6 +561,9 @@ class ContentItems extends React.Component {
           {
             this.state.showStorageModal && this.getTier() === 'group' &&
             <StorageFormContainer
+              brand={brand}
+              accountId={account}
+              groupId={group}
               show= {true}
               editing={false}
               fetching={false}
