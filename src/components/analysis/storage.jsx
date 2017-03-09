@@ -7,7 +7,7 @@ import SectionContainer from '../layout/section-container'
 import LineAreaComposedChart from '../../components/charts/line-area-composed-chart'
 import { formatBitsPerSecond } from '../../util/helpers'
 
-//TODO: remove mock data when integrating with redux in UDNP-2938
+//TODO: remove mock data when integrating with redux in UDNP-2954
 import {composedChartData } from '../../containers/__mocks__/chart-data'
 
 const AnalysisStorage = (props) => {
