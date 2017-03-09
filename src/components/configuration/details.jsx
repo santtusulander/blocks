@@ -23,17 +23,16 @@ class ConfigurationDetails extends React.Component {
     this.handleNumericChange = this.handleNumericChange.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleUDNOriginSelection = this.handleUDNOriginSelection.bind(this)
-    this.getStorageList = this.getStorageList.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.toggleUDNOrigin = this.toggleUDNOrigin.bind(this)
     this.toggleAddStorageModal = this.toggleAddStorageModal.bind(this)
     this.originHostValue = ''
-    this.storageList = this.getStorageList()
+    this.storageListOptions = this.generateStorageListOptions(props.storages)
   }
 
   componentWillReceiveProps(nextProps) {
     if(!Immutable.is(this.props.storages, nextProps.storages)) {
-      this.storageList = this.getStorageList()
+      this.storageListOptions = this.generateStorageListOptions(nextProps.storages)
     }
   }
   handleChange(path) {
@@ -80,12 +79,12 @@ class ConfigurationDetails extends React.Component {
     }
   }
 
-  getStorageList() {
+  generateStorageListOptions(storages) {
     let options = [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
-    if(this.props.storages && !this.props.storages.isEmpty()) {
-      options = this.props.storages.toJS().reduce((opt, storage) => opt.concat({
-        value: storage.gateway.hostname,
-        label: storage.ingest_point_id
+    if(!storages.isEmpty()) {
+      options = storages.reduce((opt, storage) => opt.concat({
+        value: storage.getIn(['gateway', 'hostname']),
+        label: storage.get('ingest_point_id')
       }), options)
     }
     return options;
@@ -159,7 +158,7 @@ class ConfigurationDetails extends React.Component {
                     disabled={readOnly}
                     onSelect={this.handleUDNOriginSelection}
                     value={this.props.edgeConfiguration.get('origin_host_name')}
-                    options={this.storageList}/>
+                    options={this.storageListOptions}/>
                   <InputGroup.Addon>
                     <HelpTooltip
                       id="tooltip_udn_origin"
@@ -427,6 +426,9 @@ ConfigurationDetails.propTypes = {
   readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
   storages: React.PropTypes.instanceOf(Immutable.List)
+}
+ConfigurationDetails.defaultProps = {
+  storages: Immutable.List()
 }
 
 export default injectIntl(ConfigurationDetails)
