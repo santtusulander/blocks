@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
+import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
 
 /**
  * Get property by ID
@@ -37,4 +37,14 @@ export const getByAccount = (state, account) => {
     }, List())
   }
 
+}
+
+/**
+ * Get Property IDs by Group
+ * @param  {[type]} state   [description]
+ * @param  {[type]} groupId [description]
+ * @return {[type]}         [description]
+ */
+export const getIdsByGroup = (state, groupId) => {
+  return getEntityIdsByParent(state, 'properties', groupId)
 }
