@@ -57,17 +57,7 @@ export const getIdsByGroup = (state, groupId) => {
 }
 
 /**
- * Get IngestPoint By Group
- * @param  {} state
- * @param  {String} brand [description]
- * @return List
- */
-export const getByAccount = (state, accountId) => {
-  return getEntitiesByParent(state, 'CISIngestPoints', accountId, 'accountId')
-}
-
-/**
- * Get IngestPoint By Account
+ * Get IngestPoint IDs By Account
  * @param  {[type]} state     [description]
  * @param  {[type]} accountId [description]
  * @return {[type]}           [description]
