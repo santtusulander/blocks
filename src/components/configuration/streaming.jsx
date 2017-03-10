@@ -13,7 +13,6 @@ class ConfigurationStreaming extends Component {
   }
 
   toggleVodStreaming(val) {
-    /* TODO: UDNP-2819 - Update Streaming tab once API is ready */
     this.props.changeValue(['edge_configuration', 'msd_enabled'], val)
   }
 
@@ -36,7 +35,6 @@ class ConfigurationStreaming extends Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              {/* TODO: UDNP-2819 - Update Streaming tab once API is ready */}
               <Toggle
                 readonly={readOnly}
                 value={config.getIn(['edge_configuration', 'msd_enabled'])}
