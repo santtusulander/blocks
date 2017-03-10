@@ -5,3 +5,6 @@ export const deploymentModes = {
 }
 
 export const VOD_SERVICE_ID = 3
+
+export const TOKEN_AUTH_STATIC = 'standard'
+export const TOKEN_AUTH_STREAMING = 'on_demand_hls'

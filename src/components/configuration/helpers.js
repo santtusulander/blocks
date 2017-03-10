@@ -12,8 +12,7 @@ import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
-import ConfigurationTokenAuthStatic from './actions/token-auth-static'
-import ConfigurationTokenAuthStreaming from './actions/token-auth-streaming'
+import ConfigurationTokenAuth from './actions/token-authentication'
 // import ConfigurationActionRedirection from './actions/redirection'
 // import ConfigurationActionOriginHostname from './actions/origin-hostname'
 // import ConfigurationActionCompression from './actions/compression'
@@ -153,13 +152,6 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
     if (setPath.contains('script_lua')) {
       setType = 'content_targeting'
     }
-    if(setType === 'tokenauth') {
-      if(activeSet.get('type') === 'on_demand_hls') {
-        setType = 'tokenauth-streaming'
-      } else {
-        setType = 'tokenauth-static'
-      }
-    }
 
     switch(setType) {
       case 'cache_name':
@@ -177,14 +169,9 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
           <ConfigurationActionHeader {...setterProps}/>
         )
         break
-      case 'tokenauth-static':
+      case 'tokenauth':
         activeEditForm = (
-          <ConfigurationTokenAuthStatic {...setterProps}/>
-        )
-        break
-      case 'tokenauth-streaming':
-        activeEditForm = (
-          <ConfigurationTokenAuthStreaming {...setterProps}/>
+          <ConfigurationTokenAuth {...setterProps}/>
         )
         break
       case 'content_targeting':

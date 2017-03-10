@@ -2,6 +2,7 @@ import React, { PropTypes} from 'react'
 import { injectIntl } from 'react-intl'
 import {FormGroup, ControlLabel } from 'react-bootstrap';
 import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
+import { List } from 'immutable'
 
 import ActionButtons from './action-buttons'
 import ButtonDropdown from './button-dropdown'
@@ -77,7 +78,9 @@ class SortableMultiSelector extends React.Component {
   }
 
   render() {
-    const { value, options, label, required } = this.props
+    const { options, label, required } = this.props
+    const value = this.props.value || List()
+
     const filteredOptions = options
                             .filter(option => !value.contains(option.value))
                             .map(option => Object.assign({}, option, {handleClick: this.addItem}))
@@ -121,7 +124,7 @@ SortableMultiSelector.propTypes = {
   onChange: PropTypes.func,
   options: PropTypes.array,
   required: PropTypes.bool,
-  value: PropTypes.object.isRequired
+  value: PropTypes.instanceOf(List).isRequired
 }
 SortableMultiSelector.defaultProps = {
   required: false,
