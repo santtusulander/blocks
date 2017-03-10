@@ -63,7 +63,7 @@ class AccountManagementStorages extends Component {
         group: group.get('id')
       })
 
-      // TODO UNDP-2958 Use current account and group Ids
+      // TODO UDNP-2958 Use current account and group Ids
       // when metrics API will be ready
       this.props.fetchMetrics({
         start: metricsStartDate.getTime(),
