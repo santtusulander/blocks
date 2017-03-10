@@ -7,7 +7,7 @@ import PageContainer from '../../components/layout/page-container'
 
 import StorageHeader from '../../components/storage/storage-header'
 import StorageKPI from '../../components/storage/storage-kpi'
-import StorageDropzone from '../../components/storage/storage-dropzone'
+import StorageContents from '../../components/storage/storage-contents'
 
 class Storage extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class Storage extends Component {
             valuesUnit={values.unit}
           />
 
-          <StorageDropzone
+          <StorageContents
             asperaUpload={this.state.asperaUpload}
             onMethodToggle={this.toggleUploadMehtod}
           />

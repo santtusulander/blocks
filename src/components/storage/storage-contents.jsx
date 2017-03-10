@@ -8,7 +8,7 @@ import AsperaUpload from '../storage/aspera-upload'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageDropzone = ({ asperaUpload, onMethodToggle }) => {
+const StorageContents = ({ asperaUpload, onMethodToggle }) => {
   return (
     <SectionContainer>
       <SectionHeader
@@ -46,11 +46,11 @@ const StorageDropzone = ({ asperaUpload, onMethodToggle }) => {
   )
 }
 
-StorageDropzone.displayName = 'StorageDropzone'
+StorageContents.displayName = 'StorageContents'
 
-StorageDropzone.propTypes = {
+StorageContents.propTypes = {
   asperaUpload: PropTypes.bool,
   onMethodToggle: PropTypes.func
 }
 
-export default StorageDropzone
+export default StorageContents
