@@ -319,7 +319,8 @@ class ContentItems extends React.Component {
       storageIds,
       params,
       locationPermissions,
-      storageContentItems
+      storageContentItems,
+      params: { brand, account, group }
     } = this.props
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -560,6 +561,9 @@ class ContentItems extends React.Component {
           {
             this.state.showStorageModal && this.getTier() === 'group' &&
             <StorageFormContainer
+              brand={brand}
+              accountId={account}
+              groupId={group}
               show= {true}
               editing={false}
               fetching={false}
@@ -609,7 +613,7 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -623,7 +627,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageIds: Immutable.List(),
+  storageIds: Immutable.Iterable(),
   user: Immutable.Map()
 }
 

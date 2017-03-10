@@ -43,6 +43,10 @@ $storage-unit-horizontal-margin: 10px;
         &-background {
           fill: $black;
 
+          .light-theme & {
+            fill: $silver-80;
+          }
+
           &.exceeded {
             fill: transparent;
           }
@@ -61,6 +65,13 @@ $storage-unit-horizontal-margin: 10px;
 
         &.exceeded {
           fill: $yellow;
+        }
+      }
+
+      &-background {
+        .light-theme & {
+          opacity: 1;
+          fill: $silver-40;
         }
       }
     }
@@ -161,6 +172,21 @@ $storage-unit-horizontal-margin: 10px;
 
     .hover-info {
       opacity: 1;
+    }
+  }
+  .storage-item-chart-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    border-radius: 50%;
+
+    @include print {
+      // scss-lint:disable ImportantRule
+      // Need to override Bootstrap link href for links
+      &::after {
+        content: '' !important;
+      }
     }
   }
 }

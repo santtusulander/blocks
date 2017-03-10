@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Col, Row, Table } from 'react-bootstrap'
+
 import {
   accountIsContentProviderType,
   formatBitsPerSecond,
@@ -319,6 +320,14 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
+        { isCP &&
+          <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
+            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
+              <h2>Lorem Ipsum</h2>
+            </DashboardPanel>
+          </IsAllowed>
+        }
+
       </DashboardPanels>
     )
   }
