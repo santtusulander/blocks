@@ -20,10 +20,6 @@ class Storage extends Component {
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
   }
 
-  componentWillMount() {
-    this.props.fetchStorageMetrics()
-  }
-
   toggleUploadMehtod(asperaUpload) {
     this.setState({ asperaUpload })
   }
@@ -32,6 +28,7 @@ class Storage extends Component {
     const {
       currentUser,
       params,
+      storageContents,
       storageMetrics: {
         chartData,
         values,
@@ -58,6 +55,7 @@ class Storage extends Component {
           />
 
           <StorageContents
+            contents={storageContents}
             asperaUpload={this.state.asperaUpload}
             onMethodToggle={this.toggleUploadMehtod}
           />
@@ -71,8 +69,8 @@ Storage.displayName = 'Storage'
 
 Storage.propTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  fetchStorageMetrics: PropTypes.func,
   params: PropTypes.object,
+  storageContents: PropTypes.array,
   storageMetrics: PropTypes.object
 }
 
@@ -100,17 +98,33 @@ const getMockMetrics = () => ({
   locations: ['San Jose', 'Frankfurt']
 })
 
+const getMockContents = () => ([
+  {
+    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+    status: 'In Progress'
+  },
+  {
+    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+    status: 'In Progress'
+  },
+  {
+    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+    status: 'Completed',
+    noOfFiles: 1000
+  },
+  {
+    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+    status: 'Failed',
+    noOfFiles: 800
+  }
+])
+
 function mapStateToProps(state) {
   return {
     currentUser: state.user.get('currentUser'),
+    storageContents: getMockContents(),
     storageMetrics: getMockMetrics()
   }
 }
 
-function mapDispatchToProps() {
-  return {
-    fetchStorageMetrics: () => {}
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Storage)
+export default connect(mapStateToProps, null)(Storage)

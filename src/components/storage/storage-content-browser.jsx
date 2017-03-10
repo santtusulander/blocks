@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Table } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 
 import ActionButtons from '../action-buttons'
 import IsAllowed from '../is-allowed'
 import { MODIFY_STORAGE } from '../../constants/permissions'
+import { formatDate } from '../../util/helpers'
 
-const StorageContentBrowser = () => {
+const StorageContentBrowser = ({ contents }) => {
   return (
     <Table striped={true}>
       <thead>
@@ -18,21 +19,26 @@ const StorageContentBrowser = () => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>01/19/2017</td>
-          <td>In Progress</td>
-          <td>-</td>
-          <td>
-            <IsAllowed to={MODIFY_STORAGE}>
-              <ActionButtons onDelete={() => {}} />
-            </IsAllowed>
-          </td>
-        </tr>
+        {contents.map((item, index) => (
+          <tr key={index}>
+            <td>{formatDate(item.lastModified)}</td>
+            <td>{item.status}</td>
+            <td>{item.noOfFiles ? item.noOfFiles : '-'}</td>
+            <td>
+              <IsAllowed to={MODIFY_STORAGE}>
+                <ActionButtons onDelete={() => {}} />
+              </IsAllowed>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   )
 }
 
 StorageContentBrowser.displayName = "StorageContentBrowser"
+StorageContentBrowser.propTypes = {
+  contents: PropTypes.array
+}
 
 export default StorageContentBrowser

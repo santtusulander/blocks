@@ -9,7 +9,7 @@ import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageContents = ({ asperaUpload, onMethodToggle }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
   return (
     <SectionContainer>
       <SectionHeader
@@ -42,7 +42,7 @@ const StorageContents = ({ asperaUpload, onMethodToggle }) => {
           ]}
         />
       </SectionHeader>
-      { asperaUpload ? <AsperaUpload /> : <StorageContentBrowser /> }
+      { asperaUpload ? <AsperaUpload /> : <StorageContentBrowser contents={contents} /> }
     </SectionContainer>
   )
 }
@@ -51,6 +51,7 @@ StorageContents.displayName = 'StorageContents'
 
 StorageContents.propTypes = {
   asperaUpload: PropTypes.bool,
+  contents: PropTypes.array,
   onMethodToggle: PropTypes.func
 }
 
