@@ -1,35 +1,14 @@
-import { Map } from 'immutable'
-
 import { getById as getStorageById, getAggregatedEstimatesByAccount } from '../../redux/modules/entities/CIS-ingest-points/selectors'
-import { getAggregatedBytesByAccountId } from '../../redux/modules/entities/storage-metrics/selectors'
-
-const mockMetrics = {
-  bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  },
-  historical_bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  }
-}
-
-//TODO: replace this with redux selector once storage metrics redux is ready in UDNP-2932
-const getStorageMetricsById = () => Map(mockMetrics)
+import { getAggregatedBytesByAccountId, getByStorageId as getStorageMetrics } from '../../redux/modules/entities/storage-metrics/selectors'
 
 /**
- * Default selectors for metrics and storage entity if neither are passed as prop.
+ * Default selectors for metrics and storage entity if they dont get passed as prop.
+ * TODO: return metrics by actual storage id when API returns usable data
  * @param  {[type]} state       [description]
  * @param  {[type]} storageId   id of storage for which to get data.
  * @return {[type]}             metrics data/entity data for a single storage
  */
-export const defaultStorageMetricsSelector = (state, { storageId }) => getStorageMetricsById(state, storageId)
+export const defaultStorageMetricsSelector = (state, { /*storageId*/ }) => getStorageMetrics(state, '268-10')
 export const defaultStorageSelector = (state, { storageId }) => getStorageById(state, storageId)
 
 /**

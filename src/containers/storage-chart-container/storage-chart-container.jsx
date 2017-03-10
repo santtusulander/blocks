@@ -12,7 +12,7 @@ import StorageItemChart from '../../components/content/storage-item-chart'
 const StorageChartContainer = props => {
 
   const { clusters = [], ingest_point_id, estimated_usage } = props.entity.toJS()
-  const { bytes, historical_bytes = {} } = props.entityMetrics.toJS()
+  const { bytes = {}, historical_bytes = {} } = props.entityMetrics.toJS()
 
   return props.showingAggregate
     ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
