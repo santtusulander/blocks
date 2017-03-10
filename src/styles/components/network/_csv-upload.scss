@@ -10,12 +10,12 @@ $filedrop-min-height: 200px;
   border-width: 2px;
   border-radius: 5px;
 
-  &.dark-theme {
+  .dark-theme & {
     border-color: $dt-text-color;
   }
 
-  &.light-theme {
-    border-color: $lt-text-color;
+  .light-theme & {
+    border-color: $silver-60;
   }
 
   .file-item {
