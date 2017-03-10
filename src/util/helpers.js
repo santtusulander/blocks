@@ -383,11 +383,19 @@ export function formatFileSize(bytes) {
   return filesize(bytes)
 }
 
+export const isTrialHost = (host) => {
+  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
+    return true
+  }
+
+  return false
+}
+
 export function getConfiguredName(host) {
   if(!host.size) {
     return null
   }
-  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
+  if(isTrialHost(host)) {
     return host.getIn(['services',0,'configurations',0,'edge_configuration','trial_name'])
   }
   return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
