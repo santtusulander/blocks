@@ -16,7 +16,7 @@ const aggregateBytesByParent = (state, parentId, parentKey, comparison) => {
 
       return aggregate
 
-    }, fromJS({ totals: { bytes: {} } })).get('totals')
+    }, fromJS({ totals: { bytes: {} } }))
 }
 
 export const getByStorageId = (state, storageId, comparison) => getEntityMetricsById(state, 'storageMetrics', storageId, comparison)

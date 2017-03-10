@@ -17,6 +17,8 @@ import {
 } from '../../util/routes'
 import { userIsCloudProvider } from '../../util/helpers'
 
+import { buildReduxId } from '../../redux/util'
+
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
@@ -316,8 +318,7 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
-      params,
+      storageEntities,
       locationPermissions,
       storageContentItems,
       params: { brand, account, group }
@@ -467,7 +468,16 @@ class ContentItems extends React.Component {
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
-                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                {viewingChart && storageEntities.map(storage => {
+                  const storageId = buildReduxId(group, storage.get('ingest_point_id'))
+
+                  return (
+                    <StorageChartContainer
+                      key={storageId}
+                      storageId={storageId}
+                      analyticsLink={/*TODO: UDNP-2932*/'#'}
+                      storageContentLink={/*TODO: UDNP-2925*/'#'}/>)
+                })}
 
                 {contentItems.map(content => {
                   const item = content.get('item')
@@ -613,7 +623,7 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
+  storageEntities: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
