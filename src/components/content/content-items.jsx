@@ -16,7 +16,6 @@ import {
   getContentUrl
 } from '../../util/routes'
 import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
-import {getStoragePermissions} from '../../util/permissions'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -314,7 +313,6 @@ class ContentItems extends React.Component {
       activeAccount,
       analyticsURLBuilder,
       fetchingMetrics,
-      roles,
       showAnalyticsLink,
       viewingChart,
       user,
@@ -322,10 +320,11 @@ class ContentItems extends React.Component {
       params,
       locationPermissions,
       storageContentItems,
+      storagePermission,
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed, viewAllowed } = getStoragePermissions(roles, user.get('currentUser'))
+    const { createAllowed } = storagePermission
     const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -459,7 +458,6 @@ class ContentItems extends React.Component {
                           isChart={viewingChart}
                           isStorage={true}
                           itemProps={itemProps}
-                          viewStorageSummaryAllowed={viewAllowed}
                           deleteItem={this.props.deleteItem}/>
                       )
                     })}
@@ -612,7 +610,6 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   // eslint-disable-next-line react/no-unused-prop-types
   selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
@@ -626,6 +623,7 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
+  storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -637,11 +635,11 @@ ContentItems.defaultProps = {
   contentItems: Immutable.List(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
-  roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
   storageIds: Immutable.Iterable(),
-  user: Immutable.Map()
+  user: Immutable.Map(),
+  storagePermission: {}
 }
 
 export default withRouter(ContentItems)
