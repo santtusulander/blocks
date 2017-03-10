@@ -15,7 +15,6 @@ const schemaOptions = [
   {label: 'Referrer', value: 'REFERRER'},
   {label: 'User agent', value: 'USER_AGENT'},
   {label: 'Expires', value: 'EXPIRES'},
-  {label: 'Start Date', value: 'START_DATE'},
   {label: 'End Date', value: 'END_DATE'}
 ]
 
@@ -52,9 +51,9 @@ export class TokenSchema extends React.Component {
           <h6>
             <FormattedMessage id="portal.policy.edit.tokenauth.schema_string.text" />
           </h6>
-          <p>
+          <h5>
            {selectedSchema && selectedSchema.toJS().join(' + ')}
-          </p>
+          </h5>
 
           <FormFooterButtons>
             <Button

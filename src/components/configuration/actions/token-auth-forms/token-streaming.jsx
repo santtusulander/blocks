@@ -12,6 +12,8 @@ import FormFooterButtons from '../../../form/form-footer-buttons'
 
 import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING } from '../../../../constants/configuration'
 
+const TTL_DEFAULT = 6 * 60 * 60 // 6 hours in seconds
+
 export class TokenStreaming extends React.Component {
   constructor(props) {
     super(props)
@@ -30,6 +32,8 @@ export class TokenStreaming extends React.Component {
     if (!value) {
       this.props.change('streaming_ttl', null)
       this.props.change('streaming_add_ip_addr', false)
+    } else {
+      this.props.change('streaming_ttl', TTL_DEFAULT)
     }
 
     this.props.change('streamingEnabled', value)

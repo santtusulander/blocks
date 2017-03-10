@@ -29,8 +29,8 @@ const advancedOptions = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />, form: 'streaming'}
 ]
 
-const schemaDefault = Immutable.List(['URL'])
-const encryptionDefault = 'HMAC_SHA1'
+const SCHEMA_DEFAULT = Immutable.List(['URL'])
+const ENCRIPTION_DEFAULT = 'HMAC_SHA1'
 
 // const validate = ({ sharedKey }) => {
 //   const conditions = {
@@ -65,8 +65,8 @@ export class TokenAuth extends React.Component {
     const { set } = this.props
 
     this.props.change('shared_key', set.get('shared_key'))
-    this.props.change('schema', set.get('schema') || schemaDefault)
-    this.props.change('encryption', set.get('encryption') || encryptionDefault)
+    this.props.change('schema', set.get('schema') || SCHEMA_DEFAULT)
+    this.props.change('encryption', set.get('encryption') || ENCRIPTION_DEFAULT)
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
@@ -145,6 +145,14 @@ export class TokenAuth extends React.Component {
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
             />
+
+            <hr/>
+            
+            <h5>
+              <FormattedMessage id="portal.policy.edit.tokenauth.advanced_options.text" />
+            </h5>
+
+            <br/>
 
             {advancedOptions.map((option, i) => {
               return (
