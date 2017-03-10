@@ -128,7 +128,7 @@ export class TokenAuth extends React.Component {
             <Field
               type="text"
               name="shared_key"
-              placeholder={<FormattedMessage id="portal.policy.edit.tokenauth.secret.placeholder" />}
+              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
             />
@@ -179,7 +179,7 @@ export class TokenAuth extends React.Component {
           show={!!this.state.detailForm}
           className='narrow'
           title={sidePanelTitle}
-          onCancel={() => {}}
+          cancel={this.closeDetailForm}
           overlapping={true}
         >
           {this.state.detailForm === 'schema' &&

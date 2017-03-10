@@ -120,7 +120,7 @@ class SortableMultiSelector extends React.Component {
 
 SortableMultiSelector.displayName = 'SortableMultiSelector'
 SortableMultiSelector.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.object,
   onChange: PropTypes.func,
   options: PropTypes.array,
   required: PropTypes.bool,
