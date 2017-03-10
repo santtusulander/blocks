@@ -27,6 +27,7 @@ DashboardPanel.displayName = "DashboardPanel"
 DashboardPanel.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  contentClassName: PropTypes.string,
   noPadding: PropTypes.bool,
   title: PropTypes.string
 }

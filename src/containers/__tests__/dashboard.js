@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import { FormattedMessage } from 'react-intl'
 
 jest.unmock('../dashboard.jsx')
+jest.unmock('../../redux/modules/fetching/actions.js')
 import Dashboard from '../dashboard.jsx'
 
 jest.mock('../../util/status-codes', () => {
