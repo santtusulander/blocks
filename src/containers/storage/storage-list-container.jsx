@@ -5,7 +5,7 @@ import { is, Map } from 'immutable'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { buildReduxId } from '../../redux/util'
-import StorageItemChart from '../../components/content/storage-item-chart'
+import StorageItemList from '../../components/content/storage/storage-item-list'
 
 const mockMetrics = {
   bytes: {
@@ -50,7 +50,7 @@ const StorageChartContainer = props => {
   const { clusters, ingest_point_id, estimated_usage } = props.entity.toJS()
   const { bytes, historical_bytes } = props.entityMetrics.toJS()
   return (
-      <StorageItemChart
+      <StorageItemList
         key={ingest_point_id}
         analyticsLink={/*TODO: UDNP-2932*/'#'}
         configurationLink={/*TODO: UDNP-2932*/'#'}
