@@ -167,8 +167,8 @@ class AccountManagementStorages extends Component {
     const sortedStorages = getSortData(filteredStorages, this.state.sortBy, this.state.sortDir)
 
     const numHiddenStorages = storagesFullData.size - sortedStorages.size
-    const storageText = ` ${intl.formatMessage({id: 'portal.account.storages.text'})}`
-    const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storages.hidden.text'})})` : ''
+    const storageText = ` ${intl.formatMessage({id: 'portal.account.storage.text'})}`
+    const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
     return (
@@ -193,21 +193,21 @@ class AccountManagementStorages extends Component {
               <thead>
                 <tr>
                   <TableSorter {...sorterProps} column="ingest_point_id">
-                    <FormattedMessage id="portal.account.storages.table.name.text"/>
+                    <FormattedMessage id="portal.account.storage.table.name.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="group_name">
-                    <FormattedMessage id="portal.account.storages.table.group.text"/>
+                    <FormattedMessage id="portal.account.storage.table.group.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="originTo">
-                    <FormattedMessage id="portal.account.storages.table.originTo.text"/>
+                    <FormattedMessage id="portal.account.storage.table.originTo.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="locations">
-                    <FormattedMessage id="portal.account.storages.table.location.text"/>
+                    <FormattedMessage id="portal.account.storage.table.location.text"/>
                   </TableSorter>
                   <TableSorter {...sorterProps} column="usage">
-                    <FormattedMessage id="portal.account.storages.table.usage.text"/>
+                    <FormattedMessage id="portal.account.storage.table.usage.text"/>
                   </TableSorter>
-                  <th><FormattedMessage id="portal.account.storages.table.files.text"/></th>
+                  <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
                   <th width="1%"/>
                 </tr>
               </thead>
@@ -238,7 +238,7 @@ class AccountManagementStorages extends Component {
             {accountManagementModal === DELETE_STORAGE &&
              <ModalWindow
                title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.storageToDelete}}/>}
-               content={<FormattedMessage id="portal.account.storages.deleteConfirmation.text"/>}
+               content={<FormattedMessage id="portal.account.storage.deleteConfirmation.text"/>}
                verifyDelete={true}
                deleteButton={true}
                cancelButton={true}
@@ -259,7 +259,7 @@ class AccountManagementStorages extends Component {
 
             {sortedStorages.size === 0 && this.state.search.length > 0 &&
              <div className="text-center">
-               <FormattedMessage id="portal.account.storages.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
+               <FormattedMessage id="portal.account.storage.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
              </div>}
           </div>
         }
