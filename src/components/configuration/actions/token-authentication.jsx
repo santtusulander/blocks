@@ -29,6 +29,9 @@ const advancedOptions = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />, form: 'streaming'}
 ]
 
+const schemaDefault = Immutable.List(['URL'])
+const encryptionDefault = 'HMAC_SHA1'
+
 // const validate = ({ sharedKey }) => {
 //   const conditions = {
 //     sharedKey: [
@@ -62,19 +65,17 @@ export class TokenAuth extends React.Component {
     const { set } = this.props
 
     this.props.change('shared_key', set.get('shared_key'))
-    this.props.change('schema', set.get('schema') || Immutable.List())
-    this.props.change('encryption', set.get('encryption'))
+    this.props.change('schema', set.get('schema') || schemaDefault)
+    this.props.change('encryption', set.get('encryption') || encryptionDefault)
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
   }
 
-  encriptionChanged(value) {
+  encriptionChanged() {
     if (!this.props.isMd5) {
       this.props.change('shared_key', null)
     }
-
-    //this.props.change('encryption', value)
   }
 
   saveChanges(values) {

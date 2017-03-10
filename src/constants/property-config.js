@@ -90,7 +90,7 @@ export const availableActions = [
   },
   {
     key: 'tokenauth',
-    name: 'portal.policy.edit.actionSelection.tokenauthStatic.text',
+    name: 'portal.policy.edit.actionSelection.tokenauth.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true,
     servicePermission: MEDIA_DELIVERY_TOKEN_AUTH
