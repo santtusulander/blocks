@@ -25,7 +25,7 @@ const AggregatedStorageChart = ({ bytes, estimate }) => {
       </div>
       <StorageItemChart
         locations={emptyList}
-        name={<FormattedMessage id="portal.account.storages.table.usage.text" />}
+        name={<FormattedMessage id="portal.account.storage.table.usage.text" />}
         currentUsage={bytes.average}
         estimate={estimate}
         peak={bytes.peak}/>
