@@ -21,9 +21,9 @@ class FileUploadStatus extends React.Component {
   }
 
   render() {
-    const { uploads } = this.props
+    const { uploads, inlineStyle } = this.props
     return (
-      <div className='file-upload-status-wrapper'>
+      <div className='file-upload-status-wrapper' style={inlineStyle}>
         <div className='file-upload-status-header'>
           <FormattedMessage
             id="portal.storage.uploadContent.uploading.text"
@@ -54,6 +54,7 @@ class FileUploadStatus extends React.Component {
 
 FileUploadStatus.displayName = "FileUploadStatus"
 FileUploadStatus.propTypes = {
+  inlineStyle: PropTypes.object,
   uploads: PropTypes.array
 }
 

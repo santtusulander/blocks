@@ -27,7 +27,8 @@ describe('PopFormContainer', () => {
         initialValues: {
           name: 'udn'
         },
-        edit: edit
+        edit: edit,
+        fetchServiceInfo: jest.fn()
       }
       return shallow(<PopFormContainer {...props}/>)
     }

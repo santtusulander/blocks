@@ -128,10 +128,6 @@ export class AccountManagement extends Component {
     // toggleModal(null)
   }
 
-  changeActiveAccount(account) {
-    this.setState({ activeAccount: account })
-  }
-
   dnsEditOnSave() {
     // eslint-disable-next-line no-console
     console.log('dnsEditOnSave()')
@@ -419,7 +415,7 @@ export class AccountManagement extends Component {
           </li>
          {accountIsContentProviderType(activeAccount) &&
            <li>
-             <Link to={baseUrl + '/storages'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
+             <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
            </li>}
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>

@@ -54,6 +54,7 @@ const StorageChartContainer = props => {
         key={ingest_point_id}
         analyticsLink={/*TODO: UDNP-2932*/'#'}
         configurationLink={/*TODO: UDNP-2932*/'#'}
+        storageContentLink={/*TODO: UDNP-2925*/'#'}
         name={ingest_point_id}
         locations={clusters}
         currentUsage={bytes.average}

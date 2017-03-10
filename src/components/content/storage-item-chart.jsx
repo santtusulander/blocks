@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import { PieChart, Pie } from 'recharts'
 import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { Link } from 'react-router'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
+import LinkWrapper from './link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
 import IconConfiguration from '../icons/icon-configuration'
 import IconChart from '../icons/icon-chart'
@@ -16,6 +16,7 @@ const defaultDiameter = 240
 const StorageItemChart = (
   { analyticsLink,
     configurationLink,
+    storageContentLink,
     diameter,
     name,
     locations,
@@ -103,44 +104,51 @@ const StorageItemChart = (
   return (
     <OverlayTrigger placement="top" overlay={tooltip}>
       <div className="storage-item-chart" style={{width: minDiameter, height: minDiameter}}>
-        <PieChart width={minDiameter} height={minDiameter} >
-          {pies}
-        </PieChart>
+        <LinkWrapper
+          className="storage-item-chart-link"
+          linkTo={storageContentLink}>
+          <PieChart width={minDiameter} height={minDiameter} >
+            {pies}
+          </PieChart>
 
-        <div className="storage-item-chart-location">
-          {storageLocations}
-        </div>
 
-        <div className="storage-item-chart-info">
-          <div className="title" >{name}</div>
-          <div className="usage">
-            <span className="usage-value">
-              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).value}
-            </span>
-            <span className="usage-unit">
-              {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).unit}
-            </span>
+          <div className="storage-item-chart-location">
+            {storageLocations}
           </div>
-        </div>
 
-        <div className="usage-estimate">
-          {<FormattedMessage id="portal.common.of.value.text"
-            values={{ value: formatBytes(estimate, null) }}/>}
-        </div>
+          <div className="storage-item-chart-info">
+            <div className="title" >{name}</div>
+            <div className="usage">
+              <span className="usage-value">
+                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).value}
+              </span>
+              <span className="usage-unit">
+                {!isNaN(currentUsage) && separateUnit(formatBytes(currentUsage, null, FORMAT)).unit}
+              </span>
+            </div>
+          </div>
+
+          <div className="usage-estimate">
+            {<FormattedMessage id="portal.common.of.value.text"
+              values={{ value: formatBytes(estimate, null) }}/>}
+          </div>
+        </LinkWrapper>
 
         <div className="content-item-chart content-item-toolbar">
           <ButtonToolbar>
-            <Link to={analyticsLink}
+            <LinkWrapper
+              linkTo={analyticsLink}
               className="btn btn-icon btn-round invisible">
               <IconChart/>
-            </Link>
-            <Link to={configurationLink}
+            </LinkWrapper>
+            <LinkWrapper
+              linkTo={configurationLink}
               className="btn btn-icon btn-round invisible">
               <IconConfiguration/>
-            </Link>
+            </LinkWrapper>
           </ButtonToolbar>
         </div>
-        </div>
+      </div>
     </OverlayTrigger>
   )
 }
@@ -157,7 +165,8 @@ StorageItemChart.propTypes = {
   lastMonthUsage: PropTypes.number,
   locations: PropTypes.array,
   name: PropTypes.string,
-  peak: PropTypes.number
+  peak: PropTypes.number,
+  storageContentLink: PropTypes.string
 };
 
 StorageItemChart.defaultProps = {
