@@ -24,6 +24,7 @@ import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import StorageChartContainer from '../../containers/storage/storage-chart-container'
+import StorageListContainer from '../../containers/storage/storage-list-container'
 import PropertyItemContainer from '../../containers/content/property-item-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
@@ -321,7 +322,7 @@ class ContentItems extends React.Component {
       properties,
       params,
       locationPermissions,
-      storageContentItems,
+      //storageContentItems,
       params: { brand, account, group }
     } = this.props
     let trafficTotals = Immutable.List()
@@ -471,36 +472,58 @@ class ContentItems extends React.Component {
                   <br />
                 </div>*/}
 
-              {this.getTier() === 'group' && !viewingChart &&
-                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
-              <div
-                key={viewingChart}
-                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
+                <div
+                  key={viewingChart}
+                  className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+
+                { /* STORAGES -header on List view */
+                  this.getTier() === 'group' && !viewingChart &&
+                  <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
+                }
                 {/* Storages */}
-                {viewingChart && storages.map( storage => {
-                  return (
-                    <StorageChartContainer
-                      key={storage.ingest_point_id}
-                      storageId={storage.get('ingest_point_id')}
-                      params={params}
-                    />)}
-                  )
+                { storages.map( storage => {
+                  if (viewingChart) {
+                    return (
+                      <StorageChartContainer
+                        key={storage.get('ingest_point_id')}
+                        storageId={storage.get('ingest_point_id')}
+                        params={params}
+                        viewingChart={viewingChart}
+                      />
+                    )
+                  } else {
+                    return (
+                      <StorageListContainer
+                        key={storage.get('ingest_point_id')}
+                        storageId={storage.get('ingest_point_id')}
+                        params={params}
+                        viewingChart={viewingChart}
+                      />
+                    )
+                  }
+                })
+                }
+
+                { /* PROPETIES -header on List view */
+                  this.getTier() === 'group' && !viewingChart &&
+                  <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>
                 }
 
                 { /* Properties */}
-                {viewingChart && properties.map(property => {
+                {properties.map(property => {
                   return (
                     <PropertyItemContainer
                       key={property.get('published_host_id')}
                       propertyId={property.get('published_host_id')}
                       params={params}
+                      viewingChart={viewingChart}
                     />)}
                   )
                 }
 
                 {/* OTHER ContentItems (accouts / groups) */}
-                { properties.isEmpty() && contentItems.map(content => {
+                { properties.isEmpty() && storages.isEmpty() && contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
                   const isTrialHost = item.get('isTrialHost')
