@@ -10,15 +10,16 @@ import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
 const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
-  const headerTitle = (contents && contents.length === 0)
+  const hasContents = contents && contents.length > 0
+  const headerTitle = hasContents
                       ?
-                        <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
-                      :
                         (<FormattedMessage
-                        id='portal.storage.summaryPage.contents.hasContents.title'
-                        values={{
-                          folders: contents.filter((item) => item.type === 'directory').length,
-                          files: contents.filter((item) => item.type === 'file').length}} />)
+                          id='portal.storage.summaryPage.contents.hasContents.title'
+                          values={{
+                            folders: contents.filter((item) => item.type === 'directory').length,
+                            files: contents.filter((item) => item.type === 'file').length}} />)
+                      :
+                        <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
 
   return (
     <SectionContainer>
@@ -52,7 +53,12 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
           ]}
         />
       </SectionHeader>
-      { asperaUpload ? <AsperaUpload /> : <StorageContentBrowser contents={contents} /> }
+      { hasContents
+        ?
+          <StorageContentBrowser contents={contents} />
+        :
+          asperaUpload ? <AsperaUpload /> : <span>http-upload</span>
+      }
     </SectionContainer>
   )
 }

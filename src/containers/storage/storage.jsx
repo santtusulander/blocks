@@ -98,35 +98,41 @@ const getMockMetrics = () => ({
   locations: ['San Jose', 'Frankfurt']
 })
 
-const getMockContents = () => ([
-  {
-    type: 'file',
-    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-    status: 'In Progress'
-  },
-  {
-    type: 'file',
-    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-    status: 'In Progress'
-  },
-  {
-    type: 'directory',
-    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-    status: 'Completed',
-    noOfFiles: 1000
-  },
-  {
-    type: 'directory',
-    lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
-    status: 'Failed',
-    noOfFiles: 800
-  }
-])
+const getMockContents = (storage) => (
+  storage === 'with-contents'
+  ?
+  [
+    {
+      type: 'file',
+      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+      status: 'In Progress'
+    },
+    {
+      type: 'file',
+      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+      status: 'In Progress'
+    },
+    {
+      type: 'directory',
+      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+      status: 'Completed',
+      noOfFiles: 1000
+    },
+    {
+      type: 'directory',
+      lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
+      status: 'Failed',
+      noOfFiles: 800
+    }
+  ]
+  :
+    []
+  )
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     currentUser: state.user.get('currentUser'),
-    storageContents: getMockContents(),
+    storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: getMockMetrics()
   }
 }
