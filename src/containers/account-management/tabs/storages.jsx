@@ -62,10 +62,13 @@ class AccountManagementStorages extends Component {
         account: account.get('id'),
         group: group.get('id')
       })
+
+      // TODO UNDP-2958 Use current account and group Ids
+      // when metrics API will be ready
       this.props.fetchMetrics({
         start: metricsStartDate.getTime(),
-        account: account.get('id'),
-        group: group.get('id')
+        account: 20005,
+        group: 268
       })
     })
     this.props.fetchClusters({})
