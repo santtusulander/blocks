@@ -76,8 +76,8 @@ class AsperaUpload extends Component {
   componentWillUnmount(){
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
-      clearTimeout(this.notificationTimeout)
     }
+    clearTimeout(this.notificationTimeout)
   }
 
   initAspera() {
