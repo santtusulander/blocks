@@ -100,19 +100,23 @@ const getMockMetrics = () => ({
 
 const getMockContents = () => ([
   {
+    type: 'file',
     lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
     status: 'In Progress'
   },
   {
+    type: 'file',
     lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
     status: 'In Progress'
   },
   {
+    type: 'directory',
     lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
     status: 'Completed',
     noOfFiles: 1000
   },
   {
+    type: 'directory',
     lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
     status: 'Failed',
     noOfFiles: 800

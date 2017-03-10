@@ -23,7 +23,7 @@ const StorageContentBrowser = ({ contents }) => {
           <tr key={index}>
             <td>{formatDate(item.lastModified)}</td>
             <td>{item.status}</td>
-            <td>{item.noOfFiles ? item.noOfFiles : '-'}</td>
+            <td>{item.type === 'directory' ? item.noOfFiles : '-'}</td>
             <td>
               <IsAllowed to={MODIFY_STORAGE}>
                 <ActionButtons onDelete={() => {}} />

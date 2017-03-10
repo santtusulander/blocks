@@ -35,6 +35,7 @@
 
   "portal.storage.summaryPage.title": "SUMMARY",
   "portal.storage.summaryPage.contents.noFiles.title": "No Files",
+  "portal.storage.summaryPage.contents.hasContents.title": "{folders} Folders, {files} Files",
   "portal.storage.summaryPage.contents.asperaToggle.title": "Aspera Upload",
   "portal.storage.summaryPage.contents.newFile.label": "New File Upload",
   "portal.storage.summaryPage.contents.newFolder.label": "New Folder",
