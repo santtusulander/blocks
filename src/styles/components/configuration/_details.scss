@@ -1,0 +1,19 @@
+$input-height: 36px;
+
+.configuration-details {
+  .input-group-addon {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}

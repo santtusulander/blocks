@@ -34,7 +34,9 @@
   "portal.network.popEditForm.deletePop.title": "Delete POP?",
   "portal.network.popEditForm.deletePop.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This POP will be removed from UDN immediately.",
 
-
+  "portal.network.popEditForm.billing_region.label" : "Billing Region",
+  "portal.network.popEditForm.billing_region.validation.error.text": "Billing Region is invalid",
+  "portal.network.popEditForm.billing_region.validation.required.text": "Billing Region is required",
   "portal.network.popEditForm.locationId.label" : "Location ID",
   "portal.network.popEditForm.locationId.validation.error.text": "Location ID is invalid",
   "portal.network.popEditForm.locationId.validation.required.text": "Location ID is required",
