@@ -4,7 +4,8 @@ import { Col, FormGroup } from 'react-bootstrap'
 
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
-import AsperaUpload from '../storage/aspera-upload'
+import AsperaUpload from './aspera-upload'
+import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
@@ -12,10 +13,10 @@ const StorageContents = ({ asperaUpload, onMethodToggle }) => {
   return (
     <SectionContainer>
       <SectionHeader
-        sectionHeaderTitle={<FormattedMessage id='portal.storage.summaryPage.dropzone.noFiles.title' />}>
+        sectionHeaderTitle={<FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />}>
         <FormGroup className="upload-toggle-group">
           <Col className="pull-left">
-            <FormattedMessage id='portal.storage.summaryPage.dropzone.asperaToggle.title' />
+            <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
           </Col>
           <Col xs={6} className="pull-right">
             <Toggle
@@ -31,17 +32,17 @@ const StorageContents = ({ asperaUpload, onMethodToggle }) => {
           pullRight={true}
           options={[
             {
-              label: <FormattedMessage id='portal.storage.summaryPage.dropzone.newFile.label' />,
+              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
               handleClick: () => {}
             },
             {
-              label: <FormattedMessage id='portal.storage.summaryPage.dropzone.newFolder.label' />,
+              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
               handleClick: () => {}
             }
           ]}
         />
       </SectionHeader>
-      { asperaUpload ? <AsperaUpload /> : 'http upload' }
+      { asperaUpload ? <AsperaUpload /> : <StorageContentBrowser /> }
     </SectionContainer>
   )
 }
