@@ -16,6 +16,7 @@
   "portal.policy.edit.tokenauth.streaming_toggle.text": "Authenticate Segment Requests",
   "portal.policy.edit.tokenauth.check_client_ip.text": "Check Client IP",
   "portal.policy.edit.tokenauth.hash_function.text": "Hash Function",
+  "portal.policy.edit.tokenauth.schema_string.text": "Token string, before it is hashed, will be in the following form:",
 
   "portal.policy.edit.policies.header.text": "Header",
   "portal.policy.edit.matchesSelection.url.text": "URL",

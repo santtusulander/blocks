@@ -36,7 +36,7 @@ export class TokenSchema extends React.Component {
   }
 
   render() {
-    const { close, handleSubmit } = this.props
+    const { close, handleSubmit, selectedSchema } = this.props
 
     return (
       <div>
@@ -48,6 +48,13 @@ export class TokenSchema extends React.Component {
             options={schemaOptions}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
           />
+
+          <h6>
+            <FormattedMessage id="portal.policy.edit.tokenauth.schema_string.text" />
+          </h6>
+          <p>
+           {selectedSchema && selectedSchema.toJS().join(' + ')}
+          </p>
 
           <FormFooterButtons>
             <Button
@@ -84,6 +91,8 @@ const form = reduxForm({
 })(TokenSchema)
 
 const selector = formValueSelector('token-auth-form')
+const selfSelector = formValueSelector('token-schema-form')
 export default connect(state => ({
-  schema: selector(state, 'schema')
+  schema: selector(state, 'schema'),
+  selectedSchema: selfSelector(state, 'schema')
 }))(injectIntl(form))
