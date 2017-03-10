@@ -18,6 +18,12 @@
   "portal.policy.edit.tokenauth.hash_function.text": "Hash Function",
   "portal.policy.edit.tokenauth.schema_string.text": "Token string, before it is hashed, will be in the following form:",
   "portal.policy.edit.tokenauth.advanced_options.text": "Advanced Options",
+  "portal.policy.edit.tokenauth.schema.ip.text": "IP address",
+  "portal.policy.edit.tokenauth.schema.url.text": "URL",
+  "portal.policy.edit.tokenauth.schema.referrer.text": "Referrer",
+  "portal.policy.edit.tokenauth.schema.user_agent.text": "User Agent",
+  "portal.policy.edit.tokenauth.schema.expires.text": "Expires",
+  "portal.policy.edit.tokenauth.schema.end_date.text": "End Date",
 
   "portal.policy.edit.policies.header.text": "Header",
   "portal.policy.edit.matchesSelection.url.text": "URL",

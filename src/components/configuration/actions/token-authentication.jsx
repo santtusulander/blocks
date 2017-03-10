@@ -4,9 +4,6 @@ import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } 
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
-// import { checkForErrors } from '../../../util/helpers'
-// import { isBase64 } from '../../../util/validators'
-
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import SidePanel from '../../side-panel'
@@ -17,36 +14,12 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const encryptionOptions = [
-  {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
-  {label: 'HMAC-SHA256', value: 'HMAC_SHA256'},
-  {label: 'HMAC-MD5', value: 'HMAC_MD5'},
-  {label: 'MD5', value: 'MD5'}
-]
+import { ENCRIPTION_OPTIONS, SCHEMA_DEFAULT, ENCRIPTION_DEFAULT } from '../../../constants/configuration'
 
 const advancedOptions = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />, form: 'schema'},
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />, form: 'streaming'}
 ]
-
-const SCHEMA_DEFAULT = Immutable.List(['URL'])
-const ENCRIPTION_DEFAULT = 'HMAC_SHA1'
-
-// const validate = ({ sharedKey }) => {
-//   const conditions = {
-//     sharedKey: [
-//       {
-//         condition: ! isBase64(sharedKey),
-//         errorText: (
-//           <div>
-//             <FormattedMessage id="portal.policy.edit.policies.url.validation.base64" />
-//           </div>
-//         )
-//       }
-//     ]
-//   }
-//   return checkForErrors({ sharedKey }, conditions)
-// }
 
 export class TokenAuth extends React.Component {
   constructor(props) {
@@ -65,7 +38,7 @@ export class TokenAuth extends React.Component {
     const { set } = this.props
 
     this.props.change('shared_key', set.get('shared_key'))
-    this.props.change('schema', set.get('schema') || SCHEMA_DEFAULT)
+    this.props.change('schema', set.get('schema') || Immutable.List(SCHEMA_DEFAULT))
     this.props.change('encryption', set.get('encryption') || ENCRIPTION_DEFAULT)
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
@@ -133,7 +106,7 @@ export class TokenAuth extends React.Component {
               className="input-select"
               component={FieldFormGroupSelect}
               onChange={this.encriptionChanged}
-              options={encryptionOptions}
+              options={ENCRIPTION_OPTIONS}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.hash_function.text" />}
             />
 

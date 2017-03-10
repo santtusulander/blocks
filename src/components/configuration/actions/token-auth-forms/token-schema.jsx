@@ -9,14 +9,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import FieldSortableMultiSelector from '../../../form/field-sortable-multi-selector'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 
-const schemaOptions = [
-  {label: 'IP address', value: 'IP'},
-  {label: 'URL', value: 'URL'},
-  {label: 'Referrer', value: 'REFERRER'},
-  {label: 'User agent', value: 'USER_AGENT'},
-  {label: 'Expires', value: 'EXPIRES'},
-  {label: 'End Date', value: 'END_DATE'}
-]
+import { SCHEMA_OPTIONS } from '../../../../constants/configuration'
 
 export class TokenSchema extends React.Component {
   constructor(props) {
@@ -44,7 +37,7 @@ export class TokenSchema extends React.Component {
             name="schema"
             className="input-select"
             component={FieldSortableMultiSelector}
-            options={schemaOptions}
+            options={SCHEMA_OPTIONS}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
           />
 
@@ -91,6 +84,7 @@ const form = reduxForm({
 
 const selector = formValueSelector('token-auth-form')
 const selfSelector = formValueSelector('token-schema-form')
+
 export default connect(state => ({
   schema: selector(state, 'schema'),
   selectedSchema: selfSelector(state, 'schema')

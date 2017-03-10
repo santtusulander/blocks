@@ -34,22 +34,4 @@ describe('TokenAuthentication', () => {
     expect(component).toBeTruthy()
   })
 
-  // it('should update internal state as changes happen', () => {
-  //   let inputs = component.find('FormControl')
-  //   inputs.at(0).simulate('change', {target: {value: 'c2hhcmVkLXNlY3JldA=='}})
-  //   expect(change).toHaveBeenCalled()
-  //   expect(changeValue).not.toHaveBeenCalled()
-  // })
-
-  // it('should discard changes on cancel', () => {
-  //   buttons.at(0).simulate('click')
-  //   expect(changeValue).not.toHaveBeenCalled()
-  //   expect(close).toHaveBeenCalled()
-  // })
-
-  // it('should save changes and then close', () => {
-  //   buttons.at(1).simulate('click')
-  //   expect(changeValue).toHaveBeenCalled()
-  //   expect(close).toHaveBeenCalled()
-  // })
 })

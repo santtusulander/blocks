@@ -10,9 +10,7 @@ import FieldFormGroup from '../../../form/field-form-group'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 
-import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING } from '../../../../constants/configuration'
-
-const TTL_DEFAULT = 6 * 60 * 60 // 6 hours in seconds
+import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT } from '../../../../constants/configuration'
 
 export class TokenStreaming extends React.Component {
   constructor(props) {
@@ -125,6 +123,7 @@ const form = reduxForm({
 
 const selector = formValueSelector('token-auth-form')
 const selfSelector = formValueSelector('token-streaming-form')
+
 export default connect(state => ({
   isStreamingEnabled: selfSelector(state, 'streamingEnabled'),
   streamingEnabled: selector(state, 'type') === TOKEN_AUTH_STREAMING,
