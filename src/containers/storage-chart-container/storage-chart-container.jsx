@@ -1,28 +1,28 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { defaultStorageSelector, defaultStorageMetricsSelector } from './selectors'
+import { defaultStorageSelector, defaultStorageMetricsSelector, getClusterNames } from './selectors'
 
 import AggregatedStorageChart from './aggregated-storage-chart'
 import StorageItemChart from '../../components/content/storage-item-chart'
 
 const StorageChartContainer = props => {
 
-  const { clusters = [], ingest_point_id, estimated_usage } = props.entity.toJS()
-  const { totals: { bytes, historical_bytes } } = props.entityMetrics.toJS()
+  const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
+  const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
 
   return props.showingAggregate
     ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
     : (
       <StorageItemChart
-        analyticsLink={/*TODO: UDNP-2932*/'#'}
-        configurationLink={/*TODO: UDNP-2932*/'#'}
-        storageContentLink={/*TODO: UDNP-2925*/'#'}
+        analyticsLink={props.analyticsLink}
+        onConfigurationClick={props.onConfigurationClick}
+        storageContentLink={props.storageContentLink}
         name={ingest_point_id}
-        locations={clusters}
+        locations={props.clusters}
         currentUsage={bytes.average}
         estimate={estimated_usage}
         peak={bytes.peak}
@@ -35,14 +35,17 @@ const StorageChartContainer = props => {
 StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
-  entity: PropTypes.instanceOf(Map),
-  entityMetrics: PropTypes.instanceOf(Map),
-  showingAggregate: PropTypes.bool
+  analyticsLink: PropTypes.string,
+  clusters: PropTypes.instanceOf(List),
+  onConfigurationClick: PropTypes.func,
+  showingAggregate: PropTypes.bool,
+  storageContentLink: PropTypes.string,
+  storageEntity: PropTypes.instanceOf(Map),
+  storageMetrics: PropTypes.instanceOf(Map)
 }
 
 StorageChartContainer.defaultProps = {
-  entity: Map(),
-  entityMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
+  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
 }
 
 /**
@@ -53,7 +56,8 @@ StorageChartContainer.defaultProps = {
 const makeStateToProps = () => {
 
   const getMetrics = makeMemoizedSelector()
-  const getEntity = makeMemoizedSelector()
+  const getStorageEntity = makeMemoizedSelector()
+  const getClusters = makeMemoizedSelector()
 
   const stateToProps = (state, ownProps) => {
 
@@ -62,9 +66,18 @@ const makeStateToProps = () => {
       metricsSelector = defaultStorageMetricsSelector
     } = ownProps
 
+    const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
+
+    // Get cluster descriptions by their IDs inside a storage entity if the chart
+    // isn't showing aggregate data.
+    const clusters = !ownProps.showingAggregate
+      ? getClusters(state, storageEntity.get('clusters'), getClusterNames)
+      : undefined
+
     return {
-      entity: getEntity(state, ownProps, entitySelector),
-      entityMetrics: getMetrics(state, ownProps, metricsSelector)
+      clusters,
+      storageEntity,
+      storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }
 
