@@ -3,29 +3,25 @@ import { connect } from 'react-redux'
 import { createSelectorCreator, defaultMemoize } from 'reselect'
 import { is, Map } from 'immutable'
 
-import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
-
 import ContentItemChart from '../../components/content/content-item-chart'
 
-const mockMetrics = {
-  bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  },
-  historical_bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  }
-}
+import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
+
+import { isTrialHost, getConfiguredName } from '../../util/helpers'
+import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
+
+
+// const getMetrics =  (itemId) => {
+//   return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
+//     null, Immutable.Map({ totalTraffic: 0 }))
+// }
+// const = getDailyTraffic = (itemId) {
+//   return this.props.dailyTraffic.find(traffic => traffic.get(this.props.type) === item.get('id'),
+//     null, Immutable.fromJS({ detail: [] }))
+// }
 
 //TODO: replace this with redux selector once storage metrics redux is ready in UDNP-2932
-const getStorageMetricsById = () => Map(mockMetrics)
+const getStorageMetricsById = () => Map()
 
 /**
  * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
@@ -47,7 +43,9 @@ const makeGetMetrics = () => createDeepEqualSelector(
 
 const PropertyItemContainer = props => {
 
-  const { published_host_id,  } = props.entity.toJS()
+  const { published_host_id  } = props.entity.toJS()
+  const { params, entity, roles, user } = props
+
   //const { bytes, historical_bytes } = props.entityMetrics.toJS()
 
   // const itemProps = {
@@ -80,9 +78,36 @@ const PropertyItemContainer = props => {
   //   isAllowedToConfigure: this.props.isAllowedToConfigure
   // }
 
+  const analyticsURLBuilder = (property) => {
+    return getAnalyticsUrlFromParams(
+      {...props.params, property},
+      user.get('currentUser'),
+      roles
+    )
+  }
+
+  const scaledWidth = 450
+  const isTrial = isTrialHost( props.entity )
+
+  //
+  //const name = getConfiguredName( props.entity )
+
   return (
       <ContentItemChart
+        id={published_host_id}
         name={published_host_id}
+        tagText={isTrial ? 'portal.configuration.details.deploymentMode.trial' : undefined}
+        brightMode={isTrial}
+
+        linkTo={getContentUrl('propertySummary', published_host_id, params)}
+        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
+        analyticsLink={analyticsURLBuilder(published_host_id)}
+
+        isAllowedToConfigure={true}
+
+        chartWidth={scaledWidth}
+        barMaxHeight={(scaledWidth / 7).toString()}
+        showSlices={true}
       />
   )
 }
@@ -93,6 +118,11 @@ PropertyItemContainer.propTypes = {
   entity: PropTypes.object,
   entityMetrics: PropTypes.object
 }
+
+PropertyItemContainer.defaultProps = {
+  entity: Map()
+}
+
 
 /**
  * Make an own mapStateToProps for every instance of this component.
@@ -107,7 +137,10 @@ const makeStateToProps = () => {
 
     return {
       entity: getPropertyById(state, propertyId),
-      entityMetrics: state.metrics
+      //entityMetrics: getMetrics()
+
+      user: state.user,
+      roles: state.roles
     }
   }
 

@@ -4,7 +4,7 @@ import { createSelectorCreator, defaultMemoize } from 'reselect'
 import { is, Map } from 'immutable'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
-
+import { buildReduxId } from '../../redux/util'
 import StorageItemChart from '../../components/content/storage-item-chart'
 
 const mockMetrics = {
@@ -51,6 +51,7 @@ const StorageChartContainer = props => {
   const { bytes, historical_bytes } = props.entityMetrics.toJS()
   return (
       <StorageItemChart
+        key={ingest_point_id}
         analyticsLink={/*TODO: UDNP-2932*/'#'}
         configurationLink={/*TODO: UDNP-2932*/'#'}
         name={ingest_point_id}
@@ -71,6 +72,10 @@ StorageChartContainer.propTypes = {
   entityMetrics: PropTypes.object
 }
 
+StorageChartContainer.defaultProps = {
+  entity: Map()
+}
+
 /**
  * Make an own mapStateToProps for every instance of this component.
  * See https://github.com/reactjs/reselect#sharing-selectors-with-props-across-multiple-components
@@ -80,10 +85,10 @@ const makeStateToProps = () => {
 
   const getMetrics = makeGetMetrics()
 
-  const stateToProps = (state, { storageId }) => {
-
+  const stateToProps = (state, { storageId, params: { group } }) => {
+console.log(group, storageId);
     return {
-      entity: getStorageById(state, storageId),
+      entity: getStorageById(state, buildReduxId(group, storageId) ),
       entityMetrics: getMetrics()
     }
   }

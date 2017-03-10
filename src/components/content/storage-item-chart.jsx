@@ -155,9 +155,13 @@ StorageItemChart.propTypes = {
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
-  locations: PropTypes.array.isRequired,
+  locations: PropTypes.array,
   name: PropTypes.string,
   peak: PropTypes.number
 };
+
+StorageItemChart.defaultProps = {
+  locations: []
+}
 
 export default StorageItemChart

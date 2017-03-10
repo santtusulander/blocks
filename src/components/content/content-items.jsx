@@ -24,6 +24,7 @@ import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
 import StorageChartContainer from '../../containers/storage/storage-chart-container'
+import PropertyItemContainer from '../../containers/content/property-item-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -36,6 +37,7 @@ import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
+
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
@@ -43,7 +45,6 @@ import EntityEdit from '../../components/account-management/entity-edit'
 
 import SidePanel from '../side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
-
 
 const rangeMin = 400
 const rangeMax = 500
@@ -316,12 +317,14 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
+      storages,
+      properties,
       params,
-      locationPermissions,
-      storageContentItems
+      locationPermissions
+      //storageContentItems
     } = this.props
     let trafficTotals = Immutable.List()
+
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
@@ -344,6 +347,7 @@ class ContentItems extends React.Component {
         dailyTraffic: itemDailyTraffic
       })
     })
+
     .sort(sortContent(sortValuePath, sortDirection))
     if(!fetchingMetrics){
       trafficMin = Math.min(...trafficTotals)
@@ -354,13 +358,16 @@ class ContentItems extends React.Component {
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
     trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
       .range([rangeMin, rangeMax]);
+
     const foundSort = sortOptions.find(opt => {
       return Immutable.is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
     })
+
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
@@ -407,7 +414,7 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -415,9 +422,12 @@ class ContentItems extends React.Component {
               className="content-transition"
               transitionName="content-transition"
               transitionEnterTimeout={400}
-              transitionLeaveTimeout={250}>
+              transitionLeaveTimeout={250}
+            >
 
-              {!storageContentItems.isEmpty() &&
+
+
+              {/*!storageContentItems.isEmpty() &&
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
@@ -458,7 +468,7 @@ class ContentItems extends React.Component {
                   </div>
                   <br />
                   <br />
-                </div>}
+                </div>*/}
 
               {this.getTier() === 'group' && !viewingChart &&
                 <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
@@ -466,9 +476,30 @@ class ContentItems extends React.Component {
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
-                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                {/* Storages */}
+                {viewingChart && storages.map( storage => {
+                  return (
+                    <StorageChartContainer
+                      key={storage.ingest_point_id}
+                      storageId={storage.get('ingest_point_id')}
+                      params={params}
+                    />)}
+                  )
+                }
 
-                {contentItems.map(content => {
+                { /* Properties */}
+                {viewingChart && properties.map(property => {
+                  return (
+                    <PropertyItemContainer
+                      key={property.get('published_host_id')}
+                      propertyId={property.get('published_host_id')}
+                      params={params}
+                    />)}
+                  )
+                }
+
+                {/* OTHER ContentItems (accouts / groups) */}
+                { properties.isEmpty() && contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
                   const isTrialHost = item.get('isTrialHost')
@@ -623,7 +654,8 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageIds: Immutable.Iterable(),
+  storages: Immutable.List(),
+  properties: Immutable.List(),
   user: Immutable.Map()
 }
 
