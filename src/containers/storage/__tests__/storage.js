@@ -5,7 +5,8 @@ jest.unmock('../storage.jsx')
 import Storage from '../storage.jsx'
 
 const subject = () => {
-  return shallow(<Storage />)
+  return shallow(
+    <Storage />)
 }
 
 describe('Storage', () => {

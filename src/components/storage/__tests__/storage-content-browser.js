@@ -5,7 +5,7 @@ jest.unmock('../storage-content-browser')
 import StorageContentBrowser from '../storage-content-browser'
 
 const subject = shallow(
-  <StorageContentBrowser />
+  <StorageContentBrowser contents={[]}/>
 )
 
 describe('StorageContentBrowser', () => {

@@ -74,6 +74,22 @@ Storage.propTypes = {
   storageMetrics: PropTypes.object
 }
 
+Storage.defaultProps = {
+  storageMetrics: {
+    chartData: {
+      data: [],
+      key: ''},
+    values: {
+      current: 0,
+      peak: 0,
+      referenceValue: 0,
+      unit: ''
+    },
+    gain: 0,
+    locations: []
+  }
+}
+
 const getMockMetrics = () => ({
   chartData: {
     data: [
