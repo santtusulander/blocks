@@ -4,6 +4,7 @@ import { createSelectorCreator, defaultMemoize } from 'reselect'
 import { is, Map } from 'immutable'
 
 import ContentItemChart from '../../components/content/content-item-chart'
+import ContentItemList from '../../components/content/content-item-list'
 
 import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
 
@@ -91,6 +92,27 @@ const PropertyItemContainer = props => {
 
   //
   //const name = getConfiguredName( props.entity )
+
+  if (!props.viewingChart) {
+    return(
+      <ContentItemList
+        id={published_host_id}
+        name={published_host_id}
+        tagText={isTrial ? 'portal.configuration.details.deploymentMode.trial' : undefined}
+        brightMode={isTrial}
+
+        linkTo={getContentUrl('propertySummary', published_host_id, params)}
+        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
+        analyticsLink={analyticsURLBuilder(published_host_id)}
+
+        isAllowedToConfigure={true}
+
+        chartWidth={scaledWidth}
+        barMaxHeight={(scaledWidth / 7).toString()}
+        showSlices={true}
+      />
+    )
+  }
 
   return (
       <ContentItemChart
