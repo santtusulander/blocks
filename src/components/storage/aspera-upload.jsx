@@ -78,6 +78,7 @@ class AsperaUpload extends Component {
       this.aspera.asperaDeInitConnect()
     }
     clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeAsperaNotification('')
   }
 
   initAspera() {
