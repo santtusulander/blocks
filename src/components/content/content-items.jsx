@@ -15,7 +15,8 @@ import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl
 } from '../../util/routes'
-import { userIsCloudProvider } from '../../util/helpers'
+import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+import {getStoragePermissions} from '../../util/permissions'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -251,8 +252,8 @@ class ContentItems extends React.Component {
     return { tagText: tagText }
   }
 
-  renderAddButton () {
-    if(this.getTier() === 'group'){
+  renderAddButton (storageCreationIsAllowed) {
+    if(this.getTier() === 'group' && storageCreationIsAllowed){
       return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
     }
 
@@ -313,6 +314,7 @@ class ContentItems extends React.Component {
       activeAccount,
       analyticsURLBuilder,
       fetchingMetrics,
+      roles,
       showAnalyticsLink,
       viewingChart,
       user,
@@ -322,6 +324,9 @@ class ContentItems extends React.Component {
       storageContentItems,
       params: { brand, account, group }
     } = this.props
+
+    const { createAllowed, viewAllowed } = getStoragePermissions(roles, user.get('currentUser'))
+    const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
@@ -380,7 +385,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton()}
+                {this.renderAddButton(createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -418,7 +423,8 @@ class ContentItems extends React.Component {
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
 
-              {!storageContentItems.isEmpty() &&
+              {!storageContentItems.isEmpty() && groupHasStorageService &&
+                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
@@ -453,21 +459,26 @@ class ContentItems extends React.Component {
                           isChart={viewingChart}
                           isStorage={true}
                           itemProps={itemProps}
+                          viewStorageSummaryAllowed={viewAllowed}
                           deleteItem={this.props.deleteItem}/>
                       )
                     })}
                   </div>
                   <br />
                   <br />
-                </div>}
+                  </div>
+                </IsAllowed>}
 
               {this.getTier() === 'group' && !viewingChart &&
                 <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
               <div
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-
-                {viewingChart && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                  <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+                    <div className="storage-wrapper">
+                      {viewingChart && groupHasStorageService && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                    </div>
+                  </IsAllowed>
 
                 {contentItems.map(content => {
                   const item = content.get('item')
@@ -601,6 +612,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
+  roles: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   // eslint-disable-next-line react/no-unused-prop-types
   selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
@@ -625,6 +637,7 @@ ContentItems.defaultProps = {
   contentItems: Immutable.List(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
+  roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
   storageIds: Immutable.Iterable(),

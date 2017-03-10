@@ -179,6 +179,7 @@ export class Hosts extends React.Component {
         toggleChartView={this.props.uiActions.toggleChartView}
         type={CONTENT_ITEMS_TYPES.PROPERTY}
         user={this.props.user}
+        roles={this.props.roles}
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
         hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
