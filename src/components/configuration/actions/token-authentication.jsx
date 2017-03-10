@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
@@ -55,6 +55,7 @@ export class TokenAuth extends React.Component {
 
     this.saveChanges = this.saveChanges.bind(this)
     this.closeDetailForm = this.closeDetailForm.bind(this)
+    this.encriptionChanged = this.encriptionChanged.bind(this)
   }
 
   componentWillMount() {
@@ -66,6 +67,14 @@ export class TokenAuth extends React.Component {
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
+  }
+
+  encriptionChanged(value) {
+    if (!this.props.isMd5) {
+      this.props.change('shared_key', null)
+    }
+
+    //this.props.change('encryption', value)
   }
 
   saveChanges(values) {
@@ -101,6 +110,7 @@ export class TokenAuth extends React.Component {
       type,
       streaming_ttl,
       streaming_add_ip_addr,
+      isMd5,
       handleSubmit
     } = this.props
 
@@ -121,6 +131,7 @@ export class TokenAuth extends React.Component {
               name="encryption"
               className="input-select"
               component={FieldFormGroupSelect}
+              onChange={this.encriptionChanged}
               options={encryptionOptions}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.hash_function.text" />}
             />
@@ -128,6 +139,7 @@ export class TokenAuth extends React.Component {
             <Field
               type="text"
               name="shared_key"
+              disabled={isMd5}
               placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
@@ -214,8 +226,11 @@ TokenAuth.propTypes = {
   ...reduxFormPropTypes
 }
 
+const selector = formValueSelector('token-auth-form')
 const form = reduxForm({
   form: 'token-auth-form'
 })(TokenAuth)
 
-export default connect()(injectIntl(form))
+export default connect(state => ({
+  isMd5: selector(state, 'encryption') === 'MD5'
+}))(injectIntl(form))
