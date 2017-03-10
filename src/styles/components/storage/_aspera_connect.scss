@@ -16,6 +16,10 @@
   .connect-status-banner {
     height: 60px;
     background-color: #08526c;
+
+    .light-theme & {
+      background-color: $white;
+    }
   }
 
   .message {
