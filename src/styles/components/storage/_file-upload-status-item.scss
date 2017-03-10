@@ -64,4 +64,10 @@ $upload-status-item-icon-width: rem(45px);
 .file-update-status-remove-icon {
   @extend .file-upload-status-icon-wrapper;
   padding: 0;
+
+  .light-theme & {
+    .icon {
+      fill: $grey-80;
+    }
+  }
 }
