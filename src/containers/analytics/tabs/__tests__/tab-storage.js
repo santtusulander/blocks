@@ -1,14 +1,41 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
+jest.mock('../../../../util/helpers', () => {
+  return {
+    buildAnalyticsOpts: val => {
+      return {startDate: 1451606400, endDate: 1454284799}
+    }
+  }
+})
+
+jest.mock('../../../../redux/modules/entities/storage-metrics/actions', () => {
+  fetchMetrics: jest.fn()
+})
+
 jest.unmock('../tab-storage.jsx')
 import AnalyticsTabStorage from '../tab-storage.jsx'
 
 describe('AnalyticsTabStorage', () => {
+  let subject = null
+
+  beforeEach(() => {
+    subject = () => {
+      let props = {
+        getTotals: () => {
+          return {
+            peak: 0,
+            low: 0,
+            average: 0
+          }
+        },
+        fetchStorageMetrics: jest.fn()
+      }
+      return shallow(<AnalyticsTabStorage {...props}/>)
+    }
+  })
+
   it('should exist', () => {
-    let subject = shallow(
-      <AnalyticsTabStorage />
-    );
-    expect(subject.length).toBe(1)
-  });
-});
+    expect(subject().length).toBe(1)
+  })
+})

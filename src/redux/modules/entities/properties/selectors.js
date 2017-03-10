@@ -1,4 +1,4 @@
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
 
 /**
@@ -36,5 +36,23 @@ export const getByAccount = (state, account) => {
       return acc.merge( groupProperties )
     }, List())
   }
+}
 
+/**
+ * Get Properties By Groups
+ * @param  {} state
+ * @param  {List} list of groups
+ * @return List
+ */
+export const getByGroups = (state, groups) => {
+  if (groups && groups.size > 0) {
+    let properties = []
+    groups.forEach(group => {
+      const groupProperties = getByGroup(state, group.get('id'))
+      groupProperties.forEach( property => {
+        properties.push(property)
+      })
+    })
+    return fromJS(properties)
+  }
 }

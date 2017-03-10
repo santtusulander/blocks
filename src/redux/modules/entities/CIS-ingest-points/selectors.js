@@ -1,5 +1,4 @@
-import { Map } from 'immutable'
-
+import { Map, fromJS } from 'immutable'
 import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
 
 /**
@@ -84,4 +83,23 @@ export const getAggregatedEstimatesByAccount = (state, accountId) => {
  */
 export const getAggregatedEstimatesByGroup = (state, groupId) => {
   return getAggregatedEstimatesByParent(state, groupId)
+}
+
+/**
+ * Get IngestPoints By Groups
+ * @param  {} state
+ * @param  {List} list of groups
+ * @return List
+ */
+export const getByGroups = (state, groups) => {
+  if (groups && groups.size > 0) {
+    let storages = []
+    groups.forEach(group => {
+      const groupStorages = getByGroup(state, group.get('id'))
+      groupStorages.forEach( storage => {
+        storages.push(storage)
+      })
+    })
+    return fromJS(storages)
+  }
 }
