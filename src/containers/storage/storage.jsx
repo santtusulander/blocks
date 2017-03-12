@@ -145,7 +145,7 @@ const getMockContents = (storage) => (
     []
   )
 
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   return {
     currentUser: state.user.get('currentUser'),
     storageContents: getMockContents(ownProps.params.storage),
