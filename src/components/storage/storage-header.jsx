@@ -13,6 +13,7 @@ import IconCaretDown from '../icons/icon-caret-down'
 import IconConfiguration from '../icons/icon-configuration.jsx'
 
 import {
+  getAnalyticsUrl,
   getContentUrl,
   getNetworkUrl
 } from '../../util/routes.js'
@@ -79,9 +80,7 @@ const StorageHeader = ({
       </AccountSelector>
       <ButtonToolbar>
         <Link className="btn btn-primary btn-icon"
-              // to prop should be uncommented when (UNDP-2932) finishes
-              // to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
-              >
+              to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
           <IconChart/>
         </Link>
         <Link
