@@ -71,8 +71,7 @@ StorageChartContainer.displayName = 'StorageChartContainer'
 StorageChartContainer.propTypes = {
   entity: PropTypes.object,
   entityMetrics: PropTypes.object,
-  params: PropTypes.object,
-  storageId: PropTypes.string
+  params: PropTypes.object
 }
 
 /**
