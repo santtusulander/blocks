@@ -86,11 +86,13 @@ class Network extends React.Component {
   constructor(props) {
     super(props)
 
+    this.container = null
     this.notificationTimeout = null
     this.showNotification = this.showNotification.bind(this)
 
     this.addEntity = this.addEntity.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleReference = this.handleReference.bind(this)
 
     this.handleAccountClick = this.handleAccountClick.bind(this)
     this.handleAccountEdit = this.handleAccountEdit.bind(this)
@@ -175,6 +177,11 @@ class Network extends React.Component {
     // allows us to use the browsers navigation buttons to active the scrolling.
     const { group, network, pop, pod } = this.props.params
 
+    if (this.container === null) {
+      // There is no reason to perform any operation on detached container.
+      return
+    }
+
     if (group) {
       this.selectEntityAndScroll('groupList', false)
     } else if (prevProps.params.group && !group) {
@@ -198,6 +205,12 @@ class Network extends React.Component {
     } else if (prevProps.params.pod && !pod) {
       this.selectEntityAndScroll('podList', true)
     }
+  }
+
+  handleReference(container) {
+    // avoid referenece callback re-generation
+    // https://github.com/facebook/react/issues/6249
+    this.container = container
   }
 
   addEntity(entityModal) {
@@ -674,7 +687,7 @@ class Network extends React.Component {
           </div>
         </PageHeader>
 
-        <PageContainer ref={container => this.container = container} className="network-entities-container">
+        <PageContainer ref={this.handleReference} className="network-entities-container">
           <div className="network-entities-wrapper">
             <EntityList
               fetching={accountFetching}
