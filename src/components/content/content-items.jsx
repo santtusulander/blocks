@@ -637,7 +637,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageIds: Immutable.Iterable(),
+  storageEntities: Immutable.List(),
   user: Immutable.Map()
 }
 
