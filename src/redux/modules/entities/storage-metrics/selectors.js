@@ -1,28 +1,16 @@
-import { fromJS } from 'immutable'
+import { getEntityMetricsById } from '../../entity/selectors'
 
-import { getEntityMetricsById, getEntityMetricsByParent } from '../../entity/selectors'
-
-const aggregateBytesByParent = (state, parentId, parentKey, comparison) => {
-
-  return getEntityMetricsByParent(state, 'storageMetrics', parentId, parentKey, comparison)
-
-    .reduce((aggregate, storageMetrics) => {
-
-      const pathsToUpdate = [ ['totals', 'bytes', 'average'], ['totals', 'bytes', 'peak'], ['totals', 'bytes', 'low'] ]
-
-      pathsToUpdate.forEach(path => {
-        aggregate = aggregate.updateIn(path, (value = 0) => value + storageMetrics.getIn(path))
-      })
-
-      return aggregate
-
-    }, fromJS({ totals: { bytes: {} } }))
+//Use preset id until we get better metrics data from the API.
+export const getByStorageId = (state, storageId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', 'music', 'ingest_point_id', comparison)
 }
 
-export const getByStorageId = (state, storageId, comparison) => getEntityMetricsById(state, 'storageMetrics', storageId, comparison)
+//Use preset id until we get better metrics data from the API.
+export const getByGroupId = (state, parentId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', 340, 'group_id', comparison)
+}
 
-export const getByGroupId = (state, parentId, comparison) => getEntityMetricsByParent(state, 'storageMetrics', parentId, 'group', comparison)
-
-export const getByAccountId = (state, parentId, comparison) => getEntityMetricsByParent(state, 'storageMetrics', parentId, 'account', comparison)
-
-export const getAggregatedBytesByAccountId = (state, parentId, comparison) => aggregateBytesByParent(state, parentId, 'account', comparison)
+//Use preset id until we get better metrics data from the API.
+export const getByAccountId = (state, parentId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', 239, 'account_id', comparison)
+}
