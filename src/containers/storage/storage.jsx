@@ -117,10 +117,16 @@ class Storage extends Component {
 Storage.displayName = 'Storage'
 
 Storage.propTypes = {
+  account: PropTypes.instanceOf(Map),
+  accountManagementModal: PropTypes.string,
   currentUser: PropTypes.instanceOf(Map),
+  group: PropTypes.instanceOf(Map),
   params: PropTypes.object,
+  router: PropTypes.object,
+  storage: PropTypes.instanceOf(Map),
   storageContents: PropTypes.array,
-  storageMetrics: PropTypes.object
+  storageMetrics: PropTypes.object,
+  toggleModal: PropTypes.func
 }
 
 Storage.defaultProps = {
