@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
-import { ButtonToolbar } from 'react-bootstrap'
+import { ButtonToolbar, Button } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router'
 import { Map } from 'immutable'
 
@@ -23,7 +23,8 @@ const StorageHeader = ({
   currentUser,
   intl,
   params,
-  router
+  router,
+  toggleConfigModal
 }) => {
   const itemSelectorTexts = {
     storage: intl.formatMessage({ id: 'portal.storage.topBar.storage.label' }),
@@ -83,11 +84,11 @@ const StorageHeader = ({
               to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
           <IconChart/>
         </Link>
-        <Link
+        <Button
           className="btn btn-primary btn-icon"
-          to={`${getContentUrl('storageConfiguration', params.storage, params)}`}>
+          onClick={() => {toggleConfigModal()}}>
           <IconConfiguration/>
-        </Link>
+        </Button>
       </ButtonToolbar>
     </PageHeader>
   )
@@ -99,7 +100,8 @@ StorageHeader.propTypes = {
   currentUser: React.PropTypes.instanceOf(Map),
   intl: intlShape,
   params: React.PropTypes.object,
-  router: React.PropTypes.object
+  router: React.PropTypes.object,
+  toggleConfigModal: React.PropTypes.func
 }
 
 export default withRouter(injectIntl(StorageHeader))
