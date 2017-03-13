@@ -39,4 +39,11 @@ $section-header-bottom-margin: rem(24px);
       margin: 0;
     }
   }
+
+  .upload-toggle-group {
+    display: inline-block;
+    min-width: $section-header-input-width;
+    line-height: $toggle-height; // the variable comes from _toggle.scss
+    vertical-align: middle;
+  }
 }
