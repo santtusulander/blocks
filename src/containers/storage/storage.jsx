@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
+import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 
@@ -20,6 +21,8 @@ import StorageContents from '../../components/storage/storage-contents'
 
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 
+import { getContentUrl } from '../../util/routes.js'
+
 class Storage extends Component {
   constructor(props) {
     super(props)
@@ -31,6 +34,7 @@ class Storage extends Component {
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
     this.editStorage = this.editStorage.bind(this)
+    this.onModalCancel = this.onModalCancel.bind(this)
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -40,6 +44,14 @@ class Storage extends Component {
   editStorage(storageId, groupId) {
     this.setState({ storageToEdit: storageId, storageGroup: groupId });
     this.props.toggleModal(EDIT_STORAGE);
+  }
+
+  onModalCancel() {
+    if (!this.props.storage) {
+      const { params, router } = this.props
+      router.push(getContentUrl('group', params.group, params))
+    }
+    this.props.toggleModal()
   }
 
   render() {
@@ -56,8 +68,7 @@ class Storage extends Component {
         values,
         gain,
         locations
-      },
-      toggleModal} = this.props
+      }} = this.props
 
     return (
       <Content>
@@ -95,7 +106,7 @@ class Storage extends Component {
             storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
             groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
             fetching={false}
-            onCancel={() => toggleModal()}
+            onCancel={this.onModalCancel}
           />
         }
       </Content>
@@ -204,4 +215,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Storage)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Storage))
