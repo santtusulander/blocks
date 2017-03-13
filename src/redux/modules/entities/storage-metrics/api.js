@@ -1,22 +1,54 @@
 import axios from 'axios'
-import { normalize, schema } from 'normalizr'
 
-import { analyticsBase, buildReduxId, qsBuilder } from '../../../util'
+import { analyticsBase, qsBuilder } from '../../../util'
 
 const URL = (params, getOverView = true) => {
   return `${analyticsBase({ legacy: false })}/storage/${getOverView ? 'get-overview' : 'get-by-region'}${qsBuilder(params)}`
 }
 
-/**
- * Normalization schema for metrics data
- * @type {schema}
- */
-const storageMetricsSchema = new schema.Entity('storageMetrics',
-  {},
-  { idAttribute: ({ group, ingest_point }) => buildReduxId(group, ingest_point) }
-)
-
 export const fetch = (urlParams) =>
-  axios.get(URL(urlParams)).then(({ data }) => {
-    return normalize(data.data, [ storageMetricsSchema ])
+  axios.get(URL(urlParams)).then(() => {
+    return {
+      storageMetrics: [
+        {
+          "account_id":239,
+          "group_id":340,
+          "ingest_point_id":"music",
+          totals: {
+            bytes: {
+              ending: 108000497044939,
+              peak: 71963080986145,
+              low: 36037416058794,
+              average: 54000248522470,
+              percent_change: 50.00
+            },
+            historical_bytes: {
+              ending: 108000497044939,
+              peak: 71963080986145,
+              low: 36037416058794,
+              average: 54000248522470,
+              percent_change: 50.00
+            },
+            file_count: {
+              ending: 108000497044939,
+              peak: 71963080986145,
+              low: 36037416058794,
+              average: 54000248522470,
+              percent_change: 50.00
+            },
+            historical_file_count: {
+              ending: 108000497044939,
+              peak: 71963080986145,
+              low: 36037416058794,
+              average: 54000248522470,
+              percent_change: 50.00
+            }
+          },
+          detail: [
+            {"files_count":26977,"bytes":3075897792836,"epoch_start":1489302000},
+            {"files_count":59336,"bytes":3404762206454,"epoch_start":1489284000}
+          ]
+        }
+      ]
+    }
   })
