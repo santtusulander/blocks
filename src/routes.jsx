@@ -69,6 +69,7 @@ import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificat
 import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
 import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
 import Services from './containers/services'
+import Storage from './containers/storage/storage'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'
 import Support from './containers/support/support'
@@ -274,6 +275,10 @@ export const getRoutes = store => {
             </Route>
             <Route path={routes.configurationTabStreaming} component={ConfigurationStreaming}/>
           </Route>
+
+          {/* Storage - routes */}
+          <Route path={routes.contentStorage} component={Storage} />
+
         </Route>
 
         {/* Network / SP Accounts - routes */}
@@ -372,6 +377,7 @@ export const getRoutes = store => {
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
           </Route>
         </Route>
 
