@@ -7,6 +7,7 @@ import HelpTooltip from '../../help-tooltip'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupToggle from '../../form/field-form-group-toggle'
+import FieldFormGroupNumber from '../../form/field-form-group-number'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi-option-selector'
 
@@ -111,7 +112,7 @@ class StorageForm extends React.Component {
             className="estimate-field"
             name="estimate"
             min={STORAGE_ESTIMATE_MIN}
-            component={FieldFormGroup}
+            component={FieldFormGroupNumber}
             label={<FormattedMessage id="portal.storage.storageForm.estimate.label" />}
             addonAfterLabel={
               <HelpTooltip
