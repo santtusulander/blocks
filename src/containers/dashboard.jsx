@@ -321,9 +321,11 @@ export class Dashboard extends React.Component {
             </div>}
         </DashboardPanel>
         { isCP &&
-          <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
-            <h2>Lorem Ipsum</h2>
-          </DashboardPanel>
+          <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
+            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
+              <h2>Lorem Ipsum</h2>
+            </DashboardPanel>
+          </IsAllowed>
         }
 
       </DashboardPanels>

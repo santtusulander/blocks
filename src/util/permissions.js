@@ -95,8 +95,17 @@ permissionMapping[PERMISSIONS.VIEW_GROUP] =
 
 // Storage Permissions
 permissionMapping[PERMISSIONS.VIEW_ANALYTICS_STORAGE] =
-  //TODO: UDNP-2872 - return the corrent permissions once the api is ready
-  () => true
+  (role) => role.getIn(['permissions', 'ui', 'analytics_storage_overview'])
+permissionMapping[PERMISSIONS.CREATE_STORAGE] =
+  (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'create', 'allowed'])
+permissionMapping[PERMISSIONS.VIEW_STORAGE] =
+  (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'show', 'allowed'])
+permissionMapping[PERMISSIONS.LIST_STORAGE] =
+  (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'list', 'allowed'])
+permissionMapping[PERMISSIONS.MODIFY_STORAGE] =
+  (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'modify', 'allowed'])
+permissionMapping[PERMISSIONS.DELETE_STORAGE] =
+  (role) => role.getIn(['permissions', 'cis', 'ingest_points', 'delete', 'allowed'])
 
 // Users Permissions
 permissionMapping[PERMISSIONS.CREATE_USER] =
@@ -264,6 +273,15 @@ export const getNODEPermissions = (roles, user) => ({
   modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_NODE)
 })
 
+export const getStoragePermissions = (roles, user) => ({
+  viewAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_STORAGE),
+  viewAnalyticAllowed: checkPermissions(roles, user, PERMISSIONS.VIEW_ANALYTICS_STORAGE),
+  listAllowed: checkPermissions(roles, user, PERMISSIONS.LIST_STORAGE),
+  createAllowed: checkPermissions(roles, user, PERMISSIONS.CREATE_STORAGE),
+  deleteAllowed: checkPermissions(roles, user, PERMISSIONS.DELETE_STORAGE),
+  modifyAllowed: checkPermissions(roles, user, PERMISSIONS.MODIFY_STORAGE)
+})
+
 /**
  * Determine if a user has a permission.
  * @param  {List}    roles       The roles list stored on the roles redux store.
@@ -276,7 +294,9 @@ export default function checkPermissions(roles, user, permission) {
   if (!userRoles) return false
 
   return userRoles.some(roleId => {
+
     const role = roles.find(role => role.get('id') === roleId)
+
     if ( role ) return permissionMapping[permission](role)
 
     return false
