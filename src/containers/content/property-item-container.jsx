@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { createSelectorCreator, defaultMemoize } from 'reselect'
-import { is, Map } from 'immutable'
-
+import { is, Map, List } from 'immutable'
+import d3 from 'd3'
 import ContentItemChart from '../../components/content/content-item-chart'
 import ContentItemList from '../../components/content/content-item-list'
 
@@ -12,17 +12,36 @@ import { isTrialHost, getConfiguredName } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 
 
-// const getMetrics =  (itemId) => {
-//   return this.props.metrics.find(metric => metric.get(this.props.type) === item.get('id'),
-//     null, Immutable.Map({ totalTraffic: 0 }))
-// }
-// const = getDailyTraffic = (itemId) {
-//   return this.props.dailyTraffic.find(traffic => traffic.get(this.props.type) === item.get('id'),
-//     null, Immutable.fromJS({ detail: [] }))
-// }
+const getPropertyMetricsById = (state, propertyId) => {
 
-//TODO: replace this with redux selector once storage metrics redux is ready in UDNP-2932
-const getStorageMetricsById = () => Map()
+  const entity = getPropertyById(state, propertyId)
+  const configuredName = getConfiguredName(entity)
+
+  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
+}
+
+/**
+ * getPropertyDailyTrafficById
+ * @param  {Object} redux state
+ * @param  {String|Number} propertyId
+ * @return {Map} dailyTraffic of a property
+ */
+const getPropertyDailyTrafficById = (state, propertyId) => {
+
+  const entity = getPropertyById(state, propertyId)
+  const configuredName = getConfiguredName(entity)
+
+  return state.metrics.get('hostDailyTraffic').find( metric => metric.get('property') === configuredName )
+}
+
+/**
+ * getTotalTraffics
+ * @param  {Object} state
+ * @return {List} List of totalTraffics
+ */
+const getTotalTraffics = (state) => {
+  return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
+}
 
 /**
  * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
@@ -38,46 +57,14 @@ const createDeepEqualSelector = createSelectorCreator(
  * @return {[function]} a function that when called, returns a memoized selector
  */
 const makeGetMetrics = () => createDeepEqualSelector(
-  getStorageMetricsById,
+  getPropertyMetricsById,
   metrics => metrics
 )
 
 const PropertyItemContainer = props => {
 
   const { published_host_id  } = props.entity.toJS()
-  const { params, entity, roles, user } = props
-
-  //const { bytes, historical_bytes } = props.entityMetrics.toJS()
-
-  // const itemProps = {
-  //   id,
-  //   name,
-  //   ...this.getTagText(userIsCloudProvider, item.get('provider_type'), isTrialHost),
-  //   brightMode: isTrialHost,
-  //   linkTo: this.props.nextPageURLBuilder(id, item),
-  //   disableLinkTo: activeAccount.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER,
-  //   configurationLink: this.props.configURLBuilder ? this.props.configURLBuilder(id) : null,
-  //   onConfiguration: this.getTier() === 'brand' || this.getTier() === 'account' ? () => {
-  //     this.editItem(id)
-  //   } : null,
-  //   analyticsLink: this.props.analyticsURLBuilder(id),
-  //   dailyTraffic: content.get('dailyTraffic').get('detail').reverse(),
-  //   description: 'Desc',
-  //   delete: this.props.deleteItem,
-  //   primaryData: contentMetrics.get('traffic'),
-  //   secondaryData: contentMetrics.get('historical_traffic'),
-  //   differenceData: contentMetrics.get('historical_variance'),
-  //   cacheHitRate: contentMetrics.get('avg_cache_hit_rate'),
-  //   timeToFirstByte: contentMetrics.get('avg_ttfb'),
-  //   maxTransfer: contentMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps'),
-  //   minTransfer: contentMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps'),
-  //   avgTransfer: contentMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps'),
-  //   fetchingMetrics: this.props.fetchingMetrics,
-  //   chartWidth: scaledWidth.toString(),
-  //   barMaxHeight: (scaledWidth / 7).toString(),
-  //   showSlices: this.props.showSlices,
-  //   isAllowedToConfigure: this.props.isAllowedToConfigure
-  // }
+  const { entityMetrics, dailyTraffic, totalTraffics, params, entity, roles, user } = props
 
   const analyticsURLBuilder = (property) => {
     return getAnalyticsUrlFromParams(
@@ -87,11 +74,25 @@ const PropertyItemContainer = props => {
     )
   }
 
-  const scaledWidth = 450
   const isTrial = isTrialHost( props.entity )
 
-  //
-  //const name = getConfiguredName( props.entity )
+  //Scale starbursts based on totalTraffic
+  let trafficMin = Math.min(...totalTraffics)
+  let trafficMax = Math.max(...totalTraffics)
+
+  trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+
+  const rangeMin = 400
+  const rangeMax = 500
+
+  const trafficScale = d3.scale.linear()
+    .domain([trafficMin, trafficMax])
+    .range([rangeMin, rangeMax]);
+
+  const totalTraffic = entityMetrics.get('totalTraffic')
+
+  //set to smallest size if no totalTraffic in metricsData
+  const scaledWidth = totalTraffic ? trafficScale( totalTraffic ) : rangeMin
 
   if (!props.viewingChart) {
     return(
@@ -102,14 +103,24 @@ const PropertyItemContainer = props => {
         brightMode={isTrial}
 
         linkTo={getContentUrl('propertySummary', published_host_id, params)}
-        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
         analyticsLink={analyticsURLBuilder(published_host_id)}
-
+        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
         isAllowedToConfigure={true}
+
+        primaryData={entityMetrics.get('traffic')}
+        secondaryData={entityMetrics.get('historical_traffic')}
+        differenceData={entityMetrics.get('historical_variance')}
+        cacheHitRate={entityMetrics.get('avg_cache_hit_rate')}
+        timeToFirstByte={entityMetrics.get('avg_ttfb')}
+        maxTransfer={entityMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
+        minTransfer={entityMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
+        avgTransfer={entityMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
+
+        dailyTraffic={dailyTraffic.get('detail') && dailyTraffic.get('detail').reverse()}
+        showSlices={true}
 
         chartWidth={scaledWidth}
         barMaxHeight={(scaledWidth / 7).toString()}
-        showSlices={true}
       />
     )
   }
@@ -122,14 +133,24 @@ const PropertyItemContainer = props => {
         brightMode={isTrial}
 
         linkTo={getContentUrl('propertySummary', published_host_id, params)}
-        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
         analyticsLink={analyticsURLBuilder(published_host_id)}
-
+        configurationLink={getContentUrl('propertyConfiguration', published_host_id, params)}
         isAllowedToConfigure={true}
+
+        primaryData={entityMetrics.get('traffic')}
+        secondaryData={entityMetrics.get('historical_traffic')}
+        differenceData={entityMetrics.get('historical_variance')}
+        cacheHitRate={entityMetrics.get('avg_cache_hit_rate')}
+        timeToFirstByte={entityMetrics.get('avg_ttfb')}
+        maxTransfer={entityMetrics.getIn(['transfer_rates','peak'], '0.0 Gbps')}
+        minTransfer={entityMetrics.getIn(['transfer_rates', 'lowest'], '0.0 Gbps')}
+        avgTransfer={entityMetrics.getIn(['transfer_rates', 'average'], '0.0 Gbps')}
+
+        dailyTraffic={dailyTraffic.get('detail') && dailyTraffic.get('detail').reverse()}
+        showSlices={true}
 
         chartWidth={scaledWidth}
         barMaxHeight={(scaledWidth / 7).toString()}
-        showSlices={true}
       />
   )
 }
@@ -137,12 +158,17 @@ const PropertyItemContainer = props => {
 PropertyItemContainer.displayName = 'PropertyItemContainer'
 
 PropertyItemContainer.propTypes = {
+  dailyTraffic: PropTypes.instanceOf(Map),
   entity: PropTypes.object,
-  entityMetrics: PropTypes.object
+  entityMetrics: PropTypes.object,
+  params: PropTypes.object,
+  viewingChart: PropTypes.bool
 }
 
 PropertyItemContainer.defaultProps = {
-  entity: Map()
+  dailyTraffic: Map(),
+  entityMetrics: Map(),
+  totalTraffics: List()
 }
 
 
@@ -153,14 +179,15 @@ PropertyItemContainer.defaultProps = {
  */
 const makeStateToProps = () => {
 
-  //const getMetrics = makeGetMetrics()
+  const getMetrics = makeGetMetrics()
 
   const stateToProps = (state, { propertyId }) => {
 
     return {
       entity: getPropertyById(state, propertyId),
-      //entityMetrics: getMetrics()
-
+      entityMetrics: getPropertyMetricsById(state, propertyId),
+      dailyTraffic: getPropertyDailyTrafficById(state, propertyId),
+      totalTraffics: getTotalTraffics(state),
       user: state.user,
       roles: state.roles
     }
