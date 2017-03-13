@@ -21,6 +21,10 @@ var server = new WebpackDevServer(compiler, {
   },
   //was: true,
   proxy: {
+    '/v1': {
+      target: 'http://cis-us-sjc-strg0-gtw0.cdx-dev.unifieddeliverynetwork.net:8080',
+      secure: false
+    },
     '/v2/service_info': {
       target: 'https://aaa-dal.cdx-dev.unifieddeliverynetwork.net:7999',
       secure: false
