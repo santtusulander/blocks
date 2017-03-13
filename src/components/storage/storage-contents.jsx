@@ -79,4 +79,4 @@ StorageContents.propTypes = {
   storageId: PropTypes.string
 }
 
-export default (StorageContents)
+export default StorageContents
