@@ -2,16 +2,25 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, change, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
-import Immutable from 'immutable'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import HelpTooltip from '../../../help-tooltip'
-import FieldFormGroup from '../../../form/field-form-group'
+import FieldFormGroupNumber from '../../../form/field-form-group-number'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 
 import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT, MIN_TTL, MAX_TTL } from '../../../../constants/configuration'
+
+const validate = ({ streamingEnabled, streaming_ttl }) => {
+  let errors = {}
+
+  if (streamingEnabled && !streaming_ttl) {
+    errors.streaming_ttl = <FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.required.error" />
+  }
+
+  return errors
+}
 
 export class TokenStreaming extends React.Component {
   constructor(props) {
@@ -31,6 +40,7 @@ export class TokenStreaming extends React.Component {
 
     if ((typeof this.props.isStreamingEnabled !== 'undefined') && (this.props.isStreamingEnabled !== isStreamingEnabled)) {
       if ( !isStreamingEnabled ) {
+        this.props.change('streamingEnabled', false)
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
       } else {
@@ -47,7 +57,7 @@ export class TokenStreaming extends React.Component {
   }
 
   render() {
-    const { close, handleSubmit, isStreamingEnabled } = this.props
+    const { close, handleSubmit, isStreamingEnabled, invalid } = this.props
 
     return (
       <div>
@@ -91,10 +101,9 @@ export class TokenStreaming extends React.Component {
           <br/>
 
           <Field
-            type="number"
             name="streaming_ttl"
             disabled={!isStreamingEnabled}
-            component={FieldFormGroup}
+            component={FieldFormGroupNumber}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.text" />}
             min={MIN_TTL}
             max={MAX_TTL}
@@ -112,7 +121,7 @@ export class TokenStreaming extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={false}
+              disabled={invalid}
             >
               <FormattedMessage id="portal.button.save"/>
             </Button>
@@ -126,12 +135,19 @@ export class TokenStreaming extends React.Component {
 TokenStreaming.displayName = 'TokenStreaming'
 TokenStreaming.propTypes = {
   close: React.PropTypes.func,
-  schema: React.PropTypes.instanceOf(Immutable.List),
+  streamingEnabled: React.PropTypes.bool,
+  streaming_add_ip_addr: React.PropTypes.bool,
   ...reduxFormPropTypes
 }
 
+TokenStreaming.defaultProps = {
+  streamingEnabled: false,
+  streaming_add_ip_addr: false
+}
+
 const form = reduxForm({
-  form: 'token-streaming-form'
+  form: 'token-streaming-form',
+  validate
 })(TokenStreaming)
 
 const selector = formValueSelector('token-auth-form')

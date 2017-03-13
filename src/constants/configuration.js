@@ -33,5 +33,5 @@ export const ENCRYPTION_OPTIONS = [
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 
-export const MIN_TTL = 0
+export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
