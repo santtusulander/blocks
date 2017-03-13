@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, change, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
@@ -14,7 +14,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { ENCRIPTION_OPTIONS, SCHEMA_DEFAULT, ENCRIPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
 
 const advancedOptions = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />, form: 'schema'},
@@ -25,13 +25,12 @@ export class TokenAuth extends React.Component {
   constructor(props) {
     super(props)
 
-    this. state = {
+    this.state = {
       detailForm: null
     }
 
     this.saveChanges = this.saveChanges.bind(this)
     this.closeDetailForm = this.closeDetailForm.bind(this)
-    this.encriptionChanged = this.encriptionChanged.bind(this)
   }
 
   componentWillMount() {
@@ -39,15 +38,16 @@ export class TokenAuth extends React.Component {
 
     this.props.change('shared_key', set.get('shared_key'))
     this.props.change('schema', set.get('schema') || Immutable.List(SCHEMA_DEFAULT))
-    this.props.change('encryption', set.get('encryption') || ENCRIPTION_DEFAULT)
+    this.props.change('encryption', set.get('encryption') || ENCRYPTION_DEFAULT)
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
   }
 
-  encriptionChanged() {
-    if (!this.props.isMd5) {
-      this.props.change('shared_key', null)
+  componentWillReceiveProps(nextProps) {
+    const { isMd5 } = nextProps
+    if ( isMd5 ) {
+      this.props.dispatch( change( 'token-auth-form', 'shared_key', null) )
     }
   }
 
@@ -73,6 +73,32 @@ export class TokenAuth extends React.Component {
 
   closeDetailForm() {
     this.setState({detailForm: null})
+  }
+
+  renderAdvancedOptions() {
+    return (
+      advancedOptions.map((option, i) => {
+        return (
+          <div
+            key={`option-${i}`}
+            className="flex-row options-item"
+          >
+            <div className="flex-item options-item--name">{option.label}</div>
+            <div className="flex-item arrow-right">
+              <a
+                className="btn btn-icon btn-transparent"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  this.setState({detailForm: option.form})
+                }}
+              >
+                <IconChevronRight />
+              </a>
+            </div>
+          </div>
+        )
+      })
+    )
   }
 
   render() {
@@ -105,8 +131,7 @@ export class TokenAuth extends React.Component {
               name="encryption"
               className="input-select"
               component={FieldFormGroupSelect}
-              onChange={this.encriptionChanged}
-              options={ENCRIPTION_OPTIONS}
+              options={ENCRYPTION_OPTIONS}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.hash_function.text" />}
             />
 
@@ -127,27 +152,7 @@ export class TokenAuth extends React.Component {
 
             <br/>
 
-            {advancedOptions.map((option, i) => {
-              return (
-                <div
-                  key={`option-${i}`}
-                  className="flex-row options-item"
-                >
-                  <div className="flex-item options-item--name">{option.label}</div>
-                  <div className="flex-item arrow-right">
-                    <a
-                      className="btn btn-icon btn-transparent"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        this.setState({detailForm: option.form})
-                      }}
-                    >
-                      <IconChevronRight />
-                    </a>
-                  </div>
-                </div>
-              )
-            })}
+            {this.renderAdvancedOptions()}
 
             <FormFooterButtons>
               <Button

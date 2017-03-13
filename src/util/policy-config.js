@@ -91,10 +91,6 @@ export function actionIsTokenAuth(sets) {
   return sets.some( set => (set.setkey === 'tokenauth') )
 }
 
-// const getTokenAuthType = (action) => {
-//   return action.get('tokenauth').get('type') === 'standard' ? 'tokenauth-static' : 'tokenauth-streaming'
-// }
-
 export function parsePolicy(policy, path) {
   // if this is a match
   if(policy && policy.has('match')) {

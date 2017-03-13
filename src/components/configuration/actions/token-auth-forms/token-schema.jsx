@@ -60,7 +60,7 @@ export class TokenSchema extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={false}
+              disabled={!selectedSchema.size}
             >
               <FormattedMessage id="portal.button.save"/>
             </Button>

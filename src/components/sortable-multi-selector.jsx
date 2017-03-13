@@ -82,9 +82,7 @@ class SortableMultiSelector extends React.Component {
     const value = this.props.value || List()
 
     const filteredOptions = options
-                            .filter(option => !value.contains(option.value))
-                            .map(option => Object.assign({}, option, {handleClick: this.addItem}))
-    const disableAddItem = () => !filteredOptions.length
+                            .map(option => Object.assign({}, option, { handleClick: this.addItem, disabled: value.contains(option.value) }))
     const actions = {
       moveItem: this.moveItem,
       deleteItem: this.deleteItem
@@ -101,7 +99,6 @@ class SortableMultiSelector extends React.Component {
           <ButtonDropdown
             bsStyle="primary"
             options={filteredOptions}
-            disabled={disableAddItem()}
             pullRight={true}
           />
         </div>
@@ -120,7 +117,7 @@ class SortableMultiSelector extends React.Component {
 
 SortableMultiSelector.displayName = 'SortableMultiSelector'
 SortableMultiSelector.propTypes = {
-  label: PropTypes.object,
+  label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   onChange: PropTypes.func,
   options: PropTypes.array,
   required: PropTypes.bool,

@@ -1,3 +1,6 @@
+$input-width: 324px;
+$input-height: 36px;
+
 .options-item {
   min-height: $bar-height;
   padding-left: 15px;
@@ -18,5 +21,23 @@
 
   &--name {
     font-weight: bold;
+  }
+}
+
+.token-streaming-form {
+  .tooltip-help {
+    .btn-icon {
+      width: $input-height;
+      height: $input-height;
+      margin: -5px 0 0 20px;
+      color: $white;
+      background-color: rgba($black, 0.2);
+      border-radius: 50%;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
   }
 }

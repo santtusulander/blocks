@@ -220,6 +220,14 @@ $search-input-left-padding: em(36px, $search-font-size);
         background-color: rgba($white, 0.2);
       }
     }
+
+    &.disabled > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $grey-60;
+      }
+    }
   }
 }
 

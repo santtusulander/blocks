@@ -22,7 +22,7 @@ export const SCHEMA_OPTIONS = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.end_date.text"/>, value: 'END_DATE'}
 ]
 
-export const ENCRIPTION_OPTIONS = [
+export const ENCRYPTION_OPTIONS = [
   {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
   {label: 'HMAC-SHA256', value: 'HMAC_SHA256'},
   {label: 'HMAC-MD5', value: 'HMAC_MD5'},
@@ -30,4 +30,4 @@ export const ENCRIPTION_OPTIONS = [
 ]
 
 export const SCHEMA_DEFAULT = ['URL']
-export const ENCRIPTION_DEFAULT = 'HMAC_SHA1'
+export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'

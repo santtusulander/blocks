@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
+import HelpTooltip from '../../../help-tooltip'
 import FieldFormGroup from '../../../form/field-form-group'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
@@ -17,7 +18,6 @@ export class TokenStreaming extends React.Component {
     super(props)
 
     this.saveChanges = this.saveChanges.bind(this)
-    this.streamingToggle = this.streamingToggle.bind(this)
   }
 
   componentWillMount() {
@@ -26,15 +26,17 @@ export class TokenStreaming extends React.Component {
     this.props.change('streaming_add_ip_addr', this.props.streaming_add_ip_addr)
   }
 
-  streamingToggle(value) {
-    if (!value) {
-      this.props.change('streaming_ttl', null)
-      this.props.change('streaming_add_ip_addr', false)
-    } else {
-      this.props.change('streaming_ttl', TTL_DEFAULT)
-    }
+  componentWillReceiveProps(nextProps) {
+    const { isStreamingEnabled } = nextProps
 
-    this.props.change('streamingEnabled', value)
+    if ((typeof this.props.isStreamingEnabled !== 'undefined') && (this.props.isStreamingEnabled !== isStreamingEnabled)) {
+      if ( !isStreamingEnabled ) {
+        this.props.change('streaming_ttl', null)
+        this.props.change('streaming_add_ip_addr', false)
+      } else {
+        this.props.change('streaming_ttl', TTL_DEFAULT)
+      }
+    }
   }
 
   saveChanges({ streaming_ttl, streaming_add_ip_addr }) {
@@ -49,9 +51,11 @@ export class TokenStreaming extends React.Component {
 
     return (
       <div>
-        <form onSubmit={handleSubmit(this.saveChanges)}>
-
-         <div className="flex-row options-item">
+        <form
+          className="token-streaming-form"
+          onSubmit={handleSubmit(this.saveChanges)}
+        >
+          <div className="flex-row options-item">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.streaming_toggle.text" />
             </div>
@@ -59,7 +63,6 @@ export class TokenStreaming extends React.Component {
               name="streamingEnabled"
               className="flex-item pull-right"
               component={FieldFormGroupToggle}
-              onToggle={this.streamingToggle}
             />
           </div>
 
@@ -68,6 +71,14 @@ export class TokenStreaming extends React.Component {
           <div className="flex-row options-item">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.check_client_ip.text" />
+              <span className="tooltip-help">
+                <HelpTooltip
+                  id="tooltip-help"
+                  title={<FormattedMessage id="portal.policy.edit.tokenauth.check_client_ip.text"/>}
+                >
+                  <FormattedMessage id="portal.policy.edit.tokenauth.check_client_ip.help.text" />
+                </HelpTooltip>
+              </span>
             </div>
             <Field
               name="streaming_add_ip_addr"
@@ -80,7 +91,7 @@ export class TokenStreaming extends React.Component {
           <br/>
 
           <Field
-            type="text"
+            type="number"
             name="streaming_ttl"
             disabled={!isStreamingEnabled}
             component={FieldFormGroup}
