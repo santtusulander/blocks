@@ -4,7 +4,9 @@ import { Map, List } from 'immutable'
 
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { defaultStorageSelector, defaultStorageMetricsSelector, getClusterNames } from './selectors'
+import { getStorageById, getClusterNames } from './selectors'
+
+import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 import AggregatedStorageChart from './aggregated-storage-chart'
 import StorageItemChart from '../../components/content/storage-item-chart'
@@ -22,7 +24,7 @@ const StorageChartContainer = props => {
         onConfigurationClick={props.onConfigurationClick}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
-        locations={props.clusters}
+        locations={List()}
         currentUsage={bytes.average}
         estimate={estimated_usage}
         peak={bytes.peak}
@@ -36,7 +38,7 @@ StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
   analyticsLink: PropTypes.string,
-  clusters: PropTypes.instanceOf(List),
+  // clusters: PropTypes.instanceOf(List),
   onConfigurationClick: PropTypes.func,
   showingAggregate: PropTypes.bool,
   storageContentLink: PropTypes.string,
@@ -55,15 +57,15 @@ StorageChartContainer.defaultProps = {
  */
 const makeStateToProps = () => {
 
+  const getClusters = makeMemoizedSelector(getClusterNames)
   const getMetrics = makeMemoizedSelector()
   const getStorageEntity = makeMemoizedSelector()
-  const getClusters = makeMemoizedSelector()
 
   const stateToProps = (state, ownProps) => {
 
     const {
-      entitySelector = defaultStorageSelector,
-      metricsSelector = defaultStorageMetricsSelector
+      entitySelector = getStorageById,
+      metricsSelector = getByStorageId
     } = ownProps
 
     const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
@@ -71,7 +73,7 @@ const makeStateToProps = () => {
     // Get cluster descriptions by their IDs inside a storage entity if the chart
     // isn't showing aggregate data.
     const clusters = !ownProps.showingAggregate
-      ? getClusters(state, storageEntity.get('clusters'), getClusterNames)
+      ? getClusters(state, storageEntity.get('clusters'))
       : undefined
 
     return {

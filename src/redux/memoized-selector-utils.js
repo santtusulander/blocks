@@ -10,11 +10,12 @@ export const createDeepEqualSelector = createSelectorCreator(
 )
 
 /**
- * Make an own selector for every instance of this component to cache selector results per instance
+ * Make an own selector for every instance of a component to cache selector results per instance
+ *
  * @return {[function]} a function that when called, returns a memoized selector
  */
-export const makeMemoizedSelector = () => createDeepEqualSelector(
-  (state, props, selector) => {
+export const makeMemoizedSelector = (defaultSelector) => createDeepEqualSelector(
+  (state, props, selector = defaultSelector) => {
     return selector(state, props)
   },
   data => data
