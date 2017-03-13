@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
+
+import SectionContainer from '../layout/section-container'
 import MiniChart from '../mini-chart'
 import ComparisonBars from './comparison-bars'
 
@@ -29,7 +31,7 @@ const StorageKPI = ({
   valuesUnit
 }) => {
   return (
-    <div>
+    <SectionContainer>
       <div className='storage-kpi-item'>
         <KPIFormattedMessage id='portal.storage.kpi.current.title' type='title' />
         <div className='storage-kpi-item-content'>
@@ -79,7 +81,7 @@ const StorageKPI = ({
           <div className='storage-kpi-text'>{locations.join(', ')}</div>
         </div>
       </div>
-    </div>
+    </SectionContainer>
   )
 }
 
