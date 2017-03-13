@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Col, FormGroup } from 'react-bootstrap'
+import { Map } from 'immutable'
 
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
@@ -9,7 +10,7 @@ import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -20,6 +21,10 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
                             files: contents.filter((item) => item.type === 'file').length}} />)
                       :
                         <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
+
+  const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
+  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
+  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
 
   return (
     <SectionContainer>
@@ -41,23 +46,23 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
         <ButtonDropdown
           bsStyle="success"
           pullRight={true}
+          disabled={uploadButtonIsDisabled}
           options={[
             {
               label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-              handleClick: () => {}
+              handleClick: asperaUpload ? asperaShowSelectFileDialog : () => {}
             },
             {
               label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
-              handleClick: () => {}
+              handleClick: asperaUpload ? asperaShowSelectFolderDialog : () => {}
             }
           ]}
         />
       </SectionHeader>
       { hasContents
-        ?
-          <StorageContentBrowser contents={contents} />
-        :
-          asperaUpload ? <AsperaUpload /> : <span>http-upload</span>
+        ? <StorageContentBrowser contents={contents} />
+        : asperaUpload
+        ? <AsperaUpload multiple={true} storageId={storageId} asperaGetaway={gatewayHostname} /> : <span>http-upload</span>
       }
     </SectionContainer>
   )
@@ -66,9 +71,12 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle }) => {
 StorageContents.displayName = 'StorageContents'
 
 StorageContents.propTypes = {
+  asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
   contents: PropTypes.array,
-  onMethodToggle: PropTypes.func
+  gatewayHostname: PropTypes.string,
+  onMethodToggle: PropTypes.func,
+  storageId: PropTypes.string
 }
 
 export default StorageContents
