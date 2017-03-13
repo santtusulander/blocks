@@ -91,6 +91,8 @@ export function getContentUrl(linkType, val, params) {
       return getRoute('contentProperty', { ...params, property: val })
     case 'propertyConfiguration':
       return getRoute('contentPropertyConfiguration', { ...params, property: val })
+    case 'storage':
+      return getRoute('contentStorage', { ...params, storage: val })
   }
 }
 

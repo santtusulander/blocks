@@ -1,6 +1,7 @@
 // Side Panels
 // ===========
 $side-panel-width: rem(636px);
+$side-panel-narrow-width: rem(536px);
 $side-panel-horizontal-padding: rem(42px);
 $side-panel-header-height: rem(127px);
 $side-panel-header-top-padding: rem(30px);
@@ -132,5 +133,13 @@ $side-panel-overlap-offset: rem(15px);
   &.side-panel--overlapping {
     right: -($side-panel-overlap-offset);
     box-shadow: 0 0 50px 0 rgba($black, 0.4);
+  }
+
+  &.narrow {
+    width: $side-panel-narrow-width;
+
+      @include sm {
+        max-width: $side-panel-narrow-width;
+      }
   }
 }

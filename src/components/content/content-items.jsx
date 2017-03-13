@@ -15,7 +15,7 @@ import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl
 } from '../../util/routes'
-import { userIsCloudProvider } from '../../util/helpers'
+import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -253,8 +253,8 @@ class ContentItems extends React.Component {
     return { tagText: tagText }
   }
 
-  renderAddButton () {
-    if(this.getTier() === 'group'){
+  renderAddButton (storageCreationIsAllowed) {
+    if(this.getTier() === 'group' && storageCreationIsAllowed){
       return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
     }
 
@@ -322,9 +322,12 @@ class ContentItems extends React.Component {
       properties,
       params,
       locationPermissions,
-      //storageContentItems,
+      storagePermission,
       params: { brand, account, group }
     } = this.props
+
+    const { createAllowed } = storagePermission
+    const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
 
     const contentItems = this.props.contentItems.map(item => {
@@ -388,7 +391,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton()}
+                {this.renderAddButton(createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -430,6 +433,10 @@ class ContentItems extends React.Component {
 
 
               {/*!storageContentItems.isEmpty() &&
+=======
+              {!storageContentItems.isEmpty() && groupHasStorageService &&
+                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+>>>>>>> develop
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
@@ -470,6 +477,7 @@ class ContentItems extends React.Component {
                   </div>
                   <br />
                   <br />
+<<<<<<< HEAD
                 </div>*/}
 
 
@@ -481,29 +489,34 @@ class ContentItems extends React.Component {
                   this.getTier() === 'group' && !viewingChart &&
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
-                {/* Storages */}
-                { storages.map( storage => {
-                  if (viewingChart) {
-                    return (
-                      <StorageChartContainer
-                        key={storage.get('ingest_point_id')}
-                        storageId={storage.get('ingest_point_id')}
-                        params={params}
-                        viewingChart={viewingChart}
-                      />
-                    )
-                  } else {
-                    return (
-                      <StorageListContainer
-                        key={storage.get('ingest_point_id')}
-                        storageId={storage.get('ingest_point_id')}
-                        params={params}
-                        viewingChart={viewingChart}
-                      />
-                    )
-                  }
-                })
-                }
+                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+                  <div className="storage-wrapper">
+
+                    {/* Storages */}
+                    { storages.map( storage => {
+                      if (viewingChart) {
+                        return (
+                          <StorageChartContainer
+                            key={storage.get('ingest_point_id')}
+                            storageId={storage.get('ingest_point_id')}
+                            params={params}
+                            viewingChart={viewingChart}
+                          />
+                        )
+                      } else {
+                        return (
+                          <StorageListContainer
+                            key={storage.get('ingest_point_id')}
+                            storageId={storage.get('ingest_point_id')}
+                            params={params}
+                            viewingChart={viewingChart}
+                          />
+                        )
+                      }
+                    })
+                    }
+                  </div>
+                </IsAllowed>
 
                 { /* PROPETIES -header on List view */
                   this.getTier() === 'group' && !viewingChart &&
@@ -668,6 +681,7 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
+  storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -683,7 +697,8 @@ ContentItems.defaultProps = {
   storageContentItems: Immutable.List(),
   storages: Immutable.List(),
   properties: Immutable.List(),
-  user: Immutable.Map()
+  user: Immutable.Map(),
+  storagePermission: {}
 }
 
 export default withRouter(ContentItems)

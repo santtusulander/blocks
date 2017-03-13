@@ -7,6 +7,8 @@ import { getById as getStorageById } from '../../redux/modules/entities/CIS-inge
 import { buildReduxId } from '../../redux/util'
 import StorageItemChart from '../../components/content/storage-item-chart'
 
+import { getContentUrl } from '../../util/routes'
+
 const mockMetrics = {
   bytes: {
     ending: 108000497044939,
@@ -46,7 +48,6 @@ const makeGetMetrics = () => createDeepEqualSelector(
 )
 
 const StorageChartContainer = props => {
-
   const { clusters, ingest_point_id, estimated_usage } = props.entity.toJS()
   const { bytes, historical_bytes } = props.entityMetrics.toJS()
   return (
@@ -54,7 +55,7 @@ const StorageChartContainer = props => {
         key={ingest_point_id}
         analyticsLink={/*TODO: UDNP-2932*/'#'}
         configurationLink={/*TODO: UDNP-2932*/'#'}
-        storageContentLink={/*TODO: UDNP-2925*/'#'}
+        storageContentLink={getContentUrl('storage', ingest_point_id, props.params)}
         name={ingest_point_id}
         locations={clusters}
         currentUsage={bytes.average}
@@ -70,7 +71,8 @@ StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
   entity: PropTypes.object,
-  entityMetrics: PropTypes.object
+  entityMetrics: PropTypes.object,
+  params: PropTypes.object
 }
 
 StorageChartContainer.defaultProps = {
