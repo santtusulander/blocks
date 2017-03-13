@@ -13,8 +13,7 @@ class ConfigurationStreaming extends Component {
   }
 
   toggleVodStreaming(val) {
-    /* TODO: UDNP-2819 - Update Streaming tab once API is ready */
-    this.props.changeValue(['services', 'allow_cookies'], val)
+    this.props.changeValue(['edge_configuration', 'msd_enabled'], val)
   }
 
   render() {
@@ -36,10 +35,9 @@ class ConfigurationStreaming extends Component {
               </ControlLabel>
             </Col>
             <Col xs={9}>
-              {/* TODO: UDNP-2819 - Update Streaming tab once API is ready */}
               <Toggle
                 readonly={readOnly}
-                value={config.getIn(['services', 'allow_cookies'])}
+                value={config.getIn(['edge_configuration', 'msd_enabled'])}
                 changeValue={(val) => this.toggleVodStreaming(val)}/>
             </Col>
           </FormGroup>
