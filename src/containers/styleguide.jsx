@@ -82,6 +82,7 @@ import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
 import IconContent       from '../components/icons/icon-content'
+import IconClock         from '../components/icons/icon-clock'
 import IconDelete        from '../components/icons/icon-delete'
 import IconEdit          from '../components/icons/icon-edit'
 import IconEmail         from '../components/icons/icon-email'
@@ -1410,6 +1411,11 @@ class Styleguide extends React.Component {
             <IconFolder />
             <br />
             IconFolder
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconClock />
+            <br />
+            IconClock
           </span>
         </div>
 
