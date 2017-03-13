@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { List } from 'immutable'
 
 import StorageItemChart from '../../components/content/storage-item-chart'
 
 import { formatBytes, separateUnit } from '../../util/helpers'
 
 const FORMAT = '0'
-const emptyArray = []
+const emptyList = List()
 
 const AggregatedStorageChart = ({ bytes, estimate }) => {
   return (
@@ -23,8 +24,8 @@ const AggregatedStorageChart = ({ bytes, estimate }) => {
         </div>
       </div>
       <StorageItemChart
-        locations={emptyArray}
-        name={<FormattedMessage id="portal.account.storages.table.usage.text" />}
+        locations={emptyList}
+        name={<FormattedMessage id="portal.account.storage.table.usage.text" />}
         currentUsage={bytes.average}
         estimate={estimate}
         peak={bytes.peak}/>
@@ -32,7 +33,7 @@ const AggregatedStorageChart = ({ bytes, estimate }) => {
   )
 }
 
-AggregatedStorageChart.displayName = "AggregateStorageStarburstWrapper"
+AggregatedStorageChart.displayName = "AggregatedStorageChart"
 
 AggregatedStorageChart.propTypes = {
   bytes: PropTypes.object,

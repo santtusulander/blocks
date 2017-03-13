@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
+import { List } from 'immutable'
 import { PieChart, Pie } from 'recharts'
 import { Link } from 'react-router'
-import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Button, ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
@@ -16,7 +17,7 @@ const defaultDiameter = 240
 
 const StorageItemChart = (
   { analyticsLink,
-    configurationLink,
+    onConfigurationClick,
     storageContentLink,
     diameter,
     name,
@@ -96,10 +97,10 @@ const StorageItemChart = (
   )
 
   //TODO: replace storageLocations when the api is ready
-  const storageLocations = locations.length === 1 ?
-    <span>{locations[0]}</span> :
-    locations.map((location, i) => (
-      <span key={i}>{location.slice(0, 2)}{(i + 1) !== locations.length ? ', ' : ''}</span>
+  const storageLocations = locations.size === 1 ?
+    <span>{locations.first()}</span> :
+    locations.map((location = '', i) => (
+      <span key={i}>{location.slice(0, 2)}{(i + 1) !== locations.size ? ', ' : ''}</span>
     ))
 
   return (
@@ -144,11 +145,11 @@ const StorageItemChart = (
                   <IconChart/>
               </Link>
             }
-            {configurationLink &&
-              <Link to={configurationLink}
+            {onConfigurationClick &&
+              <Button onClick={onConfigurationClick}
                 className="btn btn-icon btn-round invisible">
                 <IconConfiguration/>
-            </Link>}
+            </Button>}
           </ButtonToolbar>
         </div>
       </div>
@@ -157,17 +158,21 @@ const StorageItemChart = (
 }
 
 StorageItemChart.displayName = 'StorageItemChart'
+StorageItemChart.defaultProps = {
+  locations: List()
+}
+
 StorageItemChart.propTypes = {
   analyticsLink: PropTypes.string,
-  configurationLink: PropTypes.string,
   currentUsage: PropTypes.number,
   diameter: PropTypes.number,
   estimate: PropTypes.number,
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
-  locations: PropTypes.array.isRequired,
+  locations: PropTypes.instanceOf(List).isRequired,
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  onConfigurationClick: PropTypes.func,
   peak: PropTypes.number,
   storageContentLink: PropTypes.string
 };
