@@ -4,6 +4,7 @@ import { fromJS } from 'immutable'
 import { getAnalysisErrorCodes } from '../../util/status-codes'
 import { AVAILABLE_THEMES } from '../../constants/themes'
 
+const UI_SET_ASPERA_INSTANSE = 'UI_SET_ASPERA_INSTANSE'
 const UI_LOGIN_URL_SET = 'UI_LOGIN_URL_SET'
 const UI_THEME_CHANGED = 'UI_THEME_CHANGED'
 const UI_CHART_VIEW_TOGGLED = 'UI_CHART_VIEW_TOGGLED'
@@ -43,6 +44,11 @@ export const docBody = document.body
 docBody.className += theme + '-theme'
 
 export const defaultUI = fromJS({
+  asperaUploadInstanse: {
+    asperaInitialized: false,
+    asperaShowSelectFileDialog: null,
+    asperaShowSelectFolderDialog: null
+  },
   accountManagementModal: null,
   asperaNotification: '',
   networkModal: null,
@@ -70,6 +76,9 @@ export const getTheme = (state) => {
 }
 
 // REDUCERS
+export function configureAsperaUploadInstanse(state, action) {
+  return state.merge({ asperaUploadInstanse: action.payload })
+}
 
 export function accountManagementModalToggled(state, action) {
   return state.merge({ accountManagementModal: action.payload })
@@ -190,6 +199,7 @@ export function policyActiveRuleChanged(state, action) {
 }
 
 export default handleActions({
+  UI_SET_ASPERA_INSTANSE: configureAsperaUploadInstanse,
   UI_ACCOUNT_MANAGEMENT_MODAL_TOGGLED: accountManagementModalToggled,
   UI_NETWORK_MODAL_TOGGLED: networkModalToggled,
   UI_THEME_CHANGED: themeChanged,
@@ -214,6 +224,7 @@ export default handleActions({
 
 // ACTIONS
 
+export const setAsperaUploadInstanse = createAction(UI_SET_ASPERA_INSTANSE)
 export const setLoginUrl = createAction(UI_LOGIN_URL_SET)
 export const changeTheme = createAction(UI_THEME_CHANGED)
 export const toggleChartView = createAction(UI_CHART_VIEW_TOGGLED)
