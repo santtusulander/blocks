@@ -9,12 +9,15 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupToggle from '../../form/field-form-group-toggle'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import FieldFormGroupMultiOptionSelector from '../../form/field-form-group-multi-option-selector'
+import IsAllowed from '../../is-allowed'
 
 import { checkForErrors, formatBytes, separateUnit } from '../../../util/helpers'
 import { isValidStorageName, isValidEstimatedUsage } from '../../../util/validators'
 import { STORAGE_ESTIMATE_UNITS,  STORAGE_ESTIMATE_UNITS_DEFAULT,
          STORAGE_ESTIMATE_DEFAULT, STORAGE_ABR_DEFAULT,
          STORAGE_ESTIMATE_MIN } from '../../../constants/storage'
+import { DELETE_STORAGE } from '../../../constants/permissions.js'
+
 
 const validate = ({ name, locations, estimate, estimate_unit, abr, abrProfile }) => {
   const conditions = {
@@ -160,13 +163,15 @@ class StorageForm extends React.Component {
 
         <FormFooterButtons>
           { edit &&
-            <Button
-              id="delete-btn"
-              className="btn-danger pull-left"
-              onClick={handleSubmit(() => onDelete(initialValues.name))}
-            >
-              <FormattedMessage id="portal.button.delete"/>
-            </Button>
+            <IsAllowed to={DELETE_STORAGE}>
+              <Button
+                id="delete-btn"
+                className="btn-danger pull-left"
+                onClick={handleSubmit(() => onDelete(initialValues.name))}
+              >
+                <FormattedMessage id="portal.button.delete"/>
+              </Button>
+            </IsAllowed>
           }
           <Button
             className="btn-secondary"
