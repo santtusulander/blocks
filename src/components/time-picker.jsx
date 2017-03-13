@@ -16,10 +16,13 @@ const TimePicker = ({ time, onChange, isUTC }) => {
           className="has-left-icon"
           noCaret={true}
         >
-          <IconClock className="left"/>
+          <IconClock className="left" />
+
           {value}
-          <IconSelectCaret/>
+
+          <IconSelectCaret />
         </Dropdown.Toggle>
+
         <Dropdown.Menu className="dropdown-menu">
           <Datetime
             className="time-picker"
