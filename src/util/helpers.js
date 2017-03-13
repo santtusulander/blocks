@@ -10,7 +10,6 @@ import { ROLES_MAPPING, ACCOUNT_TYPE_SERVICE_PROVIDER, ACCOUNT_TYPE_CONTENT_PROV
 import AnalyticsTabConfig from '../constants/analytics-tab-config'
 import { getAnalysisStatusCodes, getAnalysisErrorCodes } from './status-codes'
 import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
-import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
 
 const BYTE_BASE = 1000
 
@@ -659,7 +658,7 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
   return { byTimeOpts, fetchOpts, byCityOpts, dashboardOpts }
 }
 
-export function hasStorageService(group) {
+export function hasService(group, serviceID) {
   const services = group.get('services')
-  return services && !services.filter(service => service.get('service_id') === STORAGE_SERVICE_ID).isEmpty()
+  return services && services.some(service => service.get('service_id') === serviceID)
 }

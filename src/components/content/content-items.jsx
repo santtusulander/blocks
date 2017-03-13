@@ -11,11 +11,12 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
+import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl
 } from '../../util/routes'
-import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -325,7 +326,7 @@ class ContentItems extends React.Component {
     } = this.props
 
     const { createAllowed } = storagePermission
-    const groupHasStorageService = hasStorageService(activeGroup)
+    const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/

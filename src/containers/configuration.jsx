@@ -18,11 +18,12 @@ import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selector
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
-import { hasStorageService } from '../util/helpers'
+import { hasService } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
 import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
 import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
+import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -509,7 +510,7 @@ function mapStateToProps(state) {
   const enabledServices = activeGroup.get('services') || Immutable.List()
   let hasVODSupport = false
 
-  const groupHasStorageService = hasStorageService(activeGroup)
+  const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   const storagePermission = getStoragePermissions(roles.get('roles'), state.user.get('currentUser'))
 
   enabledServices.forEach((service) => {
@@ -528,7 +529,7 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
     hasVODSupport: hasVODSupport,
-    groupHasStorageService: groupHasStorageService,
+    groupHasStorageService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
