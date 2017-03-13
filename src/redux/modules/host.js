@@ -55,9 +55,9 @@ export function deleteSuccess(state, action) {
   })
 }
 
-export function deleteFailure(state, action) {
+export function deleteFailure(state) {
   return state.merge({
-    activeHost: Immutable.fromJS(action.payload),
+    activeHost: null,
     fetching: false
   })
 }
