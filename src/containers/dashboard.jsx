@@ -374,6 +374,8 @@ export class Dashboard extends React.Component {
   render() {
     const { activeAccount, fetching, filterOptions, filters, intl, params, router, user } = this.props
     const showFilters = List(['dateRange'])
+    const dashboardParams = { brand: params.brand, account: params.account }
+    // dashboard won't allow to drill down group, even it exist in params
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
       DateRanges.LAST_MONTH,
@@ -387,10 +389,10 @@ export class Dashboard extends React.Component {
           <IsAllowed to={PERMISSIONS.VIEW_CONTENT_ACCOUNTS}>
             <AccountSelector
               as="dashboard"
-              params={params}
+              params={dashboardParams}
               topBarTexts={{ brand: 'UDN Admin' }}
               topBarAction={() => router.push(getDashboardUrl('brand', 'udn', {}))}
-              onSelect={(...params) => router.push(getDashboardUrl(...params))}
+              onSelect={(...dashboardParams) => router.push(getDashboardUrl(...dashboardParams))}
               drillable={false}
               restrictedTo="account">
               <div className="btn btn-link dropdown-toggle header-toggle">

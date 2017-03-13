@@ -15,7 +15,7 @@ import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl
 } from '../../util/routes'
-import { userIsCloudProvider } from '../../util/helpers'
+import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
 
 import { buildReduxId } from '../../redux/util'
 
@@ -253,8 +253,8 @@ class ContentItems extends React.Component {
     return { tagText: tagText }
   }
 
-  renderAddButton () {
-    if(this.getTier() === 'group'){
+  renderAddButton (storageCreationIsAllowed) {
+    if(this.getTier() === 'group' && storageCreationIsAllowed){
       return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
     }
 
@@ -321,8 +321,12 @@ class ContentItems extends React.Component {
       storageEntities,
       locationPermissions,
       storageContentItems,
+      storagePermission,
       params: { brand, account, group }
     } = this.props
+
+    const { createAllowed, listAllowed } = storagePermission
+    const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
@@ -381,7 +385,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton()}
+                {this.renderAddButton(createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
@@ -419,7 +423,8 @@ class ContentItems extends React.Component {
               transitionEnterTimeout={400}
               transitionLeaveTimeout={250}>
 
-              {!storageContentItems.isEmpty() &&
+              {!storageContentItems.isEmpty() && groupHasStorageService &&
+                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                 <div>
                   {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
                   <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
@@ -460,7 +465,8 @@ class ContentItems extends React.Component {
                   </div>
                   <br />
                   <br />
-                </div>}
+                  </div>
+                </IsAllowed>}
 
               {this.getTier() === 'group' && !viewingChart &&
                 <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
@@ -468,16 +474,19 @@ class ContentItems extends React.Component {
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
-                {viewingChart && storageEntities.map(storage => {
-                  const storageId = buildReduxId(group, storage.get('ingest_point_id'))
+                  {listAllowed
+                    && viewingChart
+                    && groupHasStorageService
+                    && storageEntities.map(storage => {
+                      const storageId = buildReduxId(group, storage.get('ingest_point_id'))
 
-                  return (
-                    <StorageChartContainer
-                      key={storageId}
-                      storageId={storageId}
-                      analyticsLink={/*TODO: UDNP-2932*/'#'}
-                      storageContentLink={/*TODO: UDNP-2925*/'#'}/>)
-                })}
+                      return (
+                        <StorageChartContainer
+                          key={storageId}
+                          storageId={storageId}
+                          analyticsLink={/*TODO: UDNP-2932*/'#'}
+                          storageContentLink={/*TODO: UDNP-2925*/'#'}/>)
+                    })}
 
                 {contentItems.map(content => {
                   const item = content.get('item')
@@ -624,6 +633,7 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
   storageEntities: React.PropTypes.instanceOf(Immutable.List),
+  storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -638,6 +648,7 @@ ContentItems.defaultProps = {
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
   storageEntities: Immutable.List(),
+  storagePermission: {},
   user: Immutable.Map()
 }
 

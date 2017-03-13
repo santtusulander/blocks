@@ -56,7 +56,7 @@ const StorageItemChart = (
     [{value: lastMonthUsage,                     className: 'last-month last-month-usage'},
     //            ↓             ↓
     // ⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: lastMonthEstimate - lastMonthUsage, className: 'last-month'}],
+     {value: lastMonthEstimate - lastMonthUsage, className: 'last-month last-month-background'}],
      /****** Last Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐

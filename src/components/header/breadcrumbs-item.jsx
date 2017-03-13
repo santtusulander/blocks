@@ -50,7 +50,7 @@ class BreadcrumbsItem extends React.Component {
 
     if (params.group === activeGroup) {
       links.push({
-        url: params.property ? urlMethod('group', params.group, params) : null,
+        url: (params.property || params.storage) ? urlMethod('group', params.group, params) : null,
         label:  params.group === activeGroup ? props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
       })
     }
@@ -67,6 +67,17 @@ class BreadcrumbsItem extends React.Component {
     }
   }
 
+  addStorageLink(props, links, urlMethod, isLastLink) {
+    const { params, params: { storage } } = props
+
+    if (storage) {
+      links.push({
+        url: !isLastLink ? urlMethod('storage', storage, params) : null,
+        label:  storage
+      })
+    }
+  }
+
   updateLinks(props) {
     let links = []
     const { pathname, params } = props
@@ -74,6 +85,7 @@ class BreadcrumbsItem extends React.Component {
 
     if (router.isActive(getRoute('content'))) {
       let propertyLinkIsLast = true
+      let storageLinkIsLast = true
       if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
           label:  <FormattedMessage id="portal.header.analytics.text"/>
@@ -90,7 +102,24 @@ class BreadcrumbsItem extends React.Component {
         propertyLinkIsLast = false
       }
 
+      if (router.isActive(getRoute('analyticsStorage', params))) {
+        links.push({
+          label:  <FormattedMessage id="portal.header.analytics.text"/>
+        })
+
+        storageLinkIsLast = false
+      }
+
+      if (router.isActive(getRoute('contentStorageConfiguration', params))) {
+        links.push({
+          label:  <FormattedMessage id="portal.header.configuration.text"/>
+        })
+
+        storageLinkIsLast = false
+      }
+
       this.addPropertyLink(props, links, getContentUrl, propertyLinkIsLast)
+      this.addStorageLink(props, links, getContentUrl, storageLinkIsLast)
       this.addGroupLink(props, links, getContentUrl)
 
       links.push({
@@ -99,6 +128,7 @@ class BreadcrumbsItem extends React.Component {
       })
     } else if (router.isActive(getRoute('analytics'))) {
       this.addPropertyLink(props, links, getAnalyticsUrl)
+      this.addStorageLink(props, links, getAnalyticsUrl)
       this.addGroupLink(props, links, getAnalyticsUrl)
 
       const accountParams = { 'brand': params.brand, 'account': params.account }

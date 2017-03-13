@@ -12,7 +12,7 @@ import ConfigurationMatcher from './matches/matcher'
 
 import ConfigurationActionCache from './actions/cache'
 import ConfigurationActionCacheKeyQueryString from './actions/cache-key-query-string'
-import ConfigurationTokenAuthentication from './actions/token-authentication'
+import ConfigurationTokenAuth from './actions/token-authentication'
 // import ConfigurationActionRedirection from './actions/redirection'
 // import ConfigurationActionOriginHostname from './actions/origin-hostname'
 // import ConfigurationActionCompression from './actions/compression'
@@ -171,7 +171,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         break
       case 'tokenauth':
         activeEditForm = (
-          <ConfigurationTokenAuthentication {...setterProps}/>
+          <ConfigurationTokenAuth {...setterProps}/>
         )
         break
       case 'content_targeting':
