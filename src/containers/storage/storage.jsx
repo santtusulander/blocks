@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Map } from 'immutable'
 
 import * as uiActionCreators from '../../redux/modules/ui'
-import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
@@ -32,10 +31,6 @@ class Storage extends Component {
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
     this.editStorage = this.editStorage.bind(this)
-  }
-
-  componentWillMount() {
-    this.props.fetchStorage(this.props.params)
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -205,7 +200,6 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   return {
-    fetchStorage: (params) => dispatch(storageActions.fetchAll(params)),
     toggleModal: uiActions.toggleAccountManagementModal
   }
 }
