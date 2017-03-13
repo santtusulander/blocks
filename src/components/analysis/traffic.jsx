@@ -175,10 +175,6 @@ class AnalysisTraffic extends React.Component {
     }
     return (
       <div className="analysis-traffic">
-        {/*<div className="analysis-data-box">
-         <h4>Total Egress Yesterday</h4>
-         <p>{formatBytes(this.props.totalEgress)}</p>
-         </div>*/}
         <SectionHeader
           sectionHeaderTitle={this.props.recordType === 'transfer_rates'
             ? <FormattedMessage id="portal.analytics.trafficOverview.bandwidth.text"/>
@@ -323,7 +319,6 @@ AnalysisTraffic.propTypes   = {
   recordType: React.PropTypes.string,
   serviceTypes: React.PropTypes.instanceOf(Immutable.List),
   theme: React.PropTypes.string
-  // totalEgress: React.PropTypes.number
 }
 
 AnalysisTraffic.defaultProps = {

@@ -59,6 +59,7 @@ import Typeahead from '../components/typeahead'
 import StorageKPI from '../components/storage/storage-kpi'
 import StorageItemChart from '../components/content/storage-item-chart'
 import SortableMultiSelector from '../components/sortable-multi-selector'
+import FileUploadStatus from '../components/storage/file-upload-status-container.jsx'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -1116,6 +1117,24 @@ class Styleguide extends React.Component {
               diameter={300} />
 
           </div>
+
+          <h1 className="page-header">File Upload Status</h1>
+
+          <FileUploadStatus
+            inlineStyle={{position: 'static'}}
+            uploads={[
+              {
+                name: 'too long name for item being uploaded',
+                type: 'directory',
+                progress: 75
+              },
+              {
+                name: 'filename.mov',
+                type: 'file',
+                progress: 33
+              }
+            ]}
+          />
 
           <h1 className="page-header">Storage KPI</h1>
 

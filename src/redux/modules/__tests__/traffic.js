@@ -9,8 +9,6 @@ import {
   trafficByTimeFailure,
   trafficByCountrySuccess,
   trafficByCountryFailure,
-  trafficTotalEgressSuccess,
-  trafficTotalEgressFailure,
   trafficOnOffNetSuccess,
   trafficOnOffNetFailure,
   trafficOnOffNetTodaySuccess,
@@ -34,7 +32,6 @@ describe('Traffic Module', () => {
         traffic: [],
         byTime: [],
         byCountry: [],
-        totalEgress: [],
         onOffNet: [],
         onOffNetToday: [],
         serviceProviders: [],
@@ -79,17 +76,7 @@ describe('Traffic Module', () => {
       expect(newState.get('byCountry').count() ).toBe(0);
 
     })
-    it('should handle trafficTotalEgressSuccess', () => {
-      const newState = trafficTotalEgressSuccess(state, {payload: {data:  { bytes: [{value: 'test'} ] } }})
 
-      expect(newState.get('totalEgress').count() ).toBe(1);
-    })
-    it('should handle trafficTotalEgressFailure', () => {
-      const newState = trafficTotalEgressFailure(state, {payload: {data:  { bytes: [{value: 'test'} ] } }})
-
-      expect( newState.get('totalEgress') ).toBe(0);
-
-    })
     it('should handle trafficOnOffNetSuccess', () => {
       const newState = trafficOnOffNetSuccess(state, {payload: {data:  {detail: [{value: 'test', timestamp: timestamp}] } }} )
 

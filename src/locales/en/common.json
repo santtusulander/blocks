@@ -127,5 +127,7 @@
   "portal.common.typeahead.emptyLabel": "Add values by typing",
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
   "portal.common.search.no-results.text": "No results found.",
-  "portal.common.current": "Current"
+  "portal.common.current": "Current",
+  "portal.common.andMore": "{firstItem} and {count} more"
+
 }
