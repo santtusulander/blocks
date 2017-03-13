@@ -11,7 +11,7 @@ import FieldFormGroup from '../../../form/field-form-group'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
 
-import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT } from '../../../../constants/configuration'
+import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT, MIN_TTL, MAX_TTL } from '../../../../constants/configuration'
 
 export class TokenStreaming extends React.Component {
   constructor(props) {
@@ -96,6 +96,8 @@ export class TokenStreaming extends React.Component {
             disabled={!isStreamingEnabled}
             component={FieldFormGroup}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.text" />}
+            min={MIN_TTL}
+            max={MAX_TTL}
           />
 
           <FormFooterButtons>

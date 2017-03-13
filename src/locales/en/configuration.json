@@ -24,6 +24,7 @@
   "portal.policy.edit.tokenauth.schema.user_agent.text": "User Agent",
   "portal.policy.edit.tokenauth.schema.expires.text": "Expires",
   "portal.policy.edit.tokenauth.schema.end_date.text": "End Date",
+  "portal.policy.edit.tokenauth.shared_key.required.error": "Shared Key is required",
   "portal.policy.edit.tokenauth.check_client_ip.help.text": "Enables checking of the Client’s IP address for every request for a chunk. If the IP value changes, the request is considered invalid.",
 
   "portal.policy.edit.policies.header.text": "Header",
