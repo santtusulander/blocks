@@ -33,7 +33,7 @@ const ConfigurationStreaming = ({config, serviceType}) => {
             <Toggle
               readonly={true}
               value={isVODEnabled}
-              changeValue={(val) => this.toggleVodStreaming(val)}/>
+              changeValue={() => {}}/>
           </Col>
         </FormGroup>
       </Row>
