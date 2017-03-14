@@ -162,8 +162,8 @@ class AccountManagementStorages extends Component {
       })
       const locationsString = locations.join(', ')
 
-      const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
-      const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
+      const usage = metrics.getIn([0, 'totals', 'bytes', 'ending'])
+      const fileCount = metrics.getIn([0, 'totals', 'file_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
