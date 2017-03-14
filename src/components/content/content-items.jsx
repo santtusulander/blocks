@@ -524,7 +524,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                {properties.map(property => {
+                { properties.map( property => {
                   return (
                     <PropertyItemContainer
                       key={property.get('published_host_id')}
@@ -535,7 +535,7 @@ class ContentItems extends React.Component {
                   )
                 }
 
-                {/* OTHER ContentItems (accouts / groups) */}
+                {/* OTHER ContentItems (brand / accouts / groups) */}
                 { properties.isEmpty() && storages.isEmpty() && contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
