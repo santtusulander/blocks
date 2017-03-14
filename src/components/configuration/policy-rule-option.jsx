@@ -17,7 +17,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     compatibleWith,
     notYetImplemented,
     requiresAdmin,
-    servicePermission
+    servicePermissions
   } = option
 
   if (compatibleWith.indexOf(policyType) < 0) {
@@ -41,8 +41,8 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     listItem = <IsAdmin>{listItem}</IsAdmin>
   }
 
-  if (servicePermission) {
-    listItem = <HasServicePermission permission={servicePermission}>{listItem}</HasServicePermission>
+  if (servicePermissions) {
+    listItem = <HasServicePermission anyOf={servicePermissions}>{listItem}</HasServicePermission>
   }
 
   return listItem
