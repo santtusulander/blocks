@@ -14,7 +14,7 @@ const ConfigurationStreaming = ({config, serviceType}) => {
     )
   }
 
-  // When service type msd means that VOD is enabled.
+  // Service type msd means that VOD is enabled.
   // Please check CS-666 for more details
   if (serviceType === "msd") {
     isVODEnabled = true
