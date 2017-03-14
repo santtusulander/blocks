@@ -75,7 +75,12 @@ TokenSchema.displayName = 'TokenSchema'
 TokenSchema.propTypes = {
   close: React.PropTypes.func,
   schema: React.PropTypes.instanceOf(Immutable.List),
+  selectedSchema: React.PropTypes.instanceOf(Immutable.List),
   ...reduxFormPropTypes
+}
+
+TokenSchema.defaultProps = {
+  selectedSchema: Immutable.List()
 }
 
 const form = reduxForm({
