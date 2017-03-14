@@ -5,9 +5,12 @@ import { Map } from 'immutable'
 import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
-import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 
+import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
+
+import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
+import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
 import { buildReduxId } from '../../redux/util'
 
@@ -23,6 +26,7 @@ import StorageContents from '../../components/storage/storage-contents'
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 
 import { getContentUrl } from '../../util/routes.js'
+import { buildAnalyticsOpts } from '../../util/helpers'
 
 class Storage extends Component {
   constructor(props) {
@@ -44,6 +48,10 @@ class Storage extends Component {
         group: this.props.params.group,
         id: this.props.params.storage
       })
+
+      const { params, filters } = this.props
+      const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
+      this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
     }
   }
 
@@ -138,6 +146,8 @@ Storage.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
   fetchStorage: PropTypes.func,
+  fetchStorageMetrics: PropTypes.func,
+  filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   params: PropTypes.object,
@@ -238,6 +248,7 @@ const mapStateToProps = (state, ownProps) => {
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
+    filters: state.filters.get('filters'),
     group: state.group.get('activeGroup'),
     storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
     storageContents: getMockContents(ownProps.params.storage),
@@ -250,6 +261,7 @@ const mapDispatchToProps = (dispatch) => {
 
   return {
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
     toggleModal: uiActions.toggleAccountManagementModal
   }
 }
