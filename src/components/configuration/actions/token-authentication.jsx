@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, change, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
@@ -20,6 +20,18 @@ const advancedOptions = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />, form: 'schema'},
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />, form: 'streaming'}
 ]
+
+const MD5 = 'MD5'
+
+const validate = ({ encryption, shared_key }) => {
+  let errors = {}
+
+  if (!shared_key && encryption !== MD5 ) {
+    errors.shared_key = <FormattedMessage id="portal.policy.edit.tokenauth.shared_key.required.error" />
+  }
+
+  return errors
+}
 
 export class TokenAuth extends React.Component {
   constructor(props) {
@@ -46,8 +58,8 @@ export class TokenAuth extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { isMd5 } = nextProps
-    if ( isMd5 ) {
-      this.props.dispatch( change( 'token-auth-form', 'shared_key', null) )
+    if ( isMd5 && (this.props.isMd5 !== isMd5)) {
+      this.props.change('shared_key', null)
     }
   }
 
@@ -63,7 +75,8 @@ export class TokenAuth extends React.Component {
         schema,
         streaming_ttl,
         streaming_add_ip_addr,
-        encryption
+        encryption,
+        streaming_encryption: encryption
       }})
 
       changeValue(setPath, newSet)
@@ -139,9 +152,9 @@ export class TokenAuth extends React.Component {
               type="text"
               name="shared_key"
               disabled={isMd5}
-              placeholder={this.props.intl.formatMessage({id: 'portal.policy.edit.tokenauth.secret.placeholder'})}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
+              required={!isMd5}
             />
 
             <hr/>
@@ -215,9 +228,10 @@ TokenAuth.propTypes = {
 
 const selector = formValueSelector('token-auth-form')
 const form = reduxForm({
-  form: 'token-auth-form'
+  form: 'token-auth-form',
+  validate
 })(TokenAuth)
 
 export default connect(state => ({
-  isMd5: selector(state, 'encryption') === 'MD5'
+  isMd5: selector(state, 'encryption') === MD5
 }))(injectIntl(form))

@@ -162,13 +162,6 @@ class ConfigurationDetails extends React.Component {
                     onSelect={this.handleUDNOriginSelection}
                     value={this.props.edgeConfiguration.get('origin_host_name')}
                     options={this.storageListOptions}/>
-                  <InputGroup.Addon>
-                    <HelpTooltip
-                      id="tooltip_udn_origin"
-                      title={<FormattedMessage id="portal.configuration.details.UDNOrigin.text"/>}>
-                      <FormattedMessage id="portal.configuration.details.UDNOrigin.help.text" />
-                    </HelpTooltip>
-                  </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -285,13 +278,13 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                  <InputGroup.Addon>
-                    <HelpTooltip
-                      id="tooltip_enter_host_name_value"
-                      title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
-                      <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
-                    </HelpTooltip>
-                  </InputGroup.Addon>
+                    <InputGroup.Addon>
+                      <HelpTooltip
+                        id="tooltip_enter_host_name_value"
+                        title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
+                        <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
+                      </HelpTooltip>
+                    </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -314,13 +307,13 @@ class ConfigurationDetails extends React.Component {
                   onChange={this.handleChange(
                     ['edge_configuration', 'origin_path_append']
                   )}/>
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_path_append"
-                    title={<FormattedMessage id="portal.configuration.details.originForwardPath.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.originForwardPath.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_origin_path_append"
+                      title={<FormattedMessage id="portal.configuration.details.originForwardPath.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.originForwardPath.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -343,13 +336,6 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'origin_test_path']
                   )}
                 />
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_test_path"
-                    title={<FormattedMessage id="portal.configuration.details.originTestPath.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.originTestPath.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -373,13 +359,13 @@ class ConfigurationDetails extends React.Component {
                   onChange={this.handleChange(
                     ['edge_configuration', 'published_name']
                   )}/>
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_published_name"
-                    title={<FormattedMessage id="portal.configuration.details.publishedHostnameValue.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.publishedHostnameValue.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
+                  <InputGroup.Addon>
+                    <HelpTooltip
+                      id="tooltip_published_name"
+                      title={<FormattedMessage id="portal.configuration.details.publishedHostnameValue.text"/>}>
+                      <FormattedMessage id="portal.configuration.details.publishedHostnameValue.help.text" />
+                    </HelpTooltip>
+                  </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>
@@ -400,13 +386,6 @@ class ConfigurationDetails extends React.Component {
                     ['edge_configuration', 'customer_cname']
                   )}
                 />
-                <InputGroup.Addon>
-                  <HelpTooltip
-                    id="tooltip_origin_target_cname"
-                    title={<FormattedMessage id="portal.configuration.details.targetCname.text"/>}>
-                    <FormattedMessage id="portal.configuration.details.targetCname.help.text" />
-                  </HelpTooltip>
-                </InputGroup.Addon>
               </InputGroup>
             </Col>
           </FormGroup>

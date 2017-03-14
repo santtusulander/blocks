@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import {Link} from 'react-router'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl'
 import {formatUnixTimestamp} from '../../util/helpers'
 
 import IsAllowed from '../is-allowed'
@@ -9,15 +9,15 @@ import { MODIFY_PROPERTY } from '../../constants/permissions'
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 
-const TokenAuthList = ({ rules, editUrlBuilder }) => {
+const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   return (
       <table className="table table-striped cell-text-left">
         <thead >
           <tr>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.property.text"/></th>
+            <th width="20%"><FormattedMessage id="portal.security.tokenAuth.type.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.encryption.text"/></th>
             <th width="20%"><FormattedMessage id="portal.security.tokenAuth.schema.text"/></th>
-            <th width="20%"><FormattedMessage id="portal.security.tokenAuth.sharedSecretValue.text"/></th>
             <th width="19%"><FormattedMessage id="portal.security.tokenAuth.created.text"/></th>
             <IsAllowed to={MODIFY_PROPERTY}>
               <th width="1%" />
@@ -33,9 +33,9 @@ const TokenAuthList = ({ rules, editUrlBuilder }) => {
             return (
               <tr key={index}>
                 <td>{rule.propertyName}</td>
+                <td>{intl.formatMessage({id: rule.type})}</td>
                 <td>{rule.encryption}</td>
                 <td>{rule.schema}</td>
-                <td>**********</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <IsAllowed to={MODIFY_PROPERTY}>
                   <td className="nowrap-column action-buttons primary">
@@ -63,10 +63,11 @@ TokenAuthList.displayName = 'TokenAuthList'
 
 TokenAuthList.propTypes = {
   editUrlBuilder: PropTypes.func,
+  intl: intlShape.isRequired,
   rules: PropTypes.array
 }
 TokenAuthList.defaultProps = {
   rules: []
 }
 
-export default TokenAuthList
+export default injectIntl(TokenAuthList)
