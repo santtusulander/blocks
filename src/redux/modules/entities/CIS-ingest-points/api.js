@@ -50,7 +50,8 @@ const ingestPointSchema = new schema.Entity('ingestPoints', {
   processStrategy: (value, parent) => {
     return {
       ...value,
-      parentId: parent.id
+      parentId: parent.id,
+      accountId: parent.accountId
     }
   }
 })
@@ -68,7 +69,7 @@ const groupIngestPoints = new schema.Entity('groupIngestPoints', {
 export const fetch = (params) => {
   return axios.get(`${baseUrl(params)}`)
     .then( ({data}) => {
-      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
     })
 }
 
@@ -80,7 +81,7 @@ export const fetch = (params) => {
 export const fetchAll = ( params = {}) => {
   return axios.get(baseListUrl(params))
     .then( ({data}) => {
-      return normalize({ id: params.group, ingestPoints: data }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: data }, groupIngestPoints)
     })
 }
 
@@ -92,7 +93,7 @@ export const fetchAll = ( params = {}) => {
 export const create = ({ payload, ...params }) => {
   return axios.post(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
     })
 }
 
