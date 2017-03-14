@@ -27,38 +27,6 @@ import {getStoragePermissions} from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-// TODO UNDP-2906
-// Remove this in scope of integration with redux
-const mockRedux = {
-  get: function(entity) {
-    switch (entity) {
-      case 'storages':
-        return Immutable.fromJS([{
-          id: 'storage1',
-          name: 'Media Storage',
-          location: 'Frankfurt',
-          currentUsage: '450 GB',
-          usageQuota: '900 GB',
-          maxTransfer: '75.00 TB',
-          minTransfer: '11.00 TB',
-          avgTransfer: '34.00 TB'
-        },{
-          id: 'storage2',
-          name: 'Bangkok Storage',
-          location: 'San Jose',
-          currentUsage: '1.2 TB',
-          usageQuota: '2 TB',
-          maxTransfer: '15.00 TB',
-          minTransfer: '2.00 TB',
-          avgTransfer: '7.00 TB'
-        }])
-
-      default:
-        return null
-    }
-  }
-}
-
 export class Hosts extends React.Component {
   constructor(props) {
     super(props);
@@ -163,7 +131,7 @@ export class Hosts extends React.Component {
         //configURLBuilder={configURLBuilder}
         //contentItems={properties}
         storages={this.props.storages}
-        properties={ this.props.properties }
+        properties={this.props.properties}
 
         //storageContentItems={ this.props.storageContentItems }
 
@@ -207,7 +175,6 @@ Hosts.propTypes = {
   fetchMetricsData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
-  hosts: React.PropTypes.instanceOf(Immutable.List),
   metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
