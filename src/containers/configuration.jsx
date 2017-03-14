@@ -259,6 +259,7 @@ export class Configuration extends React.Component {
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
+    const serviceType = activeHost.getIn(['services', 0, 'service_type'])
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
@@ -398,7 +399,8 @@ export class Configuration extends React.Component {
             edgeConfiguration: activeConfig.get('edge_configuration'),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
-            storages: this.props.storages
+            storages: this.props.storages,
+            serviceType: serviceType
           })}
           </PageContainer>
 
