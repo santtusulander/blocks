@@ -81,7 +81,7 @@ class ConfigurationDetails extends React.Component {
 
   generateStorageListOptions(storages) {
     const {storagePermission: { createAllowed } } = this.props
-    const storageCreationIsAllowed = createAllowed 
+    const storageCreationIsAllowed = createAllowed
 
     let options = storageCreationIsAllowed
                   ? [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
@@ -285,13 +285,6 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                    <InputGroup.Addon>
-                      <HelpTooltip
-                        id="tooltip_enter_host_name_value"
-                        title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
-                        <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
-                      </HelpTooltip>
-                    </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -420,7 +413,8 @@ ConfigurationDetails.propTypes = {
   storages: React.PropTypes.instanceOf(Immutable.List)
 }
 ConfigurationDetails.defaultProps = {
-  storages: Immutable.List()
+  storages: Immutable.List(),
+  storagePermission: {}
 }
 
 export default injectIntl(ConfigurationDetails)

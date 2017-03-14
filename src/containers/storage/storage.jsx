@@ -107,6 +107,7 @@ class Storage extends Component {
 
             <StorageContents
               storageId={params.storage}
+              groupId={params.group}
               gatewayHostname={gatewayHostname}
               asperaInstanse={asperaInstanse}
               contents={storageContents}

@@ -29,7 +29,7 @@ const mockArray = [
 
 
 const baseUrl = ({ group, id }) => {
-  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}`
+  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}&format=brief`
 }
 
 const baseListUrl = ({ group }) => {
@@ -48,9 +48,13 @@ const ingestPointSchema = new schema.Entity('ingestPoints', {
 },{
   idAttribute: (ingestPoint, group) => buildReduxId(group.id, ingestPoint.ingest_point_id),
   processStrategy: (value, parent) => {
+
+    //Strip away storage_desc as it's not returned by list endpoint and not used
+    const { storage_desc, ...rest } = value
     return {
-      ...value,
-      parentId: parent.id
+      ...rest,
+      parentId: parent.id,
+      accountId: parent.accountId
     }
   }
 })
@@ -68,7 +72,7 @@ const groupIngestPoints = new schema.Entity('groupIngestPoints', {
 export const fetch = (params) => {
   return axios.get(`${baseUrl(params)}`)
     .then( ({data}) => {
-      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
     })
 }
 
@@ -80,7 +84,7 @@ export const fetch = (params) => {
 export const fetchAll = ( params = {}) => {
   return axios.get(baseListUrl(params))
     .then( ({data}) => {
-      return normalize({ id: params.group, ingestPoints: data }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: data }, groupIngestPoints)
     })
 }
 
@@ -92,7 +96,7 @@ export const fetchAll = ( params = {}) => {
 export const create = ({ payload, ...params }) => {
   return axios.post(baseUrl(params), payload, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
-      return normalize({ id: params.group, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
+      return normalize({ id: params.group, accountId: params.account, ingestPoints: [ {ingest_point_id: params.id, ...data } ] }, groupIngestPoints)
     })
 }
 

@@ -14,9 +14,12 @@ import {
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl
+  getContentUrl,
+  getAnalyticsUrl
 } from '../../util/routes'
 import { userIsCloudProvider, hasService } from '../../util/helpers'
+
+import { buildReduxId } from '../../redux/util'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -24,7 +27,7 @@ import UDNButton from '../button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import StorageChartContainer from '../../containers/storage/storage-chart-container'
+import StorageChartContainer from '../../containers/storage-chart-container/storage-chart-container'
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -227,13 +230,15 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
-  showStorageModal() {
+  showStorageModal(id) {
     this.setState({
+      itemToEdit: id,
       showStorageModal : true
     });
   }
   hideStorageModal() {
     this.setState({
+      itemToEdit: undefined,
       showStorageModal : false
     });
   }
@@ -317,7 +322,7 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
+      storages,
       params,
       locationPermissions,
       storageContentItems,
@@ -325,8 +330,9 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed } = storagePermission
+    const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
@@ -475,8 +481,23 @@ class ContentItems extends React.Component {
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                   <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                     <div className="storage-wrapper">
-                      {viewingChart && groupHasStorageService && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+
+                      {viewingChart && groupHasStorageService && storages.map((storage, i) => {
+                        const id = storage.get('ingest_point_id')
+                        const reduxId = buildReduxId(group, id)
+
+                        return (
+                          <StorageChartContainer
+                            key={i}
+                            analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                            storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                            onConfigurationClick={modifyAllowed && this.showStorageModal}
+                            storageId={reduxId}
+                            params={params} />
+                        )
+                      })}
                     </div>
+
                   </IsAllowed>
 
                 {contentItems.map(content => {
@@ -574,6 +595,7 @@ class ContentItems extends React.Component {
               brand={brand}
               accountId={account}
               groupId={group}
+              storageId={this.state.itemToEdit}
               show= {true}
               editing={false}
               fetching={false}
@@ -623,8 +645,8 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   storagePermission: React.PropTypes.object,
+  storages: React.PropTypes.instanceOf(Immutable.Iterable),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -638,7 +660,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageIds: Immutable.Iterable(),
+  storages: Immutable.List(),
   user: Immutable.Map(),
   storagePermission: {}
 }

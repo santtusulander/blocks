@@ -1,57 +1,50 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Row, Col, ControlLabel, FormGroup } from 'react-bootstrap'
 import { Map } from 'immutable'
 import { FormattedMessage } from 'react-intl'
 import Toggle from '../toggle'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 
-class ConfigurationStreaming extends Component {
-  constructor(props) {
-    super(props)
+const ConfigurationStreaming = ({config, serviceType}) => {
+  let isVODEnabled = false
 
-    this.toggleVodStreaming = this.toggleVodStreaming.bind(this)
-  }
-
-  toggleVodStreaming(val) {
-    this.props.changeValue(['edge_configuration', 'msd_enabled'], val)
-  }
-
-  render() {
-    const { config, readOnly } = this.props;
-
-    if (!config || !config.size) {
-      return (
-        <LoadingSpinner />
-      )
-    }
-
+  if (!config || !config.size) {
     return (
-      <div className="configuration-details">
-        <Row>
-          <FormGroup>
-            <Col xs={3}>
-              <ControlLabel>
-                <FormattedMessage id="portal.configuration.streaming.VOD.label"/>
-              </ControlLabel>
-            </Col>
-            <Col xs={9}>
-              <Toggle
-                readonly={readOnly}
-                value={config.getIn(['edge_configuration', 'msd_enabled'])}
-                changeValue={(val) => this.toggleVodStreaming(val)}/>
-            </Col>
-          </FormGroup>
-        </Row>
-      </div>
+      <LoadingSpinner />
     )
   }
+
+  // Service type msd means that VOD is enabled.
+  // Please check CS-666 for more details
+  if (serviceType === "msd") {
+    isVODEnabled = true
+  }
+
+  return (
+    <div className="configuration-details">
+      <Row>
+        <FormGroup>
+          <Col xs={3}>
+            <ControlLabel>
+              <FormattedMessage id="portal.configuration.streaming.VOD.label"/>
+            </ControlLabel>
+          </Col>
+          <Col xs={9}>
+            <Toggle
+              readonly={true}
+              value={isVODEnabled}
+              changeValue={() => {}}/>
+          </Col>
+        </FormGroup>
+      </Row>
+    </div>
+  )
 }
 
 ConfigurationStreaming.displayName = 'ConfigurationStreaming'
 ConfigurationStreaming.propTypes = {
-  changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Map),
-  readOnly: React.PropTypes.bool
+  serviceType: React.PropTypes.string
 }
 
 ConfigurationStreaming.defaultProps = {
