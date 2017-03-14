@@ -13,9 +13,12 @@ import {
 
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl
+  getContentUrl,
+  getAnalyticsUrl
 } from '../../util/routes'
 import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+
+import { buildReduxId } from '../../redux/util'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -226,13 +229,15 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
-  showStorageModal() {
+  showStorageModal(id) {
     this.setState({
+      itemToEdit: id,
       showStorageModal : true
     });
   }
   hideStorageModal() {
     this.setState({
+      itemToEdit: undefined,
       showStorageModal : false
     });
   }
@@ -316,7 +321,7 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
+      storages,
       params,
       locationPermissions,
       storageContentItems,
@@ -324,7 +329,7 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed } = storagePermission
+    const { createAllowed, viewAllowed, viewAnalyticAllowed } = storagePermission
     const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -474,8 +479,23 @@ class ContentItems extends React.Component {
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
                   <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                     <div className="storage-wrapper">
-                      {viewingChart && groupHasStorageService && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+
+                      {viewingChart && groupHasStorageService && storages.map((storage, i) => {
+                        const id = storage.get('ingest_point_id')
+                        const reduxId = buildReduxId(group, id)
+
+                        return (
+                          <StorageChartContainer
+                            key={i}
+                            analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                            storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                            onConfigurationClick={this.showStorageModal}
+                            storageId={reduxId}
+                            params={params} />
+                        )
+                      })}
                     </div>
+
                   </IsAllowed>
 
                 {contentItems.map(content => {
@@ -573,6 +593,7 @@ class ContentItems extends React.Component {
               brand={brand}
               accountId={account}
               groupId={group}
+              storageId={this.state.itemToEdit}
               show= {true}
               editing={false}
               fetching={false}
@@ -622,8 +643,8 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   storagePermission: React.PropTypes.object,
+  storages: React.PropTypes.instanceOf(Immutable.Iterable),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -637,7 +658,7 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageIds: Immutable.Iterable(),
+  storages: Immutable.List(),
   user: Immutable.Map(),
   storagePermission: {}
 }
