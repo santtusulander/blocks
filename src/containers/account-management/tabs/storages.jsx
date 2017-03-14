@@ -59,7 +59,7 @@ class AccountManagementStorages extends Component {
       const groupId = group.get('id')
       const metricsStartDate = new Date()
 
-      this.props.fetchStorages({ group: group.get('id') })
+      this.props.fetchStorages({ group: groupId })
         .then((res) => {
           if (res) {
             const storages = res.entities.ingestPoints
