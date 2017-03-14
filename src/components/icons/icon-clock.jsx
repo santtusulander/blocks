@@ -1,6 +1,7 @@
 import React from 'react'
 import Icon from '../icon.jsx'
 
+// TODO: UDNP-3022 Replace placeholder with icon for 'Clock'
 const IconClock = (props) => {
   const {className, height, width} = props
 
