@@ -11,7 +11,7 @@ const TimePicker = ({ time, onChange, isUTC }) => {
   const value = `${time.format('hh:mma')} ${isUTC ? 'UTC' : ''}`
 
   return (
-    <Dropdown className="dropdown-select">
+    <Dropdown id="" className="dropdown-select">
         <Dropdown.Toggle
           className="has-left-icon"
           noCaret={true}
