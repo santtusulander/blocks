@@ -39,6 +39,7 @@ import AnalyticsTabCacheHitRate from './containers/analytics/tabs/tab-cache-hit-
 import AnalyticsTabVisitors from './containers/analytics/tabs/tab-visitors.jsx'
 import AnalyticsTabOnOffNet from './containers/analytics/tabs/tab-on-off-net.jsx'
 import AnalyticsTabContribution from './containers/analytics/tabs/tab-contribution.jsx'
+import AnalyticsTabStorage from './containers/analytics/tabs/tab-storage.jsx'
 import AnalyticsTabFileError from './containers/analytics/tabs/tab-file-error.jsx'
 import AnalyticsTabUrlReport from './containers/analytics/tabs/tab-url-report.jsx'
 import AnalyticsTabPlaybackDemo from './containers/analytics/tabs/tab-playback-demo.jsx'
@@ -68,6 +69,7 @@ import SecurityTabSslCertificate from './containers/security/tabs/ssl-certificat
 import SecurityTabContentTargeting from './containers/security/tabs/content-targeting'
 import SecurityTabTokenAuthentication from './containers/security/tabs/token-authentication'
 import Services from './containers/services'
+import Storage from './containers/storage/storage'
 import ForgotPassword from './containers/password/forgot-password'
 import SetPassword from './containers/password/set-password'
 import Support from './containers/support/support'
@@ -91,6 +93,7 @@ const analyticsTabs = [
   // [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabContribution, AnalyticsTabContribution],
   [PERMISSIONS.ALLOW_ALWAYS, routes.analyticsTabContribution, AnalyticsTabContribution],
 
+  [PERMISSIONS.VIEW_ANALYTICS_STORAGE, routes.analyticsStorage, AnalyticsTabStorage],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
@@ -272,6 +275,10 @@ export const getRoutes = store => {
             </Route>
             <Route path={routes.configurationTabStreaming} component={ConfigurationStreaming}/>
           </Route>
+
+          {/* Storage - routes */}
+          <Route path={routes.contentStorage} component={Storage} />
+
         </Route>
 
         {/* Network / SP Accounts - routes */}
@@ -370,6 +377,7 @@ export const getRoutes = store => {
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
           </Route>
         </Route>
 

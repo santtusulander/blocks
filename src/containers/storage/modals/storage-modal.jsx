@@ -55,27 +55,28 @@ class StorageFormContainer extends React.Component {
 
   onSave(edit, values) {
     const { brand, accountId, groupId, selectedClusters } = this.props
-
     const workflow = values.abr ? {
       id: STORAGE_WORKFLOW_DEFAULT,
       profile_id: values.abrProfile
     } : {}
 
     const data = {
-      estimated_usage: convertToBytes(values.estimate, values.estimate_unit),
+      estimated_usage: Number(convertToBytes(values.estimate, values.estimate_unit)),
       workflow: workflow,
       clusters: selectedClusters
     }
 
+    // Remove workflow property if ABR disabled.
+    if (!values.abr) {
+      delete data.workflow
+    }
+
     const params = {
+      id: values.name,
       brand: brand,
       account: accountId,
       group: groupId,
       payload: data
-    }
-
-    if (!edit) {
-      data.id = values.name
     }
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
@@ -107,7 +108,7 @@ class StorageFormContainer extends React.Component {
   }
 
   render() {
-    const { account, abrProfileOptions, group, storage,
+    const { account, abrProfileOptions, group, storageId,
             initialValues, onCancel, abrToggle,
             show, locationOptions } = this.props
 
@@ -116,7 +117,7 @@ class StorageFormContainer extends React.Component {
     const title = edit ? <FormattedMessage id="portal.storage.storageForm.edit.title"/>
                        : <FormattedMessage id="portal.storage.storageForm.add.title"/>
 
-    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${storage.get('id')}`
+    const subTitle = edit ? `${account.get('name')} / ${group.get('name')} / ${storageId}`
                           : `${account.get('name')} / ${group.get('name')}`
 
     return (
@@ -158,7 +159,7 @@ StorageFormContainer.propTypes = {
   abrProfileOptions: PropTypes.array,
   abrToggle: PropTypes.bool,
   account: PropTypes.instanceOf(Map),
-  accountId: PropTypes.string,
+  accountId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchClusters: PropTypes.func,
@@ -166,7 +167,7 @@ StorageFormContainer.propTypes = {
   fetchStorage: PropTypes.func,
   fetchWorkflows: PropTypes.func,
   group: PropTypes.instanceOf(Map),
-  groupId: PropTypes.string,
+  groupId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   initialValues: PropTypes.object,
   isFetching: PropTypes.bool,
   locationOptions: PropTypes.array,
@@ -176,14 +177,12 @@ StorageFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   selectedClusters: PropTypes.array,
   show: PropTypes.bool,
-  storage: PropTypes.instanceOf(Map),
   storageId: PropTypes.string
 }
 
 StorageFormContainer.defaultProps = {
   account: Map(),
-  group: Map(),
-  storage: Map()
+  group: Map()
 }
 
 const formSelector = formValueSelector('storageForm')
@@ -203,7 +202,6 @@ const mapStateToProps = (state, ownProps) => {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     isFetching: getGlobalFetching(state),
-    storage: storage ? storage : Map(),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),

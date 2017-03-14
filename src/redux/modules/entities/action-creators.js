@@ -7,7 +7,7 @@ const actionTypes = {
   FAIL: 'entities/FAIL'
 }
 
-const getPayload = requestTag => {
+export const getPayload = requestTag => {
   const requestId = uniqid()
   return {
     [requestId]: { requestTag }

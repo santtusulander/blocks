@@ -10,21 +10,15 @@ import {
 import propertyActions from '../../redux/modules/entities/properties/actions'
 import { getByGroup as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
+import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+import { getByGroup as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
+
 import groupActions from '../../redux/modules/entities/groups/actions'
 import { getByAccount } from '../../redux/modules/entities/groups/selectors'
 
 import { getByBrand, getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 
 import { accountIsServiceProviderType } from '../../util/helpers'
-
-const getStoragesByGroup = () => ([
-  {
-    "id": 'A Mock Storage',
-    "estimated_usage": 999999,
-    "usage": 2932224,
-    "clusters": ["strg0"]
-  }
-])
 
 /**
  * get groups from state, set child nodes and define a function to fetch child nodes for each one.
@@ -37,15 +31,15 @@ export const getGroups = (state, parents, canView) => {
 
   return getByAccount(state, parents.account).toJS().map(group => {
 
-    const { nodes, headerSubtitle } = getStoragesAndProperties(state, canView, { ...parents, group: group.id })
+    const { nodes, headerSubtitle } = getStoragesAndProperties(state, { ...parents, group: String(group.id) }, canView)
 
     return {
       ...group,
       nodeInfo: {
         headerSubtitle,
         fetchChildren: (dispatch) => Promise.all([
-          dispatch(propertyActions.fetchAll({ ...parents, group: group.id }))
-          // dispatch(storageActions.fetchAll({ ...parents, group: group.id }))
+          dispatch(propertyActions.fetchAll({ ...parents, group: String(group.id) })),
+          dispatch(storageActions.fetchAll({ ...parents, group: String(group.id) }))
         ]),
         entityType: 'group',
         parents,
@@ -63,7 +57,7 @@ export const getGroups = (state, parents, canView) => {
  */
 export const getProperties = (state, parents) => {
 
-  return getPropertiesByGroup(state, String(parents.group)).toJS().map((property) => {
+  return getPropertiesByGroup(state, parents.group).toJS().map((property) => {
 
     return {
       ...property,
@@ -85,7 +79,7 @@ export const getProperties = (state, parents) => {
  */
 export const getStorages = (state, parents) => {
 
-  return getStoragesByGroup(state, String(parents.group)).map((storage) => {
+  return getStoragesByGroup(state, parents.group).toJS().map((storage) => {
 
     return {
       ...storage,
@@ -109,7 +103,7 @@ export const getAccounts = (state, parents, canView) => {
 
   return getByBrand(state, parents.brand).toJS().map(account => {
 
-    const nodes = canView(VIEW_CONTENT_GROUPS) && getGroups(state, { ...parents, account: account.id }, canView)
+    const nodes = canView(VIEW_CONTENT_GROUPS) && getGroups(state, { ...parents, account: String(account.id) }, canView)
 
     const headerSubtitle = <FormattedMessage id="portal.common.group.multiple" values={{numGroups: nodes.length || 0}}/>
 
@@ -117,7 +111,7 @@ export const getAccounts = (state, parents, canView) => {
       ...account,
       nodeInfo: {
         headerSubtitle,
-        fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: account.id })),
+        fetchChildren: (dispatch) => dispatch(groupActions.fetchAll({ ...parents, account: String(account.id) })),
         entityType: 'account',
         parents,
         nodes
@@ -148,7 +142,7 @@ export const getBrands = (state, brand, canView) => {
  * @param  {[type]} parents [description]
  * @return {[type]}         [description]
  */
-const getStoragesAndProperties = (state, canView, parents) => {
+const getStoragesAndProperties = (state, parents, canView) => {
 
   let nodes, headerSubtitle = undefined
   let activeAccount = getAccountById(state, parents.account)

@@ -18,24 +18,34 @@ export const actionTypes = {
 
 const services =
   handleActions({
-    [actionTypes.CREATE]:  mapReducers(receiveEntity('services'), failEntity),
-    [actionTypes.FETCH]:  mapReducers(receiveEntity('services'), failEntity),
-    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('services'), failEntity),
+    [actionTypes.CREATE]:  mapReducers(receiveEntity({key: 'services'}), failEntity),
+    [actionTypes.FETCH]:  mapReducers(receiveEntity({key: 'services'}), failEntity),
+    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity({key: 'services'}), failEntity),
     [actionTypes.REMOVE]:  mapReducers(removeEntity, failEntity),
-    [actionTypes.UPDATE]:  mapReducers(receiveEntity('services'), failEntity)
+    [actionTypes.UPDATE]:  mapReducers(receiveEntity({key: 'services'}), failEntity)
   }, Map())
 
 const providerTypes =
   handleActions({
-    [actionTypes.CREATE]:  mapReducers(receiveEntity('provider_types'), failEntity),
-    [actionTypes.FETCH]:  mapReducers(receiveEntity('provider_types'), failEntity),
-    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity('provider_types'), failEntity),
+    [actionTypes.CREATE]:  mapReducers(receiveEntity({key: 'provider_types'}), failEntity),
+    [actionTypes.FETCH]:  mapReducers(receiveEntity({key: 'provider_types'}), failEntity),
+    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity({key: 'provider_types'}), failEntity),
     [actionTypes.REMOVE]:  mapReducers(removeEntity, failEntity),
-    [actionTypes.UPDATE]:  mapReducers(receiveEntity('provider_types'), failEntity)
+    [actionTypes.UPDATE]:  mapReducers(receiveEntity({key: 'provider_types'}), failEntity)
+  }, Map())
+
+const regions =
+  handleActions({
+    [actionTypes.CREATE]:  mapReducers(receiveEntity({key: 'regions'}), failEntity),
+    [actionTypes.FETCH]:  mapReducers(receiveEntity({key: 'regions'}), failEntity),
+    [actionTypes.FETCH_ALL]:  mapReducers(receiveEntity({key: 'regions'}), failEntity),
+    [actionTypes.REMOVE]:  mapReducers(removeEntity, failEntity),
+    [actionTypes.UPDATE]:  mapReducers(receiveEntity({key: 'regions'}), failEntity)
   }, Map())
 
 export default combineReducers({
   services,
-  providerTypes
+  providerTypes,
+  regions
   //fetching: createFetchingReducers( actionTypes, 'serviceInfo')
 })

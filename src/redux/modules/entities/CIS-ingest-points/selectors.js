@@ -1,4 +1,5 @@
-import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
+import { fromJS } from 'immutable'
+import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
 
 /**
  * Get IngestPoint by ID
@@ -18,4 +19,33 @@ export const getById = (state, id) => {
  */
 export const getByGroup = (state, groupId) => {
   return getEntitiesByParent(state, 'CISIngestPoints', groupId)
+}
+
+/**
+ * Get IngestPoint IDs by Group
+ * @param  {[type]} state   [description]
+ * @param  {[type]} groupId [description]
+ * @return {[type]}         [description]
+ */
+export const getIdsByGroup = (state, groupId) => {
+  return getEntityIdsByParent(state, 'CISIngestPoints', groupId)
+}
+
+/**
+ * Get IngestPoints By Groups
+ * @param  {} state
+ * @param  {List} list of groups
+ * @return List
+ */
+export const getByGroups = (state, groups) => {
+  if (groups && groups.size > 0) {
+    let storages = []
+    groups.forEach(group => {
+      const groupStorages = getByGroup(state, group.get('id'))
+      groupStorages.forEach( storage => {
+        storages.push(storage)
+      })
+    })
+    return fromJS(storages)
+  }
 }

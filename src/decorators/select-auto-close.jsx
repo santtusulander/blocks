@@ -25,7 +25,6 @@ export default function(WrappedSelect) {
     }
 
     handleClick(event) {
-      event.stopImmediatePropagation()
       const element = findDOMNode(this)
       if (element && element.contains(event.target)) {
         return

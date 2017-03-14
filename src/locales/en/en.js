@@ -130,6 +130,10 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.visitors.grid.percentage.header': '% of Visitors',
   'portal.analytics.visitors.grid.periodTrend.header': 'Period Trend',
 
+  'portal.analytics.storage.usage.text': 'Usage',
+  'portal.analytics.storage.files.text': 'Files',
+  'portal.analytics.storage.usageByTime.text': 'USAGE BY TIME',
+
   'portal.analytics.noServiceTypeSelected.text': 'There must be at least one service type selected.',
   'portal.analytics.noServiceTypeSelected.title': 'Error',
 
@@ -154,6 +158,7 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.propertyTitle': 'Property SP On/Off Net',
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
+  'portal.analytics.tabs.storage.label': 'Storage',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -182,6 +187,9 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.responseCode.title': 'Response Code',
   'portal.analysis.filters.statusCodes.title': 'Status Codes',
   'portal.analysis.filters.serviceTypes.title': 'Service Types',
+  'portal.analysis.filters.storageType.title': 'Show as',
+  'portal.analysis.filters.storageType.usage.title': 'Usage',
+  'portal.analysis.filters.storageType.files.title': 'Files',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
@@ -470,7 +478,7 @@ const TRANSLATED_MESSAGES = {
   'portal.deleteModal.warning.text': 'Please confirm by writing "delete" below, and pressing the delete button. This {itemToDelete} will be removed immediately. This action can\'t be undone',
   'portal.deleteModal.header.text': 'Delete {itemToDelete}?',
 
-  'portal.errorModal.errorOccured.text': 'An error occured',
+  'portal.errorModal.errorOccured.text': 'An error occurred',
   'portal.errorModal.reloadNote.text': 'Note: Reloading may lose all unsaved changes',
 
   'portal.exportEmail.oneTime.text': 'One-time, send now',
@@ -508,7 +516,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.users.text': 'USERS',
   'portal.accountManagement.dns.text': 'DNS',
   'portal.accountManagement.roles.text': 'ROLES',
-  'portal.accountManagement.storages.text': 'STORAGES',
+
+  'portal.accountManagement.storages.text': 'STORAGE',
   'portal.accountManagement.properties.text': 'PROPERTIES',
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
@@ -567,7 +576,7 @@ const TRANSLATED_MESSAGES = {
   'portal.properties.propertyContentSummary.text': 'PROPERTY SUMMARY',
   'portal.hosts.groupContentSummary.text': 'GROUP CONTENT SUMMARY',
 
-  'portal.purge.purgeSubmitted.text': 'Purge request succesfully submitted',
+  'portal.purge.purgeSubmitted.text': 'Purge request successfully submitted',
 
   'portal.notFound.pageNotFound.text': 'We couldn\'t find the page you were looking for',
 

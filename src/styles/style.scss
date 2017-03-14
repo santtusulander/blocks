@@ -84,6 +84,7 @@
 @import 'components/react-telephone-input';
 @import 'components/select';
 @import 'components/side-panel';
+@import 'components/sortable-multi-selector';
 @import 'components/table-sorter';
 @import 'components/toggle';
 @import 'components/tooltip';
@@ -115,15 +116,20 @@
 @import 'components/analysis/export-panel';
 //Charts
 @import 'components/charts/bar-chart';
+@import 'components/charts/stacked-area-chart';
+@import 'components/charts/line-area-composed-chart';
 // Configuration
 @import 'components/configuration/condition-selection';
 @import 'components/configuration/defaults';
+@import 'components/configuration/details';
 @import 'components/configuration/policy-rule-edit';
 @import 'components/configuration/sidebar';
 @import 'components/configuration/versions';
+@import 'components/configuration/token-auth';
 // Layouts
 @import 'components/layout/content';
 @import 'components/layout/dialog';
+@import 'components/layout/flexbox';
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
 @import 'components/layout/section-header';

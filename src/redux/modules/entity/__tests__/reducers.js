@@ -23,7 +23,7 @@ describe('Entity Module', () => {
       }
     };
 
-    const newState = receiveEntity('properties')(initialState, action);
+    const newState = receiveEntity({ key: 'properties' })(initialState, action);
 
     expect(newState).toEqual(fromJS(normalizedPayload));
   });

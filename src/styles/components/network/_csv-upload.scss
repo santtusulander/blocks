@@ -10,12 +10,12 @@ $filedrop-min-height: 200px;
   border-width: 2px;
   border-radius: 5px;
 
-  &.dark-theme {
+  .dark-theme & {
     border-color: $dt-text-color;
   }
 
-  &.light-theme {
-    border-color: $lt-text-color;
+  .light-theme & {
+    border-color: $silver-60;
   }
 
   .file-item {
@@ -93,6 +93,11 @@ $filedrop-min-height: 200px;
   // Handle onDragOver event
   color: $pale-blue !important;
   border-color: $pale-blue !important;
+}
+
+.filedrop-area.error {
+  color: $red !important;
+  border-color: $red !important;
 }
 
 .filedrop-area.files-inside {
