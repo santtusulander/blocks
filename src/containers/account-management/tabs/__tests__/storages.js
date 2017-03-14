@@ -11,6 +11,9 @@ import { getSortData } from '../../../../util/helpers.js'
 jest.unmock('../../../../redux/modules/fetching/actions')
 import mapActionsToFetchingReducers from '../../../../redux/modules/fetching/actions'
 
+jest.unmock('../../../__mocks__/gen-async');
+import { genAsyncMock } from '../../../__mocks__/gen-async'
+
 
 function intlMaker() {
   return {
@@ -101,7 +104,7 @@ const storagesComponent =
     clusters={fakeClusters}
     properties={fakeProperties}
     metrics={fakeMetrics}
-    fetchStorages={jest.fn()}
+    fetchStorages={genAsyncMock}
     fetchClusters={jest.fn()}
     fetchProperties={jest.fn()}
     fetchMetrics={jest.fn()}
