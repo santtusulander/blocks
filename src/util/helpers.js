@@ -13,6 +13,14 @@ import { MAPBOX_MAX_CITIES_FETCHED } from '../constants/mapbox'
 import { STORAGE_SERVICE_ID } from '../constants/service-permissions'
 
 const BYTE_BASE = 1000
+const UNITS_COEFFICIENTS = Map({
+  PB: Math.pow(BYTE_BASE, 5),
+  TB: Math.pow(BYTE_BASE, 4),
+  GB: Math.pow(BYTE_BASE, 3),
+  MB: Math.pow(BYTE_BASE, 2),
+  KB: Math.pow(BYTE_BASE, 1),
+  B: 1
+})
 
 export function formatBytes(bytes, setMax, customFormat) {
   let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format(customFormat || '0,0') + ' PB'
@@ -59,6 +67,12 @@ export function convertToBytes(value, units) {
     default:
       return value
   }
+}
+
+export function formatBytesToUnit(value, unit) {
+  const formatted = separateUnit(formatBytes(value))
+  const coefficient = UNITS_COEFFICIENTS.get(formatted.unit) / UNITS_COEFFICIENTS.get(unit)
+  return formatted.value * coefficient
 }
 
 export function formatBitsPerSecond(bits_per_second, decimals, setMax) {

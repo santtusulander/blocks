@@ -26,7 +26,7 @@ import StorageContents from '../../components/storage/storage-contents'
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 
 import { getContentUrl } from '../../util/routes.js'
-import { formatBytes, buildAnalyticsOpts } from '../../util/helpers'
+import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
 class Storage extends Component {
   constructor(props) {
@@ -206,10 +206,9 @@ const getMockContents = (storage) => (
   )
 
 const prepareStorageMetrics = (storage, storageMetrics, storageType) => {
-  const current = formatBytes(storage.get('usage'))
-  const estimated = formatBytes(storage.get('estimated_usage'))
-  const peak = formatBytes(storageMetrics.getIn(['totals', storageType, 'peak']))
-  const unit = current.replace(parseFloat(current), '')
+  const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
+  const current = formatBytesToUnit(storage.get('usage'), unit)
+  const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
   const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
   return {
     chartData: {
@@ -226,9 +225,9 @@ const prepareStorageMetrics = (storage, storageMetrics, storageType) => {
       key: 'bytes'
     },
     usage: {
-      current: parseFloat(current),
+      current: current,
       estimated: parseFloat(estimated),
-      peak: parseFloat(peak),
+      peak: peak,
       unit: unit
     },
     gain: gain,
