@@ -15,6 +15,7 @@ import StorageFormContainer from './modals/storage-modal.jsx'
 
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
+import StorageWrapper from './storage-wrapper'
 
 import StorageHeader from '../../components/storage/storage-header'
 import StorageKPI from '../../components/storage/storage-kpi'
@@ -72,6 +73,7 @@ class Storage extends Component {
       currentUser,
       group,
       params,
+      router,
       storage,
       storageContents,
       gatewayHostname,
@@ -83,48 +85,49 @@ class Storage extends Component {
       }} = this.props
 
     return (
-      <Content>
-
-        <StorageHeader
-          currentUser={currentUser}
-          params={params}
-          toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
-        />
-
-        <PageContainer>
-          <StorageKPI
-            chartData={chartData.data}
-            chartDataKey={chartData.key}
-            currentValue={values.current}
-            gainPercentage={gain}
-            locations={locations}
-            peakValue={values.peak}
-            referenceValue={values.reference}
-            valuesUnit={values.unit}
+      <StorageWrapper params={params} router={router}>
+        <Content>
+          <StorageHeader
+            currentUser={currentUser}
+            params={params}
+            toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
           />
 
-          <StorageContents
-            storageId={params.storage}
-            gatewayHostname={gatewayHostname}
-            asperaInstanse={asperaInstanse}
-            contents={storageContents}
-            asperaUpload={this.state.asperaUpload}
-            onMethodToggle={this.toggleUploadMehtod}
-          />
-        </PageContainer>
+          <PageContainer>
+            <StorageKPI
+              chartData={chartData.data}
+              chartDataKey={chartData.key}
+              currentValue={values.current}
+              gainPercentage={gain}
+              locations={locations}
+              peakValue={values.peak}
+              referenceValue={values.reference}
+              valuesUnit={values.unit}
+            />
 
-        {(accountManagementModal === EDIT_STORAGE) &&
-          <StorageFormContainer
-            show={true}
-            brand={account.get('brand_id')}
-            accountId={account.get('id')}
-            storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
-            groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
-            fetching={false}
-            onCancel={this.onModalCancel}
-          />
-        }
-      </Content>
+            <StorageContents
+              storageId={params.storage}
+              gatewayHostname={gatewayHostname}
+              asperaInstanse={asperaInstanse}
+              contents={storageContents}
+              asperaUpload={this.state.asperaUpload}
+              onMethodToggle={this.toggleUploadMehtod}
+            />
+          </PageContainer>
+
+          {(accountManagementModal === EDIT_STORAGE) &&
+            <StorageFormContainer
+              show={true}
+              brand={account.get('brand_id')}
+              accountId={account.get('id')}
+              storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+              groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+              fetching={false}
+              onCancel={this.onModalCancel}
+            />
+          }
+        </Content>
+      </StorageWrapper>
     )
   }
 }

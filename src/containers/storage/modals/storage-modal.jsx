@@ -197,20 +197,20 @@ const mapStateToProps = (state, ownProps) => {
 
   const storageId = ownProps.storageId && buildReduxId(ownProps.groupId, ownProps.storageId)
   const storage = ownProps.storageId && getStorageById(state, storageId)
-  const hasTranscodingSupport = hasOption(state.group.get('activeGroup'), TRANSCODING_OPTION_ID)
+  const group = ownProps.groupId && getGroupById(state, ownProps.groupId)
 
   const storageWorkflow = storage && storage.get('workflow')
   const clusters = storage && storage.get('clusters')
-
+  
   return {
     abrToggle: isABRSelected,
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
-    group: ownProps.groupId && getGroupById(state, ownProps.groupId),
+    group,
     isFetching: getGlobalFetching(state),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
-    hasTranscodingSupport,
+    hasTranscodingSupport: hasOption(group, TRANSCODING_OPTION_ID),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',

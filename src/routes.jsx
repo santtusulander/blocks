@@ -13,7 +13,8 @@ import {
   UserCanViewAnalyticsTab,
   UserCanViewDns,
   UserCanViewHosts,
-  CanViewConfigurationSecurity
+  CanViewConfigurationSecurity,
+  canViewStorageSummary
 } from './util/route-permissions-wrappers'
 
 import {
@@ -277,7 +278,7 @@ export const getRoutes = store => {
           </Route>
 
           {/* Storage - routes */}
-          <Route path={routes.contentStorage} component={Storage} />
+          <Route path={routes.contentStorage} component={canViewStorageSummary(store)(Storage)} />
 
         </Route>
 

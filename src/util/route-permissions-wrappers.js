@@ -156,3 +156,17 @@ export const CanViewConfigurationSecurity = (store) => {
     allowRedirectBack: false
   })
 }
+
+export const canViewStorageSummary = (store) => {
+  return UserAuthWrapper({
+    authSelector: authSelector,
+    failureRedirectPath: (state, ownProps) => {
+      const path = ownProps.location.pathname.replace(/\/storage\/\w+/, '')
+
+      return `${path}`
+    },
+    wrapperDisplayName: 'CanViewStorageSummary',
+    predicate: permissionChecker(PERMISSIONS.VIEW_STORAGE, store),
+    allowRedirectBack: false
+  })
+}
