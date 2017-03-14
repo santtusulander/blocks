@@ -129,7 +129,6 @@ StorageItemList.propTypes = {
   locations: PropTypes.array,
   currentUsage:  PropTypes.number,
   estimate: PropTypes.number,
-  peak:PropTypes.string,
 
   average: PropTypes.number,
   disableLinkTo: PropTypes.bool,
@@ -138,7 +137,7 @@ StorageItemList.propTypes = {
   linkTo: PropTypes.string,
   peak:PropTypes.number,
   low:PropTypes.number,
-  onConfiguration: PropTypes.func,
+  onConfiguration: PropTypes.func
 }
 StorageItemList.defaultProps = {
   primaryData: Immutable.List()

@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'immutable'
 import { shallow } from 'enzyme'
 import '../../../../__mocks__/recharts'
 
@@ -15,7 +16,7 @@ const subject = shallow(
     analyticsLink='#'
     configurationLink='#'
     name="Storage 02"
-    locations={["Hong Kong"]}
+    locations={List(["Hong Kong"])}
     currentUsage = {80.2e12}
     estimate = {250e12}
     peak = {160e12}

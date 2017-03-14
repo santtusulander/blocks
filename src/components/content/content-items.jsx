@@ -23,9 +23,12 @@ import UDNButton from '../button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import StorageChartContainer from '../../containers/storage/storage-chart-container'
-import StorageListContainer from '../../containers/storage/storage-list-container'
+
+import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
+import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
+
 import PropertyItemContainer from '../../containers/content/property-item-container'
+
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
