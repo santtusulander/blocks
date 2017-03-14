@@ -26,7 +26,7 @@ import StorageContents from '../../components/storage/storage-contents'
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 
 import { getContentUrl } from '../../util/routes.js'
-import { buildAnalyticsOpts } from '../../util/helpers'
+import { formatBytes, buildAnalyticsOpts } from '../../util/helpers'
 
 class Storage extends Component {
   constructor(props) {
@@ -85,7 +85,7 @@ class Storage extends Component {
       gatewayHostname,
       storageMetrics: {
         chartData,
-        values,
+        usage,
         gain,
         locations
       }} = this.props
@@ -103,12 +103,12 @@ class Storage extends Component {
           <StorageKPI
             chartData={chartData.data}
             chartDataKey={chartData.key}
-            currentValue={values.current}
+            currentValue={usage.current}
             gainPercentage={gain}
             locations={locations}
-            peakValue={values.peak}
-            referenceValue={values.reference}
-            valuesUnit={values.unit}
+            peakValue={usage.peak}
+            referenceValue={usage.estimated}
+            valuesUnit={usage.unit}
           />
 
           <StorageContents
@@ -163,40 +163,16 @@ Storage.defaultProps = {
     chartData: {
       data: [],
       key: ''},
-    values: {
+    usage: {
       current: 0,
+      estimated: 0,
       peak: 0,
-      referenceValue: 0,
       unit: ''
     },
     gain: 0,
     locations: []
   }
 }
-
-const getMockMetrics = () => ({
-  chartData: {
-    data: [
-      {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
-      {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
-      {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
-      {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
-      {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
-      {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
-      {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
-      {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
-    ],
-    key: 'bytes'
-  },
-  values: {
-    current: 112,
-    peak: 120,
-    reference: 100,
-    unit: 'tb'
-  },
-  gain: 0.2,
-  locations: ['San Jose', 'Frankfurt']
-})
 
 const getMockContents = (storage) => (
   storage === 'with-contents'
@@ -229,18 +205,51 @@ const getMockContents = (storage) => (
     []
   )
 
+const prepareStorageMetrics = (storage, storageMetrics, storageType) => {
+  const current = formatBytes(storage.get('usage'))
+  const estimated = formatBytes(storage.get('estimated_usage'))
+  const peak = formatBytes(storageMetrics.getIn(['totals', storageType, 'peak']))
+  const unit = current.replace(parseFloat(current), '')
+  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+  return {
+    chartData: {
+      data: [
+        {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
+        {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
+        {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
+        {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
+        {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
+        {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
+        {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
+        {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
+      ],
+      key: 'bytes'
+    },
+    usage: {
+      current: parseFloat(current),
+      estimated: parseFloat(estimated),
+      peak: parseFloat(peak),
+      unit: unit
+    },
+    gain: gain,
+    locations: ['San Jose', 'Frankfurt']
+  }}
+
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storageId = null
   let storage = null
+  let storageMetrics = null
 
   if (ownProps.params.storage && ownProps.params.group) {
     storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
+    storageMetrics = getMetricsByStorageId(state, ownProps.params.stroge)
   }
 
   const gateway = storage && storage.get('gateway')
   const gatewayHostname = gateway && gateway.get('hostname')
+  const filters = state.filters.get('filters')
 
   return {
     account: state.account.get('activeAccount'),
@@ -248,11 +257,11 @@ const mapStateToProps = (state, ownProps) => {
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
-    filters: state.filters.get('filters'),
+    filters,
     group: state.group.get('activeGroup'),
     storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: getMockMetrics()
+    storageMetrics: storageMetrics && prepareStorageMetrics(storage, storageMetrics, filters.get('storageType'))
   }
 }
 
