@@ -17,8 +17,6 @@ import {
 } from '../../util/routes'
 import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
 
-import { buildReduxId } from '../../redux/util'
-
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
@@ -318,14 +316,15 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageEntities,
+      storageIds,
+      params,
       locationPermissions,
       storageContentItems,
       storagePermission,
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed, listAllowed } = storagePermission
+    const { createAllowed } = storagePermission
     const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
@@ -473,20 +472,11 @@ class ContentItems extends React.Component {
               <div
                 key={viewingChart}
                 className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-
-                  {listAllowed
-                    && viewingChart
-                    && groupHasStorageService
-                    && storageEntities.map(storage => {
-                      const storageId = buildReduxId(group, storage.get('ingest_point_id'))
-
-                      return (
-                        <StorageChartContainer
-                          key={storageId}
-                          storageId={storageId}
-                          analyticsLink={/*TODO: UDNP-2932*/'#'}
-                          storageContentLink={/*TODO: UDNP-2925*/'#'}/>)
-                    })}
+                  <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+                    <div className="storage-wrapper">
+                      {viewingChart && groupHasStorageService && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
+                    </div>
+                  </IsAllowed>
 
                 {contentItems.map(content => {
                   const item = content.get('item')
@@ -632,7 +622,7 @@ ContentItems.propTypes = {
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageEntities: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
@@ -647,9 +637,9 @@ ContentItems.defaultProps = {
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
   storageContentItems: Immutable.List(),
-  storageEntities: Immutable.List(),
-  storagePermission: {},
-  user: Immutable.Map()
+  storageIds: Immutable.Iterable(),
+  user: Immutable.Map(),
+  storagePermission: {}
 }
 
 export default withRouter(ContentItems)

@@ -4,7 +4,7 @@ import { Map, List } from 'immutable'
 
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { getStorageById, getClusterNames } from './selectors'
+import { getStorageById } from './selectors'
 
 import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
@@ -56,8 +56,6 @@ StorageChartContainer.defaultProps = {
  * @return {[function]} mapStateToProps
  */
 const makeStateToProps = () => {
-
-  const getClusters = makeMemoizedSelector(getClusterNames)
   const getMetrics = makeMemoizedSelector()
   const getStorageEntity = makeMemoizedSelector()
 
@@ -70,14 +68,7 @@ const makeStateToProps = () => {
 
     const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
 
-    // Get cluster descriptions by their IDs inside a storage entity if the chart
-    // isn't showing aggregate data.
-    const clusters = !ownProps.showingAggregate
-      ? getClusters(state, storageEntity.get('clusters'))
-      : undefined
-
     return {
-      clusters,
       storageEntity,
       storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }

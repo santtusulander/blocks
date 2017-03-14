@@ -1,8 +1,5 @@
-import { List, Map } from 'immutable'
-
 import { getById as getStorageEntity, getAggregatedEstimatesByAccount } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getByAccountId as getMetricsByAccount } from '../../redux/modules/entities/storage-metrics/selectors'
-import { getById as getClusterById } from '../../redux/modules/entities/CIS-clusters/selectors'
 
 /**
  * Default selector for storage entity if it's not passed as prop.
@@ -18,12 +15,4 @@ export const getStorageEstimateByAccount = (state, { params: { account } }) => {
 
 export const getStorageMetricsByAccount = (state, { params: { account } }) => {
   return getMetricsByAccount(state, account)
-}
-
-export const getClusterNames = (state, clusterIds = List()) => {
-
-  return clusterIds.map(id => {
-    return ( getClusterById(state, id) || Map() ).get('description')
-  })
-
 }

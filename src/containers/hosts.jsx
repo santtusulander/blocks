@@ -13,15 +13,14 @@ import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
-import clusterActions from '../redux/modules/entities/CIS-clusters/actions'
-import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
-import { getByGroup as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+import { getIdsByGroup as getStorageIdsByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
-import checkPermissions, { getStoragePermissions } from '../util/permissions'
+import checkPermissions from '../util/permissions'
+import {getStoragePermissions} from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -159,7 +158,7 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
-        storageEntities={this.props.storageEntities}
+        storageIds={this.props.storageIds}
         storageContentItems={mockRedux.get('storages')}
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
@@ -208,7 +207,7 @@ Hosts.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storageEntities: React.PropTypes.instanceOf(Immutable.List),
+  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
@@ -234,7 +233,7 @@ function mapStateToProps(state, { params: { group } }) {
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
-    storageEntities: getStoragesByGroup(state, group),
+    storageIds: getStorageIdsByGroup(state, group),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
@@ -264,9 +263,7 @@ function mapDispatchToProps(dispatch, ownProps) {
       groupActions.fetchGroup(brand, account, group),
       hostActions.fetchHosts(brand, account, group),
       hostActions.fetchConfiguredHostNames(brand, account, group),
-      dispatch(storageActions.fetchAll({ group })),
-      dispatch(fetchStorageMetrics(metricsOpts)),
-      dispatch(clusterActions.fetchAll({}))
+      dispatch(storageActions.fetchAll({ group }))
     ])
   }
   const fetchMetricsData = () => {
