@@ -1,11 +1,11 @@
 import { createAction } from 'redux-actions'
 import { bindActionCreators } from 'redux'
 import * as api from './api'
-import * as actionTypes from './actionTypes'
+import { UPLOAD_FILE } from './actionTypes'
 
 
 const actionCreators = {
-  [actionTypes.GET_ACCESS_KEY]: createAction(actionTypes.GET_ACCESS_KEY, (id) => api.getAccessKeyById(id))
+  [UPLOAD_FILE]: createAction(UPLOAD_FILE, (accessKey, onProgress, file) => api.uploadFile(...arguments))
 }
 
 export default (dispatch) => bindActionCreators(actionCreators, dispatch)

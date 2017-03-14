@@ -6,6 +6,13 @@ import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+import { getStorageAccessKey } from '../../redux/modules/user'
+
+import * as uploadActions from '../../redux/modules/http-file-upload/actions'
+import * as uploadActionTypes from '../../redux/modules/http-file-upload/actionTypes'
+import * as uploadSelectors from '../../redux/modules/http-file-upload/selectors'
+import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
+import * as api from '../../redux/modules/http-file-upload/api'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
@@ -32,18 +39,29 @@ class Storage extends Component {
       asperaUpload: false
     }
 
+    this.fileUploader = null
+
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
+    this.initFileUploader = this.initFileUploader.bind(this)
+  }
+
+  /**
+   * Initialize File Uploader
+   * @param action {object} - action with type and payload
+   */
+  initFileUploader(action) {
+    this.fileUploader = FileUploader.initialize(action.payload)
   }
 
   componentWillMount() {
-    if (this.props.params.storage && this.props.params.group) {
-      this.props.fetchStorage({
-        group: this.props.params.group,
-        id: this.props.params.storage
-      })
+    const { storage: id, group } = this.props.params
+    if (id && group) {
+      this.props.fetchStorage({ id, group })
+      this.props.initStorageAccessKey(id, group)
+        .then(this.initFileUploader)
     }
   }
 
@@ -111,6 +129,7 @@ class Storage extends Component {
             contents={storageContents}
             asperaUpload={this.state.asperaUpload}
             onMethodToggle={this.toggleUploadMehtod}
+            fileUploader={this.fileUploader}
           />
         </PageContainer>
 
@@ -138,6 +157,7 @@ Storage.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
   fetchStorage: PropTypes.func,
+  fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   params: PropTypes.object,
@@ -238,6 +258,7 @@ const mapStateToProps = (state, ownProps) => {
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
+    storageAccessToken: state.user.get('storageAccessToken'),
     group: state.group.get('activeGroup'),
     storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
     storageContents: getMockContents(ownProps.params.storage),
@@ -250,7 +271,8 @@ const mapDispatchToProps = (dispatch) => {
 
   return {
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
-    toggleModal: uiActions.toggleAccountManagementModal
+    toggleModal: uiActions.toggleAccountManagementModal,
+    initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch)
   }
 }
 

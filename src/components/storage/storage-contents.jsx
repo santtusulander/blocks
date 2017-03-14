@@ -6,11 +6,12 @@ import { Map } from 'immutable'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
 import AsperaUpload from './aspera-upload'
+import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, groupId }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -25,6 +26,9 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
   const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
   const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
   const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
+  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : ()=>{}
+  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : ()=>{}
+  const processFiles = fileUploader ? fileUploader.processFiles : ()=>{}
 
   return (
     <SectionContainer>
@@ -50,11 +54,11 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
           options={[
             {
               label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-              handleClick: asperaUpload ? asperaShowSelectFileDialog : () => {}
+              handleClick: openFileDialog
             },
             {
               label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
-              handleClick: asperaUpload ? asperaShowSelectFolderDialog : () => {}
+              handleClick: openFolderDialog
             }
           ]}
         />
@@ -62,7 +66,8 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
       { hasContents
         ? <StorageContentBrowser contents={contents} />
         : asperaUpload
-        ? <AsperaUpload multiple={true} storageId={storageId} asperaGetaway={gatewayHostname} groupId={groupId} /> : <span>http-upload</span>
+        ? <AsperaUpload multiple={true} storageId={storageId} asperaGetaway={gatewayHostname} groupId={groupId} />
+        : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
       }
     </SectionContainer>
   )

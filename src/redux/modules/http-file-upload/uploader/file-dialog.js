@@ -15,7 +15,7 @@ export default new class FileDialog {
    * @return {HTMLElement}
    */
   static get inputElement() {
-    const input =  document.createElement('input')
+    const input = document.createElement('input')
     input.setAttribute('type', 'file')
     input.setAttribute('multiple', '')
 
