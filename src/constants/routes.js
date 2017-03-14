@@ -6,7 +6,7 @@ const ROUTES = {
   analyticsAccount: '/analysis/:brand/:account',
   analyticsGroup: '/analysis/:brand/:account/:group',
   analyticsProperty: '/analysis/:brand/:account/:group/:property',
-  analyticsStorage: '/analysis/:brand/:account/:group/:storage',
+  analyticsStorage: '/analysis/:brand/:account/:group/:storage/storage',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
