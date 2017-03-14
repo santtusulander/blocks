@@ -5,7 +5,7 @@ import { is, Map } from 'immutable'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { buildReduxId } from '../../redux/util'
-import StorageItemChart from '../../components/content/storage-item-chart'
+import StorageItemChart from '../../components/content/storage/storage-item-chart'
 
 import { getContentUrl } from '../../util/routes'
 
