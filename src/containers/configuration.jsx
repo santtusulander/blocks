@@ -81,7 +81,7 @@ export class Configuration extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
-    const nextHost = nextProps.activeHost
+    const nextHost = nextProps.activeHost || Immutable.Map()
     if (
       (!currentHost && nextHost)
         || (currentHost.getIn(pubNamePath) !== nextHost.getIn(pubNamePath))
