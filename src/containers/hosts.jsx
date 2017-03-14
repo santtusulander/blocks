@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-//import { getAnalyticsUrlFromParams, getContentUrl } from '../util/routes.js'
-
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
@@ -43,8 +41,7 @@ export class Hosts extends React.Component {
   }
   componentWillMount() {
     if(!this.props.activeGroup ||
-      String(this.props.activeGroup.get('id')) !== this.props.params.group
-      /*this.props.configuredHostNames.size === 0*/ ) {
+      String(this.props.activeGroup.get('id')) !== this.props.params.group ) {
       this.startFetching();
       this.props.fetchGroupData()
         .then(this.stopFetching, this.stopFetching)
@@ -190,9 +187,7 @@ Hosts.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
   dailyTraffic: Immutable.List(),
-  //hosts: Immutable.List(),
   metrics: Immutable.List(),
-  //propertyNames: Immutable.List(),
   roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   storages: Immutable.List(),
@@ -203,15 +198,10 @@ const mapStateToProps = (state, { params: { group } }) => {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    //configuredHostNames: state.host.get('configuredHostNames'),
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group), //state.host.get('allHosts'),
     storages: getStoragesByGroup(state, group),
-
-    //propertyIds: getPropertyIdsByGroup(state, group),
-    //propertyNames: state.host.get('configuredHostNames'),
-
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
@@ -235,11 +225,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   }
   const fetchGroupData = () => {
     return Promise.all([
-      //hostActions.startFetching(),
       accountActions.fetchAccount(brand, account),
       groupActions.fetchGroup(brand, account, group),
-      //hostActions.fetchHosts(brand, account, group),
-      //hostActions.fetchConfiguredHostNames(brand, account, group),
 
       dispatch(storageActions.fetchAll({ group })),
       dispatch(propertyActions.fetchAll({brand, account, group }))
