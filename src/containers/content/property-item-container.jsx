@@ -64,7 +64,7 @@ const makeGetMetrics = () => createDeepEqualSelector(
 const PropertyItemContainer = props => {
 
   const { published_host_id  } = props.entity.toJS()
-  const { entityMetrics, dailyTraffic, totalTraffics, params, entity, roles, user } = props
+  const { entityMetrics, dailyTraffic, totalTraffics, params, roles, user } = props
 
   const analyticsURLBuilder = (property) => {
     return getAnalyticsUrlFromParams(
@@ -162,6 +162,9 @@ PropertyItemContainer.propTypes = {
   entity: PropTypes.object,
   entityMetrics: PropTypes.object,
   params: PropTypes.object,
+  roles: PropTypes.instanceOf(List),
+  totalTraffics: PropTypes.instanceOf(List),
+  user: PropTypes.instanceOf(List),
   viewingChart: PropTypes.bool
 }
 
