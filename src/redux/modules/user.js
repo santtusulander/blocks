@@ -368,7 +368,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   }
 })
 
-export const getAccessKeyByToken = createAction(USER_ACCESS_KEY_RECEIVED, (storageId, groupId) => {
+export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (storageId, groupId) => {
   const token = getUserToken()
   const axiosInstanse = axios.create({
     headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }

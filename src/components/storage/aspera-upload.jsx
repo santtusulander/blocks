@@ -58,7 +58,7 @@ class AsperaUpload extends Component {
   componentWillMount() {
     const { storageId, groupId } = this.props
 
-    this.props.userActions.getAccessKeyByToken(storageId, groupId).then((res) => {
+    this.props.userActions.getStorageAccessKey(storageId, groupId).then((res) => {
       if (res.error) {
         this.setState({
           asperaError: res.payload.data.message,
