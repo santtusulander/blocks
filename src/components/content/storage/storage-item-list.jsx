@@ -41,18 +41,18 @@ class StorageItemList extends React.Component {
   render() {
     const {
       name,
-      location,
+      locations,
       linkTo,
       disableLinkTo,
       configurationLink,
       onConfiguration,
       isAllowedToConfigure,
       analyticsLink,
-      maxTransfer,
-      minTransfer,
-      avgTransfer,
+      peak,
+      low,
+      average,
       currentUsage,
-      usageQuota,
+      estimate,
       fetchingMetrics
     } = this.props
 
@@ -62,7 +62,7 @@ class StorageItemList extends React.Component {
           <LinkWrapper className="content-item-list-link" disableLinkTo={disableLinkTo} linkTo={linkTo}>
             <div className="content-item-details">
               <TruncatedTitle content={name} tooltipPlacement="top" className="content-item-list-name"/>
-              {location}
+              {locations.join(', ')}
             </div>
           </LinkWrapper>
 
@@ -87,14 +87,14 @@ class StorageItemList extends React.Component {
         <LinkWrapper className="content-item-list-link" disableLinkTo={disableLinkTo} linkTo={linkTo}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
-              <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{maxTransfer}</b></p>
-              <p><FormattedMessage id="portal.analytics.low.text"/> <b className="pull-right">{minTransfer}</b></p>
-              <p><FormattedMessage id="portal.analytics.average.text"/> <b className="pull-right">{avgTransfer}</b></p>
+              <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{formatBitsPerSecond(peak)}</b></p>
+              <p><FormattedMessage id="portal.analytics.low.text"/> <b className="pull-right">{formatBitsPerSecond(low)}</b></p>
+              <p><FormattedMessage id="portal.analytics.average.text"/> <b className="pull-right">{formatBitsPerSecond(average)}</b></p>
             </div>
 
             <div className="content-item-list-section section-lg">
               <Row>
-                <h1>{currentUsage}<span className="heading-suffix">/ {usageQuota}</span></h1>
+                <h1>{formatBitsPerSecond(currentUsage)}<span className="heading-suffix">/ {formatBitsPerSecond(estimate)}</span></h1>
                 <p className="text-sm"><FormattedMessage id="portal.common.current" /></p>
               </Row>
             </div>
@@ -124,16 +124,21 @@ StorageItemList.displayName = 'StorageItemList'
 StorageItemList.propTypes = {
   analyticsLink: PropTypes.string,
   configurationLink: PropTypes.string,
-  currentUsage: PropTypes.number,
-  diameter: PropTypes.number,
-  estimate: PropTypes.number,
-  lastMonthEstimate: PropTypes.number,
-  lastMonthPeak: PropTypes.number,
-  lastMonthUsage: PropTypes.number,
-  locations: PropTypes.array,
+  storageContentLink: PropTypes.string,
   name: PropTypes.string,
-  peak: PropTypes.number,
-  storageContentLink: PropTypes.string
+  locations: PropTypes.array,
+  currentUsage:  PropTypes.number,
+  estimate: PropTypes.number,
+  peak:PropTypes.string,
+
+  average: PropTypes.number,
+  disableLinkTo: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  isAllowedToConfigure: PropTypes.bool,
+  linkTo: PropTypes.string,
+  peak:PropTypes.number,
+  low:PropTypes.number,
+  onConfiguration: PropTypes.func,
 }
 StorageItemList.defaultProps = {
   primaryData: Immutable.List()
