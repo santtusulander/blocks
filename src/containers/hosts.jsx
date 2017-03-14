@@ -83,30 +83,9 @@ export class Hosts extends React.Component {
   }
   render() {
     const params = this.props.params
-    const { brand, account, group } = this.props.params
+    const { brand, account, group } = params
     const { activeAccount, activeGroup, roles, user } = this.props
 
-    // const propertyNames = this.props.propertyNames.size ?
-    //   this.props.propertyNames : this.props.hosts
-    // const properties = propertyNames.map(host => {
-    //   return Immutable.Map({
-    //     id: host,
-    //     name: host
-    //   })
-    // })
-    // const nextPageURLBuilder = (property) => {
-    //   return getContentUrl('property', property, params)
-    // }
-    // const configURLBuilder = (property) => {
-    //   return getContentUrl('propertyConfiguration', property, params)
-    // }
-    // const analyticsURLBuilder = (property) => {
-    //   return getAnalyticsUrlFromParams(
-    //     {...this.props.params, property},
-    //     user.get('currentUser'),
-    //     roles
-    //   )
-    // }
     const breadcrumbs = [
       {
         label: activeAccount ? activeAccount.get('name') : <FormattedMessage id="portal.loading.text"/>,
@@ -116,21 +95,19 @@ export class Hosts extends React.Component {
         label: activeGroup ? activeGroup.get('name') : <FormattedMessage id="portal.loading.text"/>
       }
     ]
+
     const storagePermission = getStoragePermissions(roles, user.get('currentUser'))
+
     return (
       <ContentItems
         activeAccount={this.props.activeAccount}
         activeGroup={activeGroup}
-        //analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
-        params={this.props.params}
+        params={params}
         className="hosts-container"
-        //configURLBuilder={configURLBuilder}
-        //contentItems={properties}
+
         storages={this.props.storages}
         properties={this.props.properties}
-
-        //storageContentItems={ this.props.storageContentItems }
 
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
@@ -144,9 +121,6 @@ export class Hosts extends React.Component {
         // instead of groups permissions, but they dont exist yet.
         isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
         metrics={this.props.metrics}
-        //nextPageURLBuilder={nextPageURLBuilder}
-        //showAnalyticsLink={true}
-        //showSlices={true}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
@@ -166,7 +140,6 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  //configuredHostNames: React.PropTypes.instanceOf(Immutable.List),
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
