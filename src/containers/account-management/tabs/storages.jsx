@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { Map, List} from 'immutable'
+import { Map, List } from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -54,22 +54,28 @@ class AccountManagementStorages extends Component {
   componentWillMount() {
     this.props.groups.map( group => {
       const account = this.props.account
+      const brandId = account.get('brand_id')
+      const accountId = account.get('id')
+      const groupId = group.get('id')
       const metricsStartDate = new Date()
 
       this.props.fetchStorages({ group: group.get('id') })
-      this.props.fetchProperties({
-        brand: account.get('brand_id'),
-        account: account.get('id'),
-        group: group.get('id')
-      })
+        .then((res) => {
+          if (res) {
+            const storages = res.entities.ingestPoints
 
-      // TODO UDNP-2958 Use current account and group Ids
-      // when metrics API will be ready
-      this.props.fetchMetrics({
-        start: metricsStartDate.getTime(),
-        account: 20005,
-        group: 268
-      })
+            for (let key in storages) {
+              this.props.fetchMetrics({
+                start: metricsStartDate.getTime(),
+                account: accountId,
+                group: groupId,
+                ingest_point: storages[key].ingest_point_id
+              })
+            }
+          }
+        })
+
+      this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
     this.props.fetchClusters({})
   }
