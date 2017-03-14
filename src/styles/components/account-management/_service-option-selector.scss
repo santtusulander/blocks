@@ -3,19 +3,9 @@
   width: 550px;
 
   .flex-row {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    font-weight: 100;
-
     &.enabled {
       font-weight: 600;
     }
-  }
-
-  .flex-item {
-    flex-grow: 1;
-    flex-basis: 0;
   }
 
   .name {
@@ -23,10 +13,6 @@
   }
 
   .tick {
-    flex: 0 0 5rem;
-  }
-
-  .arrow-right {
-    flex: 0 0 5rem;
+    flex: 0 0 5rem !important;
   }
 }
