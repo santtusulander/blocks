@@ -16,28 +16,8 @@ import { composedChartData as fakeData } from '../../../containers/__mocks__/cha
 class StorageItemList extends React.Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      byLocationWidth: 0,
-      byTimeWidth: 0,
-      byTimeHeight: 0
-    }
-
-    this.measureContainers = this.measureContainers.bind(this)
-  }
-  componentDidMount() {
-    this.measureContainers()
-    window.addEventListener('resize', this.measureContainers)
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.measureContainers)
-  }
-  measureContainers() {
-    this.setState({
-      byTimeWidth: this.refs.byTimeHolder && this.refs.byTimeHolder.clientWidth,
-      byTimeHeight: this.refs.byTimeHolder && this.refs.byTimeHolder.clientHeight
-    })
-  }
   render() {
     const {
       name,
@@ -107,10 +87,16 @@ class StorageItemList extends React.Component {
               transitionName="content-transition"
               transitionEnterTimeout={250}
               transitionLeaveTimeout={250}>
-              {!fetchingMetrics ?
+
+              {!fetchingMetrics &&
                 // TODO : UDNP-2938 | replace storage mock data with redux
-                <LineAreaComposedChart isMiniChart={true} data={fakeData} valueFormatter={formatBitsPerSecond} width={this.state.byTimeWidth} height={this.state.byTimeHeight}/>
-              : ''}
+                <LineAreaComposedChart
+                  isMiniChart={true}
+                  data={fakeData}
+                  valueFormatter={formatBitsPerSecond}
+                />
+              }
+
             </ReactCSSTransitionGroup>
           </div>
         </LinkWrapper>

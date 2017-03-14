@@ -168,6 +168,13 @@
     align-items: center;
     justify-content: center;
 
+    //needed to make mini-chart responsive
+    .line-area-composed-chart-container, .content-transition {
+      width: 100%;
+      height: 100%;
+      padding: 5px 0 5px 0px;
+    }
+
     @include md {
       height: $md-content-item-list-height;
       margin: 0 520px 0 330px;
