@@ -20,8 +20,9 @@ import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
-import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
-import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
+import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
+import { deploymentModes } from '../constants/configuration'
+import { VOD_STREAMING_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -102,7 +103,7 @@ export class Configuration extends React.Component {
   }
 
   hasSecurityServicePermission() {
-    return this.props.servicePermissions.contains(VIEW_CONFIGURATION_SECURITY)
+    return this.props.servicePermissions.contains(MEDIA_DELIVERY_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -505,7 +506,7 @@ function mapStateToProps(state) {
   let hasVODSupport = false
 
   enabledServices.forEach((service) => {
-    if (service.get('service_id') === VOD_SERVICE_ID) {
+    if (service.get('service_id') === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     }
   })

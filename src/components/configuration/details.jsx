@@ -278,13 +278,6 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                    <InputGroup.Addon>
-                      <HelpTooltip
-                        id="tooltip_enter_host_name_value"
-                        title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
-                        <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
-                      </HelpTooltip>
-                    </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
