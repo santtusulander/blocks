@@ -433,65 +433,15 @@ class ContentItems extends React.Component {
               transitionLeaveTimeout={250}
             >
 
-
-
-              {/*!storageContentItems.isEmpty() &&
-=======
-              {!storageContentItems.isEmpty() && groupHasStorageService &&
-                <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
->>>>>>> develop
-                <div>
-                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
-                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                    {!viewingChart && storageContentItems.map(storage => {
-                      const id = storage.get('id')
-
-                      // TODO UNDP-2906
-                      // Fix this in scope of integration with create/edit forms task, analytics
-                      const itemProps = {
-                        id,
-                        name: storage.get('name'),
-                        location: storage.get('location'),
-                        linkTo: '',
-                        disableLinkTo: false,
-                        configurationLink: '',
-                        onConfiguration: () => {this.editItem(id)},
-                        analyticsLink: '',
-                        delete: this.props.deleteItem,
-                        primaryData: Immutable.List(),
-                        maxTransfer: storage.get('maxTransfer'),
-                        minTransfer: storage.get('minTransfer'),
-                        avgTransfer: storage.get('avgTransfer'),
-                        currentUsage: storage.get('currentUsage'),
-                        usageQuota: storage.get('usageQuota'),
-                        fetchingMetrics: this.props.fetchingMetrics,
-                        isAllowedToConfigure: this.props.isAllowedToConfigure,
-                        chartWidth: '450'
-                      }
-
-                      return (
-                        <ContentItem key={`content-item-${id}`}
-                          isChart={viewingChart}
-                          isStorage={true}
-                          itemProps={itemProps}
-                          deleteItem={this.props.deleteItem}/>
-                      )
-                    })}
-                  </div>
-                  <br />
-                  <br />
-<<<<<<< HEAD
-                </div>*/}
-
-
-                <div
-                  key={viewingChart}
-                  className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+            <div
+              key={viewingChart}
+              className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
                 { /* STORAGES -header on List view */
                   this.getTier() === 'group' && !viewingChart &&
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
+                
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                   <div className="storage-wrapper">
 
