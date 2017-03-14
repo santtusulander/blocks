@@ -6,7 +6,7 @@ import AsperaUpload from '../aspera-upload'
 
 function makeUserActions() {
   return {
-    getAccessKeyByToken: function () {
+    getStorageAccessKey: function () {
       return {
         then: jest.fn()
       }
