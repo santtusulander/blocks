@@ -64,14 +64,13 @@ class StorageForm extends React.Component {
 
   render() {
     const { error, submitting, handleSubmit, intl, initialValues, abrProfileOptions, dirty,
-            invalid, onCancel, onSave, onDelete, abrToggle, locationOptions } = this.props
+            invalid, onCancel, onSave, onDelete, abrToggle, locationOptions, hasTranscodingSupport } = this.props
 
     const edit = !!initialValues.name
 
     const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
                               edit ? <FormattedMessage id="portal.button.save"/> :
                               <FormattedMessage id="portal.button.add"/>
-
 
     return (
       <form className="storage-form" onSubmit={handleSubmit(onSave)}>
@@ -134,21 +133,23 @@ class StorageForm extends React.Component {
           />
         </div>
 
-        <Field
-          name="abr"
-          className="abr-field"
-          component={FieldFormGroupToggle}
-          label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
-          readonly={edit ? true : false}
-          required={edit ? false : true}
-          addonAfterLabel={
-            <HelpTooltip
-              id="tooltip-help"
-              title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
-              <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
-            </HelpTooltip>
-          }
-        />
+        {hasTranscodingSupport &&
+          <Field
+            name="abr"
+            className="abr-field"
+            component={FieldFormGroupToggle}
+            label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
+            readonly={edit ? true : false}
+            required={edit ? false : true}
+            addonAfterLabel={
+              <HelpTooltip
+                id="tooltip-help"
+                title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
+                <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
+              </HelpTooltip>
+            }
+          />
+        }
 
         {abrToggle &&
           <Field
@@ -198,6 +199,7 @@ StorageForm.propTypes = {
   abrProfileOptions: PropTypes.array,
   abrToggle: PropTypes.bool,
   fetching: PropTypes.bool,
+  hasTranscodingSupport: PropTypes.bool,
   intl: intlShape.isRequired,
   invalid: PropTypes.bool,
   locationOptions: PropTypes.array,

@@ -662,3 +662,8 @@ export function hasService(group, serviceID) {
   const services = group.get('services')
   return services && services.some(service => service.get('service_id') === serviceID)
 }
+
+export function hasOption(group, optionID) {
+  const services = group.get('services')
+  return services && services.some(service => service.get('options').some(option => option.get('option_id') === optionID))
+}
