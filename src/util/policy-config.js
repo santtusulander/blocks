@@ -8,6 +8,8 @@ import {
   DEFAULT_MATCH
 } from '../constants/property-config'
 
+import { TOKEN_AUTH_STREAMING } from '../constants/configuration'
+
 export const matchFilterChildPaths = {
   'exists': ['cases', 0, 1],
   'contains': ['cases', 0, 1],
@@ -270,13 +272,15 @@ export const getTokenAuthRules = (properties) => {
     config && config.request_policy.policy_rules.forEach( (rule, key) => {
       const {sets} = parsePolicy(fromJS(rule), [])
       if ( actionIsTokenAuth( sets ) ) {
+        const tokenAuthConfig = fromJS(rule).getIn(sets[0].path).toJS()
         const returnObj = {
           ruleId: key,
           propertyName: property.published_host_id,
+          type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
           accountId: property.accountId,
           groupId: property.groupId,
-          encryption: 'HMAC-SHA1',  //Hardcoded for now
-          schema: 'URL',            //
+          encryption: tokenAuthConfig.encryption,
+          schema: tokenAuthConfig.schema && tokenAuthConfig.schema.join(' + '),
           created: config.config_created
         }
         tokenAuthRules.push(returnObj)

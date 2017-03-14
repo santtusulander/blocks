@@ -126,9 +126,11 @@
 @import 'components/configuration/policy-rule-edit';
 @import 'components/configuration/sidebar';
 @import 'components/configuration/versions';
+@import 'components/configuration/token-auth';
 // Layouts
 @import 'components/layout/content';
 @import 'components/layout/dialog';
+@import 'components/layout/flexbox';
 @import 'components/layout/page-container';
 @import 'components/layout/page-header';
 @import 'components/layout/section-header';
