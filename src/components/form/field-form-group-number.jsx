@@ -7,6 +7,7 @@ import NumberInput from '../number-input'
 
 const FieldFormGroupNumber = ({
   addonAfter,
+  addonAfterLabel,
   addonBefore,
   className,
   disabled,
@@ -23,7 +24,15 @@ const FieldFormGroupNumber = ({
 
   return (
     <FormGroup controlId={input.name} validationState={getReduxFormValidationState(meta)}>
-      {label && <ControlLabel>{label}{required && ' *'}</ControlLabel>}
+      {label &&
+        <ControlLabel>
+          {label}{required && ' *'}
+          {addonAfterLabel &&
+            <InputGroup.Addon className="addon-after-label">
+              {addonAfterLabel}
+            </InputGroup.Addon>
+          }
+        </ControlLabel>}
 
       <InputGroup>
 
@@ -68,6 +77,7 @@ FieldFormGroupNumber.defaultProps = {
 FieldFormGroupNumber.propTypes = {
   ErrorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   addonAfter: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  addonAfterLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   addonBefore: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
   className: PropTypes.string,
   disabled: PropTypes.bool,

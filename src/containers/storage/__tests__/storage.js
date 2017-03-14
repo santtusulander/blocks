@@ -4,9 +4,14 @@ import { shallow } from 'enzyme'
 jest.unmock('../storage.jsx')
 import Storage from '../storage.jsx'
 
+let params = {
+  storage: 'storage',
+  group: 'group'
+}
+
 const subject = () => {
   return shallow(
-    <Storage />)
+    <Storage params={params} fetchStorage={jest.fn()} />)
 }
 
 describe('Storage', () => {

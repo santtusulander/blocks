@@ -1,6 +1,17 @@
 import React, { Component, PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
+import { withRouter } from 'react-router'
+
+import * as uiActionCreators from '../../redux/modules/ui'
+import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+
+import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
+
+import { buildReduxId } from '../../redux/util'
+
+import StorageFormContainer from './modals/storage-modal.jsx'
 
 import Content from '../../components/layout/content'
 import PageContainer from '../../components/layout/page-container'
@@ -8,6 +19,10 @@ import PageContainer from '../../components/layout/page-container'
 import StorageHeader from '../../components/storage/storage-header'
 import StorageKPI from '../../components/storage/storage-kpi'
 import StorageContents from '../../components/storage/storage-contents'
+
+import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
+
+import { getContentUrl } from '../../util/routes.js'
 
 class Storage extends Component {
   constructor(props) {
@@ -18,28 +33,62 @@ class Storage extends Component {
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
+
+    this.editStorage = this.editStorage.bind(this)
+    this.onModalCancel = this.onModalCancel.bind(this)
+  }
+
+  componentWillMount() {
+    if (this.props.params.storage && this.props.params.group) {
+      this.props.fetchStorage({
+        group: this.props.params.group,
+        id: this.props.params.storage
+      })
+    }
   }
 
   toggleUploadMehtod(asperaUpload) {
     this.setState({ asperaUpload })
   }
 
+  editStorage(storageId, groupId) {
+    this.setState({ storageToEdit: storageId, storageGroup: groupId });
+    this.props.toggleModal(EDIT_STORAGE);
+  }
+
+  onModalCancel() {
+    if (!this.props.storage) {
+      const { params, router } = this.props
+      router.push(getContentUrl('group', params.group, params))
+    }
+    this.props.toggleModal()
+  }
+
   render() {
     const {
+      account,
+      accountManagementModal,
+      asperaInstanse,
       currentUser,
+      group,
       params,
+      storage,
       storageContents,
+      gatewayHostname,
       storageMetrics: {
         chartData,
         values,
         gain,
         locations
       }} = this.props
+
     return (
       <Content>
+
         <StorageHeader
           currentUser={currentUser}
           params={params}
+          toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
         />
 
         <PageContainer>
@@ -55,11 +104,27 @@ class Storage extends Component {
           />
 
           <StorageContents
+            storageId={params.storage}
+            groupId={params.group}
+            gatewayHostname={gatewayHostname}
+            asperaInstanse={asperaInstanse}
             contents={storageContents}
             asperaUpload={this.state.asperaUpload}
             onMethodToggle={this.toggleUploadMehtod}
           />
         </PageContainer>
+
+        {(accountManagementModal === EDIT_STORAGE) &&
+          <StorageFormContainer
+            show={true}
+            brand={account.get('brand_id')}
+            accountId={account.get('id')}
+            storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+            groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+            fetching={false}
+            onCancel={this.onModalCancel}
+          />
+        }
       </Content>
     )
   }
@@ -68,10 +133,19 @@ class Storage extends Component {
 Storage.displayName = 'Storage'
 
 Storage.propTypes = {
+  account: PropTypes.instanceOf(Map),
+  accountManagementModal: PropTypes.string,
+  asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
+  fetchStorage: PropTypes.func,
+  gatewayHostname: PropTypes.string,
+  group: PropTypes.instanceOf(Map),
   params: PropTypes.object,
+  router: PropTypes.object,
+  storage: PropTypes.instanceOf(Map),
   storageContents: PropTypes.array,
-  storageMetrics: PropTypes.object
+  storageMetrics: PropTypes.object,
+  toggleModal: PropTypes.func
 }
 
 Storage.defaultProps = {
@@ -146,11 +220,38 @@ const getMockContents = (storage) => (
   )
 
 const mapStateToProps = (state, ownProps) => {
+  const asperaInstanse = state.ui.get('asperaUploadInstanse')
+  let storageId = null
+  let storage = null
+
+  if (ownProps.params.storage && ownProps.params.group) {
+    storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
+    storage = getStorageById(state, storageId)
+  }
+
+  const gateway = storage && storage.get('gateway')
+  const gatewayHostname = gateway && gateway.get('hostname')
+
   return {
+    account: state.account.get('activeAccount'),
+    accountManagementModal: state.ui.get('accountManagementModal'),
+    gatewayHostname,
+    asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
+    group: state.group.get('activeGroup'),
+    storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
     storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: getMockMetrics()
   }
 }
 
-export default connect(mapStateToProps, null)(Storage)
+const mapDispatchToProps = (dispatch) => {
+  const uiActions = bindActionCreators(uiActionCreators, dispatch)
+
+  return {
+    fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    toggleModal: uiActions.toggleAccountManagementModal
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Storage))
