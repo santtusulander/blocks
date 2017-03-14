@@ -159,6 +159,7 @@ Storage.propTypes = {
 }
 
 Storage.defaultProps = {
+  filters: Map(),
   storageMetrics: {
     chartData: {
       data: [],
