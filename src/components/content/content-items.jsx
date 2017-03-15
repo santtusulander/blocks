@@ -331,6 +331,7 @@ class ContentItems extends React.Component {
       params,
       locationPermissions,
       storagePermission,
+      isAllowedToConfigure,
       params: { brand, account, group }
     } = this.props
 
@@ -339,21 +340,13 @@ class ContentItems extends React.Component {
     let trafficTotals = Immutable.List()
 
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-      // Remove the trial url from trial property names
-      if (trialNameRegEx.test(item.get('id'))) {
-        item = item.merge({
-          id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1'),
-          isTrialHost: true
-        })
-      }
+
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
@@ -460,17 +453,19 @@ class ContentItems extends React.Component {
                                 key={i}
                                 analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                                 storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
-                                onConfigurationClick={this.showStorageModal}
+                                onConfigurationClick={isAllowedToConfigure && this.showStorageModal}
                                 storageId={reduxId}
                                 params={params} />
                             )
                           } else {
                             return (
                               <StorageListContainer
-                                key={storage.get('ingest_point_id')}
-                                storageId={storage.get('ingest_point_id')}
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={isAllowedToConfigure && this.showStorageModal}
+                                storageId={reduxId}
                                 params={params}
-                                viewingChart={viewingChart}
                               />
                             )
                           }
@@ -644,7 +639,6 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List),
-  storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
