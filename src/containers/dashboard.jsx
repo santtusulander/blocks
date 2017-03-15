@@ -139,6 +139,8 @@ export class Dashboard extends React.Component {
           if (response) {
             groupIds = Object.keys(response.entities.groups)
           }
+          // We don't always have to fetch groups because of caching, in those cases use selector
+          // to get group IDs for this account from the store.
           else {
             groupIds = this.props.getGroupIds()
           }
