@@ -109,24 +109,31 @@ class StorageItemList extends React.Component {
 StorageItemList.displayName = 'StorageItemList'
 StorageItemList.propTypes = {
   analyticsLink: PropTypes.string,
-  configurationLink: PropTypes.string,
-  storageContentLink: PropTypes.string,
-  name: PropTypes.string,
-  locations: PropTypes.array,
-  currentUsage:  PropTypes.number,
-  estimate: PropTypes.number,
-
   average: PropTypes.number,
+
+  //configurationLink: PropTypes.string,
+  currentUsage:  PropTypes.number,
+
   disableLinkTo: PropTypes.bool,
+
+  estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
-  isAllowedToConfigure: PropTypes.bool,
+
   linkTo: PropTypes.string,
-  peak:PropTypes.number,
+  locations: PropTypes.array,
   low:PropTypes.number,
-  onConfiguration: PropTypes.func
+
+  name: PropTypes.string,
+
+  onConfiguration: PropTypes.func,
+  peak:PropTypes.number,
+  storageContentLink: PropTypes.string
+  
+//  isAllowedToConfigure: PropTypes.bool,
 }
+
 StorageItemList.defaultProps = {
   primaryData: Immutable.List()
 }
 
-module.exports = StorageItemList
+export default StorageItemList
