@@ -13,7 +13,8 @@ import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
-import { getIdsByGroup as getStorageIdsByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+import { getByGroup as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import ContentItems from '../components/content/content-items'
 
@@ -158,7 +159,7 @@ export class Hosts extends React.Component {
         className="hosts-container"
         configURLBuilder={configURLBuilder}
         contentItems={properties}
-        storageIds={this.props.storageIds}
+        storages={this.props.storages}
         storageContentItems={mockRedux.get('storages')}
         createNewItem={this.createNewHost}
         dailyTraffic={this.props.dailyTraffic}
@@ -207,7 +208,7 @@ Hosts.propTypes = {
   roles: React.PropTypes.instanceOf(Immutable.List),
   sortDirection: React.PropTypes.number,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
+  storages: React.PropTypes.instanceOf(Immutable.Iterable),
   uiActions: React.PropTypes.object,
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
@@ -233,7 +234,7 @@ function mapStateToProps(state, { params: { group } }) {
     dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     hosts: state.host.get('allHosts'),
-    storageIds: getStorageIdsByGroup(state, group),
+    storages: getStoragesByGroup(state, group),
     propertyNames: state.host.get('configuredHostNames'),
     metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
@@ -263,7 +264,8 @@ function mapDispatchToProps(dispatch, ownProps) {
       groupActions.fetchGroup(brand, account, group),
       hostActions.fetchHosts(brand, account, group),
       hostActions.fetchConfiguredHostNames(brand, account, group),
-      dispatch(storageActions.fetchAll({ group }))
+      dispatch(storageActions.fetchAll({ group })),
+      dispatch(fetchStorageMetrics(metricsOpts))
     ])
   }
   const fetchMetricsData = () => {
