@@ -203,11 +203,11 @@ class AnalyticsContainer extends React.Component {
           location={this.props.location}
           activeTab={getTabName(pathname)}
         />
-        <AnalyticsTabControl
+        {!params.storage && <AnalyticsTabControl
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
-        />
+        />}
         {this.renderFilters()}
         {this.renderContent(children, filters)}
       </Content>
