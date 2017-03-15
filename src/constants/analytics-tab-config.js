@@ -25,6 +25,7 @@ export default Immutable.fromJS([
   },
   {
     key: 'storage',
+    //TODO: add 'includeComparison' when the api gets ready ticket:UDNP-3051
     filters: ['dateRange', 'storageType'],
     permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
   },
