@@ -22,6 +22,7 @@ const subject = () => {
   return shallow(
     <Storage
       params={params}
+      fetchGroupData={jest.fn()}
       fetchStorage={jest.fn()}
       fetchStorageMetrics={jest.fn()}
       fetchClusters={jest.fn()} />)

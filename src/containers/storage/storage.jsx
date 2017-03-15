@@ -5,8 +5,10 @@ import { Map } from 'immutable'
 import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
-
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+import * as groupActionCreators from '../../redux/modules/group'
+import { hasService } from '../../util/helpers'
+
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
 import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
@@ -27,6 +29,7 @@ import StorageKPI from '../../components/storage/storage-kpi'
 import StorageContents from '../../components/storage/storage-contents'
 
 import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
+import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
 import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
@@ -61,6 +64,15 @@ class Storage extends Component {
 
       this.props.fetchClusters({})
     }
+    //fetch Active group if there is none in redux
+    if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
+  }
+
+  componentWillReceiveProps ({ group, hasStorageService, params}) {
+    if (group && !hasStorageService) {
+      //redirect when the group doesn't have storage service
+      this.props.router.push(getContentUrl('group', params.group, params))
+    }
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -87,6 +99,7 @@ class Storage extends Component {
       asperaInstanse,
       currentUser,
       group,
+      hasStorageService,
       params,
       storage,
       storageContents,
@@ -100,47 +113,48 @@ class Storage extends Component {
 
     return (
       <Content>
+        {group && hasStorageService &&
+          <div>
+            <StorageHeader
+              currentUser={currentUser}
+              params={params}
+              toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
+            />
 
-        <StorageHeader
-          currentUser={currentUser}
-          params={params}
-          toggleConfigModal={() => {this.editStorage(storage.get('ingest_point_id'), storage.get('parentId'))}}
-        />
+            <PageContainer>
+              <StorageKPI
+                chartData={chartData.data}
+                chartDataKey={chartData.key}
+                currentValue={usage.current}
+                gainPercentage={gain}
+                locations={locations}
+                peakValue={usage.peak}
+                referenceValue={usage.estimated}
+                valuesUnit={usage.unit}
+              />
 
-        <PageContainer>
-          <StorageKPI
-            chartData={chartData.data}
-            chartDataKey={chartData.key}
-            currentValue={usage.current}
-            gainPercentage={gain}
-            locations={locations}
-            peakValue={usage.peak}
-            referenceValue={usage.estimated}
-            valuesUnit={usage.unit}
-          />
+              <StorageContents
+                storageId={params.storage}
+                groupId={params.group}
+                gatewayHostname={gatewayHostname}
+                asperaInstanse={asperaInstanse}
+                contents={storageContents}
+                asperaUpload={this.state.asperaUpload}
+                onMethodToggle={this.toggleUploadMehtod}
+              />
+            </PageContainer>
 
-          <StorageContents
-            storageId={params.storage}
-            groupId={params.group}
-            gatewayHostname={gatewayHostname}
-            asperaInstanse={asperaInstanse}
-            contents={storageContents}
-            asperaUpload={this.state.asperaUpload}
-            onMethodToggle={this.toggleUploadMehtod}
-          />
-        </PageContainer>
-
-        {(accountManagementModal === EDIT_STORAGE) &&
-          <StorageFormContainer
-            show={true}
-            brand={account.get('brand_id')}
-            accountId={account.get('id')}
-            storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
-            groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
-            fetching={false}
-            onCancel={this.onModalCancel}
-          />
-        }
+            {(accountManagementModal === EDIT_STORAGE) &&
+              <StorageFormContainer
+                show={true}
+                brand={account.get('brand_id')}
+                accountId={account.get('id')}
+                storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+                groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+                fetching={false}
+                onCancel={this.onModalCancel}
+              />}
+          </div> }
       </Content>
     )
   }
@@ -154,11 +168,13 @@ Storage.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
   fetchClusters: PropTypes.func,
+  fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
+  hasStorageService: PropTypes.bool,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
@@ -254,6 +270,9 @@ const mapStateToProps = (state, ownProps) => {
   const gatewayHostname = gateway && gateway.get('hostname')
   const filters = state.filters.get('filters')
 
+  const group = state.group.get('activeGroup')
+  const hasStorageService = hasService(group, STORAGE_SERVICE_ID)
+
   return {
     account: state.account.get('activeAccount'),
     accountManagementModal: state.ui.get('accountManagementModal'),
@@ -262,6 +281,7 @@ const mapStateToProps = (state, ownProps) => {
     currentUser: state.user.get('currentUser'),
     filters,
     group: state.group.get('activeGroup'),
+    hasStorageService,
     storage,
     storageContents: getMockContents(ownProps.params.storage),
     storageMetrics: storageMetrics && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
@@ -270,9 +290,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
     fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
     toggleModal: uiActions.toggleAccountManagementModal
