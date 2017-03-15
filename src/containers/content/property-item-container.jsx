@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { createSelectorCreator, defaultMemoize } from 'reselect'
-import { is, Map, List } from 'immutable'
+import { Map, List } from 'immutable'
 import d3 from 'd3'
 import ContentItemChart from '../../components/content/content-item-chart'
 import ContentItemList from '../../components/content/content-item-list'
@@ -42,24 +41,6 @@ const getPropertyDailyTrafficById = (state, propertyId) => {
 const getTotalTraffics = (state) => {
   return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
 }
-
-/**
- * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
- */
-const createDeepEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  is
-)
-
-/**
- * Make an own metrics-selector for every instance of this component to cache selector results per instance
- * TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
- * @return {[function]} a function that when called, returns a memoized selector
- */
-const makeGetMetrics = () => createDeepEqualSelector(
-  getPropertyMetricsById,
-  metrics => metrics
-)
 
 const PropertyItemContainer = props => {
 
@@ -180,11 +161,9 @@ PropertyItemContainer.defaultProps = {
  * See https://github.com/reactjs/reselect#sharing-selectors-with-props-across-multiple-components
  * @return {[function]} mapStateToProps
  */
-const makeStateToProps = () => {
+const makeMapStateToProps = () => {
 
-  const getMetrics = makeGetMetrics()
-
-  const stateToProps = (state, { propertyId }) => {
+  const mapStateToProps = (state, { propertyId }) => {
 
     return {
       entity: getPropertyById(state, propertyId),
@@ -196,7 +175,7 @@ const makeStateToProps = () => {
     }
   }
 
-  return stateToProps
+  return mapStateToProps
 }
 
-export default connect(makeStateToProps)(PropertyItemContainer)
+export default connect(makeMapStateToProps)(PropertyItemContainer)
