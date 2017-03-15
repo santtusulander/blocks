@@ -331,12 +331,14 @@ class ContentItems extends React.Component {
       params,
       locationPermissions,
       storagePermission,
-      isAllowedToConfigure,
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed, viewAllowed, viewAnalyticAllowed } = storagePermission
+    const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+
+    /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
+    const modifyStorageAllowed = modifyAllowed && false
 
     let trafficTotals = Immutable.List()
 
@@ -454,7 +456,7 @@ class ContentItems extends React.Component {
                                 key={i}
                                 analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                                 storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
-                                onConfigurationClick={isAllowedToConfigure && this.showStorageModal}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
                                 storageId={id}
                                 params={params} />
                             )
@@ -464,7 +466,7 @@ class ContentItems extends React.Component {
                                 key={i}
                                 analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                                 storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
-                                onConfigurationClick={isAllowedToConfigure && this.showStorageModal}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
                                 storageId={id}
                                 params={params}
                               />
