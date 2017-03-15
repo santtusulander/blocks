@@ -68,10 +68,16 @@ $storage-kpi-comparison-bars-width: rem(120px);
 }
 
 .storage-kpi-number {
+  display: flex;
   font-weight: bold;
+  align-items: baseline;
 
   .value {
     font-size: rem(36px);
+
+    &.truncated-title {
+      max-width: rem(100px);
+    }
 
     .dark-theme & {
       color: $white;
