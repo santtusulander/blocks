@@ -112,7 +112,6 @@ export class Hosts extends React.Component {
         properties={this.props.properties}
 
         createNewItem={this.createNewHost}
-        dailyTraffic={this.props.dailyTraffic}
         deleteItem={this.deleteHost}
         fetching={this.state.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -122,7 +121,6 @@ export class Hosts extends React.Component {
         // TODO: We need to use published_hosts permissions from the north API
         // instead of groups permissions, but they dont exist yet.
         isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
-        metrics={this.props.metrics}
         sortDirection={this.props.sortDirection}
         sortItems={this.sortItems}
         sortValuePath={this.props.sortValuePath}
@@ -142,12 +140,10 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
@@ -161,8 +157,6 @@ Hosts.propTypes = {
 Hosts.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  metrics: Immutable.List(),
   roles: Immutable.List(),
   sortValuePath: Immutable.List(),
   storages: Immutable.List(),
@@ -173,11 +167,9 @@ const mapStateToProps = (state, { params: { group } }) => {
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
-    dailyTraffic: state.metrics.get('hostDailyTraffic'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group), //state.host.get('allHosts'),
     storages: getStoragesByGroup(state, group),
-    metrics: state.metrics.get('hostMetrics'),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
