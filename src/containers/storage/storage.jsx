@@ -225,7 +225,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   )).toJS()
   return {
     chartData: {
-      data: lineChartData,
+      data: lineChartData, // Should be replaced with the real data when API get ready UDNP-3032
       key: 'bytes'
     },
     usage: {
