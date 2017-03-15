@@ -11,6 +11,12 @@ import { hasService } from '../../util/helpers'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
+import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
+import { getById as getClusterById } from '../../redux/modules/entities/CIS-clusters/selectors'
+
+import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
+import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
+
 import { buildReduxId } from '../../redux/util'
 
 import StorageFormContainer from './modals/storage-modal.jsx'
@@ -26,6 +32,10 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
+import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+
+
+import { lineChartData } from '../../containers/__mocks__/chart-data'
 
 class Storage extends Component {
   constructor(props) {
@@ -47,6 +57,12 @@ class Storage extends Component {
         group: this.props.params.group,
         id: this.props.params.storage
       })
+
+      const { params, filters } = this.props
+      const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
+      this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+
+      this.props.fetchClusters({})
     }
     //fetch Active group if there is none in redux
     if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
@@ -90,7 +106,7 @@ class Storage extends Component {
       gatewayHostname,
       storageMetrics: {
         chartData,
-        values,
+        usage,
         gain,
         locations
       }} = this.props
@@ -109,12 +125,12 @@ class Storage extends Component {
               <StorageKPI
                 chartData={chartData.data}
                 chartDataKey={chartData.key}
-                currentValue={values.current}
+                currentValue={usage.current}
                 gainPercentage={gain}
                 locations={locations}
-                peakValue={values.peak}
-                referenceValue={values.reference}
-                valuesUnit={values.unit}
+                peakValue={usage.peak}
+                referenceValue={usage.estimated}
+                valuesUnit={usage.unit}
               />
 
               <StorageContents
@@ -137,10 +153,8 @@ class Storage extends Component {
                 groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
                 fetching={false}
                 onCancel={this.onModalCancel}
-              />
-            }
-          </div>
-        }
+              />}
+          </div> }
       </Content>
     )
   }
@@ -153,8 +167,11 @@ Storage.propTypes = {
   accountManagementModal: PropTypes.string,
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
+  fetchClusters: PropTypes.func,
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
+  fetchStorageMetrics: PropTypes.func,
+  filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
@@ -167,44 +184,21 @@ Storage.propTypes = {
 }
 
 Storage.defaultProps = {
+  filters: Map(),
   storageMetrics: {
     chartData: {
       data: [],
       key: ''},
-    values: {
+    usage: {
       current: 0,
+      estimated: 0,
       peak: 0,
-      referenceValue: 0,
       unit: ''
     },
     gain: 0,
     locations: []
   }
 }
-
-const getMockMetrics = () => ({
-  chartData: {
-    data: [
-      {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
-      {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
-      {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
-      {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
-      {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
-      {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
-      {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
-      {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
-    ],
-    key: 'bytes'
-  },
-  values: {
-    current: 112,
-    peak: 120,
-    reference: 100,
-    unit: 'tb'
-  },
-  gain: 0.2,
-  locations: ['San Jose', 'Frankfurt']
-})
 
 const getMockContents = (storage) => (
   storage === 'with-contents'
@@ -237,18 +231,44 @@ const getMockContents = (storage) => (
     []
   )
 
+const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
+  const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
+  const current = formatBytesToUnit(storage.get('usage'), unit)
+  const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
+  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+  const locations = storage.get('clusters').map(cluster => (
+    getClusterById(state, cluster).get('description').split(',')[0]
+  )).toJS()
+  return {
+    chartData: {
+      data: lineChartData, // Should be replaced with the real data when API get ready UDNP-3032
+      key: 'bytes'
+    },
+    usage: {
+      current,
+      estimated: parseFloat(estimated),
+      peak,
+      unit
+    },
+    gain,
+    locations
+  }}
+
 const mapStateToProps = (state, ownProps) => {
   const asperaInstanse = state.ui.get('asperaUploadInstanse')
   let storageId = null
   let storage = null
+  let storageMetrics = null
 
   if (ownProps.params.storage && ownProps.params.group) {
     storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
+    storageMetrics = getMetricsByStorageId(state, ownProps.params.stroge)
   }
 
   const gateway = storage && storage.get('gateway')
   const gatewayHostname = gateway && gateway.get('hostname')
+  const filters = state.filters.get('filters')
 
   const group = state.group.get('activeGroup')
   const hasStorageService = hasService(group, STORAGE_SERVICE_ID)
@@ -259,11 +279,12 @@ const mapStateToProps = (state, ownProps) => {
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
-    group,
+    filters,
+    group: state.group.get('activeGroup'),
     hasStorageService,
-    storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
+    storage,
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: getMockMetrics()
+    storageMetrics: storageMetrics && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
 
@@ -271,9 +292,11 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
+    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
-    toggleModal: uiActions.toggleAccountManagementModal,
-    fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group)
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
+    toggleModal: uiActions.toggleAccountManagementModal
   }
 }
 
