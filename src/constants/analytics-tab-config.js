@@ -25,7 +25,7 @@ export default Immutable.fromJS([
   },
   {
     key: 'storage',
-    filters: ['dateRange', 'includeComparison', 'storageType'],
+    filters: ['dateRange', 'storageType'],
     permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
   },
   {
