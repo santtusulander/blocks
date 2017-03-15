@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { Map, List } from 'immutable'
+import { Map, List, toJS } from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -54,31 +54,21 @@ class AccountManagementStorages extends Component {
   }
 
   componentWillMount() {
+
+
     this.props.groups.map( group => {
       const account = this.props.account
       const brandId = account.get('brand_id')
       const accountId = account.get('id')
       const groupId = group.get('id')
-      const metricsStartDate = new Date()
+      const metricsStartDate = 1487203200
 
       this.props.fetchStorages({ group: groupId })
-        .then((res) => {
-          if (res) {
-            const storages = res.entities.ingestPoints
 
-            for (let key in storages) {
-              this.props.fetchMetrics({
-                start: metricsStartDate.getTime(),
-                account: accountId,
-                group: groupId,
-                ingest_point: storages[key].ingest_point_id
-              })
-            }
-          }
-        })
-
+      this.props.fetchMetrics({ start: metricsStartDate, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
+
     this.props.fetchClusters({})
   }
 
@@ -164,8 +154,8 @@ class AccountManagementStorages extends Component {
       })
       const locationsString = locations.join(', ')
 
-      const usage = metrics.getIn([0, 'totals', 'bytes', 'ending'])
-      const fileCount = metrics.getIn([0, 'totals', 'file_count', 'ending'])
+      const usage = metrics && metrics.getIn([0, 'totals', 'bytes', 'ending'])
+      const fileCount = metrics && metrics.getIn([0, 'totals', 'file_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
@@ -313,9 +303,6 @@ AccountManagementStorages.defaultProps = {
 function mapStateToProps(state) {
   const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
-  // TODO Account Id to select metrics mock data
-  // Should be removed when metrics API will be ready
-  const metricsAccountId = '20005'
 
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
@@ -325,7 +312,7 @@ function mapStateToProps(state) {
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
-    metrics: getMetricsByAccountId(state, metricsAccountId),
+    metrics: getMetricsByAccountId(state, account.get('id')),
     isFetching: getGlobalFetching(state)
   }
 }
