@@ -3,6 +3,7 @@ import { shallow } from 'enzyme'
 import { fromJS } from 'immutable'
 
 jest.unmock('../main.jsx')
+jest.unmock('../../redux/modules/fetching/actions.js')
 import { Main } from '../main.jsx'
 
 jest.mock('../../util/helpers', () => {

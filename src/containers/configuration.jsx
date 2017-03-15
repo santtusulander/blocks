@@ -20,8 +20,9 @@ import { getContentUrl } from '../util/routes'
 import checkPermissions from '../util/permissions'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
-import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
-import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
+import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
+import { deploymentModes } from '../constants/configuration'
+import { VOD_STREAMING_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -102,7 +103,7 @@ export class Configuration extends React.Component {
   }
 
   hasSecurityServicePermission() {
-    return this.props.servicePermissions.contains(VIEW_CONFIGURATION_SECURITY)
+    return this.props.servicePermissions.contains(MEDIA_DELIVERY_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -259,6 +260,7 @@ export class Configuration extends React.Component {
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
+    const serviceType = activeHost.getIn(['services', 0, 'service_type'])
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
@@ -398,7 +400,8 @@ export class Configuration extends React.Component {
             edgeConfiguration: activeConfig.get('edge_configuration'),
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
-            storages: this.props.storages
+            storages: this.props.storages,
+            serviceType: serviceType
           })}
           </PageContainer>
 
@@ -505,7 +508,7 @@ function mapStateToProps(state) {
   let hasVODSupport = false
 
   enabledServices.forEach((service) => {
-    if (service.get('service_id') === VOD_SERVICE_ID) {
+    if (service.get('service_id') === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     }
   })

@@ -2,17 +2,25 @@ import { fromJS, List } from 'immutable'
 
 import {
   REGION_LOCATION_TYPE,
-  GLOBAL_LOCATION_TYPE,
-  MEDIA_DELIVERY_SERVICE_ID,
-  MEDIA_DELIVERY_SECURITY_OPTION_ID,
-  MEDIA_DELIVERY_TOKEN_AUTH_OPTION_ID,
-  MEDIA_DELIVERY_CONTENT_TARGETTING_OPTION_ID
+  GLOBAL_LOCATION_TYPE
 } from '../constants/account-management-options'
 
 import {
-  VIEW_CONFIGURATION_SECURITY,
+  MEDIA_DELIVERY_SERVICE_ID,
+  VOD_STREAMING_SERVICE_ID,
+  MEDIA_DELIVERY_SECURITY_OPTION_ID,
+  MEDIA_DELIVERY_TOKEN_AUTH_OPTION_ID,
+  MEDIA_DELIVERY_CONTENT_TARGETTING_OPTION_ID,
+  VOD_STREAMING_SECURITY_OPTION_ID,
+  VOD_STREAMING_TOKEN_AUTH_OPTION_ID,
+  VOD_STREAMING_CONTENT_TARGETTING_OPTION_ID,
+
+  MEDIA_DELIVERY_SECURITY,
   MEDIA_DELIVERY_TOKEN_AUTH,
-  MEDIA_DELIVERY_CONTENT_TARGETTING
+  MEDIA_DELIVERY_CONTENT_TARGETTING,
+  VOD_STREAMING_SECURITY,
+  VOD_STREAMING_TOKEN_AUTH,
+  VOD_STREAMING_CONTENT_TARGETTING
 } from '../constants/service-permissions'
 
 
@@ -101,12 +109,13 @@ export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, 
 export function getServicePermissions (group) {
   let servicePermissions = List()
   const services = group.get('services') || List()
-  const mediaDeliveryServices = services.find(service => service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID)
+  const mediaDeliveryService = services.find(service => service.get('service_id') === MEDIA_DELIVERY_SERVICE_ID)
+  const VODStreamingService = services.find(service => service.get('service_id') === VOD_STREAMING_SERVICE_ID)
 
-  if (mediaDeliveryServices && mediaDeliveryServices.size) {
-    mediaDeliveryServices.get('options').forEach(option => {
+  if (mediaDeliveryService && mediaDeliveryService.size) {
+    mediaDeliveryService.get('options').forEach(option => {
       if (option.get('option_id') === MEDIA_DELIVERY_SECURITY_OPTION_ID) {
-        servicePermissions = servicePermissions.push(VIEW_CONFIGURATION_SECURITY)
+        servicePermissions = servicePermissions.push(MEDIA_DELIVERY_SECURITY)
       }
 
       if (option.get('option_id') === MEDIA_DELIVERY_TOKEN_AUTH_OPTION_ID) {
@@ -115,6 +124,22 @@ export function getServicePermissions (group) {
 
       if (option.get('option_id') === MEDIA_DELIVERY_CONTENT_TARGETTING_OPTION_ID) {
         servicePermissions = servicePermissions.push(MEDIA_DELIVERY_CONTENT_TARGETTING)
+      }
+    })
+  }
+
+  if (VODStreamingService && VODStreamingService.size) {
+    VODStreamingService.get('options').forEach(option => {
+      if (option.get('option_id') === VOD_STREAMING_SECURITY_OPTION_ID) {
+        servicePermissions = servicePermissions.push(VOD_STREAMING_SECURITY)
+      }
+
+      if (option.get('option_id') === VOD_STREAMING_TOKEN_AUTH_OPTION_ID) {
+        servicePermissions = servicePermissions.push(VOD_STREAMING_TOKEN_AUTH)
+      }
+
+      if (option.get('option_id') === VOD_STREAMING_CONTENT_TARGETTING_OPTION_ID) {
+        servicePermissions = servicePermissions.push(VOD_STREAMING_CONTENT_TARGETTING)
       }
     })
   }
