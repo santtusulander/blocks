@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Map, List } from 'immutable'
 
+import { buildReduxId } from '../../redux/util'
+
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { getStorageById } from './selectors'
-
-import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
+import { getStorageById, getStorageMetricsById } from './selectors'
 
 import AggregatedStorageChart from './aggregated-storage-chart'
 import StorageItemChart from '../../components/content/storage-item-chart'
@@ -21,7 +21,7 @@ const StorageChartContainer = props => {
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
-        onConfigurationClick={() => props.onConfigurationClick(ingest_point_id)}
+        onConfigurationClick={props.onConfigurationClick && (() => props.onConfigurationClick(ingest_point_id))}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
@@ -47,7 +47,8 @@ StorageChartContainer.propTypes = {
 }
 
 StorageChartContainer.defaultProps = {
-  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
+  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } }),
+  storageEntity: Map()
 }
 
 /**
@@ -63,13 +64,13 @@ const makeStateToProps = () => {
 
     const {
       entitySelector = getStorageById,
-      metricsSelector = getByStorageId
+      metricsSelector = getStorageMetricsById
     } = ownProps
 
-    const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
+    const reduxId = ownProps.storageId && buildReduxId(ownProps.params.group, ownProps.storageId)
 
     return {
-      storageEntity,
+      storageEntity: getStorageEntity(state, {reduxId, ...ownProps}, entitySelector),
       storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }
