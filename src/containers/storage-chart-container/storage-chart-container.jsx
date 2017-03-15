@@ -67,10 +67,10 @@ const makeStateToProps = () => {
       metricsSelector = getStorageMetricsById
     } = ownProps
 
-    const reduxId = ownProps.storageId && buildReduxId(ownProps.params.group, ownProps.storageId)
+    const storageReduxId = ownProps.storageId && buildReduxId(ownProps.params.group, ownProps.storageId)
 
     return {
-      storageEntity: getStorageEntity(state, {reduxId, ...ownProps}, entitySelector),
+      storageEntity: getStorageEntity(state, {storageReduxId, ...ownProps}, entitySelector),
       storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }

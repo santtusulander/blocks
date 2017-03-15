@@ -10,7 +10,7 @@ import {
  * @param  {[type]} storageId   id of storage for which to get data.
  * @return {[type]}             metrics data/entity data for a single storage
  */
-export const getStorageById = (state, { reduxId }) => getStorageEntity(state, reduxId)
+export const getStorageById = (state, { storageReduxId }) => getStorageEntity(state, storageReduxId)
 export const getStorageMetricsById = (state, { storageId }) => {
   return getMetricsByStorageId(state, storageId)
 }
