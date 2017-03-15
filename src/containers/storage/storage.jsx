@@ -8,11 +8,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getStorageAccessKey } from '../../redux/modules/user'
 
-import * as uploadActions from '../../redux/modules/http-file-upload/actions'
-import * as uploadActionTypes from '../../redux/modules/http-file-upload/actionTypes'
-import * as uploadSelectors from '../../redux/modules/http-file-upload/selectors'
 import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
-import * as api from '../../redux/modules/http-file-upload/api'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
@@ -53,7 +49,8 @@ class Storage extends Component {
    * @param action {object} - action with type and payload
    */
   initFileUploader(action) {
-    this.fileUploader = FileUploader.initialize(action.payload)
+    this.fileUploader = FileUploader.initialize(action.payload, this.props.gatewayHostname)
+    console.info('initialized uploader: ', this.fileUploader)
   }
 
   componentWillMount() {
@@ -99,6 +96,8 @@ class Storage extends Component {
         gain,
         locations
       }} = this.props
+
+    console.info('gatewayHostname', gatewayHostname)
 
     return (
       <Content>

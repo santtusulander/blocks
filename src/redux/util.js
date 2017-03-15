@@ -4,7 +4,6 @@ import moment from 'moment'
 // CIS
 export const BASE_URL_CIS_SOUTH = '/cis_south'
 export const BASE_URL_CIS_NORTH = '/cis_north'
-export const BASE_URL_CIS_UPLOAD = '/v1'
 
 
 // For authentication, account, group, user, role, permission management

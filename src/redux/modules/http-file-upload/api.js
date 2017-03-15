@@ -1,20 +1,28 @@
 import axios from 'axios'
 import { parseResponseData } from '../../util'
-import { BASE_URL_CIS_UPLOAD } from '../../../redux/util'
+
+const UPLOAD_URL = '/v1'
+const UPLOAD_PROTOCOL = 'http://'
+const UPLOAD_PORT = ':8080'
 
 /**
- * @function uploadFile
+ * Upload file via POST request to API
+ * @param accessKey {string} - upload access key
+ * @param gateway {string} - gateway host
  * @param {object} file - {key - file name, value - file binary data}
+ * @param onProgress {callback} - function for tracking 'progress' event
  * @returns {axios.Promise}
  */
-export const uploadFile = (accessKey, file, onProgress =()=>{}) => {
+export const uploadFile = (accessKey, gateway, file, onProgress =()=>{}) => {
   const [ name ] = Object.keys(file)
   const [ data ] = Object.values(file)
-  const url = `${BASE_URL_CIS_UPLOAD}/${name}`
+  const url = `${UPLOAD_PROTOCOL}${gateway}${UPLOAD_PORT}${UPLOAD_URL}/${name}`
   const headers = {
+    // 'Content-Type': 'multipart/form-data',
     'Content-Type': 'application/x-www-form-urlencoded',
     'X-Auth-Token': accessKey
   }
-  return axios.post(url, { data }, { headers, progress: onProgress })
+  debugger
+  return axios.post(url, gateway, { data }, { headers, progress: onProgress })
     .then(parseResponseData)
 }
