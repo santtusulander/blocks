@@ -8,18 +8,15 @@ import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
 import { getStorageById, getStorageMetricsById } from './selectors'
 
-import AggregatedStorageChart from './aggregated-storage-chart'
-import StorageItemChart from '../../components/content/storage-item-chart'
+import StorageItemList from '../../components/content/storage/storage-item-list'
 
 const StorageChartContainer = props => {
 
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
   const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
 
-  return props.showingAggregate
-    ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
-    : (
-      <StorageItemChart
+  return (
+      <StorageItemList
         analyticsLink={props.analyticsLink}
         onConfigurationClick={props.onConfigurationClick && (() => props.onConfigurationClick(ingest_point_id))}
         storageContentLink={props.storageContentLink}
@@ -31,7 +28,7 @@ const StorageChartContainer = props => {
         lastMonthUsage={historical_bytes.average}
         lastMonthEstimate={estimated_usage}
         lastMonthPeak={historical_bytes.peak} />
-    )
+  )
 }
 
 StorageChartContainer.displayName = 'StorageChartContainer'
@@ -40,7 +37,6 @@ StorageChartContainer.propTypes = {
   analyticsLink: PropTypes.string,
   // clusters: PropTypes.instanceOf(List),
   onConfigurationClick: PropTypes.func,
-  showingAggregate: PropTypes.bool,
   storageContentLink: PropTypes.string,
   storageEntity: PropTypes.instanceOf(Map),
   storageMetrics: PropTypes.instanceOf(Map)
