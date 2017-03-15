@@ -179,7 +179,7 @@ export const CanViewStorageTab = (store) => {
 
       return `${path}`
     },
-    wrapperDisplayName: 'CanViewStorageSummary',
+    wrapperDisplayName: 'CanViewStorageTab',
     predicate: permissionChecker(PERMISSIONS.LIST_STORAGE, store),
     allowRedirectBack: false
   })
