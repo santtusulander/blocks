@@ -23,7 +23,7 @@ export const getByAccount = (state, account) => {
 /**
  * Get Group IDs by Account
  * @param  {} state
- * @param  {String} brand [description]
+ * @param  {String} account [description]
  * @return List
  */
 export const getIdsByAccount = (state, account) => {
