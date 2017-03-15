@@ -31,6 +31,9 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { getContentUrl } from '../../util/routes.js'
 import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
+
+import { lineChartData } from '../../containers/__mocks__/chart-data'
+
 class Storage extends Component {
   constructor(props) {
     super(props)
@@ -222,16 +225,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   )).toJS()
   return {
     chartData: {
-      data: [
-        {bytes: 45000, timestamp: new Date('Thu May 26 2016 11:17:01 GMT-0700 (PDT)')},
-        {bytes: 65000, timestamp: new Date('Thu May 26 2016 12:17:01 GMT-0700 (PDT)')},
-        {bytes: 45000, timestamp: new Date('Thu May 26 2016 13:17:01 GMT-0700 (PDT)')},
-        {bytes: 105000, timestamp: new Date('Thu May 26 2016 14:17:01 GMT-0700 (PDT)')},
-        {bytes: 115000, timestamp: new Date('Thu May 26 2016 15:17:01 GMT-0700 (PDT)')},
-        {bytes: 190000, timestamp: new Date('Thu May 26 2016 16:17:01 GMT-0700 (PDT)')},
-        {bytes: 125000, timestamp: new Date('Thu May 26 2016 17:17:01 GMT-0700 (PDT)')},
-        {bytes: 155000, timestamp: new Date('Thu May 26 2016 18:17:01 GMT-0700 (PDT)')}
-      ],
+      data: lineChartData,
       key: 'bytes'
     },
     usage: {
