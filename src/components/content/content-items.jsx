@@ -482,15 +482,13 @@ class ContentItems extends React.Component {
 
                       {viewingChart && groupHasStorageService && storages.map((storage, i) => {
                         const id = storage.get('ingest_point_id')
-                        const reduxId = buildReduxId(group, id)
-
                         return (
                           <StorageChartContainer
                             key={i}
                             analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                             storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
                             onConfigurationClick={this.showStorageModal}
-                            storageId={reduxId}
+                            storageId={id}
                             params={params} />
                         )
                       })}
