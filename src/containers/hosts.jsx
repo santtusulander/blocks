@@ -196,10 +196,10 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
       groupActions.fetchGroup(brand, account, group),
 
       dispatch(storageActions.fetchAll({ group })),
-      dispatch(propertyActions.fetchAll({brand, account, group })),
-      dispatch(fetchStorageMetrics(metricsOpts))
+      dispatch(propertyActions.fetchAll({brand, account, group }))
     ])
   }
+
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
     metricsActions.fetchHostMetrics(metricsOpts)
