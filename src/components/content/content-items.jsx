@@ -11,12 +11,13 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
+import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
   getAnalyticsUrl
 } from '../../util/routes'
-import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -327,8 +328,9 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed, viewAllowed, viewAnalyticAllowed } = storagePermission
-    const groupHasStorageService = hasStorageService(activeGroup)
+    const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
+    const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+
     let trafficTotals = Immutable.List()
     const contentItems = this.props.contentItems.map(item => {
       const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
@@ -485,8 +487,8 @@ class ContentItems extends React.Component {
                             key={i}
                             analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                             storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
-                            onConfigurationClick={this.showStorageModal}
                             storageId={id}
+                            onConfigurationClick={modifyAllowed && this.showStorageModal}
                             params={params} />
                         )
                       })}

@@ -17,12 +17,14 @@ import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import { getContentUrl } from '../util/routes'
-import checkPermissions from '../util/permissions'
+import checkPermissions, { getStoragePermissions } from '../util/permissions'
+import { hasService } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
+
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
-import { deploymentModes } from '../constants/configuration'
-import { VOD_STREAMING_SERVICE_ID } from '../constants/service-permissions'
+import { deploymentModes} from '../constants/configuration'
+import { STORAGE_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -397,10 +399,13 @@ export class Configuration extends React.Component {
             changeValues: this.changeValues,
             config: activeConfig,
             deploymentMode: deploymentModeText,
+            hasVODSupport: this.props.hasVODSupport,
             edgeConfiguration: activeConfig.get('edge_configuration'),
+            groupHasStorageService: this.props.groupHasStorageService,
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
             storages: this.props.storages,
+            storagePermission: this.props.storagePermission,
             serviceType: serviceType
           })}
           </PageContainer>
@@ -479,6 +484,7 @@ Configuration.propTypes = {
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
+  groupHasStorageService: React.PropTypes.bool,
   hasVODSupport: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
@@ -492,6 +498,7 @@ Configuration.propTypes = {
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
+  storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
@@ -502,10 +509,13 @@ Configuration.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { group } = state
+  const { group, roles } = state
   const activeGroup = group.get('activeGroup') || Immutable.Map()
   const enabledServices = activeGroup.get('services') || Immutable.List()
   let hasVODSupport = false
+
+  const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+  const storagePermission = getStoragePermissions(roles.get('roles'), state.user.get('currentUser'))
 
   enabledServices.forEach((service) => {
     if (service.get('service_id') === VOD_STREAMING_SERVICE_ID) {
@@ -523,6 +533,8 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
     hasVODSupport: hasVODSupport,
+    groupHasStorageService,
+    storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
   };

@@ -19,7 +19,9 @@ import { getABRProfilesOptions } from '../../../redux/modules/entities/CIS-workf
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { STORAGE_WORKFLOW_DEFAULT } from '../../../constants/storage'
-import { convertToBytes } from '../../../util/helpers.js'
+import { convertToBytes, hasOption } from '../../../util/helpers.js'
+import { VOD_STREAMING_TRANSCODING_OPTION_ID } from '../../../constants/service-permissions'
+
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -110,7 +112,7 @@ class StorageFormContainer extends React.Component {
   render() {
     const { account, abrProfileOptions, group, storageId,
             initialValues, onCancel, abrToggle,
-            show, locationOptions } = this.props
+            show, locationOptions, hasTranscodingSupport } = this.props
 
     const edit = !!initialValues.name
 
@@ -130,6 +132,7 @@ class StorageFormContainer extends React.Component {
                onDelete={() => this.onToggleDeleteModal(true)}
                onCancel={onCancel}
                abrToggle={abrToggle}
+               hasTranscodingSupport={hasTranscodingSupport}
                locationOptions={locationOptions}
                abrProfileOptions={abrProfileOptions}
              />
@@ -168,6 +171,7 @@ StorageFormContainer.propTypes = {
   fetchWorkflows: PropTypes.func,
   group: PropTypes.instanceOf(Map),
   groupId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
+  hasTranscodingSupport: PropTypes.bool,
   initialValues: PropTypes.object,
   isFetching: PropTypes.bool,
   locationOptions: PropTypes.array,
@@ -193,6 +197,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const storageId = ownProps.storageId && buildReduxId(ownProps.groupId, ownProps.storageId)
   const storage = ownProps.storageId && getStorageById(state, storageId)
+  const activeGroup = state.group.get('activeGroup')
 
   const storageWorkflow = storage && storage.get('workflow')
   const clusters = storage && storage.get('clusters')
@@ -205,6 +210,7 @@ const mapStateToProps = (state, ownProps) => {
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
+    hasTranscodingSupport: hasOption(activeGroup, VOD_STREAMING_TRANSCODING_OPTION_ID),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',

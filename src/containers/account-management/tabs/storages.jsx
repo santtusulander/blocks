@@ -13,6 +13,7 @@ import ActionButtons from '../../../components/action-buttons'
 import ModalWindow from '../../../components/modal'
 import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import IsAllowed from '../../../components/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
@@ -28,6 +29,7 @@ import { getByAccountId as getMetricsByAccountId } from '../../../redux/modules/
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
+import * as PERMISSIONS from '../../../constants/permissions.js'
 
 
 class AccountManagementStorages extends Component {
@@ -174,99 +176,105 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
+    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
+
     return (
-      <PageContainer className="account-management-storages">
-        { isFetching ? <LoadingSpinner/> :
-          <div>
-            <SectionHeader sectionHeaderTitle={finalStorageText}>
-              <FormGroup className="search-input-group">
-                <FormControl
-                  type="text"
-                  className="search-input"
-                  placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
-                  value={this.state.search}
-                  onChange={this.changeSearch}  />
-              </FormGroup>
-              <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!group}>
-                <IconAdd />
-              </Button>
-            </SectionHeader>
+      <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+        <PageContainer className="account-management-storages">
+          { isFetching ? <LoadingSpinner/> :
+            <div>
+              <SectionHeader sectionHeaderTitle={finalStorageText}>
+                <FormGroup className="search-input-group">
+                  <FormControl
+                    type="text"
+                    className="search-input"
+                    placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
+                    value={this.state.search}
+                    onChange={this.changeSearch}  />
+                </FormGroup>
+                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!group}>
+                  <IconAdd />
+                </Button>
+              </SectionHeader>
 
-            <Table striped={true}>
-              <thead>
-                <tr>
-                  <TableSorter {...sorterProps} column="ingest_point_id">
-                    <FormattedMessage id="portal.account.storage.table.name.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="group_name">
-                    <FormattedMessage id="portal.account.storage.table.group.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="originTo">
-                    <FormattedMessage id="portal.account.storage.table.originTo.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="locations">
-                    <FormattedMessage id="portal.account.storage.table.location.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="usage">
-                    <FormattedMessage id="portal.account.storage.table.usage.text"/>
-                  </TableSorter>
-                  <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
-                  <th width="1%"/>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedStorages.map((storage, i) => {
-                  const storageId = storage.get('ingest_point_id')
-                  const origins = storage.get('origins')
-                  const originsString = origins.length ? this.formatOrigins(origins) : '-'
+              <Table striped={true}>
+                <thead>
+                  <tr>
+                    <TableSorter {...sorterProps} column="ingest_point_id">
+                      <FormattedMessage id="portal.account.storage.table.name.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="group_name">
+                      <FormattedMessage id="portal.account.storage.table.group.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="originTo">
+                      <FormattedMessage id="portal.account.storage.table.originTo.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="locations">
+                      <FormattedMessage id="portal.account.storage.table.location.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="usage">
+                      <FormattedMessage id="portal.account.storage.table.usage.text"/>
+                    </TableSorter>
+                    <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
+                    <th width="1%"/>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedStorages.map((storage, i) => {
+                    const storageId = storage.get('ingest_point_id')
+                    const origins = storage.get('origins')
+                    const originsString = origins.length ? this.formatOrigins(origins) : '-'
 
-                  return (
-                    <tr key={i}>
-                      <td>{storageId}</td>
-                      <td>{storage.get('group_name')}</td>
-                      <td>{originsString}</td>
-                      <td>{storage.get('locations')}</td>
-                      <td>{formatBytes(storage.get('usage'))}</td>
-                      <td>{storage.get('file_count')}</td>
-                      <td className="nowrap-column">
-                      <ActionButtons onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
-                                     onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                    return (
+                      <tr key={i}>
+                        <td>{storageId}</td>
+                        <td>{storage.get('group_name')}</td>
+                        <td>{originsString}</td>
+                        <td>{storage.get('locations')}</td>
+                        <td>{formatBytes(storage.get('usage'))}</td>
+                        <td>{storage.get('file_count')}</td>
+                        <td className="nowrap-column">
+                        <ActionButtons
+                          permissions={permissions}
+                          onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
+                          onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
 
-            {accountManagementModal === DELETE_STORAGE &&
-             <ModalWindow
-               title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.storageToDelete}}/>}
-               content={<FormattedMessage id="portal.account.storage.deleteConfirmation.text"/>}
-               verifyDelete={true}
-               deleteButton={true}
-               cancelButton={true}
-               cancel={() => toggleModal(null)}
-               onSubmit={() => this.deleteStorage()} />}
+              {accountManagementModal === DELETE_STORAGE &&
+               <ModalWindow
+                 title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.storageToDelete}}/>}
+                 content={<FormattedMessage id="portal.account.storage.deleteConfirmation.text"/>}
+                 verifyDelete={true}
+                 deleteButton={true}
+                 cancelButton={true}
+                 cancel={() => toggleModal(null)}
+                 onSubmit={() => this.deleteStorage()} />}
 
-            {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
-              <StorageFormContainer
-                show={true}
-                brand={account.get('brand_id')}
-                accountId={account.get('id')}
-                storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
-                groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
-                fetching={false}
-                onCancel={() => this.props.toggleModal()}
-              />
-            }
+              {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
+                <StorageFormContainer
+                  show={true}
+                  brand={account.get('brand_id')}
+                  accountId={account.get('id')}
+                  storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+                  groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+                  fetching={false}
+                  onCancel={() => this.props.toggleModal()}
+                />
+              }
 
-            {sortedStorages.size === 0 && this.state.search.length > 0 &&
-             <div className="text-center">
-               <FormattedMessage id="portal.account.storage.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
-             </div>}
-          </div>
-        }
-      </PageContainer>
+              {sortedStorages.size === 0 && this.state.search.length > 0 &&
+               <div className="text-center">
+                 <FormattedMessage id="portal.account.storage.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
+               </div>}
+            </div>
+          }
+        </PageContainer>
+      </IsAllowed>
     )
   }
 }
