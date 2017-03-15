@@ -72,7 +72,7 @@ export function convertToBytes(value, units) {
 export function formatBytesToUnit(value, unit) {
   const formatted = separateUnit(formatBytes(value))
   const coefficient = UNITS_COEFFICIENTS.get(formatted.unit) / UNITS_COEFFICIENTS.get(unit)
-  return formatted.value * coefficient
+  return Number(numeral(formatted.value * coefficient).format('0[.000]'))
 }
 
 export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
