@@ -48,7 +48,8 @@ class Storage extends Component {
         id: this.props.params.storage
       })
     }
-    if (!this.props.group) this.props.fetchGroupData(this.props.params)
+    //fetch Active group if there is none in redux
+    if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
   }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
