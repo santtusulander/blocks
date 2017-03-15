@@ -1,82 +1,50 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { createSelectorCreator, defaultMemoize } from 'reselect'
-import { is, Map } from 'immutable'
+import { Map, List } from 'immutable'
 
-import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
-import { buildReduxId } from '../../redux/util'
+import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
+
+import { getStorageById } from './selectors'
+
+import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
+
 import StorageItemList from '../../components/content/storage/storage-item-list'
-
-const mockMetrics = {
-  bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  },
-  historical_bytes: {
-    ending: 108000497044939,
-    peak: 71963080986145,
-    low: 36037416058794,
-    average: 54000248522470,
-    percent_change: 50.00
-  }
-}
-
-//TODO: replace this with redux selector once storage metrics redux is ready in UDNP-2932
-const getStorageMetricsById = () => Map(mockMetrics)
-
-/**
- * Creator for a memoized selector. TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
- */
-const createDeepEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  is
-)
-
-/**
- * Make an own metrics-selector for every instance of this component to cache selector results per instance
- * TODO: Move this into the storage metrics redux selectors-file when it's done in UDNP-2932
- * @return {[function]} a function that when called, returns a memoized selector
- */
-const makeGetMetrics = () => createDeepEqualSelector(
-  getStorageMetricsById,
-  metrics => metrics
-)
 
 const StorageChartContainer = props => {
 
-  const { clusters, ingest_point_id, estimated_usage } = props.entity.toJS()
-  const { bytes, historical_bytes } = props.entityMetrics.toJS()
+  const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
+  const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
+
   return (
       <StorageItemList
-        key={ingest_point_id}
-        analyticsLink={/*TODO: UDNP-2932*/'#'}
-        configurationLink={/*TODO: UDNP-2932*/'#'}
-        storageContentLink={/*TODO: UDNP-2925*/'#'}
+        analyticsLink={props.analyticsLink}
+        onConfigurationClick={() => props.onConfigurationClick(ingest_point_id)}
+        storageContentLink={props.storageContentLink}
         name={ingest_point_id}
-        locations={clusters}
+        locations={List()}
         currentUsage={bytes.average}
         estimate={estimated_usage}
-        average={bytes.average}
         peak={bytes.peak}
-        low={bytes.low}
         lastMonthUsage={historical_bytes.average}
         lastMonthEstimate={estimated_usage}
-        lastMonthPeak={historical_bytes.peak} />
+        lastMonthPeak={historical_bytes.peak}
+       />
   )
 }
 
 StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
-  entity: PropTypes.object,
-  entityMetrics: PropTypes.object
+  analyticsLink: PropTypes.string,
+  // locations: PropTypes.instanceOf(List),
+  onConfigurationClick: PropTypes.func,
+  storageContentLink: PropTypes.string,
+  storageEntity: PropTypes.instanceOf(Map),
+  storageMetrics: PropTypes.instanceOf(Map)
 }
 
 StorageChartContainer.defaultProps = {
-  entity: Map()
+  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
 }
 
 /**
@@ -85,13 +53,21 @@ StorageChartContainer.defaultProps = {
  * @return {[function]} mapStateToProps
  */
 const makeStateToProps = () => {
+  const getMetrics = makeMemoizedSelector()
+  const getStorageEntity = makeMemoizedSelector()
 
-  const getMetrics = makeGetMetrics()
+  const stateToProps = (state, ownProps) => {
 
-  const stateToProps = (state, { storageId, params: { group } }) => {
+    const {
+      entitySelector = getStorageById,
+      metricsSelector = getByStorageId
+    } = ownProps
+
+    const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
+
     return {
-      entity: getStorageById(state, buildReduxId(group, storageId) ),
-      entityMetrics: getMetrics()
+      storageEntity,
+      storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }
 
