@@ -6,17 +6,35 @@ import numeral from 'numeral'
 import AnalysisStorage from '../../../components/analysis/storage'
 
 import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
-import { getByAccountId, getByGroupId, getByStorageId } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByAccountId, getByGroupId, getByStorageId, getDataForChart } from '../../../redux/modules/entities/storage-metrics/selectors'
+
+import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { formatBytes, buildAnalyticsOpts, hasService } from '../../../util/helpers'
 import { STORAGE_SERVICE_ID } from '../../../constants/service-permissions'
 
 class AnalyticsTabStorage extends Component {
+  constructor(props) {
+    super(props)
+
+    this.formatTotals = this.formatTotals.bind(this)
+  }
+
   componentWillMount() {
     const { params, filters, location } = this.props
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
-    this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+    this.props.fetchGroups(params).then((response) => {
+      if (response) {
+        const groupIds = Object.keys(response.entities.groups) || []
+
+        return Promise.all([
+          ...groupIds.map(id => this.props.fetchCISIngestPoints({ ...params, group: id })),
+          this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+        ])
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,25 +44,21 @@ class AnalyticsTabStorage extends Component {
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
     if(JSON.stringify(nextFetchOpts) !== JSON.stringify(fetchOpts)) {
-      nextProps.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+      nextProps.fetchStorageMetrics({start: nextFetchOpts.startDate, end: nextFetchOpts.endDate, ...nextFetchOpts})
     }
   }
 
   formatTotals(value) {
     if(this.props.filters.get('storageType') === 'bytes') {
       return formatBytes(value)
-    } else if(this.props.filters.get('storageType') === 'file_count') {
+    } else if(this.props.filters.get('storageType') === 'files_count') {
       return numeral(value).format('0,0 a')
     }
   }
 
   render() {
-    const {filters, getTotals, groupHasStorageService} = this.props
-
+    const {filters, peakStorage, avgStorage, lowStorage, dataForChart, groupHasStorageService, params} = this.props
     const storageType = filters.get('storageType')
-    const peakStorage = getTotals(storageType).peak
-    const avgStorage  = getTotals(storageType).average
-    const lowStorage  = getTotals(storageType).low
 
     return (
       <div>
@@ -52,9 +66,13 @@ class AnalyticsTabStorage extends Component {
           <AnalysisStorage
             avgStorage={this.formatTotals(avgStorage)}
             fetching={false}
+            params={params}
             lowStorage={this.formatTotals(lowStorage)}
             peakStorage={this.formatTotals(peakStorage)}
-            storageType={this.props.filters.get('storageType')}
+            storageType={storageType}
+            chartData={dataForChart}
+            dateRangeLabel={filters.get('dateRangeLabel')}
+            valueFormatter={this.formatTotals}
           />
         }
       </div>
@@ -64,12 +82,17 @@ class AnalyticsTabStorage extends Component {
 
 AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
+  avgStorage: React.PropTypes.number,
+  dataForChart: React.PropTypes.instanceOf(Immutable.List),
+  fetchCISIngestPoints: React.PropTypes.func,
+  fetchGroups: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
-  getTotals: React.PropTypes.func,
   groupHasStorageService: React.PropTypes.bool,
   location: React.PropTypes.object,
-  params: React.PropTypes.object
+  lowStorage: React.PropTypes.number,
+  params: React.PropTypes.object,
+  peakStorage: React.PropTypes.number
 }
 
 AnalyticsTabStorage.defaultProps = {
@@ -77,39 +100,35 @@ AnalyticsTabStorage.defaultProps = {
   groupHasStorageService: false
 }
 
-const mapStateToProps = (state, { params: { account, group, ingest_point } }) => {
-  const storageByParent = ingest_point
-    ? getByStorageId((state, ingest_point))
-    : group
-      ? getByGroupId(state, group)
-      : getByAccountId(state, account)
-
-  const getTotals =  (storageType) => storageByParent.reduce(
-    (totals, storage) => {
-      return {
-        peak: totals.peak + storage.getIn(['totals', storageType, 'peak']),
-        low: totals.low + storage.getIn(['totals', storageType, 'low']),
-        average: totals.average + storage.getIn(['totals', storageType, 'low'])
-      }
-    },
-    {
-      peak: 0,
-      low: 0,
-      average: 0
-    }
-  )
-
+const mapStateToProps = (state, { params: { account, group, storage } }) => {
   const activeGroup = state.group.get('activeGroup')
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+  const comparison = state.filters.getIn(['filters', 'includeComparison'])
+  const storageType = state.filters.getIn(['filters', 'storageType'])
+  let getStorageByParent
+
+  if(storage) {
+    getStorageByParent = getByStorageId(state, storage, comparison)
+  } else if(group) {
+    getStorageByParent = getByGroupId(state, group, comparison)
+  } else {
+    getStorageByParent = getByAccountId(state, account, comparison)
+  }
+
   return {
-    getTotals: getTotals,
+    peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
+    avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
+    lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
+    dataForChart: getDataForChart(state, { account, group, storage }, storageType, comparison),
     groupHasStorageService
   }
 }
 
 const  mapDispatchToProps = (dispatch) => {
   return {
-    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params))
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
+    fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
+    fetchCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams))
   }
 }
 
