@@ -38,8 +38,8 @@ import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
 
-import StorageChartContainer from './storage-chart-container/storage-chart-container'
-import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-chart-container/selectors'
+import StorageChartContainer from './storage-item-containers/storage-chart-container'
+import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'

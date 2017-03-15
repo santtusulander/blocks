@@ -8,8 +8,8 @@ jest.mock('../../../util/helpers', () => { return {
   separateUnit: bytes => bytes
 }})
 
-jest.unmock('../storage-item-chart')
-import StorageItemChart from '../storage-item-chart'
+jest.unmock('../storage/storage-item-chart')
+import StorageItemChart from '../storage/storage-item-chart'
 
 const subject = shallow(
   <StorageItemChart
