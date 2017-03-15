@@ -195,8 +195,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
       accountActions.fetchAccount(brand, account),
       groupActions.fetchGroup(brand, account, group),
 
-      dispatch(storageActions.fetchAll({ group })),
-      dispatch(propertyActions.fetchAll({brand, account, group }))
+      dispatch(storageActions.fetchAll({ brand, account, group })),
+      dispatch(propertyActions.fetchAll({ brand, account, group }))
     ])
   }
 
