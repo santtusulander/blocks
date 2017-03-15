@@ -34,7 +34,7 @@ export const analyticsBase = ({legacy = true} = {}) => {
     case 'development':
       return legacy ? ANALYTICS_BASE_URI_DEVELOPMENT_LEGACY : ANALYTICS_BASE_URI_DEVELOPMENT
     case 'production':
-      return ANALYTICS_BASE_URI_PRODUCTION
+      return legacy ? ANALYTICS_BASE_URI_PRODUCTION + '-legacy' : ANALYTICS_BASE_URI_PRODUCTION
     default:
       return ANALYTICS_BASE_URI_DEVELOPMENT
   }
