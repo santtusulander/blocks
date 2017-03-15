@@ -18,7 +18,6 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { buildReduxId } from '../../redux/util'
 import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
