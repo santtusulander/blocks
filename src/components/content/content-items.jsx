@@ -447,33 +447,36 @@ class ContentItems extends React.Component {
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
 
+                {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
-                  <div className="storage-wrapper">
+                      <div className="storage-wrapper">
+                        { groupHasStorageService && storages.map((storage, i) => {
+                          const id = storage.get('ingest_point_id')
+                          const reduxId = buildReduxId(group, id)
 
-                    {/* Storages */}
-                    { storages.map( storage => {
-                      if (viewingChart) {
-                        return (
-                          <StorageChartContainer
-                            key={storage.get('ingest_point_id')}
-                            storageId={storage.get('ingest_point_id')}
-                            params={params}
-                            viewingChart={viewingChart}
-                          />
-                        )
-                      } else {
-                        return (
-                          <StorageListContainer
-                            key={storage.get('ingest_point_id')}
-                            storageId={storage.get('ingest_point_id')}
-                            params={params}
-                            viewingChart={viewingChart}
-                          />
-                        )
-                      }
-                    })
-                    }
-                  </div>
+                          if (viewingChart) {
+                            return (
+                              <StorageChartContainer
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={this.showStorageModal}
+                                storageId={reduxId}
+                                params={params} />
+                            )
+                          } else {
+                            return (
+                              <StorageListContainer
+                                key={storage.get('ingest_point_id')}
+                                storageId={storage.get('ingest_point_id')}
+                                params={params}
+                                viewingChart={viewingChart}
+                              />
+                            )
+                          }
+                        })
+                        }
+                      </div>
                 </IsAllowed>
 
                 { /* PROPETIES -header on List view */

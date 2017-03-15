@@ -149,7 +149,7 @@ const PropertyItemContainer = props => {
         dailyTraffic={dailyTraffic.get('detail') && dailyTraffic.get('detail').reverse()}
         showSlices={true}
 
-        chartWidth={scaledWidth}
+        chartWidth={scaledWidth.toString()}
         barMaxHeight={(scaledWidth / 7).toString()}
       />
   )
@@ -162,9 +162,9 @@ PropertyItemContainer.propTypes = {
   entity: PropTypes.object,
   entityMetrics: PropTypes.object,
   params: PropTypes.object,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   totalTraffics: PropTypes.instanceOf(List),
-  user: PropTypes.instanceOf(List),
+  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 
