@@ -9,6 +9,9 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 
+import clusterActions from '../../redux/modules/entities/CIS-clusters/actions'
+import { getById as getClusterById } from '../../redux/modules/entities/CIS-clusters/selectors'
+
 import { fetchMetrics } from '../../redux/modules/entities/storage-metrics/actions'
 import { getByStorageId as getMetricsByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 
@@ -52,6 +55,8 @@ class Storage extends Component {
       const { params, filters } = this.props
       const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
       this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+
+      this.props.fetchClusters({})
     }
   }
 
@@ -206,11 +211,14 @@ const getMockContents = (storage) => (
     []
   )
 
-const prepareStorageMetrics = (storage, storageMetrics, storageType) => {
+const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
   const current = formatBytesToUnit(storage.get('usage'), unit)
   const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
   const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+  const locations = storage.get('clusters').map(cluster => (
+    getClusterById(state, cluster).get('description').split(',')[0]
+  )).toJS()
   return {
     chartData: {
       data: [
@@ -226,13 +234,13 @@ const prepareStorageMetrics = (storage, storageMetrics, storageType) => {
       key: 'bytes'
     },
     usage: {
-      current: current,
+      current,
       estimated: parseFloat(estimated),
-      peak: peak,
-      unit: unit
+      peak,
+      unit
     },
-    gain: gain,
-    locations: ['San Jose', 'Frankfurt']
+    gain,
+    locations
   }}
 
 const mapStateToProps = (state, ownProps) => {
@@ -259,9 +267,9 @@ const mapStateToProps = (state, ownProps) => {
     currentUser: state.user.get('currentUser'),
     filters,
     group: state.group.get('activeGroup'),
-    storage: getStorageById(state, buildReduxId(ownProps.params.group, ownProps.params.storage)),
+    storage,
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: storageMetrics && prepareStorageMetrics(storage, storageMetrics, filters.get('storageType'))
+    storageMetrics: storageMetrics && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
 
@@ -269,6 +277,7 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
 
   return {
+    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
     toggleModal: uiActions.toggleAccountManagementModal
