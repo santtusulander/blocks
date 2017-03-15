@@ -15,8 +15,8 @@ const FilterStorageType = ({ storageType = '', toggleStorageType }) => (
       </FormGroup>
       <FormGroup>
         <Radio
-          checked={storageType.includes('file_count')}
-          onChange={() => toggleStorageType('file_count')}>
+          checked={storageType.includes('files_count')}
+          onChange={() => toggleStorageType('files_count')}>
          <span>{<FormattedMessage id="portal.analysis.filters.storageType.files.title"/>}</span>
         </Radio>
       </FormGroup>
