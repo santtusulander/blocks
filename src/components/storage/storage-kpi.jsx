@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import SectionContainer from '../layout/section-container'
 import MiniChart from '../mini-chart'
 import ComparisonBars from './comparison-bars'
+import TruncatedTitle from '../truncated-title'
 
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
@@ -36,7 +37,7 @@ const StorageKPI = ({
         <KPIFormattedMessage id='portal.storage.kpi.current.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
-            <span className='value'>{currentValue}</span>
+            <TruncatedTitle className='value' content={currentValue.toString()} />
             <span className='suffix'>
               {`/ ${referenceValue} ${valuesUnit.toUpperCase()}`}
             </span>
@@ -52,7 +53,7 @@ const StorageKPI = ({
         <KPIFormattedMessage id='portal.storage.kpi.peak.title' type='title' />
         <div className='storage-kpi-item-content'>
           <div className='storage-kpi-number'>
-            <span className='value'>{peakValue}</span>
+            <TruncatedTitle className='value' content={peakValue.toString()} />
             <span className='suffix'>{valuesUnit.toUpperCase()}</span>
           </div>
         </div>
