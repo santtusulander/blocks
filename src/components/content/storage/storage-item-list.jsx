@@ -22,11 +22,9 @@ class StorageItemList extends React.Component {
     const {
       name,
       locations,
-      linkTo,
-      disableLinkTo,
+      storageContentLink,
       configurationLink,
-      onConfiguration,
-      isAllowedToConfigure,
+      onConfigurationClick,
       analyticsLink,
       peak,
       low,
@@ -39,7 +37,7 @@ class StorageItemList extends React.Component {
     return (
       <div className="content-item-list storage-item-list">
         <div className="content-item-list-section section-lg">
-          <LinkWrapper className="content-item-list-link" disableLinkTo={disableLinkTo} linkTo={linkTo}>
+          <LinkWrapper className="content-item-list-link" disableLinkTo={!!storageContentLink} linkTo={storageContentLink}>
             <div className="content-item-details">
               <TruncatedTitle content={name} tooltipPlacement="top" className="content-item-list-name"/>
               {locations.join(', ')}
@@ -47,13 +45,14 @@ class StorageItemList extends React.Component {
           </LinkWrapper>
 
           <ButtonToolbar>
-            {configurationLink && isAllowedToConfigure ?
+            {configurationLink &&
               <Link to={configurationLink} className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
-              </Link> : ''
+              </Link>
             }
-            {onConfiguration && isAllowedToConfigure &&
-              <a onClick={onConfiguration} className="btn btn-icon btn-round edit-content-item">
+
+            {onConfigurationClick &&
+              <a onClick={onConfigurationClick} className="btn btn-icon btn-round edit-content-item">
                 <IconConfiguration/>
               </a>
             }
@@ -64,7 +63,7 @@ class StorageItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <LinkWrapper className="content-item-list-link" disableLinkTo={disableLinkTo} linkTo={linkTo}>
+        <LinkWrapper className="content-item-list-link" disableLinkTo={!!storageContentLink} linkTo={storageContentLink}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
               <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{formatBitsPerSecond(peak)}</b></p>
@@ -111,29 +110,26 @@ StorageItemList.propTypes = {
   analyticsLink: PropTypes.string,
   average: PropTypes.number,
 
-  //configurationLink: PropTypes.string,
+  configurationLink: PropTypes.string,
   currentUsage:  PropTypes.number,
-
-  disableLinkTo: PropTypes.bool,
 
   estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
 
-  linkTo: PropTypes.string,
   locations: PropTypes.array,
   low:PropTypes.number,
 
   name: PropTypes.string,
 
-  onConfiguration: PropTypes.func,
+  onConfigurationClick: PropTypes.func,
   peak:PropTypes.number,
   storageContentLink: PropTypes.string
-  
-//  isAllowedToConfigure: PropTypes.bool,
+
 }
 
 StorageItemList.defaultProps = {
-  primaryData: Immutable.List()
+  primaryData: Immutable.List(),
+  locations: []
 }
 
 export default StorageItemList
