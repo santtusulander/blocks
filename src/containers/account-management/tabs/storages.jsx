@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { Map, List, toJS } from 'immutable'
+import { Map, List } from 'immutable'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -154,8 +154,12 @@ class AccountManagementStorages extends Component {
       })
       const locationsString = locations.join(', ')
 
-      const usage = metrics && metrics.getIn([0, 'totals', 'bytes', 'ending'])
-      const fileCount = metrics && metrics.getIn([0, 'totals', 'file_count', 'ending'])
+      // TODO UDNP-3049 Uncomment this when redux for multiple group metrix will be ready
+      // const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
+      // const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
+      // const fileCount = storageMetrics && storageMetrics.getIn(['totals', 'file_count', 'ending'])
+      const usage = metrics || 0
+      const fileCount = metrics || 0
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
@@ -289,7 +293,7 @@ AccountManagementStorages.propTypes = {
   groups: PropTypes.instanceOf(List),
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
-  metrics: PropTypes.instanceOf(List),
+  metrics: PropTypes.instanceOf(Map),
   properties: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
