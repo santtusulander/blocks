@@ -8,7 +8,8 @@ import AnalysisStorage from '../../../components/analysis/storage'
 import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 import { getByAccountId, getByGroupId, getByStorageId } from '../../../redux/modules/entities/storage-metrics/selectors'
 
-import { formatBytes, buildAnalyticsOpts } from '../../../util/helpers'
+import { formatBytes, buildAnalyticsOpts, hasService } from '../../../util/helpers'
+import { STORAGE_SERVICE_ID } from '../../../constants/service-permissions'
 
 class AnalyticsTabStorage extends Component {
   componentWillMount() {
@@ -38,7 +39,7 @@ class AnalyticsTabStorage extends Component {
   }
 
   render() {
-    const {filters, getTotals} = this.props
+    const {filters, getTotals, groupHasStorageService} = this.props
 
     const storageType = filters.get('storageType')
     const peakStorage = getTotals(storageType).peak
@@ -46,13 +47,17 @@ class AnalyticsTabStorage extends Component {
     const lowStorage  = getTotals(storageType).low
 
     return (
-      <AnalysisStorage
-        avgStorage={this.formatTotals(avgStorage)}
-        fetching={false}
-        lowStorage={this.formatTotals(lowStorage)}
-        peakStorage={this.formatTotals(peakStorage)}
-        storageType={this.props.filters.get('storageType')}
-      />
+      <div>
+        {groupHasStorageService &&
+          <AnalysisStorage
+            avgStorage={this.formatTotals(avgStorage)}
+            fetching={false}
+            lowStorage={this.formatTotals(lowStorage)}
+            peakStorage={this.formatTotals(peakStorage)}
+            storageType={this.props.filters.get('storageType')}
+          />
+        }
+      </div>
     )
   }
 }
@@ -62,12 +67,14 @@ AnalyticsTabStorage.propTypes = {
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   getTotals: React.PropTypes.func,
+  groupHasStorageService: React.PropTypes.bool,
   location: React.PropTypes.object,
   params: React.PropTypes.object
 }
 
 AnalyticsTabStorage.defaultProps = {
-  filters: Immutable.Map()
+  filters: Immutable.Map(),
+  groupHasStorageService: false
 }
 
 const mapStateToProps = (state, { params: { account, group, ingest_point } }) => {
@@ -92,8 +99,11 @@ const mapStateToProps = (state, { params: { account, group, ingest_point } }) =>
     }
   )
 
+  const activeGroup = state.group.get('activeGroup')
+  const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
   return {
-    getTotals: getTotals
+    getTotals: getTotals,
+    groupHasStorageService
   }
 }
 

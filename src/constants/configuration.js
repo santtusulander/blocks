@@ -18,8 +18,7 @@ export const SCHEMA_OPTIONS = [
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.url.text"/>, value: 'URL'},
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.referrer.text"/>, value: 'REFERRER'},
   {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.user_agent.text"/>, value: 'USER_AGENT'},
-  {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.expires.text"/>, value: 'EXPIRES'},
-  {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.end_date.text"/>, value: 'END_DATE'}
+  {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.end_date.text"/>, value: 'EXPIRES'}
 ]
 
 export const ENCRYPTION_OPTIONS = [
