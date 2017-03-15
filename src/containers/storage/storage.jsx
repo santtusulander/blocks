@@ -233,7 +233,7 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const current = formatBytesToUnit(storage.get('usage'), unit)
+  const current = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'average']), unit)
   const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
   const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
   const locations = storage.get('clusters').map(cluster => (
@@ -250,7 +250,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
       peak,
       unit
     },
-    gain,
+    gain: 0,
     locations
   }}
 
