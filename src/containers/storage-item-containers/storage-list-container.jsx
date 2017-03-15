@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Map, List } from 'immutable'
 
+import { buildReduxId } from '../../redux/util'
+
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { getStorageById } from './selectors'
-
-import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
+import { getStorageById, getStorageMetricsById } from './selectors'
 
 import StorageItemList from '../../components/content/storage/storage-item-list'
 
@@ -18,7 +18,7 @@ const StorageChartContainer = props => {
   return (
       <StorageItemList
         analyticsLink={props.analyticsLink}
-        onConfigurationClick={() => props.onConfigurationClick(ingest_point_id)}
+        onConfigurationClick={props.onConfigurationClick && (() => props.onConfigurationClick(ingest_point_id))}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
@@ -27,8 +27,7 @@ const StorageChartContainer = props => {
         peak={bytes.peak}
         lastMonthUsage={historical_bytes.average}
         lastMonthEstimate={estimated_usage}
-        lastMonthPeak={historical_bytes.peak}
-       />
+        lastMonthPeak={historical_bytes.peak} />
   )
 }
 
@@ -36,7 +35,7 @@ StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
   analyticsLink: PropTypes.string,
-  // locations: PropTypes.instanceOf(List),
+  // clusters: PropTypes.instanceOf(List),
   onConfigurationClick: PropTypes.func,
   storageContentLink: PropTypes.string,
   storageEntity: PropTypes.instanceOf(Map),
@@ -44,7 +43,8 @@ StorageChartContainer.propTypes = {
 }
 
 StorageChartContainer.defaultProps = {
-  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
+  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } }),
+  storageEntity: Map()
 }
 
 /**
@@ -60,13 +60,13 @@ const makeStateToProps = () => {
 
     const {
       entitySelector = getStorageById,
-      metricsSelector = getByStorageId
+      metricsSelector = getStorageMetricsById
     } = ownProps
 
-    const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
+    const storageReduxId = ownProps.storageId && buildReduxId(ownProps.params.group, ownProps.storageId)
 
     return {
-      storageEntity,
+      storageEntity: getStorageEntity(state, {storageReduxId, ...ownProps}, entitySelector),
       storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }

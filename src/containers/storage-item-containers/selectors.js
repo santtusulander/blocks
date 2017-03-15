@@ -1,5 +1,8 @@
 import { getById as getStorageEntity, getAggregatedEstimatesByAccount } from '../../redux/modules/entities/CIS-ingest-points/selectors'
-import { getByAccountId as getMetricsByAccount } from '../../redux/modules/entities/storage-metrics/selectors'
+import {
+  getByStorageId as getMetricsByStorageId,
+  getByAccountId as getMetricsByAccount
+} from '../../redux/modules/entities/storage-metrics/selectors'
 
 /**
  * Default selector for storage entity if it's not passed as prop.
@@ -7,7 +10,10 @@ import { getByAccountId as getMetricsByAccount } from '../../redux/modules/entit
  * @param  {[type]} storageId   id of storage for which to get data.
  * @return {[type]}             metrics data/entity data for a single storage
  */
-export const getStorageById = (state, { storageId }) => getStorageEntity(state, storageId)
+export const getStorageById = (state, { storageReduxId }) => getStorageEntity(state, storageReduxId)
+export const getStorageMetricsById = (state, { storageId }) => {
+  return getMetricsByStorageId(state, storageId)
+}
 
 export const getStorageEstimateByAccount = (state, { params: { account } }) => {
   return getAggregatedEstimatesByAccount(state, account)

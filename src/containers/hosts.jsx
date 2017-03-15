@@ -203,7 +203,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
     metricsActions.fetchHostMetrics(metricsOpts)
-    metricsActions.fetchDailyHostTraffic(metricsOpts)
+    metricsActions.fetchDailyHostTraffic(metricsOpts),
+    dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true }))
   }
   return {
     fetchGroupData: fetchGroupData,

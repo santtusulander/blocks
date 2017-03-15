@@ -65,20 +65,20 @@ export class TokenStreaming extends React.Component {
           className="token-streaming-form"
           onSubmit={handleSubmit(this.saveChanges)}
         >
-          <div className="flex-row options-item">
+          <div className="flex-row options-item toggle-box">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.streaming_toggle.text" />
             </div>
             <Field
               name="streamingEnabled"
-              className="flex-item pull-right"
+              className="flex-item pull-right toggle-item"
               component={FieldFormGroupToggle}
             />
           </div>
 
           <hr/>
-          
-          <div className="flex-row options-item">
+
+          <div className="flex-row options-item toggle-box">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.check_client_ip.text" />
               <span className="tooltip-help">
@@ -93,7 +93,7 @@ export class TokenStreaming extends React.Component {
             <Field
               name="streaming_add_ip_addr"
               component={FieldFormGroupToggle}
-              className="flex-item pull-right"
+              className="flex-item pull-right toggle-item"
               readonly={!isStreamingEnabled}
             />
           </div>
