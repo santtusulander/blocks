@@ -150,6 +150,7 @@ Storage.propTypes = {
   accountManagementModal: PropTypes.string,
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
+  fetchClusters: PropTypes.func,
   fetchStorage: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   filters: PropTypes.instanceOf(Map),

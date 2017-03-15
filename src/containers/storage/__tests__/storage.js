@@ -20,7 +20,11 @@ let params = {
 
 const subject = () => {
   return shallow(
-    <Storage params={params} fetchStorage={jest.fn()} fetchStorageMetrics={jest.fn()} />)
+    <Storage
+      params={params}
+      fetchStorage={jest.fn()}
+      fetchStorageMetrics={jest.fn()}
+      fetchClusters={jest.fn()} />)
 }
 
 describe('Storage', () => {
