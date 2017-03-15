@@ -11,7 +11,7 @@ import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
 
-const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height}) => {
+const LineAreaComposedChart = ({chartLabel, data, dataKey, keyLabel, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height}) => {
   let dateFormat = defaultTickDateFormat
   const haveEstimate = data && data[0] && data[0].estimate
   const isComparison = data && data[0] && data[0].comparison_storage
@@ -51,9 +51,9 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             <Area
               isAnimationActive={false}
               fillOpacity={0.9}
-              dataKey="storage"
+              dataKey={dataKey}
               stackId="1"
-              name="Storage"
+              name={keyLabel}
               className="storage"
             />
             { isComparison &&
@@ -84,7 +84,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
               <XAxis hide={true} scale="point" />
             }
             { !isMiniChart &&
-              <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
+              <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick valueFormatter={valueFormatter} />}/>
             }
 
             { !isMiniChart &&
@@ -110,12 +110,19 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
   );
 }
 
+LineAreaComposedChart.defaultProps = {
+  dataKey: 'storage',
+  name: 'Storage'
+}
+
 LineAreaComposedChart.displayName = "LineAreaComposedChart"
 LineAreaComposedChart.propTypes = {
   chartLabel: PropTypes.string,
   data: PropTypes.array,
+  dataKey: PropTypes.string,
   height: PropTypes.number,
   isMiniChart: PropTypes.bool,
+  keyLabel: PropTypes.string,
   valueFormatter: PropTypes.func,
   width: PropTypes.number
 };
