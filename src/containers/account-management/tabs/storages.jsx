@@ -159,13 +159,13 @@ class AccountManagementStorages extends Component {
       const locationsString = locations.join(', ')
 
       const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
-      const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
+      const filesCount = metrics.getIn([0, 'detail', 0, 'files_count'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
                     .setIn(['locations'], locationsString)
                     .setIn(['usage'], usage)
-                    .setIn(['file_count'], fileCount)
+                    .setIn(['files_count'], filesCount)
     })
 
     const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
@@ -232,7 +232,7 @@ class AccountManagementStorages extends Component {
                         <td>{originsString}</td>
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
-                        <td>{storage.get('file_count')}</td>
+                        <td>{storage.get('files_count')}</td>
                         <td className="nowrap-column">
                         <ActionButtons
                           permissions={permissions}
