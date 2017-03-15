@@ -20,7 +20,7 @@ import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { STORAGE_WORKFLOW_DEFAULT } from '../../../constants/storage'
 import { convertToBytes, hasOption } from '../../../util/helpers.js'
-import { TRANSCODING_OPTION_ID } from '../../../constants/service-permissions'
+import { VOD_STREAMING_TRANSCODING_OPTION_ID } from '../../../constants/service-permissions'
 
 
 import SidePanel from '../../../components/side-panel'
@@ -201,7 +201,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const storageWorkflow = storage && storage.get('workflow')
   const clusters = storage && storage.get('clusters')
-  
+
   return {
     abrToggle: isABRSelected,
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -210,7 +210,7 @@ const mapStateToProps = (state, ownProps) => {
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
-    hasTranscodingSupport: hasOption(group, TRANSCODING_OPTION_ID),
+    hasTranscodingSupport: hasOption(group, VOD_STREAMING_TRANSCODING_OPTION_ID),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',

@@ -14,7 +14,8 @@ import {
   UserCanViewDns,
   UserCanViewHosts,
   CanViewConfigurationSecurity,
-  canViewStorageSummary
+  CanViewStorageSummary,
+  CanViewStorageTab
 } from './util/route-permissions-wrappers'
 
 import {
@@ -279,7 +280,7 @@ export const getRoutes = store => {
           </Route>
 
           {/* Storage - routes */}
-          <Route path={routes.contentStorage} component={canViewStorageSummary(store)(Storage)} />
+          <Route path={routes.contentStorage} component={CanViewStorageSummary(store)(Storage)} />
 
         </Route>
 
@@ -365,21 +366,21 @@ export const getRoutes = store => {
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
           <Route path={routes.accountManagementGroup} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
           <Route path={routes.accountManagementProperty} component={AccountManagement}>
             <IndexRedirect to={routes.accountManagementTabAccountDetails}/>
             <Route path={routes.accountManagementTabAccountDetails} component={AccountManagementAccountDetails}/>
             <Route path={routes.accountManagementTabAccountGroups} component={AccountManagementGroups}/>
             <Route path={routes.accountManagementTabAccountUsers} component={AccountManagementAccountUsers}/>
-            <Route path={routes.accountManagementTabSystemStorages} component={AccountManagementStorages}/>
+            <Route path={routes.accountManagementTabSystemStorages} component={CanViewStorageTab(store)(AccountManagementStorages)}/>
           </Route>
         </Route>
 

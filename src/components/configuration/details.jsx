@@ -80,12 +80,11 @@ class ConfigurationDetails extends React.Component {
   }
 
   generateStorageListOptions(storages) {
-    const {storagePermission: { createAllowed } } = this.props
-    const storageCreationIsAllowed = createAllowed
-
+    const {storagePermission: { createAllowed : storageCreationIsAllowed } } = this.props
     let options = storageCreationIsAllowed
                   ? [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
                   : []
+
     if(!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
         value: storage.getIn(['gateway', 'hostname']),
