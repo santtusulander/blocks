@@ -547,7 +547,7 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchStorage : (brand, account, group) => dispatch(storageActions.fetchAll({ group }))
+    fetchStorage : (brand, account, group) => dispatch(storageActions.fetchAll({ brand, account, group }))
   };
 }
 
