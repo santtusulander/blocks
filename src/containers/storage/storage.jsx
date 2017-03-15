@@ -42,7 +42,7 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: false
+      asperaUpload: true
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
