@@ -15,13 +15,15 @@ const StorageChartContainer = props => {
 
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
   const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
-
+  const onConfigurationClick = () => {
+    props.onConfigurationClick(ingest_point_id)
+  }
   return props.showingAggregate
     ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
-        onConfigurationClick={props.onConfigurationClick ? () => props.onConfigurationClick(ingest_point_id): null}
+        onConfigurationClick={props.onConfigurationClick && onConfigurationClick}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}

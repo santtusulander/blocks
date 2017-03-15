@@ -133,34 +133,36 @@ class StorageForm extends React.Component {
           />
         </div>
 
-        {hasTranscodingSupport &&
-          <Field
-            name="abr"
-            className="abr-field"
-            component={FieldFormGroupToggle}
-            label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
-            readonly={edit ? true : false}
-            required={edit ? false : true}
-            addonAfterLabel={
-              <HelpTooltip
-                id="tooltip-help"
-                title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
-                <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
-              </HelpTooltip>
+        { hasTranscodingSupport &&
+          <div>
+            <Field
+              name="abr"
+              className="abr-field"
+              component={FieldFormGroupToggle}
+              label={<FormattedMessage id="portal.storage.storageForm.abr.label" />}
+              readonly={edit ? true : false}
+              required={edit ? false : true}
+              addonAfterLabel={
+                <HelpTooltip
+                  id="tooltip-help"
+                  title={<FormattedMessage id="portal.storage.storageForm.abrProfile.help.label"/>}>
+                  <FormattedMessage id="portal.storage.storageForm.abrProfile.help.text" />
+                </HelpTooltip>
+              }
+            />
+          
+            { abrToggle &&
+              <Field
+                name="abrProfile"
+                className="abr-profile-field"
+                component={FieldFormGroupSelect}
+                emptyLabel={<FormattedMessage id="portal.storage.storageForm.abrProfile.placeholder" />}
+                options={abrProfileOptions}
+                disabled={edit ? true : false}
+                required={edit ? false : true}
+              />
             }
-          />
-        }
-
-        {abrToggle &&
-          <Field
-            name="abrProfile"
-            className="abr-profile-field"
-            component={FieldFormGroupSelect}
-            emptyLabel={<FormattedMessage id="portal.storage.storageForm.abrProfile.placeholder" />}
-            options={abrProfileOptions}
-            disabled={edit ? true : false}
-            required={edit ? false : true}
-          />
+          </div>
         }
 
         <FormFooterButtons>

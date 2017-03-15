@@ -197,7 +197,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const storageId = ownProps.storageId && buildReduxId(ownProps.groupId, ownProps.storageId)
   const storage = ownProps.storageId && getStorageById(state, storageId)
-  const group = ownProps.groupId && getGroupById(state, ownProps.groupId)
+  const activeGroup = state.group.get('activeGroup')
 
   const storageWorkflow = storage && storage.get('workflow')
   const clusters = storage && storage.get('clusters')
@@ -205,12 +205,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     abrToggle: isABRSelected,
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
-    group,
+    group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     isFetching: getGlobalFetching(state),
     locationOptions: getLocationOptions(state),
     abrProfileOptions: getABRProfilesOptions(state),
     selectedClusters: selectedLocations && getClustersByLocations(state, selectedLocations),
-    hasTranscodingSupport: hasOption(group, VOD_STREAMING_TRANSCODING_OPTION_ID),
+    hasTranscodingSupport: hasOption(activeGroup, VOD_STREAMING_TRANSCODING_OPTION_ID),
 
     initialValues: {
       name: edit ? ownProps.storageId : '',

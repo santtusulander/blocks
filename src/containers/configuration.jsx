@@ -399,6 +399,7 @@ export class Configuration extends React.Component {
             changeValues: this.changeValues,
             config: activeConfig,
             deploymentMode: deploymentModeText,
+            hasVODSupport: this.props.hasVODSupport,
             edgeConfiguration: activeConfig.get('edge_configuration'),
             groupHasStorageService: this.props.groupHasStorageService,
             saveChanges: this.saveActiveHostChanges,
