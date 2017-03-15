@@ -21,7 +21,7 @@ const StorageChartContainer = props => {
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
-        onConfigurationClick={props.onConfigurationClick}
+        onConfigurationClick={() => props.onConfigurationClick(ingest_point_id)}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}

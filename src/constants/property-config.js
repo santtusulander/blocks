@@ -1,6 +1,10 @@
 import Immutable from 'immutable'
 
-import { MEDIA_DELIVERY_CONTENT_TARGETTING, MEDIA_DELIVERY_TOKEN_AUTH } from './service-permissions'
+import { 
+  MEDIA_DELIVERY_CONTENT_TARGETTING,
+  MEDIA_DELIVERY_TOKEN_AUTH,
+  VOD_STREAMING_TOKEN_AUTH
+} from './service-permissions'
 
 export const DEFAULT_MATCH_JS = {match: {field: null, cases: [['',[]]]}}
 export const DEFAULT_MATCH = Immutable.fromJS(DEFAULT_MATCH_JS)
@@ -56,7 +60,7 @@ export const availableMatches = [
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true,
-    servicePermission: MEDIA_DELIVERY_CONTENT_TARGETTING
+    servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
   },
   { // File Name (not yet implemented on backend)
     key: 'File Name',
@@ -93,7 +97,7 @@ export const availableActions = [
     name: 'portal.policy.edit.actionSelection.tokenauth.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     requiresAdmin: true,
-    servicePermission: MEDIA_DELIVERY_TOKEN_AUTH
+    servicePermissions: [ MEDIA_DELIVERY_TOKEN_AUTH, VOD_STREAMING_TOKEN_AUTH ]
   },
   {
     key: null,

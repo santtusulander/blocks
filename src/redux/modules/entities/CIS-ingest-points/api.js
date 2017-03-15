@@ -29,7 +29,7 @@ const mockArray = [
 
 
 const baseUrl = ({ group, id }) => {
-  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}`
+  return `${BASE_URL_CIS_NORTH}/ingest_points/${id}?group_id=${group}&format=brief`
 }
 
 const baseListUrl = ({ group }) => {
@@ -48,8 +48,11 @@ const ingestPointSchema = new schema.Entity('ingestPoints', {
 },{
   idAttribute: (ingestPoint, group) => buildReduxId(group.id, ingestPoint.ingest_point_id),
   processStrategy: (value, parent) => {
+
+    //Strip away storage_desc as it's not returned by list endpoint and not used
+    const { storage_desc, ...rest } = value
     return {
-      ...value,
+      ...rest,
       parentId: parent.id,
       accountId: parent.accountId
     }

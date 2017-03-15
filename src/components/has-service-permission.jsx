@@ -1,27 +1,30 @@
-import React, { PropTypes, Component, Children } from 'react'
+import { PropTypes, Component, Children } from 'react'
 import { List } from 'immutable'
 import { connect } from 'react-redux'
 
-import * as PERMISSIONS from '../constants/service-permissions'
-
 class HasServicePermission extends Component {
   render() {
-    const { children, servicePermissions, permission } = this.props;
+    const { children, servicePermissions, allOf, anyOf } = this.props
+    const hasAllPermissions = !allOf.find(permission => !servicePermissions.contains(permission))
+    const hasAnyPermissions = !!anyOf.find(permission => servicePermissions.contains(permission))
 
     return (
-      servicePermissions.contains(permission) && Children.only(children)
+      (hasAllPermissions || hasAnyPermissions) && Children.only(children)
     )
   }
 }
 
 HasServicePermission.displayName = 'HasServicePermission'
 HasServicePermission.propTypes = {
-  children: React.PropTypes.node,
-  permission: PropTypes.oneOf(Object.keys(PERMISSIONS)),
+  allOf: PropTypes.array,
+  anyOf: PropTypes.array,
+  children: PropTypes.node,
   servicePermissions: PropTypes.instanceOf(List)
 }
 
 HasServicePermission.defaultProps = {
+  allOf: [],
+  anyOf: [],
   servicePermissions: List()
 }
 

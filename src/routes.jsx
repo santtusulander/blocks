@@ -93,6 +93,7 @@ const analyticsTabs = [
   // [PERMISSIONS.VIEW_ANALYTICS_SP_CONTRIBUTION, routes.analyticsTabContribution, AnalyticsTabContribution],
   [PERMISSIONS.ALLOW_ALWAYS, routes.analyticsTabContribution, AnalyticsTabContribution],
 
+  [PERMISSIONS.VIEW_ANALYTICS_STORAGE, routes.analyticsTabStorage, AnalyticsTabStorage],
   [PERMISSIONS.VIEW_ANALYTICS_STORAGE, routes.analyticsStorage, AnalyticsTabStorage],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],

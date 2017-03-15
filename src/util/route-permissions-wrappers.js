@@ -1,7 +1,7 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 import * as PERMISSIONS from '../constants/permissions'
-import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
+import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 
 const authSelector = state => state.user.get('currentUser')
@@ -152,7 +152,7 @@ export const CanViewConfigurationSecurity = (store) => {
       return `${path}`
     },
     wrapperDisplayName: 'CanViewConfigurationSecurity',
-    predicate: servicePermissionChecker(VIEW_CONFIGURATION_SECURITY, store),
+    predicate: servicePermissionChecker(MEDIA_DELIVERY_SECURITY, store),
     allowRedirectBack: false
   })
 }

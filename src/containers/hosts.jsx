@@ -16,6 +16,8 @@ import propertyActions from '../redux/modules/entities/properties/actions'
 import { getByGroup as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 import { getByGroup as getPropertiesByGroup } from '../redux/modules/entities/properties/selectors'
 
+import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+
 import ContentItems from '../components/content/content-items'
 
 import * as PERMISSIONS from '../constants/permissions'
@@ -202,7 +204,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
       groupActions.fetchGroup(brand, account, group),
 
       dispatch(storageActions.fetchAll({ group })),
-      dispatch(propertyActions.fetchAll({brand, account, group }))
+      dispatch(propertyActions.fetchAll({brand, account, group })),
+      dispatch(fetchStorageMetrics(metricsOpts))
     ])
   }
   const fetchMetricsData = () => {

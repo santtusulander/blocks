@@ -13,9 +13,12 @@ import {
 
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl
+  getContentUrl,
+  getAnalyticsUrl
 } from '../../util/routes'
 import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+
+import { buildReduxId } from '../../redux/util'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -231,13 +234,15 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
-  showStorageModal() {
+  showStorageModal(id) {
     this.setState({
+      itemToEdit: id,
       showStorageModal : true
     });
   }
   hideStorageModal() {
     this.setState({
+      itemToEdit: undefined,
       showStorageModal : false
     });
   }
@@ -329,7 +334,7 @@ class ContentItems extends React.Component {
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed } = storagePermission
+    const { createAllowed, viewAllowed, viewAnalyticAllowed } = storagePermission
     const groupHasStorageService = hasStorageService(activeGroup)
     let trafficTotals = Immutable.List()
 
@@ -441,7 +446,7 @@ class ContentItems extends React.Component {
                   this.getTier() === 'group' && !viewingChart &&
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
-                
+
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                   <div className="storage-wrapper">
 
@@ -584,6 +589,7 @@ class ContentItems extends React.Component {
               brand={brand}
               accountId={account}
               groupId={group}
+              storageId={this.state.itemToEdit}
               show= {true}
               editing={false}
               fetching={false}
@@ -635,6 +641,7 @@ ContentItems.propTypes = {
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
   storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List),
+  storagePermission: React.PropTypes.object,
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
