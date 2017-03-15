@@ -19,8 +19,6 @@ import {
 } from '../../util/routes'
 import { userIsCloudProvider, hasService } from '../../util/helpers'
 
-import { buildReduxId } from '../../redux/util'
-
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
@@ -484,15 +482,13 @@ class ContentItems extends React.Component {
 
                       {viewingChart && groupHasStorageService && storages.map((storage, i) => {
                         const id = storage.get('ingest_point_id')
-                        const reduxId = buildReduxId(group, id)
-
                         return (
                           <StorageChartContainer
                             key={i}
                             analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
                             storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                            storageId={id}
                             onConfigurationClick={modifyAllowed && this.showStorageModal}
-                            storageId={reduxId}
                             params={params} />
                         )
                       })}
