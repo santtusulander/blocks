@@ -1,8 +1,17 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../storage.jsx')
 import Storage from '../storage.jsx'
+
+jest.unmock('../../../redux/modules/fetching/actions.js')
+jest.mock('../../../util/helpers', () => {
+  return {
+    buildAnalyticsOpts: () => {
+      return {startDate: 1, endDate: 2}
+    }
+  }
+})
+jest.unmock('../storage.jsx')
 
 let params = {
   storage: 'storage',
@@ -11,7 +20,11 @@ let params = {
 
 const subject = () => {
   return shallow(
-    <Storage params={params} fetchStorage={jest.fn()} />)
+    <Storage
+      params={params}
+      fetchStorage={jest.fn()}
+      fetchStorageMetrics={jest.fn()}
+      fetchClusters={jest.fn()} />)
 }
 
 describe('Storage', () => {
