@@ -1,4 +1,4 @@
-import {getEntityById, getEntitiesByParent} from '../../entity/selectors'
+import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
 
 /**
  * Get property by ID
@@ -11,11 +11,21 @@ export const getById = (state, id) => {
 }
 
 /**
- * Get Accounts By Brand
+ * Get Groups by Account
  * @param  {} state
- * @param  {String} brand [description]
+ * @param  {String} account [description]
  * @return List
  */
 export const getByAccount = (state, account) => {
   return getEntitiesByParent(state, 'groups', account)
+}
+
+/**
+ * Get Group IDs by Account
+ * @param  {} state
+ * @param  {String} account [description]
+ * @return List
+ */
+export const getIdsByAccount = (state, account) => {
+  return getEntityIdsByParent(state, 'groups', account)
 }

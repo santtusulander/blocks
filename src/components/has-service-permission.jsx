@@ -5,8 +5,16 @@ import { connect } from 'react-redux'
 class HasServicePermission extends Component {
   render() {
     const { children, servicePermissions, allOf, anyOf } = this.props
-    const hasAllPermissions = !allOf.find(permission => !servicePermissions.contains(permission))
-    const hasAnyPermissions = !!anyOf.find(permission => servicePermissions.contains(permission))
+    let hasAllPermissions = false
+    let hasAnyPermissions = false
+
+    if (allOf.length) {
+      hasAllPermissions = !allOf.find(permission => !servicePermissions.contains(permission))
+    }
+    
+    if (anyOf.length) {
+      hasAnyPermissions = !!anyOf.find(permission => servicePermissions.contains(permission))
+    }
 
     return (
       (hasAllPermissions || hasAnyPermissions) && Children.only(children)

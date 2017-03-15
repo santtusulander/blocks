@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 
-import { formatBytes } from '../../util/helpers'
+import { formatBytes } from '../../../util/helpers'
 
 const StorageItemTooltip = ({ name, valuesFormat, currentUsage, peak, lastMonthUsage, lastMonthPeak }) => {
   return (

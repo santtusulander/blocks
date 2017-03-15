@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { List } from 'immutable'
 
-import StorageItemChart from '../../components/content/storage-item-chart'
+import StorageItemChart from '../../components/content/storage/storage-item-chart'
 
 import { formatBytes, separateUnit } from '../../util/helpers'
 

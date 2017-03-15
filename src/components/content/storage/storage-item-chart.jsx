@@ -6,11 +6,11 @@ import { Button, ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
-import LinkWrapper from './link-wrapper'
+import LinkWrapper from '../link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
-import IconConfiguration from '../icons/icon-configuration'
-import IconChart from '../icons/icon-chart'
-import { formatBytes, separateUnit } from '../../util/helpers'
+import IconConfiguration from '../../icons/icon-configuration'
+import IconChart from '../../icons/icon-chart'
+import { formatBytes, separateUnit } from '../../../util/helpers'
 
 const FORMAT = '0,0.0'
 const defaultDiameter = 240
@@ -176,5 +176,9 @@ StorageItemChart.propTypes = {
   peak: PropTypes.number,
   storageContentLink: PropTypes.string
 };
+
+StorageItemChart.defaultProps = {
+  locations: []
+}
 
 export default StorageItemChart

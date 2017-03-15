@@ -1,8 +1,8 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-jest.unmock('../storage-item-tooltip')
-import StorageItemTooltip from '../storage-item-tooltip'
+jest.unmock('../storage/storage-item-tooltip')
+import StorageItemTooltip from '../storage/storage-item-tooltip'
 
 const subject = shallow(
   <StorageItemTooltip />
