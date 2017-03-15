@@ -34,9 +34,6 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import { getContentUrl } from '../../util/routes.js'
 import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
-
-import { lineChartData } from '../../containers/__mocks__/chart-data'
-
 class Storage extends Component {
   constructor(props) {
     super(props)
@@ -244,9 +241,11 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     getClusterById(state, cluster).get('description').split(',')[0]
   )).toJS()
 
+  const lineChartData = storageMetrics.get('detail').toJS()
+
   return {
     chartData: {
-      data: lineChartData, // Should be replaced with the real data when API get ready UDNP-3032
+      data: lineChartData,
       key: 'bytes'
     },
     usage: {
