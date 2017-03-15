@@ -100,7 +100,6 @@ const storagesComponent =
     storages={fakeStorages}
     clusters={fakeClusters}
     properties={fakeProperties}
-    metrics={fakeMetrics}
     fetchStorages={jest.fn()}
     fetchClusters={jest.fn()}
     fetchProperties={jest.fn()}
