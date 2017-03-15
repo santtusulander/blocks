@@ -263,7 +263,7 @@ const mapStateToProps = (state, ownProps) => {
   if (ownProps.params.storage && ownProps.params.group) {
     storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
-    storageMetrics = getMetricsByStorageId(state, ownProps.params.stroge)
+    storageMetrics = getMetricsByStorageId(state, ownProps.params.storage)
   }
 
   const gateway = storage && storage.get('gateway')
