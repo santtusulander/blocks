@@ -18,8 +18,6 @@ import {
 } from '../../util/routes'
 import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
 
-import { buildReduxId } from '../../redux/util'
-
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
 import UDNButton from '../button'
