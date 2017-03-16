@@ -46,7 +46,7 @@ class StorageFormContainer extends React.Component {
 
     accountId && this.props.fetchAccount({brand, id: accountId})
     groupId && this.props.fetchGroup({brand, account: accountId, id: groupId})
-    storageId && this.props.fetchStorage({ group: groupId, id: storageId })
+    storageId && this.props.fetchStorage({ brand, account: accountId, group: groupId, id: storageId })
     this.props.fetchClusters({})
     this.props.fetchWorkflows({})
   }
