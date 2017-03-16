@@ -42,17 +42,17 @@ export class Hosts extends React.Component {
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    if(!this.props.activeGroup ||
-      String(this.props.activeGroup.get('id')) !== this.props.params.group ) {
-      this.startFetching();
-      this.props.fetchGroupData()
-        .then(this.stopFetching, this.stopFetching)
-        .then(() => {
-          this.props.fetchMetricsData()
-        })
-    } else {
-      this.props.fetchMetricsData()
-    }
+    // if(!this.props.activeGroup ||
+    //   String(this.props.activeGroup.get('id')) !== this.props.params.group ) {
+    this.startFetching();
+    this.props.fetchGroupData()
+      .then(this.stopFetching, this.stopFetching)
+      .then(() => {
+        this.props.fetchMetricsData()
+      })
+    // } else {
+    //   this.props.fetchMetricsData()
+    // }
   }
 
   startFetching() {
