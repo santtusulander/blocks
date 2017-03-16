@@ -6,6 +6,12 @@ import { withRouter } from 'react-router'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+import { getStorageAccessKey } from '../../redux/modules/user'
+
+import { UPLOAD_FILE } from '../../redux/modules/http-file-upload/actionTypes'
+import actions from '../../redux/modules/http-file-upload/actions'
+
+import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 import * as groupActionCreators from '../../redux/modules/group'
 import { hasService } from '../../util/helpers'
 
@@ -39,13 +45,16 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: true
+      asperaUpload: false
     }
+
+    this.fileUploader = null
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
     this.editStorage = this.editStorage.bind(this)
     this.onModalCancel = this.onModalCancel.bind(this)
+    this.initFileUploader = this.initFileUploader.bind(this)
   }
 
   componentWillMount() {
@@ -67,11 +76,25 @@ class Storage extends Component {
     if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
   }
 
+  componentDidMount() {
+    const { brand, account, group, storage } = this.props.params
+    this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
+  }
+
   componentWillReceiveProps ({ group, hasStorageService, params}) {
     if (group && !hasStorageService) {
       //redirect when the group doesn't have storage service
       this.props.router.push(getContentUrl('group', params.group, params))
     }
+  }
+
+  /**
+   * Initialize File Uploader
+   * @param action {object} - action with type and payload
+   */
+  initFileUploader(action) {
+    const { gatewayHostname, initUploadProgressHandler } = this.props
+    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, initUploadProgressHandler)
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -142,6 +165,7 @@ class Storage extends Component {
                 contents={storageContents}
                 asperaUpload={this.state.asperaUpload}
                 onMethodToggle={this.toggleUploadMehtod}
+                fileUploader={this.fileUploader}
               />
             </PageContainer>
 
@@ -176,6 +200,8 @@ Storage.propTypes = {
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
+  initStorageAccessKey: PropTypes.func,
+  initUploadProgressHandler: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
@@ -285,6 +311,7 @@ const mapStateToProps = (state, ownProps) => {
     gatewayHostname,
     asperaInstanse: asperaInstanse.get('asperaInitialized') ? asperaInstanse : new Map(),
     currentUser: state.user.get('currentUser'),
+    storageAccessToken: state.user.get('storageAccessToken'),
     filters,
     group: state.group.get('activeGroup'),
     hasStorageService,
@@ -301,6 +328,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
+    initUploadProgressHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params)),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
     toggleModal: uiActions.toggleAccountManagementModal
   }
