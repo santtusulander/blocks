@@ -58,7 +58,11 @@ class AccountManagementStorages extends Component {
       const account = this.props.account
       const metricsStartDate = new Date()
 
-      this.props.fetchStorages({ group: group.get('id') })
+      this.props.fetchStorages({
+        brand: account.get('brand_id'),
+        account: account.get('id'),
+        group: group.get('id')
+      })
       this.props.fetchProperties({
         brand: account.get('brand_id'),
         account: account.get('id'),

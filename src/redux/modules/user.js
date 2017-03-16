@@ -368,14 +368,14 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
   }
 })
 
-export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (storageId, groupId) => {
+export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brandId, accountId, groupId, storageId) => {
   const token = getUserToken()
   const axiosInstanse = axios.create({
     headers: {'Content-Type': 'application/json', 'X-Auth-Token': token }
   })
 
   if (storageId && token && groupId) {
-    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?group_id=${groupId}`)
+    return axiosInstanse.post(`${BASE_URL_CIS_NORTH}/ingest_points/${storageId}/access_keys?brand_id=${brandId}&account_id=${accountId}&group_id=${groupId}`)
                         .then(parseResponseData)
   } else {
     return Promise.reject({ data: { message: "No token" } })
