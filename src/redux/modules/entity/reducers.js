@@ -30,7 +30,7 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
  * @return {[Immutable Map]}      state fragment
  */
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
-  
+
   const metricsObject = comparison ? 'comparisonData' : 'data'
 
   if (response && response[key]) {
@@ -42,8 +42,6 @@ export const receiveMetrics = ({ key, comparison }) => (state, { response }) => 
 
 /**
  * Reducer for receiving metrics data for muliple groups
- * @param  {[type]} key
- * @param  {[type]} comparison    if true, insert data into array for comparison data
  * @return {[Immutable Map]}      state fragment
  */
 export const receiveGroupsMetrics = () => (state, { response }) => {
