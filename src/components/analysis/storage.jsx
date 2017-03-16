@@ -15,6 +15,7 @@ const AnalysisStorage = ({
   lowStorage,
   chartData,
   valueFormatter,
+  includeComparison,
   intl
   }) => {
 
@@ -48,10 +49,15 @@ const AnalysisStorage = ({
           chartLabel={intl.formatMessage({id: dateRangeLabel})}
           data={chartData.toJS()}
           dataKey={storageType}
+          comparisonDataKey={"historical_"+storageType}
           keyLabel={storageType === 'bytes'
             ? intl.formatMessage({id: "portal.analysis.filters.storageType.usage.title"})
             : intl.formatMessage({id: "portal.analysis.filters.storageType.files.title"})}
+          comparisonKeyLabel={storageType === 'bytes'
+            ? intl.formatMessage({id: "portal.analysis.filters.storageType.usage.comparison.title"})
+            : intl.formatMessage({id: "portal.analysis.filters.storageType.files.comparison.title"})}
           valueFormatter={valueFormatter}
+          isComparison={includeComparison}
         />
       </SectionContainer>
     </div>
@@ -73,6 +79,7 @@ AnalysisStorage.propTypes   = {
   avgStorage: React.PropTypes.string,
   chartData: React.PropTypes.instanceOf(List),
   dateRangeLabel: React.PropTypes.string,
+  includeComparison: React.PropTypes.bool,
   intl: React.PropTypes.object,
   lowStorage: React.PropTypes.string,
   peakStorage: React.PropTypes.string,
