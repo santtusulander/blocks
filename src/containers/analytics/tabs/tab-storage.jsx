@@ -30,7 +30,7 @@ class AnalyticsTabStorage extends Component {
 
         return Promise.all([
           ...groupIds.map(id => this.props.fetchCISIngestPoints({ ...params, group: id })),
-          this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+          this.props.fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
         ])
       }
     })
@@ -43,7 +43,7 @@ class AnalyticsTabStorage extends Component {
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
     if(JSON.stringify(nextFetchOpts) !== JSON.stringify(fetchOpts)) {
-      nextProps.fetchStorageMetrics({start: nextFetchOpts.startDate, end: nextFetchOpts.endDate, ...nextFetchOpts})
+      nextProps.fetchStorageMetrics({include_history:true, list_children: false, ...nextFetchOpts})
     }
   }
 
@@ -98,26 +98,22 @@ AnalyticsTabStorage.defaultProps = {
 }
 
 const mapStateToProps = (state, { params: { account, group, storage } }) => {
-  const activeGroup = state.group.get('activeGroup')
-  const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-  const comparison = state.filters.getIn(['filters', 'includeComparison'])
   const storageType = state.filters.getIn(['filters', 'storageType'])
   let getStorageByParent
 
   if(storage) {
-    getStorageByParent = getByStorageId(state, storage, comparison)
+    getStorageByParent = getByStorageId(state, storage)
   } else if(group) {
-    getStorageByParent = getByGroupId(state, group, comparison)
+    getStorageByParent = getByGroupId(state, group)
   } else {
-    getStorageByParent = getByAccountId(state, account, comparison)
+    getStorageByParent = getByAccountId(state, account)
   }
 
   return {
     peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
     avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
-    dataForChart: getDataForChart(state, { account, group, storage }, storageType, comparison),
-    groupHasStorageService
+    dataForChart: getDataForChart(state, { account, group, storage }, storageType)
   }
 }
 
