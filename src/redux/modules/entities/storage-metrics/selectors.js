@@ -14,7 +14,6 @@ export const getByAccountId = (state, accountId, comparison) => {
   return getEntityMetricsById(state, 'storageMetrics', accountId, 'account', comparison)
 }
 
-// <<<<<<< HEAD
 export const getDataForChart = (state, { account, group, storage }, storageType, comparison) => {
   let getStorageByParent, getAggregatedEstimates, dataForChart
 
@@ -39,8 +38,7 @@ export const getDataForChart = (state, { account, group, storage }, storageType,
 
   return dataForChart
 }
-// =======
+
 export const getByGroups = (state) => {
   return state.entities['storageMetrics'].get('groupsData')
-// >>>>>>> develop
 }

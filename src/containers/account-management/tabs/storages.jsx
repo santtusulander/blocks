@@ -154,15 +154,9 @@ class AccountManagementStorages extends Component {
         }
       })
       const locationsString = locations.join(', ')
-
-// <<<<<<< HEAD
-      const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
-      const filesCount = metrics.getIn([0, 'detail', 0, 'files_count'])
-// =======
-//       const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
-//       const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
-//       const fileCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
-// >>>>>>> develop
+      const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
+      const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
+      const filesCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
@@ -235,11 +229,7 @@ class AccountManagementStorages extends Component {
                         <td>{originsString}</td>
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
-{/* <<<<<<< HEAD */}
                         <td>{storage.get('files_count')}</td>
-{/* =======
-                        <td>{storage.get('file_count') || 0}</td>
->>>>>>> develop */}
                         <td className="nowrap-column">
                         <ActionButtons
                           permissions={permissions}
