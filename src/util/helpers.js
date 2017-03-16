@@ -215,6 +215,7 @@ export function buildAnalyticsOpts(params, filters, location ){
     brand: params.brand,
     group: params.group,
     property: params.property,
+    ingest_point: params.storage,
     startDate: toUnixTimestamp( startDate ),
     endDate: toUnixTimestamp( endDate ),
     sp_account_ids: filterValues.serviceProviders && filterValues.serviceProviders.join(','),
