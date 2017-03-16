@@ -11,6 +11,9 @@ import TruncatedTitle from '../truncated-title'
 import IconChart from '../icons/icon-chart.jsx'
 import IconCaretDown from '../icons/icon-caret-down'
 import IconConfiguration from '../icons/icon-configuration.jsx'
+import IsAllowed from '../is-allowed'
+
+import * as PERMISSIONS from '../../constants/permissions.js'
 
 import {
   getAnalyticsUrl,
@@ -80,15 +83,23 @@ const StorageHeader = ({
         </div>
       </AccountSelector>
       <ButtonToolbar>
-        <Link className="btn btn-primary btn-icon"
-              to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
-          <IconChart/>
-        </Link>
-        <Button
-          className="btn btn-primary btn-icon"
-          onClick={() => {toggleConfigModal()}}>
-          <IconConfiguration/>
-        </Button>
+        <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
+          <Link className="btn btn-primary btn-icon"
+                to={`${getAnalyticsUrl('storage', params.storage, params)}`}>
+            <IconChart/>
+          </Link>
+        </IsAllowed>
+        {/*TODO: Remove the following false condition once the API for editing ingest_point(CIS-322) is ready*/}
+        { false &&
+        <IsAllowed to={PERMISSIONS.MODIFY_STORAGE}>
+          <Button
+            className="btn btn-primary btn-icon"
+            onClick={() => {toggleConfigModal()}}>
+            <IconConfiguration/>
+          </Button>
+
+        </IsAllowed>
+        }
       </ButtonToolbar>
     </PageHeader>
   )

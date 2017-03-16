@@ -10,7 +10,7 @@ describe('ConfigurationStreaming', () => {
 
   beforeEach(() => {
     subject = (config = Map()) => {
-      return shallow(<ConfigurationStreaming config={config} />)
+      return shallow(<ConfigurationStreaming config={config} hasVODSupport={true} />)
     }
   })
 

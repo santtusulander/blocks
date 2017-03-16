@@ -9,14 +9,14 @@ import ButtonDropdown from './button-dropdown'
 
 const DragHandle = SortableHandle(() => <div className="sortable-handle">::</div>);
 
-const SortableItem = SortableElement(({value, idx, size, actions}) => {
+const SortableItem = SortableElement(({value, idx, size, actions, getLabel}) => {
   const { moveItem, deleteItem } = actions
 
   return (
     <div className='sortable-item'>
       <DragHandle />
       <div className='sortable-item-name'>
-        {value}
+        {getLabel ? getLabel(value) : value}
       </div>
       <div className='sortable-item-actions'>
         <ActionButtons
@@ -32,7 +32,7 @@ const SortableItem = SortableElement(({value, idx, size, actions}) => {
   )
 })
 
-const SortableList = SortableContainer(({items, actions}) => {
+const SortableList = SortableContainer(({items, actions, getLabel}) => {
   return (
     <div className="sortable-list clearfix">
       {items.map((item, i) => 
@@ -43,6 +43,7 @@ const SortableList = SortableContainer(({items, actions}) => {
           idx={i}
           size={items.size}
           actions={actions}
+          getLabel={getLabel}
         />
       )}
     </div>
@@ -80,9 +81,15 @@ class SortableMultiSelector extends React.Component {
   render() {
     const { options, label, required } = this.props
     const value = this.props.value || List()
+    const getLabel = () => (value) => options.find(item => item.value === value).label
 
-    const filteredOptions = options
-                            .map(option => Object.assign({}, option, { handleClick: this.addItem, disabled: value.contains(option.value) }))
+    const filteredOptions = options.map(option => {
+      return Object.assign({}, option, {
+        handleClick: this.addItem,
+        disabled: value.contains(option.value)
+      })
+    })
+
     const actions = {
       moveItem: this.moveItem,
       deleteItem: this.deleteItem
@@ -109,6 +116,7 @@ class SortableMultiSelector extends React.Component {
           actions={actions}
           useDragHandle={true}
           helperClass="sortable-helper"
+          getLabel={getLabel()}
         />
       </FormGroup>
     )

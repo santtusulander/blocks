@@ -1,22 +1,26 @@
 import axios from 'axios'
-import { normalize, schema } from 'normalizr'
 
-import { analyticsBase, buildReduxId, qsBuilder } from '../../../util'
+import { analyticsBase, qsBuilder } from '../../../util'
 
 const URL = (params, getOverView = true) => {
-  return `${analyticsBase({ legacy: false })}/storage/${getOverView ? 'get-overview' : 'get-by-region'}${qsBuilder(params)}`
+  //TODO UDNP-2958 Remove trailing slash for endpoint
+  return `${analyticsBase({ legacy: false })}/storage/${getOverView ? 'get-overview/' : 'get-by-region/'}${qsBuilder(params)}`
 }
-
-/**
- * Normalization schema for metrics data
- * @type {schema}
- */
-const storageMetricsSchema = new schema.Entity('storageMetrics',
-  {},
-  { idAttribute: ({ group, ingest_point }) => buildReduxId(group, ingest_point) }
-)
 
 export const fetch = (urlParams) =>
   axios.get(URL(urlParams)).then(({ data }) => {
-    return normalize(data.data, [ storageMetricsSchema ])
+    return { storageMetrics: data.data }
   })
+
+export const fetchByGroups = (groups, urlParams) => {
+  let groupsMetrics = []
+  groups.forEach((group) => {
+    urlParams.group = group.get('id')
+    groupsMetrics.push(
+      axios.get(URL(urlParams)).then(({ data }) => {
+        return data.data
+      })
+    )
+  })
+  return Promise.all(groupsMetrics)
+}

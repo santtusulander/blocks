@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
+
+import HasServicePermission from '../../has-service-permission'
 
 import SidePanel from '../../side-panel'
 import TokenSchema from './token-auth-forms/token-schema'
@@ -15,18 +17,12 @@ import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
 import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
-const advancedOptions = [
-  {label: <FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />, form: 'schema'},
-  {label: <FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />, form: 'streaming'}
-]
-
-const MD5 = 'MD5'
-
-const validate = ({ encryption, shared_key }) => {
+const validate = ({ shared_key }) => {
   let errors = {}
 
-  if (!shared_key && encryption !== MD5 ) {
+  if (!shared_key) {
     errors.shared_key = <FormattedMessage id="portal.policy.edit.tokenauth.shared_key.required.error" />
   }
 
@@ -56,13 +52,6 @@ export class TokenAuth extends React.Component {
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isMd5 } = nextProps
-    if ( isMd5 && (this.props.isMd5 !== isMd5)) {
-      this.props.change('shared_key', null)
-    }
-  }
-
   saveChanges(values) {
     const { close, invalid, changeValue, path} = this.props
     const { type, shared_key, encryption, streaming_ttl, streaming_add_ip_addr, schema } = values
@@ -90,27 +79,38 @@ export class TokenAuth extends React.Component {
 
   renderAdvancedOptions() {
     return (
-      advancedOptions.map((option, i) => {
-        return (
-          <div
-            key={`option-${i}`}
-            className="flex-row options-item"
-          >
-            <div className="flex-item options-item--name">{option.label}</div>
+      <div>
+        <div className="flex-row options-item">
+          <div className="flex-item options-item--name">{<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}</div>
+          <div className="flex-item arrow-right">
+            <a
+              className="btn btn-icon btn-transparent"
+              onClick={(e) => {
+                e.stopPropagation()
+                this.setState({detailForm: 'schema'})
+              }}
+            >
+              <IconChevronRight />
+            </a>
+          </div>
+        </div>
+        <HasServicePermission allOf={[VOD_STREAMING_TOKEN_AUTH]}>
+          <div className="flex-row options-item">
+            <div className="flex-item options-item--name">{<FormattedMessage id="portal.policy.edit.tokenauth.streaming_options.text" />}</div>
             <div className="flex-item arrow-right">
               <a
                 className="btn btn-icon btn-transparent"
                 onClick={(e) => {
                   e.stopPropagation()
-                  this.setState({detailForm: option.form})
+                  this.setState({detailForm: 'streaming'})
                 }}
               >
                 <IconChevronRight />
               </a>
             </div>
           </div>
-        )
-      })
+        </HasServicePermission>
+      </div>
     )
   }
 
@@ -123,7 +123,6 @@ export class TokenAuth extends React.Component {
       type,
       streaming_ttl,
       streaming_add_ip_addr,
-      isMd5,
       handleSubmit
     } = this.props
 
@@ -151,10 +150,9 @@ export class TokenAuth extends React.Component {
             <Field
               type="text"
               name="shared_key"
-              disabled={isMd5}
               component={FieldFormGroup}
               label={<FormattedMessage id="portal.policy.edit.tokenauth.secret.text" />}
-              required={!isMd5}
+              required={true}
             />
 
             <hr/>
@@ -226,12 +224,9 @@ TokenAuth.propTypes = {
   ...reduxFormPropTypes
 }
 
-const selector = formValueSelector('token-auth-form')
 const form = reduxForm({
   form: 'token-auth-form',
   validate
 })(TokenAuth)
 
-export default connect(state => ({
-  isMd5: selector(state, 'encryption') === MD5
-}))(injectIntl(form))
+export default connect()(injectIntl(form))

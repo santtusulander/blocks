@@ -21,6 +21,8 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../constants/account-management-options'
 import { getDashboardUrl } from '../util/routes'
+
+import checkPermissions from '../util/permissions'
 import * as PERMISSIONS from '../constants/permissions'
 
 import * as dashboardActionCreators from '../redux/modules/dashboard'
@@ -28,6 +30,16 @@ import * as filterActionCreators from '../redux/modules/filters'
 import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
+
+import groupActions from '../redux/modules/entities/groups/actions'
+import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
+
+import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
+
+import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+
+import StorageChartContainer from './storage-item-containers/storage-chart-container'
+import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -112,10 +124,37 @@ export class Dashboard extends React.Component {
         ? this.props.filterActions.fetchServiceProvidersWithTrafficForCP(params.brand, providerOpts)
         : this.props.filterActions.fetchContentProvidersWithTrafficForSP(params.brand, providerOpts)
 
+      /**
+       * If user has permission to list storages and view storage analytics and if the active account is a content provider:
+       * fetch all groups and storage metrics of this account, all storages of each group.
+       * @type {[Promise]}
+       */
+      const fetchStorageData =
+        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
+        checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
+        accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
+
+        this.props.fetchGroups(params).then((response) => {
+          let groupIds = []
+          if (response) {
+            groupIds = Object.keys(response.entities.groups)
+          }
+          // We don't always have to fetch groups because of caching, in those cases use selector
+          // to get group IDs for this account from the store.
+          else {
+            groupIds = this.props.getGroupIds()
+          }
+          return Promise.all([
+            ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
+            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined })
+          ])
+        })
+
       return Promise.all([
         this.props.dashboardActions.startFetching(),
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
-        fetchProviders
+        fetchProviders,
+        fetchStorageData
       ]).then(this.props.dashboardActions.finishFetching)
     }
   }
@@ -320,13 +359,19 @@ export class Dashboard extends React.Component {
               <FormattedMessage id="portal.common.no-data.text"/>
             </div>}
         </DashboardPanel>
+
         { isCP &&
-          <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
-            <DashboardPanel title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}>
-              <h2>Lorem Ipsum</h2>
-            </DashboardPanel>
-          </IsAllowed>
-        }
+        <IsAllowed to={PERMISSIONS.VIEW_ANALYTICS_STORAGE}>
+          <DashboardPanel
+            title={intl.formatMessage({id: 'portal.dashboard.storage.title'})}
+            contentClassName="storage-chart-panel">
+              <StorageChartContainer
+                showingAggregate={true}
+                params={this.props.params}
+                entitySelector={getStorageEstimateByAccount}
+                metricsSelector={getStorageMetricsByAccount}/>
+          </DashboardPanel>
+        </IsAllowed>}
 
       </DashboardPanels>
     )
@@ -399,11 +444,15 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
+  fetchGroups: PropTypes.func,
+  fetchStorageMetrics: PropTypes.func,
+  fetchStorages: PropTypes.func,
   fetching: PropTypes.bool,
   filterActions: React.PropTypes.object,
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
+  getGroupIds: PropTypes.func,
   intl: PropTypes.object,
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
@@ -414,6 +463,11 @@ Dashboard.propTypes = {
   user: PropTypes.instanceOf(Map)
 }
 
+Dashboard.contextTypes = {
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
+}
+
 Dashboard.defaultProps = {
   activeAccount: Map(),
   dashboard: Map(),
@@ -421,8 +475,9 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { params: { account } }) {
   return {
+    getGroupIds: () => getIdsByAccount(state, account),
     activeAccount: state.account.get('activeAccount'),
     dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),
@@ -437,6 +492,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
+    fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
+    fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),

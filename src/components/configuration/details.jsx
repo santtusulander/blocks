@@ -80,7 +80,11 @@ class ConfigurationDetails extends React.Component {
   }
 
   generateStorageListOptions(storages) {
-    let options = [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
+    const {storagePermission: { createAllowed : storageCreationIsAllowed } } = this.props
+    let options = storageCreationIsAllowed
+                  ? [{value: 'option_new_storage', label: <FormattedMessage id="portal.configuration.details.UDNOrigin.storage.new.text" />}]
+                  : []
+
     if(!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
         value: storage.getIn(['gateway', 'hostname']),
@@ -96,8 +100,8 @@ class ConfigurationDetails extends React.Component {
         <LoadingSpinner/>
       )
     }
-    const { readOnly, params: { brand, account, group } } = this.props
-    const isCIS = this.props.edgeConfiguration.get('origin_type') === 'cis'
+    const { readOnly, params: { brand, account, group }, groupHasStorageService } = this.props
+    const isCIS = this.props.edgeConfiguration.get('origin_type') === 'cis' && groupHasStorageService
     const isOtherHostHeader = ['option_origin_host_name', 'option_published_name'].indexOf(
         this.props.edgeConfiguration.get('host_header')
       ) === -1;
@@ -129,22 +133,24 @@ class ConfigurationDetails extends React.Component {
           </FormGroup>
         </Row>
 
-        <Row>
-          <FormGroup>
-            <Col xs={3}>
-              <ControlLabel>
-                <FormattedMessage id="portal.configuration.details.useUDNOrigin.text"/>
-              </ControlLabel>
-            </Col>
-            <Col xs={9}>
-              <Toggle
-                readonly={readOnly}
-                value={isCIS}
-                changeValue={this.toggleUDNOrigin}
-              />
-            </Col>
-          </FormGroup>
-        </Row>
+        { groupHasStorageService &&
+          <Row>
+            <FormGroup>
+              <Col xs={3}>
+                <ControlLabel>
+                  <FormattedMessage id="portal.configuration.details.useUDNOrigin.text"/>
+                </ControlLabel>
+              </Col>
+              <Col xs={9}>
+                <Toggle
+                  readonly={readOnly}
+                  value={isCIS}
+                  changeValue={this.toggleUDNOrigin}
+                />
+              </Col>
+            </FormGroup>
+          </Row>
+        }
 
         { isCIS &&
           <Row>
@@ -278,13 +284,6 @@ class ConfigurationDetails extends React.Component {
                     onChange={this.handleChange(
                       ['edge_configuration', 'host_header']
                     )}/>
-                    <InputGroup.Addon>
-                      <HelpTooltip
-                        id="tooltip_enter_host_name_value"
-                        title={<FormattedMessage id="portal.configuration.details.enterHostnameValue.text"/>}>
-                        <FormattedMessage id="portal.configuration.details.enterHostnameValue.help.text" />
-                      </HelpTooltip>
-                    </InputGroup.Addon>
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -404,14 +403,17 @@ ConfigurationDetails.propTypes = {
   changeValues: React.PropTypes.func,
   deploymentMode: React.PropTypes.string,
   edgeConfiguration: React.PropTypes.instanceOf(Immutable.Map),
+  groupHasStorageService: React.PropTypes.bool,
   intl: intlShape.isRequired,
   params: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
+  storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List)
 }
 ConfigurationDetails.defaultProps = {
-  storages: Immutable.List()
+  storages: Immutable.List(),
+  storagePermission: {}
 }
 
 export default injectIntl(ConfigurationDetails)

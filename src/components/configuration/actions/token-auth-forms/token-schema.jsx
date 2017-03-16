@@ -28,7 +28,13 @@ export class TokenSchema extends React.Component {
   }
 
   render() {
-    const { close, handleSubmit, selectedSchema } = this.props
+    const { close, handleSubmit, selectedSchema, intl } = this.props
+    const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
+    const getLabels = () => {
+      const items = schemaOptions.filter(item => selectedSchema.contains(item.value))
+
+      return items.map(item => item.label).join(' + ')
+    }
 
     return (
       <div>
@@ -37,16 +43,16 @@ export class TokenSchema extends React.Component {
             name="schema"
             className="input-select"
             component={FieldSortableMultiSelector}
-            options={SCHEMA_OPTIONS}
+            options={schemaOptions}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.schema.text" />}
           />
 
           <h6>
             <FormattedMessage id="portal.policy.edit.tokenauth.schema_string.text" />
           </h6>
-          <h5>
-           {selectedSchema && selectedSchema.toJS().join(' + ')}
-          </h5>
+          <strong>
+            { selectedSchema && getLabels() }
+          </strong>
 
           <FormFooterButtons>
             <Button
@@ -74,8 +80,14 @@ export class TokenSchema extends React.Component {
 TokenSchema.displayName = 'TokenSchema'
 TokenSchema.propTypes = {
   close: React.PropTypes.func,
+  intl: React.PropTypes.object,
   schema: React.PropTypes.instanceOf(Immutable.List),
+  selectedSchema: React.PropTypes.instanceOf(Immutable.List),
   ...reduxFormPropTypes
+}
+
+TokenSchema.defaultProps = {
+  selectedSchema: Immutable.List()
 }
 
 const form = reduxForm({

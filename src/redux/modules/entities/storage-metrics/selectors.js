@@ -1,5 +1,17 @@
-import { getEntityMetricsById, getEntityMetricsByParent } from '../../entity/selectors'
+import { getEntityMetricsById } from '../../entity/selectors'
 
-export const getByStorageId = (state, storageId, comparison) => getEntityMetricsById(state, 'storageMetrics', storageId, comparison)
-export const getByGroupId = (state, parentId, comparison) => getEntityMetricsByParent(state, 'storageMetrics', parentId, 'group', comparison)
-export const getByAccountId = (state, parentId, comparison) => getEntityMetricsByParent(state, 'storageMetrics', parentId, 'account', comparison)
+export const getByStorageId = (state, storageId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', storageId, 'ingest_point', comparison)
+}
+
+export const getByGroupId = (state, groupId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', groupId, 'group', comparison)
+}
+
+export const getByAccountId = (state, accountId, comparison) => {
+  return getEntityMetricsById(state, 'storageMetrics', accountId, 'account', comparison)
+}
+
+export const getByGroups = (state) => {
+  return state.entities['storageMetrics'].get('groupsData')
+}
