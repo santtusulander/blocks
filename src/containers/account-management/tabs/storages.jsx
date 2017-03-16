@@ -62,7 +62,7 @@ class AccountManagementStorages extends Component {
     this.props.groups.map( group => {
       const groupId = group.get('id')
 
-      this.props.fetchStorages({ group: groupId })
+      this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
 
