@@ -5,7 +5,7 @@ import {
   VIEW_CONTENT_GROUPS,
   VIEW_CONTENT_ACCOUNTS,
   VIEW_CONTENT_PROPERTIES,
-  VIEW_CONTENT_STORAGES } from '../../constants/permissions'
+  LIST_STORAGE } from '../../constants/permissions'
 
 import propertyActions from '../../redux/modules/entities/properties/actions'
 import { getByGroup as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
@@ -120,6 +120,13 @@ export const getAccounts = (state, parents, canView) => {
   })
 }
 
+/**
+ * Get brands and set accounts as child nodes
+ * @param  {[type]} state   [description]
+ * @param  {[type]} brand   [description]
+ * @param  {[type]} canView [description]
+ * @return {[type]}         [description]
+ */
 export const getBrands = (state, brand, canView) => {
 
   const nodes = canView(VIEW_CONTENT_ACCOUNTS) && getAccounts(state, { brand }, canView)
@@ -150,7 +157,7 @@ const getStoragesAndProperties = (state, parents, canView) => {
   if (!accountIsServiceProviderType(activeAccount)) {
 
     const properties = canView(VIEW_CONTENT_PROPERTIES) && getProperties(state, parents)
-    const storages = canView(VIEW_CONTENT_STORAGES) && getStorages(state, parents)
+    const storages = canView(LIST_STORAGE) && getStorages(state, parents)
 
     nodes = [
       ...properties,

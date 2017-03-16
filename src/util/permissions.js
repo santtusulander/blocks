@@ -79,10 +79,6 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =
 permissionMapping[PERMISSIONS.VIEW_CONTENT_PROPERTIES] =
   (role) => role.getIn(['permissions', 'north', 'published_hosts', 'list', 'allowed'])
 
-//TODO replace with actual check once storage permissions are in place
-permissionMapping[PERMISSIONS.VIEW_CONTENT_STORAGES] =
-  (role) => role.getIn(['permissions', 'north', 'published_hosts', 'list', 'allowed'])
-
 // Account Permissions
 permissionMapping[PERMISSIONS.MODIFY_ACCOUNTS] =
   (role) => role.getIn(['permissions', 'aaa', 'accounts', 'modify', 'allowed'])
