@@ -306,8 +306,7 @@ AccountManagementStorages.propTypes = {
 }
 
 AccountManagementStorages.defaultProps = {
-  storages: List(),
-  metrics: List()
+  storages: List()
 }
 
 
