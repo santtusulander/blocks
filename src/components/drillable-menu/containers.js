@@ -91,33 +91,33 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
 
   const canView = permissionCheck(levels, state.user.get('currentUser'), state.roles.get('roles'))
 
-  const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
-  const canViewAccount = canView(VIEW_CONTENT_GROUPS)
-  const canViewGroup = canView(VIEW_CONTENT_PROPERTIES) || canView(LIST_STORAGE)
+  const brandIsTopLevel = canView(VIEW_CONTENT_ACCOUNTS)
+  const accountIsTopLevel = canView(VIEW_CONTENT_GROUPS)
+  const groupIsTopLevel = canView(VIEW_CONTENT_PROPERTIES) || canView(LIST_STORAGE)
 
   let activeNode = brand
   let tree = []
 
-  if (canViewBrand) {
+  if (brandIsTopLevel) {
 
     tree = getBrands(state, brand, canView)
 
-  } else if (canViewAccount) {
+  } else if (accountIsTopLevel) {
 
     tree = getAccounts(state, { brand }, canView)
 
-  } else if (canViewGroup) {
+  } else if (groupIsTopLevel) {
 
     tree = getGroups(state, { brand, account }, canView)
   }
 
-  if (canViewBrand && brand) {
+  if (brandIsTopLevel && brand) {
     activeNode = brand
   }
-  if (canViewAccount && account) {
+  if (accountIsTopLevel && account) {
     activeNode = account
   }
-  if (canViewGroup && property) {
+  if (groupIsTopLevel && property) {
     activeNode = group
   }
 

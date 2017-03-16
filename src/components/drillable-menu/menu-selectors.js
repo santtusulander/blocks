@@ -50,7 +50,7 @@ export const getGroups = (state, parents, canView) => {
 }
 
 /**
- * get properties from state
+ * get properties from state, set idKey and labelKey for indentifying label and id
  * @param  {[type]} state   [description]
  * @param  {[type]} parents [description]
  * @return {[type]}         [description]

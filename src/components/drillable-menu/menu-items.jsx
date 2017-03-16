@@ -15,7 +15,7 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
           const nodeId = node[idKey]
           const nodeName = node[labelKey]
 
-          if (nodeName.includes(searchValue)) {
+          if (nodeName.toLowerCase().includes(searchValue.toLowerCase())) {
 
             listItems.push(
               <li key={i}>

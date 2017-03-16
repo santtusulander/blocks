@@ -27,6 +27,8 @@ class DrillableMenu extends Component {
       activeNode: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
       dispatch: PropTypes.func,
       fetchData: PropTypes.func,
+      open: PropTypes.bool,
+      toggle: PropTypes.func,
       tree: PropTypes.array,
       onItemClick: PropTypes.func,
       children: PropTypes.node
