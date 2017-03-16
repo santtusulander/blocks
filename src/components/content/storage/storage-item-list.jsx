@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import Immutable from 'immutable'
+import { List } from 'immutable'
 import { ButtonToolbar, Row } from 'react-bootstrap'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage } from 'react-intl'
@@ -116,7 +116,7 @@ StorageItemList.propTypes = {
   estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
 
-  locations: PropTypes.array,
+  locations: PropTypes.instanceOf(List),
   low:PropTypes.number,
 
   name: PropTypes.string,
@@ -128,7 +128,7 @@ StorageItemList.propTypes = {
 }
 
 StorageItemList.defaultProps = {
-  primaryData: Immutable.List(),
+  primaryData: List(),
   locations: []
 }
 
