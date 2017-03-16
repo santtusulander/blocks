@@ -13,8 +13,8 @@ import * as uiActionCreators from '../redux/modules/ui'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import propertyActions from '../redux/modules/entities/properties/actions'
 
-import { getByGroup as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
-import { getByGroup as getPropertiesByGroup } from '../redux/modules/entities/properties/selectors'
+import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../redux/modules/entities/properties/selectors'
 
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
 
@@ -168,7 +168,7 @@ const mapStateToProps = (state, { params: { group } }) => {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
-    properties: getPropertiesByGroup(state, group), //state.host.get('allHosts'),
+    properties: getPropertiesByGroup(state, group),
     storages: getStoragesByGroup(state, group),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
