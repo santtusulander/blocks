@@ -1,5 +1,6 @@
 import { Map, fromJS } from 'immutable'
 import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
+import { getByStorageId as getStorageMetricsById } from '../storage-metrics/selectors'
 
 /**
  * Get an aggregate estimate of all storages beloning to a specified parent entity.
@@ -102,4 +103,22 @@ export const getByGroups = (state, groups) => {
     })
     return fromJS(storages)
   }
+}
+
+/**
+ * [getByGroupWithTotalTraffic description]
+ * @param  {[type]} state [description]
+ * @param  {[type]} group [description]
+ * @return {[type]}       [description]
+ */
+export const getByGroupWithTotalTraffic = (state, group) => {
+  const storages = getByGroup(state, group)
+  const result = storages.map( storage => {
+    const metrics = getStorageMetricsById(state, storage.get('ingest_point_id'), false)
+    const totalTraffic = metrics ? metrics.getIn(['totals', 'bytes', 'average']) : 0
+
+    return storage.set('totalTraffic', totalTraffic || 0)
+  })
+
+  return result
 }
