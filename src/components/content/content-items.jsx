@@ -315,7 +315,7 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
-  /** TODO: Refactor sorters */
+  /** TODO: UDNP-3069 Refactor sorters */
   storageSorter( a,b ) {
     const [sortBy] =  this.props.sortValuePath
     const sortDirection = this.props.sortDirection
@@ -327,7 +327,6 @@ class ContentItems extends React.Component {
       valA = a.get('ingest_point_id').toLowerCase()
       valB = b.get('ingest_point_id').toLowerCase()
     } else {
-      //TODO: change to 'totals' when storage API is available
       valA = a.get('totalTraffic')
       valB = b.get('totalTraffic')
     }
@@ -337,7 +336,7 @@ class ContentItems extends React.Component {
 
     return 0
   }
-  /** TODO: Refactor sorters */
+  /** TODO: UDNP-3069 Refactor sorters */
   propertySorter( a,b ) {
     const [sortBy] =  this.props.sortValuePath
     const sortDirection = this.props.sortDirection
@@ -349,7 +348,6 @@ class ContentItems extends React.Component {
       valA = a.get('published_host_id').toLowerCase()
       valB = b.get('published_host_id').toLowerCase()
     } else {
-      //TODO: change to 'totals' when storage API is available
       valA = a.get('totalTraffic')
       valB = b.get('totalTraffic')
     }
