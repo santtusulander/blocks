@@ -232,11 +232,12 @@ class AccountManagementStorages extends Component {
                         <td>{formatBytes(storage.get('usage'))}</td>
                         <td>{storage.get('file_count') || 0}</td>
                         <td className="nowrap-column">
+
+                        {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                            onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                        */}
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={
-                            /*TODO: remove false condition once API from CIS-322 is ready*/
-                            false && (() => {this.editStorage(storageId, storage.get('parentId'))})}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>
