@@ -115,7 +115,6 @@ class HTTPUpload extends Component {
 }
 
 HTTPUpload.propTypes = {
-  openFileDialog: PropTypes.func,
   processFiles: PropTypes.func,
   uploads: PropTypes.instanceOf(Map)
 }
