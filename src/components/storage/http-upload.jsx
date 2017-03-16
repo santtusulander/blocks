@@ -22,7 +22,6 @@ class HTTPUpload extends Component {
     this.state = {
       dropZoneActive: false,
       dropZoneInvalid: false
-      /*{name: 'file1', progress: 89, type: 'file', status: 'progress'},*/
     }
 
     this.getEventsHandlersMap = this.getEventsHandlersMap.bind(this)
@@ -78,7 +77,9 @@ class HTTPUpload extends Component {
   bindEventsHandlers(container) {
     if (container === null) return
 
-    for (const [e, h] of this.getEventsHandlersMap()) container.addEventListener(e, h, false)
+    for (const [e, h] of this.getEventsHandlersMap()) {
+      container.addEventListener(e, h, false)
+    }
   }
 
   render() {
@@ -97,7 +98,6 @@ class HTTPUpload extends Component {
         <div
           className="filedrop-container"
           ref={this.bindEventsHandlers}
-          onClick={this.props.openFileDialog}
         >
           <div className={dropZoneClassNames}>
             <div className="welcome-text">
@@ -105,7 +105,10 @@ class HTTPUpload extends Component {
             </div>
           </div>
         </div>
-        <UploadStatusContainer uploads={uploads} />
+        <UploadStatusContainer
+          uploads={uploads}
+          inlineStyle={{'display': uploads.length ? 'block' : 'none'}}
+        />
       </div>
     )
   }

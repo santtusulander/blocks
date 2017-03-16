@@ -18,7 +18,6 @@ export const uploadFile = (accessKey, gateway, file, onProgress) => {
   const [ data ] = Object.values(file)
 
   const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${fileName}`
-  // const url = `/${UPLOAD_VERSION}`
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -29,5 +28,4 @@ export const uploadFile = (accessKey, gateway, file, onProgress) => {
 
   return axios.post(url, data, { headers, progress })
     .then(parseResponseData)
-    // .catch(console.info)
 }

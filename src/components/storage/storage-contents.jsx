@@ -9,6 +9,9 @@ import AsperaUpload from './aspera-upload'
 import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
+import Button from '../button'
+import IconAdd from '../icons/icon-add'
+
 import Toggle from '../toggle'
 
 const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
@@ -47,21 +50,28 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             />
           </Col>
         </FormGroup>
-        <ButtonDropdown
-          bsStyle="success"
-          pullRight={true}
-          disabled={uploadButtonIsDisabled}
-          options={[
-            {
-              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-              handleClick: openFileDialog
-            },
-            {
-              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
-              handleClick: openFolderDialog
-            }
-          ]}
-        />
+        { asperaUpload &&
+          <ButtonDropdown
+            bsStyle="success"
+            pullRight={true}
+            disabled={uploadButtonIsDisabled}
+            options={[
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
+                handleClick: openFileDialog
+              },
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                handleClick: openFolderDialog
+              }
+            ]}
+          />
+        }
+        { !asperaUpload && fileUploader &&
+          <Button bsStyle="success" icon={true} onClick={openFileDialog}>
+            <IconAdd/>
+          </Button>
+        }
       </SectionHeader>
       { hasContents
         ? <StorageContentBrowser contents={contents} />
