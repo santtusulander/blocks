@@ -11,3 +11,7 @@ export const getByGroupId = (state, groupId, comparison) => {
 export const getByAccountId = (state, accountId, comparison) => {
   return getEntityMetricsById(state, 'storageMetrics', accountId, 'account', comparison)
 }
+
+export const getByGroups = (state) => {
+  return state.entities['storageMetrics'].get('groupsData')
+}

@@ -5,46 +5,19 @@ import d3 from 'd3'
 import ContentItemChart from '../../components/content/content-item-chart'
 import ContentItemList from '../../components/content/content-item-list'
 
-import { getById as getPropertyById } from '../../redux/modules/entities/properties/selectors'
+import {
+  getById as getPropertyById,
+  getPropertyMetricsById,
+  getPropertyDailyTrafficById,
+  getTotalTraffics
+} from '../../redux/modules/entities/properties/selectors'
 
-import { isTrialHost, getConfiguredName } from '../../util/helpers'
+import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
-
-
-const getPropertyMetricsById = (state, propertyId) => {
-
-  const entity = getPropertyById(state, propertyId)
-  const configuredName = getConfiguredName(entity)
-
-  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
-}
-
-/**
- * getPropertyDailyTrafficById
- * @param  {Object} redux state
- * @param  {String|Number} propertyId
- * @return {Map} dailyTraffic of a property
- */
-const getPropertyDailyTrafficById = (state, propertyId) => {
-
-  const entity = getPropertyById(state, propertyId)
-  const configuredName = getConfiguredName(entity)
-
-  return state.metrics.get('hostDailyTraffic').find( metric => metric.get('property') === configuredName )
-}
-
-/**
- * getTotalTraffics
- * @param  {Object} state
- * @return {List} List of totalTraffics
- */
-const getTotalTraffics = (state) => {
-  return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
-}
 
 const PropertyItemContainer = props => {
 
-  const { published_host_id  } = props.entity.toJS()
+  const { published_host_id } = props.entity ? props.entity.toJS() : {}
   const { entityMetrics, dailyTraffic, totalTraffics, params, roles, user } = props
 
   const analyticsURLBuilder = (property) => {
