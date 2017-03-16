@@ -14,10 +14,11 @@ import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuratio
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
   const getSchemaLabel = (schema) => {
-    const items = schemaOptions.filter(item => schema.indexOf(item.value) > -1)
-
-    return items.map(item => item.label).join(' + ')
+    return schema.reduce((acc, schema) => {
+      return acc.concat([schemaOptions.find(option => option.value === schema).label])
+    }, []).join(' + ')
   }
+
   const getEncryptionLabel = (value) => ENCRYPTION_OPTIONS.find(item => item.value === value).label
 
   return (
