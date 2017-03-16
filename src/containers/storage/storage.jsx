@@ -34,9 +34,6 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import { getContentUrl } from '../../util/routes.js'
 import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
-
-import { lineChartData } from '../../containers/__mocks__/chart-data'
-
 class Storage extends Component {
   constructor(props) {
     super(props)
@@ -237,15 +234,22 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const current = formatBytesToUnit(storage.get('usage'), unit)
+  const average = storageMetrics.getIn(['totals', storageType, 'average'])
+  const current = formatBytesToUnit(average, unit)
   const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
-  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+
+  const historical_average = storageMetrics.getIn(['totals', `historical_${storageType}`, 'average'])
+  const gain = 100 * (average - historical_average ) / historical_average
+
   const locations = storage.get('clusters').map(cluster => (
     getClusterById(state, cluster).get('description').split(',')[0]
   )).toJS()
+
+  const lineChartData = storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
+
   return {
     chartData: {
-      data: lineChartData, // Should be replaced with the real data when API get ready UDNP-3032
+      data: lineChartData,
       key: 'bytes'
     },
     usage: {
@@ -267,7 +271,7 @@ const mapStateToProps = (state, ownProps) => {
   if (ownProps.params.storage && ownProps.params.group) {
     storageId = buildReduxId(ownProps.params.group, ownProps.params.storage)
     storage = getStorageById(state, storageId)
-    storageMetrics = getMetricsByStorageId(state, ownProps.params.stroge)
+    storageMetrics = getMetricsByStorageId(state, ownProps.params.storage)
   }
 
   const gateway = storage && storage.get('gateway')
@@ -299,7 +303,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
-    fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
+    fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
     toggleModal: uiActions.toggleAccountManagementModal
   }
 }

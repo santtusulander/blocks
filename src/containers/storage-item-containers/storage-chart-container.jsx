@@ -37,11 +37,11 @@ const StorageChartContainer = props => {
 StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
-  analyticsLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   // clusters: PropTypes.instanceOf(List),
-  onConfigurationClick: PropTypes.func,
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   showingAggregate: PropTypes.bool,
-  storageContentLink: PropTypes.string,
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   storageEntity: PropTypes.instanceOf(Map),
   storageMetrics: PropTypes.instanceOf(Map)
 }

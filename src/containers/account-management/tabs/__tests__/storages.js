@@ -61,9 +61,9 @@ const fakeClusters = Immutable.fromJS([
 
 const fakeMetrics = Immutable.fromJS([
   {
-   detail: [{
-     bytes: 108000497044939,
-     files_count: 5000
+   totals: [{
+     bytes: { ending : 108000497044939},
+     files_count: { ending: 5000}
    }]
   }
 ])
@@ -104,7 +104,7 @@ const storagesComponent =
     fetchStorages={jest.fn()}
     fetchClusters={jest.fn()}
     fetchProperties={jest.fn()}
-    fetchMetrics={jest.fn()}
+    fetchGroupsMetrics={jest.fn()}
     isFetching={false}
     intl={intlMaker()} />
 

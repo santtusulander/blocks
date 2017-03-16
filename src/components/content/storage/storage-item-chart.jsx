@@ -163,7 +163,7 @@ StorageItemChart.defaultProps = {
 }
 
 StorageItemChart.propTypes = {
-  analyticsLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   currentUsage: PropTypes.number,
   diameter: PropTypes.number,
   estimate: PropTypes.number,
@@ -172,9 +172,9 @@ StorageItemChart.propTypes = {
   lastMonthUsage: PropTypes.number,
   locations: PropTypes.instanceOf(List).isRequired,
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  onConfigurationClick: PropTypes.func,
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   peak: PropTypes.number,
-  storageContentLink: PropTypes.string
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 StorageItemChart.defaultProps = {
