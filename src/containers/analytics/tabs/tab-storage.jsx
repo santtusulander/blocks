@@ -7,6 +7,7 @@ import AnalysisStorage from '../../../components/analysis/storage'
 
 import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 import { getByAccountId, getByGroupId, getByStorageId, getDataForChart } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
@@ -21,19 +22,11 @@ class AnalyticsTabStorage extends Component {
   }
 
   componentWillMount() {
-    const { params, filters, location } = this.props
+    const { params, filters, location, fetchStorageMetrics } = this.props
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
-    this.props.fetchGroups(params).then((response) => {
-      if (response) {
-        const groupIds = Object.keys(response.entities.groups) || []
-
-        return Promise.all([
-          ...groupIds.map(id => this.props.fetchCISIngestPoints({ ...params, group: id })),
-          this.props.fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
-        ])
-      }
-    })
+    fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
+    this.props.fetchGroups(params)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,6 +34,13 @@ class AnalyticsTabStorage extends Component {
 
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
+
+    if(nextProps.groups) {
+      nextProps.groups.forEach( (group) => {
+        const groupId = group.get('id')
+        nextProps.fetchCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
+      })
+    }
 
     if(JSON.stringify(nextFetchOpts) !== JSON.stringify(fetchOpts)) {
       nextProps.fetchStorageMetrics({include_history:true, list_children: false, ...nextFetchOpts})
@@ -82,7 +82,6 @@ AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
-  fetchCISIngestPoints: React.PropTypes.func,
   fetchGroups: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
@@ -113,7 +112,8 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
     peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
     avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
-    dataForChart: getDataForChart(state, { account, group, storage }, storageType)
+    dataForChart: getDataForChart(state, { account, group, storage }, storageType),
+    groups: getGroupsByAccount(state, account)
   }
 }
 
