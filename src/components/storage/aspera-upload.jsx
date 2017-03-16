@@ -56,9 +56,9 @@ class AsperaUpload extends Component {
   }
 
   componentWillMount() {
-    const { storageId, groupId } = this.props
+    const { brandId, accountId, groupId, storageId } = this.props
 
-    this.props.userActions.getStorageAccessKey(storageId, groupId).then((res) => {
+    this.props.userActions.getStorageAccessKey(brandId, accountId, groupId, storageId).then((res) => {
       if (res.error) {
         this.setState({
           asperaError: res.payload.data.message,
@@ -301,7 +301,9 @@ class AsperaUpload extends Component {
 
 AsperaUpload.displayName = 'AsperaUpload'
 AsperaUpload.propTypes = {
+  accountId: React.PropTypes.string,
   asperaGetaway: React.PropTypes.string,
+  brandId: React.PropTypes.string,
   groupId: React.PropTypes.string,
   multiple: React.PropTypes.bool,
   openUploadModalOnClick: React.PropTypes.bool,
