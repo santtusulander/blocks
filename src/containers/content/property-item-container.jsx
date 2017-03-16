@@ -15,17 +15,6 @@ import {
 import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 
-
-/*const getPropertyMetricsById = (state, propertyId) => {
-
-  const entity = getPropertyById(state, propertyId)
-  const configuredName = getConfiguredName(entity)
-
-  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
-}*/
-
-
-
 const PropertyItemContainer = props => {
 
   const { published_host_id } = props.entity ? props.entity.toJS() : {}
