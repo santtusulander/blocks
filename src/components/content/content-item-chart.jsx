@@ -70,7 +70,6 @@ class ContentItemChart extends React.Component {
   }
 
   render() {
-    console.log('Chart -- render()', this.props.id);
     if (this.props.fetchingMetrics) {
       return <LoadingSpinner />
     }
