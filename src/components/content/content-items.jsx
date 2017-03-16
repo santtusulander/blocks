@@ -315,43 +315,47 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
-
+  /** TODO: Refactor sorters */
   storageSorter( a,b ) {
     const [sortBy] =  this.props.sortValuePath
     const sortDirection = this.props.sortDirection
 
-    let sortKey
+    let valA, valB
 
     //sort By Name
     if (sortBy === 'item') {
-      sortKey = 'ingest_point_id'
+      valA = a.get('ingest_point_id').toLowerCase()
+      valB = b.get('ingest_point_id').toLowerCase()
     } else {
       //TODO: change to 'totals' when storage API is available
-      sortKey = 'ingest_point_id'
+      valA = a.get('totalTraffic')
+      valB = b.get('totalTraffic')
     }
 
-    if ( a.get(sortKey).toLowerCase() > b.get(sortKey).toLowerCase() ) return sortDirection
-    if ( a.get(sortKey).toLowerCase() < b.get(sortKey).toLowerCase() ) return -1 * sortDirection
+    if ( valA > valB ) return sortDirection
+    if ( valA < valB ) return -1 * sortDirection
 
     return 0
   }
-
+  /** TODO: Refactor sorters */
   propertySorter( a,b ) {
     const [sortBy] =  this.props.sortValuePath
     const sortDirection = this.props.sortDirection
 
-    let sortKey
+    let valA, valB
 
     //sort By Name
     if (sortBy === 'item') {
-      sortKey = 'published_host_id'
+      valA = a.get('published_host_id').toLowerCase()
+      valB = b.get('published_host_id').toLowerCase()
     } else {
       //TODO: change to 'totals' when storage API is available
-      sortKey = 'ingest_point_id'
+      valA = a.get('totalTraffic')
+      valB = b.get('totalTraffic')
     }
 
-    if ( a.get(sortKey) > b.get(sortKey) ) return sortDirection
-    if ( a.get(sortKey) < b.get(sortKey) ) return -1 * sortDirection
+    if ( valA > valB ) return sortDirection
+    if ( valA < valB ) return -1 * sortDirection
 
     return 0
   }
@@ -524,10 +528,10 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort( this.propertySorter ).map( property => {
+                { properties.sort( this.propertySorter ).map( (property,i) => {
                   return (
                     <PropertyItemContainer
-                      key={property.get('published_host_id')}
+                      key={i}
                       propertyId={property.get('published_host_id')}
                       params={params}
                       viewingChart={viewingChart}
