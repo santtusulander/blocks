@@ -37,7 +37,7 @@ class StorageItemList extends React.Component {
     return (
       <div className="content-item-list storage-item-list">
         <div className="content-item-list-section section-lg">
-          <LinkWrapper className="content-item-list-link" disableLinkTo={!!storageContentLink} linkTo={storageContentLink}>
+          <LinkWrapper className="content-item-list-link" disableLinkTo={!storageContentLink} linkTo={storageContentLink}>
             <div className="content-item-details">
               <TruncatedTitle content={name} tooltipPlacement="top" className="content-item-list-name"/>
               {locations.join(', ')}
@@ -63,7 +63,7 @@ class StorageItemList extends React.Component {
           </ButtonToolbar>
         </div>
 
-        <LinkWrapper className="content-item-list-link" disableLinkTo={!!storageContentLink} linkTo={storageContentLink}>
+        <LinkWrapper className="content-item-list-link" disableLinkTo={!storageContentLink} linkTo={storageContentLink}>
           <div className="pull-right">
             <div className="content-item-list-section section-sm text-sm">
               <p><FormattedMessage id="portal.analytics.peak.text"/> <b className="pull-right">{formatBitsPerSecond(peak)}</b></p>
@@ -107,7 +107,7 @@ class StorageItemList extends React.Component {
 
 StorageItemList.displayName = 'StorageItemList'
 StorageItemList.propTypes = {
-  analyticsLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   average: PropTypes.number,
 
   configurationLink: PropTypes.string,
@@ -121,9 +121,9 @@ StorageItemList.propTypes = {
 
   name: PropTypes.string,
 
-  onConfigurationClick: PropTypes.func,
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   peak:PropTypes.number,
-  storageContentLink: PropTypes.string
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 
 }
 
