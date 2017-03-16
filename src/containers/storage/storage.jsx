@@ -245,7 +245,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
     getClusterById(state, cluster).get('description').split(',')[0]
   )).toJS()
 
-  const lineChartData = storageMetrics.get('detail').toJS()
+  const lineChartData = storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
 
   return {
     chartData: {
