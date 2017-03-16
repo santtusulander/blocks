@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
 import { Map, List } from 'immutable'
+import moment from 'moment'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -29,6 +30,7 @@ import { getByGroups as getMetricsByGroups } from '../../../redux/modules/entiti
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
+import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
 import * as PERMISSIONS from '../../../constants/permissions.js'
 
 
@@ -57,7 +59,8 @@ class AccountManagementStorages extends Component {
     const account = this.props.account
     const brandId = account.get('brand_id')
     const accountId = account.get('id')
-    const metricsStartDate = 1487203200
+    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
+
 
     this.props.groups.map( group => {
       const groupId = group.get('id')

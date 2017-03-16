@@ -16,3 +16,4 @@ export const STORAGE_ESTIMATE_UNITS = [
   ['kb', 'KB'],
   ['b', 'B']
 ]
+export const STORAGE_METRICS_SHIFT_TIME = 2
