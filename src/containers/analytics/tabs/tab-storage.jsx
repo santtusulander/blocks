@@ -11,8 +11,7 @@ import { getByAccountId, getByGroupId, getByStorageId, getDataForChart } from '.
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
-import { formatBytes, buildAnalyticsOpts, hasService } from '../../../util/helpers'
-import { STORAGE_SERVICE_ID } from '../../../constants/service-permissions'
+import { formatBytes, buildAnalyticsOpts } from '../../../util/helpers'
 
 class AnalyticsTabStorage extends Component {
   constructor(props) {
@@ -87,7 +86,6 @@ AnalyticsTabStorage.propTypes = {
   fetchGroups: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
-  groupHasStorageService: React.PropTypes.bool,
   location: React.PropTypes.object,
   lowStorage: React.PropTypes.number,
   params: React.PropTypes.object,
