@@ -30,6 +30,7 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
  * @return {[Immutable Map]}      state fragment
  */
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
+  
   const metricsObject = comparison ? 'comparisonData' : 'data'
 
   if (response && response[key]) {
