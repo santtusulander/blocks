@@ -15,7 +15,7 @@ import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT, MIN_TTL, MAX_TTL 
 const validate = ({ streamingEnabled, streaming_ttl }) => {
   let errors = {}
 
-  if (streamingEnabled && !streaming_ttl) {
+  if (streamingEnabled && (!streaming_ttl && streaming_ttl !== null)) {
     errors.streaming_ttl = <FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.required.error" />
   }
 
@@ -26,6 +26,8 @@ export class TokenStreaming extends React.Component {
   constructor(props) {
     super(props)
 
+    this.ttlTimeout = null
+    this.setDefaultTtl = this.setDefaultTtl.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
 
@@ -35,18 +37,30 @@ export class TokenStreaming extends React.Component {
     this.props.change('streaming_add_ip_addr', this.props.streaming_add_ip_addr)
   }
 
+  componentDidMount() {
+    this.ttlTimeout && clearTimeout(this.ttlTimeout)
+  }
+
   componentWillReceiveProps(nextProps) {
     const { isStreamingEnabled } = nextProps
 
     if ((typeof this.props.isStreamingEnabled !== 'undefined') && (this.props.isStreamingEnabled !== isStreamingEnabled)) {
       if ( !isStreamingEnabled ) {
-        this.props.change('streamingEnabled', false)
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
       } else {
-        this.props.change('streaming_ttl', TTL_DEFAULT)
+        this.setDefaultTtl()
       }
     }
+  }
+
+  setDefaultTtl() {
+    // This is hack to set default value for the field
+    // that is enabled by another option. Seems like redux-form API issue.
+    // TODO: UDNP-3073 - Investigate issue in redux-form 'change' API
+    this.ttlTimeout = setTimeout(() => {
+      this.props.change('streaming_ttl', TTL_DEFAULT)
+    }, 5)
   }
 
   saveChanges({ streaming_ttl, streaming_add_ip_addr }) {
@@ -107,6 +121,7 @@ export class TokenStreaming extends React.Component {
             label={<FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.text" />}
             min={MIN_TTL}
             max={MAX_TTL}
+            normalize={value => Number(value)}
           />
 
           <FormFooterButtons>
