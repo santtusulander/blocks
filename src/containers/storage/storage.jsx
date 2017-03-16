@@ -39,7 +39,7 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: false
+      asperaUpload: true
     }
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
@@ -51,6 +51,8 @@ class Storage extends Component {
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
       this.props.fetchStorage({
+        brand: this.props.params.brand,
+        account: this.props.params.account,
         group: this.props.params.group,
         id: this.props.params.storage
       })
@@ -131,6 +133,8 @@ class Storage extends Component {
               />
 
               <StorageContents
+                brandId={params.brand}
+                accountId={params.account}
                 storageId={params.storage}
                 groupId={params.group}
                 gatewayHostname={gatewayHostname}
