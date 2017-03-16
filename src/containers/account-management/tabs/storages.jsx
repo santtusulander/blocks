@@ -180,6 +180,7 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
+    //TODO: remove && false condition once API from CIS-322 is ready
     const permissions = {modify : PERMISSIONS.MODIFY_STORAGE && false , delete: PERMISSIONS.DELETE_STORAGE}
 
     return (
