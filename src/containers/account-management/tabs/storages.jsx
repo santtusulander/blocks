@@ -240,7 +240,9 @@ class AccountManagementStorages extends Component {
                         <td className="nowrap-column">
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
+                          onEdit={
+                            /*TODO: remove false condition once API from CIS-322 is ready*/
+                            false && (() => {this.editStorage(storageId, storage.get('parentId'))})}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>
