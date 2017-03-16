@@ -89,13 +89,17 @@ const StorageHeader = ({
             <IconChart/>
           </Link>
         </IsAllowed>
+        {/*TODO: Remove the following false condition once the API for editing ingest_point(CIS-322) is ready*/}
+        { false &&
         <IsAllowed to={PERMISSIONS.MODIFY_STORAGE}>
           <Button
             className="btn btn-primary btn-icon"
             onClick={() => {toggleConfigModal()}}>
             <IconConfiguration/>
           </Button>
+
         </IsAllowed>
+        }
       </ButtonToolbar>
     </PageHeader>
   )
