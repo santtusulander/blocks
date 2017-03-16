@@ -22,10 +22,10 @@ const StorageChartContainer = props => {
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
-        currentUsage={bytes.average}
+        currentUsage={bytes.ending}
         estimate={estimated_usage}
         peak={bytes.peak}
-        lastMonthUsage={historical_bytes.average}
+        lastMonthUsage={historical_bytes.ending}
         lastMonthEstimate={estimated_usage}
         lastMonthPeak={historical_bytes.peak} />
   )

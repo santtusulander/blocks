@@ -494,7 +494,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
-    fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
+    fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics({ ...requestParams, include_history: true })),
     dashboardActions: bindActionCreators(dashboardActionCreators, dispatch),
     filterActions: bindActionCreators(filterActionCreators, dispatch),
     filtersActions: bindActionCreators(filtersActionCreators, dispatch),
