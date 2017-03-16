@@ -28,7 +28,7 @@ class DrillableMenu extends Component {
       dispatch: PropTypes.func,
       fetchData: PropTypes.func,
       tree: PropTypes.array,
-      handleEntityClick: PropTypes.func,
+      onItemClick: PropTypes.func,
       children: PropTypes.node
     }
   }
@@ -115,7 +115,7 @@ class DrillableMenu extends Component {
               activeNodeName={nodeToView[labelKey]} />
 
             <SelectorItems
-              handleEntityClick={this.props.handleEntityClick}
+              onItemClick={this.props.onItemClick}
               handleCaretClick={this.handleCaretClick}
               goToChild={this.changeActiveNode}
               menuNodes={nodeInfo.nodes}

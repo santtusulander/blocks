@@ -32,7 +32,7 @@ class AccountSelector extends Component {
     this.providerType = null
     this.fetchItems = this.fetchItems.bind(this)
     this.onCaretClick = this.onCaretClick.bind(this)
-    this.handleEntityClick = this.handleEntityClick.bind(this)
+    this.onItemClick = this.onItemClick.bind(this)
     this.onTopbarClick = this.onTopbarClick.bind(this)
     this.isDrillable = this.isDrillable.bind(this)
   }
@@ -142,7 +142,7 @@ class AccountSelector extends Component {
    * Item name pressed -> should route to that item. Since the same menu items are displayed
    * in brand and account tiers, in both cases 'account' gets passed
    */
-  handleEntityClick(value) {
+  onItemClick(value) {
     let { onSelect, params: { brand, account, group }, accountSelectorActions } = this.props
     if(!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
@@ -238,7 +238,7 @@ class AccountSelector extends Component {
       onSelect: this.selectOption,
       searchValue,
       open,
-      handleEntityClick: this.handleEntityClick,
+      onItemClick: this.onItemClick,
       onTopbarClick: this.onTopbarClick,
       onCaretClick: this.onCaretClick
     })

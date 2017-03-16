@@ -11,7 +11,7 @@ export default function(WrappedSelect) {
 
       this.close = this.close.bind(this)
       this.handleClick = this.handleClick.bind(this)
-      this.handleEntityClick = this.handleEntityClick.bind(this)
+      this.onItemClick = this.onItemClick.bind(this)
       this.onToggle = this.onToggle.bind(this)
     }
 
@@ -32,10 +32,10 @@ export default function(WrappedSelect) {
       this.close()
     }
 
-    handleEntityClick(value) {
-      const { handleEntityClick } = this.props
-      if (handleEntityClick) {
-        handleEntityClick(value)
+    onItemClick(value) {
+      const { onItemClick } = this.props
+      if (onItemClick) {
+        onItemClick(value)
       }
       this.close()
     }
@@ -56,7 +56,7 @@ export default function(WrappedSelect) {
 
     render() {
       return (
-        <WrappedSelect {...this.props} open={this.state.open} handleEntityClick={this.handleEntityClick} toggle={this.onToggle}/>
+        <WrappedSelect {...this.props} open={this.state.open} onItemClick={this.onItemClick} toggle={this.onToggle}/>
       )
     }
   }
@@ -64,7 +64,7 @@ export default function(WrappedSelect) {
   AutoClose.displayName = WrappedSelect.displayName ? `autoClose(${WrappedSelect.displayName})` : 'AutoClose'
   AutoClose.propTypes = {
     close: PropTypes.func,
-    handleEntityClick: PropTypes.func,
+    onItemClick: PropTypes.func,
     open: PropTypes.bool,
     toggle: PropTypes.func
   }

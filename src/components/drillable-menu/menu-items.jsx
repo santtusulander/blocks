@@ -1,7 +1,7 @@
 import React from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
 
-export default ({ menuNodes = [], searchValue, handleCaretClick, handleEntityClick }) => {
+export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
 
   return (
     <li className="menu-container">
@@ -20,7 +20,7 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, handleEntityCli
             listItems.push(
               <li key={i}>
 
-                <a onClick={() => handleEntityClick(node)}>{nodeName}</a>
+                <a onClick={() => onItemClick(node)}>{nodeName}</a>
 
                 {nodes &&
                   <a
