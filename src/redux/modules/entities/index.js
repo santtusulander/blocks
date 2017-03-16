@@ -4,7 +4,7 @@ import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupsMetrics} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -106,7 +106,7 @@ const CISWorkflowProfiles =
 const storageMetrics =
   handleActions({
     [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
-    [metricsActionTypes.RECEIVE_GROUPS_METRICS] : receiveMetrics({ key: 'groupsStorageMetrics' }),
+    [metricsActionTypes.RECEIVE_GROUPS_METRICS] : receiveGroupsMetrics(),
     [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
     [actionTypes.FAIL] : failEntity
   }, Map({ comparisonData: Map(), data: Map(), groupsData: List() }))

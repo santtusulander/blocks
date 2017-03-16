@@ -234,7 +234,6 @@ class AccountManagementStorages extends Component {
                         <td className="nowrap-column">
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>

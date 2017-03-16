@@ -32,16 +32,26 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
   let metricsObject = comparison ? 'comparisonData' : 'data'
 
-  if (key === 'groupsStorageMetrics') {
-    const res = response.filter((resItem) => resItem.length)
-    const flattenedRes = [].concat.apply([],res)
-    response = {}
-    response.groupsStorageMetrics = flattenedRes
-    metricsObject = 'groupsData'
-  }
-
   if (response && response[key]) {
     return state.merge(fromJS({ [metricsObject]: response[key] }))
+  }
+
+  return state
+}
+
+/**
+ * Reducer for receiving metrics data for muliple groups
+ * @param  {[type]} key
+ * @param  {[type]} comparison    if true, insert data into array for comparison data
+ * @return {[Immutable Map]}      state fragment
+ */
+export const receiveGroupsMetrics = () => (state, { response }) => {
+  const metricsObject = 'groupsData'
+  //Convert response from array of arrays to array of object + filter empty arrays
+  const flattenedResponse = [].concat.apply([],response.filter((resItem) => resItem.length))
+
+  if (response) {
+    return state.merge(fromJS({ [metricsObject]: flattenedResponse }))
   }
 
   return state
