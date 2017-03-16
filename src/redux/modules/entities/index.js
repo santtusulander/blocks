@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
-import {Map} from 'immutable'
+import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
@@ -17,6 +17,7 @@ export const actionTypes = {
 
 export const metricsActionTypes = {
   RECEIVE_METRICS: 'metrics/RECEIVE',
+  RECEIVE_GROUPS_METRICS: 'metrics/RECEIVE_GROUPS',
   RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
@@ -105,9 +106,10 @@ const CISWorkflowProfiles =
 const storageMetrics =
   handleActions({
     [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
+    [metricsActionTypes.RECEIVE_GROUPS_METRICS] : receiveMetrics({ key: 'groupsStorageMetrics' }),
     [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
     [actionTypes.FAIL] : failEntity
-  }, Map({ comparisonData: Map(), data: Map() }))
+  }, Map({ comparisonData: Map(), data: Map(), groupsData: List() }))
 
 export default combineReducers({
   accounts,

@@ -30,8 +30,15 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
  * @return {[Immutable Map]}      state fragment
  */
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
+  let metricsObject = comparison ? 'comparisonData' : 'data'
 
-  const metricsObject = comparison ? 'comparisonData' : 'data'
+  if (key === 'groupsStorageMetrics') {
+    const res = response.filter((resItem) => resItem.length)
+    const flattenedRes = [].concat.apply([],res)
+    response = {}
+    response.groupsStorageMetrics = flattenedRes
+    metricsObject = 'groupsData'
+  }
 
   if (response && response[key]) {
     return state.merge(fromJS({ [metricsObject]: response[key] }))
