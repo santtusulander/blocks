@@ -100,6 +100,9 @@ class ContentItems extends React.Component {
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
 
+    this.storageSorter = this.storageSorter.bind(this)
+    this.propertySorter = this.propertySorter.bind(this)
+
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
       handleClick: this.addItem
@@ -313,6 +316,46 @@ class ContentItems extends React.Component {
     )
   }
 
+  storageSorter( a,b ) {
+    const [sortBy] =  this.props.sortValuePath
+    const sortDirection = this.props.sortDirection
+
+    let sortKey
+
+    //sort By Name
+    if (sortBy === 'item') {
+      sortKey = 'ingest_point_id'
+    } else {
+      //TODO: change to 'totals' when storage API is available
+      sortKey = 'ingest_point_id'
+    }
+
+    if ( a.get(sortKey).toLowerCase() > b.get(sortKey).toLowerCase() ) return sortDirection
+    if ( a.get(sortKey).toLowerCase() < b.get(sortKey).toLowerCase() ) return -1 * sortDirection
+
+    return 0
+  }
+
+  propertySorter( a,b ) {
+    const [sortBy] =  this.props.sortValuePath
+    const sortDirection = this.props.sortDirection
+
+    let sortKey
+
+    //sort By Name
+    if (sortBy === 'item') {
+      sortKey = 'published_host_id'
+    } else {
+      //TODO: change to 'totals' when storage API is available
+      sortKey = 'ingest_point_id'
+    }
+
+    if ( a.get(sortKey) > b.get(sortKey) ) return sortDirection
+    if ( a.get(sortKey) < b.get(sortKey) ) return -1 * sortDirection
+
+    return 0
+  }
+
   render() {
     const {
       sortValuePath,
@@ -354,8 +397,8 @@ class ContentItems extends React.Component {
         dailyTraffic: itemDailyTraffic
       })
     })
-
     .sort(sortContent(sortValuePath, sortDirection))
+
     if(!fetchingMetrics){
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
@@ -444,7 +487,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.map((storage, i) => {
+                        { groupHasStorageService && storages.sort( this.storageSorter ).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -481,7 +524,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.map( property => {
+                { properties.sort( this.propertySorter ).map( property => {
                   return (
                     <PropertyItemContainer
                       key={property.get('published_host_id')}
