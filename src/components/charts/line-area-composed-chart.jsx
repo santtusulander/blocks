@@ -11,10 +11,9 @@ import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
 
-const LineAreaComposedChart = ({chartLabel, data, dataKey, keyLabel, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height}) => {
+const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, keyLabel, comparisonKeyLabel, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height, isComparison}) => {
   let dateFormat = defaultTickDateFormat
   const haveEstimate = data && data[0] && data[0].estimate
-  const isComparison = data && data[0] && data[0].comparison_storage
   const containerProps = isMiniChart ? { width: width, height: height} : { minHeight: 300, aspect: 2}
   const getTicks = (data) => {
     if (!data || !data.length || isMiniChart ) {return [];}
@@ -35,8 +34,8 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, keyLabel, valueFormat
 
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
-  };
-
+  }
+  
   return (
     <div className="line-area-composed-chart-container">
       <span id="line-area-composed-chart-label" className="line-area-composed-chart-label">
@@ -60,9 +59,9 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, keyLabel, valueFormat
               <Area
                 isAnimationActive={false}
                 fillOpacity={0.9}
-                dataKey="comparison_storage"
+                dataKey={comparisonDataKey}
                 stackId="2"
-                name="Comparison Storage"
+                name={comparisonKeyLabel}
                 className="comparison_storage"
               />
             }
@@ -112,15 +111,19 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, keyLabel, valueFormat
 
 LineAreaComposedChart.defaultProps = {
   dataKey: 'storage',
+  comparisonDataKey: 'comparison_storage',
   name: 'Storage'
 }
 
 LineAreaComposedChart.displayName = "LineAreaComposedChart"
 LineAreaComposedChart.propTypes = {
   chartLabel: PropTypes.string,
+  comparisonDataKey: PropTypes.string,
+  comparisonKeyLabel: PropTypes.string,
   data: PropTypes.array,
   dataKey: PropTypes.string,
   height: PropTypes.number,
+  isComparison: PropTypes.bool,
   isMiniChart: PropTypes.bool,
   keyLabel: PropTypes.string,
   valueFormatter: PropTypes.func,
