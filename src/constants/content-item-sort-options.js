@@ -3,13 +3,13 @@ import Immutable from 'immutable'
 export default [
   {
     value: 'traffic_high_to_low',
-    label: 'Traffic High to Low',
+    label: 'High to Low',
     path: Immutable.List(['dailyTraffic', 'totals', 'bytes', 'total']),
     direction: -1
   },
   {
     value: 'traffic_low_to_high',
-    label: 'Traffic Low to High',
+    label: 'Low to High',
     path: Immutable.List(['dailyTraffic', 'totals', 'bytes', 'total']),
     direction: 1
   },
