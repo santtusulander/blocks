@@ -6,7 +6,7 @@ import numeral from 'numeral'
 import AnalysisStorage from '../../../components/analysis/storage'
 
 import { fetchMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
-import { getByAccountId, getByGroupId, getByStorageId, getDataForChart } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByAccountId, getByGroupId, getByStorageId, getDataForStorageAnalysisChart } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entities/groups/selectors'
 
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
@@ -112,7 +112,7 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
     peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
     avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
-    dataForChart: getDataForChart(state, { account, group, storage }, storageType),
+    dataForChart: getDataForStorageAnalysisChart(state, { account, group, storage }, storageType),
     groups: getGroupsByAccount(state, account)
   }
 }

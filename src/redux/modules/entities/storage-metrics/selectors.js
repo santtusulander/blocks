@@ -14,7 +14,7 @@ export const getByAccountId = (state, accountId, comparison) => {
   return getEntityMetricsById(state, 'storageMetrics', accountId, 'account', comparison)
 }
 
-export const getDataForChart = (state, { account, group, storage }, storageType, comparison) => {
+export const getDataForStorageAnalysisChart = (state, { account, group, storage }, storageType, comparison) => {
   let getStorageByParent, getAggregatedEstimates, dataForChart
 
   if(storage) {
