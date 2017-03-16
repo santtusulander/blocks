@@ -180,8 +180,7 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
-    //TODO: remove && false condition once API from CIS-322 is ready
-    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE && false , delete: PERMISSIONS.DELETE_STORAGE}
+    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
 
     return (
       <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
@@ -241,7 +240,9 @@ class AccountManagementStorages extends Component {
                         <td className="nowrap-column">
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
+                          onEdit={
+                            /*TODO: remove false condition once API from CIS-322 is ready*/
+                            false && (() => {this.editStorage(storageId, storage.get('parentId'))})}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>
@@ -305,7 +306,8 @@ AccountManagementStorages.propTypes = {
 }
 
 AccountManagementStorages.defaultProps = {
-  storages: List()
+  storages: List(),
+  metrics: List()
 }
 
 
