@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { parseResponseData } from '../../util'
 
-const UPLOAD_URL = '/v1'
+const UPLOAD_VERSION = 'v1'
 const UPLOAD_PROTOCOL = 'http://'
 const UPLOAD_PORT = ':8080'
 
@@ -10,19 +10,24 @@ const UPLOAD_PORT = ':8080'
  * @param accessKey {string} - upload access key
  * @param gateway {string} - gateway host
  * @param {object} file - {key - file name, value - file binary data}
- * @param onProgress {callback} - function for tracking 'progress' event
+ * @param progress {callback} - function for tracking 'progress' event
  * @returns {axios.Promise}
  */
-export const uploadFile = (accessKey, gateway, file, onProgress =()=>{}) => {
-  const [ name ] = Object.keys(file)
+export const uploadFile = (accessKey, gateway, file, onProgress) => {
+  const [ fileName ] = Object.keys(file)
   const [ data ] = Object.values(file)
-  const url = `${UPLOAD_PROTOCOL}${gateway}${UPLOAD_PORT}${UPLOAD_URL}/${name}`
+
+  const url = `${UPLOAD_PROTOCOL}/${gateway}${UPLOAD_PORT}/${UPLOAD_VERSION}/${fileName}`
+  // const url = `/${UPLOAD_VERSION}`
+
   const headers = {
-    // 'Content-Type': 'multipart/form-data',
     'Content-Type': 'application/x-www-form-urlencoded',
     'X-Auth-Token': accessKey
   }
-  debugger
-  return axios.post(url, gateway, { data }, { headers, progress: onProgress })
+
+  const progress = onProgress(fileName)
+
+  return axios.post(url, data, { headers, progress })
     .then(parseResponseData)
+    // .catch(console.info)
 }

@@ -8,6 +8,9 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getStorageAccessKey } from '../../redux/modules/user'
 
+import { UPLOAD_FILE } from '../../redux/modules/http-file-upload/actionTypes'
+import actions from '../../redux/modules/http-file-upload/actions'
+
 import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 
 import { getById as getStorageById } from '../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -44,22 +47,25 @@ class Storage extends Component {
     this.initFileUploader = this.initFileUploader.bind(this)
   }
 
+  componentWillMount() {
+    const { storage: id, group } = this.props.params
+    if (id && group) {
+      this.props.fetchStorage({ id, group })
+    }
+  }
+
+  componentDidMount() {
+    const { storage, group } = this.props.params
+    this.props.initStorageAccessKey(storage, group).then(this.initFileUploader)
+  }
+
   /**
    * Initialize File Uploader
    * @param action {object} - action with type and payload
    */
   initFileUploader(action) {
-    this.fileUploader = FileUploader.initialize(action.payload, this.props.gatewayHostname)
-    console.info('initialized uploader: ', this.fileUploader)
-  }
-
-  componentWillMount() {
-    const { storage: id, group } = this.props.params
-    if (id && group) {
-      this.props.fetchStorage({ id, group })
-      this.props.initStorageAccessKey(id, group)
-        .then(this.initFileUploader)
-    }
+    const { gatewayHostname, initUploadProgressHandler } = this.props
+    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, initUploadProgressHandler)
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -96,8 +102,6 @@ class Storage extends Component {
         gain,
         locations
       }} = this.props
-
-    console.info('gatewayHostname', gatewayHostname)
 
     return (
       <Content>
@@ -156,9 +160,10 @@ Storage.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   currentUser: PropTypes.instanceOf(Map),
   fetchStorage: PropTypes.func,
-  fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
+  initStorageAccessKey: PropTypes.func,
+  initUploadProgressHandler: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
@@ -271,7 +276,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
     toggleModal: uiActions.toggleAccountManagementModal,
-    initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch)
+    initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
+    initUploadProgressHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params))
   }
 }
 

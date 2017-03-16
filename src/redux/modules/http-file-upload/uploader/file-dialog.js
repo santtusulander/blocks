@@ -45,8 +45,9 @@ export default new class FileDialog {
 
     return new Promise(resolve => {
       const event = 'change'
+      const handler = () => resolve(inputElement.files)
 
-      inputElement.addEventListener(event, (e) => resolve(e.target.files))
+      inputElement.addEventListener(event, handler, false)
       inputElement.dispatchEvent(clickEvent)
     })
   }

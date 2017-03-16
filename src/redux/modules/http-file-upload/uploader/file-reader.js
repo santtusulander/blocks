@@ -16,13 +16,17 @@ export default class Reader {
       const e = 'load'
       const reader = new FileReader()
 
-      const handler = () => {
-        resolve({ [ file.name ]: reader.result })
-        reader.removeEventListener(e, handler)
+      const handler = (e) => {
+        const fileName = file.name
+        const data = new FormData()
+        data.append(fileName, e.target.result)
+        resolve({ [ fileName ]: data })
+
+        return reader.removeEventListener(e, handler)
       }
 
-      reader.addEventListener(e, handler)
-      reader.readAsBinaryString(file)
+      reader.addEventListener(e, handler, false)
+      reader.readAsDataURL(file)
     })
   }
 }

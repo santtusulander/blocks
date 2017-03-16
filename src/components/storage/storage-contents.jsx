@@ -26,9 +26,9 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
   const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
   const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
   const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
-  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : () => console.info('fileUploader', fileUploader)
-  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : () => console.info('fileUploader', fileUploader)
-  const processFiles = fileUploader ? fileUploader.processFiles : () => console.info('fileUploader', fileUploader)
+  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
+  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
+  const processFiles = fileUploader ? fileUploader.processFiles : (()=>{})
 
   return (
     <SectionContainer>
@@ -79,6 +79,7 @@ StorageContents.propTypes = {
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
   contents: PropTypes.array,
+  fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
   groupId: PropTypes.string,
   onMethodToggle: PropTypes.func,

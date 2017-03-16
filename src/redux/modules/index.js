@@ -43,7 +43,7 @@ export const serviceInfo = require('./service-info/index.js').default;
 export const pagination = require('./pagination').default;
 
 //HTTP file upload
-export const storage = require('./http-file-upload').default;
+export const storageUploads = require('./http-file-upload').default;
 
 // Account Selectors
 export const accountSelectors = multireducer({

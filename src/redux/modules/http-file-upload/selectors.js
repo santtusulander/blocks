@@ -1,6 +1,5 @@
-export const getAccessKey = ({ storageAccessToken }) => storageAccessToken
+const getStorageUploads = ({ storageUploads }) => storageUploads
 
-/** TODO: selectors for read and upload progress, */
 export default (state) => ({
-  accessKey: getAccessKey(state)
+  uploads: getStorageUploads(state)
 })

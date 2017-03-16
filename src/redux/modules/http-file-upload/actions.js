@@ -1,13 +1,13 @@
 import { createAction } from 'redux-actions'
-import { bindActionCreators } from 'redux'
-import * as api from './api'
 import { UPLOAD_FILE } from './actionTypes'
 
+const uploadActionParser = (name, { lengthComputable, loaded, total }) => {
+  const progress = lengthComputable ? parseInt(loaded / total * 100) : 0
 
-const actionCreators = {
-  [UPLOAD_FILE]: createAction(UPLOAD_FILE, (accessKey, onProgress, file) => api.uploadFile(...arguments))
+  return { [name]: { progress, status }}
 }
 
-export default (dispatch) => bindActionCreators(actionCreators, dispatch)
-
+export default {
+  [UPLOAD_FILE]: createAction(UPLOAD_FILE, uploadActionParser)
+}
 
