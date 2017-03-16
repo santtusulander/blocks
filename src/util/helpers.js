@@ -399,7 +399,7 @@ export function formatFileSize(bytes) {
 }
 
 export const isTrialHost = (host) => {
-  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
+  if(host && host.getIn(['services',0,'deployment_mode']) === 'trial') {
     return true
   }
 
@@ -407,7 +407,7 @@ export const isTrialHost = (host) => {
 }
 
 export function getConfiguredName(host) {
-  if(!host.size) {
+  if(!host || !host.size) {
     return null
   }
   if(isTrialHost(host)) {

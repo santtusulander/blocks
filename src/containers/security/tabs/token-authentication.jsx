@@ -22,7 +22,7 @@ import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 const REQUEST_TAG = 'req-token-auth'
 
 class TabTokenAuthentication extends Component {
-  componentDidMount(){
+  componentWillMount(){
     this.fetchData()
   }
 
@@ -99,7 +99,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchAccount: (params) => dispatch( accountActions.fetchOne({...params, requestTag: REQUEST_TAG}) ),
     fetchGroups: (params) => dispatch( groupActions.fetchAll({...params, requestTag: REQUEST_TAG}) ),
-    fetchProperties: (params) => dispatch( propertyActions.fetchAll({...params, requestTag: REQUEST_TAG} ))
+    fetchProperties: (params) => dispatch( propertyActions.fetchAll({...params, requestTag: REQUEST_TAG, forceReload: true} ))
   }
 }
 
