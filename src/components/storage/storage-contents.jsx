@@ -11,7 +11,7 @@ import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
 import Toggle from '../toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, groupId, fileUploader }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -66,7 +66,7 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
       { hasContents
         ? <StorageContentBrowser contents={contents} />
         : asperaUpload
-        ? <AsperaUpload multiple={true} storageId={storageId} asperaGetaway={gatewayHostname} groupId={groupId} />
+        ? <AsperaUpload multiple={true} brandId={brandId} accountId={accountId} groupId={groupId} storageId={storageId} asperaGetaway={gatewayHostname} />
         : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
       }
     </SectionContainer>
@@ -76,8 +76,10 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
 StorageContents.displayName = 'StorageContents'
 
 StorageContents.propTypes = {
+  accountId: React.PropTypes.string,
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
+  brandId: React.PropTypes.string,
   contents: PropTypes.array,
   fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,

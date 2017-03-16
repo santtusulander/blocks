@@ -89,6 +89,7 @@ export function getContentUrl(linkType, val, params) {
     case 'group':
       return getRoute('contentGroup', { ...params, group: val })
     case 'property':
+    case 'propertySummary':
       return getRoute('contentProperty', { ...params, property: val })
     case 'propertyConfiguration':
       return getRoute('contentPropertyConfiguration', { ...params, property: val })

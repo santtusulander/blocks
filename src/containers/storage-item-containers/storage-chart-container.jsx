@@ -2,26 +2,26 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Map, List } from 'immutable'
 
+import { buildReduxId } from '../../redux/util'
+
 import { makeMemoizedSelector } from '../../redux/memoized-selector-utils.js'
 
-import { getStorageById } from './selectors'
-
-import { getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
+import { getStorageById, getStorageMetricsById } from './selectors'
 
 import AggregatedStorageChart from './aggregated-storage-chart'
-import StorageItemChart from '../../components/content/storage-item-chart'
+import StorageItemChart from '../../components/content/storage/storage-item-chart'
 
 const StorageChartContainer = props => {
 
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
-  const { totals: { bytes, historical_bytes } } = props.storageMetrics.toJS()
+  const { totals: { bytes = {}, historical_bytes = {}} } = props.storageMetrics.toJS()
 
   return props.showingAggregate
     ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
-        onConfigurationClick={() => props.onConfigurationClick(ingest_point_id)}
+        onConfigurationClick={props.onConfigurationClick && (() => props.onConfigurationClick(ingest_point_id))}
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
@@ -37,17 +37,18 @@ const StorageChartContainer = props => {
 StorageChartContainer.displayName = 'StorageChartContainer'
 
 StorageChartContainer.propTypes = {
-  analyticsLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   // clusters: PropTypes.instanceOf(List),
-  onConfigurationClick: PropTypes.func,
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   showingAggregate: PropTypes.bool,
-  storageContentLink: PropTypes.string,
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   storageEntity: PropTypes.instanceOf(Map),
   storageMetrics: PropTypes.instanceOf(Map)
 }
 
 StorageChartContainer.defaultProps = {
-  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } })
+  storageMetrics: Map({ totals: { bytes: {}, historical_bytes: {} } }),
+  storageEntity: Map()
 }
 
 /**
@@ -63,13 +64,13 @@ const makeStateToProps = () => {
 
     const {
       entitySelector = getStorageById,
-      metricsSelector = getByStorageId
+      metricsSelector = getStorageMetricsById
     } = ownProps
 
-    const storageEntity = getStorageEntity(state, ownProps, entitySelector) || Map()
+    const storageReduxId = ownProps.storageId && buildReduxId(ownProps.params.group, ownProps.storageId)
 
     return {
-      storageEntity,
+      storageEntity: getStorageEntity(state, {storageReduxId, ...ownProps}, entitySelector),
       storageMetrics: getMetrics(state, ownProps, metricsSelector)
     }
   }

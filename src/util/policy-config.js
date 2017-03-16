@@ -280,7 +280,7 @@ export const getTokenAuthRules = (properties) => {
           accountId: property.accountId,
           groupId: property.groupId,
           encryption: tokenAuthConfig.encryption,
-          schema: tokenAuthConfig.schema && tokenAuthConfig.schema.join(' + '),
+          schema: tokenAuthConfig.schema,
           created: config.config_created
         }
         tokenAuthRules.push(returnObj)

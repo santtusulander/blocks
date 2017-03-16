@@ -32,12 +32,14 @@ import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
 import groupActions from '../redux/modules/entities/groups/actions'
+import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
+
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 
 import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
 
-import StorageChartContainer from './storage-chart-container/storage-chart-container'
-import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-chart-container/selectors'
+import StorageChartContainer from './storage-item-containers/storage-chart-container'
+import { getStorageEstimateByAccount, getStorageMetricsByAccount } from './storage-item-containers/selectors'
 
 import AccountSelector from '../components/global-account-selector/global-account-selector'
 import AnalysisByLocation from '../components/analysis/by-location'
@@ -127,28 +129,32 @@ export class Dashboard extends React.Component {
        * fetch all groups and storage metrics of this account, all storages of each group.
        * @type {[Promise]}
        */
-      const fetchAggregateStorageData =
+      const fetchStorageData =
         checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.LIST_STORAGE) &&
         checkPermissions(this.context.roles, this.context.currentUser, PERMISSIONS.VIEW_ANALYTICS_STORAGE) &&
         accountType === ACCOUNT_TYPE_CONTENT_PROVIDER &&
 
         this.props.fetchGroups(params).then((response) => {
+          let groupIds = []
           if (response) {
-
-            const groupIds = Object.keys(response.entities.groups) || []
-
-            return Promise.all([
-              ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
-              this.props.fetchStorageMetrics({ ...providerOpts, group: undefined })
-            ])
+            groupIds = Object.keys(response.entities.groups)
           }
+          // We don't always have to fetch groups because of caching, in those cases use selector
+          // to get group IDs for this account from the store.
+          else {
+            groupIds = this.props.getGroupIds()
+          }
+          return Promise.all([
+            ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
+            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined })
+          ])
         })
 
       return Promise.all([
         this.props.dashboardActions.startFetching(),
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
         fetchProviders,
-        fetchAggregateStorageData
+        fetchStorageData
       ]).then(this.props.dashboardActions.finishFetching)
     }
   }
@@ -446,6 +452,7 @@ Dashboard.propTypes = {
   filterOptions: PropTypes.object,
   filters: PropTypes.instanceOf(Map),
   filtersActions: PropTypes.object,
+  getGroupIds: PropTypes.func,
   intl: PropTypes.object,
   mapBounds: PropTypes.instanceOf(Map),
   mapboxActions: PropTypes.object,
@@ -468,8 +475,9 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { params: { account } }) {
   return {
+    getGroupIds: () => getIdsByAccount(state, account),
     activeAccount: state.account.get('activeAccount'),
     dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),

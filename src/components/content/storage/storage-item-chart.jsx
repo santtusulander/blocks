@@ -6,11 +6,11 @@ import { Button, ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
-import LinkWrapper from './link-wrapper'
+import LinkWrapper from '../link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
-import IconConfiguration from '../icons/icon-configuration'
-import IconChart from '../icons/icon-chart'
-import { formatBytes, separateUnit } from '../../util/helpers'
+import IconConfiguration from '../../icons/icon-configuration'
+import IconChart from '../../icons/icon-chart'
+import { formatBytes, separateUnit } from '../../../util/helpers'
 
 const FORMAT = '0,0.0'
 const defaultDiameter = 240
@@ -163,7 +163,7 @@ StorageItemChart.defaultProps = {
 }
 
 StorageItemChart.propTypes = {
-  analyticsLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   currentUsage: PropTypes.number,
   diameter: PropTypes.number,
   estimate: PropTypes.number,
@@ -172,9 +172,13 @@ StorageItemChart.propTypes = {
   lastMonthUsage: PropTypes.number,
   locations: PropTypes.instanceOf(List).isRequired,
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  onConfigurationClick: PropTypes.func,
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   peak: PropTypes.number,
-  storageContentLink: PropTypes.string
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
+
+StorageItemChart.defaultProps = {
+  locations: []
+}
 
 export default StorageItemChart
