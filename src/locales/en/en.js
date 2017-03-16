@@ -190,6 +190,8 @@ const TRANSLATED_MESSAGES = {
   'portal.analysis.filters.storageType.title': 'Show as',
   'portal.analysis.filters.storageType.usage.title': 'Usage',
   'portal.analysis.filters.storageType.files.title': 'Files',
+  'portal.analysis.filters.storageType.usage.comparison.title': 'Comparison Usage',
+  'portal.analysis.filters.storageType.files.comparison.title': 'Comparison Files',
   'portal.analysis.filters.video.title': 'Video URL',
 
   'portal.policy.edit.cacheKeyQueryString.includeAllQueryTerms.text': 'Include all query parameters',
