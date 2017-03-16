@@ -154,16 +154,15 @@ class AccountManagementStorages extends Component {
         }
       })
       const locationsString = locations.join(', ')
-
       const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
       const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
-      const fileCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
+      const filesCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
                     .setIn(['locations'], locationsString)
                     .setIn(['usage'], usage)
-                    .setIn(['file_count'], fileCount)
+                    .setIn(['files_count'], filesCount)
     })
 
     const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
@@ -230,13 +229,14 @@ class AccountManagementStorages extends Component {
                         <td>{originsString}</td>
                         <td>{storage.get('locations')}</td>
                         <td>{formatBytes(storage.get('usage'))}</td>
-                        <td>{storage.get('file_count') || 0}</td>
+                        <td>{storage.get('files_count')}</td>
                         <td className="nowrap-column">
+
+                        {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                            onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                        */}
                         <ActionButtons
                           permissions={permissions}
-                          onEdit={
-                            /*TODO: remove false condition once API from CIS-322 is ready*/
-                            false && (() => {this.editStorage(storageId, storage.get('parentId'))})}
                           onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
                         </td>
                       </tr>

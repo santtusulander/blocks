@@ -263,9 +263,7 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const average = storageMetrics.getIn(['totals', storageType, 'average'])
   const current = formatBytesToUnit(average, unit)
   const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
-
-  const historical_average = storageMetrics.getIn(['totals', `historical_${storageType}`, 'average'])
-  const gain = 100 * (average - historical_average ) / historical_average
+  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
 
   const locations = storage.get('clusters').map(cluster => (
     getClusterById(state, cluster).get('description').split(',')[0]

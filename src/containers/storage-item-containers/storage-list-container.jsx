@@ -25,6 +25,8 @@ const StorageChartContainer = props => {
         currentUsage={bytes.average}
         estimate={estimated_usage}
         peak={bytes.peak}
+        low={bytes.low}
+        average={bytes.average}
         lastMonthUsage={historical_bytes.average}
         lastMonthEstimate={estimated_usage}
         lastMonthPeak={historical_bytes.peak} />

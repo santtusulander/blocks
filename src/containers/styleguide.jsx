@@ -436,7 +436,10 @@ class Styleguide extends React.Component {
                 <LineAreaComposedChart
                   chartLabel="Oct 2016 Month To Date"
                   data={composedChartData}
+                  keyLabel="Storage"
                   valueFormatter={formatBitsPerSecond}
+                  comparisonKeyLabel="Comparison Storage"
+                  isComparison={true}
                 />
               </SectionContainer>
             </Row>

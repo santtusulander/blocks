@@ -31,9 +31,9 @@ export class TokenSchema extends React.Component {
     const { close, handleSubmit, selectedSchema, intl } = this.props
     const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
     const getLabels = () => {
-      const items = schemaOptions.filter(item => selectedSchema.contains(item.value))
-
-      return items.map(item => item.label).join(' + ')
+      return selectedSchema.reduce((acc, schema) => {
+        return acc.concat([schemaOptions.find(option => option.value === schema).label])
+      }, []).join(' + ')
     }
 
     return (
