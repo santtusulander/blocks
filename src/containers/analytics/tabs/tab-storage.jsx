@@ -57,24 +57,23 @@ class AnalyticsTabStorage extends Component {
   }
 
   render() {
-    const {filters, peakStorage, avgStorage, lowStorage, dataForChart, groupHasStorageService, params} = this.props
+    const {filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
     const storageType = filters.get('storageType')
 
     return (
       <div>
-        {groupHasStorageService &&
-          <AnalysisStorage
-            avgStorage={this.formatTotals(avgStorage)}
-            fetching={false}
-            params={params}
-            lowStorage={this.formatTotals(lowStorage)}
-            peakStorage={this.formatTotals(peakStorage)}
-            storageType={storageType}
-            chartData={dataForChart}
-            dateRangeLabel={filters.get('dateRangeLabel')}
-            valueFormatter={this.formatTotals}
-          />
-        }
+        <AnalysisStorage
+          avgStorage={this.formatTotals(avgStorage)}
+          fetching={false}
+          params={params}
+          lowStorage={this.formatTotals(lowStorage)}
+          peakStorage={this.formatTotals(peakStorage)}
+          storageType={storageType}
+          chartData={dataForChart}
+          dateRangeLabel={filters.get('dateRangeLabel')}
+          valueFormatter={this.formatTotals}
+          includeComparison={filters.get('includeComparison')}
+        />
       </div>
     )
   }
