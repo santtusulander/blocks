@@ -12,7 +12,7 @@ import { formatBitsPerSecond } from '../../../util/helpers'
 import TruncatedTitle from '../../truncated-title'
 import LinkWrapper from '../link-wrapper'
 
-import { composedChartData as fakeData } from '../../../containers/__mocks__/chart-data'
+//import { composedChartData as fakeData } from '../../../containers/__mocks__/chart-data'
 class StorageItemList extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +31,8 @@ class StorageItemList extends React.Component {
       average,
       currentUsage,
       estimate,
-      fetchingMetrics
+      fetchingMetrics,
+      chartData
     } = this.props
 
     return (
@@ -88,10 +89,10 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
 
               {!fetchingMetrics &&
-                // TODO : UDNP-2938 | replace storage mock data with redux
                 <LineAreaComposedChart
                   isMiniChart={true}
-                  data={fakeData}
+                  data={chartData}
+                  dataKey='bytes'
                   valueFormatter={formatBitsPerSecond}
                 />
               }
@@ -109,7 +110,7 @@ StorageItemList.displayName = 'StorageItemList'
 StorageItemList.propTypes = {
   analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   average: PropTypes.number,
-
+  chartData: PropTypes.array,
   configurationLink: PropTypes.string,
   currentUsage:  PropTypes.number,
 
@@ -128,8 +129,8 @@ StorageItemList.propTypes = {
 }
 
 StorageItemList.defaultProps = {
-  primaryData: List(),
-  locations: []
+  locations: [],
+  chartData: []
 }
 
 export default StorageItemList
