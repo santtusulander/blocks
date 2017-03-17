@@ -40,5 +40,24 @@
 }
 
 .sortable-handle {
+  width: 20px;
+  height: 36px;
+
   cursor: pointer;
+
+  .sortable-handle-item {
+    float: left;
+    width: 2px;
+    height: 36px;
+    margin-right: 2px;
+    opacity: 0.2;
+
+    .dark-theme & {
+      border-left: 2px dotted $dt-text-color;
+    }
+
+    .light-theme & {
+      border-left: 2px dotted $lt-text-color;
+    }
+  }
 }
