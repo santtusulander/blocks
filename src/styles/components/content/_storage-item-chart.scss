@@ -140,7 +140,7 @@ $storage-unit-horizontal-margin: 10px;
     .usage {
       position: relative;
       margin-bottom: 8px;
-      margin-left: calc(.5 * (#{$storage-unit-width} + #{$storage-unit-horizontal-margin}));
+      margin-left: calc(#{$storage-unit-width} + #{$storage-unit-horizontal-margin});
       overflow: hidden;
       font-weight: bold;
 
@@ -150,6 +150,7 @@ $storage-unit-horizontal-margin: 10px;
       }
 
       &-unit {
+        display: inline-block;
         width: $storage-unit-width;
         margin-left: $storage-unit-horizontal-margin;
       }
