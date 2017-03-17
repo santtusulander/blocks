@@ -63,8 +63,12 @@ class AnalyticsContainer extends React.Component {
 
   handleScroll() {
     const docBody = document.body
-    const pageHeaderHeight = document.querySelector('.page-header-container').offsetHeight
-    const analyticsTabsHeight = document.querySelector('.analytics-tabs').offsetHeight
+    const pageHeaderHeight = document.querySelector('.page-header-container')
+      ? document.querySelector('.page-header-container').offsetHeight
+      : 0
+    const analyticsTabsHeight = document.querySelector('.analytics-tabs')
+      ? document.querySelector('.analytics-tabs').offsetHeight
+      : 0
     const pageHeaderTotalHeight = pageHeaderHeight + analyticsTabsHeight
     const analyticsContainer = document.querySelector('.analytics-container')
 
@@ -203,11 +207,11 @@ class AnalyticsContainer extends React.Component {
           location={this.props.location}
           activeTab={getTabName(pathname)}
         />
-        <AnalyticsTabControl
+        {!params.storage && <AnalyticsTabControl
           params={params}
           location={this.props.location}
           activeTab={getTabName(pathname)}
-        />
+        />}
         {this.renderFilters()}
         {this.renderContent(children, filters)}
       </Content>

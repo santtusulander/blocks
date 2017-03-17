@@ -7,7 +7,16 @@ import { List } from 'immutable'
 import ActionButtons from './action-buttons'
 import ButtonDropdown from './button-dropdown'
 
-const DragHandle = SortableHandle(() => <div className="sortable-handle">::</div>);
+const DragHandle = SortableHandle(() => {
+  return (
+    <div className="sortable-handle">
+      <div className="sortable-handle-item" />
+      <div className="sortable-handle-item" />
+      <div className="sortable-handle-item" />
+      <div className="sortable-handle-item" />
+    </div>
+  )
+});
 
 const SortableItem = SortableElement(({value, idx, size, actions, getLabel}) => {
   const { moveItem, deleteItem } = actions
@@ -35,7 +44,7 @@ const SortableItem = SortableElement(({value, idx, size, actions, getLabel}) => 
 const SortableList = SortableContainer(({items, actions, getLabel}) => {
   return (
     <div className="sortable-list clearfix">
-      {items.map((item, i) => 
+      {items.map((item, i) =>
         <SortableItem
           key={`item-${i}`}
           index={i}

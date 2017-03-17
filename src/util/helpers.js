@@ -215,6 +215,7 @@ export function buildAnalyticsOpts(params, filters, location ){
     brand: params.brand,
     group: params.group,
     property: params.property,
+    ingest_point: params.storage,
     startDate: toUnixTimestamp( startDate ),
     endDate: toUnixTimestamp( endDate ),
     sp_account_ids: filterValues.serviceProviders && filterValues.serviceProviders.join(','),
@@ -398,7 +399,7 @@ export function formatFileSize(bytes) {
 }
 
 export const isTrialHost = (host) => {
-  if(host.getIn(['services',0,'deployment_mode']) === 'trial') {
+  if(host && host.getIn(['services',0,'deployment_mode']) === 'trial') {
     return true
   }
 
@@ -406,7 +407,7 @@ export const isTrialHost = (host) => {
 }
 
 export function getConfiguredName(host) {
-  if(!host.size) {
+  if(!host || !host.size) {
     return null
   }
   if(isTrialHost(host)) {

@@ -13,6 +13,8 @@ jest.mock('../../../../redux/modules/entities/storage-metrics/actions', () => {
   fetchMetrics: jest.fn()
 })
 
+const genAsyncMock = () => {return Promise.resolve()}
+
 jest.unmock('../tab-storage.jsx')
 import AnalyticsTabStorage from '../tab-storage.jsx'
 
@@ -29,7 +31,8 @@ describe('AnalyticsTabStorage', () => {
             average: 0
           }
         },
-        fetchStorageMetrics: jest.fn()
+        fetchStorageMetrics: jest.fn(),
+        fetchGroups: genAsyncMock
       }
       return shallow(<AnalyticsTabStorage {...props}/>)
     }

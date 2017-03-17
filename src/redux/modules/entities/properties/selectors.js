@@ -1,6 +1,6 @@
 import { List, fromJS } from 'immutable'
 import {getEntityById, getEntitiesByParent, getEntityIdsByParent} from '../../entity/selectors'
-
+import { getConfiguredName } from '../../../../util/helpers'
 /**
  * Get property by ID
  * @param  {} state from redux
@@ -65,4 +65,61 @@ export const getByGroups = (state, groups) => {
  */
 export const getIdsByGroup = (state, groupId) => {
   return getEntityIdsByParent(state, 'properties', groupId)
+}
+
+
+/**
+ * [getPropertyMetricsById description]
+ * @param  {[type]} state      [description]
+ * @param  {[type]} propertyId [description]
+ * @return {[type]}            [description]
+ */
+export const getPropertyMetricsById = (state, propertyId) => {
+
+  const entity = getById(state, propertyId)
+  const configuredName = getConfiguredName(entity)
+
+  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
+}
+
+/**
+ * [getByGroupWithTotalTraffic description]
+ * @param  {[type]} state [description]
+ * @param  {[type]} group [description]
+ * @return {[type]}       [description]
+ */
+export const getByGroupWithTotalTraffic = (state, group) => {
+  const properties = getByGroup(state, group)
+  const result = properties.map( property => {
+
+    const metrics = getPropertyMetricsById(state, property.get('published_host_id'))
+    const totalTraffic = metrics ? metrics.get('totalTraffic') : 0
+
+    return property.set('totalTraffic', totalTraffic)
+  })
+
+  return result
+}
+
+/**
+ * getPropertyDailyTrafficById
+ * @param  {Object} redux state
+ * @param  {String|Number} propertyId
+ * @return {Map} dailyTraffic of a property
+ */
+export const getPropertyDailyTrafficById = (state, propertyId) => {
+
+  const entity = getById(state, propertyId)
+  const configuredName = getConfiguredName(entity)
+
+  return state.metrics.get('hostDailyTraffic').find( metric => metric.get('property') === configuredName )
+}
+
+/**
+ * getTotalTraffics
+ * @param  {Object} state
+ * @return {List} List of totalTraffics
+ */
+export const getTotalTraffics = (state) => {
+  return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
 }

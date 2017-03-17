@@ -9,7 +9,18 @@ import { MODIFY_PROPERTY } from '../../constants/permissions'
 import IconEdit from '../icons/icon-edit.jsx'
 import IconTrash from '../icons/icon-trash.jsx'
 
+import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuration'
+
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
+  const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
+  const getSchemaLabel = (schema) => {
+    return schema.reduce((acc, schema) => {
+      return acc.concat([schemaOptions.find(option => option.value === schema).label])
+    }, []).join(' + ')
+  }
+
+  const getEncryptionLabel = (value) => ENCRYPTION_OPTIONS.find(item => item.value === value).label
+
   return (
       <table className="table table-striped cell-text-left">
         <thead >
@@ -34,8 +45,8 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
               <tr key={index}>
                 <td>{rule.propertyName}</td>
                 <td>{intl.formatMessage({id: rule.type})}</td>
-                <td>{rule.encryption}</td>
-                <td>{rule.schema}</td>
+                <td>{getEncryptionLabel(rule.encryption)}</td>
+                <td>{getSchemaLabel(rule.schema)}</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <IsAllowed to={MODIFY_PROPERTY}>
                   <td className="nowrap-column action-buttons primary">

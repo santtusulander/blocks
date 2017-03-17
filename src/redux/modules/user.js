@@ -44,7 +44,8 @@ const emptyUser = Map({
   currentUser: Map(),
   fetching: false,
   loggedIn: false,
-  username: null
+  username: null,
+  storageAccessToken: null
 })
 
 // REDUCERS

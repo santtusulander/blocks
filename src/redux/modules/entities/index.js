@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux'
 import {handleActions} from 'redux-actions'
-import {Map} from 'immutable'
+import {Map,List} from 'immutable'
 
 import mapActionsToFetchingReducers from '../fetching/actions'
 
-import {receiveEntity, failEntity, removeEntity, receiveMetrics} from '../entity/reducers'
+import {receiveEntity, failEntity, removeEntity, receiveMetrics, receiveGroupsMetrics} from '../entity/reducers'
 
 import iataCodes from './iata-codes/reducers'
 
@@ -17,6 +17,7 @@ export const actionTypes = {
 
 export const metricsActionTypes = {
   RECEIVE_METRICS: 'metrics/RECEIVE',
+  RECEIVE_GROUPS_METRICS: 'metrics/RECEIVE_GROUPS',
   RECEIVE_COMPARISON_METRICS: 'metrics/RECEIVE_COMPARISON'
 }
 
@@ -56,7 +57,7 @@ const nodes =
 
 const properties =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties' }),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties', useMergeDeep: false }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
@@ -105,9 +106,10 @@ const CISWorkflowProfiles =
 const storageMetrics =
   handleActions({
     [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
+    [metricsActionTypes.RECEIVE_GROUPS_METRICS] : receiveGroupsMetrics(),
     [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
     [actionTypes.FAIL] : failEntity
-  }, Map({ comparisonData: Map(), data: Map() }))
+  }, Map({ comparisonData: Map(), data: Map(), groupsData: List() }))
 
 export default combineReducers({
   accounts,
