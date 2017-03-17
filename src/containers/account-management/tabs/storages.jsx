@@ -20,7 +20,7 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import {fetchGroupsMetrics} from '../../../redux/modules/entities/storage-metrics/actions'
+import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -165,8 +165,8 @@ class AccountManagementStorages extends Component {
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
                     .setIn(['locations'], locationsString)
-                    .setIn(['usage'], usage)
-                    .setIn(['files_count'], filesCount)
+                    .setIn(['usage'], usage || 0)
+                    .setIn(['files_count'], filesCount || 0)
     })
 
     const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
@@ -207,7 +207,7 @@ class AccountManagementStorages extends Component {
                     <TableSorter {...sorterProps} column="group_name">
                       <FormattedMessage id="portal.account.storage.table.group.text"/>
                     </TableSorter>
-                    <TableSorter {...sorterProps} column="originTo">
+                    <TableSorter {...sorterProps} column="origins">
                       <FormattedMessage id="portal.account.storage.table.originTo.text"/>
                     </TableSorter>
                     <TableSorter {...sorterProps} column="locations">
