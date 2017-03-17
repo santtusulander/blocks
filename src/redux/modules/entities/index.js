@@ -57,7 +57,7 @@ const nodes =
 
 const properties =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties' }),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties', useMergeDeep: false }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
