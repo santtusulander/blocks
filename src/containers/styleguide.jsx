@@ -121,6 +121,7 @@ import { stackedBarChartData,
          composedChartData
   } from './__mocks__/chart-data'
 import DateRanges from '../constants/date-ranges'
+import country_list from '../constants/country-list'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1' },
@@ -817,7 +818,16 @@ class Styleguide extends React.Component {
                 options={[]}/>
             </Col>
           </Row>
-
+          <Row>
+            <Col xs={6}>
+              <label>Contry picker</label>
+              <Typeahead
+                placeholder={"Entry contry name, or 2 letter code ISO code"}
+                multiple={true}
+                onChange={() => null}
+                options={country_list}/>
+            </Col>
+          </Row>
           <h1 className="page-header">Month Picker</h1>
           <Row>
             <Col xs={6}>
