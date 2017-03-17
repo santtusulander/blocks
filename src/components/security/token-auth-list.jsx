@@ -19,7 +19,14 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
     }, []).join(' + ')
   }
 
-  const getEncryptionLabel = (value) => ENCRYPTION_OPTIONS.find(item => item.value === value).label
+  const getEncryptionLabel = ({encryption, streaming_encryption}) => {
+    if (streaming_encryption) {
+      return `Manifest: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label} 
+              Chunk: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
+    } else {
+      return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label
+    }
+  }
 
   return (
       <table className="table table-striped cell-text-left">
@@ -45,7 +52,7 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
               <tr key={index}>
                 <td>{rule.propertyName}</td>
                 <td>{intl.formatMessage({id: rule.type})}</td>
-                <td>{getEncryptionLabel(rule.encryption)}</td>
+                <td>{getEncryptionLabel(rule)}</td>
                 <td>{getSchemaLabel(rule.schema)}</td>
                 <td>{formatUnixTimestamp(rule.created, 'MM/DD/YYYY hh:mm a')}</td>
                 <IsAllowed to={MODIFY_PROPERTY}>
