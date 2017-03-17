@@ -101,8 +101,12 @@ class AccountManagementStorages extends Component {
   }
 
   deleteStorage() {
-    return this.props.deleteStorage({group: this.state.storageGroup, id: this.state.storageToDelete})
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteStorage({
+      brand: this.props.account.get('brand_id'),
+      account: this.props.account.get('id'),
+      group: this.state.storageGroup,
+      id: this.state.storageToDelete
+    }).then(() => this.props.toggleModal(null))
   }
 
   filterData(storages, storageName) {
