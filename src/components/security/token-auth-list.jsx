@@ -21,8 +21,8 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
 
   const getEncryptionLabel = ({encryption, streaming_encryption}) => {
     if (streaming_encryption) {
-      return `Manifest: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label} 
-              Chunk: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
+      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label} 
+              ${intl.formatMessage({id: 'portal.security.tokenAuth.chunk.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
     } else {
       return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label
     }
