@@ -107,7 +107,7 @@ export class Hosts extends React.Component {
         brand={brand}
         params={params}
         className="hosts-container"
-
+        changeNotification={this.props.uiActions.changeNotification}
         storages={this.props.storages}
         properties={this.props.properties}
 

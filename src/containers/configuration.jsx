@@ -428,7 +428,17 @@ export class Configuration extends React.Component {
           cancel={toggleDelete}
           onSubmit={() =>
             deleteHost(brand, account, group, this.props.activeHost)
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))}
+              .then(action => {
+                if (action.error) {
+                  this.showNotification(this.props.intl.formatMessage(
+                                        {id: 'portal.configuration.deleteFailed.text'},
+                                        {reason: action.payload.data.message}))
+                } else {
+                  this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text"/>)
+                  router.push(getContentUrl('group', group, { brand, account }))
+                }
+              })
+            }
           invalid={true}
           verifyDelete={true}>
           <p>

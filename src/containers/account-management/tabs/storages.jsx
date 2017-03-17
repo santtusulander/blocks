@@ -79,6 +79,12 @@ class AccountManagementStorages extends Component {
     })
   }
 
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
+  }
+
   changeSort(column, direction) {
     this.setState({
       sortBy: column,
@@ -106,7 +112,12 @@ class AccountManagementStorages extends Component {
       account: this.props.account.get('id'),
       group: this.state.storageGroup,
       id: this.state.storageToDelete
-    }).then(() => this.props.toggleModal(null))
+    }).then(() => {
+      this.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
+      this.props.toggleModal(null)
+    }).catch (() => {
+      this.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.failed.status"/>)
+    })
   }
 
   filterData(storages, storageName) {
@@ -287,6 +298,7 @@ AccountManagementStorages.displayName = 'AccountManagementStorages'
 AccountManagementStorages.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountManagementModal: PropTypes.string,
+  changeNotification: PropTypes.func,
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
@@ -330,6 +342,7 @@ function mapDispatchToProps(dispatch) {
 
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
+    changeNotification: uiActions.changeNotification,
     deleteStorage: (params) => dispatch( storageActions.remove(params)),
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),

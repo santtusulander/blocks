@@ -99,6 +99,8 @@
 
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
+  "portal.configuration.deleteSuccess.text": "Property deleted successfully",
+  "portal.configuration.deleteFailed.text": "Deleting property failed: {reason}",
   "portal.configuration.retireSuccessfull.text": "Configurations successfully retired",
   "portal.configuration.retireFailed.text": "Retiring configurations failed: {reason}",
   "portal.configuration.publishSuccessfull.text": "Configurations successfully published",
