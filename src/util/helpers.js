@@ -176,8 +176,8 @@ export function getTabLink(location, tabName) {
 
 /* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName(path) {
-  let linkArr = decodeURIComponent(path).split('/')
-  return linkArr.pop().split('&')[0]
+  let linkArr = path.split('/')
+  return linkArr.pop()
 }
 
 /* Constructs nested link from linkParts -array */
