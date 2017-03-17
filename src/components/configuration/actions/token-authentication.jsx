@@ -50,11 +50,12 @@ export class TokenAuth extends React.Component {
     this.props.change('type', set.get('type'))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
+    this.props.change('streaming_encryption', set.get('streaming_encryption'))
   }
 
   saveChanges(values) {
     const { close, invalid, changeValue, path} = this.props
-    const { type, shared_key, encryption, streaming_ttl, streaming_add_ip_addr, schema } = values
+    const { type, shared_key, encryption, streaming_ttl, streaming_add_ip_addr, schema, streaming_encryption } = values
     const setPath = path.slice(0, -1)
 
     if (!invalid) {
@@ -65,7 +66,7 @@ export class TokenAuth extends React.Component {
         streaming_ttl,
         streaming_add_ip_addr,
         encryption,
-        streaming_encryption: encryption
+        streaming_encryption
       }})
 
       changeValue(setPath, newSet)
@@ -123,6 +124,7 @@ export class TokenAuth extends React.Component {
       type,
       streaming_ttl,
       streaming_add_ip_addr,
+      streaming_encryption,
       handleSubmit
     } = this.props
 
@@ -203,6 +205,7 @@ export class TokenAuth extends React.Component {
               type={type}
               streaming_ttl={streaming_ttl}
               streaming_add_ip_addr={streaming_add_ip_addr}
+              streaming_encryption={streaming_encryption}
               close={this.closeDetailForm}
             />
           }

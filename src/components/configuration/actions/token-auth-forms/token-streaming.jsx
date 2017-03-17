@@ -9,8 +9,17 @@ import HelpTooltip from '../../../help-tooltip'
 import FieldFormGroupNumber from '../../../form/field-form-group-number'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
+import FieldFormGroupSelect from '../../../form/field-form-group-select'
 
-import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT, MIN_TTL, MAX_TTL } from '../../../../constants/configuration'
+import { 
+  TOKEN_AUTH_STATIC,
+  TOKEN_AUTH_STREAMING,
+  TTL_DEFAULT,
+  MIN_TTL,
+  MAX_TTL,
+  STREAMING_ENCRYPTION_OPTIONS,
+  STREAMING_ENCRYPTION_DEFAULT
+} from '../../../../constants/configuration'
 
 const validate = ({ streamingEnabled, streaming_ttl }) => {
   let errors = {}
@@ -35,6 +44,7 @@ export class TokenStreaming extends React.Component {
     this.props.change('streamingEnabled', this.props.streamingEnabled)
     this.props.change('streaming_ttl', this.props.streaming_ttl)
     this.props.change('streaming_add_ip_addr', this.props.streaming_add_ip_addr)
+    this.props.change('streaming_encryption', this.props.streaming_encryption || STREAMING_ENCRYPTION_DEFAULT)
   }
 
   componentDidMount() {
@@ -48,8 +58,10 @@ export class TokenStreaming extends React.Component {
       if ( !isStreamingEnabled ) {
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
+        this.props.change('streaming_encryption', null)
       } else {
         this.setDefaultTtl()
+        this.props.change('streaming_encryption', STREAMING_ENCRYPTION_DEFAULT)
       }
     }
   }
@@ -63,10 +75,11 @@ export class TokenStreaming extends React.Component {
     }, 5)
   }
 
-  saveChanges({ streaming_ttl, streaming_add_ip_addr }) {
+  saveChanges({ streaming_ttl, streaming_add_ip_addr, streaming_encryption }) {
     this.props.dispatch(change('token-auth-form', 'type', this.props.isStreamingEnabled ? TOKEN_AUTH_STREAMING : TOKEN_AUTH_STATIC))
     this.props.dispatch(change('token-auth-form', 'streaming_ttl', streaming_ttl))
     this.props.dispatch(change('token-auth-form', 'streaming_add_ip_addr', streaming_add_ip_addr))
+    this.props.dispatch(change('token-auth-form', 'streaming_encryption', streaming_encryption))
     this.props.close()
   }
 
@@ -91,6 +104,15 @@ export class TokenStreaming extends React.Component {
           </div>
 
           <hr/>
+
+          <Field
+            name="streaming_encryption"
+            className="input-select"
+            component={FieldFormGroupSelect}
+            options={STREAMING_ENCRYPTION_OPTIONS}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.hash_function.text" />}
+            disabled={!isStreamingEnabled}
+          />
 
           <div className="flex-row options-item toggle-box">
             <div className="flex-item options-item--name">
@@ -152,6 +174,7 @@ TokenStreaming.propTypes = {
   close: React.PropTypes.func,
   streamingEnabled: React.PropTypes.bool,
   streaming_add_ip_addr: React.PropTypes.bool,
+  streaming_encryption: React.PropTypes.string,
   ...reduxFormPropTypes
 }
 
@@ -172,5 +195,6 @@ export default connect(state => ({
   isStreamingEnabled: selfSelector(state, 'streamingEnabled'),
   streamingEnabled: selector(state, 'type') === TOKEN_AUTH_STREAMING,
   streaming_ttl: selector(state, 'streaming_ttl'),
-  streaming_add_ip_addr: selector(state, 'streaming_add_ip_addr')
+  streaming_add_ip_addr: selector(state, 'streaming_add_ip_addr'),
+  streaming_encryption: selector(state, 'streaming_encryption')
 }))(injectIntl(form))
