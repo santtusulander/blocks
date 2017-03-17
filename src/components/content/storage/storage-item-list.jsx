@@ -12,7 +12,6 @@ import { formatBitsPerSecond } from '../../../util/helpers'
 import TruncatedTitle from '../../truncated-title'
 import LinkWrapper from '../link-wrapper'
 
-//import { composedChartData as fakeData } from '../../../containers/__mocks__/chart-data'
 class StorageItemList extends React.Component {
   constructor(props) {
     super(props);
