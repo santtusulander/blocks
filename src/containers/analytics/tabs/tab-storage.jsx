@@ -26,23 +26,26 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
-    !params.group
-      ? this.props.fetchAllGroups(params)
-      : this.props.fetchOneGroup({brand:params.brand, account:params.account, id:params.group})
+
+    if(params.storage) {
+      this.props.fetchOneCISIngestPoint({brand: params.brand, account: params.account, group: params.group, id: params.storage})
+    } else if(params.group){
+      this.props.fetchAllCISIngestPoints(params)
+    } else {
+      this.props.fetchAllGroups(params)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, filters, location } = this.props
+    const { params, filters, location, groups} = this.props
 
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
-    if(nextProps.groups) {
+    if(!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
       nextProps.groups.forEach( (group) => {
         const groupId = group.get('id')
-        nextProps.storage
-          ? nextProps.fetchOneCISIngestPoint(nextProps.params)
-          : nextProps.fetchAllCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
+        nextProps.fetchAllCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
       })
     }
 
@@ -86,10 +89,12 @@ AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
+  fetchAllCISIngestPoints: React.PropTypes.func,
   fetchAllGroups: React.PropTypes.func,
-  fetchOneGroup: React.PropTypes.func,
+  fetchOneCISIngestPoint: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
+  groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   lowStorage: React.PropTypes.number,
   params: React.PropTypes.object,
