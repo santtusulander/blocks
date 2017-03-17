@@ -26,7 +26,9 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
-    this.props.fetchGroups(params)
+    !params.group
+      ? this.props.fetchAllGroups(params)
+      : this.props.fetchOneGroup({brand:params.brand, account:params.account, id:params.group})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -82,7 +84,8 @@ AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
-  fetchGroups: React.PropTypes.func,
+  fetchAllGroups: React.PropTypes.func,
+  fetchOneGroup: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
   location: React.PropTypes.object,
@@ -120,8 +123,9 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 const  mapDispatchToProps = (dispatch) => {
   return {
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
-    fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams))
+    fetchAllGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
+    fetchOneGroup: requestParams => dispatch(groupActions.fetchOne(requestParams)),
   }
 }
 
