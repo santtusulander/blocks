@@ -67,7 +67,7 @@ const accountSelectorDispatchToProps = (dispatch, { params: { brand, account, gr
 
         shouldFetch(VIEW_CONTENT_ACCOUNTS) && dispatch(accountActions.fetchAll({ brand })),
 
-        !shouldFetch(VIEW_CONTENT_ACCOUNTS) && dispatch(accountActions.fetchOne({ brand, id: account })),
+        !shouldFetch(VIEW_CONTENT_ACCOUNTS) && account && dispatch(accountActions.fetchOne({ brand, id: account })),
 
         shouldFetch(VIEW_CONTENT_GROUPS) && account && dispatch(groupActions.fetchAll({ brand, account })),
 
@@ -91,36 +91,32 @@ const accountSelectorStateToProps = (state, { params: { property, group, account
 
   const canView = permissionCheck(levels, state.user.get('currentUser'), state.roles.get('roles'))
 
-  const brandIsTopLevel = canView(VIEW_CONTENT_ACCOUNTS)
-  const accountIsTopLevel = canView(VIEW_CONTENT_GROUPS)
-  const groupIsTopLevel = canView(VIEW_CONTENT_PROPERTIES) || canView(LIST_STORAGE)
+  const canViewBrand = canView(VIEW_CONTENT_ACCOUNTS)
+  const canViewAccount = canView(VIEW_CONTENT_GROUPS)
+  const canViewGroup = canView(VIEW_CONTENT_PROPERTIES) || canView(LIST_STORAGE)
 
   let activeNode = brand
   let tree = []
 
-  if (brandIsTopLevel) {
+  if (canViewBrand) {
 
-    tree = getBrands(state, brand, canView)
+    tree = getBrands(state, canView)
 
-  } else if (accountIsTopLevel) {
+  } else if (canViewAccount) {
 
     tree = getAccounts(state, { brand }, canView)
 
-  } else if (groupIsTopLevel) {
+  } else if (canViewGroup) {
 
     tree = getGroups(state, { brand, account }, canView)
   }
 
-  if (brandIsTopLevel && brand) {
-    activeNode = brand
-  }
-  if (accountIsTopLevel && account) {
+  if (canViewAccount && account) {
     activeNode = account
   }
-  if (groupIsTopLevel && property) {
+  if (canViewGroup && property) {
     activeNode = group
   }
-
 
   return {
     activeNode,

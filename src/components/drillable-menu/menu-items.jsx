@@ -31,6 +31,7 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
                       event.nativeEvent.stopImmediatePropagation()
                       !isFetchingChildren && handleCaretClick(fetchChildren, nodeId)
                     }}>
+                    <span className="caret-container-short-border"/>
                     {!isFetchingChildren ? <IconArrowRight /> : <MiniLoadingSpinner />}
                   </a>
                 }

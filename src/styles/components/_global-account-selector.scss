@@ -120,9 +120,18 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
       }
 
       .caret-container {
+        position: relative;
         width: auto;
         padding: $dd-caret-padding;
         flex-shrink: 1;
+
+        & > .caret-container-short-border {
+          position: absolute;
+          top: 10px;
+          bottom: 10px;
+          left: 0;
+          border-left: 1px solid rgba($pale-blue, 0.5);
+        }
 
         .dark-theme & {
           .icon {
