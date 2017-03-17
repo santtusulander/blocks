@@ -23,20 +23,37 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
   li.action-container {
     flex-direction: column;
 
-    & > div {
+    .header-search-container {
+      padding: 9px;
+      border-top: 1px solid rgba($pale-blue, 0.1);
+
+      .header-search-input {
+        background-color: $black;
+      }
+    }
+
+    & > .header-text-container {
       display: flex;
       height: 78px;
       padding-bottom: 6px;
-      padding-left: 12px;
+      padding-left: 25px;
+      background-color: $black;
       flex-direction: row;
 
-      & > div {
+      a {
+        width: $back-caret-width;
+        margin-right: -2px;
+        margin-left: -28px;
+        flex-grow: 0;
+      }
+
+      div {
 
         display: flex;
         width: 100%;
 
         & > {
-          h2 {
+          h3 {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -49,12 +66,6 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
           }
         }
 
-      }
-
-      a {
-        width: $back-caret-width;
-        margin-left: -30px;
-        flex-grow: 0;
       }
     }
   }
@@ -80,6 +91,7 @@ $dd-selector-item-width: ($dd-horizontal-padding * 2);
     height: 400px;
     max-height: none;
     overflow-y: auto !important;
+    background: #161927;
 
     .menu-container {
       position: relative;
