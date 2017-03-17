@@ -40,7 +40,9 @@ class AnalyticsTabStorage extends Component {
     if(nextProps.groups) {
       nextProps.groups.forEach( (group) => {
         const groupId = group.get('id')
-        nextProps.fetchCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
+        nextProps.storage
+          ? nextProps.fetchOneCISIngestPoint(nextProps.params)
+          : nextProps.fetchAllCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
       })
     }
 
@@ -123,9 +125,10 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 const  mapDispatchToProps = (dispatch) => {
   return {
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
-    fetchCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams))
     fetchAllGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchOneGroup: requestParams => dispatch(groupActions.fetchOne(requestParams)),
+    fetchAllCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams)),
+    fetchOneCISIngestPoint: requestParams => dispatch(storageActions.fetchOne(requestParams))
   }
 }
 
