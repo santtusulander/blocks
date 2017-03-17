@@ -1,5 +1,6 @@
 import React from 'react'
 import IconArrowRight from '../icons/icon-arrow-right'
+import MiniLoadingSpinner from '../loading-spinner/loading-spinner-sm'
 
 export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) => {
 
@@ -8,16 +9,16 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
 
       {/* Dropdown with nodes */}
       <ul className="scrollable-menu">
-        {menuNodes.reduce((listItems, node, i) => {
+        {menuNodes.reduce((menuItems, node, i) => {
 
-          const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren, nodes } } = node
+          const { labelKey = 'name', idKey = 'id', nodeInfo: { fetchChildren, isFetchingChildren, nodes } } = node
 
           const nodeId = node[idKey]
           const nodeName = node[labelKey]
 
           if (nodeName.toLowerCase().includes(searchValue.toLowerCase())) {
 
-            listItems.push(
+            menuItems.push(
               <li key={i}>
 
                 <a onClick={() => onItemClick(node)}>{nodeName}</a>
@@ -28,9 +29,9 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
                     tabIndex="-1"
                     onClick={event => {
                       event.nativeEvent.stopImmediatePropagation()
-                      handleCaretClick(fetchChildren, nodeId)
+                      !isFetchingChildren && handleCaretClick(fetchChildren, nodeId)
                     }}>
-                    <IconArrowRight />
+                    {!isFetchingChildren ? <IconArrowRight /> : <MiniLoadingSpinner />}
                   </a>
                 }
 
@@ -38,7 +39,7 @@ export default ({ menuNodes = [], searchValue, handleCaretClick, onItemClick }) 
             )
           }
 
-          return listItems
+          return menuItems
         }, [])}
       </ul>
 
