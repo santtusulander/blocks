@@ -194,7 +194,9 @@ export function buildAnalyticsOpts(params, filters, location ){
 
   const tabKey = getTabName(location.pathname)
   //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
-  const visibleFilters = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey ).get('filters')
+  let visibleFilters = List()
+  const tab = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey )
+  if (tab) { visibleFilters = tab.get('filters') }
 
   //get filter values
   let filterValues = {}
