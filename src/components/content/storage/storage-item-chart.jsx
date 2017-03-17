@@ -160,7 +160,6 @@ const StorageItemChart = (
 StorageItemChart.displayName = 'StorageItemChart'
 StorageItemChart.defaultProps = {
   currentUsage: 0,
-  lastMonthEstimate: 0,
   lastMonthPeak: 0,
   lastMonthUsage: 0,
   locations: List(),
