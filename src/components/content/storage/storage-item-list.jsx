@@ -88,12 +88,15 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
 
               {!fetchingMetrics &&
-                <LineAreaComposedChart
-                  isMiniChart={true}
-                  data={chartData}
-                  dataKey='bytes'
-                  valueFormatter={formatBitsPerSecond}
-                />
+                ( chartData.length > 0
+                  ? <LineAreaComposedChart
+                    isMiniChart={true}
+                    data={chartData}
+                    dataKey='bytes'
+                    valueFormatter={formatBitsPerSecond}
+                  />
+                  : <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
+                )
               }
 
             </ReactCSSTransitionGroup>
