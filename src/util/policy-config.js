@@ -280,6 +280,7 @@ export const getTokenAuthRules = (properties) => {
           accountId: property.accountId,
           groupId: property.groupId,
           encryption: tokenAuthConfig.encryption,
+          streaming_encryption: tokenAuthConfig.streaming_encryption,
           schema: tokenAuthConfig.schema,
           created: config.config_created
         }

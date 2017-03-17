@@ -1,51 +1,52 @@
 @import '../../base/colors';
 
 .line-area-composed-chart-container {
-  .non-stacked {
-    .storage {
-      path {
+  .storage {
+    path {
+      &:first-child {
+        stroke: $gradient-teal;
+        stroke-width: 4px;
+      }
+
+      .light-theme & {
         &:last-child {
-          fill: $pale-blue;
+          fill: $pale-blue-40;
+        }
+      }
+
+      .dark-theme & {
+        &:last-child {
+          fill: $deep-blue-20;
         }
       }
     }
   }
 
-  .comparison {
-    .storage {
-      path {
-        &:first-child {
-          stroke: $dark-green;
-          stroke-width: 4px;
-        }
+  .comparison_storage {
+    path {
+      &:first-child {
+        stroke: $pale-blue;
+        stroke-width: 4px;
+      }
 
+      .light-theme & {
         &:last-child {
-          fill: $dark-blue;
+          fill: $pale-blue-60;
         }
       }
-    }
 
-    .comparison_storage {
-      path {
-        &:first-child {
-          stroke: $pale-blue;
-          stroke-width: 2px;
-        }
-
+      .dark-theme & {
         &:last-child {
-          fill: $black-20;
+          fill: $deep-blue;
         }
       }
     }
   }
 
-  .non-stacked,
-  .comparison {
-    .estimate {
-      path {
-        stroke: $grey-40;
-        stroke-width: 2px;
-      }
+  .estimate {
+    path {
+      stroke: $grey-40;
+      stroke-width: 2px;
     }
   }
 
