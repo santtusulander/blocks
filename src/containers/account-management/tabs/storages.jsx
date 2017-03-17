@@ -131,7 +131,7 @@ class AccountManagementStorages extends Component {
 
     const storagesFullData = storages.map(storage => {
       const storageGroupId = storage.get('parentId')
-      const storageGroup = groups.find(group => (group.get('id') === storageGroupId))
+      const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 
       let origins = []
