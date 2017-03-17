@@ -120,7 +120,7 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, groups, storages, clusters, properties, metrics,
+    const { account, group, groups, storages, clusters, properties, metrics, params,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
     const sorterProps  = {
@@ -189,7 +189,7 @@ class AccountManagementStorages extends Component {
                     value={this.state.search}
                     onChange={this.changeSearch}  />
                 </FormGroup>
-                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!group}>
+                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!params.group}>
                   <IconAdd />
                 </Button>
               </SectionHeader>
@@ -294,6 +294,7 @@ AccountManagementStorages.propTypes = {
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
+  params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
