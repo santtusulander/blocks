@@ -177,8 +177,4 @@ StorageItemChart.propTypes = {
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
-StorageItemChart.defaultProps = {
-  locations: []
-}
-
 export default StorageItemChart
