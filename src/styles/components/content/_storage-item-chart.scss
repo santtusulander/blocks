@@ -1,5 +1,5 @@
 $storage-unit-width: 24px;
-$storage-unit-horizontal-margin: 10px;
+$storage-unit-horizontal-margin: 8px;
 
 .aggregate-storage-starburst-wrapper {
   display: inline-flex;
@@ -100,6 +100,10 @@ $storage-unit-horizontal-margin: 10px;
           opacity: 1;
           fill: $silver-40;
         }
+
+        .dark-theme & {
+          fill: $black-30;
+        }
       }
     }
   }
@@ -146,6 +150,7 @@ $storage-unit-horizontal-margin: 10px;
       }
 
       &-unit {
+        display: inline-block;
         width: $storage-unit-width;
         margin-left: $storage-unit-horizontal-margin;
       }
