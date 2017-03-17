@@ -133,7 +133,7 @@ const StorageItemChart = (
 
           <div className="usage-estimate">
             {<FormattedMessage id="portal.common.of.value.text"
-              values={{ value: separateUnit(formatBytes(estimate, null)).value }}/>}
+              values={{ value: formatBytes(estimate, null) }}/>}
           </div>
         </LinkWrapper>
 
