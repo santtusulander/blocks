@@ -25,8 +25,14 @@ export const ENCRYPTION_OPTIONS = [
   {label: 'MD5', value: 'MD5'}
 ]
 
+export const STREAMING_ENCRYPTION_OPTIONS = [
+  {label: 'HMAC-SHA1', value: 'HMAC_SHA1'},
+  {label: 'HMAC-SHA256', value: 'HMAC_SHA256'}
+]
+
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
+export const STREAMING_ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 
 export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
