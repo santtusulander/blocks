@@ -71,7 +71,7 @@ const pops =
 
 const pods =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'pods' }),
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'pods', useMergeDeep: false }),
     [actionTypes.REMOVE] : removeEntity,
     [actionTypes.FAIL] : failEntity
   }, Map())
