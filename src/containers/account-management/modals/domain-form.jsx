@@ -77,14 +77,16 @@ function mapStateToProps({ dns }, { edit }) {
   return props
 }
 
-function mapDispatchToProps(dispatch, { closeModal }) {
+function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
   const dnsActions = bindActionCreators(dnsActionCreators, dispatch)
 
   return {
     dnsActions: dnsActions,
     saveDomain: (edit, values) => {
       const method = edit ? 'editDomain' : 'createDomain'
-
+      const saveDomainMessage = edit
+                                ? <FormattedMessage id="portal.accountManagement.dns.domain.updated.text"/>
+                                : <FormattedMessage id="portal.accountManagement.dns.domain.created.text"/>
       // TODO: Are these required params ok (refresh, retry, expiry)?
       const defaultData = {
         'class': 'IN',
@@ -106,7 +108,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       dnsActions.startFetchingDomains()
       return dnsActions[method]('udn', domain, data)
         .then(res => {
-          if (res.error) {          
+          if (res.error) {
             dispatch( showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
@@ -115,6 +117,7 @@ function mapDispatchToProps(dispatch, { closeModal }) {
             }))
           }
           dnsActions.stopFetchingDomains()
+          showNotification(saveDomainMessage)
           closeModal();
         })
     }
