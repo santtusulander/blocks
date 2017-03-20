@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import BSTypeahead from 'react-bootstrap-typeahead'
+import {Typeahead as BSTypeahead} from 'react-bootstrap-typeahead'
 
 class Typeahead extends React.Component {
   constructor(props) {
