@@ -6,7 +6,6 @@ import moment from 'moment'
 
 import * as accountActionCreators from '../redux/modules/account'
 import * as groupActionCreators from '../redux/modules/group'
-import * as hostActionCreators from '../redux/modules/host'
 import * as metricsActionCreators from '../redux/modules/metrics'
 import * as uiActionCreators from '../redux/modules/ui'
 
@@ -39,7 +38,7 @@ export class Hosts extends React.Component {
     this.stopFetching = this.stopFetching.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
-    this.createNewProperty = this.createNewProperty.bind(this)
+    this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
     // if(!this.props.activeGroup ||
@@ -63,23 +62,34 @@ export class Hosts extends React.Component {
     this.setState({fetching: false});
   }
 
-  createNewProperty(id, deploymentMode) {
+  createNewHost(id, deploymentMode) {
+    const payload = {
+      services:[{
+        service_type: "large",
+        deployment_mode: deploymentMode,
+        configurations: [{
+          edge_configuration: {
+            published_name: id
+          }
+        }]
+      }]
+    }
     return this.props.createNewProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      id,
-      deploymentMode
-    )
+      payload)
   }
+
   deleteHost(id) {
-    this.props.hostActions.deleteHost(
+    this.props.deleteProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
       id
     )
   }
+
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
@@ -111,7 +121,7 @@ export class Hosts extends React.Component {
         storages={this.props.storages}
         properties={this.props.properties}
 
-        createNewItem={this.createNewProperty}
+        createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
         fetching={this.state.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -141,10 +151,10 @@ Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   createNewProperty: React.PropTypes.func,
+  deleteProperty: React.PropTypes.func,
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
-  hostActions: React.PropTypes.object,
   params: React.PropTypes.object,
   properties: React.PropTypes.instanceOf(Immutable.List),
   roles: React.PropTypes.instanceOf(Immutable.List),
@@ -183,7 +193,6 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   const {brand, account, group} = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
-  const hostActions = bindActionCreators(hostActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
@@ -211,9 +220,9 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   return {
     fetchGroupData: fetchGroupData,
     fetchMetricsData: fetchMetricsData,
-    hostActions: hostActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    createNewProperty: (brand, account, group, id, payload) => dispatch(propertyActions.create({brand, account, group, id, payload}))
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
+    createNewProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload}))
   };
 }
 
