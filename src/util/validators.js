@@ -326,7 +326,7 @@ export function isValidEstimatedUsage(str) {
 
 /**
  * Check if valid storage name
- * @param hostName
+ * @param storageName
  * @returns {boolean|*}
  */
 export function isValidStorageName(storageName) {
