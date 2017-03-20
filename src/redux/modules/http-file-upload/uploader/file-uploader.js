@@ -71,7 +71,7 @@ class Uploader {
    * @param files []
    */
   processFiles(files) {
-    for (const file of files) Reader.readFile(file).then(this.uploadFile)
+    [...files].forEach(file => Reader.readFile(file).then(this.uploadFile))
   }
 
   /**
