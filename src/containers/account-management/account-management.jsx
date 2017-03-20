@@ -414,9 +414,12 @@ export class AccountManagement extends Component {
             <Link to={baseUrl + '/users'} activeClassName="active"><FormattedMessage id="portal.accountManagement.users.text"/></Link>
           </li>
          {accountIsContentProviderType(activeAccount) &&
-           <li>
-             <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
-           </li>}
+           <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+             <li>
+               <Link to={baseUrl + '/storage'} activeClassName="active"><FormattedMessage id="portal.accountManagement.storages.text"/></Link>
+             </li>
+           </IsAllowed>
+         }
         </Tabs>}
         {!account && <Tabs activeKey={this.props.children.props.route.path}>
           <li data-eventKey="accounts">

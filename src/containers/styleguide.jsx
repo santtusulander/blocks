@@ -54,9 +54,10 @@ import Checkbox from '../components/checkbox'
 import Radio from '../components/radio'
 import NetworkItem from '../components/network/network-item'
 import CsvUploadArea from '../components/network/csv-upload'
+import TimePicker from '../components/time-picker'
 import Typeahead from '../components/typeahead'
 import StorageKPI from '../components/storage/storage-kpi'
-import StorageItemChart from '../components/content/storage-item-chart'
+import StorageItemChart from '../components/content/storage/storage-item-chart'
 import SortableMultiSelector from '../components/sortable-multi-selector'
 import FileUploadStatus from '../components/storage/file-upload-status-container.jsx'
 
@@ -81,6 +82,7 @@ import IconClose         from '../components/icons/icon-close'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
 import IconContent       from '../components/icons/icon-content'
+import IconClock         from '../components/icons/icon-clock'
 import IconDelete        from '../components/icons/icon-delete'
 import IconEdit          from '../components/icons/icon-edit'
 import IconEmail         from '../components/icons/icon-email'
@@ -119,6 +121,7 @@ import { stackedBarChartData,
          composedChartData
   } from './__mocks__/chart-data'
 import DateRanges from '../constants/date-ranges'
+import country_list from '../constants/country-list'
 
 const filterCheckboxOptions = Immutable.fromJS([
   { value: 'link1', label: 'Property 1' },
@@ -160,7 +163,8 @@ class Styleguide extends React.Component {
       ]),
       multiOptionValues: Immutable.List([ {id: 1, options: [1, 2]} ]),
       numberInputValue: 100,
-      sortableMultiSelectorItems: Immutable.List([1, 2])
+      sortableMultiSelectorItems: Immutable.List([1, 2]),
+      timePickerTime: moment().utc()
     }
   }
 
@@ -433,7 +437,10 @@ class Styleguide extends React.Component {
                 <LineAreaComposedChart
                   chartLabel="Oct 2016 Month To Date"
                   data={composedChartData}
+                  keyLabel="Storage"
                   valueFormatter={formatBitsPerSecond}
+                  comparisonKeyLabel="Comparison Storage"
+                  isComparison={true}
                 />
               </SectionContainer>
             </Row>
@@ -811,7 +818,16 @@ class Styleguide extends React.Component {
                 options={[]}/>
             </Col>
           </Row>
-
+          <Row>
+            <Col xs={6}>
+              <label>Contry picker</label>
+              <Typeahead
+                placeholder={"Entry contry name, or 2 letter code ISO code"}
+                multiple={true}
+                onChange={() => null}
+                options={country_list}/>
+            </Col>
+          </Row>
           <h1 className="page-header">Month Picker</h1>
           <Row>
             <Col xs={6}>
@@ -962,6 +978,19 @@ class Styleguide extends React.Component {
             </Col>
             <Col xs={4}>
               <p>{`endDate: ${this.state.customDatePickerEndDate} (${this.state.customDatePickerEndDate.format('MM/DD/YYYY HH:mm')})`}</p>
+            </Col>
+          </Row>
+
+          <h1 className="page-header">Time Picker</h1>
+
+          <Row>
+            <Col xs={4}>
+              <TimePicker
+                time={this.state.timePickerTime}
+                onChange={(time) => this.setState({ timePickerTime: time })} />
+            </Col>
+            <Col xs={8}>
+              <p>{`time: ${this.state.timePickerTime} (${this.state.timePickerTime.format('HH:mm')})`}</p>
             </Col>
           </Row>
 
@@ -1395,6 +1424,11 @@ class Styleguide extends React.Component {
             <IconFolder />
             <br />
             IconFolder
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconClock />
+            <br />
+            IconClock
           </span>
         </div>
 

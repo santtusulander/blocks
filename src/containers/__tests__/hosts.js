@@ -11,6 +11,7 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
+jest.unmock('../../redux/modules/fetching/actions.js')
 jest.unmock('../hosts.jsx')
 jest.unmock('../../util/status-codes')
 import { Hosts } from '../hosts.jsx'

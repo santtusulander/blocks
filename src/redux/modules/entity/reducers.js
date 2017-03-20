@@ -26,15 +26,31 @@ export const receiveEntity = ({ key, useMergeDeep = true }) => (state, action) =
 /**
  * Reducer for receiving metrics data for entities
  * @param  {[type]} key
- * @param  {[type]} comparison    if true, insert data into object for comparison data
+ * @param  {[type]} comparison    if true, insert data into array for comparison data
  * @return {[Immutable Map]}      state fragment
  */
 export const receiveMetrics = ({ key, comparison }) => (state, { response }) => {
 
   const metricsObject = comparison ? 'comparisonData' : 'data'
 
-  if (response.entities && response.entities[key]) {
-    return state.merge(fromJS({ [metricsObject]: response.entities[key] }))
+  if (response && response[key]) {
+    return state.merge(fromJS({ [metricsObject]: response[key] }))
+  }
+
+  return state
+}
+
+/**
+ * Reducer for receiving metrics data for muliple groups
+ * @return {[Immutable Map]}      state fragment
+ */
+export const receiveGroupsMetrics = () => (state, { response }) => {
+  const metricsObject = 'groupsData'
+  //Convert response from array of arrays to array of object + filter empty arrays
+  const flattenedResponse = [].concat.apply([],response.filter((resItem) => resItem.length))
+
+  if (response) {
+    return state.merge(fromJS({ [metricsObject]: flattenedResponse }))
   }
 
   return state

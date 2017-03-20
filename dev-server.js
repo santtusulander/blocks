@@ -48,13 +48,14 @@ var server = new WebpackDevServer(compiler, {
       }
     },
     '/analytics-legacy': {
-      target: 'http://portal2.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics-legacy([^?]*)\\??(.*)$' : '/legacy$1/?$2'
       }
     },
+
     '/analytics': {
-      target: 'http://portal2.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics([^-][^?]*)\\??(.*)$' : '/analytics/$1/?$2'
       }

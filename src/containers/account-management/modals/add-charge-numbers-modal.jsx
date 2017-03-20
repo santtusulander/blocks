@@ -8,7 +8,7 @@ import ChargeNumbersForm from '../../../components/account-management/charge-num
 import { getRegionsInfo } from '../../../redux/modules/service-info/selectors'
 
 import { getServiceById, getServiceByOptionId } from '../../../util/services-helpers'
-import { MEDIA_DELIVERY_SERVICE_ID } from '../../../constants/account-management-options'
+import { MEDIA_DELIVERY_SERVICE_ID } from '../../../constants/service-permissions'
 
 class AddChargeNumbersModal extends React.Component {
   constructor(props) {

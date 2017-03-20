@@ -61,9 +61,9 @@ const fakeClusters = Immutable.fromJS([
 
 const fakeMetrics = Immutable.fromJS([
   {
-   detail: [{
-     bytes: 108000497044939,
-     file_count: 5000
+   totals: [{
+     bytes: { ending : 108000497044939},
+     files_count: { ending: 5000}
    }]
   }
 ])
@@ -78,7 +78,7 @@ const fakefullStorage = Immutable.fromJS([
    locations: 'Syndey, San Jose',
    gateway: {hostname: 'usa.storage.gateway.host.net'},
    usage: 108000497044939,
-   file_count: 5000
+   files_count: 5000
   },
   {
    ingest_point_id: 'China Storage',
@@ -89,7 +89,7 @@ const fakefullStorage = Immutable.fromJS([
    locations: 'Syndey',
    gateway: {hostname: 'china.storage.gateway.host.net'},
    usage: 108000497044939,
-   file_count: 5000
+   files_count: 5000
   }
 ])
 
@@ -101,10 +101,11 @@ const storagesComponent =
     clusters={fakeClusters}
     properties={fakeProperties}
     metrics={fakeMetrics}
+    params={{}}
     fetchStorages={jest.fn()}
     fetchClusters={jest.fn()}
     fetchProperties={jest.fn()}
-    fetchMetrics={jest.fn()}
+    fetchGroupsMetrics={jest.fn()}
     isFetching={false}
     intl={intlMaker()} />
 

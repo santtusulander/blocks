@@ -174,27 +174,31 @@ const AnalyticsViewControl = (props) => {
 
   return (
     <PageHeader pageSubTitle={title}>
-      <AccountSelector
-        as="analytics"
-        params={props.params}
-        topBarTexts={topBarTexts}
-        topBarAction={topBarFunc}
-        onSelect={(...params) => {
-          let url = getAnalyticsUrl(...params)
-          if (active) {
-            let tab = active.key
-            if(active.propertyOnly && params[0] !== 'property') {
-              tab = ''
+    {/* Hide the dropdown until we get the storage included in it */}
+      {!props.params.storage ?
+        <AccountSelector
+          as="analytics"
+          params={props.params}
+          topBarTexts={topBarTexts}
+          topBarAction={topBarFunc}
+          onSelect={(...params) => {
+            let url = getAnalyticsUrl(...params)
+            if (active) {
+              let tab = active.key
+              if(active.propertyOnly && params[0] !== 'property') {
+                tab = ''
+              }
+              url = `${url}/${tab}`
             }
-            url = `${url}/${tab}`
-          }
-          props.router.push(url)
-        }}>
+            props.router.push(url)
+          }}>
         <div className="btn btn-link dropdown-toggle header-toggle">
           <h1><TruncatedTitle content={activeItem || props.intl.formatMessage({id: 'portal.account.manage.selectAccount.text'})} tooltipPlacement="bottom" className="account-management-title"/></h1>
           <IconCaretDown />
         </div>
-      </AccountSelector>
+      </AccountSelector> :
+      <h1><TruncatedTitle content={props.params.storage} /></h1>
+    }
       {props.params.account &&
         <ButtonToolbar>
           <AnalyticsExport

@@ -6,11 +6,15 @@ import { Map } from 'immutable'
 import SectionContainer from '../layout/section-container'
 import SectionHeader from '../layout/section-header'
 import AsperaUpload from './aspera-upload'
+import HttpUpload from './http-upload'
 import StorageContentBrowser from './storage-content-browser'
 import ButtonDropdown from '../button-dropdown'
+import Button from '../button'
+import IconAdd from '../icons/icon-add'
+
 import Toggle from '../toggle'
 
-const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId }) => {
+const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
                       ?
@@ -25,6 +29,9 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
   const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
   const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
   const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
+  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
+  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
+  const processFiles = fileUploader ? fileUploader.processFiles : (()=>{})
 
   return (
     <SectionContainer>
@@ -43,26 +50,34 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             />
           </Col>
         </FormGroup>
-        <ButtonDropdown
-          bsStyle="success"
-          pullRight={true}
-          disabled={uploadButtonIsDisabled}
-          options={[
-            {
-              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
-              handleClick: asperaUpload ? asperaShowSelectFileDialog : () => {}
-            },
-            {
-              label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
-              handleClick: asperaUpload ? asperaShowSelectFolderDialog : () => {}
-            }
-          ]}
-        />
+        { asperaUpload &&
+          <ButtonDropdown
+            bsStyle="success"
+            pullRight={true}
+            disabled={uploadButtonIsDisabled}
+            options={[
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFile.label' />,
+                handleClick: openFileDialog
+              },
+              {
+                label: <FormattedMessage id='portal.storage.summaryPage.contents.newFolder.label' />,
+                handleClick: openFolderDialog
+              }
+            ]}
+          />
+        }
+        { !asperaUpload && fileUploader &&
+          <Button bsStyle="success" icon={true} onClick={openFileDialog}>
+            <IconAdd/>
+          </Button>
+        }
       </SectionHeader>
       { hasContents
         ? <StorageContentBrowser contents={contents} />
         : asperaUpload
-        ? <AsperaUpload multiple={true} storageId={storageId} asperaGetaway={gatewayHostname} /> : <span>http-upload</span>
+        ? <AsperaUpload multiple={true} brandId={brandId} accountId={accountId} groupId={groupId} storageId={storageId} asperaGetaway={gatewayHostname} />
+        : <HttpUpload processFiles={processFiles} openFileDialog={openFileDialog} />
       }
     </SectionContainer>
   )
@@ -71,10 +86,14 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
 StorageContents.displayName = 'StorageContents'
 
 StorageContents.propTypes = {
+  accountId: React.PropTypes.string,
   asperaInstanse: PropTypes.instanceOf(Map),
   asperaUpload: PropTypes.bool,
+  brandId: React.PropTypes.string,
   contents: PropTypes.array,
+  fileUploader: PropTypes.object,
   gatewayHostname: PropTypes.string,
+  groupId: PropTypes.string,
   onMethodToggle: PropTypes.func,
   storageId: PropTypes.string
 }

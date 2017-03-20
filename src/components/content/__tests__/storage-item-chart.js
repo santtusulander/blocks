@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'immutable'
 import { shallow } from 'enzyme'
 import '../../../../__mocks__/recharts'
 
@@ -7,15 +8,15 @@ jest.mock('../../../util/helpers', () => { return {
   separateUnit: bytes => bytes
 }})
 
-jest.unmock('../storage-item-chart')
-import StorageItemChart from '../storage-item-chart'
+jest.unmock('../storage/storage-item-chart')
+import StorageItemChart from '../storage/storage-item-chart'
 
 const subject = shallow(
   <StorageItemChart
     analyticsLink='#'
     configurationLink='#'
     name="Storage 02"
-    locations={["Hong Kong"]}
+    locations={List(["Hong Kong"])}
     currentUsage = {80.2e12}
     estimate = {250e12}
     peak = {160e12}
