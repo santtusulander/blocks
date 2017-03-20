@@ -43,6 +43,10 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
+    if(nextProps.params.account !== params.account) {
+      nextProps.fetchAllGroups(nextProps.params)
+    }
+
     if(!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
       nextProps.groups.forEach( (group) => {
         const groupId = group.get('id')
