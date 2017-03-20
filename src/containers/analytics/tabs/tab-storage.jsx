@@ -148,7 +148,6 @@ const  mapDispatchToProps = (dispatch) => {
   return {
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
     fetchAllGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
-    fetchOneGroup: requestParams => dispatch(groupActions.fetchOne(requestParams)),
     fetchAllCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchOneCISIngestPoint: requestParams => dispatch(storageActions.fetchOne(requestParams))
   }
