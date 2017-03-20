@@ -120,8 +120,8 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 
   return {
     peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
-    avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
-    lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
+    avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
+    lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     dataForChart: getDataForStorageAnalysisChart(state, { account, group, storage }, storageType),
     groups: getGroupsByAccount(state, account)
   }
