@@ -518,8 +518,8 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.users.text': 'USERS',
   'portal.accountManagement.dns.text': 'DNS',
   'portal.accountManagement.roles.text': 'ROLES',
-  'portal.accountManagement.groups.created': 'Group created',
-  'portal.accountManagement.groups.delete': 'Group deleted',
+  'portal.accountManagement.groups.created': 'Group created.',
+  'portal.accountManagement.groups.delete': 'Group deleted.',
 
   'portal.accountManagement.storages.text': 'STORAGE',
   'portal.accountManagement.properties.text': 'PROPERTIES',
