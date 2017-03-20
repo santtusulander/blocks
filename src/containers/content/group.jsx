@@ -54,7 +54,7 @@ export class Hosts extends React.Component {
     )
   }
   deleteHost(id) {
-    this.props.hostActions.deleteHost(
+    return this.props.hostActions.deleteHost(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -123,6 +123,7 @@ Hosts.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
+  fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   params: React.PropTypes.object,
@@ -146,8 +147,8 @@ Hosts.defaultProps = {
 
 const mapStateToProps = (state, { params: { account, group } }) => {
   return {
-    activeAccount: getAccountById( state, account), //state.account.get('activeAccount'),
-    activeGroup: getGroupById(state, group),// groupstate.group.get('activeGroup'),
+    activeAccount: getAccountById( state, account),
+    activeGroup: getGroupById(state, group),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group),
