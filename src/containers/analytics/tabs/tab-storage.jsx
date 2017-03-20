@@ -26,19 +26,26 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
     fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
-    this.props.fetchGroups(params)
+
+    if(params.storage) {
+      this.props.fetchOneCISIngestPoint({brand: params.brand, account: params.account, group: params.group, id: params.storage})
+    } else if(params.group){
+      this.props.fetchAllCISIngestPoints(params)
+    } else {
+      this.props.fetchAllGroups(params)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, filters, location } = this.props
+    const { params, filters, location, groups} = this.props
 
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
-    if(nextProps.groups) {
+    if(!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
       nextProps.groups.forEach( (group) => {
         const groupId = group.get('id')
-        nextProps.fetchCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
+        nextProps.fetchAllCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
       })
     }
 
@@ -82,9 +89,12 @@ AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
-  fetchGroups: React.PropTypes.func,
+  fetchAllCISIngestPoints: React.PropTypes.func,
+  fetchAllGroups: React.PropTypes.func,
+  fetchOneCISIngestPoint: React.PropTypes.func,
   fetchStorageMetrics: React.PropTypes.func,
   filters: React.PropTypes.instanceOf(Immutable.Map),
+  groups: React.PropTypes.instanceOf(Immutable.List),
   location: React.PropTypes.object,
   lowStorage: React.PropTypes.number,
   params: React.PropTypes.object,
@@ -120,8 +130,10 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 const  mapDispatchToProps = (dispatch) => {
   return {
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
-    fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
-    fetchCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams))
+    fetchAllGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
+    fetchOneGroup: requestParams => dispatch(groupActions.fetchOne(requestParams)),
+    fetchAllCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams)),
+    fetchOneCISIngestPoint: requestParams => dispatch(storageActions.fetchOne(requestParams))
   }
 }
 
