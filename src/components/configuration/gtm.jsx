@@ -13,22 +13,24 @@ import LoadingSpinner from '../loading-spinner/loading-spinner'
 import SectionHeader from '../layout/section-header'
 import SectionContainer from '../layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
+import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupToggle from '../form/field-form-group-toggle'
 
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
+import { isValidCName, isValidTextField } from '../../util/validators.js'
 
 const validate = ({ cdnName, cName }) => {
   const conditions = {
     cdnName: {
-      condition: !cdnName,
-      errorText: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cdnName.required" />
+      condition: !isValidTextField(cdnName),
+      errorText: <MultilineTextFieldError fieldLabel="portal.configuration.gtm.trafficConfig.cdnName.label" />
     },
     cName: {
-      condition: !cName,
-      errorText: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cName.required" />
+      condition: !isValidCName(cName),
+      errorText: <FormattedMessage id="portal.configuration.gtm.trafficConfig.cName.validation.text" />
     }
   }
 
@@ -247,7 +249,7 @@ const mapStateToProps = (state) => {
   const GTMToggle = selector(state, 'GTMToggle')
 
   /*
-    TODO: UDNP-3088 - Rules section 
+    TODO: UDNP-3088 - Rules section
   */
   return {
     isFormDisabled: !GTMToggle,

@@ -109,6 +109,7 @@
   "portal.configuration.gtm.trafficConfig.cName.label": "3rd Party CNAME",
   "portal.configuration.gtm.trafficConfig.cName.placeholder": "Enter canonical name of network",
   "portal.configuration.gtm.trafficConfig.cName.required": "CNAME is required",
+  "portal.configuration.gtm.trafficConfig.cName.validation.text": "Please enter a valid CNAME",
   "portal.configuration.gtm.trafficConfig.ROW.label": "Rest-of-world traffic served by 3rd party",
   "portal.configuration.gtm.trafficConfig.ROW.help": "Rest-of-world traffic served by 3rd party help",
   "portal.configuration.gtm.trafficConfig.ROW.readOnly.enabled.text": "Yes",
