@@ -36,8 +36,18 @@ export const fetchIds = ({ brand, account, group }) => {
     .then(({ data }) => data)
 }
 
-export const create = ({ brand, account, group, payload }) =>
-  axios.post(`${baseURL(brand, account, group)}/${publishedName(payload)}`, payload, { headers: { 'Content-Type': 'application/json' } })
+export const create = ({ brand, account, group, id, payload }) =>
+  axios.post(`${baseURL(brand, account, group)}/${id}`, {
+    services:[{
+      service_type: "large",
+      deployment_mode: payload,
+      configurations: [{
+        edge_configuration: {
+          published_name: id
+        }
+      }]
+    }]
+  }, { headers: { 'Content-Type': 'application/json' } })
     .then(({ data }) => {
       return normalize({ id: group, properties: [ data ] }, groupPropertiesSchema)
     })

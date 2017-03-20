@@ -39,14 +39,20 @@ export class Hosts extends React.Component {
     this.stopFetching = this.stopFetching.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
-    this.createNewHost = this.createNewHost.bind(this)
+    this.createNewProperty = this.createNewProperty.bind(this)
   }
   componentWillMount() {
+    // if(!this.props.activeGroup ||
+    //   String(this.props.activeGroup.get('id')) !== this.props.params.group ) {
     this.startFetching();
     this.props.fetchGroupData()
       .then(this.stopFetching, this.stopFetching)
-
-    this.props.fetchMetricsData()
+      .then(() => {
+        this.props.fetchMetricsData()
+      })
+    // } else {
+    //   this.props.fetchMetricsData()
+    // }
   }
 
   startFetching() {
@@ -57,8 +63,8 @@ export class Hosts extends React.Component {
     this.setState({fetching: false});
   }
 
-  createNewHost(id, deploymentMode) {
-    return this.props.hostActions.createHost(
+  createNewProperty(id, deploymentMode) {
+    return this.props.createNewProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -105,7 +111,7 @@ export class Hosts extends React.Component {
         storages={this.props.storages}
         properties={this.props.properties}
 
-        createNewItem={this.createNewHost}
+        createNewItem={this.createNewProperty}
         deleteItem={this.deleteHost}
         fetching={this.state.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
@@ -134,6 +140,7 @@ Hosts.displayName = 'Hosts'
 Hosts.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
+  createNewProperty: React.PropTypes.func,
   fetchGroupData: React.PropTypes.func,
   fetchMetricsData: React.PropTypes.func,
   fetchingMetrics: React.PropTypes.bool,
@@ -205,7 +212,8 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     fetchGroupData: fetchGroupData,
     fetchMetricsData: fetchMetricsData,
     hostActions: hostActions,
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    createNewProperty: (brand, account, group, id, payload) => dispatch(propertyActions.create({brand, account, group, id, payload}))
   };
 }
 
