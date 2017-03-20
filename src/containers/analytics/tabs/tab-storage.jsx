@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import numeral from 'numeral'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisStorage from '../../../components/analysis/storage'
 
@@ -12,7 +13,7 @@ import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entit
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
-import { formatBytes, buildAnalyticsOpts } from '../../../util/helpers'
+import { accountIsServiceProviderType, buildAnalyticsOpts, formatBytes } from '../../../util/helpers'
 
 class AnalyticsTabStorage extends Component {
   constructor(props) {
@@ -63,8 +64,16 @@ class AnalyticsTabStorage extends Component {
   }
 
   render() {
-    const {filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
+    const { serviceProviderAccount, filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
     const storageType = filters.get('storageType')
+
+    if(serviceProviderAccount) {
+      return (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectContentProviderAccount.text" />
+        </div>
+      )
+    }
 
     return (
       <div>
@@ -98,7 +107,8 @@ AnalyticsTabStorage.propTypes = {
   location: React.PropTypes.object,
   lowStorage: React.PropTypes.number,
   params: React.PropTypes.object,
-  peakStorage: React.PropTypes.number
+  peakStorage: React.PropTypes.number,
+  serviceProviderAccount: React.PropTypes.bool
 }
 
 AnalyticsTabStorage.defaultProps = {
@@ -108,6 +118,8 @@ AnalyticsTabStorage.defaultProps = {
 
 const mapStateToProps = (state, { params: { account, group, storage } }) => {
   const storageType = state.filters.getIn(['filters', 'storageType'])
+  const activeAccount = state.account.get('activeAccount')
+
   let getStorageByParent
 
   if(storage) {
@@ -123,7 +135,8 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
     avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
     lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     dataForChart: getDataForStorageAnalysisChart(state, { account, group, storage }, storageType),
-    groups: getGroupsByAccount(state, account)
+    groups: getGroupsByAccount(state, account),
+    serviceProviderAccount: accountIsServiceProviderType(activeAccount)
   }
 }
 
