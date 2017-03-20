@@ -13,7 +13,7 @@ import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entit
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
-import { accountIsServiceProviderType, buildAnalyticsOpts, formatBytes } from '../../../util/helpers'
+import { accountIsContentProviderType, buildAnalyticsOpts, formatBytes } from '../../../util/helpers'
 
 class AnalyticsTabStorage extends Component {
   constructor(props) {
@@ -68,10 +68,10 @@ class AnalyticsTabStorage extends Component {
   }
 
   render() {
-    const { serviceProviderAccount, filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
+    const { contentProviderAccount, filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
     const storageType = filters.get('storageType')
 
-    if(serviceProviderAccount) {
+    if(!contentProviderAccount) {
       return (
         <div className="text-center">
           <FormattedMessage id="portal.analytics.selectContentProviderAccount.text" />
@@ -101,6 +101,7 @@ class AnalyticsTabStorage extends Component {
 AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
+  contentProviderAccount: React.PropTypes.bool,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
   fetchAllCISIngestPoints: React.PropTypes.func,
   fetchAllGroups: React.PropTypes.func,
@@ -111,8 +112,7 @@ AnalyticsTabStorage.propTypes = {
   location: React.PropTypes.object,
   lowStorage: React.PropTypes.number,
   params: React.PropTypes.object,
-  peakStorage: React.PropTypes.number,
-  serviceProviderAccount: React.PropTypes.bool
+  peakStorage: React.PropTypes.number
 }
 
 AnalyticsTabStorage.defaultProps = {
@@ -140,7 +140,7 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
     lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     dataForChart: getDataForStorageAnalysisChart(state, { account, group, storage }, storageType),
     groups: getGroupsByAccount(state, account),
-    serviceProviderAccount: accountIsServiceProviderType(activeAccount)
+    contentProviderAccount: accountIsContentProviderType(activeAccount)
   }
 }
 
