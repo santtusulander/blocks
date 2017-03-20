@@ -477,14 +477,23 @@ export function userHasRole(user, roleToFind) {
 }
 
 export function accountIsServiceProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
 }
 
 export function accountIsContentProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
 export function accountIsCloudProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
 }
 
