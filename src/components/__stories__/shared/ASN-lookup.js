@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../theme-wrap'
-import ASNLookup from '../../shared/ASN-lookup'
+import AsnLookup from '../../shared/asn-lookup'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)
@@ -19,5 +19,5 @@ storiesOf('ASN-lookup', module)
     </ThemeWrap>
   ))
   .add('ASN', () => (
-      <ASNLookup />
+      <AsnLookup />
   ));

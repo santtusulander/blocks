@@ -48,4 +48,4 @@ import './storage/file-upload-status-item'
 import './button-dropdown'
 
 //shared
-import './shared/ASN-lookup'
+import './shared/asn-lookup'

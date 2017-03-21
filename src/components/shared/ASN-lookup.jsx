@@ -1,16 +1,33 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
+
+import * as asnActionCreators from '../../redux/modules/asn'
 
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
 
 
-class ASNLookup extends Component {
+class AsnLookup extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      options: []
+    }
+  }
+
+  componentWillMount() {
+    console.log('this.props',this.props)
+    this.props.asnActions.fetchAsns({filterBy: 'asn', filterValue: '4' })
+  }
+
   render() {
     return (
       <form>
         <Field
           required={false}
-          name="ASNLookup"
+          name="AsnLookup"
           allowNew={true}
           component={FieldFormGroupTypeahead}
           multiple={true}
@@ -23,13 +40,19 @@ class ASNLookup extends Component {
 }
 
 
-ASNLookup.displayName = 'ASNLookup'
-ASNLookup.propTypes = {
-
+AsnLookup.displayName = 'AsnLookup'
+AsnLookup.propTypes = {
+  asnActions: PropTypes.object
 }
 
 const form = reduxForm({
-  form: 'ASNLookup'
-})(ASNLookup)
+  form: 'AsnLookup'
+})(AsnLookup)
 
-module.exports = form
+function mapDispatchToProps(dispatch) {
+  return {
+    asnActions: bindActionCreators(asnActionCreators, dispatch)
+  }
+}
+
+export default connect(mapDispatchToProps)(form)
