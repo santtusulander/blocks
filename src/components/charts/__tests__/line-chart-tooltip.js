@@ -8,6 +8,7 @@ jest.mock('../../../util/helpers', () => ({ formatBytes: bytes => bytes, formatU
 
 const subject = shallow(
   <Tooltip
+    iconClassNamePicker={jest.fn()}
     payload={[
       { name: 'aa', value: 1000, timestamp: 1484139959 },
       { name: 'bb', value: 1000, timestamp: 1484139959 }
