@@ -36,7 +36,7 @@ import checkPermissions, { getLocationPermissions } from '../../util/permissions
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-export class Groups extends React.Component {
+export class Account extends React.Component {
   constructor(props) {
     super(props)
 
@@ -224,8 +224,8 @@ export class Groups extends React.Component {
   }
 }
 
-Groups.displayName = 'Groups'
-Groups.propTypes = {
+Account.displayName = 'Account'
+Account.propTypes = {
   accountManagementModal: React.PropTypes.string,
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
@@ -248,7 +248,7 @@ Groups.propTypes = {
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
-Groups.defaultProps = {
+Account.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
   dailyTraffic: Immutable.List(),
@@ -259,7 +259,7 @@ Groups.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
     activeAccount: state.account.get('activeAccount'),
@@ -277,7 +277,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+const mapDispatchToProps = (dispatch, ownProps) => {
   const {brand, account} = ownProps.params
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
@@ -307,4 +307,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Groups));
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Account));
