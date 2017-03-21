@@ -18,6 +18,26 @@
 
   .tooltip-item {
     @extend %legend-item;
+    position: relative;
+    display: block;
     padding: 0 8px;
+    margin-left: 10px;
+
+    .tooltip-item-date {
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .legend {
+      display: flex;
+      margin-bottom: 10px;
+      justify-content: space-between;
+
+      .legend-icon {
+        position: absolute;
+        left: -10px;
+      }
+    }
+
   }
 }
