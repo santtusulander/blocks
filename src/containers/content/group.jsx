@@ -31,7 +31,7 @@ import checkPermissions, {getStoragePermissions} from '../../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
-export class Hosts extends React.Component {
+export class Group extends React.Component {
   constructor(props) {
     super(props);
 
@@ -83,10 +83,12 @@ export class Hosts extends React.Component {
 
     return (
       <ContentItems
-        activeAccount={this.props.activeAccount}
+        activeAccount={activeAccount}
         activeGroup={activeGroup}
         brand={brand}
+        group={group}
         params={params}
+
         className="hosts-container"
 
         storages={this.props.storages}
@@ -96,7 +98,6 @@ export class Hosts extends React.Component {
         deleteItem={this.deleteHost}
         fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        group={group}
         headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
         ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
         // TODO: We need to use published_hosts permissions from the north API
@@ -117,8 +118,8 @@ export class Hosts extends React.Component {
   }
 }
 
-Hosts.displayName = 'Hosts'
-Hosts.propTypes = {
+Group.displayName = 'Group'
+Group.propTypes = {
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   fetchGroupData: React.PropTypes.func,
@@ -136,7 +137,7 @@ Hosts.propTypes = {
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
-Hosts.defaultProps = {
+Group.defaultProps = {
   activeAccount: Immutable.Map(),
   activeGroup: Immutable.Map(),
   roles: Immutable.List(),
@@ -198,4 +199,4 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Hosts));
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Group));
