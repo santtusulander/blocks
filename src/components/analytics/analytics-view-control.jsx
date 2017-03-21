@@ -19,7 +19,8 @@ const AnalyticsViewControl = (props) => {
   const {
     account,
     group,
-    property
+    property,
+    storage
   } = props.params
 
   const tabs = [
@@ -77,13 +78,13 @@ const AnalyticsViewControl = (props) => {
     },
     {
       key: 'storage',
-      label: 'storage',
-      hideHierarchy: true,
+      label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.storageTitle'}),
+      hideForProperty: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE,
       titles: {
-        property: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.propertyTitle'}),
-        group: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.groupTitle'}),
-        account: props.intl.formatMessage({id: 'portal.analytics.tabs.serviceProviders.accountTitle'})
+        storage: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.storageTitle'}),
+        group: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.groupTitle'}),
+        account: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.accountTitle'})
       }
     },
     {
@@ -127,6 +128,9 @@ const AnalyticsViewControl = (props) => {
     if(active) {
       if(active.hideHierarchy) {
         title = active.label
+      }
+      else if(storage) {
+        title = active.titles.storage
       }
       else if(property) {
         title = active.titles.property
@@ -186,6 +190,9 @@ const AnalyticsViewControl = (props) => {
             if (active) {
               let tab = active.key
               if(active.propertyOnly && params[0] !== 'property') {
+                tab = ''
+              }
+              if(active.hideForProperty && params[0] === 'property') {
                 tab = ''
               }
               url = `${url}/${tab}`
