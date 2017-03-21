@@ -26,6 +26,7 @@ import checkPermissions from '../util/permissions'
 import {getStoragePermissions} from '../util/permissions'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
+import { getAnalyticsUrlFromParams } from '../util/routes'
 
 export class Hosts extends React.Component {
   constructor(props) {
@@ -125,7 +126,11 @@ export class Hosts extends React.Component {
         storagePermission={storagePermission}
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
-        hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
+        hideInfoDialog={this.props.uiActions.hideInfoDialog}
+
+        showAnalyticsLink={true}
+        analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, user, roles)}
+      />
     )
   }
 }
