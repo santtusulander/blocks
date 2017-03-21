@@ -47,6 +47,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     this.addRule = this.addRule.bind(this)
     this.editRule = this.editRule.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
+    this.handleSave = this.handleSave.bind(this)
   }
 
   addRule() {
@@ -67,6 +68,17 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     */
   }
 
+  handleSave(e) {
+    /*
+      TODO: UDNP-3108 - Integrate Global Traffic form with Redux
+
+      Please note - we should use existing approach of saving configuration
+                    like in other Configuragion tabs.
+    */
+    e.preventDefault()
+    this.props.saveChanges()
+  }
+
   render() {
     const { config, intl, isFormDisabled, initialValues, readOnly } = this.props
 
@@ -77,8 +89,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
     }
 
     return (
-      <div className="configuration-gtm">
-
+      <form className="configuration-gtm" onSubmit={this.handleSave}>
         {/* ENABLE GTM */}
         <SectionContainer>
           <Row>
@@ -226,7 +237,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
             deleteRule={this.deleteRule}
           />
         </SectionContainer>
-      </div>
+      </form>
     )
   }
 }
@@ -237,6 +248,7 @@ ConfigurationGlobalTrafficManager.propTypes = {
   gtmToggleState: PropTypes.bool,
   intl: intlShape.isRequired,
   readOnly: React.PropTypes.bool,
+  saveChanges: React.PropTypes.func,
   ...reduxFormPropTypes
 }
 
@@ -249,7 +261,10 @@ const mapStateToProps = (state) => {
   const GTMToggle = selector(state, 'GTMToggle')
 
   /*
-    TODO: UDNP-3088 - Rules section
+    TODO: UDNP-3108 - Integrate Global Traffic form with Redux
+
+    Please note - we should use existing approach of saving configuration
+                  like in other Configuragion tabs.
   */
   return {
     isFormDisabled: !GTMToggle,
