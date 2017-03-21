@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
 import ThemeWrap from '../theme-wrap'
-import AsnLookup from '../../shared/asn-lookup'
+import AsnLookup from '../../form/field-form-group-asn-lookup'
 
 const stateReducer = combineReducers({ form: formReducer })
 const store = createStore(stateReducer)

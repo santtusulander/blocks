@@ -25,7 +25,7 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 
 import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
-import AsnLookup from '../../../components/shared/asn-lookup'
+import AsnLookup from '../../../components/form/field-form-group-asn-lookup'
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
 class AccountManagementAccountGroups extends React.Component {
