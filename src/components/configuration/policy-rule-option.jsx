@@ -24,7 +24,7 @@ const PolicyRuleOption = ({ checkIfEnabled, onClick, option, policyType }) => {
     return null
   }
 
-  const isEnabled = checkIfEnabled ? (checkIfEnabled(key) && !notYetImplemented) : true
+  const isEnabled = checkIfEnabled ? (checkIfEnabled(key) && !notYetImplemented) : !notYetImplemented
   const className = classNames({
     inactive: !isEnabled
   })
