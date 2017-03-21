@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import HelpTooltip from '../help-tooltip'
 import Confirmation from '../confirmation'
 import ActionButtons from '../../components/action-buttons'
 
@@ -83,7 +84,14 @@ class ConfigurationGTMTrafficRules extends React.Component {
     return (
       <tr key={policy + i}>
         <td>{policy.get('rule_name')}</td>
-        <td>{matchLabel}</td>
+        <td>
+          <HelpTooltip
+            id='gtm-match-tooltip'
+            buttonText={matchLabel}
+            title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
+            {matchLabel}
+          </HelpTooltip>
+        </td>
         <td>{actionsLabel}</td>
         <td className="nowrap-column">
           {actionButtons}
