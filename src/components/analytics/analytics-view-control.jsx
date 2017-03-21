@@ -189,10 +189,8 @@ const AnalyticsViewControl = (props) => {
             let url = getAnalyticsUrl(...params)
             if (active) {
               let tab = active.key
-              if(active.propertyOnly && params[0] !== 'property') {
-                tab = ''
-              }
-              if(active.hideForProperty && params[0] === 'property') {
+              if((active.propertyOnly && params[0] !== 'property') ||
+              (active.hideForProperty && params[0] === 'property')) {
                 tab = ''
               }
               url = `${url}/${tab}`

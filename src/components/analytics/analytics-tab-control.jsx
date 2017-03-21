@@ -42,6 +42,7 @@ const AnalyticsTabControl = (props) => {
     {
       key: 'storage',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.label'}),
+      hideForProperty: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE
     },
     {
