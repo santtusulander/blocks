@@ -17,6 +17,7 @@ import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import IsAllowed from '../../../components/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
+import * as groupActionCreators from '../../../redux/modules/group'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
@@ -61,13 +62,16 @@ class AccountManagementStorages extends Component {
     const accountId = account.get('id')
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
 
-
     this.props.groups.map( group => {
       const groupId = group.get('id')
 
       this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
+
+    if (!this.props.group && this.props.params.group) {
+      this.props.fetchGroup(this.props.params)
+    }
 
     this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
     this.props.fetchClusters({})
@@ -290,6 +294,7 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetchGroupsMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -328,15 +333,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-
+  const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
     deleteStorage: (params) => dispatch( storageActions.remove(params)),
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params))
-
+    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
+    fetchGroup: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group)
   };
 }
 
