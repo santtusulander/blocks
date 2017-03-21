@@ -35,14 +35,14 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
   const { changeValue, formatMessage, activateSet, activateMatch, cancelActiveEditForm } = actions
 
   const saveAction = (path, key, data) => {
-    if(path) {
+    if (path) {
       changeValue(path, fromJS({[key]: data}))
       activateSet(null)
     }
   }
 
   let activeEditForm = null
-  if(matchPath) {
+  if (matchPath) {
     const activeMatch = config.getIn(matchPath)
     const matcherProps = {
       changeValue: changeValue,
@@ -156,7 +156,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       // <ConfigurationMatchIpAddress {...matcherProps}/>
     }
   }
-  if(setPath) {
+  if (setPath) {
     const activeSet = config.getIn(setPath)
     let setKey = activeSet.keySeq().first()
 

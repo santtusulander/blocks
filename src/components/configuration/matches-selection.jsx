@@ -27,10 +27,10 @@ class MatchesSelection extends React.Component {
   }
 
   setMatchFieldForFileExtension() {
+    const { path, rule } = this.props
+
     return e => {
       e.preventDefault()
-      const rule = this.props.rule
-      const path = this.props.path
       const match = Immutable.fromJS({
         value: FILE_EXTENSION_DEFAULT_CASE,
         field: 'request_url'

@@ -33,10 +33,10 @@ class Cache extends React.Component {
     }
 
     this.state = {
-      checkEtag: setKey.get('check_etag') || 'false',
-      honorOrigin: setKey.get('honor_origin') || false,
+      checkEtag: setKey.get('check_etag', 'false'),
+      honorOrigin: setKey.get('honor_origin', false),
       maxAge: maxAge,
-      noStore: setKey.get('no_store') || false,
+      noStore: setKey.get('no_store', false),
       ttlType: ttlType
     }
 

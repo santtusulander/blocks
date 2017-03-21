@@ -21,7 +21,7 @@ class Matcher extends React.Component {
     this.state = {
       activeFilter: getMatchFilterType(props.match),
       containsVal: containsVal,
-      val: fieldDetail ? fieldDetail : value
+      val: fieldDetail || value
     }
 
     this.handleValChange = this.handleValChange.bind(this)
@@ -40,7 +40,7 @@ class Matcher extends React.Component {
       this.setState({
         activeFilter: getMatchFilterType(nextProps.match),
         containsVal: containsVal,
-        val: fieldDetail ? fieldDetail : value
+        val: fieldDetail || value
       })
     }
   }
