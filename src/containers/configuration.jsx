@@ -370,12 +370,6 @@ export class Configuration extends React.Component {
             </li>
           }
 
-          <li data-eventKey='gtm'>
-            <Link to={baseUrl + '/gtm'} activeClassName="active">
-            <FormattedMessage id="portal.configuration.gtm.text" />
-            </Link>
-          </li>
-
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
