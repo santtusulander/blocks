@@ -8,31 +8,31 @@ import {
   getAnalyticsUrlFromParams,
   getContentUrl,
   getNetworkUrl
-} from '../util/routes.js'
+} from '../../util/routes.js'
 import {
   accountIsServiceProviderType,
   userIsServiceProvider
-} from '../util/helpers.js'
+} from '../../util/helpers.js'
 
 import {
   DELETE_GROUP
-} from '../constants/account-management-modals.js'
+} from '../../constants/account-management-modals.js'
 
-import { fetchUsers, updateUser } from '../redux/modules/user'
-import * as accountActionCreators from '../redux/modules/account'
-import { clearFetchedHosts } from '../redux/modules/host'
-import * as groupActionCreators from '../redux/modules/group'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as uiActionCreators from '../redux/modules/ui'
-import PROVIDER_TYPES from '../constants/provider-types'
+import { fetchUsers, updateUser } from '../../redux/modules/user'
+import * as accountActionCreators from '../../redux/modules/account'
+import { clearFetchedHosts } from '../../redux/modules/host'
+import * as groupActionCreators from '../../redux/modules/group'
+import * as metricsActionCreators from '../../redux/modules/metrics'
+import * as uiActionCreators from '../../redux/modules/ui'
+import PROVIDER_TYPES from '../../constants/provider-types'
 
-import Content from '../components/layout/content'
-import ModalWindow from '../components/modal'
-import ContentItems from '../components/content/content-items'
+import Content from '../../components/layout/content'
+import ModalWindow from '../../components/modal'
+import ContentItems from '../../components/content/content-items'
 
-import * as PERMISSIONS from '../constants/permissions'
-import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
-import checkPermissions, { getLocationPermissions } from '../util/permissions'
+import * as PERMISSIONS from '../../constants/permissions'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+import checkPermissions, { getLocationPermissions } from '../../util/permissions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
