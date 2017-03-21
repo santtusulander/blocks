@@ -484,7 +484,7 @@ class ContentItems extends React.Component {
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
                 { /* STORAGES -header on List view */
-                  this.getTier() === 'group' && !viewingChart &&
+                  this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
 

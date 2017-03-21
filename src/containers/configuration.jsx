@@ -13,6 +13,8 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
+
+import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
@@ -251,7 +253,7 @@ export class Configuration extends React.Component {
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
+    const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
     if(this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
@@ -433,7 +435,7 @@ export class Configuration extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           onSubmit={() =>
-            deleteHost(brand, account, group, this.props.activeHost)
+            deleteProperty(brand, account, group, activeHost.get('published_host_id'))
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}
           invalid={true}
           verifyDelete={true}>
@@ -487,6 +489,7 @@ Configuration.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  deleteProperty: React.PropTypes.func,
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
@@ -553,6 +556,7 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
     fetchStorage : (brand, account, group) => dispatch(storageActions.fetchAll({ brand, account, group }))
   };
 }
