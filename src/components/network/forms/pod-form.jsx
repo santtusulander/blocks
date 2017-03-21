@@ -345,9 +345,10 @@ const PodForm = ({
         }/>
 
       <Field
-        name="UISaltRoles"
+        name="UISaltRole"
+        className="input-select"
         component={FieldFormGroupSelect}
-        options={SALT_ROLE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        options={SALT_ROLE_OPTIONS.map(({value, label}) => ({ value, label: intl.formatMessage({id: label}) }))}
         label={<FormattedMessage id="portal.network.podForm.saltRole.label" />}
       />
 

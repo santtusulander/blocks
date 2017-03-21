@@ -31,7 +31,7 @@ export const pod = new schema.Entity('pods', {
       UIsp_bgp_router_as: sp_bgp_router_as,
       UIsp_bgp_router_ip: sp_bgp_router_ip,
       UIsp_bgp_router_password: sp_bgp_router_password,
-      UISaltRoles: salt_roles,
+      UISaltRole: salt_roles[0],
 
       ...value
     }
