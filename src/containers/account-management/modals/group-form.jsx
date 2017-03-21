@@ -8,7 +8,6 @@ import { Button } from 'react-bootstrap'
 import * as hostActionCreators from '../../../redux/modules/host'
 import * as uiActionCreators from '../../../redux/modules/ui'
 import { fetchAll as serviceInfofetchAll } from '../../../redux/modules/service-info/actions'
-import propertyActions from '../../../redux/modules/entities/properties/actions'
 
 import locationActions from '../../../redux/modules/entities/locations/actions'
 import { getByGroup as getLocationsByGroup } from '../../../redux/modules/entities/locations/selectors'
@@ -166,11 +165,11 @@ class GroupFormContainer extends React.Component {
       host
     )
       .then(() => {
-        this.props.deleteProperty(
+        hostActions.deleteHost(
           brand,
           accountId,
           groupId,
-          this.props.activeHost.get('published_host_id')
+          this.props.activeHost
         )
           .then(res => {
             this.setState({ hostToDelete: null })
@@ -329,7 +328,6 @@ GroupFormContainer.propTypes = {
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
-  deleteProperty: PropTypes.func,
   fetchLocations: PropTypes.func,
   fetchNetworks: PropTypes.func,
   fetchServiceInfo: PropTypes.func,
@@ -402,7 +400,6 @@ const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
   return {
     fetchLocations: (group) => group && dispatch(locationActions.fetchAll({ brand, account, group })),
     fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
-    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
