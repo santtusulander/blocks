@@ -28,6 +28,7 @@ import * as PERMISSIONS from '../../constants/permissions'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
 import checkPermissions, {getStoragePermissions} from '../../util/permissions'
+import { getAnalyticsUrlFromParams } from '../../util/routes'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
 
@@ -113,7 +114,11 @@ export class Group extends React.Component {
         storagePermission={storagePermission}
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
-        hideInfoDialog={this.props.uiActions.hideInfoDialog}/>
+        hideInfoDialog={this.props.uiActions.hideInfoDialog}
+        
+        showAnalyticsLink={true}
+        analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, user, roles)}
+      />
     )
   }
 }
