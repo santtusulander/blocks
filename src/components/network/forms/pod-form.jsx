@@ -49,7 +49,7 @@ import IconClose from '../../icons/icon-close'
 import IsAllowed from '../../is-allowed'
 
 const validate = (values) => {
-  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList } = values
+  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList, UISaltRole } = values
   const IPList = UIIpList.map(address => address.label)
   const conditions = {
     UIName: {
@@ -80,7 +80,8 @@ const validate = (values) => {
       UIDiscoveryMethod,
       UILocalAS,
       UIFootprints,
-      UIIpList
+      UIIpList,
+      UISaltRole
     },
     conditions,
     {
@@ -91,7 +92,8 @@ const validate = (values) => {
       UIProviderWeight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
       UIDiscoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
       UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>,
-      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>
+      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>,
+      UISaltRole: <FormattedMessage id="portal.network.podForm.saltRole.required.error"/>
     }
   )
 
