@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl'
 import {
   getAnalyticsUrl,
   getAnalyticsUrlFromParams,
-  getNetworkUrl,
   getContentUrl
 } from '../../util/routes.js'
 import { getRoute } from '../../util/routes'
@@ -81,7 +80,7 @@ class BreadcrumbsItem extends React.Component {
 
   updateLinks(props) {
     let links = []
-    const { pathname, params, activeGroup } = props
+    const { pathname, params } = props
     const { roles, user, router } = this.props
 
     if (router.isActive(getRoute('content'))) {
@@ -148,41 +147,7 @@ class BreadcrumbsItem extends React.Component {
     } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
       links.push( {label:  'Configuration'} )
     } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
-      // Link to POD
-      if (params.pod) {
-        links.push({
-          label:  params.pod,
-          url: getNetworkUrl('pod', params.pod, params)
-        })
-      }
-
-      // Link to POP
-      if (params.pop) {
-        links.push({
-          label:  params.pop,
-          url: getNetworkUrl('pop', params.pop, params)
-        })
-      }
-
-      // Link to Network
-      if (params.network) {
-        links.push({
-          label:  params.network,
-          url: getNetworkUrl('network', params.network, params)
-        })
-      }
-
-      // Link to Group
-      if (params.group && (activeGroup && (activeGroup.get('id') == params.group))) {
-        links.push({
-          label: activeGroup.get('name'),
-          url: getNetworkUrl('group', params.group, params)
-        })
-      }
-
-      // Label with the page name
       links.push( {label:  'Network'} )
-
     } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
       links.push( {label:  'Dashboard'} )
     }

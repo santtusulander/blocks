@@ -45,7 +45,7 @@ export function createFailure(state) {
 
 export function deleteSuccess(state, action) {
   const allHosts = state.get('allHosts')
-    .filterNot(property => property.get('published_host_id') === action.payload.get('published_host_id'))
+    .filterNot(property => property === action.payload.get('published_host_id'))
   const configuredHostNames = state.get('configuredHostNames')
     .filterNot(property => property === getConfiguredName(action.payload))
   return state.merge({
