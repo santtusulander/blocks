@@ -7,14 +7,8 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 import {
-  getScriptLua,
-  matchIsContentTargeting,
   actionIsTokenAuth,
-  parsePolicy,
-  parseCountriesByResponseCodes,
-  ALLOW_RESPONSE_CODES,
-  DENY_RESPONSE_CODES,
-  REDIRECT_RESPONSE_CODES
+  parsePolicy
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
@@ -76,43 +70,17 @@ class ConfigurationPolicyRules extends React.Component {
     }
   }
   render() {
-    const policyMapper = type => (policy, i) => {
-      if(!policy.has('match')) {
-        return null
-      }
-
-      const {matches, sets} = parsePolicy(policy, [])
-
-      /* Check if matches have content targeting and show 'friendly labels' (list of countries by action) */
-      let matchLabel = ''
-      let actionsLabel = ''
-      if ( matchIsContentTargeting(policy.get('match') )) {
-        matchLabel = this.props.intl.formatMessage({id: 'portal.configuration.policies.contentTargeting.text'})
-        actionsLabel = ''
-
-        const scriptLua = getScriptLua( policy )
-
-        const allowCountries = parseCountriesByResponseCodes( scriptLua, ALLOW_RESPONSE_CODES)
-        const denyCountries = parseCountriesByResponseCodes( scriptLua, DENY_RESPONSE_CODES)
-        const redirectCountries = parseCountriesByResponseCodes( scriptLua, REDIRECT_RESPONSE_CODES)
-
-        let ctActionLabels = []
-        if ( allowCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.allow.text'})}: ${allowCountries.join(', ')}` )
-        if ( denyCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.deny.text'})}: ${denyCountries.join(', ')}` )
-        if ( redirectCountries.length ) ctActionLabels.push( `${this.props.intl.formatMessage({id: 'portal.configuration.policies.redirect.text'})}: ${redirectCountries.join(', ')}` )
-
-        actionsLabel = ctActionLabels.join(' | ')
-
-      } else {
-        matchLabel = matches.map(match => match.field).join(', ')
-        actionsLabel = sets.map(set => set.setkey).join(', ')
-      }
+    const policyMapper = type => (rule, i) => {
+      const { matches, sets } = parsePolicy(rule, [])
+      const matchLabel = matches.map(match => match.field).join(', ')
+      const actionsLabel = sets.map(set => set.setkey).join(', ')
 
       {/*
         TODO: remove UDN admin checks as part of UDNP-1713
         Allow CT / TA modification only for UDN Admin
       */}
-      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
+      //const ruleNeedsAdmin = matchIsContentTargeting(firstPolicy.get('match')) || actionIsTokenAuth(sets)
+      const ruleNeedsAdmin = actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -121,8 +89,8 @@ class ConfigurationPolicyRules extends React.Component {
       )
 
       return (
-        <tr key={policy + i}>
-          <td>{policy.get('rule_name')}</td>
+        <tr key={rule + i}>
+          <td>{rule.get('rule_name')}</td>
           <td className="text-right">{type}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>

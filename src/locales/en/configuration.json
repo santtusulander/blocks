@@ -166,5 +166,8 @@
   "portal.configurationList.by.text": "By",
   "portal.configurationList.status.text": "Status",
   "portal.configurationList.activeVersion.text": "Active Version",
-  "portal.configurationList.belongsTo.text": "Belongs to"
+  "portal.configurationList.belongsTo.text": "Belongs to",
+
+  "portal.policy.edit.policies.matchType.action.all": "ALL conditions match",
+  "portal.policy.edit.policies.matchType.action.any": "ANY conditions match"
 }

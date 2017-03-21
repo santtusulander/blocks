@@ -11,7 +11,8 @@ import { secondsToUnit, secondsFromUnit } from '../helpers'
 class Cache extends React.Component {
   constructor(props) {
     super(props)
-    let maxAge = props.set.get('max_age')
+    const setKey = props.set
+    let maxAge = setKey.get('max_age')
 
     if (!maxAge) {
       maxAge = secondsFromUnit(7, 'days')
@@ -32,10 +33,10 @@ class Cache extends React.Component {
     }
 
     this.state = {
-      checkEtag: props.set.get('check_etag') || 'false',
-      honorOrigin: props.set.get('honor_origin') || false,
+      checkEtag: setKey.get('check_etag') || 'false',
+      honorOrigin: setKey.get('honor_origin') || false,
       maxAge: maxAge,
-      noStore: props.set.get('no_store') || false,
+      noStore: setKey.get('no_store') || false,
       ttlType: ttlType
     }
 
@@ -84,16 +85,12 @@ class Cache extends React.Component {
     return maxAge;
   }
   saveChanges() {
-    this.props.changeValue(
-      this.props.path,
-      this.props.set.merge({
-        check_etag: this.state.checkEtag,
-        max_age: this.getMaxAge(),
-        no_store: this.state.noStore,
-        honor_origin: this.state.honorOrigin
-      })
-    )
-    this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, {
+      check_etag: this.state.checkEtag,
+      max_age: this.getMaxAge(),
+      no_store: this.state.noStore,
+      honor_origin: this.state.honorOrigin
+    })
   }
   render() {
     return (

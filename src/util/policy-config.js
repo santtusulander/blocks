@@ -4,18 +4,10 @@ import Immutable, { fromJS } from 'immutable'
 
 import { flatten } from '../util/helpers'
 import {
-  POLICY_TYPES,
-  DEFAULT_MATCH
+  POLICY_TYPES
 } from '../constants/property-config'
 
 import { TOKEN_AUTH_STREAMING } from '../constants/configuration'
-
-export const matchFilterChildPaths = {
-  'exists': ['cases', 0, 1],
-  'contains': ['cases', 0, 1],
-  'does_not_exist': ['default'],
-  'does_not_contain': ['cases', 1, 1]
-}
 
 export const ALLOW_RESPONSE_CODES = [200]
 export const DENY_RESPONSE_CODES = [401,404,500]
@@ -33,17 +25,25 @@ export const FILE_EXTENSION_CASE_START = '(.*)\\\\.('
 export const FILE_EXTENSION_CASE_END = ')'
 export const FILE_EXTENSION_DEFAULT_CASE = FILE_EXTENSION_CASE_START + FILE_EXTENSION_CASE_END
 
-export function getMatchFilterType(match) {
-  if(!match.get('field_detail')) {
-    return match.get('default') ? 'does_not_exist' : 'exists'
+//"equals | substr | exists | empty | in | regexp"
+export function getMatchFilterType(item) {
+  if(item.get('type') === 'exists') {
+    return item.get('inverted') ? 'does_not_exist' : 'exists'
   }
-  if(match.get('default')) {
-    return 'does_not_exist'
+
+  if(item.get('type') === 'in') {
+    return item.get('inverted') ? 'does_not_contain' : 'contains'
   }
-  if(match.get('cases').size > 1) {
-    return 'does_not_contain'
+
+  if(item.get('type') === 'equals') {
+    return item.get('inverted') ? 'does_not_equals' : 'equals'
   }
-  return match.getIn(['cases', 0, 0]) === '.*' ? 'exists' : 'contains'
+
+  if(item.get('type') === 'empty') {
+    return item.get('inverted') ? 'does_not_empty' : 'empty'
+  }
+
+  throw new Error('Unexpected condition type')
 }
 
 export function policyContainsMatchField(policy, field, count) {
@@ -52,11 +52,11 @@ export function policyContainsMatchField(policy, field, count) {
 }
 
 export function policyIsCompatibleWithMatch(policy, match) {
-  switch (match) {
-    case 'content_targeting':
-      return policy.matches.length === 1
-              && policy.sets.length === 0
-  }
+  // switch (match) {
+  //   case 'content_targeting':
+  //     return policy.matches.length === 1
+  //             && policy.sets.length === 0
+  // }
   return true
 }
 
@@ -66,10 +66,10 @@ export function policyIsCompatibleWithAction(policy, action) {
       return policy.matches.length === 1
               && policy.sets.length === 1
               && policyContainsMatchField(policy, 'request_url', 1)
-    case 'content_targeting':
-      return policy.matches.length === 1
-              && policy.sets.length >= 1
-              && policy.sets[0].path.indexOf('script_lua') !== -1
+    // case 'content_targeting':
+    //   return policy.matches.length === 1
+    //           && policy.sets.length >= 1
+    //           && policy.sets[0].path.indexOf('script_lua') !== -1
   }
   return true
 }
@@ -79,101 +79,50 @@ export function policyContainsSetComponent(policy, setComponent) {
   return sets.filter(set => set.get('setkey') === setComponent).count() > 0
 }
 
-export function matchIsContentTargeting(match) {
-  return !!(match.get('field') === 'request_host'
-          && match.getIn(["cases", 0, 1, 0, "script_lua"]))
-}
+// export function matchIsContentTargeting(match) {
+//   return !!(match.get('field') === 'request_host'
+//           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
+// }
 
 export function matchIsFileExtension(match) {
   return !!((match.get('field') === 'request_url' || match.get('field') === 'request_path')
-          && FILE_EXTENSION_REGEXP.test(match.getIn(["cases", 0, 0])))
+          && FILE_EXTENSION_REGEXP.test(match.get('value')))
 }
 
 export function actionIsTokenAuth(sets) {
   return sets.some( set => (set.setkey === 'tokenauth') )
 }
 
-export function parsePolicy(policy, path) {
-  // if this is a match
-  if(policy && policy.has('match')) {
-    const match = policy.get('match')
-    const fieldDetail = match.get('field_detail')
-    const caseKey = match.getIn(['cases', 0, 0])
-    const filterType = getMatchFilterType(match)
-    const childPath = matchFilterChildPaths[filterType]
-    let {matches, sets} = match.getIn(childPath).reduce((combinations, subcase, i) => {
-      // build up a path to the nested rules
-      const nextPath = path.concat(['match'], childPath, [i])
-      // recurse to parse the nested policy rules
-      const {matches, sets} = parsePolicy(subcase, nextPath)
-      // add any found matches / sets to the list
-      combinations.matches = combinations.matches.concat(matches)
-      combinations.sets = combinations.sets.concat(sets)
-      return combinations
-    }, {matches: [], sets: []})
-    // add info about this match to the list of matches
-    matches.push({
-      containsVal: fieldDetail ? caseKey : '',
-      field: match.get('field'),
-      fieldDetail: fieldDetail,
-      filterType: match.get('field') ? filterType : '',
-      values: match.get('cases').map(matchCase => matchCase.get(0)).toJS(),
-      path: path.concat(['match'])
-    })
-    return {
-      matches: matches,
-      sets: sets
-    }
-  }
-  // if this is a set
-  else if(policy && policy.has('set')) {
-    // sets are the deepest level, so just return data about the sets
-    return {
-      matches: [],
-      sets: policy.get('set').keySeq().toArray().map((key) => {
-        return {
-          setkey: key,
-          name: key,
-          path: path.concat(['set', key])
-        }
-      })
-    }
-  }
-  // if this is a content targeting "action"
-  else if (policy && policy.has('script_lua')) {
-    // we will search for actions in the following paths
-    // this is forward-thinking for when we eventually add city/state support
-    const searchPaths = [
-      // ['script_lua', 'target', 'geo', 0, 'city'],
-      // ['script_lua', 'target', 'geo', 0, 'state'],
-      ['script_lua', 'target', 'geo', 0, 'country']
-    ]
+const parseConditions = (items, path) => {
+  return items ? items.map((item, i) => ({
+    field: item.get('field'),
+    fieldDetail: item.get('field_detail'),
+    filterType: getMatchFilterType(item),
+    values: Array.isArray(item.get('value')) ? item.get('value') : [item.get('value')],
+    path: path.concat([i])
+  })).toJS() : []
+}
 
-    let sets = []
-
-    for (let searchPath of searchPaths) {
-      if (policy.getIn(searchPath)) {
-        const actions = policy.getIn(searchPath).toJS().map((action, index) => {
-          return {
-            setkey: index,
-            name: setContentTargetingActionName(action),
-            path: path.concat(searchPath).concat([index])
-          }
-        })
-        sets = sets.concat(actions)
-      }
-    }
+const parseActions = (items, path) => {
+  return items ? items.map((item, i) => {
+    const actionName = item.keySeq().toArray()[0]
 
     return {
-      matches: [],
-      sets
+      setkey: actionName,
+      name: actionName,
+      path: path.concat([i]),
+      _temp: item.get('_temp')
     }
-  }
-  else {
-    return {
-      matches: [],
-      sets: []
-    }
+  }).toJS() : []
+}
+
+export function parsePolicy(rule, path) {
+  const conditions = rule ? rule.get('rule_body').get('conditions') : Immutable.List()
+  const actions = rule ? rule.get('rule_body').get('actions') : Immutable.List()
+
+  return  {
+    matches: parseConditions(conditions, path.concat(['rule_body', 'conditions'])),
+    sets: parseActions(actions, path.concat(['rule_body', 'actions']))
   }
 }
 
@@ -299,5 +248,5 @@ export const getTokenAuthRules = (properties) => {
  * @return returns true if the rule at the given path is empty
  */
 export const isPolicyRuleEmpty = (config, rulePath) => {
-  return Immutable.is(config.getIn(rulePath).get('match'), DEFAULT_MATCH.get('match'))
+  return !!config.getIn(rulePath).get('rule_body').get('actions').size
 }

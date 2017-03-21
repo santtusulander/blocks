@@ -89,11 +89,12 @@ class Header extends React.Component {
         }])
       })
     }
-    this.props.changeValue(
-      this.props.path,
-      newSet
-    )
-    this.props.close()
+    // this.props.changeValue(
+    //   this.props.path,
+    //   newSet
+    // )
+    // this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, newSet)
   }
   render() {
 
