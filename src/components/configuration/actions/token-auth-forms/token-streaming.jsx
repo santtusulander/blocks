@@ -2,21 +2,41 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, change, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button } from 'react-bootstrap'
-import Immutable from 'immutable'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import HelpTooltip from '../../../help-tooltip'
-import FieldFormGroup from '../../../form/field-form-group'
+import FieldFormGroupNumber from '../../../form/field-form-group-number'
 import FieldFormGroupToggle from '../../../form/field-form-group-toggle'
 import FormFooterButtons from '../../../form/form-footer-buttons'
+import FieldFormGroupSelect from '../../../form/field-form-group-select'
 
-import { TOKEN_AUTH_STATIC, TOKEN_AUTH_STREAMING, TTL_DEFAULT } from '../../../../constants/configuration'
+import { 
+  TOKEN_AUTH_STATIC,
+  TOKEN_AUTH_STREAMING,
+  TTL_DEFAULT,
+  MIN_TTL,
+  MAX_TTL,
+  STREAMING_ENCRYPTION_OPTIONS,
+  STREAMING_ENCRYPTION_DEFAULT
+} from '../../../../constants/configuration'
+
+const validate = ({ streamingEnabled, streaming_ttl }) => {
+  let errors = {}
+
+  if (streamingEnabled && (!streaming_ttl && streaming_ttl !== null)) {
+    errors.streaming_ttl = <FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.required.error" />
+  }
+
+  return errors
+}
 
 export class TokenStreaming extends React.Component {
   constructor(props) {
     super(props)
 
+    this.ttlTimeout = null
+    this.setDefaultTtl = this.setDefaultTtl.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
   }
 
@@ -24,6 +44,11 @@ export class TokenStreaming extends React.Component {
     this.props.change('streamingEnabled', this.props.streamingEnabled)
     this.props.change('streaming_ttl', this.props.streaming_ttl)
     this.props.change('streaming_add_ip_addr', this.props.streaming_add_ip_addr)
+    this.props.change('streaming_encryption', this.props.streaming_encryption || STREAMING_ENCRYPTION_DEFAULT)
+  }
+
+  componentDidMount() {
+    this.ttlTimeout && clearTimeout(this.ttlTimeout)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -33,21 +58,33 @@ export class TokenStreaming extends React.Component {
       if ( !isStreamingEnabled ) {
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
+        this.props.change('streaming_encryption', null)
       } else {
-        this.props.change('streaming_ttl', TTL_DEFAULT)
+        this.setDefaultTtl()
+        this.props.change('streaming_encryption', STREAMING_ENCRYPTION_DEFAULT)
       }
     }
   }
 
-  saveChanges({ streaming_ttl, streaming_add_ip_addr }) {
+  setDefaultTtl() {
+    // This is hack to set default value for the field
+    // that is enabled by another option. Seems like redux-form API issue.
+    // TODO: UDNP-3073 - Investigate issue in redux-form 'change' API
+    this.ttlTimeout = setTimeout(() => {
+      this.props.change('streaming_ttl', TTL_DEFAULT)
+    }, 5)
+  }
+
+  saveChanges({ streaming_ttl, streaming_add_ip_addr, streaming_encryption }) {
     this.props.dispatch(change('token-auth-form', 'type', this.props.isStreamingEnabled ? TOKEN_AUTH_STREAMING : TOKEN_AUTH_STATIC))
     this.props.dispatch(change('token-auth-form', 'streaming_ttl', streaming_ttl))
     this.props.dispatch(change('token-auth-form', 'streaming_add_ip_addr', streaming_add_ip_addr))
+    this.props.dispatch(change('token-auth-form', 'streaming_encryption', streaming_encryption))
     this.props.close()
   }
 
   render() {
-    const { close, handleSubmit, isStreamingEnabled } = this.props
+    const { close, handleSubmit, isStreamingEnabled, invalid } = this.props
 
     return (
       <div>
@@ -55,20 +92,29 @@ export class TokenStreaming extends React.Component {
           className="token-streaming-form"
           onSubmit={handleSubmit(this.saveChanges)}
         >
-          <div className="flex-row options-item">
+          <div className="flex-row options-item toggle-box">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.streaming_toggle.text" />
             </div>
             <Field
               name="streamingEnabled"
-              className="flex-item pull-right"
+              className="flex-item pull-right toggle-item"
               component={FieldFormGroupToggle}
             />
           </div>
 
           <hr/>
-          
-          <div className="flex-row options-item">
+
+          <Field
+            name="streaming_encryption"
+            className="input-select"
+            component={FieldFormGroupSelect}
+            options={STREAMING_ENCRYPTION_OPTIONS}
+            label={<FormattedMessage id="portal.policy.edit.tokenauth.hash_function.text" />}
+            disabled={!isStreamingEnabled}
+          />
+
+          <div className="flex-row options-item toggle-box">
             <div className="flex-item options-item--name">
               <FormattedMessage id="portal.policy.edit.tokenauth.check_client_ip.text" />
               <span className="tooltip-help">
@@ -83,7 +129,7 @@ export class TokenStreaming extends React.Component {
             <Field
               name="streaming_add_ip_addr"
               component={FieldFormGroupToggle}
-              className="flex-item pull-right"
+              className="flex-item pull-right toggle-item"
               readonly={!isStreamingEnabled}
             />
           </div>
@@ -91,11 +137,13 @@ export class TokenStreaming extends React.Component {
           <br/>
 
           <Field
-            type="number"
             name="streaming_ttl"
             disabled={!isStreamingEnabled}
-            component={FieldFormGroup}
+            component={FieldFormGroupNumber}
             label={<FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.text" />}
+            min={MIN_TTL}
+            max={MAX_TTL}
+            normalize={value => Number(value)}
           />
 
           <FormFooterButtons>
@@ -110,7 +158,7 @@ export class TokenStreaming extends React.Component {
             <Button
               type="submit"
               bsStyle="primary"
-              disabled={false}
+              disabled={invalid}
             >
               <FormattedMessage id="portal.button.save"/>
             </Button>
@@ -124,12 +172,20 @@ export class TokenStreaming extends React.Component {
 TokenStreaming.displayName = 'TokenStreaming'
 TokenStreaming.propTypes = {
   close: React.PropTypes.func,
-  schema: React.PropTypes.instanceOf(Immutable.List),
+  streamingEnabled: React.PropTypes.bool,
+  streaming_add_ip_addr: React.PropTypes.bool,
+  streaming_encryption: React.PropTypes.string,
   ...reduxFormPropTypes
 }
 
+TokenStreaming.defaultProps = {
+  streamingEnabled: false,
+  streaming_add_ip_addr: false
+}
+
 const form = reduxForm({
-  form: 'token-streaming-form'
+  form: 'token-streaming-form',
+  validate
 })(TokenStreaming)
 
 const selector = formValueSelector('token-auth-form')
@@ -139,5 +195,6 @@ export default connect(state => ({
   isStreamingEnabled: selfSelector(state, 'streamingEnabled'),
   streamingEnabled: selector(state, 'type') === TOKEN_AUTH_STREAMING,
   streaming_ttl: selector(state, 'streaming_ttl'),
-  streaming_add_ip_addr: selector(state, 'streaming_add_ip_addr')
+  streaming_add_ip_addr: selector(state, 'streaming_add_ip_addr'),
+  streaming_encryption: selector(state, 'streaming_encryption')
 }))(injectIntl(form))

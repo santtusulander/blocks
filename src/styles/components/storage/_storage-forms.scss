@@ -32,6 +32,11 @@ $label-margin-bottom: 10px;
     .form-group {
       float: left;
       max-width: $estimate-field-max-width;
+      margin-right: $arb-toggle-margin-right;
+
+      .number-input-group {
+        width: $estimate-field-width; 
+      }
     }
   }
 

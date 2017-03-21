@@ -13,15 +13,20 @@ import * as groupActionCreators from '../redux/modules/group'
 import * as hostActionCreators from '../redux/modules/host'
 import * as securityActionCreators from '../redux/modules/security'
 import * as uiActionCreators from '../redux/modules/ui'
+
+import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
 
 import { getContentUrl } from '../util/routes'
-import checkPermissions from '../util/permissions'
+import checkPermissions, { getStoragePermissions } from '../util/permissions'
+import { hasService } from '../util/helpers'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../constants/permissions'
-import { VIEW_CONFIGURATION_SECURITY } from '../constants/service-permissions'
-import { deploymentModes, VOD_SERVICE_ID } from '../constants/configuration'
+
+import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
+import { deploymentModes} from '../constants/configuration'
+import { STORAGE_SERVICE_ID, VOD_STREAMING_SERVICE_ID } from '../constants/service-permissions'
 
 import PageContainer from '../components/layout/page-container'
 import Sidebar from '../components/layout/sidebar'
@@ -75,7 +80,7 @@ export class Configuration extends React.Component {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
-    this.props.fetchStorage(group)
+    this.props.fetchStorage(brand, account, group)
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
@@ -102,7 +107,7 @@ export class Configuration extends React.Component {
   }
 
   hasSecurityServicePermission() {
-    return this.props.servicePermissions.contains(VIEW_CONFIGURATION_SECURITY)
+    return this.props.servicePermissions.contains(MEDIA_DELIVERY_SECURITY)
   }
 
   // allows changing multiple values while only changing state once
@@ -248,7 +253,7 @@ export class Configuration extends React.Component {
       this.props.uiActions.changeNotification, 10000)
   }
   render() {
-    const { intl: { formatMessage }, activeHost, hostActions: { deleteHost }, params: { brand, account, group, property }, router, children } = this.props
+    const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
     if(this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
@@ -259,6 +264,7 @@ export class Configuration extends React.Component {
     const activeEnvironment = activeConfig.get('configuration_status').get('deployment_status')
     const deployMoment = moment(activeConfig.get('configuration_status').get('deployment_date'), 'X')
     const deploymentMode = activeHost.getIn(['services', 0, 'deployment_mode'])
+    const serviceType = activeHost.getIn(['services', 0, 'service_type'])
     const deploymentModeText = formatMessage({ id: deploymentModes[deploymentMode] || deploymentModes['unknown'] })
     const readOnly = this.isReadOnly()
     const baseUrl = getContentUrl('propertyConfiguration', property, { brand, account, group })
@@ -364,6 +370,12 @@ export class Configuration extends React.Component {
             </li>
           }
 
+          <li data-eventKey='gtm'>
+            <Link to={baseUrl + '/gtm'} activeClassName="active">
+            <FormattedMessage id="portal.configuration.gtm.text" />
+            </Link>
+          </li>
+
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -395,10 +407,14 @@ export class Configuration extends React.Component {
             changeValues: this.changeValues,
             config: activeConfig,
             deploymentMode: deploymentModeText,
+            hasVODSupport: this.props.hasVODSupport,
             edgeConfiguration: activeConfig.get('edge_configuration'),
+            groupHasStorageService: this.props.groupHasStorageService,
             saveChanges: this.saveActiveHostChanges,
             sslCertificates: this.props.sslCertificates,
-            storages: this.props.storages
+            storages: this.props.storages,
+            storagePermission: this.props.storagePermission,
+            serviceType: serviceType
           })}
           </PageContainer>
 
@@ -419,7 +435,7 @@ export class Configuration extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           onSubmit={() =>
-            deleteHost(brand, account, group, this.props.activeHost)
+            deleteProperty(brand, account, group, activeHost.get('published_host_id'))
               .then(() => router.push(getContentUrl('group', group, { brand, account })))}
           invalid={true}
           verifyDelete={true}>
@@ -473,9 +489,11 @@ Configuration.propTypes = {
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  deleteProperty: React.PropTypes.func,
   fetchStorage: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
+  groupHasStorageService: React.PropTypes.bool,
   hasVODSupport: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
@@ -489,6 +507,7 @@ Configuration.propTypes = {
   securityActions: React.PropTypes.object,
   servicePermissions: React.PropTypes.instanceOf(Immutable.List),
   sslCertificates: React.PropTypes.instanceOf(Immutable.List),
+  storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List),
   uiActions: React.PropTypes.object
 }
@@ -499,13 +518,16 @@ Configuration.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { group } = state
+  const { group, roles } = state
   const activeGroup = group.get('activeGroup') || Immutable.Map()
   const enabledServices = activeGroup.get('services') || Immutable.List()
   let hasVODSupport = false
 
+  const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+  const storagePermission = getStoragePermissions(roles.get('roles'), state.user.get('currentUser'))
+
   enabledServices.forEach((service) => {
-    if (service.get('service_id') === VOD_SERVICE_ID) {
+    if (service.get('service_id') === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     }
   })
@@ -520,6 +542,8 @@ function mapStateToProps(state) {
     policyActiveSet: state.ui.get('policyActiveSet'),
     roles: state.roles.get('roles'),
     hasVODSupport: hasVODSupport,
+    groupHasStorageService,
+    storagePermission,
     servicePermissions: state.group.get('servicePermissions'),
     sslCertificates: state.security.get('sslCertificates')
   };
@@ -532,7 +556,8 @@ function mapDispatchToProps(dispatch) {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchStorage : (group) => dispatch(storageActions.fetchAll({ group }))
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
+    fetchStorage : (brand, account, group) => dispatch(storageActions.fetchAll({ brand, account, group }))
   };
 }
 

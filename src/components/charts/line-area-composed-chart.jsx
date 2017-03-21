@@ -3,7 +3,7 @@ import { ComposedChart, Line, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, 
 import d3 from 'd3'
 import classNames from 'classnames'
 
-import AreaTooltip from './area-tooltip'
+import LineAreaComposedChartTooltip from './line-area-composed-chart-tooltip'
 import CustomLegend from './custom-legend'
 import { black } from '../../constants/colors'
 import { defaultTickDateFormat, dayInMilliSeconds } from '../../constants/chart'
@@ -11,10 +11,9 @@ import StackAreaCustomTick from './stacked-area-chart-tick'
 
 import {formatUnixTimestamp, unixTimestampToDate, formatBitsPerSecond } from '../../util/helpers'
 
-const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height}) => {
+const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, keyLabel, comparisonKeyLabel, valueFormatter = formatBitsPerSecond, isMiniChart = false, width, height, isComparison}) => {
   let dateFormat = defaultTickDateFormat
   const haveEstimate = data && data[0] && data[0].estimate
-  const isComparison = data && data[0] && data[0].comparison_storage
   const containerProps = isMiniChart ? { width: width, height: height} : { minHeight: 300, aspect: 2}
   const getTicks = (data) => {
     if (!data || !data.length || isMiniChart ) {return [];}
@@ -35,8 +34,8 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
 
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
-  };
-
+  }
+  
   return (
     <div className="line-area-composed-chart-container">
       <span id="line-area-composed-chart-label" className="line-area-composed-chart-label">
@@ -51,18 +50,18 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             <Area
               isAnimationActive={false}
               fillOpacity={0.9}
-              dataKey="storage"
+              dataKey={dataKey}
               stackId="1"
-              name="Storage"
+              name={keyLabel}
               className="storage"
             />
             { isComparison &&
               <Area
                 isAnimationActive={false}
                 fillOpacity={0.9}
-                dataKey="comparison_storage"
+                dataKey={comparisonDataKey}
                 stackId="2"
-                name="Comparison Storage"
+                name={comparisonKeyLabel}
                 className="comparison_storage"
               />
             }
@@ -84,7 +83,7 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
               <XAxis hide={true} scale="point" />
             }
             { !isMiniChart &&
-              <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick />}/>
+              <YAxis tickLine={false} axisLine={false} tick={<StackAreaCustomTick valueFormatter={valueFormatter} />}/>
             }
 
             { !isMiniChart &&
@@ -98,8 +97,12 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
             <Tooltip
               cursor={{stroke: black}}
               content={
-                <AreaTooltip
-                  iconClass={() => 'tooltip-class'}
+                <LineAreaComposedChartTooltip
+                  iconClassNamePicker={(dataKey) => dataKey !== comparisonDataKey
+                    ? 'storage'
+                    : 'comparison_storage'
+                  }
+                  ignoreValues={["estimate"]}
                   valueFormatter={valueFormatter}
                 />
               }
@@ -110,12 +113,23 @@ const LineAreaComposedChart = ({chartLabel, data, valueFormatter = formatBitsPer
   );
 }
 
+LineAreaComposedChart.defaultProps = {
+  dataKey: 'storage',
+  comparisonDataKey: 'comparison_storage',
+  name: 'Storage'
+}
+
 LineAreaComposedChart.displayName = "LineAreaComposedChart"
 LineAreaComposedChart.propTypes = {
   chartLabel: PropTypes.string,
+  comparisonDataKey: PropTypes.string,
+  comparisonKeyLabel: PropTypes.string,
   data: PropTypes.array,
+  dataKey: PropTypes.string,
   height: PropTypes.number,
+  isComparison: PropTypes.bool,
   isMiniChart: PropTypes.bool,
+  keyLabel: PropTypes.string,
   valueFormatter: PropTypes.func,
   width: PropTypes.number
 };

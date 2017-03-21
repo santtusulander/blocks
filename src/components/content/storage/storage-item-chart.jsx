@@ -1,21 +1,23 @@
 import React, { PropTypes } from 'react'
+import { List } from 'immutable'
 import { PieChart, Pie } from 'recharts'
-import { ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Link } from 'react-router'
+import { Button, ButtonToolbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
-import LinkWrapper from './link-wrapper'
+import LinkWrapper from '../link-wrapper'
 import StorageItemTooltip from './storage-item-tooltip'
-import IconConfiguration from '../icons/icon-configuration'
-import IconChart from '../icons/icon-chart'
-import { formatBytes, separateUnit } from '../../util/helpers'
+import IconConfiguration from '../../icons/icon-configuration'
+import IconChart from '../../icons/icon-chart'
+import { formatBytes, separateUnit } from '../../../util/helpers'
 
 const FORMAT = '0,0.0'
 const defaultDiameter = 240
 
 const StorageItemChart = (
   { analyticsLink,
-    configurationLink,
+    onConfigurationClick,
     storageContentLink,
     diameter,
     name,
@@ -41,10 +43,10 @@ const StorageItemChart = (
      /****** This Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: peak - (estimate / 360),            className: 'current-month'},
+    [{value: peak && peak - (estimate / 360),            className: 'current-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: estimate / 360,                     className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
+     {value: peak && estimate / 360,                     className: classNames('current-month current-month-peak', {exceeded: peak >= estimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: estimate - peak,                    className: 'current-month'}],
@@ -58,10 +60,10 @@ const StorageItemChart = (
      /****** Last Month's Peak Chart ******/
     // ↓        ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-    [{value: lastMonthPeak - (estimate / 360),   className: 'last-month'},
+    [{value: lastMonthPeak && lastMonthPeak - (lastMonthEstimate / 360),   className: 'last-month'},
     //           ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
-     {value: lastMonthEstimate / 360,            className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
+     {value: lastMonthPeak && lastMonthEstimate / 360,            className: classNames('last-month last-month-peak', {exceeded: lastMonthPeak >= lastMonthEstimate})},
     //            ↓             ↓
     // ⊏⊏⊏⊏⊏⊏⊏⊏⊏⊏⫴⫴⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐⊐
      {value: lastMonthEstimate - lastMonthPeak,  className: 'last-month'}]]
@@ -95,10 +97,10 @@ const StorageItemChart = (
   )
 
   //TODO: replace storageLocations when the api is ready
-  const storageLocations = locations.length === 1 ?
-    <span>{locations[0]}</span> :
-    locations.map((location, i) => (
-      <span key={i}>{location.slice(0, 2)}{(i + 1) !== locations.length ? ', ' : ''}</span>
+  const storageLocations = locations.size === 1 ?
+    <span>{locations.first()}</span> :
+    locations.map((location = '', i) => (
+      <span key={i}>{location.slice(0, 2)}{(i + 1) !== locations.size ? ', ' : ''}</span>
     ))
 
   return (
@@ -106,6 +108,7 @@ const StorageItemChart = (
       <div className="storage-item-chart" style={{width: minDiameter, height: minDiameter}}>
         <LinkWrapper
           className="storage-item-chart-link"
+          disableLinkTo={!storageContentLink}
           linkTo={storageContentLink}>
           <PieChart width={minDiameter} height={minDiameter} >
             {pies}
@@ -136,16 +139,17 @@ const StorageItemChart = (
 
         <div className="content-item-chart content-item-toolbar">
           <ButtonToolbar>
-            <LinkWrapper
-              linkTo={analyticsLink}
-              className="btn btn-icon btn-round invisible">
-              <IconChart/>
-            </LinkWrapper>
-            <LinkWrapper
-              linkTo={configurationLink}
-              className="btn btn-icon btn-round invisible">
-              <IconConfiguration/>
-            </LinkWrapper>
+            {analyticsLink &&
+                <Link to={analyticsLink}
+                  className="btn btn-icon btn-round invisible">
+                  <IconChart/>
+              </Link>
+            }
+            {onConfigurationClick &&
+              <Button onClick={onConfigurationClick}
+                className="btn btn-icon btn-round invisible">
+                <IconConfiguration/>
+            </Button>}
           </ButtonToolbar>
         </div>
       </div>
@@ -154,19 +158,27 @@ const StorageItemChart = (
 }
 
 StorageItemChart.displayName = 'StorageItemChart'
+StorageItemChart.defaultProps = {
+  currentUsage: 0,
+  lastMonthPeak: 0,
+  lastMonthUsage: 0,
+  locations: List(),
+  peak: 0
+}
+
 StorageItemChart.propTypes = {
-  analyticsLink: PropTypes.string,
-  configurationLink: PropTypes.string,
+  analyticsLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   currentUsage: PropTypes.number,
   diameter: PropTypes.number,
   estimate: PropTypes.number,
   lastMonthEstimate: PropTypes.number,
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
-  locations: PropTypes.array.isRequired,
-  name: PropTypes.string,
+  locations: PropTypes.instanceOf(List).isRequired,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   peak: PropTypes.number,
-  storageContentLink: PropTypes.string
+  storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 export default StorageItemChart

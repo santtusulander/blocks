@@ -11,11 +11,14 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
+import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
-  getContentUrl
+  getContentUrl,
+  getAnalyticsUrl
 } from '../../util/routes'
-import { userIsCloudProvider, hasStorageService } from '../../util/helpers'
+
+import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -23,7 +26,12 @@ import UDNButton from '../button'
 import NoContentItems from './no-content-items'
 import PageContainer from '../layout/page-container'
 import AccountSelector from '../global-account-selector/global-account-selector'
-import StorageChartContainer from '../../containers/storage/storage-chart-container'
+
+import StorageChartContainer from '../../containers/storage-item-containers/storage-chart-container'
+import StorageListContainer from '../../containers/storage-item-containers//storage-list-container'
+
+import PropertyItemContainer from '../../containers/content/property-item-container'
+
 import Content from '../layout/content'
 import PageHeader from '../layout/page-header'
 import ContentItem from './content-item'
@@ -36,6 +44,7 @@ import IconItemChart from '../icons/icon-item-chart.jsx'
 import LoadingSpinner from '../loading-spinner/loading-spinner'
 import TruncatedTitle from '../../components/truncated-title'
 import IsAllowed from '../is-allowed'
+
 import * as PERMISSIONS from '../../constants/permissions.js'
 import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
@@ -43,7 +52,6 @@ import EntityEdit from '../../components/account-management/entity-edit'
 
 import SidePanel from '../side-panel'
 import StorageFormContainer from '../../containers/storage/modals/storage-modal'
-
 
 const rangeMin = 400
 const rangeMax = 500
@@ -91,6 +99,9 @@ class ContentItems extends React.Component {
     this.hideModal = this.hideModal.bind(this)
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
+
+    this.storageSorter = this.storageSorter.bind(this)
+    this.propertySorter = this.propertySorter.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -226,13 +237,15 @@ class ContentItems extends React.Component {
       itemToEdit: undefined
     })
   }
-  showStorageModal() {
+  showStorageModal(id) {
     this.setState({
+      itemToEdit: id,
       showStorageModal : true
     });
   }
   hideStorageModal() {
     this.setState({
+      itemToEdit: undefined,
       showStorageModal : false
     });
   }
@@ -302,6 +315,48 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
+  /** TODO: UDNP-3069 Refactor sorters */
+  storageSorter( a,b ) {
+    const [sortBy] =  this.props.sortValuePath
+    const sortDirection = this.props.sortDirection
+
+    let valA, valB
+
+    //sort By Name
+    if (sortBy === 'item') {
+      valA = a.get('ingest_point_id').toLowerCase()
+      valB = b.get('ingest_point_id').toLowerCase()
+    } else {
+      valA = a.get('totalTraffic')
+      valB = b.get('totalTraffic')
+    }
+
+    if ( valA > valB ) return sortDirection
+    if ( valA < valB ) return -1 * sortDirection
+
+    return 0
+  }
+  /** TODO: UDNP-3069 Refactor sorters */
+  propertySorter( a,b ) {
+    const [sortBy] =  this.props.sortValuePath
+    const sortDirection = this.props.sortDirection
+
+    let valA, valB
+
+    //sort By Name
+    if (sortBy === 'item') {
+      valA = a.get('published_host_id').toLowerCase()
+      valB = b.get('published_host_id').toLowerCase()
+    } else {
+      valA = a.get('totalTraffic')
+      valB = b.get('totalTraffic')
+    }
+
+    if ( valA > valB ) return sortDirection
+    if ( valA < valB ) return -1 * sortDirection
+
+    return 0
+  }
 
   render() {
     const {
@@ -316,33 +371,30 @@ class ContentItems extends React.Component {
       showAnalyticsLink,
       viewingChart,
       user,
-      storageIds,
+      storages,
+      properties,
       params,
       locationPermissions,
-      storageContentItems,
       storagePermission,
       params: { brand, account, group }
     } = this.props
 
-    const { createAllowed } = storagePermission
-    const groupHasStorageService = hasStorageService(activeGroup)
+    const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
+    const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+
+    /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
+    const modifyStorageAllowed = modifyAllowed && false
+
     let trafficTotals = Immutable.List()
+
     const contentItems = this.props.contentItems.map(item => {
-      const trialNameRegEx = /(.+?)(?:\.cdx.*)?\.unifieddeliverynetwork\.net/
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
       if(!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
-      // Remove the trial url from trial property names
-      if (trialNameRegEx.test(item.get('id'))) {
-        item = item.merge({
-          id: item.get('id').replace(trialNameRegEx, '$1'),
-          name: item.get('id').replace(trialNameRegEx, '$1'),
-          isTrialHost: true
-        })
-      }
+
       return Immutable.Map({
         item: item,
         metrics: itemMetrics,
@@ -350,6 +402,7 @@ class ContentItems extends React.Component {
       })
     })
     .sort(sortContent(sortValuePath, sortDirection))
+
     if(!fetchingMetrics){
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
@@ -359,13 +412,16 @@ class ContentItems extends React.Component {
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
     trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
       .range([rangeMin, rangeMax]);
+
     const foundSort = sortOptions.find(opt => {
       return Immutable.is(opt.path, sortValuePath) &&
         opt.direction === sortDirection
     })
+
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
     const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
@@ -412,7 +468,7 @@ class ContentItems extends React.Component {
         <PageContainer>
           {this.props.fetching || this.props.fetchingMetrics  ?
             <LoadingSpinner /> : (
-            this.props.contentItems.isEmpty() && storageContentItems.isEmpty() ?
+            this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
             <ReactCSSTransitionGroup
@@ -420,65 +476,71 @@ class ContentItems extends React.Component {
               className="content-transition"
               transitionName="content-transition"
               transitionEnterTimeout={400}
-              transitionLeaveTimeout={250}>
+              transitionLeaveTimeout={250}
+            >
 
-              {!storageContentItems.isEmpty() && groupHasStorageService &&
+            <div
+              key={viewingChart}
+              className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
+
+                { /* STORAGES -header on List view */
+                  this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
+                  <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
+                }
+
+                {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
-                <div>
-                  {!viewingChart && <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>}
-                  <div key={viewingChart} className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                    {!viewingChart && storageContentItems.map(storage => {
-                      const id = storage.get('id')
+                      <div className="storage-wrapper">
+                        { groupHasStorageService && storages.sort( this.storageSorter ).map((storage, i) => {
+                          const id = storage.get('ingest_point_id')
+                          //const reduxId = buildReduxId(group, id)
 
-                      // TODO UNDP-2906
-                      // Fix this in scope of integration with create/edit forms task, analytics
-                      const itemProps = {
-                        id,
-                        name: storage.get('name'),
-                        location: storage.get('location'),
-                        linkTo: '',
-                        disableLinkTo: false,
-                        configurationLink: '',
-                        onConfiguration: () => {this.editItem(id)},
-                        analyticsLink: '',
-                        delete: this.props.deleteItem,
-                        primaryData: Immutable.List(),
-                        maxTransfer: storage.get('maxTransfer'),
-                        minTransfer: storage.get('minTransfer'),
-                        avgTransfer: storage.get('avgTransfer'),
-                        currentUsage: storage.get('currentUsage'),
-                        usageQuota: storage.get('usageQuota'),
-                        fetchingMetrics: this.props.fetchingMetrics,
-                        isAllowedToConfigure: this.props.isAllowedToConfigure,
-                        chartWidth: '450'
-                      }
+                          if (viewingChart) {
+                            return (
+                              <StorageChartContainer
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
+                                storageId={id}
+                                params={params} />
+                            )
+                          } else {
+                            return (
+                              <StorageListContainer
+                                key={i}
+                                analyticsLink={viewAnalyticAllowed && getAnalyticsUrl('storage', id, params)}
+                                storageContentLink={viewAllowed && getContentUrl('storage', id, params)}
+                                onConfigurationClick={modifyStorageAllowed && this.showStorageModal}
+                                storageId={id}
+                                params={params}
+                              />
+                            )
+                          }
+                        })
+                        }
+                      </div>
+                </IsAllowed>
 
-                      return (
-                        <ContentItem key={`content-item-${id}`}
-                          isChart={viewingChart}
-                          isStorage={true}
-                          itemProps={itemProps}
-                          deleteItem={this.props.deleteItem}/>
-                      )
-                    })}
-                  </div>
-                  <br />
-                  <br />
-                  </div>
-                </IsAllowed>}
+                { /* PROPETIES -header on List view */
+                  this.getTier() === 'group' && !viewingChart &&
+                  <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>
+                }
 
-              {this.getTier() === 'group' && !viewingChart &&
-                <h3><FormattedMessage id="portal.accountManagement.properties.text" /></h3>}
-              <div
-                key={viewingChart}
-                className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
-                  <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
-                    <div className="storage-wrapper">
-                      {viewingChart && groupHasStorageService && storageIds.map(id => <StorageChartContainer key={id} storageId={id} params={params} />)}
-                    </div>
-                  </IsAllowed>
+                { /* Properties */}
+                { properties.sort( this.propertySorter ).map( (property,i) => {
+                  return (
+                    <PropertyItemContainer
+                      key={i}
+                      propertyId={property.get('published_host_id')}
+                      params={params}
+                      viewingChart={viewingChart}
+                    />)}
+                  )
+                }
 
-                {contentItems.map(content => {
+                {/* OTHER ContentItems (brand / accouts / groups) */}
+                { properties.isEmpty() && storages.isEmpty() && contentItems.map(content => {
                   const item = content.get('item')
                   const id = item.get('id')
                   const isTrialHost = item.get('isTrialHost')
@@ -573,6 +635,7 @@ class ContentItems extends React.Component {
               brand={brand}
               accountId={account}
               groupId={group}
+              storageId={this.state.itemToEdit}
               show= {true}
               editing={false}
               fetching={false}
@@ -610,6 +673,7 @@ ContentItems.propTypes = {
   metrics: React.PropTypes.instanceOf(Immutable.List),
   nextPageURLBuilder: React.PropTypes.func,
   params: React.PropTypes.object,
+  properties: React.PropTypes.instanceOf(Immutable.List),
   router: React.PropTypes.object,
   // eslint-disable-next-line react/no-unused-prop-types
   selectionDisabled: React.PropTypes.bool, // this is used in a helper render method
@@ -621,9 +685,8 @@ ContentItems.propTypes = {
   sortDirection: React.PropTypes.number,
   sortItems: React.PropTypes.func,
   sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storageContentItems: React.PropTypes.instanceOf(Immutable.List),
-  storageIds: React.PropTypes.instanceOf(Immutable.Iterable),
   storagePermission: React.PropTypes.object,
+  storages: React.PropTypes.instanceOf(Immutable.List),
   toggleChartView: React.PropTypes.func,
   type: React.PropTypes.string,
   user: React.PropTypes.instanceOf(Immutable.Map),
@@ -636,8 +699,8 @@ ContentItems.defaultProps = {
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
   sortValuePath: Immutable.List(),
-  storageContentItems: Immutable.List(),
-  storageIds: Immutable.Iterable(),
+  storages: Immutable.List(),
+  properties: Immutable.List(),
   user: Immutable.Map(),
   storagePermission: {}
 }

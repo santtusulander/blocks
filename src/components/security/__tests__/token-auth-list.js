@@ -4,8 +4,15 @@ import { shallow } from 'enzyme'
 jest.unmock('../token-auth-list')
 import TokenAuthList from '../token-auth-list'
 
+
+const intlMaker = () => {
+  return {
+    formatMessage: jest.fn()
+  }
+}
+
 const subject = shallow(
-  <TokenAuthList />
+  <TokenAuthList intl={intlMaker()} />
 )
 
 describe('TokenAuthList', () => {

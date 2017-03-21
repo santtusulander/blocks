@@ -141,6 +141,10 @@
   "portal.network.podForm.requestForwardType.options.gslb_referral.label": "GSLB Referral",
   "portal.network.podForm.discoveryMethod.options.bgp.label": "BGP",
   "portal.network.podForm.discoveryMethod.options.footprints.label": "Footprints",
+  "portal.network.podForm.saltRole.label": "Salt Role",
+  "portal.network.podForm.saltRole.options.cache.label": "Cache",
+  "portal.network.podForm.saltRole.options.gslb.label": "GSLB",
+  "portal.network.podForm.saltRole.required.error": "Salt Role is required",
 
   "portal.network.footprintForm.title.add.text": "Add Footprint",
   "portal.network.footprintForm.title.edit.text": "Edit Footprint",

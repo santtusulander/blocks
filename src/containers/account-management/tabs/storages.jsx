@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, FormControl, Table, Button } from 'react-bootstrap'
-import { Map, List} from 'immutable'
+import { Map, List } from 'immutable'
+import moment from 'moment'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -13,21 +14,24 @@ import ActionButtons from '../../../components/action-buttons'
 import ModalWindow from '../../../components/modal'
 import StorageFormContainer from '../../../containers/storage/modals/storage-modal.jsx'
 import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
+import IsAllowed from '../../../components/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
-import {fetchMetrics} from '../../../redux/modules/entities/storage-metrics/actions'
+import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-clusters/selectors'
 import { getByGroups as getPropetiesByGroups } from '../../../redux/modules/entities/properties/selectors'
-import { getByAccountId as getMetricsByAccountId } from '../../../redux/modules/entities/storage-metrics/selectors'
+import { getByGroups as getMetricsByGroups } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
+import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
+import * as PERMISSIONS from '../../../constants/permissions.js'
 
 
 class AccountManagementStorages extends Component {
@@ -52,25 +56,20 @@ class AccountManagementStorages extends Component {
   }
 
   componentWillMount() {
+    const account = this.props.account
+    const brandId = account.get('brand_id')
+    const accountId = account.get('id')
+    const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
+
+
     this.props.groups.map( group => {
-      const account = this.props.account
-      const metricsStartDate = new Date()
+      const groupId = group.get('id')
 
-      this.props.fetchStorages({ group: group.get('id') })
-      this.props.fetchProperties({
-        brand: account.get('brand_id'),
-        account: account.get('id'),
-        group: group.get('id')
-      })
-
-      // TODO UDNP-2958 Use current account and group Ids
-      // when metrics API will be ready
-      this.props.fetchMetrics({
-        start: metricsStartDate.getTime(),
-        account: 20005,
-        group: 268
-      })
+      this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
+      this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
+
+    this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
     this.props.fetchClusters({})
   }
 
@@ -102,8 +101,12 @@ class AccountManagementStorages extends Component {
   }
 
   deleteStorage() {
-    return this.props.deleteStorage({group: this.state.storageGroup, id: this.state.storageToDelete})
-      .then(() => this.props.toggleModal(null))
+    return this.props.deleteStorage({
+      brand: this.props.account.get('brand_id'),
+      account: this.props.account.get('id'),
+      group: this.state.storageGroup,
+      id: this.state.storageToDelete
+    }).then(() => this.props.toggleModal(null))
   }
 
   filterData(storages, storageName) {
@@ -121,7 +124,7 @@ class AccountManagementStorages extends Component {
   }
 
   render() {
-    const { account, group, groups, storages, clusters, properties, metrics,
+    const { account, group, groups, storages, clusters, properties, metrics, params,
             accountManagementModal, toggleModal, intl, isFetching } = this.props
 
     const sorterProps  = {
@@ -132,7 +135,7 @@ class AccountManagementStorages extends Component {
 
     const storagesFullData = storages.map(storage => {
       const storageGroupId = storage.get('parentId')
-      const storageGroup = groups.find(group => (group.get('id') === storageGroupId))
+      const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 
       let origins = []
@@ -155,15 +158,15 @@ class AccountManagementStorages extends Component {
         }
       })
       const locationsString = locations.join(', ')
-
-      const usage = metrics.getIn([0, 'detail', 0, 'bytes'])
-      const fileCount = metrics.getIn([0, 'detail', 0, 'file_count'])
+      const storageMetrics = metrics && metrics.find(metric => (metric.get('ingest_point') === storage.get('ingest_point_id')))
+      const usage = storageMetrics && storageMetrics.getIn(['totals', 'bytes', 'ending'])
+      const filesCount = storageMetrics && storageMetrics.getIn(['totals', 'files_count', 'ending'])
 
       return storage.setIn(['group_name'], groupName)
                     .setIn(['origins'], origins)
                     .setIn(['locations'], locationsString)
-                    .setIn(['usage'], usage)
-                    .setIn(['file_count'], fileCount)
+                    .setIn(['usage'], usage || 0)
+                    .setIn(['files_count'], filesCount || 0)
     })
 
     const filteredStorages = this.filterData(storagesFullData, this.state.search.toLowerCase())
@@ -174,99 +177,108 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
+    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
+
     return (
-      <PageContainer className="account-management-storages">
-        { isFetching ? <LoadingSpinner/> :
-          <div>
-            <SectionHeader sectionHeaderTitle={finalStorageText}>
-              <FormGroup className="search-input-group">
-                <FormControl
-                  type="text"
-                  className="search-input"
-                  placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
-                  value={this.state.search}
-                  onChange={this.changeSearch}  />
-              </FormGroup>
-              <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!group}>
-                <IconAdd />
-              </Button>
-            </SectionHeader>
+      <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
+        <PageContainer className="account-management-storages">
+          { isFetching ? <LoadingSpinner/> :
+            <div>
+              <SectionHeader sectionHeaderTitle={finalStorageText}>
+                <FormGroup className="search-input-group">
+                  <FormControl
+                    type="text"
+                    className="search-input"
+                    placeholder={intl.formatMessage({id: 'portal.common.search.text'})}
+                    value={this.state.search}
+                    onChange={this.changeSearch}  />
+                </FormGroup>
+                <Button bsStyle="success" className="btn-icon" onClick={this.addStorage} disabled={!params.group}>
+                  <IconAdd />
+                </Button>
+              </SectionHeader>
 
-            <Table striped={true}>
-              <thead>
-                <tr>
-                  <TableSorter {...sorterProps} column="ingest_point_id">
-                    <FormattedMessage id="portal.account.storage.table.name.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="group_name">
-                    <FormattedMessage id="portal.account.storage.table.group.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="originTo">
-                    <FormattedMessage id="portal.account.storage.table.originTo.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="locations">
-                    <FormattedMessage id="portal.account.storage.table.location.text"/>
-                  </TableSorter>
-                  <TableSorter {...sorterProps} column="usage">
-                    <FormattedMessage id="portal.account.storage.table.usage.text"/>
-                  </TableSorter>
-                  <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
-                  <th width="1%"/>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedStorages.map((storage, i) => {
-                  const storageId = storage.get('ingest_point_id')
-                  const origins = storage.get('origins')
-                  const originsString = origins.length ? this.formatOrigins(origins) : '-'
+              <Table striped={true}>
+                <thead>
+                  <tr>
+                    <TableSorter {...sorterProps} column="ingest_point_id">
+                      <FormattedMessage id="portal.account.storage.table.name.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="group_name">
+                      <FormattedMessage id="portal.account.storage.table.group.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="origins">
+                      <FormattedMessage id="portal.account.storage.table.originTo.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="locations">
+                      <FormattedMessage id="portal.account.storage.table.location.text"/>
+                    </TableSorter>
+                    <TableSorter {...sorterProps} column="usage">
+                      <FormattedMessage id="portal.account.storage.table.usage.text"/>
+                    </TableSorter>
+                    <th><FormattedMessage id="portal.account.storage.table.files.text"/></th>
+                    <th width="1%"/>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedStorages.map((storage, i) => {
+                    const storageId = storage.get('ingest_point_id')
+                    const origins = storage.get('origins')
+                    const originsString = origins.length ? this.formatOrigins(origins) : '-'
 
-                  return (
-                    <tr key={i}>
-                      <td>{storageId}</td>
-                      <td>{storage.get('group_name')}</td>
-                      <td>{originsString}</td>
-                      <td>{storage.get('locations')}</td>
-                      <td>{formatBytes(storage.get('usage'))}</td>
-                      <td>{storage.get('file_count')}</td>
-                      <td className="nowrap-column">
-                      <ActionButtons onEdit={() => {this.editStorage(storageId, storage.get('parentId'))}}
-                                     onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+                    return (
+                      <tr key={i}>
+                        <td>{storageId}</td>
+                        <td>{storage.get('group_name')}</td>
+                        <td>{originsString}</td>
+                        <td>{storage.get('locations')}</td>
+                        <td>{formatBytes(storage.get('usage'))}</td>
+                        <td>{storage.get('files_count')}</td>
+                        <td className="nowrap-column">
 
-            {accountManagementModal === DELETE_STORAGE &&
-             <ModalWindow
-               title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.storageToDelete}}/>}
-               content={<FormattedMessage id="portal.account.storage.deleteConfirmation.text"/>}
-               verifyDelete={true}
-               deleteButton={true}
-               cancelButton={true}
-               cancel={() => toggleModal(null)}
-               onSubmit={() => this.deleteStorage()} />}
+                        {/*TODO: add edit to ActionButtons once API from CIS-322 is ready
+                            onEdit={(() => {this.editStorage(storageId, storage.get('parentId'))})}
+                        */}
+                        <ActionButtons
+                          permissions={permissions}
+                          onDelete={() => {this.toggleDeleteConfirmationModal(storageId, storage.get('parentId'))}} />
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
 
-            {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
-              <StorageFormContainer
-                show={true}
-                brand={account.get('brand_id')}
-                accountId={account.get('id')}
-                storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
-                groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
-                fetching={false}
-                onCancel={() => this.props.toggleModal()}
-              />
-            }
+              {accountManagementModal === DELETE_STORAGE &&
+               <ModalWindow
+                 title={<FormattedMessage id="portal.deleteModal.header.text" values={{itemToDelete: this.state.storageToDelete}}/>}
+                 content={<FormattedMessage id="portal.account.storage.deleteConfirmation.text"/>}
+                 verifyDelete={true}
+                 deleteButton={true}
+                 cancelButton={true}
+                 cancel={() => toggleModal(null)}
+                 onSubmit={() => this.deleteStorage()} />}
 
-            {sortedStorages.size === 0 && this.state.search.length > 0 &&
-             <div className="text-center">
-               <FormattedMessage id="portal.account.storage.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
-             </div>}
-          </div>
-        }
-      </PageContainer>
+              {((accountManagementModal === ADD_STORAGE) || (accountManagementModal === EDIT_STORAGE)) &&
+                <StorageFormContainer
+                  show={true}
+                  brand={account.get('brand_id')}
+                  accountId={account.get('id')}
+                  storageId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageToEdit : ''}
+                  groupId={(accountManagementModal === EDIT_STORAGE) ? this.state.storageGroup : group.get('id')}
+                  fetching={false}
+                  onCancel={() => this.props.toggleModal()}
+                />
+              }
+
+              {sortedStorages.size === 0 && this.state.search.length > 0 &&
+               <div className="text-center">
+                 <FormattedMessage id="portal.account.storage.table.noStoragesFound.text" values={{searchTerm: this.state.search}}/>
+               </div>}
+            </div>
+          }
+        </PageContainer>
+      </IsAllowed>
     )
   }
 }
@@ -278,7 +290,7 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
-  fetchMetrics: PropTypes.func,
+  fetchGroupsMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
   group: PropTypes.instanceOf(Map),
@@ -286,6 +298,7 @@ AccountManagementStorages.propTypes = {
   intl: PropTypes.object,
   isFetching: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
+  params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
@@ -299,9 +312,6 @@ AccountManagementStorages.defaultProps = {
 function mapStateToProps(state) {
   const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
-  // TODO Account Id to select metrics mock data
-  // Should be removed when metrics API will be ready
-  const metricsAccountId = '20005'
 
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
@@ -311,7 +321,7 @@ function mapStateToProps(state) {
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
-    metrics: getMetricsByAccountId(state, metricsAccountId),
+    metrics: getMetricsByGroups(state),
     isFetching: getGlobalFetching(state)
   }
 }
@@ -325,7 +335,7 @@ function mapDispatchToProps(dispatch) {
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchMetrics: (params) => dispatch(fetchMetrics(params))
+    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params))
 
   };
 }

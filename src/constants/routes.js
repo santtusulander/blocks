@@ -6,13 +6,14 @@ const ROUTES = {
   analyticsAccount: '/analysis/:brand/:account',
   analyticsGroup: '/analysis/:brand/:account/:group',
   analyticsProperty: '/analysis/:brand/:account/:group/:property',
+  analyticsStorage: '/analysis/:brand/:account/:group/:storage/storage',
 
   analyticsTabTraffic: 'traffic',
   analyticsTabVisitors: 'visitors',
   analyticsTabCacheHitRate: 'cache-hit-rate',
   analyticsTabOnOffNet: 'on-off-net',
   analyticsTabContribution: 'contribution',
-  analyticsStorage: 'storage',
+  analyticsTabStorage: 'storage',
   analyticsTabFileError: 'file-error',
   analyticsTabUrlReport: 'url-report',
   analyticsTabPlaybackDemo: 'playback-demo',
@@ -35,6 +36,7 @@ const ROUTES = {
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
   configurationTabStreaming: 'streaming',
+  configurationTabGlobalTrafficManager: 'gtm',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 

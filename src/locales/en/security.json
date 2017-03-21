@@ -2,11 +2,16 @@
   "portal.security.selectAccount.text": "Please, select an account to see Security",
 
   "portal.security.tokenAuth.property.text": "Property",
+  "portal.security.tokenAuth.type.text": "Type",
   "portal.security.tokenAuth.encryption.text": "Encryption",
   "portal.security.tokenAuth.schema.text": "Schema",
+  "portal.security.tokenAuth.static.text": "Static",
+  "portal.security.tokenAuth.streaming.text": "Streaming",
   "portal.security.tokenAuth.sharedSecretValue.text": "Secret",
   "portal.security.tokenAuth.created.text": "Created",
   "portal.security.tokenAuth.noRules.text": "No Token Auth rules found",
+  "portal.security.tokenAuth.manifest.text": "Manifest",
+  "portal.security.tokenAuth.chunk.text": "Chunk",
 
   "portal.security.ssl.selectGroup.text": "Please select a group from top left to see SSL Certificates",
   "portal.security.ssl.noCertificates.text": "No certificates",

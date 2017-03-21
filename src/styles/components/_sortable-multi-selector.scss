@@ -1,10 +1,11 @@
 .sortable-item {
-  align-items: center;
   display: flex;
-  justify-content: space-between;
   min-height: $bar-height;
   padding: 10px;
   margin-bottom: 10px;
+  justify-content: space-between;
+  align-items: center;
+
 
   &-name {
     margin-left: 10px;
@@ -20,18 +21,43 @@
   }
 
   .light-theme & {
-    background-color: rgba($white, 0.1);
+    color: $lt-text-color;
+    background-color: $white;
+    box-shadow: 0 0 0 1px rgba($black, 0.1);
+
+    .icon {
+      fill: $lt-text-color;
+    }
   }
 }
 
 .sortable-list {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .sortable-helper {
-  z-index: 10000!important; //TODO: UDNP-2181 Abstract z-index values to variables
+  z-index: 10000 !important; //TODO: UDNP-2181 Abstract z-index values to variables
 }
 
 .sortable-handle {
+  width: 20px;
+  height: 36px;
+
   cursor: pointer;
+
+  .sortable-handle-item {
+    float: left;
+    width: 2px;
+    height: 36px;
+    margin-right: 2px;
+    opacity: 0.2;
+
+    .dark-theme & {
+      border-left: 2px dotted $dt-text-color;
+    }
+
+    .light-theme & {
+      border-left: 2px dotted $lt-text-color;
+    }
+  }
 }

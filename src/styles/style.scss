@@ -86,6 +86,7 @@
 @import 'components/side-panel';
 @import 'components/sortable-multi-selector';
 @import 'components/table-sorter';
+@import 'components/time-picker';
 @import 'components/toggle';
 @import 'components/tooltip';
 @import 'components/typeahead';
@@ -126,6 +127,8 @@
 @import 'components/configuration/sidebar';
 @import 'components/configuration/versions';
 @import 'components/configuration/token-auth';
+@import 'components/configuration/gtm';
+
 // Layouts
 @import 'components/layout/content';
 @import 'components/layout/dialog';

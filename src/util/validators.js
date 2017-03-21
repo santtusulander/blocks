@@ -325,8 +325,8 @@ export function isValidEstimatedUsage(str) {
 }
 
 /**
- * Check if valid host-name
- * @param hostName
+ * Check if valid storage name
+ * @param storageName
  * @returns {boolean|*}
  */
 export function isValidStorageName(storageName) {
@@ -335,8 +335,26 @@ export function isValidStorageName(storageName) {
     Each segment:
     - contains at least one character and a maximum of 63 characters;
     - consists only of allowed characters [a-zA-Z0-9-];
-    - doesn't begin or end with a hyphen;
+    - hyphen is not allowed;
   */
   if (storageName.length > 255) return false
-  return matchesRegexp(storageName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*?$/)
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/)
+}
+
+/**
+ * Check if valid CNAME
+ * @param cName
+ * @returns {boolean|*}
+ */
+export function isValidCName(cName) {
+  /* Rules matching CloudScale's Hostname validation:
+    - isn't longer than 255 characters.
+    Each segment:
+    - contains at least one character and a maximum of 63 characters;
+    - consists only of allowed characters [a-zA-Z0-9-];
+    - doesn't begin or end with a hyphen;
+    - can end with a dot.
+  */
+  if (cName.length > 255) return false
+  return matchesRegexp(cName, /^[a-z\d]([a-z\d\-]{0,61}[a-z\d])?(\.[a-z\d]([a-z\d\-]{0,61}[a-z\d])?)*[.]?$/)
 }
