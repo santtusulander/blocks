@@ -8,10 +8,10 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
-const renderMatch = ({ onRemove, input }) => {
+const renderMatch = ({ onRemove, onEdit, input }) => {
   return (
     <Row>
-      <Col xs={10}>
+      <Col xs={10} onClick={onEdit}>
         <p>{input.value.label}</p>
       </Col>
       <Col xs={2} className="text-right">
@@ -22,31 +22,35 @@ const renderMatch = ({ onRemove, input }) => {
     </Row>
   )
 }
-const renderMatches = ({ fields }) => {
+const renderMatches = ({ fields, openMatchModal }) => {
   return (
     <div className="conditions">
-      {
-        fields.map((match, index) =>
+      {fields.map((match, index) => {
+
+        const editableMatch = { ...fields.get(index), index }
+
+        return (
           <Field
             key={index}
-            name={`${match}`}
+            name={match}
             type="text"
             component={renderMatch}
             onRemove={() => fields.remove(index)}
+            onEdit={() => openMatchModal(editableMatch)}
           />
         )
-      }
+      })}
     </div>
   )
 }
 
-const RuleForm = ({ submitting, edit, onSubmit, onCancel, handleSubmit, onAddMatchClick, invalid }) => {
+const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, openMatchModal, invalid }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Field
         name="name"
         component={Input}
-        label={<FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>}/>
+        label="Rule Name"/>
 
         <Row className="header-btn-row">
           <Col sm={8}>
@@ -56,7 +60,7 @@ const RuleForm = ({ submitting, edit, onSubmit, onCancel, handleSubmit, onAddMat
             <Button
               bsStyle="success"
               className="btn-icon btn-add-new"
-              onClick={onAddMatchClick}>
+              onClick={openMatchModal}>
               <IconAdd />
             </Button>
           </Col>
@@ -65,6 +69,7 @@ const RuleForm = ({ submitting, edit, onSubmit, onCancel, handleSubmit, onAddMat
         {/* Footprints list */}
         <FieldArray
           name="matchArray"
+          openMatchModal={openMatchModal}
           component={renderMatches}/>
 
       <FormFooterButtons>
@@ -77,13 +82,11 @@ const RuleForm = ({ submitting, edit, onSubmit, onCancel, handleSubmit, onAddMat
         <Button
           id='submit-button'
           type='submit'
-          disabled={invalid || submitting}
+          disabled={invalid}
           bsStyle="primary">
-          {submitting
-            ? <FormattedMessage id='portal.common.button.saving' />
-            : edit
-              ? <FormattedMessage id='portal.common.button.save' />
-              : <FormattedMessage id='portal.common.button.add' />}
+          {edit
+            ? <FormattedMessage id='portal.common.button.save' />
+            : <FormattedMessage id='portal.common.button.add' />}
         </Button>
       </FormFooterButtons>
     </form>
