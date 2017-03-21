@@ -18,10 +18,13 @@ import {
   DELETE_GROUP
 } from '../../constants/account-management-modals.js'
 
-import { fetchUsers, updateUser } from '../../redux/modules/user'
-import * as accountActionCreators from '../../redux/modules/account'
-import { clearFetchedHosts } from '../../redux/modules/host'
-import * as groupActionCreators from '../../redux/modules/group'
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import groupActions from '../../redux/modules/entities/groups/actions'
+
+import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
+import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
+
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 import PROVIDER_TYPES from '../../constants/provider-types'
@@ -53,16 +56,10 @@ export class Account extends React.Component {
     }
   }
   componentWillMount() {
-    /* FIXME: This is not the right way of deciding when to fetch - causes sometimes 'No Groups found' - error
-     * temp fix for bug: commented out condition to fetch always. Maybe we should cache the data and fetch from server only if needed?
-     **/
-    //if(!this.props.activeAccount || String(this.props.activeAccount.get('id')) !== this.props.params.account) {
-    if (checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.CREATE_GROUP)) {
-      this.props.fetchUsers()
-    }
     this.props.fetchData()
-    //}
   }
+
+  /* TODO: Move all CRUD methods inside modal */
   createGroup({data, usersToAdd}) {
     return this.props.groupActions.createGroup('udn', this.props.params.account, data)
       .then(({ payload }) => {
@@ -232,7 +229,6 @@ Account.propTypes = {
   clearFetchedHosts: React.PropTypes.func,
   dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
   fetchData: React.PropTypes.func,
-  fetchUsers: React.PropTypes.func,
   fetching: React.PropTypes.bool,
   fetchingMetrics: React.PropTypes.bool,
   groupActions: React.PropTypes.object,
@@ -259,15 +255,18 @@ Account.defaultProps = {
   user: Immutable.Map()
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const {account} = ownProps.params
+
   return {
     accountManagementModal: state.ui.get('accountManagementModal'),
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
+    activeAccount: getAccountById(state, account),
+
     dailyTraffic: state.metrics.get('groupDailyTraffic'),
-    fetching: state.group.get('fetching'),
+    fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingGroupMetrics'),
-    groups: state.group.get('allGroups'),
+    groups: getGroupsByAccount(state, account),
+
     metrics: state.metrics.get('groupMetrics'),
     roles: state.roles.get('roles'),
     sortDirection: state.ui.get('contentItemSortDirection'),
@@ -278,9 +277,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {brand, account} = ownProps.params
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+  const {params} = ownProps
+  const {account} = params
+
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const metricsOpts = {
@@ -289,19 +288,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     endDate: moment.utc().endOf('day').format('X')
   }
   const fetchData = () => {
-    accountActions.fetchAccount(brand, account)
-    groupActions.startFetching()
-    metricsActions.startGroupFetching()
-    groupActions.fetchGroups(brand, account)
-    metricsActions.fetchGroupMetrics(metricsOpts)
-    metricsActions.fetchDailyGroupTraffic(metricsOpts)
+    return Promise.all([
+      dispatch( accountActions.fetchOne({...params, id: params.account}) ),
+      dispatch( groupActions.fetchAll(params) ),
+
+      metricsActions.startGroupFetching(),
+      metricsActions.fetchGroupMetrics(metricsOpts),
+      metricsActions.fetchDailyGroupTraffic(metricsOpts)
+    ])
   }
   return {
     fetchData: fetchData,
-    groupActions: groupActions,
-    clearFetchedHosts: () => dispatch(clearFetchedHosts()),
-    fetchUsers: () => dispatch(fetchUsers(brand, account)),
-    updateUser: (email, newUser) => dispatch(updateUser(email, newUser)),
     uiActions,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal
   };
