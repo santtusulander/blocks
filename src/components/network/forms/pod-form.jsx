@@ -38,7 +38,8 @@ import {
   POD_TYPE_OPTIONS,
   REQUEST_FWD_TYPE_OPTIONS,
   DISCOVERY_METHOD_OPTIONS,
-  STATUS_OPTIONS
+  STATUS_OPTIONS,
+  SALT_ROLE_OPTIONS
 } from '../../../constants/network'
 
 import UDNButton from '../../button'
@@ -342,6 +343,13 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.providerWeight.help.text" />
           </HelpTooltip>
         }/>
+
+      <Field
+        name="UISaltRoles"
+        component={FieldFormGroupSelect}
+        options={SALT_ROLE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
+        label={<FormattedMessage id="portal.network.podForm.saltRole.label" />}
+      />
 
       <Field
         required={false}
