@@ -5,10 +5,7 @@ import Immutable from 'immutable'
 
 import PolicyRuleOption from './policy-rule-option'
 import {
-  parsePolicy,
-  policyIsCompatibleWithMatch,
-  FILE_EXTENSION_DEFAULT_CASE,
-  WILDCARD_REGEXP
+  FILE_EXTENSION_DEFAULT_CASE
 } from '../../util/policy-config'
 import { availableMatches } from '../../constants/property-config'
 
@@ -17,13 +14,9 @@ class MatchesSelection extends React.Component {
     super(props);
 
     this.setMatchField = this.setMatchField.bind(this)
-    //this.setMatchFieldForContentTargeting = this.setMatchFieldForContentTargeting.bind(this)
     this.setMatchFieldForFileExtension = this.setMatchFieldForFileExtension.bind(this)
   }
   setMatchField(field) {
-    // if (field === 'content_targeting') {
-    //   return this.setMatchFieldForContentTargeting()
-    // } else 
     if (field === 'file_extension') {
       return this.setMatchFieldForFileExtension()
     }
@@ -47,15 +40,11 @@ class MatchesSelection extends React.Component {
   }
   render() {
     const {
-      path,
-      rule
+      path
     } = this.props
 
     const policyType = path.get(0)
-    const flattenedPolicy = parsePolicy(rule, [])
-    const listItemIsEnabled = (flattenedPolicy) => {
-      return match => policyIsCompatibleWithMatch(flattenedPolicy, match)
-    }
+
 
     return (
       <div>
@@ -69,7 +58,6 @@ class MatchesSelection extends React.Component {
               return (
                 <PolicyRuleOption
                   key={`match-${index}`}
-                  checkIfEnabled={listItemIsEnabled(flattenedPolicy)}
                   policyType={policyType}
                   option={match}
                   onClick={this.setMatchField}

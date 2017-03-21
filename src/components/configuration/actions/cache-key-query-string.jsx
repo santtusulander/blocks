@@ -18,10 +18,6 @@ class CacheKeyQueryString extends React.Component {
     this.updateSet = this.updateSet.bind(this)
   }
   saveChanges() {
-    // this.props.changeValue(
-    //   this.props.path,
-    //   this.state.updatedSet
-    // )
     this.props.saveAction(this.props.path, this.props.setKey, this.state.updatedSet)
 
   }
@@ -58,11 +54,12 @@ class CacheKeyQueryString extends React.Component {
 
 CacheKeyQueryString.displayName = 'CacheKeyQueryString'
 CacheKeyQueryString.propTypes = {
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: React.PropTypes.object,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  saveAction: React.PropTypes.func,
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 export default injectIntl(CacheKeyQueryString)

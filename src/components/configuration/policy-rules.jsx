@@ -32,18 +32,21 @@ class ConfigurationPolicyRules extends React.Component {
     this.showConfirmation = this.showConfirmation.bind(this)
     this.closeConfirmation = this.closeConfirmation.bind(this)
   }
+
   componentWillMount() {
     const { editOrDelete, policyId, policyType } = this.props.params
     if (editOrDelete === 'delete') {
       this.showConfirmation(policyType, Number(policyId))()
     }
   }
+
   activateRule(rulePath) {
     return e => {
       e.preventDefault()
       this.props.activateRule(rulePath)
     }
   }
+
   deleteRule(policyType, index) {
     return e => {
       e.preventDefault()
@@ -54,6 +57,7 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
   showConfirmation(policyType, index) {
     return () => {
       this.setState({
@@ -61,6 +65,7 @@ class ConfigurationPolicyRules extends React.Component {
       })
     }
   }
+
   closeConfirmation(policyType) {
     return () => {
       this.setState({
@@ -69,17 +74,12 @@ class ConfigurationPolicyRules extends React.Component {
       this.props.cancelDeletePolicyRoute()
     }
   }
+
   render() {
     const policyMapper = type => (rule, i) => {
       const { matches, sets } = parsePolicy(rule, [])
       const matchLabel = matches.map(match => match.field).join(', ')
       const actionsLabel = sets.map(set => set.setkey).join(', ')
-
-      {/*
-        TODO: remove UDN admin checks as part of UDNP-1713
-        Allow CT / TA modification only for UDN Admin
-      */}
-      //const ruleNeedsAdmin = matchIsContentTargeting(firstPolicy.get('match')) || actionIsTokenAuth(sets)
       const ruleNeedsAdmin = actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
@@ -95,7 +95,6 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
-            {/* Allow CT / TA modification only for UDN Admin */}
             {ruleNeedsAdmin ?
               <IsAdmin>
                 {actionButtons}

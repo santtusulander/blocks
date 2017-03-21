@@ -8,8 +8,7 @@ import TruncatedTitle from '../truncated-title'
 
 import {
   parsePolicy,
-  policyContainsSetComponent,
-  policyIsCompatibleWithAction
+  policyContainsSetComponent
 } from '../../util/policy-config'
 import Select from '../select'
 import {
@@ -37,6 +36,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.activateSet = this.activateSet.bind(this)
     this.submitForm = this.submitForm.bind(this)
   }
+
   componentWillReceiveProps(nextProps) {
     if (!Immutable.is(this.state.originalConfig, nextProps.config)) {
       this.setState({
@@ -44,6 +44,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       })
     }
   }
+
   handleChange(path) {
     return e => this.props.changeValue(path, e.target.value)
   }
@@ -94,6 +95,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       this.props.activateMatch(null)
     }
   }
+
   deleteSet(path) {
     return e => {
       e.preventDefault()
@@ -110,10 +112,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
 
   moveSet(path, newIndex) {
-    const flattenedPolicy = parsePolicy(this.props.rule, [])
-    // if (policyIsCompatibleWithAction(flattenedPolicy, 'content_targeting')) {
-    //   return this.moveContentTargetingSet(path, newIndex)
-    // }
     return e => {
       e.preventDefault()
       e.stopPropagation()

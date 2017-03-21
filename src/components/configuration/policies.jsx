@@ -51,16 +51,22 @@ class ConfigurationPolicies extends React.Component {
       this.handleCancel()
     }
   }
+
   addRule(policyType) {
     this.setState({ isEditingRule: false })
 
     const policyRules = this.props.config.getIn([policyType, 'policy_rules']).push(DEFAULT_RULE)
     this.props.changeValue([policyType, 'policy_rules'], policyRules)
     this.props.activateRule([policyType, 'policy_rules', policyRules.size - 1])
-    //this.props.activateMatch([policyType, 'policy_rules', policyRules.size - 1, 'match'])
   }
+
   changeActiveRuleType(policyType) {
-    if ([ POLICY_TYPES.REQUEST, POLICY_TYPES.FINAL_REQUEST, POLICY_TYPES.RESPONSE, POLICY_TYPES.FINAL_RESPONSE].indexOf(policyType) === -1) {
+    if ([
+      POLICY_TYPES.REQUEST,
+      POLICY_TYPES.FINAL_REQUEST,
+      POLICY_TYPES.RESPONSE,
+      POLICY_TYPES.FINAL_RESPONSE
+    ].indexOf(policyType) === -1) {
       return
     }
 
@@ -76,24 +82,28 @@ class ConfigurationPolicies extends React.Component {
       [[policyType, 'policy_rules'], newRuleset]
     ])
     this.props.activateRule([policyType, 'policy_rules', newRuleset.size - 1])
-    //this.props.activateMatch([policyType, 'policy_rules', newRuleset.size - 1, 'match'])
   }
+
   deleteRule(policyType, index) {
     const newPolicies = this.props.config.get(policyType).get('policy_rules').splice(index, 1)
     this.props.changeValue([policyType, 'policy_rules'], newPolicies)
   }
+
   handleChange(path) {
     return value => this.props.changeValue(path, value)
   }
+
   handleSave(e) {
     e.preventDefault()
     this.props.saveChanges()
   }
+
   handleHide(){
     this.props.cancelEditPolicyRoute()
     this.setState({ isEditingRule: true })
     this.props.activateRule(null)
   }
+
   handleCancel() {
     if (isPolicyRuleEmpty(this.props.config, this.props.activeRule)) {
       const ruleType = this.props.activeRule.get(0)
@@ -103,6 +113,7 @@ class ConfigurationPolicies extends React.Component {
     }
     this.handleHide()
   }
+
   cancelActiveMatchSetEditForm() {
     const { config, activeMatch, activeSet, activateMatch, activateSet } = this.props
 
@@ -117,6 +128,7 @@ class ConfigurationPolicies extends React.Component {
       activateSet(null)
     }
   }
+
   deleteTempItem(path) {
     const { config, changeValue } = this.props
     const parentPath = path.slice(0, -1)
@@ -126,6 +138,7 @@ class ConfigurationPolicies extends React.Component {
 
     changeValue(parentPath, filtered)
   }
+
   render() {
     let config = this.props.config;
     if(!config || !config.size) {

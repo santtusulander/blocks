@@ -6,9 +6,6 @@ import {
   VOD_STREAMING_TOKEN_AUTH
 } from './service-permissions'
 
-// export const DEFAULT_MATCH_JS = {match: {field: null, cases: [['',[]]]}}
-// export const DEFAULT_MATCH = Immutable.fromJS(DEFAULT_MATCH_JS)
-
 export const DEFAULT_RULE_JS = {
   rule_name: '',
   rule_body: {}

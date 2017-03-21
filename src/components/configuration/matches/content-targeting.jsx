@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl'
 
 import country_list from '../../../constants/country-list'
 import Typeahead from '../../../components/typeahead'
-import { WILDCARD_REGEXP } from '../../../util/policy-config'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
@@ -61,13 +60,10 @@ class ContentTargeting extends React.Component {
       }
     })
     const countries = includes.concat(excludes)
-
     const newMatch = newMatch.set('value', countries)
 
     this.props.changeValue(this.props.path, newMatch)
     this.props.activateMatch(null)
-
-    //this.props.close()
   }
 
   render() {
@@ -120,9 +116,9 @@ class ContentTargeting extends React.Component {
 
 ContentTargeting.displayName = 'ContentTargeting'
 ContentTargeting.propTypes = {
+  activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  // match: React.PropTypes.instanceOf(Immutable.Map),
   path: React.PropTypes.instanceOf(Immutable.List)
 }
 

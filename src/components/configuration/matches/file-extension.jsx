@@ -123,6 +123,7 @@ class FileExtension extends React.Component {
 
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
+  activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),

@@ -35,8 +35,8 @@ class Matcher extends React.Component {
     if(!Immutable.is(nextProps.match, this.props.match)) {
       const fieldDetail = nextProps.match.get('field_detail')
       const value = nextProps.match.get('value')
-      //const caseKey = nextProps.match.getIn(['cases', 0, 0])
       const containsVal = fieldDetail ? value : ''
+
       this.setState({
         activeFilter: getMatchFilterType(nextProps.match),
         containsVal: containsVal,
@@ -209,11 +209,15 @@ class Matcher extends React.Component {
 
 Matcher.displayName = 'Matcher'
 Matcher.propTypes = {
+  activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   contains: React.PropTypes.bool,
   description: React.PropTypes.string,
   disableRuleSelector: React.PropTypes.bool,
+  hasContains: React.PropTypes.bool,
+  hasEmpty: React.PropTypes.bool,
+  hasEquals: React.PropTypes.bool,
   label: React.PropTypes.string,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,

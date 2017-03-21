@@ -1,5 +1,3 @@
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
 import Immutable, { fromJS } from 'immutable'
 
 import { flatten } from '../util/helpers'
@@ -51,38 +49,10 @@ export function policyContainsMatchField(policy, field, count) {
   return matches.filter(match => match.get('field') === field).count() === count
 }
 
-export function policyIsCompatibleWithMatch(policy, match) {
-  // switch (match) {
-  //   case 'content_targeting':
-  //     return policy.matches.length === 1
-  //             && policy.sets.length === 0
-  // }
-  return true
-}
-
-export function policyIsCompatibleWithAction(policy, action) {
-  switch (action) {
-    case 'tokenauth':
-      return policy.matches.length === 1
-              && policy.sets.length === 1
-              && policyContainsMatchField(policy, 'request_url', 1)
-    // case 'content_targeting':
-    //   return policy.matches.length === 1
-    //           && policy.sets.length >= 1
-    //           && policy.sets[0].path.indexOf('script_lua') !== -1
-  }
-  return true
-}
-
 export function policyContainsSetComponent(policy, setComponent) {
   const sets = fromJS(policy.sets)
   return sets.filter(set => set.get('setkey') === setComponent).count() > 0
 }
-
-// export function matchIsContentTargeting(match) {
-//   return !!(match.get('field') === 'request_host'
-//           && match.getIn(["cases", 0, 1, 0, "script_lua"]))
-// }
 
 export function matchIsFileExtension(match) {
   return !!((match.get('field') === 'request_url' || match.get('field') === 'request_path')
@@ -162,35 +132,6 @@ export const getVaryHeaderRuleId = ( config ) => {
   return path.findIndex( rule => {
     return 'Vary' === rule.getIn(['set', 'header','header'])
   })
-}
-
-/**
- * Constructs a localized string looking like: (Deny/Allow) Users (from/NOT from) FI
- * or in case of redirection: Redirect Users (from/NOT from) US: www.redirect.here
- */
-// eslint-disable-next-line react/display-name
-const setContentTargetingActionName = action => {
-  const { response: { headers, code } } = action
-  const countries = action.not_in ? action.not_in.join(', ') : action.in.join(', ')
-  const fromOrNotFromPart = action.not_in ?
-    'portal.policy.edit.policies.contentTargeting.notFrom.text' :
-    'portal.policy.edit.policies.contentTargeting.from.text'
-  const redirectTo = headers && headers.Location
-  const redirLocationPart = redirectTo ? (': ' + redirectTo) : ''
-  let actionTypePart = null
-  if (code < 300) {
-    actionTypePart = 'portal.policy.edit.allowBlock.allow.text'
-  } else if(code < 400) {
-    actionTypePart = 'portal.policy.edit.allowBlock.redirect.text'
-  } else {
-    actionTypePart = 'portal.policy.edit.allowBlock.deny.text'
-  }
-  return (
-    <span>
-      <FormattedMessage id={actionTypePart}/> <FormattedMessage id={fromOrNotFromPart}/> {countries}
-      {redirLocationPart}
-    </span>
-  )
 }
 
 /**
