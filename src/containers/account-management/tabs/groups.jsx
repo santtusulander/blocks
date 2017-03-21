@@ -27,7 +27,7 @@ import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/h
 import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
-import ASNLookup from '../../../components/shared/ASN-lookup'
+
 class AccountManagementAccountGroups extends React.Component {
   constructor(props) {
     super(props);
@@ -221,7 +221,6 @@ class AccountManagementAccountGroups extends React.Component {
     const finalGroupText = groupSize + groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
-        <ASNLookup />
         <SectionHeader sectionHeaderTitle={finalGroupText}>
           <FormGroup className="search-input-group">
             <FormControl
