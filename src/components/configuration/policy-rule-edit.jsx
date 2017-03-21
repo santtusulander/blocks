@@ -6,10 +6,7 @@ import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 
-import {
-  parsePolicy,
-  policyContainsSetComponent
-} from '../../util/policy-config'
+import { parsePolicy } from '../../util/policy-config'
 import Select from '../select'
 import {
   POLICY_TYPES,
@@ -143,19 +140,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
     const disableAddMatchButton = () => {
-      if (policyContainsSetComponent(flattenedPolicy, 'tokenauth')) {
-        return true
-      } 
-
       if (flattenedPolicy.sets.length === 0) {
         return true
       }
 
       return false
-    }
-
-    const disableAddActionButton = () => {
-      return policyContainsSetComponent(flattenedPolicy, 'tokenauth')
     }
 
     const disableButton = () => {
@@ -202,10 +191,11 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
             </Col>
             <Col xs={4} className="text-right">
-              <Button bsStyle="primary"
-                      className="btn-icon btn-add-new"
-                      onClick={this.addAction(flattenedPolicy.matches[0])}
-                      disabled={disableAddActionButton()}>
+              <Button
+                bsStyle="primary"
+                className="btn-icon btn-add-new"
+                onClick={this.addAction(flattenedPolicy.matches[0])}
+              >
                 <IconAdd />
               </Button>
             </Col>

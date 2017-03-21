@@ -54,12 +54,11 @@ export class TokenAuth extends React.Component {
   }
 
   saveChanges(values) {
-    const { close, invalid, changeValue, path} = this.props
+    const { invalid, path} = this.props
     const { type, shared_key, encryption, streaming_ttl, streaming_add_ip_addr, schema, streaming_encryption } = values
-    const setPath = path.slice(0, -1)
 
     if (!invalid) {
-      const newSet = Immutable.fromJS({tokenauth: {
+      const newSet = Immutable.fromJS({
         type,
         shared_key,
         schema,
@@ -67,10 +66,9 @@ export class TokenAuth extends React.Component {
         streaming_add_ip_addr,
         encryption,
         streaming_encryption
-      }})
+      })
 
-      changeValue(setPath, newSet)
-      close()
+      this.props.saveAction(path, this.props.setKey, newSet)
     }
   }
 
@@ -223,6 +221,7 @@ TokenAuth.propTypes = {
   invalid: React.PropTypes.bool,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.string,
   shared_key: React.PropTypes.string,
   ...reduxFormPropTypes
 }

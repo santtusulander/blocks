@@ -19,7 +19,6 @@ class CacheKeyQueryString extends React.Component {
   }
   saveChanges() {
     this.props.saveAction(this.props.path, this.props.setKey, this.state.updatedSet)
-
   }
   updateSet(set) {
     this.setState({ updatedSet: set })
