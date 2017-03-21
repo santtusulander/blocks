@@ -471,13 +471,6 @@ class ContentItems extends React.Component {
             this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
-            <ReactCSSTransitionGroup
-              component="div"
-              className="content-transition"
-              transitionName="content-transition"
-              transitionEnterTimeout={400}
-              transitionLeaveTimeout={250}
-            >
 
             <div
               key={viewingChart}
@@ -586,7 +579,6 @@ class ContentItems extends React.Component {
                   )
                 })}
               </div>
-            </ReactCSSTransitionGroup>
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
