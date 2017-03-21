@@ -59,7 +59,6 @@ export const availableMatches = [
     key: 'content_targeting',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
-    requiresAdmin: true,
     servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
   },
   { // File Name (not yet implemented on backend)
@@ -96,7 +95,6 @@ export const availableActions = [
     key: 'tokenauth',
     name: 'portal.policy.edit.actionSelection.tokenauth.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
-    requiresAdmin: true,
     servicePermissions: [ MEDIA_DELIVERY_TOKEN_AUTH, VOD_STREAMING_TOKEN_AUTH ]
   },
   {

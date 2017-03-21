@@ -17,7 +17,10 @@ const StorageChartContainer = props => {
   const { totals: { bytes = {}, historical_bytes = {}} } = props.storageMetrics.toJS()
 
   return props.showingAggregate
-    ? <AggregatedStorageChart bytes={bytes} estimate={estimated_usage} />
+    ? <AggregatedStorageChart
+        bytes={bytes}
+        historicalBytes={historical_bytes}
+        estimate={estimated_usage} />
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
@@ -25,10 +28,10 @@ const StorageChartContainer = props => {
         storageContentLink={props.storageContentLink}
         name={ingest_point_id}
         locations={List()}
-        currentUsage={bytes.average}
+        currentUsage={bytes.ending}
         estimate={estimated_usage}
         peak={bytes.peak}
-        lastMonthUsage={historical_bytes.average}
+        lastMonthUsage={historical_bytes.ending}
         lastMonthEstimate={estimated_usage}
         lastMonthPeak={historical_bytes.peak} />
     )
