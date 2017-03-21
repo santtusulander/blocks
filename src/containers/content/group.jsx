@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -46,7 +46,7 @@ export class Group extends React.Component {
   }
 
   createNewHost(id, deploymentMode) {
-    return this.props.hostActions.createHost(
+    return this.props.createProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -55,7 +55,7 @@ export class Group extends React.Component {
     )
   }
   deleteHost(id) {
-    return this.props.hostActions.deleteHost(
+    return this.props.deleteProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
@@ -115,7 +115,7 @@ export class Group extends React.Component {
         viewingChart={this.props.viewingChart}
         showInfoDialog={this.props.uiActions.showInfoDialog}
         hideInfoDialog={this.props.uiActions.hideInfoDialog}
-        
+
         showAnalyticsLink={true}
         analyticsURLBuilder={() => getAnalyticsUrlFromParams(params, user, roles)}
       />
@@ -125,22 +125,23 @@ export class Group extends React.Component {
 
 Group.displayName = 'Group'
 Group.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  fetchGroupData: React.PropTypes.func,
-  fetchMetricsData: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
-  hostActions: React.PropTypes.object,
-  params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  sortDirection: React.PropTypes.number,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storages: React.PropTypes.instanceOf(Immutable.Iterable),
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+  activeAccount: PropTypes.instanceOf(Immutable.Map),
+  activeGroup: PropTypes.instanceOf(Immutable.Map),
+  createProperty: PropTypes.func,
+  deleteProperty: PropTypes.func,
+  fetchGroupData: PropTypes.func,
+  fetchMetricsData: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  params: PropTypes.object,
+  properties: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.List),
+  sortDirection: PropTypes.number,
+  sortValuePath: PropTypes.instanceOf(Immutable.List),
+  storages: PropTypes.instanceOf(Immutable.Iterable),
+  uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Immutable.Map),
+  viewingChart: PropTypes.bool
 }
 Group.defaultProps = {
   activeAccount: Immutable.Map(),
@@ -200,7 +201,10 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   return {
     fetchGroupData: fetchGroupData,
     fetchMetricsData: fetchMetricsData,
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
+    createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload}))
+
   };
 }
 
