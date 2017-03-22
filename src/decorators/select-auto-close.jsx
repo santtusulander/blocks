@@ -24,7 +24,7 @@ export default function(WrappedSelect) {
     }
 
     handleClick(event) {
-      const element = findDOMNode(this)
+      const element = findDOMNode(this.node)
       if (element && element.contains(event.target)) {
         return
       }
@@ -54,9 +54,9 @@ export default function(WrappedSelect) {
     }
 
     render() {
-      return (
+      return (<span className="select-auto-close" ref={(node) => {this.node = node}}>
         <WrappedSelect {...this.props} open={this.state.open} onItemClick={this.onItemClick} toggle={this.onToggle}/>
-      )
+      </span>)
     }
   }
 
