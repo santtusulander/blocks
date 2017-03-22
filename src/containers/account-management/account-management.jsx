@@ -170,13 +170,17 @@ export class AccountManagement extends Component {
       group.get('id')
     ).then(response => {
       this.props.toggleModal(null)
-      response.error &&
+      if (response.error) {
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
+      } else {
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groups.delete"/>)
+      }
+
     })
   }
 
@@ -323,7 +327,10 @@ export class AccountManagement extends Component {
           deleteButton: true,
           cancelButton: true,
           cancel: () => toggleModal(null),
-          onSubmit: () => onDelete(brand, this.state.accountToDelete, router)
+          onSubmit: () => {
+            onDelete(brand, this.state.accountToDelete, router)
+              .then(() => this.showNotification(<FormattedMessage id="portal.accountManagement.accountDeleted.text"/>))
+          }
         }
         break
       case DELETE_GROUP:
@@ -341,6 +348,7 @@ export class AccountManagement extends Component {
 
     const childProps = {
       addGroup: this.addGroupToActiveAccount,
+      showNotification: this.showNotification,
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
@@ -507,6 +515,7 @@ AccountManagement.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   // activeRecordType: PropTypes.string,
+  changeNotification: PropTypes.func,
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
   // dnsActions: PropTypes.object,
@@ -584,6 +593,7 @@ function mapDispatchToProps(dispatch) {
 
   return {
     accountActions: accountActions,
+    changeNotification: uiActions.changeNotification,
     toggleModal: uiActions.toggleAccountManagementModal,
     dnsActions: dnsActions,
     groupActions: groupActions,
