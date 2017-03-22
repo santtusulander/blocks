@@ -27,6 +27,9 @@ import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
+
+//TODO: remove -> update to entities/redux
+import * as groupActionCreators from '../../redux/modules/group'
 import PROVIDER_TYPES from '../../constants/provider-types'
 
 import Content from '../../components/layout/content'
@@ -59,8 +62,10 @@ export class Account extends React.Component {
     this.props.fetchData()
   }
 
-  /* TODO: Move all CRUD methods inside modal */
+  /* TODO: Move all CRUD methods inside GroupContainer */
   createGroup({data, usersToAdd}) {
+    console.warn( 'createGroup in account.jsx will be deprecated')
+
     return this.props.groupActions.createGroup('udn', this.props.params.account, data)
       .then(({ payload }) => {
         this.props.clearFetchedHosts()
@@ -76,6 +81,8 @@ export class Account extends React.Component {
       })
   }
   editGroup({groupId, data, addUsers, deleteUsers}) {
+    console.warn( 'editGroup in account.jsx will be deprecated')
+
     const groupIdsByEmail = email => this.props.user.get('allUsers')
       .find(user => user.get('email') === email)
       .get('group_id')
@@ -103,6 +110,8 @@ export class Account extends React.Component {
     ))
   }
   deleteGroup(group) {
+    console.warn( 'deleteGroup in account.jsx will be deprecated')
+
     return this.props.groupActions.deleteGroup(
       'udn',
       this.props.activeAccount.get('id'),
@@ -297,10 +306,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       metricsActions.fetchDailyGroupTraffic(metricsOpts)
     ])
   }
+
+  const oldGroupActions = bindActionCreators(groupActionCreators, dispatch)
+
   return {
     fetchData: fetchData,
     uiActions,
-    toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal
+    toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
+    groupActions: oldGroupActions
   };
 }
 
