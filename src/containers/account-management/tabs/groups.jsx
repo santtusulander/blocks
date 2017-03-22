@@ -41,7 +41,6 @@ class AccountManagementAccountGroups extends React.Component {
     this.changeSort      = this.changeSort.bind(this)
     this.deleteGroup     = this.deleteGroup.bind(this)
     this.editGroup       = this.editGroup.bind(this)
-    this.saveEditedGroup = this.saveEditedGroup.bind(this)
     this.cancelAdding    = this.cancelAdding.bind(this)
     this.changeSearch    = this.changeSearch.bind(this)
     this.changeNewUsers  = this.changeNewUsers.bind(this)
@@ -105,11 +104,6 @@ class AccountManagementAccountGroups extends React.Component {
     return checkForErrors({ name }, conditions)
   }
 
-  // TODO: Now that this is a container, no need to pass this in
-  saveEditedGroup(group) {
-    return name => this.props.editGroup(group, name).then(this.cancelAdding)
-  }
-
   changeSearch(e) {
     this.setState({
       search: e.target.value
@@ -171,7 +165,7 @@ class AccountManagementAccountGroups extends React.Component {
               onChange={this.changeSearch} />
           </FormGroup>
           <IsAllowed to={CREATE_GROUP}>
-            <Button bsStyle="success" className="btn-icon" onClick={() => this.props.editGroup()}>
+            <Button bsStyle="success" className="btn-icon" onClick={() => this.props.showGroupModal()}>
               <IconAdd />
             </Button>
           </IsAllowed>
@@ -212,7 +206,7 @@ class AccountManagementAccountGroups extends React.Component {
                 */}
                 <td className="nowrap-column">
                   <IsAllowed to={MODIFY_GROUP}>
-                    <ActionButtons onEdit={() => {this.props.editGroup(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
+                    <ActionButtons onEdit={() => {this.props.showGroupModal(group)}} onDelete={() => {this.props.deleteGroup(group)}} />
                   </IsAllowed>
                 </td>
               </tr>
@@ -234,13 +228,13 @@ class AccountManagementAccountGroups extends React.Component {
 AccountManagementAccountGroups.displayName  = 'AccountManagementAccountGroups'
 AccountManagementAccountGroups.propTypes    = {
   deleteGroup: React.PropTypes.func,
-  editGroup: React.PropTypes.func,
   groupActions: React.PropTypes.object,
   groups: React.PropTypes.instanceOf(Immutable.List),
   intl: React.PropTypes.object,
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showGroupModal: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)

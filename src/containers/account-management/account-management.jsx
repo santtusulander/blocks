@@ -371,7 +371,7 @@ export class AccountManagement extends Component {
       deleteGroup: this.showDeleteGroupModal,
       deleteAccount: this.showDeleteAccountModal,
       deleteUser: this.showDeleteUserModal,
-      editGroup: this.showGroupModal,
+      showGroupModal: this.showGroupModal,
       account: activeAccount,
       toggleModal,
       params,
@@ -526,6 +526,8 @@ export class AccountManagement extends Component {
         {accountManagementModal === ADD_GROUP &&
           <EntityEdit
             type='group'
+            canSeeLocations={accountIsServiceProviderType(this.props.activeAccount)}
+            locationPermissions={getLocationPermissions(childProps.roles, childProps.currentUser)}
             currentUser={this.props.currentUser}
             params={this.props.params}
             onCancel={() => this.hideGroupModal()}
