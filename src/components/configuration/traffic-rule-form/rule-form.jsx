@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 
 import Input from '../../form/field-form-group'
@@ -9,22 +9,7 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
-const renderMatch = ({ onRemove, onEdit, input }) => {
-  return (
-    <Row className="condition">
-      <Col xs={10} onClick={onEdit}>
-        <p>{input.value.label}</p>
-      </Col>
-      <Col xs={2} className="text-right">
-        <ActionButtons
-          className="secondary"
-          onDelete={onRemove}/>
-      </Col>
-    </Row>
-  )
-}
-
-const renderMatches = ({ fields, chooseMatch }) => {
+const Matches = ({ fields, chooseMatch }) => {
   return (
     <div className="conditions">
       {fields.map((match, index) => {
@@ -36,16 +21,33 @@ const renderMatches = ({ fields, chooseMatch }) => {
             key={index}
             name={match}
             type="text"
-            component={renderMatch}
             onRemove={() => fields.remove(index)}
             onEdit={() => chooseMatch(editableMatch)}
-          />
+            component={({ onRemove, onEdit, input }) => (
+              <Row className="condition">
+                <Col xs={10} onClick={onEdit}>
+                  <p>{input.value.label}</p>
+                </Col>
+                <Col xs={2} className="text-right">
+                  <ActionButtons
+                    className="secondary"
+                    onDelete={onRemove}/>
+                </Col>
+              </Row>
+            )}/>
         )
       })}
     </div>
   )
 }
 
+Matches.displayName = "Matches"
+Matches.propTypes = {
+  chooseMatch: PropTypes.func,
+  fields: PropTypes.object
+}
+
+/*eslint-disable react/no-multi-comp*/
 const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, invalid }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
@@ -78,7 +80,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
         <FieldArray
           name="matchArray"
           chooseMatch={chooseMatch}
-          component={renderMatches}/>
+          component={Matches}/>
 
       <FormFooterButtons>
         <Button
@@ -103,7 +105,13 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
 
 RuleForm.displayName = 'RuleForm'
 RuleForm.propTypes = {
-
+  chooseMatch: PropTypes.bool,
+  edit: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  hasMatches: PropTypes.bool,
+  invalid: PropTypes.bool,
+  onCancel: PropTypes.func,
+  onSubmit: PropTypes.func
 }
 
-export default injectIntl(RuleForm)
+export default RuleForm

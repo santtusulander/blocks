@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+/*eslint-disable no-console*/
+
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
-import { reduxForm, formValueSelector, arrayPush, arraySplice } from 'redux-form'
+import { reduxForm, propTypes, formValueSelector, arrayPush, arraySplice } from 'redux-form'
 
 import MatchesForm from './matches-form'
 import SidePanel from '../../../components/side-panel'
@@ -51,6 +52,15 @@ class TrafficRuleFormContainer extends Component {
 }
 
 TrafficRuleFormContainer.displayName = "TrafficRuleFormContainer"
+TrafficRuleFormContainer.propTypes = {
+  addMatch: PropTypes.bool,
+  editMatch: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  hasMatches: PropTypes.bool,
+  onCancel: PropTypes.func,
+  ...propTypes
+
+}
 
 const stateToProps = state => {
   const matchArrayValues = formValueSelector('traffic-rule-form')(state, 'matchArray')

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 
 import SidePanel from '../../side-panel'
 import IconCaretRight from '../../icons/icon-caret-right'
@@ -13,6 +13,18 @@ const matches = [
 ]
 
 export default class MatchesForm extends Component {
+
+  static get displayName() {
+    return 'MatchesForm'
+  }
+
+  static get propTypes() {
+    return {
+      chooseMatch: PropTypes.func,
+      chosenMatch: PropTypes.object,
+      saveMatch: PropTypes.func
+    }
+  }
 
   renderMatchSelection = () => (
     <ul className="condition-selection list-unstyled">
