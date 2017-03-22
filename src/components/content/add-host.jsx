@@ -1,4 +1,7 @@
 import React from 'react'
+import Immutable from 'immutable'
+import { connect } from 'react-redux'
+import { SubmissionError } from 'redux-form'
 import {
   Button,
   FormGroup,
@@ -13,13 +16,16 @@ import FieldFormGroup from '../form/field-form-group'
 import FormFooterButtons from '../form/form-footer-buttons'
 
 import { isValidHostName } from '../../util/validators'
+import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'
+import { DEFAULT_HOST_SERVICE_TYPE } from '../../constants/configuration'
 
 const validate = (values) => {
   const errors = {}
 
   const {
     hostName,
-    deploymentMode
+    deploymentMode,
+    serviceType
   } = values
 
   if(!hostName) {
@@ -34,6 +40,10 @@ const validate = (values) => {
     errors.deploymentMode = <FormattedMessage id="portal.content.addHost.deploymentMode.required" />
   }
 
+  if (!serviceType) {
+    errors.serviceType = <FormattedMessage id="portal.content.addHost.serviceType.required" />
+  }
+
   return errors
 }
 
@@ -45,8 +55,14 @@ class AddHost extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit(values){
-    return this.props.createHost( values.hostName, values.deploymentMode )
+  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }){
+    const res = this.props.createHost(hostName, deploymentMode, serviceType)
+
+    return res.catch((error) => {
+      if (error) {
+        throw new SubmissionError({ _error: error.data.message })
+      }
+    })
   }
 
   onCancel(){
@@ -58,7 +74,10 @@ class AddHost extends React.Component {
       handleSubmit,
       invalid,
       intl,
-      submitting
+      error,
+      submitting,
+      hasVODSupport,
+      hasMDSupport
     } = this.props
 
     const submitButtonLabel = submitting
@@ -67,6 +86,13 @@ class AddHost extends React.Component {
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
+
+        {
+          error &&
+          <p className='has-error'>
+            <span className='help-block'>{error}</span>
+          </p>
+        }
 
         <Field
           type="text"
@@ -95,6 +121,31 @@ class AddHost extends React.Component {
             />
         </FormGroup>
 
+        {(hasMDSupport || hasVODSupport) &&
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.content.addHost.serviceType.text" /> *</ControlLabel>
+              {hasMDSupport &&
+                <Field
+                  name="serviceType"
+                  type="radio"
+                  value="large"
+                  component={FieldRadio}
+                  label={<FormattedMessage id="portal.content.addHost.large.text" />}
+                />
+              }
+
+              {hasVODSupport &&
+                <Field
+                  type="radio"
+                  name="serviceType"
+                  value="msd"
+                  component={FieldRadio}
+                  label={<FormattedMessage id="portal.content.addHost.msd.text" />}
+                />
+              }
+          </FormGroup>
+        }
+
         <FormFooterButtons>
           <Button
             id="cancel-btn"
@@ -117,13 +168,38 @@ class AddHost extends React.Component {
 
 AddHost.displayName = 'AddHost'
 AddHost.propTypes = {
+  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   cancelChanges: React.PropTypes.func,
   createHost: React.PropTypes.func,
+  hasMDSupport: React.PropTypes.bool,
+  hasVODSupport: React.PropTypes.bool,
   intl: React.PropTypes.object,
   ...reduxFormPropTypes
 }
 
-export default reduxForm({
+function mapStateToProps(state, ownProps) {
+  const enabledServices = ownProps.activeGroup.get('services') || Immutable.List()
+  let hasVODSupport = false
+  let hasMDSupport = false
+
+  enabledServices.forEach((service) => {
+    let serviceId = service.get('service_id')
+    if (serviceId === VOD_STREAMING_SERVICE_ID) {
+      hasVODSupport = true
+    } else if (serviceId === MEDIA_DELIVERY_SERVICE_ID) {
+      hasMDSupport = true
+    }
+  })
+
+  return {
+    hasVODSupport: hasVODSupport,
+    hasMDSupport: hasMDSupport
+  };
+}
+
+const form = reduxForm({
   form: 'add-host-form',
   validate: validate
 })(injectIntl(AddHost))
+
+export default connect(mapStateToProps)(form)
