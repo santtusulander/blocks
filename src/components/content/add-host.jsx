@@ -17,6 +17,7 @@ import FormFooterButtons from '../form/form-footer-buttons'
 
 import { isValidHostName } from '../../util/validators'
 import { VOD_STREAMING_SERVICE_ID, MEDIA_DELIVERY_SERVICE_ID } from '../../constants/service-permissions'
+import { DEFAULT_HOST_SERVICE_TYPE } from '../../constants/configuration'
 
 const validate = (values) => {
   const errors = {}
@@ -54,8 +55,9 @@ class AddHost extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit({ hostName, deploymentMode, serviceType = "large" }){
+  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }){
     const res = this.props.createHost(hostName, deploymentMode, serviceType)
+
     return res.catch((error) => {
       if (error) {
         throw new SubmissionError({ _error: error.data.message })
