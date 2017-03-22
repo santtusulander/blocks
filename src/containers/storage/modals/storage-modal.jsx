@@ -10,6 +10,7 @@ import storageActions from '../../../redux/modules/entities/CIS-ingest-points/ac
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import workflowActions from '../../../redux/modules/entities/CIS-workflow-profiles/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
+import * as uiActions from '../../../redux/modules/ui'
 
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
@@ -39,6 +40,7 @@ class StorageFormContainer extends React.Component {
     this.onSave = this.onSave.bind(this)
     this.onDelete = this.onDelete.bind(this)
     this.onToggleDeleteModal = this.onToggleDeleteModal.bind(this)
+    this.showNotification= this.showNotification.bind(this)
   }
 
   componentWillMount() {
@@ -53,6 +55,12 @@ class StorageFormContainer extends React.Component {
 
   onToggleDeleteModal(showDeleteModal) {
     this.setState({ showDeleteModal })
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.changeNotification, 10000)
   }
 
   onSave(edit, values) {
@@ -82,9 +90,12 @@ class StorageFormContainer extends React.Component {
     }
 
     const save = edit ? this.props.onUpdate : this.props.onCreate
-
+    const statusMessage = edit
+                          ? <FormattedMessage id="portal.storage.storageForm.update.success.status"/>
+                          : <FormattedMessage id="portal.storage.storageForm.add.success.status"/>
     return save(params)
       .then(() => {
+        this.showNotification(statusMessage)
         this.props.onCancel();
       }).catch(resp => {
         throw new SubmissionError({ _error: resp.data.message })
@@ -103,6 +114,7 @@ class StorageFormContainer extends React.Component {
 
     return this.props.onDelete(params)
       .then(() => {
+        this.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
         this.props.onCancel()
       }).catch(resp => {
         throw new SubmissionError({ _error: resp.data.message })
@@ -164,6 +176,7 @@ StorageFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountId: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
   brand: PropTypes.string,
+  changeNotification: PropTypes.func,
   fetchAccount: PropTypes.func,
   fetchClusters: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -227,6 +240,7 @@ const mapDispatchToProps = (dispatch) => {
     onCreate: (params, data) => dispatch( storageActions.create( {...params, data } )),
     onUpdate: (params, data) => dispatch( storageActions.update( {...params, data } )),
     onDelete: (params) => dispatch( storageActions.remove( {...params } )),
+    changeNotification: (message) => dispatch( uiActions.changeNotification(message)),
 
     fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
     fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),

@@ -106,7 +106,12 @@ class AccountManagementStorages extends Component {
       account: this.props.account.get('id'),
       group: this.state.storageGroup,
       id: this.state.storageToDelete
-    }).then(() => this.props.toggleModal(null))
+    }).then(() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
+      this.props.toggleModal(null)
+    }).catch (() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.failed.status"/>)
+    })
   }
 
   filterData(storages, storageName) {
@@ -300,6 +305,7 @@ AccountManagementStorages.propTypes = {
   metrics: PropTypes.instanceOf(List),
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
+  showNotification: PropTypes.func,
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
 }
