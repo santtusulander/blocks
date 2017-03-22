@@ -57,7 +57,15 @@
     }
 
     .dark-theme & {
-      background-color: rgba($black, 0.2);
+      background-color: $dark-blue;
+
+      & b {
+        color: $white;
+      }
+
+      & h1 {
+        color: $white;
+      }
     }
 
     &.section-lg {
@@ -120,6 +128,10 @@
     text-overflow: ellipsis;
     word-wrap: break-word;
     white-space: nowrap;
+
+    .dark-theme & {
+      color: $white;
+    }
 
     @include md {
       font-size: 24px;
