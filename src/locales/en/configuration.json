@@ -89,13 +89,14 @@
   "portal.policy.edit.cors.textPlain.text": "text/plain",
 
   "portal.configuration.details.deploymentMode.text": "Deployment Mode",
+  "portal.configuration.details.serviceType.text": "Service Type",
+  "portal.configuration.details.serviceType.msd": "VOD Streaming",
+  "portal.configuration.details.serviceType.large": "Media Delivery",
   "portal.configuration.details.useUDNOrigin.text": "Use UDN Origin",
   "portal.configuration.details.UDNOrigin.text": "UDN Origin (Storage)",
   "portal.configuration.details.deploymentMode.production": "Production",
   "portal.configuration.details.deploymentMode.trial": "Trial",
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
-
-  "portal.configuration.streaming.VOD.label": "Enable VOD Streaming",
 
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
@@ -126,7 +127,6 @@
   "portal.configuration.policies.text": "Policies",
   "portal.configuration.performance.text": "Performance",
   "portal.configuration.security.text": "Security",
-  "portal.configuration.streaming.text": "Streaming",
   "portal.configuration.certificates.text": "Certificates",
   "portal.configuration.changeLog.text": "Change Log",
   "portal.configuration.changes.text": "{numChanges, plural, one {change} other{changes}}",
