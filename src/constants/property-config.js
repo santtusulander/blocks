@@ -113,7 +113,6 @@ export const availableActions = [
     key: 'reply',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
-    requiresAdmin: true,
     servicePermission: MEDIA_DELIVERY_CONTENT_TARGETTING
   },
   {
