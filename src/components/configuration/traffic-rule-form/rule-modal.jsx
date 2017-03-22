@@ -35,6 +35,7 @@ class TrafficRuleFormContainer extends Component {
         <SidePanel show={true} title={'blaceholder'} subTitle={''} cancel={!chosenMatch && onCancel}>
           <RuleForm
             hasMatches={hasMatches}
+            disabled={!!chosenMatch}
             chooseMatch={this.chooseMatch}
             initialValues={initialValues}
             handleSubmit={handleSubmit}
