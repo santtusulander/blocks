@@ -148,7 +148,7 @@ function mapStateToProps(state, { edit }) {
   }
 }
 
-function mapDispatchToProps(dispatch, { closeModal }) {
+function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
   const { startFetching, createResource, updateResource } = bindActionCreators(recordActionCreators, dispatch)
   return {
     addRecord: (vals, domain) => {
@@ -157,7 +157,10 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       vals.class = 'IN'
       startFetching()
       return createResource(domain, vals.name, vals)
-        .then(() => closeModal())
+        .then(() => {
+          showNotification(<FormattedMessage id='portal.accountManagement.dnsCreated.text' />)
+          closeModal()
+        })
     },
     updateRecord: (formValues, zone, activeRecord) => {
       let vals = recordValues(formValues)
@@ -165,7 +168,10 @@ function mapDispatchToProps(dispatch, { closeModal }) {
       vals.class = 'IN'
       startFetching()
       return updateResource(zone, activeRecord.get('name'), vals)
-        .then(() => closeModal())
+        .then(() => {
+          showNotification(<FormattedMessage id='portal.accountManagement.dnsUpdated.text' />)
+          closeModal()
+        })
     }
   }
 }

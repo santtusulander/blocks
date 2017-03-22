@@ -105,6 +105,7 @@ describe('AccountManagementAccountGroups', () => {
         }}
         router= { routerMock }
         addGroup={ addGroup }
+        showNotification={jest.fn()}
         intl={intlMaker()}
       />
     )
