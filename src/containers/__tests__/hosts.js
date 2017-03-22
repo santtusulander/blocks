@@ -118,7 +118,7 @@ describe('Hosts', () => {
   });
 
   it('should add a new host when called', () => {
-    subject().instance().createNewHost('bbb','production')
+    subject().instance().createNewHost('bbb','production', 'large')
     expect(propertyActions.create.mock.calls[0]).toEqual(['udn','1','1', fakePayload])
   })
 
