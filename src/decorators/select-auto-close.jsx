@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { findDOMNode } from 'react-dom'
 
 export default function(WrappedSelect) {
   class AutoClose extends Component {
@@ -24,7 +23,7 @@ export default function(WrappedSelect) {
     }
 
     handleClick(event) {
-      const element = findDOMNode(this.node)
+      const element = this.node
       if (element && element.contains(event.target)) {
         return
       }
