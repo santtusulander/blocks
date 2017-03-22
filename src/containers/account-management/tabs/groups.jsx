@@ -25,7 +25,7 @@ import MultilineTextFieldError from '../../../components/shared/forms/multiline-
 
 import { formatUnixTimestamp, checkForErrors, getSortData} from '../../../util/helpers'
 import { isValidTextField } from '../../../util/validators'
-import AsnLookup from '../../../components/form/field-form-group-asn-lookup'
+
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
 class AccountManagementAccountGroups extends React.Component {
@@ -221,7 +221,6 @@ class AccountManagementAccountGroups extends React.Component {
     const finalGroupText = groupSize + groupText + hiddenGroupText
     return (
       <PageContainer className="account-management-account-groups">
-        <AsnLookup />
         <SectionHeader sectionHeaderTitle={finalGroupText}>
           <FormGroup className="search-input-group">
             <FormControl
