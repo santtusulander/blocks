@@ -128,6 +128,7 @@
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
   "portal.common.search.no-results.text": "No results found.",
   "portal.common.current": "Current",
-  "portal.common.andMore": "{firstItem} and {count} more"
-
+  "portal.common.andMore": "{firstItem} and {count} more",
+  "portal.common.typeahead.asnLookup.label": "Autonomous System Number (ASN)",
+  "portal.common.typeahead.asnLookup.placeholder": "Enter ASN or company name"
 }
