@@ -12,6 +12,7 @@ import FieldRadio from '../../form/field-radio'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
+import FieldFormGroupAsnLookup from '../../form/field-form-group-asn-lookup'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import HelpTooltip from '../../../components/help-tooltip'
 import IsAllowed from '../../is-allowed'
@@ -71,21 +72,21 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
     ]
   }
 
-  if (data_type === 'asnlist' && value_asnlist && value_asnlist.length > 0) {
-    let hasInvalidASNItems = false
-    value_asnlist.forEach((asnItem) => {
-      if (!validateASNToken(asnItem)) {
-        hasInvalidASNItems = true
-      }
-    })
-
-    conditions.value_asnlist = [
-      {
-        condition: hasInvalidASNItems,
-        errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
-      }
-    ]
-  }
+  // if (data_type === 'asnlist' && value_asnlist && value_asnlist.length > 0) {
+  //   let hasInvalidASNItems = false
+  //   value_asnlist.forEach((asnItem) => {
+  //     if (!validateASNToken(asnItem)) {
+  //       hasInvalidASNItems = true
+  //     }
+  //   })
+  //
+  //   conditions.value_asnlist = [
+  //     {
+  //       condition: hasInvalidASNItems,
+  //       errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
+  //     }
+  //   ]
+  // }
 
   const errors = checkForErrors(
     { name, data_type, udn_type, value_ipv4cidr, value_asnlist },
@@ -282,8 +283,8 @@ class FootprintForm extends React.Component {
       ? <FormattedMessage id="portal.button.save"/>
       : <FormattedMessage id="portal.button.add"/>
 
-    const typeaheadValidationMethod = dataType === 'ipv4cidr' ? validateCIDRToken : validateASNToken
     const filteredUdnTypeOptions = dataType === 'ipv4cidr' ? udnTypeOptions.filter(({value}) => !value.includes('asn')) : udnTypeOptions
+
     return (
       <form className="sp-footprint-form" onSubmit={(addFootprintMethod === 'manual') ? handleSubmit(onSave) : handleSubmit(() => onCSVSave(this.state.csvValues))}>
           <span className='submit-error'>
@@ -349,15 +350,24 @@ class FootprintForm extends React.Component {
             label={<FormattedMessage id="portal.network.footprintForm.dataType.option.asn.text"/>}
           />
 
-          <Field
-            required={true}
-            name={`value_${dataType}`}
-            allowNew={true}
-            component={FieldFormGroupTypeahead}
-            multiple={true}
-            options={[]}
-            validation={typeaheadValidationMethod}
-          />
+          { dataType === 'ipv4cidr' &&
+            <Field
+              required={true}
+              name="value_ipv4cidr"
+              allowNew={true}
+              component={FieldFormGroupTypeahead}
+              multiple={true}
+              options={[]}
+              validation={validateCIDRToken}
+            />
+          }
+
+          { dataType === 'asnlist' &&
+            <FieldFormGroupAsnLookup
+              name="value_asnlist"
+              withoutLabel={true}
+            />
+          }
 
           <Field
             name="udn_type"
@@ -395,8 +405,6 @@ class FootprintForm extends React.Component {
 
 FootprintForm.displayName = "FootprintForm"
 FootprintForm.propTypes = {
-  ASNOptions: PropTypes.array,
-  CIDROptions: PropTypes.array,
   editing: PropTypes.bool,
   fetching: PropTypes.bool,
   intl: PropTypes.object,

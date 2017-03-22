@@ -15,7 +15,10 @@ import FootprintForm from '../../../components/network/forms/footprint-form'
 
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
 
-const normalizeValueToAPI = (value) => value.map(item => item.label)
+const normalizeValueToAPI = (value, type) => value.map(item => {
+  console.log('value type',type)
+  return type === 'ipv4cidr' ? item.label : item.id
+})
 const normalizeValueFromAPI = (value) => value.map(item => ({ id: item, label: item }))
 
 class FootprintFormContainer extends React.Component {
@@ -38,7 +41,7 @@ class FootprintFormContainer extends React.Component {
   onSave(edit, values) {
 
     const finalValues = Object.assign({}, values, {
-      value: normalizeValueToAPI(values[`value_${values.data_type}`]),
+      value: normalizeValueToAPI(values[`value_${values.data_type}`], values.data_type),
       location: this.props.location
     })
 
@@ -127,8 +130,6 @@ class FootprintFormContainer extends React.Component {
 
   render() {
     const {
-      ASNOptions,
-      CIDROptions,
       fetching,
       footprint,
       initialValues,
@@ -155,8 +156,6 @@ class FootprintFormContainer extends React.Component {
           editing={edit}
           footprintId={footprint && !footprint.isEmpty() && footprint.get('id')}
           fetching={fetching}
-          ASNOptions={ASNOptions}
-          CIDROptions={CIDROptions}
           udnTypeOptions={FOOTPRINT_UDN_TYPES}
           showNotification={this.showNotification}
           onCSVSave={this.onCSVSave}
@@ -176,8 +175,6 @@ FootprintFormContainer.defaultProps = {
   footprint: Map()
 }
 FootprintFormContainer.propTypes = {
-  ASNOptions: PropTypes.array,
-  CIDROptions: PropTypes.array,
   accountId: PropTypes.number,
   addFootprintToPod: PropTypes.func,
   fetching: PropTypes.bool,
