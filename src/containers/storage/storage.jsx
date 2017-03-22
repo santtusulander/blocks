@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { withRouter } from 'react-router'
+import moment from 'moment'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
@@ -38,7 +39,7 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
-import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
 class Storage extends Component {
   constructor(props) {
@@ -59,16 +60,24 @@ class Storage extends Component {
 
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
+      const { brand, account, group, storage } = this.props.params
       this.props.fetchStorage({
-        brand: this.props.params.brand,
-        account: this.props.params.account,
-        group: this.props.params.group,
-        id: this.props.params.storage
+        brand: brand,
+        account: account,
+        group: group,
+        id: storage
       })
 
-      const { params, filters } = this.props
-      const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
-      this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+      const metricsOpts = {
+        brand : brand,
+        account: account,
+        group: group,
+        ingest_point: storage,
+        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        endDate: moment.utc().endOf('day').format('X')
+      }
+
+      this.props.fetchStorageMetrics({...metricsOpts})
 
       this.props.fetchClusters({})
     }
@@ -196,7 +205,6 @@ Storage.propTypes = {
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
-  filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
