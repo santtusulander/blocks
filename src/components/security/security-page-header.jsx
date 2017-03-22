@@ -17,12 +17,17 @@ const SecurityPageHeader = ({ activeAccount, activeGroup, intl, itemSelectorFunc
     headerText = activeAccount
   }
 
+  const topBarTexts = {
+    account: intl.formatMessage({ id: 'portal.content.property.topBar.account.label' }),
+    brand: intl.formatMessage({ id: 'portal.content.property.topBar.brand.label' })
+  }
+
   return (
     <PageHeader pageSubTitle={<FormattedMessage id="portal.security.header.text"/>}>
         <AccountSelector
           as="security"
           params={params}
-          topBarTexts={{ brand: 'UDN Admin', account: 'UDN Admin' }}
+          topBarTexts={topBarTexts}
           topBarAction={() => itemSelectorFunc('brand', 'udn', {})}
           onSelect={itemSelectorFunc}
           restrictedTo={restriction}

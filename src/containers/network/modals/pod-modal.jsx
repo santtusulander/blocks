@@ -182,7 +182,8 @@ class PodFormContainer extends React.Component {
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
       provider_weight: parseFloat(values.UIProviderWeight),
-      ip_list: values.UIIpList.map( ip => ip.label )
+      ip_list: values.UIIpList.map( ip => ip.label ),
+      salt_roles: [values.UISaltRole]
     }
 
     if (values.UIDiscoveryMethod === 'BGP') {
@@ -253,7 +254,7 @@ class PodFormContainer extends React.Component {
         if (this.props.selectedEntityId === podId) {
           this.props.handleSelectedEntity(podId)
         }
-        
+
         this.showNotification(<FormattedMessage id="portal.network.podForm.deletePod.status"/>)
 
         //Close modal
@@ -430,7 +431,8 @@ const mapStateToProps = (state, ownProps) => {
     UIRequestFwdType: 'on_net',
     UILbMethod: 'gslb',
     pod_type: 'sp_edge',
-    UIProviderWeight: 0.5
+    UIProviderWeight: 0.5,
+    UISaltRole: 'cache'
   }
 
   const initialValues = edit && pod ? pod.toJS() : defaultValues
