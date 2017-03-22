@@ -8,8 +8,7 @@ import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
 import { getStorageAccessKey } from '../../redux/modules/user'
 
-import { UPLOAD_FILE } from '../../redux/modules/http-file-upload/actionTypes'
-import actions from '../../redux/modules/http-file-upload/actions'
+import uploadActions from '../../redux/modules/http-file-upload/actions'
 
 import FileUploader from '../../redux/modules/http-file-upload/uploader/file-uploader'
 import * as groupActionCreators from '../../redux/modules/group'
@@ -93,8 +92,8 @@ class Storage extends Component {
    * @param action {object} - action with type and payload
    */
   initFileUploader(action) {
-    const { gatewayHostname, initUploadProgressHandler } = this.props
-    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, initUploadProgressHandler)
+    const { gatewayHostname, uploadHandlers } = this.props
+    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers)
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -201,13 +200,13 @@ Storage.propTypes = {
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
   initStorageAccessKey: PropTypes.func,
-  initUploadProgressHandler: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
   storageContents: PropTypes.array,
   storageMetrics: PropTypes.object,
-  toggleModal: PropTypes.func
+  toggleModal: PropTypes.func,
+  uploadHandlers: PropTypes.object
 }
 
 Storage.defaultProps = {
@@ -329,7 +328,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
-    initUploadProgressHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params)),
+    // initUploadHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params)),
+    uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
     toggleModal: uiActions.toggleAccountManagementModal
   }
