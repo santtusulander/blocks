@@ -187,8 +187,8 @@ class PurgeModal extends React.Component {
     [] :
     allHosts.map(host => {
       return {
-        id: host,
-        label: host
+        id: host.get('published_host_id'),
+        label: host.get('published_host_id')
       }
     }).toJS();
 
