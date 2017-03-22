@@ -29,8 +29,8 @@ export class Security extends React.Component {
 
     const activeGroup = groups.find(obj => obj.get('id') === Number(params.group))
 
-    const itemSelectorFunc = (linkType, val) => {
-      this.props.router.push(getUrl('/security', linkType, val, this.props.params))
+    const itemSelectorFunc = (linkType, val, params) => {
+      this.props.router.push(getUrl('/security', linkType, val, params))
     }
 
     const securityBaseUrl = getSecurityUrlFromParams(params);
