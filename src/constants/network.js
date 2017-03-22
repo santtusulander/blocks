@@ -109,6 +109,11 @@ export const DISCOVERY_METHOD_OPTIONS = [
   {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
 ]
 
+export const SALT_ROLE_OPTIONS = [
+  {value: 'cache', label: 'portal.network.podForm.saltRole.options.cache.label'},
+  {value: 'gslb', label: 'portal.network.podForm.saltRole.options.gslb.label'}
+]
+
 export const STATUS_OPTIONS = [
   {value: 1, label: 'portal.network.item.status.provisioning'},
   {value: 2, label: 'portal.network.item.status.disabled'},

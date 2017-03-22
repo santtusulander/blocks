@@ -31,7 +31,9 @@ describe('AnalyticsTabStorage', () => {
             average: 0
           }
         },
+        params: { brand: 'foo', account: 'bar', group: 'zyx', storage: 'qwe' },
         fetchStorageMetrics: jest.fn(),
+        fetchOneCISIngestPoint: jest.fn(),
         fetchGroups: genAsyncMock
       }
       return shallow(<AnalyticsTabStorage {...props}/>)

@@ -146,7 +146,7 @@ export class Dashboard extends React.Component {
           }
           return Promise.all([
             ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
-            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined })
+            this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
           ])
         })
 
