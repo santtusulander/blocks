@@ -35,7 +35,12 @@ export class Property extends React.Component {
 
   componentDidMount() {
     const { account, brand, group, property} = this.props.params
-    this.props.hostActions.fetchHost(brand, account, group, property);
+    this.props.hostActions.fetchHost(brand, account, group, property)
+      .then((res) => {
+        if(res.error){
+          this.props.router.replace(getContentUrl('group', group, { brand, account }))
+        }
+      })
     this.props.hostActions.fetchHosts(brand, account, group);
   }
 
