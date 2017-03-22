@@ -35,7 +35,7 @@ export class Property extends React.Component {
 
   componentDidMount() {
     const { account, brand, group, property} = this.props.params
-    this.props.hostActions.fetchHost(brand, account, group, property)
+    this.props.hostActions.fetchHost(brand, account, group, property);
     this.props.hostActions.fetchHosts(brand, account, group);
   }
 
