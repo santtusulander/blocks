@@ -3,7 +3,7 @@ import { ComposedChart, Line, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, 
 import d3 from 'd3'
 import classNames from 'classnames'
 
-import AreaTooltip from './area-tooltip'
+import LineAreaComposedChartTooltip from './line-area-composed-chart-tooltip'
 import CustomLegend from './custom-legend'
 import { black } from '../../constants/colors'
 import { defaultTickDateFormat, dayInMilliSeconds } from '../../constants/chart'
@@ -97,8 +97,12 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             <Tooltip
               cursor={{stroke: black}}
               content={
-                <AreaTooltip
-                  iconClass={() => 'tooltip-class'}
+                <LineAreaComposedChartTooltip
+                  iconClassNamePicker={(dataKey) => dataKey !== comparisonDataKey
+                    ? 'storage'
+                    : 'comparison_storage'
+                  }
+                  ignoreValues={["estimate"]}
                   valueFormatter={valueFormatter}
                 />
               }

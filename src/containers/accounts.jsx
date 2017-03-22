@@ -107,6 +107,7 @@ export class Accounts extends React.Component {
         analyticsURLBuilder={analyticsURLBuilder}
         brand={brand}
         params={params}
+        changeNotification={uiActions.changeNotification}
         className="groups-container"
         createNewItem={this.createAccount}
         editItem={this.editAccount}

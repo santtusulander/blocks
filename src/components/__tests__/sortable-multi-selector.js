@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
 jest.unmock('../sortable-multi-selector.jsx')
+
 import SortableMultiSelector from '../sortable-multi-selector.jsx'
 
 function intlMaker() {
@@ -46,4 +47,28 @@ describe('SortableMultiSelector', () => {
     expect(subject().length).toBe(1)
   })
 
+  it('should have ButtonDropdown', () => {
+    expect(subject().find('ButtonDropdown').length).toBe(1)
+  })
+
+  it('should have 3 options in ButtonDropdown', () => {
+    expect(subject().find('ButtonDropdown').prop('options').length).toBe(3)
+  })
+
+  it('should have 2 options disabled in ButtonDropdown', () => {
+    const ButtonDropdown = subject().find('ButtonDropdown')
+    const options = ButtonDropdown.prop('options')
+
+    expect(options.filter(opt => opt.disabled).length).toBe(2)
+  })
+
+  it('should have 1 sortableList', () => {
+    expect(subject().find('sortableList').length).toBe(1)
+  })
+
+  it('should have 2 sortable items', () => {
+    const myContainerComponentWrapper = subject().find('sortableList')
+
+    expect(myContainerComponentWrapper.prop('items').size).toBe(2)
+  })
 })

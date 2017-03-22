@@ -11,6 +11,11 @@
   "portal.storage.storageForm.add.title": "New Storage",
   "portal.storage.storageForm.edit.title": "Edit Storage",
 
+  "portal.storage.storageForm.add.success.status": "Storage created successfully",
+  "portal.storage.storageForm.update.success.status": "Storage updated successfully",
+  "portal.storage.storageForm.delete.success.status": "Storage deleted successfully",
+  "portal.storage.storageForm.delete.failed.status": "Deleting storage failed",
+
   "portal.storage.storageForm.deleteModal.title": "Delete Storage?",
   "portal.storage.storageForm.deleteModal.confirmation.text": "Please confirm by writing 'delete' below, and pressing the delete button. This Storage will be removed from UDN immediately.",
   "portal.storage.storageForm.name.required.error": "Storage name is required",

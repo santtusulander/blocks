@@ -50,6 +50,7 @@ import ConfigurationDefaults from './components/configuration/defaults'
 import ConfigurationPolicies from './components/configuration/policies'
 import ConfigurationSecurity from './components/configuration/security'
 import ConfigurationStreaming from './components/configuration/streaming'
+import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
 
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
@@ -279,6 +280,7 @@ export const getRoutes = store => {
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
             <Route path={routes.configurationTabStreaming} component={ConfigurationStreaming}/>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
           </Route>
 
           {/* Storage - routes */}

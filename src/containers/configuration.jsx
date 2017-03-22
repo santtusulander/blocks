@@ -370,6 +370,12 @@ export class Configuration extends React.Component {
             </li>
           }
 
+          <li data-eventKey='gtm'>
+            <Link to={baseUrl + '/gtm'} activeClassName="active">
+            <FormattedMessage id="portal.configuration.gtm.text" />
+            </Link>
+          </li>
+
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -430,7 +436,17 @@ export class Configuration extends React.Component {
           cancel={toggleDelete}
           onSubmit={() =>
             deleteProperty(brand, account, group, activeHost.get('published_host_id'))
-              .then(() => router.push(getContentUrl('group', group, { brand, account })))}
+              .then(action => {
+                if (action.error) {
+                  this.showNotification(this.props.intl.formatMessage(
+                                        {id: 'portal.configuration.deleteFailed.text'},
+                                        {reason: action.payload.data.message}))
+                } else {
+                  this.showNotification(<FormattedMessage id="portal.configuration.deleteSuccess.text"/>)
+                  router.push(getContentUrl('group', group, { brand, account }))
+                }
+              })
+            }
           invalid={true}
           verifyDelete={true}>
           <p>

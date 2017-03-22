@@ -31,6 +31,7 @@ import checkPermissions, {getStoragePermissions} from '../../util/permissions'
 import { getAnalyticsUrlFromParams } from '../../util/routes'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
+import { getAnalyticsUrlFromParams } from '../util/routes'
 
 export class Group extends React.Component {
   constructor(props) {
@@ -91,7 +92,7 @@ export class Group extends React.Component {
         params={params}
 
         className="hosts-container"
-
+        changeNotification={this.props.uiActions.changeNotification}
         storages={this.props.storages}
         properties={this.props.properties}
 

@@ -109,6 +109,11 @@ export const DISCOVERY_METHOD_OPTIONS = [
   {value: 'footprints', label: 'portal.network.podForm.discoveryMethod.options.footprints.label'}
 ]
 
+export const SALT_ROLE_OPTIONS = [
+  {value: 'cache', label: 'portal.network.podForm.saltRole.options.cache.label'},
+  {value: 'gslb', label: 'portal.network.podForm.saltRole.options.gslb.label'}
+]
+
 export const STATUS_OPTIONS = [
   {value: 1, label: 'portal.network.item.status.provisioning'},
   {value: 2, label: 'portal.network.item.status.disabled'},
@@ -128,6 +133,9 @@ export const ASN_MAX = 4199999999
 export const ASN_RESERVED = 23456
 export const ASN_RESERVED_RANGE_START = 64496
 export const ASN_RESERVED_RANGE_END = 131071
+export const ASN_ITEMS_COUNT_TO_SEARCH = 5
+export const ASN_STARTING_SEARCH_COUNT = 1
+export const ASN_SEARCH_DELAY = 400
 
 export const ROUTING_DEAMON_BGP_NAME_MIN_LEN = 1
 export const ROUTING_DEAMON_BGP_NAME_MAX_LEN = 255
