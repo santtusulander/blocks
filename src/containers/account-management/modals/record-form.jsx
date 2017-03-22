@@ -81,10 +81,11 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
     shouldShowField: isShown(recordType),
     type: recordType,
     onSubmit: values => {
-      const filteredValues = filterFields(values)
-      let { ttl, prio } = filteredValues
-      if (ttl) {
-        filteredValues.ttl = Number(ttl)
+      const { type, value, name, ttl } = values
+      const filteredValues = filterFields({ type, value, name, ttl })
+      let { ttl: filteredTtl, prio } = filteredValues
+      if (filteredTtl) {
+        filteredValues.ttl = Number(filteredTtl)
       }
       if (prio) {
         filteredValues.prio = Number(prio)
