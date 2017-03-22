@@ -55,7 +55,6 @@ export class AccountManagementAccountUsers extends React.Component {
     this.newUser = this.newUser.bind(this)
     this.editUser = this.editUser.bind(this)
     this.saveUser = this.saveUser.bind(this)
-    this.showNotification = this.showNotification.bind(this)
     this.cancelUserEdit = this.cancelUserEdit.bind(this)
     this.toggleInlineAdd = this.toggleInlineAdd.bind(this)
     this.togglePermissionModal = this.togglePermissionModal.bind(this)
@@ -86,11 +85,6 @@ export class AccountManagementAccountUsers extends React.Component {
     document.removeEventListener('click', this.cancelAdding, false)
   }
 
-  showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
-  }
 
   changeSort(column, direction) {
     this.setState({
@@ -113,6 +107,7 @@ export class AccountManagementAccountUsers extends React.Component {
         throw new SubmissionError({email: res.payload.message})
       }
       else {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.userCreated.text" />)
         this.toggleInlineAdd()
       }
     })
@@ -485,6 +480,7 @@ AccountManagementAccountUsers.propTypes = {
   rolesActions: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showNotification: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(List)

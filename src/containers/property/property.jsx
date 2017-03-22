@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl'
 import * as hostActionCreators from '../../redux/modules/host'
 import * as purgeActionCreators from '../../redux/modules/purge'
 import * as uiActionCreators from '../../redux/modules/ui'
+import propertyActions from '../../redux/modules/entities/properties/actions'
 
 import Content from '../../components/layout/content'
 import PropertyHeader from '../../components/content/property/property-header'
@@ -82,9 +83,7 @@ export class Property extends React.Component {
 
     const {
       currentUser,
-      hostActions: {
-        deleteHost
-      },
+      deleteProperty,
       params: {
         brand,
         account,
@@ -127,7 +126,7 @@ export class Property extends React.Component {
           deleteButton={true}
           cancel={toggleDelete}
           onSubmit={() => {
-            deleteHost(brand, account, group, this.props.activeHost)
+            deleteProperty(brand, account, group, this.props.activeHost.get('published_host_id'))
               .then(() => router.replace(getContentUrl('group', group, { brand, account })))
           }}
           invalid={true}
@@ -152,6 +151,7 @@ Property.propTypes = {
   brand: React.PropTypes.string,
   children: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
+  deleteProperty: React.PropTypes.func,
   group: React.PropTypes.string,
   hostActions: React.PropTypes.object,
   location: React.PropTypes.object,
@@ -182,7 +182,8 @@ function mapDispatchToProps(dispatch) {
   return {
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     purgeActions: bindActionCreators(purgeActionCreators, dispatch),
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+    deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id}))
   };
 }
 
