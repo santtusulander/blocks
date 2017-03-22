@@ -17,11 +17,11 @@ import LoadingSpinner from '../../../components/loading-spinner/loading-spinner'
 import IsAllowed from '../../../components/is-allowed'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
-import * as groupActionCreators from '../../../redux/modules/group'
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -29,6 +29,7 @@ import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-cl
 import { getByGroups as getPropetiesByGroups } from '../../../redux/modules/entities/properties/selectors'
 import { getByGroups as getMetricsByGroups } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
@@ -69,8 +70,8 @@ class AccountManagementStorages extends Component {
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
 
-    if (!this.props.group && this.props.params.group) {
-      this.props.fetchGroup(this.props.params)
+    if (this.props.params.group) {
+      this.props.fetchGroup({ brand: brandId, account: accountId, id: this.props.params.group })
     }
 
     this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
@@ -314,7 +315,7 @@ AccountManagementStorages.defaultProps = {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
 
@@ -322,7 +323,7 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     account: account,
     groups: groups,
-    group: state.group.get('activeGroup'),
+    group: getGroupById(state, ownProps.params.group),
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
@@ -333,7 +334,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
     deleteStorage: (params) => dispatch( storageActions.remove(params)),
@@ -341,7 +342,7 @@ function mapDispatchToProps(dispatch) {
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
     fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
-    fetchGroup: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group)
+    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) )
   };
 }
 
