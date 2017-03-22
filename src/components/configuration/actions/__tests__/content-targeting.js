@@ -15,20 +15,21 @@ function intlMaker() {
 
 describe('ContentTargeting', () => {
   let subject = null
-  let props = {}
-  let changeValue = null
-  let close = null
-  const fakeConfig = Immutable.fromJS({"in":["AS"],"response":{"code":200}})
+  let props = {}, close, handleSubmit, change
+  const fakeConfig = Immutable.fromJS({ "code": 200 })
 
   const fakePath = Immutable.List(['foo', 'bar'])
   beforeEach(() => {
-    changeValue = jest.fn()
+    handleSubmit = jest.fn()
+    close = jest.fn()
+    change = jest.fn()
     close = jest.fn()
     subject = () => {
       props = {
         set: fakeConfig,
         path: fakePath,
-        changeValue,
+        handleSubmit,
+        change,
         close,
         intl: intlMaker()
       }

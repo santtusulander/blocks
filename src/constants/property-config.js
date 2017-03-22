@@ -68,7 +68,7 @@ export const availableMatches = [
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST, POLICY_TYPES.FINAL_REQUEST]
   },
   {
-    key: 'content_targeting',
+    key: 'content_targeting_country_code',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
@@ -113,7 +113,7 @@ export const availableActions = [
     key: 'reply',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
-    servicePermission: MEDIA_DELIVERY_CONTENT_TARGETTING
+    servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
   },
   {
     key: null,

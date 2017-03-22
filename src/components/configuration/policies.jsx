@@ -192,6 +192,7 @@ class ConfigurationPolicies extends React.Component {
                 activateSet={this.props.activateSet}
                 activeMatchPath={this.props.activeMatch}
                 activeSetPath={this.props.activeSet}
+                cancelActiveEditForm={this.cancelActiveMatchSetEditForm}
                 changeValue={this.props.changeValue}
                 config={config}
                 rule={config.getIn(this.props.activeRule)}

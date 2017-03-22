@@ -123,11 +123,17 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
 
   activateMatch(newPath) {
-    return () => this.props.activateMatch(newPath)
+    return () => {
+      this.props.cancelActiveEditForm()
+      this.props.activateMatch(newPath)
+    }
   }
 
   activateSet(newPath) {
-    return () => this.props.activateSet(newPath)
+    return () => {
+      this.props.cancelActiveEditForm()
+      this.props.activateSet(newPath)
+    }
   }
 
   submitForm(e) {
@@ -139,13 +145,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
 
-    const disableAddMatchButton = () => {
-      if (flattenedPolicy.sets.length === 0) {
-        return true
-      }
-
-      return false
-    }
+    const disableAddMatchButton = () => !flattenedPolicy.sets.length || flattenedPolicy.sets.reduce((acc, set) => acc || set._temp, false)
 
     const disableButton = () => {
       return !this.props.config.getIn(this.props.rulePath.concat(['rule_name'])) ||
@@ -350,6 +350,7 @@ ConfigurationPolicyRuleEdit.propTypes = {
   activeMatchPath: React.PropTypes.instanceOf(Immutable.List),
   activeSetPath: React.PropTypes.instanceOf(Immutable.List),
   cancelAction: React.PropTypes.func,
+  cancelActiveEditForm: React.PropTypes.func,
   changeActiveRuleType: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   config: React.PropTypes.instanceOf(Immutable.Map),

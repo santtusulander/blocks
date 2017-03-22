@@ -16,10 +16,12 @@ class MatchesSelection extends React.Component {
     this.setMatchField = this.setMatchField.bind(this)
     this.setMatchFieldForFileExtension = this.setMatchFieldForFileExtension.bind(this)
   }
+
   setMatchField(field) {
     if (field === 'file_extension') {
       return this.setMatchFieldForFileExtension()
     }
+
     return e => {
       e.preventDefault()
       this.props.changeValue(this.props.path.concat(['field']), field)
@@ -38,13 +40,10 @@ class MatchesSelection extends React.Component {
       this.props.changeValue(path, rule.getIn(path.slice(3)).merge(match))
     }
   }
+
   render() {
-    const {
-      path
-    } = this.props
-
+    const { path } = this.props
     const policyType = path.get(0)
-
 
     return (
       <div>

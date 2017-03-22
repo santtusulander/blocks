@@ -140,7 +140,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
           />
         )
         break
-      case 'content_targeting':
+      case 'content_targeting_country_code':
         activeEditForm = <ConfigurationContentTargetingMatch {...matcherProps} />
         break
       default:

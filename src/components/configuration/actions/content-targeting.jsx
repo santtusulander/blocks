@@ -51,15 +51,13 @@ class ContentTargeting extends React.Component {
   }
 
   saveChanges(values) {
-    const { invalid, path, set, actionType } = this.props
+    const { invalid, path, actionType } = this.props
     const { code, location } = values
 
     if (!invalid) {
       const newSet = Immutable.fromJS({
         code,
-        location: actionType === 'redirect' ? location : '',
-        reason: set.get('reason'),
-        body: set.get('body')
+        location: actionType === 'redirect' ? location : ''
       })
 
       this.props.saveAction(path, this.props.setKey, newSet)
