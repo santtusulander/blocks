@@ -1,3 +1,4 @@
+/*eslint-disable react/no-multi-comp*/
 import React, { PropTypes } from 'react'
 import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
@@ -47,7 +48,6 @@ Matches.propTypes = {
   fields: PropTypes.object
 }
 
-/*eslint-disable react/no-multi-comp*/
 const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, invalid }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
