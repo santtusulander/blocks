@@ -5,7 +5,7 @@ import ToggleElement from './toggle-element'
 import IconArrowRight from '../icons/icon-arrow-right'
 import autoClose from '../../decorators/select-auto-close'
 
-const SelectorComponent = ({
+export const SelectorComponent = ({
   items,
   drillable,
   children,
