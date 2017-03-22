@@ -4,6 +4,12 @@ export const deploymentModes = {
   unknown: 'portal.configuration.details.deploymentMode.unknown'
 }
 
+export const serviceTypes = {
+  msd: 'portal.configuration.details.serviceType.msd',
+  large: 'portal.configuration.details.serviceType.large',
+  unknown: 'portal.configuration.details.deploymentMode.unknown'
+}
+
 export const CIS_ORIGIN_HOST_PORT = 8082
 
 export const TOKEN_AUTH_STATIC = 'standard'
