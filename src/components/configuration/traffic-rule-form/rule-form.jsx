@@ -53,8 +53,9 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
     <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
       <Field
         name="name"
+        required={false}
         component={Input}
-        label="Rule Name"/>
+        label={<FormattedMessage id='portal.policy.edit.editRule.ruleName.text'/>} />
 
         <Row className="header-btn-row">
           <Col sm={7}>
@@ -81,6 +82,8 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
           name="matchArray"
           chooseMatch={chooseMatch}
           component={Matches}/>
+
+        <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
 
       <FormFooterButtons>
         <Button

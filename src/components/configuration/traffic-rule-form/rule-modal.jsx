@@ -77,7 +77,7 @@ const dispatchToProps = dispatch => ({
   editMatch: (index, match) => dispatch(arraySplice('traffic-rule-form', 'matchArray', index, 1, match))
 })
 
-const form = reduxForm({ form: 'traffic-rule-form', validate: () => ({}) })(TrafficRuleFormContainer)
+const form = reduxForm({ form: 'traffic-rule-form' })(TrafficRuleFormContainer)
 
 export default connect(
   stateToProps,

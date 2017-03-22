@@ -28,6 +28,7 @@ export default class MatchesForm extends Component {
 
   renderMatchSelection = () => (
     <ul className="condition-selection list-unstyled">
+      <li/>
       {matches.map(({ matchType, label }) =>
         <li>
           <a onClick={() => this.props.chooseMatch({ matchType })}>
