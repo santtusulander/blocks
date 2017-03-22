@@ -53,8 +53,8 @@ class TrafficRuleFormContainer extends Component {
 
 TrafficRuleFormContainer.displayName = "TrafficRuleFormContainer"
 TrafficRuleFormContainer.propTypes = {
-  addMatch: PropTypes.bool,
-  editMatch: PropTypes.bool,
+  addMatch: PropTypes.func,
+  editMatch: PropTypes.func,
   handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
   onCancel: PropTypes.func,

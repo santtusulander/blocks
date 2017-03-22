@@ -108,7 +108,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
 
 RuleForm.displayName = 'RuleForm'
 RuleForm.propTypes = {
-  chooseMatch: PropTypes.bool,
+  chooseMatch: PropTypes.func,
   edit: PropTypes.func,
   handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
