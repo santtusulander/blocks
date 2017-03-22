@@ -256,7 +256,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     const ruleType = this.props.rulePath.get(0, null)
 
     return (
-      <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
+      <form className="configuration-rule-edit" onSubmit={this.submitForm}>
         <Modal.Header>
           <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>

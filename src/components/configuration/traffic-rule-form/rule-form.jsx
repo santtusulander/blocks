@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react'
-import { Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 
 import Input from '../../form/field-form-group'
+import FormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
 const renderMatch = ({ onRemove, onEdit, input }) => {
   return (
-    <Row>
+    <Row className="condition">
       <Col xs={10} onClick={onEdit}>
         <p>{input.value.label}</p>
       </Col>
@@ -22,7 +23,8 @@ const renderMatch = ({ onRemove, onEdit, input }) => {
     </Row>
   )
 }
-const renderMatches = ({ fields, openMatchModal }) => {
+
+const renderMatches = ({ fields, chooseMatch }) => {
   return (
     <div className="conditions">
       {fields.map((match, index) => {
@@ -36,7 +38,7 @@ const renderMatches = ({ fields, openMatchModal }) => {
             type="text"
             component={renderMatch}
             onRemove={() => fields.remove(index)}
-            onEdit={() => openMatchModal(editableMatch)}
+            onEdit={() => chooseMatch(editableMatch)}
           />
         )
       })}
@@ -44,32 +46,38 @@ const renderMatches = ({ fields, openMatchModal }) => {
   )
 }
 
-const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, openMatchModal, invalid }) => {
+const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, invalid }) => {
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
       <Field
         name="name"
         component={Input}
         label="Rule Name"/>
 
         <Row className="header-btn-row">
-          <Col sm={8}>
+          <Col sm={7}>
             <h3><FormattedMessage id="portal.policy.edit.editRule.matchConditions.text"/></h3>
           </Col>
-          <Col sm={4} className="text-right">
-            <Button
-              bsStyle="success"
-              className="btn-icon btn-add-new"
-              onClick={openMatchModal}>
-              <IconAdd />
-            </Button>
+          <Col sm={5}>
+            <ButtonToolbar className="pull-right extra-margin-top" bsClass="btn-toolbar">
+              {hasMatches &&
+              <Field
+                name="condition"
+                options={[['or', 'OR'], ['and', 'AND']]}
+                component={FormGroupSelect}/>}
+              <Button
+                bsStyle="success"
+                className="btn-icon btn-add-new pull-right"
+                onClick={chooseMatch}>
+                <IconAdd />
+              </Button>
+            </ButtonToolbar>
           </Col>
         </Row>
 
-        {/* Footprints list */}
         <FieldArray
           name="matchArray"
-          openMatchModal={openMatchModal}
+          chooseMatch={chooseMatch}
           component={renderMatches}/>
 
       <FormFooterButtons>

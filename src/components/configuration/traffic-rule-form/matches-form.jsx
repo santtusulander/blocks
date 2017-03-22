@@ -27,9 +27,11 @@ export default class MatchesForm extends Component {
     </ul>
   )
 
+  onCancel = () => this.props.chooseMatch(null)
+
   render() {
 
-    const { onCancel, chosenMatch, chooseMatch, saveMatch } = this.props
+    const { chosenMatch, saveMatch } = this.props
 
     let title = 'Choose Match'
     let subtitle = 'Select the match type'
@@ -78,11 +80,11 @@ export default class MatchesForm extends Component {
         show={true}
         title={title}
         subTitle={subtitle}
-        cancel={onCancel}>
+        cancel={this.onCancel}>
         <Form
           onSave={saveMatch}
           matchType={matchType}
-          onCancel={() => chooseMatch(null)}
+          onCancel={this.onCancel}
           matchIndex={chosenMatch.index}
           initialValues={chosenMatch.values} />
       </SidePanel>

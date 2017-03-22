@@ -18,7 +18,7 @@ export default function(WrappedModal) {
     handleKeyDown(e) {
       switch(e.keyCode) {
         case 27:
-          this.props.cancel()
+          this.props.cancel && this.props.cancel()
           break
       }
     }
