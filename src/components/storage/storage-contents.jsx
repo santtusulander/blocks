@@ -67,8 +67,13 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             ]}
           />
         }
-        { !asperaUpload && fileUploader &&
-          <Button bsStyle="success" icon={true} onClick={openFileDialog}>
+        { !asperaUpload &&
+          <Button
+            bsStyle="success"
+            icon={true}
+            onClick={openFileDialog}
+            disabled={!fileUploader}
+          >
             <IconAdd/>
           </Button>
         }
