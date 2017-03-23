@@ -4,27 +4,31 @@ import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 
+import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
+
 import Input from '../../form/field-form-group'
 import FormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
-const Matches = ({ fields, chooseMatch }) => {
+/**
+ * Field array for matches
+ */
+const Matches = ({ fields, chooseMatch, disabled }) => {
   return (
     <div className="conditions">
       {fields.map((match, index) => {
 
         const editableMatch = { ...fields.get(index), index }
+        const onEdit = () => disabled || chooseMatch(editableMatch)
 
         return (
           <Field
             key={index}
             name={match}
             type="text"
-            onRemove={() => fields.remove(index)}
-            onEdit={() => chooseMatch(editableMatch)}
-            component={({ onRemove, onEdit, input }) => (
+            component={({ input }) => (
               <Row className="condition">
                 <Col xs={10} onClick={onEdit}>
                   <p>{input.value.label}</p>
@@ -32,7 +36,8 @@ const Matches = ({ fields, chooseMatch }) => {
                 <Col xs={2} className="text-right">
                   <ActionButtons
                     className="secondary"
-                    onDelete={onRemove}/>
+                    deleteDisabled={disabled}
+                    onDelete={() => fields.remove(index)}/>
                 </Col>
               </Row>
             )}/>
@@ -45,16 +50,18 @@ const Matches = ({ fields, chooseMatch }) => {
 Matches.displayName = "Matches"
 Matches.propTypes = {
   chooseMatch: PropTypes.func,
+  disabled: PropTypes.bool,
   fields: PropTypes.object
 }
 
-const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, invalid }) => {
+const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, disabled, invalid }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
       <Field
         name="name"
         required={false}
         component={Input}
+        disabled={disabled}
         label={<FormattedMessage id='portal.policy.edit.editRule.ruleName.text'/>} />
 
         <Row className="header-btn-row">
@@ -65,10 +72,12 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
             <ButtonToolbar className="pull-right extra-margin-top" bsClass="btn-toolbar">
               {hasMatches &&
               <Field
+                disabled={disabled}
                 name="condition"
                 options={[['or', 'OR'], ['and', 'AND']]}
                 component={FormGroupSelect}/>}
               <Button
+                disabled={disabled}
                 bsStyle="success"
                 className="btn-icon btn-add-new pull-right"
                 onClick={chooseMatch}>
@@ -80,6 +89,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
 
         <FieldArray
           name="matchArray"
+          disabled={disabled}
           chooseMatch={chooseMatch}
           component={Matches}/>
 
@@ -95,7 +105,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
         <Button
           id='submit-button'
           type='submit'
-          disabled={invalid}
+          disabled={invalid || disabled}
           bsStyle="primary">
           {edit
             ? <FormattedMessage id='portal.common.button.save' />
@@ -109,12 +119,13 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
 RuleForm.displayName = 'RuleForm'
 RuleForm.propTypes = {
   chooseMatch: PropTypes.func,
+  disabled: PropTypes.bool,
   edit: PropTypes.func,
   handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
   invalid: PropTypes.bool,
-  onCancel: PropTypes.func,
+  onCancel: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   onSubmit: PropTypes.func
 }
 
-export default RuleForm
+export default keyStrokeSupport(RuleForm)

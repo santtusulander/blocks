@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
+import { Modal } from 'react-bootstrap'
 
-import SidePanel from '../../side-panel'
+import IconClose from '../../icons/icon-close'
+import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import IconCaretRight from '../../icons/icon-caret-right'
 import ContinentMatchConditionForm from './continent-match-form'
 
@@ -12,7 +14,7 @@ const matches = [
   { matchType: 'asn', label: 'ASN'}
 ]
 
-export default class MatchesForm extends Component {
+class MatchesForm extends Component {
 
   static get displayName() {
     return 'MatchesForm'
@@ -20,8 +22,9 @@ export default class MatchesForm extends Component {
 
   static get propTypes() {
     return {
-      chooseMatch: PropTypes.func,
       chosenMatch: PropTypes.object,
+      chooseMatch: PropTypes.func,
+      onCancel: PropTypes.func,
       saveMatch: PropTypes.func
     }
   }
@@ -40,11 +43,9 @@ export default class MatchesForm extends Component {
     </ul>
   )
 
-  onCancel = () => this.props.chooseMatch(null)
-
   render() {
 
-    const { chosenMatch, saveMatch } = this.props
+    const { chosenMatch, onCancel, saveMatch } = this.props
 
     let title = 'Choose Match'
     let subtitle = 'Select the match type'
@@ -89,18 +90,26 @@ export default class MatchesForm extends Component {
     }
 
     return (
-      <SidePanel
-        show={true}
-        title={title}
-        subTitle={subtitle}
-        cancel={this.onCancel}>
-        <Form
-          onSave={saveMatch}
-          matchType={matchType}
-          onCancel={this.onCancel}
-          matchIndex={chosenMatch.index}
-          initialValues={chosenMatch.values} />
-      </SidePanel>
+      <div className="modal-content traffic-match-conditions-modal">
+        <Modal.Header>
+          <a onClick={onCancel} className="secondary-sidepanel-close">
+            <IconClose />
+          </a>
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSave={saveMatch}
+            matchType={matchType}
+            onCancel={onCancel}
+            matchIndex={chosenMatch.index}
+            initialValues={chosenMatch.values} />
+        </Modal.Body>
+      </div>
+
     )
   }
 }
+
+export default keyStrokeSupport(MatchesForm)

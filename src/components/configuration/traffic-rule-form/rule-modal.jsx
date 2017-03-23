@@ -1,11 +1,12 @@
 /*eslint-disable no-console*/
 
 import React, { Component, PropTypes } from 'react'
+import classnames from 'classnames'
 import { connect } from 'react-redux'
+import { Modal } from 'react-bootstrap'
 import { reduxForm, propTypes, formValueSelector, arrayPush, arraySplice } from 'redux-form'
 
 import MatchesForm from './matches-form'
-import SidePanel from '../../../components/side-panel'
 import RuleForm from './rule-form'
 
 class TrafficRuleFormContainer extends Component {
@@ -13,14 +14,14 @@ class TrafficRuleFormContainer extends Component {
   state = { chosenMatch: undefined }
 
   onSaveRule = (values) => {
-    return this.props.initialValues
-      ? console.log('edit', values)
-      : console.log('create', values)
+    return this.props.initialValues.name
+      ? console.log('edit rule', values)
+      : console.log('create rule', values)
   }
 
-  chooseMatch = (chosenMatch) => {
-    this.setState({ chosenMatch })
-  }
+  chooseMatch = (chosenMatch) => this.setState({ chosenMatch })
+
+  cancelMatch = () => this.setState({ chosenMatch: undefined })
 
   saveMatch = (match, index) => {
     typeof index === 'number' ? this.props.editMatch(index, match) : this.props.addMatch(match)
@@ -29,24 +30,33 @@ class TrafficRuleFormContainer extends Component {
   render() {
     const { initialValues, onCancel, handleSubmit, hasMatches } = this.props
     const { chosenMatch } = this.state
+    const disabled = !!chosenMatch
 
     return (
-      <div>
-        <SidePanel show={true} title={'blaceholder'} subTitle={''} cancel={!chosenMatch && onCancel}>
-          <RuleForm
-            hasMatches={hasMatches}
-            chooseMatch={this.chooseMatch}
-            initialValues={initialValues}
-            handleSubmit={handleSubmit}
-            onSubmit={this.onSaveRule}
-            onCancel={onCancel}/>
-        </SidePanel>
+      <Modal show={true} dialogClassName="side-panel traffic-rules-modals-container">
+        <div className={classnames("traffic-rules-modal", { disabled })}>
+          <Modal.Header>
+            <h1>Add Traffic Rule</h1>
+            <p>placeholder subtitle</p>
+          </Modal.Header>
+          <Modal.Body>
+            <RuleForm
+              hasMatches={hasMatches}
+              disabled={disabled}
+              chooseMatch={this.chooseMatch}
+              initialValues={initialValues}
+              handleSubmit={handleSubmit}
+              onSubmit={this.onSaveRule}
+              onCancel={!disabled && onCancel}/>
+          </Modal.Body>
+        </div>
         {chosenMatch &&
           <MatchesForm
+            onCancel={this.cancelMatch}
             chooseMatch={this.chooseMatch}
             saveMatch={this.saveMatch}
             chosenMatch={chosenMatch}/>}
-      </div>
+      </Modal>
     )
   }
 }
@@ -68,7 +78,7 @@ const stateToProps = state => {
     initialValues: { condition: 'or' },
     hasMatches: matchArrayValues && !!matchArrayValues.length,
     //until integrated into UI
-    onCancel: () => console.log('cancel')
+    onCancel: () => console.log('onCancel')
   }
 }
 
