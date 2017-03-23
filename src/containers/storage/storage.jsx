@@ -73,7 +73,7 @@ class Storage extends Component {
         account: account,
         group: group,
         ingest_point: storage,
-        startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
+        startDate: moment().utc().startOf('month').format('X'),
         endDate: moment.utc().endOf('day').format('X')
       }
 
