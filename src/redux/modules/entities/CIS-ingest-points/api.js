@@ -10,7 +10,7 @@ const baseUrl = ({ brand, account, group, id }) => {
 }
 
 const baseListUrl = ({ brand, account, group }) => {
-  return `${BASE_URL_CIS_NORTH}/ingest_points?brand_id=${brand}&account_id=${account}&group_id=${group}&format=brief`
+  return `${BASE_URL_CIS_NORTH}/ingest_points?brand_id=${brand}&account_id=${account}&group_id=${group}&format=full`
 }
 
 /* We only need profile_id -> set entity name to workflowsDummy so workflow doesn't go into redux */
