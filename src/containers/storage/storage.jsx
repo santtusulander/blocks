@@ -266,9 +266,11 @@ const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
   const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
-  const locations = storage.get('clusters').map(cluster => (
-    getClusterById(state, cluster).get('description').split(',')[0]
-  )).toJS()
+  const locations = storage.get('clusters').map((cluster) => {
+    const clusterData = getClusterById(state, cluster)
+
+    return clusterData ? clusterData.get('description').split(',')[0] : ''
+  }).toJS()
 
   const lineChartData = storageMetrics ? storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data})) : []
 
