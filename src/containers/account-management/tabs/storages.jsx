@@ -21,6 +21,7 @@ import storageActions from '../../../redux/modules/entities/CIS-ingest-points/ac
 import clusterActions from '../../../redux/modules/entities/CIS-clusters/actions'
 import propertyActions from '../../../redux/modules/entities/properties/actions'
 import { fetchGroupsMetrics } from '../../../redux/modules/entities/storage-metrics/actions'
+import groupActions from '../../../redux/modules/entities/groups/actions'
 
 import { getSortData, formatBytes } from '../../../util/helpers'
 import { getByGroups as getStoragesByGroups } from '../../../redux/modules/entities/CIS-ingest-points/selectors'
@@ -28,6 +29,7 @@ import { getAll as getAllClusters } from '../../../redux/modules/entities/CIS-cl
 import { getByGroups as getPropetiesByGroups } from '../../../redux/modules/entities/properties/selectors'
 import { getByGroups as getMetricsByGroups } from '../../../redux/modules/entities/storage-metrics/selectors'
 import { getGlobalFetching } from '../../../redux/modules/fetching/selectors'
+import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 
 import { ADD_STORAGE, EDIT_STORAGE, DELETE_STORAGE } from '../../../constants/account-management-modals.js'
 import { STORAGE_METRICS_SHIFT_TIME } from '../../../constants/storage.js'
@@ -61,13 +63,16 @@ class AccountManagementStorages extends Component {
     const accountId = account.get('id')
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
 
-
     this.props.groups.map( group => {
       const groupId = group.get('id')
 
       this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
     })
+
+    if (this.props.params.group) {
+      this.props.fetchGroup({ brand: brandId, account: accountId, id: this.props.params.group })
+    }
 
     this.props.fetchGroupsMetrics(this.props.groups, { start: metricsStartDate, account: accountId })
     this.props.fetchClusters({})
@@ -106,7 +111,12 @@ class AccountManagementStorages extends Component {
       account: this.props.account.get('id'),
       group: this.state.storageGroup,
       id: this.state.storageToDelete
-    }).then(() => this.props.toggleModal(null))
+    }).then(() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.success.status"/>)
+      this.props.toggleModal(null)
+    }).catch (() => {
+      this.props.showNotification(<FormattedMessage id="portal.storage.storageForm.delete.failed.status"/>)
+    })
   }
 
   filterData(storages, storageName) {
@@ -290,6 +300,7 @@ AccountManagementStorages.propTypes = {
   clusters: PropTypes.instanceOf(List),
   deleteStorage: PropTypes.func,
   fetchClusters: PropTypes.func,
+  fetchGroup: PropTypes.func,
   fetchGroupsMetrics: PropTypes.func,
   fetchProperties: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -300,6 +311,7 @@ AccountManagementStorages.propTypes = {
   metrics: PropTypes.instanceOf(List),
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
+  showNotification: PropTypes.func,
   storages: PropTypes.instanceOf(List),
   toggleModal: PropTypes.func
 }
@@ -309,7 +321,7 @@ AccountManagementStorages.defaultProps = {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const account = state.account.get('activeAccount')
   const groups = state.group.get('allGroups')
 
@@ -317,7 +329,7 @@ function mapStateToProps(state) {
     accountManagementModal: state.ui.get('accountManagementModal'),
     account: account,
     groups: groups,
-    group: state.group.get('activeGroup'),
+    group: getGroupById(state, ownProps.params.group),
     storages: getStoragesByGroups(state, groups),
     clusters: getAllClusters(state),
     properties: getPropetiesByGroups(state, groups),
@@ -335,8 +347,8 @@ function mapDispatchToProps(dispatch) {
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
-    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params))
-
+    fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
+    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) )
   };
 }
 

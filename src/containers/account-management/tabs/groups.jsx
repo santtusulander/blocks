@@ -136,7 +136,10 @@ class AccountManagementAccountGroups extends React.Component {
           return this.props.userActions.updateUser(email, newUser)
         }))
       })
-      .then(this.cancelAdding)
+      .then(() => {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.groups.created"/>)
+        this.cancelAdding()
+      })
   }
 
   changeSearch(e) {
@@ -306,6 +309,7 @@ AccountManagementAccountGroups.propTypes    = {
   params: React.PropTypes.object,
   route: React.PropTypes.object,
   router: React.PropTypes.object,
+  showNotification: React.PropTypes.func,
   uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   users: React.PropTypes.instanceOf(Immutable.List)

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import BSTypeahead from 'react-bootstrap-typeahead'
+import {Typeahead as BSTypeahead, AsyncTypeahead as AsyncBSTypeahead} from 'react-bootstrap-typeahead'
 
 class Typeahead extends React.Component {
   constructor(props) {
@@ -45,17 +45,17 @@ class Typeahead extends React.Component {
       ref: ref => this.typeahead = ref
     } : {}
 
-    return (
-      <BSTypeahead
-        {...this.props}
-        {...customProps} />
-    )
+    const typeahead = this.props.asyncMode ? <AsyncBSTypeahead {...this.props} {...customProps} /> :
+      <BSTypeahead {...this.props} {...customProps} />
+
+    return typeahead
   }
 }
 
 Typeahead.displayName = 'Typeahead'
 Typeahead.propTypes = {
   allowNew: PropTypes.bool,
+  asyncMode: PropTypes.bool,
   minLength: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
   onBlur: PropTypes.func
 }

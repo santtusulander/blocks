@@ -194,7 +194,9 @@ export function buildAnalyticsOpts(params, filters, location ){
 
   const tabKey = getTabName(location.pathname)
   //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
-  const visibleFilters = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey ).get('filters')
+  let visibleFilters = List()
+  const tab = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey )
+  if (tab) { visibleFilters = tab.get('filters') }
 
   //get filter values
   let filterValues = {}
@@ -334,7 +336,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @returns {*}
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
-  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : formatDate(unix, format)
+  return moment.unix(unix).isValid() ? moment.unix(unix).utc().format(format) : formatDate(unix, format)
 }
 
 /**
@@ -354,7 +356,7 @@ export function unixTimestampToDate(unix) {
  * @returns {*}
  */
 export function formatDate(date, format = 'MM/DD/YYYY') {
-  return moment(date).format(format)
+  return moment(date).utc().format(format)
 }
 
 
@@ -477,14 +479,23 @@ export function userHasRole(user, roleToFind) {
 }
 
 export function accountIsServiceProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
 }
 
 export function accountIsContentProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
 export function accountIsCloudProviderType(account) {
+  if (!account) {
+    throw new Error('Account not found')
+  }
   return account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
 }
 

@@ -45,7 +45,7 @@ export function createFailure(state) {
 
 export function deleteSuccess(state, action) {
   const allHosts = state.get('allHosts')
-    .filterNot(property => property === action.payload.get('published_host_id'))
+    .filterNot(property => property.get('published_host_id') === action.payload.get('published_host_id'))
   const configuredHostNames = state.get('configuredHostNames')
     .filterNot(property => property === getConfiguredName(action.payload))
   return state.merge({
@@ -55,9 +55,9 @@ export function deleteSuccess(state, action) {
   })
 }
 
-export function deleteFailure(state, action) {
+export function deleteFailure(state) {
   return state.merge({
-    activeHost: Immutable.fromJS(action.payload),
+    activeHost: null,
     fetching: false
   })
 }
@@ -170,10 +170,10 @@ export default handleActions({
 
 // ACTIONS
 
-export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode) => {
+export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode, serviceType) => {
   return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
     services:[{
-      service_type: "large",
+      service_type: serviceType,
       deployment_mode: deploymentMode,
       configurations: [{
         edge_configuration: {
