@@ -28,6 +28,9 @@ import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
+//TODO: UDNP-3177 Remove when fetchItem is not needed anymore
+import * as groupActionCreators from '../../redux/modules/group'
+
 import PROVIDER_TYPES from '../../constants/provider-types'
 
 import Content from '../../components/layout/content'
@@ -60,9 +63,10 @@ export class Account extends React.Component {
     this.props.fetchData()
   }
 
-  /* TODO: Move all CRUD methods inside GroupModal */
+  /* TODO: UDNP-3177 Move all CRUD methods inside GroupModal */
+  /* eslint-disable no-console */
   createGroup({data /*, usersToAdd*/ }) {
-    console.warn( 'createGroup in account.jsx will be deprecated')
+    console.warn( 'createGroup in account.jsx will be deprecated and moved to GroupFormContainer')
     const {brand, account} = this.props.params
 
     return this.props.createGroup({brand, account, payload: data})
@@ -81,7 +85,7 @@ export class Account extends React.Component {
   }
 
   editGroup({groupId, data /*, addUsers, deleteUsers */ }) {
-    console.warn( 'editGroup in account.jsx will be deprecated')
+    console.warn( 'editGroup in account.jsx will be deprecated and moved to GroupFormContainer')
 
     const {brand, account} = this.props.params
 
@@ -115,7 +119,7 @@ export class Account extends React.Component {
     // ))
   }
   deleteGroup(group) {
-    console.warn( 'deleteGroup in account.jsx will be deprecated')
+    console.warn( 'deleteGroup in account.jsx will be deprecated and moved to GroupFormContainer')
 
     const {brand, account} = this.props.params
     const id = group.get('id')
@@ -229,7 +233,7 @@ export class Account extends React.Component {
           type={CONTENT_ITEMS_TYPES.GROUP}
           user={this.props.user}
           viewingChart={this.props.viewingChart}
-          fetchItem={(id) => { return this.props.groupActions.fetchGroup(brand, account, id) }}
+          fetchItem={(id) => { console.warn('UDNP-3177 fetchItem will be deprecated'); return this.props.oldGroupActions.fetchGroup(brand, account, id) }}
         />
 
         {deleteModalProps && <ModalWindow {...deleteModalProps}/>}
@@ -251,6 +255,7 @@ Account.propTypes = {
   fetchingMetrics: PropTypes.bool,
   groups: PropTypes.instanceOf(List),
   metrics: PropTypes.instanceOf(List),
+  oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
   roles: PropTypes.instanceOf(List),
@@ -301,6 +306,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
+
+  //TODO: UDNP-3177 Remove when fetchItem is not needed anymore
+  const oldGroupActions = bindActionCreators(groupActionCreators, dispatch)
+
   const metricsOpts = {
     account: account,
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
@@ -320,6 +329,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchData: fetchData,
     uiActions,
+    oldGroupActions,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
     createGroup: (params) => dispatch(groupActions.create(params)),
     updateGroup: (params) => dispatch(groupActions.update(params)),
