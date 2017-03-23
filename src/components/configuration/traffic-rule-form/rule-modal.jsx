@@ -28,7 +28,7 @@ class TrafficRuleFormContainer extends Component {
   }
 
   render() {
-    const { initialValues, onCancel, handleSubmit, hasMatches } = this.props
+    const { activeCondition, initialValues, onCancel, handleSubmit, hasMatches } = this.props
     const { chosenMatch } = this.state
     const disabled = !!chosenMatch
 
@@ -42,6 +42,7 @@ class TrafficRuleFormContainer extends Component {
           <Modal.Body>
             <RuleForm
               hasMatches={hasMatches}
+              activeCondition={activeCondition}
               disabled={disabled}
               chooseMatch={this.chooseMatch}
               initialValues={initialValues}
@@ -71,14 +72,17 @@ TrafficRuleFormContainer.propTypes = {
   ...propTypes
 }
 
+//until integrated into UI
+TrafficRuleFormContainer.defaultProps = { onCancel: () => console.log('onCancel') }
+
 const stateToProps = state => {
   const matchArrayValues = formValueSelector('traffic-rule-form')(state, 'matchArray')
+  const activeCondition = formValueSelector('traffic-rule-form')(state, 'condition')
   return {
     state,
+    activeCondition,
     initialValues: { condition: 'or' },
-    hasMatches: matchArrayValues && !!matchArrayValues.length,
-    //until integrated into UI
-    onCancel: () => console.log('onCancel')
+    hasMatches: matchArrayValues && !!matchArrayValues.length
   }
 }
 

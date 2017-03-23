@@ -31,6 +31,15 @@
     margin-bottom: 10px;
     cursor: pointer;
 
+    .condition-info-column {
+      display: flex;
+      justify-content: space-between;
+
+      h4 {
+        line-height: 2;
+      }
+    }
+
     @include md {
       min-height: $md-bar-height;
     }
