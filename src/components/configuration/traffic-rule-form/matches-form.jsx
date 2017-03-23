@@ -90,9 +90,9 @@ class MatchesForm extends Component {
     }
 
     return (
-      <div className="modal-content traffic-match-conditions-modal">
+      <div className="modal-content secondary-side-modal">
         <Modal.Header>
-          <a onClick={onCancel} className="secondary-sidepanel-close">
+          <a onClick={onCancel} className="secondary-side-modal-close">
             <IconClose />
           </a>
           <h1>{title}</h1>
