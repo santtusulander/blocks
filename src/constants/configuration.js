@@ -4,6 +4,12 @@ export const deploymentModes = {
   unknown: 'portal.configuration.details.deploymentMode.unknown'
 }
 
+export const serviceTypes = {
+  msd: 'portal.configuration.details.serviceType.msd',
+  large: 'portal.configuration.details.serviceType.large',
+  unknown: 'portal.configuration.details.deploymentMode.unknown'
+}
+
 export const CIS_ORIGIN_HOST_PORT = 8082
 
 export const TOKEN_AUTH_STATIC = 'standard'
@@ -38,3 +44,5 @@ export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
 
 export const CT_DEFAULT_STATUS_CODE = 200
+
+export const DEFAULT_HOST_SERVICE_TYPE = 'large'
