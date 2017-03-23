@@ -35,7 +35,7 @@ const ROUTES = {
   configurationTabDefaults: 'defaults',
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
-  configurationTabStreaming: 'streaming',
+  configurationTabGlobalTrafficManager: 'gtm',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 

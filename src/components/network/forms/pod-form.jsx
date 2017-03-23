@@ -38,7 +38,8 @@ import {
   POD_TYPE_OPTIONS,
   REQUEST_FWD_TYPE_OPTIONS,
   DISCOVERY_METHOD_OPTIONS,
-  STATUS_OPTIONS
+  STATUS_OPTIONS,
+  SALT_ROLE_OPTIONS
 } from '../../../constants/network'
 
 import UDNButton from '../../button'
@@ -48,7 +49,7 @@ import IconClose from '../../icons/icon-close'
 import IsAllowed from '../../is-allowed'
 
 const validate = (values) => {
-  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList } = values
+  const { UIName, UILbMethod, pod_type, UILocalAS, UIRequestFwdType, UIProviderWeight, UIDiscoveryMethod, UIFootprints, UIIpList, UISaltRole } = values
   const IPList = UIIpList.map(address => address.label)
   const conditions = {
     UIName: {
@@ -79,7 +80,8 @@ const validate = (values) => {
       UIDiscoveryMethod,
       UILocalAS,
       UIFootprints,
-      UIIpList
+      UIIpList,
+      UISaltRole
     },
     conditions,
     {
@@ -90,7 +92,8 @@ const validate = (values) => {
       UIProviderWeight: <FormattedMessage id="portal.network.podForm.provider_weight.required.error"/>,
       UIDiscoveryMethod: <FormattedMessage id="portal.network.podForm.discoveryMethod.required.error"/>,
       UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.required.error"/>,
-      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>
+      UIFootprints: <FormattedMessage id="portal.network.podForm.footprints.required.error"/>,
+      UISaltRole: <FormattedMessage id="portal.network.podForm.saltRole.required.error"/>
     }
   )
 
@@ -342,6 +345,14 @@ const PodForm = ({
             <FormattedMessage id="portal.network.podForm.providerWeight.help.text" />
           </HelpTooltip>
         }/>
+
+      <Field
+        name="UISaltRole"
+        className="input-select"
+        component={FieldFormGroupSelect}
+        options={SALT_ROLE_OPTIONS.map(({value, label}) => ({ value, label: intl.formatMessage({id: label}) }))}
+        label={<FormattedMessage id="portal.network.podForm.saltRole.label" />}
+      />
 
       <Field
         required={false}

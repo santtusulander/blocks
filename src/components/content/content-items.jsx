@@ -99,6 +99,7 @@ class ContentItems extends React.Component {
     this.hideModal = this.hideModal.bind(this)
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
+    this.showNotification = this.showNotification.bind(this)
 
     this.storageSorter = this.storageSorter.bind(this)
     this.propertySorter = this.propertySorter.bind(this)
@@ -134,7 +135,7 @@ class ContentItems extends React.Component {
     this.setState({ saving: true })
 
     return this.props.createNewItem(...arguments)
-      .then(({ item, name, error, payload }) => {
+      .then(({ item, name, error, payload, type }) => {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -147,6 +148,11 @@ class ContentItems extends React.Component {
           this.showNotification(`${item} ${name} created.`)
         } else {
           this.hideModal()
+          if (type === 'ACCOUNT_CREATED') {
+            this.showNotification(<FormattedMessage id="portal.content.account.createAccount.status"/>)
+          } else if (type === 'HOST_CREATED') {
+            this.showNotification(<FormattedMessage id="portal.content.property.createProperty.status"/>)
+          }
         }
         this.setState({ saving: false })
       })
@@ -484,7 +490,7 @@ class ContentItems extends React.Component {
               className={viewingChart ? 'content-item-grid' : 'content-item-lists'}>
 
                 { /* STORAGES -header on List view */
-                  this.getTier() === 'group' && !viewingChart &&
+                  this.getTier() === 'group' && !viewingChart && groupHasStorageService && !!storages.size &&
                   <h3><FormattedMessage id="portal.accountManagement.storages.text" /></h3>
                 }
 
@@ -623,6 +629,7 @@ class ContentItems extends React.Component {
               >
 
               <AddHost
+                activeGroup={activeGroup}
                 createHost={this.onItemAdd}
                 cancelChanges={this.hideModal}
               />

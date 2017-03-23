@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import numeral from 'numeral'
+import { FormattedMessage } from 'react-intl'
 
 import AnalysisStorage from '../../../components/analysis/storage'
 
@@ -12,7 +13,7 @@ import { getByAccount as getGroupsByAccount } from '../../../redux/modules/entit
 import storageActions from '../../../redux/modules/entities/CIS-ingest-points/actions'
 import groupActions from '../../../redux/modules/entities/groups/actions'
 
-import { formatBytes, buildAnalyticsOpts } from '../../../util/helpers'
+import { accountIsContentProviderType, buildAnalyticsOpts, formatBytes } from '../../../util/helpers'
 
 class AnalyticsTabStorage extends Component {
   constructor(props) {
@@ -42,6 +43,10 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
+    if(nextProps.params.account !== params.account) {
+      nextProps.fetchAllGroups(nextProps.params)
+    }
+
     if(!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
       nextProps.groups.forEach( (group) => {
         const groupId = group.get('id')
@@ -63,8 +68,16 @@ class AnalyticsTabStorage extends Component {
   }
 
   render() {
-    const {filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
+    const { contentProviderAccount, filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
     const storageType = filters.get('storageType')
+
+    if(!contentProviderAccount) {
+      return (
+        <div className="text-center">
+          <FormattedMessage id="portal.analytics.selectContentProviderAccount.text" />
+        </div>
+      )
+    }
 
     return (
       <div>
@@ -88,6 +101,7 @@ class AnalyticsTabStorage extends Component {
 AnalyticsTabStorage.displayName = "AnalyticsTabStorage"
 AnalyticsTabStorage.propTypes = {
   avgStorage: React.PropTypes.number,
+  contentProviderAccount: React.PropTypes.bool,
   dataForChart: React.PropTypes.instanceOf(Immutable.List),
   fetchAllCISIngestPoints: React.PropTypes.func,
   fetchAllGroups: React.PropTypes.func,
@@ -108,6 +122,8 @@ AnalyticsTabStorage.defaultProps = {
 
 const mapStateToProps = (state, { params: { account, group, storage } }) => {
   const storageType = state.filters.getIn(['filters', 'storageType'])
+  const activeAccount = state.account.get('activeAccount')
+
   let getStorageByParent
 
   if(storage) {
@@ -120,10 +136,11 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 
   return {
     peakStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'peak']),
-    avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
-    lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
+    avgStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'average']),
+    lowStorage: getStorageByParent && getStorageByParent.getIn(['totals', storageType, 'low']),
     dataForChart: getDataForStorageAnalysisChart(state, { account, group, storage }, storageType),
-    groups: getGroupsByAccount(state, account)
+    groups: getGroupsByAccount(state, account),
+    contentProviderAccount: accountIsContentProviderType(activeAccount)
   }
 }
 
@@ -131,7 +148,6 @@ const  mapDispatchToProps = (dispatch) => {
   return {
     fetchStorageMetrics: (params) => dispatch(fetchMetrics(params)),
     fetchAllGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
-    fetchOneGroup: requestParams => dispatch(groupActions.fetchOne(requestParams)),
     fetchAllCISIngestPoints: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchOneCISIngestPoint: requestParams => dispatch(storageActions.fetchOne(requestParams))
   }
