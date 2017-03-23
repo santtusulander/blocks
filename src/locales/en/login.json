@@ -24,5 +24,6 @@
   "portal.login.2fa.havingTrouble.voiceItem.text": "Receive Verification Code from a Voice Call",
   "portal.login.2fa.havingTrouble.authySoftToken.text": "Use Authy SoftToken to login",
   "portal.login.2fa.havingTrouble.authyOneTouchItem.text": "Use Authy OneTouch to login",
-  "portal.login.2fa.havingTrouble.supportHelp.text": "You can also get help at support.ericssonudn.com or contact your System Administator."
+  "portal.login.2fa.havingTrouble.supportHelp.text": "You can also get help at support.ericssonudn.com or contact your System Administator.",
+  "portal.login.localStorage.error.text": "Portal doesn't support Safari in Private mode. Please turn off Private mode and try again."
 }
