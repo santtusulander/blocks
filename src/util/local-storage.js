@@ -4,11 +4,36 @@ const LOCALSTORAGE_USER_NAME = 'EricssonUDNUserName'
 const LOCALSTORAGE_UI_THEME = 'EricssonUDNUiTheme'
 
 /**
+ * Check whether LocalStorage is supported.
+ * Should be invoced only once.
+ *
+ * @return {Boolean}
+ */
+export const isLocalStorageSupported = () => {
+  const testKey = 'test'
+
+  try {
+    localStorage.setItem(testKey, '1')
+    localStorage.removeItem(testKey)
+
+    return true
+
+  } catch (error) {
+
+    Storage.prototype.setItem = () => {}
+    Storage.prototype.getItem = () => {}
+    Storage.prototype.removeItem = () => {}
+
+    return false
+  }
+}
+
+/**
  * Set User token to localStorage
  * @type {String}
  */
 export const setUserToken = (token) => {
-  localStorage.setItem( LOCALSTORAGE_USER_TOKEN , token)
+  localStorage.setItem(LOCALSTORAGE_USER_TOKEN, token)
 }
 
 /**
@@ -16,7 +41,7 @@ export const setUserToken = (token) => {
  * @return {String}
  */
 export const getUserToken = () => {
-  return localStorage.getItem( LOCALSTORAGE_USER_TOKEN )
+  return localStorage.getItem(LOCALSTORAGE_USER_TOKEN)
 }
 
 /**
@@ -24,7 +49,7 @@ export const getUserToken = () => {
  * @return {[type]} [description]
  */
 export const deleteUserToken = () => {
-  localStorage.removeItem( LOCALSTORAGE_USER_TOKEN )
+  localStorage.removeItem(LOCALSTORAGE_USER_TOKEN)
 }
 
 /**
@@ -32,7 +57,7 @@ export const deleteUserToken = () => {
  * @param {Object} tokenMeta
  */
 export const setTokenMeta = ( tokenMeta ) => {
-  localStorage.setItem( LOCALSTORAGE_USER_TOKEN_META, JSON.stringify(tokenMeta) )
+  localStorage.setItem(LOCALSTORAGE_USER_TOKEN_META, JSON.stringify(tokenMeta))
 }
 
 /**
@@ -40,7 +65,7 @@ export const setTokenMeta = ( tokenMeta ) => {
  * @return {Object}
  */
 export const getTokenMeta = () => {
-  return JSON.parse( localStorage.getItem( LOCALSTORAGE_USER_TOKEN_META ) || '{}')
+  return JSON.parse( localStorage.getItem(LOCALSTORAGE_USER_TOKEN_META) || '{}')
 }
 
 /**
@@ -48,7 +73,7 @@ export const getTokenMeta = () => {
  * @return {[type]} [description]
  */
 export const deleteTokenMeta = () => {
-  localStorage.removeItem( LOCALSTORAGE_USER_TOKEN_META )
+  localStorage.removeItem(LOCALSTORAGE_USER_TOKEN_META)
 }
 
 /**
@@ -56,7 +81,7 @@ export const deleteTokenMeta = () => {
  * @param {String} theme
  */
 export const setUITheme = (theme) => {
-  localStorage.setItem( LOCALSTORAGE_UI_THEME, theme)
+  localStorage.setItem(LOCALSTORAGE_UI_THEME, theme)
 }
 
 /**
@@ -80,7 +105,7 @@ export const deleteUITheme = () => {
  * @param {String} userName
  */
 export const setUserName = (userName) => {
-  localStorage.setItem( LOCALSTORAGE_USER_NAME, userName)
+  localStorage.setItem(LOCALSTORAGE_USER_NAME, userName)
 }
 
 /**
@@ -88,7 +113,7 @@ export const setUserName = (userName) => {
  * @return {String} userName
  */
 export const getUserName = () => {
-  return localStorage.getItem( LOCALSTORAGE_USER_NAME )
+  return localStorage.getItem(LOCALSTORAGE_USER_NAME)
 }
 
 /**
@@ -96,5 +121,5 @@ export const getUserName = () => {
  *
  */
 export const deleteUserName = () => {
-  localStorage.removeItem( LOCALSTORAGE_USER_NAME)
+  localStorage.removeItem(LOCALSTORAGE_USER_NAME)
 }
