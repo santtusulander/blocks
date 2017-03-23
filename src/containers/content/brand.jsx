@@ -3,33 +3,33 @@ import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import { FormattedMessage } from 'react-intl';
 
 import {
   getAnalyticsUrlFromParams,
   getContentUrl,
   getNetworkUrl
-} from '../util/routes.js'
+} from '../../util/routes.js'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as uiActionCreators from '../redux/modules/ui'
+import * as accountActionCreators from '../../redux/modules/account'
+import * as metricsActionCreators from '../../redux/modules/metrics'
+import * as uiActionCreators from '../../redux/modules/ui'
 
 import {
   filterMetricsByAccounts,
   userIsCloudProvider,
   userIsServiceProvider
-} from '../util/helpers'
+} from '../../util/helpers'
 
-import ContentItems from '../components/content/content-items'
+import ContentItems from '../../components/content/content-items'
 
-import * as PERMISSIONS from '../constants/permissions'
-import checkPermissions from '../util/permissions'
-import PROVIDER_TYPES from '../constants/provider-types'
-import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
+import * as PERMISSIONS from '../../constants/permissions'
+import checkPermissions from '../../util/permissions'
+import PROVIDER_TYPES from '../../constants/provider-types'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
 
-import { FormattedMessage } from 'react-intl';
 
-export class Accounts extends React.Component {
+export class Brand extends React.Component {
   constructor(props) {
     super(props);
     this.deleteAccount = this.deleteAccount.bind(this)
@@ -135,8 +135,8 @@ export class Accounts extends React.Component {
   }
 }
 
-Accounts.displayName = 'Accounts'
-Accounts.propTypes = {
+Brand.displayName = 'Brand'
+Brand.propTypes = {
   accountActions: React.PropTypes.object,
   accounts: React.PropTypes.instanceOf(Immutable.List),
   activeAccount: React.PropTypes.instanceOf(Immutable.Map),
@@ -153,8 +153,8 @@ Accounts.propTypes = {
   user: React.PropTypes.instanceOf(Immutable.Map),
   viewingChart: React.PropTypes.bool
 }
-Accounts.defaultProps = {
-  accounts: Immutable.List(),
+Brand.defaultProps = {
+  Brand: Immutable.List(),
   activeAccount: Immutable.Map(),
   dailyTraffic: Immutable.List(),
   metrics: Immutable.List(),
@@ -162,7 +162,7 @@ Accounts.defaultProps = {
   user: Immutable.Map()
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     activeAccount: state.account.get('activeAccount'),
     accounts: state.account.get('allAccounts'),
@@ -178,7 +178,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+const mapDispatchToProps = (dispatch, ownProps) => {
   const accountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   let metricsOpts = {
@@ -209,4 +209,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Accounts);
+export default connect(mapStateToProps, mapDispatchToProps)(Brand);

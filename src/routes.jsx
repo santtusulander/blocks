@@ -52,7 +52,7 @@ import ConfigurationSecurity from './components/configuration/security'
 import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
 
 
-import Accounts from './containers/accounts'
+import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
@@ -257,8 +257,8 @@ export const getRoutes = store => {
         <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
+            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
+            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(BrandContainer)}/>
             <Route path={routes.contentGroups} component={AccountContainer}/>
             <Route path={routes.contentGroup} component={UserCanViewHosts(store)(GroupContainer)}/>
           </Route>
