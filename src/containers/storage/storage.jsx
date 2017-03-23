@@ -215,7 +215,8 @@ Storage.defaultProps = {
   storageMetrics: {
     chartData: {
       data: [],
-      key: ''},
+      key: ''
+    },
     usage: {
       current: 0,
       estimated: 0,
@@ -260,16 +261,18 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const average = storageMetrics.getIn(['totals', storageType, 'average'])
+  const average = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'average']) : 0
   const current = formatBytesToUnit(average, unit)
-  const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
-  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
+  const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
-  const locations = storage.get('clusters').map(cluster => (
-    getClusterById(state, cluster).get('description').split(',')[0]
-  )).toJS()
+  const locations = storage.get('clusters').map((cluster) => {
+    const clusterData = getClusterById(state, cluster)
 
-  const lineChartData = storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
+    return clusterData ? clusterData.get('description').split(',')[0] : ''
+  }).toJS()
+
+  const lineChartData = storageMetrics ? storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data})) : []
 
   return {
     chartData: {
@@ -317,7 +320,7 @@ const mapStateToProps = (state, ownProps) => {
     hasStorageService,
     storage,
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: storageMetrics && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
+    storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
 

@@ -10,7 +10,7 @@ export const serviceTypes = {
   unknown: 'portal.configuration.details.deploymentMode.unknown'
 }
 
-export const CIS_ORIGIN_HOST_PORT = 8082
+export const CIS_ORIGIN_HOST_PORT = 80
 
 export const TOKEN_AUTH_STATIC = 'standard'
 export const TOKEN_AUTH_STREAMING = 'on_demand_hls'
