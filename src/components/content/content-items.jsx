@@ -621,6 +621,7 @@ class ContentItems extends React.Component {
               >
 
               <AddHost
+                activeGroup={activeGroup}
                 createHost={this.onItemAdd}
                 cancelChanges={this.hideModal}
               />

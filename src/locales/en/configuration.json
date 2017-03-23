@@ -89,13 +89,14 @@
   "portal.policy.edit.cors.textPlain.text": "text/plain",
 
   "portal.configuration.details.deploymentMode.text": "Deployment Mode",
+  "portal.configuration.details.serviceType.text": "Service Type",
+  "portal.configuration.details.serviceType.msd": "VOD Streaming",
+  "portal.configuration.details.serviceType.large": "Media Delivery",
   "portal.configuration.details.useUDNOrigin.text": "Use UDN Origin",
   "portal.configuration.details.UDNOrigin.text": "UDN Origin (Storage)",
   "portal.configuration.details.deploymentMode.production": "Production",
   "portal.configuration.details.deploymentMode.trial": "Trial",
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
-
-  "portal.configuration.streaming.VOD.label": "Enable VOD Streaming",
 
   "portal.configuration.gtm.gtmToggle.label": "Allow 3rd-party CDN to serve content",
   "portal.configuration.gtm.gtmToggle.help": "Allow 3rd-party CDN to serve content help",
@@ -151,8 +152,8 @@
   "portal.configuration.policies.text": "Policies",
   "portal.configuration.performance.text": "Performance",
   "portal.configuration.security.text": "Security",
-  "portal.configuration.streaming.text": "Streaming",
   "portal.configuration.gtm.text": "Global Traffic Manager",
+
   "portal.configuration.certificates.text": "Certificates",
   "portal.configuration.changeLog.text": "Change Log",
   "portal.configuration.changes.text": "{numChanges, plural, one {change} other{changes}}",
