@@ -5,7 +5,7 @@ jest.unmock('../selector-component.jsx')
 jest.unmock('../toggle-element.jsx')
 jest.unmock('../../../decorators/select-auto-close')
 
-import SelectorComponent from '../selector-component.jsx'
+import { SelectorComponent } from '../selector-component.jsx'
 
 describe('SelectorComponent', () => {
   let subject, error, props = null
