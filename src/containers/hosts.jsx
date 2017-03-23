@@ -196,9 +196,10 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
   const metricsOpts = {
     account: account,
     group: group,
-    startDate: moment().utc().startOf('month').format('X'),
+    startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
+
   const fetchGroupData = () => {
     return Promise.all([
       accountActions.fetchAccount(brand, account),
@@ -213,7 +214,7 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     metricsActions.startHostFetching()
     metricsActions.fetchHostMetrics(metricsOpts)
     metricsActions.fetchDailyHostTraffic(metricsOpts),
-    dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true }))
+    dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: moment().utc().startOf('month').format('X') }))
   }
 
   return {
