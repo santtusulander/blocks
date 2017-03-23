@@ -19,6 +19,7 @@ import Footer from '../components/footer'
 
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
+import BannerNotification from '../components/shared/banner-notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 import {
@@ -123,6 +124,10 @@ export class Main extends React.Component {
     this.props.uiActions.changeAsperaNotification()
   }
 
+  hideBannerNotification() {
+    this.props.uiActions.changeBannerNotification()
+  }
+
   render() {
     if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
       return <LoadingSpinner />
@@ -220,6 +225,22 @@ export class Main extends React.Component {
           }
         </ReactCSSTransitionGroup>
 
+        <ReactCSSTransitionGroup
+          component="div"
+          className="banner-notification-transition"
+          transitionName="banner-notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.props.bannerNotification ?
+            <BannerNotification
+              handleClose={this.hideBannerNotification}
+              notificationCode={this.props.bannerNotification}
+            />
+            : ''
+          }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -233,6 +254,7 @@ Main.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   activeHost: React.PropTypes.instanceOf(Immutable.Map),
   asperaNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+  bannerNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
   children: React.PropTypes.node,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
@@ -283,6 +305,7 @@ function mapStateToProps({entities, ...state}) {
     activeGroup: state.group.get('activeGroup'),
     activeHost: state.host.get('activeHost'),
     asperaNotification: state.ui.get('asperaNotification'),
+    bannerNotification: state.ui.get('bannerNotification'),
     currentUser: state.user.get('currentUser'),
     fetching,
     notification: state.ui.get('notification'),
