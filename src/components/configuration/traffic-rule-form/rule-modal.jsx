@@ -33,8 +33,8 @@ class TrafficRuleFormContainer extends Component {
     const disabled = !!chosenMatch
 
     return (
-      <Modal show={true} dialogClassName="side-panel traffic-rules-modals-container">
-        <div className={classnames("traffic-rules-modal", { disabled })}>
+      <Modal show={true} dialogClassName="side-panel double-side-modal-container">
+        <div className={classnames("primary-side-modal", { disabled })}>
           <Modal.Header>
             <h1>Add Traffic Rule</h1>
             <p>placeholder subtitle</p>
