@@ -44,6 +44,7 @@ const validate = ({ name }) => {
 const GroupForm = ({
   accountIsServiceProviderType,
   accountIsContentProviderType,
+  canEditServices,
   canSeeLocations,
   groupId,
   handleSubmit,
@@ -86,7 +87,7 @@ const GroupForm = ({
 
         <hr/>
 
-        {(accountIsContentProviderType) &&
+        {(canEditServices && accountIsContentProviderType) &&
           <div>
             <Field
               name="services"
@@ -222,6 +223,7 @@ GroupForm.displayName = "GroupForm"
 GroupForm.propTypes = {
   accountIsContentProviderType: PropTypes.bool.isRequired,
   accountIsServiceProviderType: PropTypes.bool.isRequired,
+  canEditServices: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
   groupId: PropTypes.number,
   handleSubmit: PropTypes.func,
