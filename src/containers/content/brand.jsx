@@ -140,7 +140,7 @@ export class Brand extends React.Component {
         viewingChart={viewingChart}
         fetchItem={(id) => {
           /*eslint-disable no-console */
-          console.warn('fetchItem will be deprecated in UDNP-3177')
+          //console.warn('fetchItem will be deprecated in UDNP-3177')
           return this.props.oldAccountActions.fetchAccount(brand, id)
         }}
       />
