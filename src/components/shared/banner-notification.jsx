@@ -16,7 +16,7 @@ class BannerNotification extends React.Component {
       case BANNER_NOTIFICATION_NO_LOCAL_STORAGE:
         return (
           <div>
-            <span id="update-container-text" className="text">
+            <span id="container-text" className="text">
               <IconInfo />
               <FormattedMessage id="portal.login.localStorage.error.text"/>
             </span>
