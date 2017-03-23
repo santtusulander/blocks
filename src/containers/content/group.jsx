@@ -45,15 +45,28 @@ export class Group extends React.Component {
     this.props.fetchMetricsData()
   }
 
-  createNewHost(id, deploymentMode) {
+  createNewHost(id, deploymentMode, serviceType) {
+    /* Create initial services and configurations for property */
+    const payload = {
+      services:[{
+        service_type: serviceType,
+        deployment_mode: deploymentMode,
+        configurations: [{
+          edge_configuration: {
+            published_name: id
+          }
+        }]
+      }]
+    }
+
     return this.props.createProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      id,
-      deploymentMode
+      payload
     )
   }
+
   deleteHost(id) {
     return this.props.deleteProperty(
       this.props.params.brand,
@@ -91,7 +104,7 @@ export class Group extends React.Component {
         params={params}
 
         className="hosts-container"
-
+        changeNotification={this.props.uiActions.changeNotification}
         storages={this.props.storages}
         properties={this.props.properties}
 

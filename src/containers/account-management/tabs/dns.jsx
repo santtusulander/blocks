@@ -67,7 +67,14 @@ class AccountManagementSystemDNS extends Component {
 
   deleteDnsRecord() {
     const { props: { activeDomain, deleteRecord }, state: { recordToDelete } } = this
-    deleteRecord(activeDomain, recordToDelete, () => this.setState({ recordToDelete: null }))
+    deleteRecord(activeDomain, recordToDelete)
+      .then(() => {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.dnsDeleted.text"/>)
+        this.setState({ recordToDelete: null })
+      })
+      .catch(() => {
+        this.props.showNotification(<FormattedMessage id="portal.accountManagement.dnsDeleted.failed.text"/>)
+      })
   }
 
   closeDeleteDnsRecordModal() {
@@ -84,6 +91,7 @@ class AccountManagementSystemDNS extends Component {
       loadingRecords,
       loadingDomains,
       activeModal,
+      showNotification,
       toggleModal } = this.props
 
     const { domainSearch, recordSearch, recordToDelete } = this.state
@@ -149,11 +157,13 @@ class AccountManagementSystemDNS extends Component {
         {activeModal === EDIT_RECORD &&
         <RecordForm
           edit={this.editingRecord}
+          showNotification={showNotification}
           closeModal={() => toggleModal(null)}/>
         }
         {activeModal === DNS_DOMAIN_EDIT &&
         <DomainForm
           edit={this.editingDomain}
+          showNotification={showNotification}
           closeModal={() => toggleModal(null)}/>
         }
         {this.state.recordToDelete &&
@@ -205,6 +215,7 @@ AccountManagementSystemDNS.propTypes = {
   params: PropTypes.object,
   records: PropTypes.array,
   setActiveRecord: PropTypes.func,
+  showNotification: PropTypes.func,
   toggleModal: PropTypes.func
 }
 
@@ -219,7 +230,7 @@ function mapStateToProps({ dns, dnsRecords, ui }) {
   }
 }
 
-function mapDispatchToProps(dispatch, { params: { brand } }) {
+function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
   const { changeActiveDomain, deleteDomain, fetchDomains, fetchDomain, startFetchingDomains, stopFetchingDomains } = bindActionCreators(domainActionCreators, dispatch)
   const { fetchResourcesWithDetails, startFetching, setActiveRecord, removeResource } = bindActionCreators(dnsRecordActionCreators, dispatch)
   return {
@@ -232,9 +243,9 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
       startFetchingDomains()
       return fetchDomains(brand)
     },
-    deleteRecord: (domain, record, onResponse) => {
+    deleteRecord: (domain, record) => {
       startFetching()
-      return removeResource(domain, record.name, record).then(onResponse)
+      return removeResource(domain, record.name, record)
     },
     onEditDomain: activeDomain => fetchDomain(brand, activeDomain),
     changeActiveDomain,
@@ -252,6 +263,7 @@ function mapDispatchToProps(dispatch, { params: { brand } }) {
               cancel: () => dispatch(hideInfoDialog())
             }))
           }
+          showNotification(<FormattedMessage id="portal.accountManagement.dns.domain.deleted.text"/>)
           stopFetchingDomains()
         })
     }
