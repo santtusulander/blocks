@@ -163,40 +163,57 @@ class Matcher extends React.Component {
               type="text"
               placeholder={this.props.placeholder}
               value={this.state.val}
-              onChange={this.handleValChange}/>
+              onChange={this.handleValChange}
+            />
           </FormGroup>
 
           <hr />
 
           {!this.props.disableRuleSelector &&
             <div className="form-groups">
-              <InputConnector show={hasContainingRule} noLabel={true} />
+              <InputConnector
+                show={hasContainingRule}
+                noLabel={true}
+              />
               <FormGroup>
-                <Select className="input-select"
+                <Select
+                  className="input-select"
                   onSelect={this.handleMatchesChange}
                   value={this.state.activeFilter}
-                  options={matchOpts}/>
+                  options={matchOpts}
+                />
               </FormGroup>
 
-              <Panel className="form-panel" collapsible={true}
-                expanded={hasContainingRule}>
+              <Panel
+                className="form-panel"
+                collapsible={true}
+                expanded={hasContainingRule}
+              >
                 <FormGroup>
                   <ControlLabel>
                     <FormattedMessage id="portal.policy.edit.matcher.value.text" />
                   </ControlLabel>
                   <FormControl
                     value={this.state.containsVal}
-                    onChange={this.handleContainsValChange}/>
+                    onChange={this.handleContainsValChange}
+                  />
                 </FormGroup>
               </Panel>
             </div>
           }
 
           <ButtonToolbar className="text-right">
-            <Button className="btn-secondary" onClick={this.props.close}>
+            <Button
+              className="btn-secondary"
+              onClick={this.props.close}
+            >
               <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
             </Button>
-            <Button bsStyle="primary" onClick={this.saveChanges} disabled={!isValid}>
+            <Button
+              bsStyle="primary"
+              onClick={this.saveChanges}
+              disabled={!isValid}
+            >
               <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
             </Button>
           </ButtonToolbar>

@@ -1,75 +1,48 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
-import Immutable from 'immutable'
-import { FormattedMessage } from 'react-intl'
+import { List, fromJS } from 'immutable'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { connect } from 'react-redux'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+
+import FieldFormGroupSelect from '../../form/field-form-group-select'
+import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
 import country_list from '../../../constants/country-list'
-import Typeahead from '../../../components/typeahead'
 
 class ContentTargeting extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleIncludeChange = this.handleIncludeChange.bind(this)
-    this.handleExcludeChange = this.handleExcludeChange.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
-
-    this.state = {
-      includes: [],
-      includeOptions: country_list,
-      excludes: [],
-      excludeOptions: country_list
-    }
   }
 
-  handleIncludeChange() {
-    return includes => {
-      const excludeOptions = country_list.filter(country => includes.indexOf(country) < 0)
-      this.setState({
-        includes,
-        excludeOptions
-      })
-    }
+  componentWillMount() {
+    const { match } = this.props
+
+    this.props.change('value', match.get('value').toJS().map(item => ({id: item, label: country_list.find(ctr => ctr.id === item ).label})))
+    this.props.change('inverted', match.get('inverted'))
   }
 
-  handleExcludeChange() {
-    return excludes => {
-      const includeOptions = country_list.filter(country => excludes.indexOf(country) < 0)
-      this.setState({
-        excludes,
-        includeOptions
-      })
-    }
-  }
+  saveChanges({value, inverted}) {
+    const { match } = this.props
 
-  saveChanges() {
-    const includes = this.state.includes.map(country => {
-      return {
-        in: [country.id],
-        response: {
-          code: 200
-        }
-      }
-    })
-    const excludes = this.state.excludes.map(country => {
-      return {
-        in: [country.id],
-        response: {
-          code: 401
-        }
-      }
-    })
-    const countries = includes.concat(excludes)
-
-    this.props.changeValue(this.props.path, Immutable.fromJS({value: countries}))
+    this.props.changeValue(this.props.path, fromJS({
+      field: match.get('field'),
+      type: match.get('type'),
+      inverted,
+      value: value.map(item => item.id)
+    }))
     this.props.activateMatch(null)
   }
 
   render() {
-    const {
-      includes,
-      excludes
-    } = this.state
+    const { handleSubmit, invalid, close, exclude, countries } = this.props
+    const typeOptions = [
+      {value: 'in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom'})},
+      {value: 'not_in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom'})}
+    ]
+    const countryOptions = country_list.filter(country => countries.indexOf(country) < 0)
 
     return (
       <div>
@@ -78,35 +51,46 @@ class ContentTargeting extends React.Component {
           <p><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.text" /></p>
         </Modal.Header>
         <Modal.Body>
+          <form onSubmit={handleSubmit(this.saveChanges)}>
+            <Field
+              name="inverted"
+              className="input-select"
+              component={FieldFormGroupSelect}
+              options={typeOptions}
+              format={(v) => v ? 'in' : 'not_in'}
+              normalize={(v) => v === 'in' ? true : false}
+              label={<FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text" />}
+            />
 
-          <label><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.include.text" /></label>
-          <Typeahead
-            multiple={true}
-            onChange={this.handleIncludeChange()}
-            selected={includes}
-            options={this.state.includeOptions}/>
+            <Field
+              className={exclude ? 'exclude' : ''}
+              name="value"
+              component={FieldFormGroupTypeahead}
+              multiple={true}
+              options={countryOptions}
+            />
 
-          <label><FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.exclude.text" /></label>
-          <Typeahead
-            className="exclude"
-            multiple={true}
-            onChange={this.handleExcludeChange()}
-            selected={excludes}
-            options={this.state.excludeOptions}/>
+            <hr />
 
-          <hr />
+            <ButtonToolbar className="text-right">
+              <Button
+                id="cancel-btn"
+                className="btn-secondary"
+                onClick={close}
+              >
+                <FormattedMessage id="portal.policy.edit.policies.cancel.text"/>
+              </Button>
 
-          <ButtonToolbar className="text-right">
-            <Button className="btn-secondary" onClick={this.props.close}>
-              <FormattedMessage id="portal.policy.edit.policies.cancel.text" />
-            </Button>
-            <Button bsStyle="primary"
-              onClick={this.saveChanges}
-              disabled={this.state.includes.length === 0 && this.state.excludes.length === 0}>
-              <FormattedMessage id="portal.policy.edit.policies.saveMatch.text" />
-            </Button>
-          </ButtonToolbar>
+              <Button
+                type="submit"
+                bsStyle="primary"
+                disabled={invalid}
+              >
+                <FormattedMessage id="portal.policy.edit.policies.saveMatch.text"/>
+              </Button>
 
+            </ButtonToolbar>
+          </form>
         </Modal.Body>
       </div>
     )
@@ -115,10 +99,26 @@ class ContentTargeting extends React.Component {
 
 ContentTargeting.displayName = 'ContentTargeting'
 ContentTargeting.propTypes = {
-  activateMatch: React.PropTypes.func,
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  path: React.PropTypes.instanceOf(Immutable.List)
+  path: React.PropTypes.instanceOf(List),
+  ...reduxFormPropTypes
 }
 
-module.exports = ContentTargeting
+const form = reduxForm({
+  form: 'content-targeting-form'
+})(ContentTargeting)
+
+ContentTargeting.defaultProps = {
+  inverted: false,
+  value: [],
+  countries: []
+}
+
+const selector = formValueSelector('content-targeting-form')
+
+export default connect(state => ({
+  exclude: selector(state, 'inverted'),
+  countries: selector(state, 'value'),
+  value: selector(state, 'value'),
+  inverted: selector(state, 'inverted')
+}))(injectIntl(form))
