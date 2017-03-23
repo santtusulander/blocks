@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { withRouter } from 'react-router'
+import moment from 'moment'
 
 import * as uiActionCreators from '../../redux/modules/ui'
 import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
@@ -38,7 +39,7 @@ import { EDIT_STORAGE } from '../../constants/account-management-modals.js'
 import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 
 import { getContentUrl } from '../../util/routes.js'
-import { buildAnalyticsOpts, formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
+import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
 class Storage extends Component {
   constructor(props) {
@@ -59,16 +60,25 @@ class Storage extends Component {
 
   componentWillMount() {
     if (this.props.params.storage && this.props.params.group) {
+      const { brand, account, group, storage } = this.props.params
       this.props.fetchStorage({
-        brand: this.props.params.brand,
-        account: this.props.params.account,
-        group: this.props.params.group,
-        id: this.props.params.storage
+        brand: brand,
+        account: account,
+        group: group,
+        id: storage
       })
 
-      const { params, filters } = this.props
-      const fetchOpts = buildAnalyticsOpts(params, filters, {pathname: 'storage'})
-      this.props.fetchStorageMetrics({start: fetchOpts.startDate, end: fetchOpts.endDate, ...fetchOpts})
+      const metricsOpts = {
+        brand : brand,
+        account: account,
+        group: group,
+        ingest_point: storage,
+        list_children: false,
+        startDate: moment().utc().startOf('month').format('X'),
+        endDate: moment.utc().endOf('day').format('X')
+      }
+
+      this.props.fetchStorageMetrics({...metricsOpts})
 
       this.props.fetchClusters({})
     }
@@ -196,7 +206,6 @@ Storage.propTypes = {
   fetchGroupData: PropTypes.func,
   fetchStorage: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
-  filters: PropTypes.instanceOf(Map),
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
@@ -215,7 +224,8 @@ Storage.defaultProps = {
   storageMetrics: {
     chartData: {
       data: [],
-      key: ''},
+      key: ''
+    },
     usage: {
       current: 0,
       estimated: 0,
@@ -260,16 +270,18 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const average = storageMetrics.getIn(['totals', storageType, 'average'])
+  const average = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'average']) : 0
   const current = formatBytesToUnit(average, unit)
-  const peak = formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit)
-  const gain = storageMetrics.getIn(['totals', storageType, 'percent_change'])
+  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
+  const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
-  const locations = storage.get('clusters').map(cluster => (
-    getClusterById(state, cluster).get('description').split(',')[0]
-  )).toJS()
+  const locations = storage.get('clusters').map((cluster) => {
+    const clusterData = getClusterById(state, cluster)
 
-  const lineChartData = storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data}))
+    return clusterData ? clusterData.get('description').split(',')[0] : ''
+  }).toJS()
+
+  const lineChartData = storageMetrics ? storageMetrics.get('detail').toJS().map(data => ({bytes: 0, ...data})) : []
 
   return {
     chartData: {
@@ -317,7 +329,7 @@ const mapStateToProps = (state, ownProps) => {
     hasStorageService,
     storage,
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: storageMetrics && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
+    storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
 

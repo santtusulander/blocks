@@ -87,7 +87,7 @@ class ConfigurationDetails extends React.Component {
 
     if(!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
-        value: storage.getIn(['gateway', 'hostname']),
+        value: storage.getIn(['origin', 'hostname']),
         label: storage.get('ingest_point_id')
       }), options)
     }
