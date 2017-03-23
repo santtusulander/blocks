@@ -15,7 +15,7 @@ import accountActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
-//TODO: UDNP-3177 remove when fetchItem has been removed
+
 import * as accountActionCreators from '../../redux/modules/account'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
@@ -55,17 +55,19 @@ export class Brand extends React.Component {
   }
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
   createAccount(brand, id, data) {
-    return this.props.oldAccountActions.createAccount(brand, data)
+    return this.props.createAccount({brand, payload: data})
   }
   editAccount(brand, id, data) {
-    return this.props.oldAccountActions.updateAccount(brand, id, data)
+    return this.props.updateAccount({brand, id, payload: data})
   }
   deleteAccount(id) {
-    this.props.oldAccountActions.deleteAccount(this.props.params.brand, id)
+    const {brand} = this.props.params
+    return this.props.removeAccount({brand, id})
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
+
   render() {
     const { brand } = this.props.params
     const {
@@ -150,6 +152,7 @@ Brand.displayName = 'Brand'
 Brand.propTypes = {
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
+  createAccount: PropTypes.func,
   dailyTraffic: PropTypes.instanceOf(List),
   fetchData: PropTypes.func,
   fetching: PropTypes.bool,
@@ -157,13 +160,16 @@ Brand.propTypes = {
   metrics: PropTypes.instanceOf(List),
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
+  removeAccount: PropTypes.func,
   roles: PropTypes.instanceOf(List),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
+  updateAccount: PropTypes.func,
   user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
+
 Brand.defaultProps = {
   Brand: List(),
   activeAccount: Map(),
@@ -175,10 +181,10 @@ Brand.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    activeAccount: getAccountById(state, ownProps.params.account), //state.account.get('activeAccount'),
-    accounts: getByBrand(state, ownProps.params.brand), //state.account.get('allAccounts'),
+    activeAccount: getAccountById(state, ownProps.params.account),
+    accounts: getByBrand(state, ownProps.params.brand),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
-    fetching: getGlobalFetching(state), //state.account.get('fetching'),
+    fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
@@ -222,7 +228,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     oldAccountActions,
-    uiActions: bindActionCreators(uiActionCreators, dispatch)
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
+
+    createAccount: (params) => dispatch(accountActions.create(params)),
+    updateAccount: (params) => dispatch(accountActions.update(params)),
+    removeAccount: (params) => dispatch(accountActions.remove(params))
   };
 }
 
