@@ -5,7 +5,7 @@ const LOCALSTORAGE_UI_THEME = 'EricssonUDNUiTheme'
 
 /**
  * Check whether LocalStorage is supported.
- * Should be invoced only once.
+ * Should be called only once.
  *
  * @return {Boolean}
  */
