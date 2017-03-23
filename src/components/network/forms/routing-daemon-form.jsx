@@ -102,7 +102,7 @@ class RoutingDaemonForm extends React.Component {
 
     fetchASOverview(BGPNumber)
       .then((resp) => {
-        const organization = resp.organization ? formatASN(resp) : ''
+        const organization = resp[0].organization ? formatASN(resp[0]) : ''
         this.setState({
           BGPNumber,
           BGPName: organization.length ? organization : null,
