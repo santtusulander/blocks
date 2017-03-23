@@ -318,7 +318,7 @@ const mapStateToProps = (state, ownProps) => {
     hasStorageService,
     storage,
     storageContents: getMockContents(ownProps.params.storage),
-    storageMetrics: prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
+    storageMetrics: storage && prepareStorageMetrics(state, storage, storageMetrics, filters.get('storageType'))
   }
 }
 
