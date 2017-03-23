@@ -701,3 +701,13 @@ export function hasOption(group, optionID) {
   const services = group && group.get('services')
   return services && services.some(service => service.get('options').some(option => option.get('option_id') === optionID))
 }
+
+/**
+ * Format ASN number
+ *
+ * @param asnObj
+ * @returns {string}
+ */
+export function formatASN(asnObj) {
+  return asnObj ? `ASN${asnObj.asn} (${asnObj.organization})` : ''
+}

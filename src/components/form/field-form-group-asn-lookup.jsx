@@ -7,6 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import * as asnActionCreators from '../../redux/modules/asn'
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
 import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY } from '../../constants/network'
+import { formatASN } from '../../util/helpers'
 
 
 class FieldFormGroupAsnLookup extends Component {
@@ -32,7 +33,7 @@ class FieldFormGroupAsnLookup extends Component {
         resp.payload.forEach(item => {
           options.push({
             id: item.asn,
-            label: `ASN${item.asn} (${item.organization})`
+            label: formatASN(item)
           })
         })
 

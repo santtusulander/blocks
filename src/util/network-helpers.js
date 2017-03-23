@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { parseResponseData, qsBuilder } from '../redux/util'
+import { parseResponseData, BASE_URL_NORTH, qsBuilder } from '../redux/util'
 import { MAPBOX_REVERSE_LOOKUP_ENDPOINT } from '../constants/mapbox.js'
 import {
   RIPE_STAT_DATA_API_ENDPOINT,
@@ -38,7 +38,7 @@ export const locationReverseGeoCodingLookup = (lon, lat, limit = 1, mode = 'mapb
  * Fetch AS-overview
  * @param resource
  */
-export const fetchASOverview = resource => CallRIPEStatDataAPI('as-overview', { resource })
+//export const fetchASOverview = resource => CallRIPEStatDataAPI('as-overview', { resource })
 
 /**
  * Helper to make calls to RIPE Stat Data API
@@ -48,15 +48,22 @@ export const fetchASOverview = resource => CallRIPEStatDataAPI('as-overview', { 
  * @returns {axios.Promise}
  * @constructor
  */
-const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
-  // TODO: Should we include the sourceapp-param
-  // as described in https://stat.ripe.net/docs/data_api#RulesOfUsage
-
-  // const finalParams = Object.assign({}, params, { sourceapp: 'udnportal' })
-  const query = qsBuilder(params)
-  return ripeInstance.get(`/${dataCallName}/data.${format}${query}`).then(parseResponseData)
+// const CallRIPEStatDataAPI = (dataCallName, params = {}, format = 'json') => {
+//   // TODO: Should we include the sourceapp-param
+//   // as described in https://stat.ripe.net/docs/data_api#RulesOfUsage
+//
+//   // const finalParams = Object.assign({}, params, { sourceapp: 'udnportal' })
+//   const query = qsBuilder(params)
+//   return ripeInstance.get(`/${dataCallName}/data.${format}${query}`).then(parseResponseData)
+// }
+export const fetchASOverview = (asn) => {
+  return axios.get(`${BASE_URL_NORTH}/asns/${asn}`)
+  .then((res) => {
+    if(res) {
+      return res.data;
+    }
+  })
 }
-
 /**
  * Generate nodename
  * @param  {String} pod_id
