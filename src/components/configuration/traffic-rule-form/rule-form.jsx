@@ -15,7 +15,8 @@ import IconAdd from '../../icons/icon-add'
 /**
  * Field array for matches
  */
-const Matches = ({ fields, chooseMatch, disabled }) => {
+const Matches = ({ fields, activeCondition, chooseMatch, disabled }) => {
+  const matchArrayLength = fields.length
   return (
     <div className="conditions">
       {fields.map((match, index) => {
@@ -30,8 +31,11 @@ const Matches = ({ fields, chooseMatch, disabled }) => {
             type="text"
             component={({ input }) => (
               <Row className="condition">
-                <Col xs={10} onClick={onEdit}>
+                <Col xs={10} className="condition-info-column" onClick={onEdit}>
+
                   <p>{input.value.label}</p>
+                  {index + 1 !== matchArrayLength && <h4>{activeCondition.toUpperCase()}</h4>}
+
                 </Col>
                 <Col xs={2} className="text-right">
                   <ActionButtons
@@ -49,12 +53,13 @@ const Matches = ({ fields, chooseMatch, disabled }) => {
 
 Matches.displayName = "Matches"
 Matches.propTypes = {
+  activeCondition: PropTypes.string,
   chooseMatch: PropTypes.func,
   disabled: PropTypes.bool,
   fields: PropTypes.object
 }
 
-const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatches, disabled, invalid }) => {
+const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, chooseMatch, hasMatches, disabled, invalid }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="configuration-rule-edit">
       <Field
@@ -90,6 +95,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
         <FieldArray
           name="matchArray"
           disabled={disabled}
+          activeCondition={activeCondition}
           chooseMatch={chooseMatch}
           component={Matches}/>
 
@@ -118,6 +124,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
 
 RuleForm.displayName = 'RuleForm'
 RuleForm.propTypes = {
+  activeCondition: PropTypes.string,
   chooseMatch: PropTypes.func,
   disabled: PropTypes.bool,
   edit: PropTypes.func,
