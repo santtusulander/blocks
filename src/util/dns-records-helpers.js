@@ -22,7 +22,7 @@ export const getRecordFormInitialValues = record => {
   }
 }
 
-export const isShown = recordType => field => recordFields[field].indexOf(recordType) >= 0
+export const isShown = recordType => field => recordFields[field] && recordFields[field].indexOf(recordType) >= 0
 
 export const recordValues = values => {
   if (isShown(values.type)('prio')) {

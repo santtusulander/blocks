@@ -57,10 +57,10 @@ export class Hosts extends React.Component {
     this.setState({fetching: false});
   }
 
-  createNewHost(id, deploymentMode) {
+  createNewHost(id, deploymentMode, serviceType) {
     const payload = {
       services:[{
-        service_type: "large",
+        service_type: serviceType,
         deployment_mode: deploymentMode,
         configurations: [{
           edge_configuration: {

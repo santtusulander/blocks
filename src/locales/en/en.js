@@ -436,8 +436,14 @@ const TRANSLATED_MESSAGES = {
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
 
+  'portal.content.addHost.serviceType.text': 'Service Type',
+  'portal.content.addHost.serviceType.required': 'Service Type is required',
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
+
+  'portal.content.addHost.large.text': 'Media Delivery',
+  'portal.content.addHost.msd.text': 'VOD Streaming',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
