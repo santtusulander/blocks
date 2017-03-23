@@ -5,6 +5,7 @@ import IconClose from '../../icons/icon-close'
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import IconCaretRight from '../../icons/icon-caret-right'
 import ContinentMatchConditionForm from './continent-match-form'
+import CountryMatchConditionForm from './country-match-form'
 
 const matches = [
   { matchType: 'continent', label: 'Continent'},
@@ -65,7 +66,7 @@ class MatchesForm extends Component {
         title = 'Country'
         subtitle = 'Specify all continents that should be matched'
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = CountryMatchConditionForm
         break
 
       case 'ipv4address':
