@@ -6,6 +6,7 @@ import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import IconCaretRight from '../../icons/icon-caret-right'
 import ContinentMatchConditionForm from './continent-match-form'
 import CountryMatchConditionForm from './country-match-form'
+import ASNMatchConditionForm from './asn-match-form'
 
 const matches = [
   { matchType: 'continent', label: 'Continent'},
@@ -87,7 +88,7 @@ class MatchesForm extends Component {
         title = 'ASN'
         subtitle = 'Specify all continents that should be matched'
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = ASNMatchConditionForm
     }
 
     return (

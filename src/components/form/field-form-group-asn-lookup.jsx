@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { Field } from 'redux-form'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
-import * as asnActionCreators from '../../redux/modules/asn'
-import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
-import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY } from '../../constants/network'
+import axios from 'axios'
+import { BASE_URL_NORTH } from '../../redux/util'
 
+import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
+import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY, ASN_ITEMS_COUNT_TO_SEARCH } from '../../constants/network'
+
+const fetchAsns = (filterBy, filterValue) =>
+  axios.get(`${BASE_URL_NORTH}/asns?filter_by=${filterBy}&filter_value=${filterValue}&page_size=${ASN_ITEMS_COUNT_TO_SEARCH}`)
+    .then(res => res ? res.data.data : [])
 
 class FieldFormGroupAsnLookup extends Component {
   constructor(props) {
@@ -26,17 +29,14 @@ class FieldFormGroupAsnLookup extends Component {
     }
 
     const filterType = parseInt(query) ? 'asn' : 'organization'
-    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: query })
-      .then(resp => {
-        let options = []
-        resp.payload.forEach(item => {
-          options.push({
-            id: item.asn,
-            label: `ASN${item.asn} (${item.organization})`
-          })
-        })
+    fetchAsns(filterType, query)
+      .then(asns => {
+        const options = asns.map(item => ({
+          id: item.asn,
+          label: `ASN${item.asn} (${item.organization})`
+        }))
 
-        this.setState({options: options})
+        this.setState({ options })
       });
   }
 
@@ -62,14 +62,7 @@ class FieldFormGroupAsnLookup extends Component {
 
 FieldFormGroupAsnLookup.displayName = 'FieldFormGroupAsnLookup'
 FieldFormGroupAsnLookup.propTypes = {
-  asnActions: PropTypes.object,
   intl: PropTypes.object
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    asnActions: bindActionCreators(asnActionCreators, dispatch)
-  }
-}
-
-export default connect(null, mapDispatchToProps)(injectIntl(FieldFormGroupAsnLookup))
+export default injectIntl(FieldFormGroupAsnLookup)
