@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = { 
   AW4: {
     Connect: {
       STATUS: {
