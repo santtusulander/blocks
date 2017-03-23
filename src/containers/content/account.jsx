@@ -66,7 +66,7 @@ export class Account extends React.Component {
   /* TODO: UDNP-3177 Move all CRUD methods inside GroupModal */
   /* eslint-disable no-console */
   createGroup({data /*, usersToAdd*/ }) {
-    console.warn( 'createGroup in account.jsx will be deprecated and moved to GroupFormContainer')
+    //console.warn( 'createGroup in account.jsx will be deprecated and moved to GroupFormContainer')
     const {brand, account} = this.props.params
 
     return this.props.createGroup({brand, account, payload: data})
@@ -85,7 +85,7 @@ export class Account extends React.Component {
   }
 
   editGroup({groupId, data /*, addUsers, deleteUsers */ }) {
-    console.warn( 'editGroup in account.jsx will be deprecated and moved to GroupFormContainer')
+    //console.warn( 'editGroup in account.jsx will be deprecated and moved to GroupFormContainer')
 
     const {brand, account} = this.props.params
 
@@ -119,7 +119,7 @@ export class Account extends React.Component {
     // ))
   }
   deleteGroup(group) {
-    console.warn( 'deleteGroup in account.jsx will be deprecated and moved to GroupFormContainer')
+    //console.warn( 'deleteGroup in account.jsx will be deprecated and moved to GroupFormContainer')
 
     const {brand, account} = this.props.params
     const id = group.get('id')
