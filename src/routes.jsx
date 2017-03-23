@@ -291,7 +291,7 @@ export const getRoutes = store => {
         <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
           <Route path={routes.networkGroups} component={Network}/>

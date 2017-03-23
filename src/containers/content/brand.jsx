@@ -11,9 +11,16 @@ import {
   getNetworkUrl
 } from '../../util/routes.js'
 
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
+import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
+
+//TODO: UDNP-3177 remove when fetchItem has been removed
 import * as accountActionCreators from '../../redux/modules/account'
+
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
+
 
 import {
   filterMetricsByAccounts,
@@ -48,13 +55,13 @@ export class Brand extends React.Component {
   }
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
   createAccount(brand, id, data) {
-    return this.props.accountActions.createAccount(brand, data)
+    return this.props.oldAccountActions.createAccount(brand, data)
   }
   editAccount(brand, id, data) {
-    return this.props.accountActions.updateAccount(brand, id, data)
+    return this.props.oldAccountActions.updateAccount(brand, id, data)
   }
   deleteAccount(id) {
-    this.props.accountActions.deleteAccount(this.props.params.brand, id)
+    this.props.oldAccountActions.deleteAccount(this.props.params.brand, id)
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
@@ -129,7 +136,11 @@ export class Brand extends React.Component {
         type={CONTENT_ITEMS_TYPES.ACCOUNT}
         user={user}
         viewingChart={viewingChart}
-        fetchItem={(id) => { return this.props.accountActions.fetchAccount(brand, id) }}
+        fetchItem={(id) => {
+          /*eslint-disable no-console */
+          console.warn('fetchItem will be deprecated in UDNP-3177')
+          return this.props.oldAccountActions.fetchAccount(brand, id)
+        }}
       />
     )
   }
@@ -137,7 +148,6 @@ export class Brand extends React.Component {
 
 Brand.displayName = 'Brand'
 Brand.propTypes = {
-  accountActions: PropTypes.object,
   accounts: PropTypes.instanceOf(List),
   activeAccount: PropTypes.instanceOf(Map),
   dailyTraffic: PropTypes.instanceOf(List),
@@ -145,6 +155,7 @@ Brand.propTypes = {
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   metrics: PropTypes.instanceOf(List),
+  oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   roles: PropTypes.instanceOf(List),
   sortDirection: PropTypes.number,
@@ -162,12 +173,12 @@ Brand.defaultProps = {
   user: Map()
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    accounts: state.account.get('allAccounts'),
+    activeAccount: getAccountById(state, ownProps.params.account), //state.account.get('activeAccount'),
+    accounts: getByBrand(state, ownProps.params.brand), //state.account.get('allAccounts'),
     dailyTraffic: state.metrics.get('accountDailyTraffic'),
-    fetching: state.account.get('fetching'),
+    fetching: getGlobalFetching(state), //state.account.get('fetching'),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
     roles: state.roles.get('roles'),
@@ -179,9 +190,13 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
+
+  const {brand, account} = ownProps.params
+
+  const oldAccountActions = bindActionCreators(accountActionCreators, dispatch)
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
-  let metricsOpts = {
+
+  const metricsOpts = {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
@@ -189,13 +204,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchData: (metrics, accounts, dailyTraffic, canListAccounts) => {
       if (!canListAccounts) {
-        metricsOpts.account = ownProps.params.account;
+        metricsOpts.account = ownProps.params.account
+        metricsOpts.list_children = false
+        dispatch( accountActions.fetchOne({brand, id: account}) )
+      } else {
+        metricsOpts.list_children = true
+        dispatch( accountActions.fetchAll({brand}) )
       }
-      metricsOpts.list_children = !!canListAccounts;
-      if(accounts.isEmpty() && canListAccounts) {
-        accountActions.startFetching()
-        accountActions.fetchAccounts(ownProps.params.brand)
-      }
+
       metricsActions.startAccountFetching()
       metricsActions.fetchAccountMetrics(metricsOpts)
       // TODO: Replace metrics endpoint with traffic endpoint after 0.7
@@ -204,7 +220,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   .then(() => metricsActions.fetchDailyAccountTraffic(metricsOpts))
       metricsActions.fetchDailyAccountTraffic(metricsOpts)
     },
-    accountActions: accountActions,
+
+    oldAccountActions,
     uiActions: bindActionCreators(uiActionCreators, dispatch)
   };
 }
