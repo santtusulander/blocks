@@ -16,7 +16,6 @@ import FootprintForm from '../../../components/network/forms/footprint-form'
 import { FOOTPRINT_UDN_TYPES, FOOTPRINT_DEFAULT_DATA_TYPE } from '../../../constants/network'
 
 const normalizeValueToAPI = (value, type) => value.map(item => {
-  console.log('value type',type)
   return type === 'ipv4cidr' ? item.label : item.id
 })
 const normalizeValueFromAPI = (value) => value.map(item => ({ id: item, label: item }))
