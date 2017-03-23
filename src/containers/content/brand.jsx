@@ -1,5 +1,5 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, {PropTypes} from 'react'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -80,7 +80,7 @@ export class Brand extends React.Component {
     const showAccountList = activeAccount.isEmpty() && userIsCloudProvider(currentUser)
     const contentItems = showAccountList
                       ? accounts
-                      : Immutable.List.of(activeAccount)
+                      : List.of(activeAccount)
     const headerTextLabel = showAccountList
                               ? <FormattedMessage id='portal.brand.allAccounts.message'/>
                               : activeAccount.get('name')
@@ -137,29 +137,29 @@ export class Brand extends React.Component {
 
 Brand.displayName = 'Brand'
 Brand.propTypes = {
-  accountActions: React.PropTypes.object,
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  fetchData: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
-  metrics: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  sortDirection: React.PropTypes.number,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+  accountActions: PropTypes.object,
+  accounts: PropTypes.instanceOf(List),
+  activeAccount: PropTypes.instanceOf(Map),
+  dailyTraffic: PropTypes.instanceOf(List),
+  fetchData: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  metrics: PropTypes.instanceOf(List),
+  params: PropTypes.object,
+  roles: PropTypes.instanceOf(List),
+  sortDirection: PropTypes.number,
+  sortValuePath: PropTypes.instanceOf(List),
+  uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Map),
+  viewingChart: PropTypes.bool
 }
 Brand.defaultProps = {
-  Brand: Immutable.List(),
-  activeAccount: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  metrics: Immutable.List(),
-  roles: Immutable.List(),
-  user: Immutable.Map()
+  Brand: List(),
+  activeAccount: Map(),
+  dailyTraffic: List(),
+  metrics: List(),
+  roles: List(),
+  user: Map()
 }
 
 const mapStateToProps = (state) => {
