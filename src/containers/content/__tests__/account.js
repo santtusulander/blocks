@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
@@ -14,10 +14,10 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.unmock('../../util/status-codes')
-jest.unmock('../groups.jsx')
+jest.unmock('../../../util/status-codes')
+jest.unmock('../account.jsx')
 
-import { Groups } from '../groups.jsx'
+import { Account } from '../account.jsx'
 
 function groupActionsMaker() {
   return {
@@ -108,7 +108,7 @@ describe('Groups', () => {
         metrics: fakeMetrics,
         viewingChart: viewingChart || false
       }
-      return shallow(<Groups {...props}/>)
+      return shallow(<Acccount {...props}/>)
     }
   })
 
