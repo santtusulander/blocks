@@ -80,7 +80,7 @@ export class Configuration extends React.Component {
     this.props.hostActions.startFetching()
     this.props.hostActions.fetchHost(brand, account, group, property)
     this.props.securityActions.fetchSSLCertificates(brand, account, group)
-    this.props.fetchStorage(brand, account, group)
+    this.props.fetchStorage(brand, account, group, 'full')
   }
   componentWillReceiveProps(nextProps) {
     const currentHost = this.props.activeHost
@@ -550,7 +550,7 @@ function mapDispatchToProps(dispatch) {
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    fetchStorage : (brand, account, group) => dispatch(storageActions.fetchAll({ brand, account, group }))
+    fetchStorage : (brand, account, group, format) => dispatch(storageActions.fetchAll({ brand, account, group, format }))
   };
 }
 
