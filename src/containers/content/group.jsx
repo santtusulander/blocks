@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import Immutable from 'immutable'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -138,8 +138,8 @@ export class Group extends React.Component {
 
 Group.displayName = 'Group'
 Group.propTypes = {
-  activeAccount: PropTypes.instanceOf(Immutable.Map),
-  activeGroup: PropTypes.instanceOf(Immutable.Map),
+  activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
   createProperty: PropTypes.func,
   deleteProperty: PropTypes.func,
   fetchGroupData: PropTypes.func,
@@ -147,22 +147,22 @@ Group.propTypes = {
   fetching: PropTypes.bool,
   fetchingMetrics: PropTypes.bool,
   params: PropTypes.object,
-  properties: PropTypes.instanceOf(Immutable.List),
-  roles: PropTypes.instanceOf(Immutable.List),
+  properties: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(List),
   sortDirection: PropTypes.number,
-  sortValuePath: PropTypes.instanceOf(Immutable.List),
-  storages: PropTypes.instanceOf(Immutable.Iterable),
+  sortValuePath: PropTypes.instanceOf(List),
+  storages: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
-  user: PropTypes.instanceOf(Immutable.Map),
+  user: PropTypes.instanceOf(Map),
   viewingChart: PropTypes.bool
 }
 Group.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  roles: Immutable.List(),
-  sortValuePath: Immutable.List(),
-  storages: Immutable.List(),
-  user: Immutable.Map()
+  activeAccount: Map(),
+  activeGroup: Map(),
+  roles: List(),
+  sortValuePath: List(),
+  storages: List(),
+  user: Map()
 }
 
 const mapStateToProps = (state, { params: { account, group } }) => {
