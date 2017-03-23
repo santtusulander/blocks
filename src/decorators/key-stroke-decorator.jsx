@@ -19,6 +19,7 @@ export default function(WrappedModal) {
       switch(e.keyCode) {
         case 27:
           this.props.cancel && this.props.cancel()
+          this.props.onCancel && this.props.onCancel()
           break
       }
     }
@@ -31,6 +32,10 @@ export default function(WrappedModal) {
   KeyStrokeSupport.displayName = "KeyStrokeSupport"
   KeyStrokeSupport.propTypes = {
     cancel: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.bool
+    ]),
+    onCancel: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.bool
     ])

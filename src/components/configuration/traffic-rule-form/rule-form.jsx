@@ -4,12 +4,17 @@ import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
 
+import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
+
 import Input from '../../form/field-form-group'
 import FormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
+/**
+ * Field array for matches
+ */
 const Matches = ({ fields, chooseMatch, disabled }) => {
   return (
     <div className="conditions">
@@ -45,6 +50,7 @@ const Matches = ({ fields, chooseMatch, disabled }) => {
 Matches.displayName = "Matches"
 Matches.propTypes = {
   chooseMatch: PropTypes.func,
+  disabled: PropTypes.bool,
   fields: PropTypes.object
 }
 
@@ -55,6 +61,7 @@ const RuleForm = ({ edit, onSubmit, onCancel, handleSubmit, chooseMatch, hasMatc
         name="name"
         required={false}
         component={Input}
+        disabled={disabled}
         label={<FormattedMessage id='portal.policy.edit.editRule.ruleName.text'/>} />
 
         <Row className="header-btn-row">
@@ -117,8 +124,8 @@ RuleForm.propTypes = {
   handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
   invalid: PropTypes.bool,
-  onCancel: PropTypes.func,
+  onCancel: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   onSubmit: PropTypes.func
 }
 
-export default RuleForm
+export default keyStrokeSupport(RuleForm)
