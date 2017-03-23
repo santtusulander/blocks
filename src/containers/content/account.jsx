@@ -1,5 +1,5 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, {PropTypes} from 'react'
+import { Map, List} from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -28,8 +28,6 @@ import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
 
-//TODO: remove -> update to entities/redux
-import * as groupActionCreators from '../../redux/modules/group'
 import PROVIDER_TYPES from '../../constants/provider-types'
 
 import Content from '../../components/layout/content'
@@ -62,73 +60,83 @@ export class Account extends React.Component {
     this.props.fetchData()
   }
 
-  /* TODO: Move all CRUD methods inside GroupContainer */
-  createGroup({data, usersToAdd}) {
+  /* TODO: Move all CRUD methods inside GroupModal */
+  createGroup({data /*, usersToAdd*/ }) {
     console.warn( 'createGroup in account.jsx will be deprecated')
+    const {brand, account} = this.props.params
 
-    return this.props.groupActions.createGroup('udn', this.props.params.account, data)
-      .then(({ payload }) => {
-        this.props.clearFetchedHosts()
-        return Promise.all(usersToAdd.map(email => {
-          const foundUser = this.props.user.get('allUsers')
-            .find(user => user.get('email') === email)
-          const newUser = {
-            group_id: foundUser.get('group_id').push(payload.id).toJS()
-          }
-          return this.props.updateUser(email, newUser)
-        }))
-        .then(() => ({ item: 'Group', name: data.name }))
-      })
+    return this.props.createGroup({brand, account, payload: data})
+      //TODO: Should we support adding users to group`?
+      //.then(({ payload }) => {
+      //   return Promise.all(usersToAdd.map(email => {
+      //     const foundUser = this.props.user.get('allUsers')
+      //       .find(user => user.get('email') === email)
+      //     const newUser = {
+      //       group_id: foundUser.get('group_id').push(payload.id).toJS()
+      //     }
+      //     return this.props.updateUser(email, newUser)
+      //   }))
+      //   .then(() => ({ item: 'Group', name: data.name }))
+      // })
   }
-  editGroup({groupId, data, addUsers, deleteUsers}) {
+
+  editGroup({groupId, data /*, addUsers, deleteUsers */ }) {
     console.warn( 'editGroup in account.jsx will be deprecated')
 
-    const groupIdsByEmail = email => this.props.user.get('allUsers')
-      .find(user => user.get('email') === email)
-      .get('group_id')
-    const addUserActions = addUsers.map(email => {
-      return this.props.updateUser(email, {
-        group_id: groupIdsByEmail(email).push(groupId).toJS()
-      })
-    })
-    const deleteUserActions = deleteUsers.map(email => {
-      return this.props.updateUser(email, {
-        group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
-      })
-    })
-    return Promise.all([
-      this.props.groupActions.updateGroup(
-        'udn',
-        this.props.activeAccount.get('id'),
-        groupId,
-        data
-      ),
-      ...addUserActions,
-      ...deleteUserActions
-    ]).then(({ error, payload }) => (
-      { item: 'Group', name: data.name, error, payload }
-    ))
+    const {brand, account} = this.props.params
+
+    return this.props.updateGroup({brand, account, id: groupId, payload: data})
+
+    // TODO: Should we support users in groups?
+    // const groupIdsByEmail = email => this.props.user.get('allUsers')
+    //   .find(user => user.get('email') === email)
+    //   .get('group_id')
+    // const addUserActions = addUsers.map(email => {
+    //   return this.props.updateUser(email, {
+    //     group_id: groupIdsByEmail(email).push(groupId).toJS()
+    //   })
+    // })
+    // const deleteUserActions = deleteUsers.map(email => {
+    //   return this.props.updateUser(email, {
+    //     group_id: groupIdsByEmail(email).filter(id => id !== groupId).toJS()
+    //   })
+    // })
+    // return Promise.all([
+    //   this.props.groupActions.updateGroup(
+    //     'udn',
+    //     this.props.activeAccount.get('id'),
+    //     groupId,
+    //     data
+    //   ),
+    //   ...addUserActions,
+    //   ...deleteUserActions
+    // ]).then(({ error, payload }) => (
+    //   { item: 'Group', name: data.name, error, payload }
+    // ))
   }
   deleteGroup(group) {
     console.warn( 'deleteGroup in account.jsx will be deprecated')
 
-    return this.props.groupActions.deleteGroup(
-      'udn',
-      this.props.activeAccount.get('id'),
-      group.get('id')
-    ).then(response => {
-      this.props.toggleDeleteConfirmationModal(null)
-      this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
-      response.error &&
+    const {brand, account} = this.props.params
+    const id = group.get('id')
+
+    return this.props.removeGroup({brand, account, id})
+      .then( () => {
+        this.props.toggleDeleteConfirmationModal(null)
+        this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
+      })
+      .catch( (response) => {
+        this.props.toggleDeleteConfirmationModal(null)
         this.props.uiActions.showInfoDialog({
           title: 'Error',
           content: response.payload.data.message,
           okButton: true,
           cancel: () => this.props.uiActions.hideInfoDialog()
         })
-    })
+      })
   }
 
+  //TODO: Refactor to Global confirmation dialog action
   showDeleteGroupModal(group) {
     this.setState({ groupToDelete: group });
 
@@ -137,6 +145,7 @@ export class Account extends React.Component {
     return Promise.resolve({})
   }
 
+  //TODO: Refactor to global notification action
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
@@ -232,36 +241,37 @@ export class Account extends React.Component {
 
 Account.displayName = 'Account'
 Account.propTypes = {
-  accountManagementModal: React.PropTypes.string,
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  clearFetchedHosts: React.PropTypes.func,
-  dailyTraffic: React.PropTypes.instanceOf(Immutable.List),
-  fetchData: React.PropTypes.func,
-  fetching: React.PropTypes.bool,
-  fetchingMetrics: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
-  groups: React.PropTypes.instanceOf(Immutable.List),
-  metrics: React.PropTypes.instanceOf(Immutable.List),
-  params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  sortDirection: React.PropTypes.number,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  toggleDeleteConfirmationModal: React.PropTypes.func,
-  uiActions: React.PropTypes.object,
-  updateUser: React.PropTypes.func,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+  accountManagementModal: PropTypes.string,
+  activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
+  createGroup: PropTypes.func,
+  dailyTraffic: PropTypes.instanceOf(List),
+  fetchData: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  groups: PropTypes.instanceOf(List),
+  metrics: PropTypes.instanceOf(List),
+  params: PropTypes.object,
+  removeGroup: PropTypes.func,
+  roles: PropTypes.instanceOf(List),
+  sortDirection: PropTypes.number,
+  sortValuePath: PropTypes.instanceOf(List),
+  toggleDeleteConfirmationModal: PropTypes.func,
+  uiActions: PropTypes.object,
+  updateGroup: PropTypes.func,
+  user: PropTypes.instanceOf(Map),
+  viewingChart: PropTypes.bool
 }
+
 Account.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  dailyTraffic: Immutable.List(),
-  groups: Immutable.List(),
-  metrics: Immutable.List(),
-  roles: Immutable.List(),
-  sortValuePath: Immutable.List(),
-  user: Immutable.Map()
+  activeAccount: Map(),
+  activeGroup: Map(),
+  dailyTraffic: List(),
+  groups: List(),
+  metrics: List(),
+  roles: List(),
+  sortValuePath: List(),
+  user: Map()
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -307,13 +317,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     ])
   }
 
-  const oldGroupActions = bindActionCreators(groupActionCreators, dispatch)
-
   return {
     fetchData: fetchData,
     uiActions,
     toggleDeleteConfirmationModal: uiActions.toggleAccountManagementModal,
-    groupActions: oldGroupActions
+    createGroup: (params) => dispatch(groupActions.create(params)),
+    updateGroup: (params) => dispatch(groupActions.update(params)),
+    removeGroup: (params) => dispatch(groupActions.remove(params))
   };
 }
 
