@@ -72,22 +72,6 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
     ]
   }
 
-  // if (data_type === 'asnlist' && value_asnlist && value_asnlist.length > 0) {
-  //   let hasInvalidASNItems = false
-  //   value_asnlist.forEach((asnItem) => {
-  //     if (!validateASNToken(asnItem)) {
-  //       hasInvalidASNItems = true
-  //     }
-  //   })
-  //
-  //   conditions.value_asnlist = [
-  //     {
-  //       condition: hasInvalidASNItems,
-  //       errorText: <FormattedMessage id="portal.network.footprintForm.ASN.invalid.text"/>
-  //     }
-  //   ]
-  // }
-
   const errors = checkForErrors(
     { name, data_type, udn_type, value_ipv4cidr, value_asnlist },
     conditions,
