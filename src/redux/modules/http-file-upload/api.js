@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { parseResponseData } from '../../util'
 import fileUploadAdapter from './uploader/file-upload-adapter'
+import * as actionTypes from './actionTypes'
 
 const UPLOAD_VERSION = 'v1'
 const UPLOAD_PROTOCOL = 'http://'
@@ -11,7 +11,7 @@ const UPLOAD_PORT = ':8080'
  * @param accessKey {string} - upload access key
  * @param gateway {string} - gateway host
  * @param {object} file - {key - file name, value - file binary data}
- * @param onProgress {function} - function for tracking 'progress' event
+ * @param uploadHandlers {object} - action creators map
  * @returns {axios.Promise}
  */
 export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
@@ -24,5 +24,12 @@ export const uploadFile = (accessKey, gateway, file, uploadHandlers) => {
 
   const config = { headers, adapter, uploadHandlers, fileName }
 
-  return axios.post(url, data, config).then(parseResponseData)
+  return axios.post(url, data, config)
+    .then(response => {
+      const { fileName } = response.config
+      if (fileName) uploadHandlers[actionTypes.UPLOAD_FINISHED](fileName)
+    })
+    .catch(fileName => {
+      if (typeof fileName === 'string') uploadHandlers[actionTypes.UPLOAD_FAILURE](fileName)
+    })
 }
