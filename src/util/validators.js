@@ -334,7 +334,7 @@ export function isValidStorageName(storageName) {
     - isn't longer than 255 characters.
     Each segment:
     - contains at least one character and a maximum of 63 characters;
-    - consists only of allowed characters [a-zA-Z0-9-];
+    - consists only of allowed characters [a-z0-9-];
     - hyphen is not allowed;
   */
   if (storageName.length > 255) return false
