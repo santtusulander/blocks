@@ -17,6 +17,9 @@ class ModalWindow extends React.Component {
 
   render() {
     const {
+      auxiliaryButton,
+      auxiliaryButtonHandler,
+      auxiliaryButtonText,
       cancel,
       cancelButton,
       children,
@@ -26,9 +29,6 @@ class ModalWindow extends React.Component {
       closeModal,
       content,
       continueButton,
-      auxiliaryButton,
-      auxiliaryButtonHandler,
-      auxiliaryButtonText,
       deleteButton,
       error,
       handleSubmit,
@@ -172,11 +172,11 @@ class ModalWindow extends React.Component {
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
   auxiliaryButton: PropTypes.bool,
+  auxiliaryButtonHandler: PropTypes.func,
   auxiliaryButtonText: PropTypes.oneOfType([
     React.PropTypes.string,
     React.PropTypes.node
   ]),
-  auxiliaryButtonHandler: PropTypes.func,
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
