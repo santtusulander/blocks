@@ -6,7 +6,7 @@ import PolicyWeight from '../policy-weight'
 
 describe('PolicyWeight', () => {
   it('should exist', () => {
-    const performance = shallow(<PolicyWeight secondaryProvider="CDN" />)
-    expect(performance).toBeDefined()
+    const subject = shallow(<PolicyWeight secondaryProvider="CDN" />)
+    expect(subject).toBeDefined()
   })
 })
