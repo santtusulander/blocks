@@ -11,7 +11,7 @@ import {
   ACCOUNT_TYPE_CONTENT_PROVIDER
 } from '../../constants/account-management-options'
 
-import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
+import { MEDIA_DELIVERY_SERVICE_ID, STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import sortOptions from '../../constants/content-item-sort-options'
 import {
   getContentUrl,
@@ -270,9 +270,16 @@ class ContentItems extends React.Component {
     return { tagText: tagText }
   }
 
-  renderAddButton (storageCreationIsAllowed) {
-    if(this.getTier() === 'group' && storageCreationIsAllowed){
-      return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+  renderAddButton (propertyCreationIsAllowed, storageCreationIsAllowed) {
+    if(this.getTier() === 'group') {
+      console.log('TEST',propertyCreationIsAllowed, storageCreationIsAllowed )
+      if (propertyCreationIsAllowed && storageCreationIsAllowed) {
+        return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
+      }
+
+      if (storageCreationIsAllowed) {
+        return <UDNButton bsStyle="success" icon={true} onClick={this.showStorageModal}><IconAdd/></UDNButton>
+      }
     }
 
     return <UDNButton bsStyle="success" icon={true} onClick={this.addItem}><IconAdd/></UDNButton>
@@ -387,6 +394,7 @@ class ContentItems extends React.Component {
 
     const { createAllowed, viewAllowed, viewAnalyticAllowed, modifyAllowed } = storagePermission
     const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
+    const groupHasMediaDeliveryService = hasService(activeGroup, MEDIA_DELIVERY_SERVICE_ID)
 
     /*TODO: Please remove && false of the following line once the API for editing ingest_point(CIS-322) is ready*/
     const modifyStorageAllowed = modifyAllowed && false
@@ -446,7 +454,7 @@ class ContentItems extends React.Component {
             {/* Hide Add item button for SP/CP Admins at 'Brand' level */}
             {isCloudProvider || activeAccount.size ?
               <IsAllowed to={PERMISSIONS.CREATE_GROUP}>
-                {this.renderAddButton(createAllowed && groupHasStorageService)}
+                {this.renderAddButton(groupHasMediaDeliveryService, createAllowed && groupHasStorageService)}
               </IsAllowed>
             : null}
             {this.props.type !== CONTENT_ITEMS_TYPES.ACCOUNT || contentItems.size > 1 ?
