@@ -4,7 +4,13 @@ export const deploymentModes = {
   unknown: 'portal.configuration.details.deploymentMode.unknown'
 }
 
-export const CIS_ORIGIN_HOST_PORT = 8082
+export const serviceTypes = {
+  msd: 'portal.configuration.details.serviceType.msd',
+  large: 'portal.configuration.details.serviceType.large',
+  unknown: 'portal.configuration.details.deploymentMode.unknown'
+}
+
+export const CIS_ORIGIN_HOST_PORT = 80
 
 export const TOKEN_AUTH_STATIC = 'standard'
 export const TOKEN_AUTH_STREAMING = 'on_demand_hls'
@@ -36,3 +42,5 @@ export const STREAMING_ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 
 export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
+
+export const DEFAULT_HOST_SERVICE_TYPE = 'large'
