@@ -338,5 +338,5 @@ export function isValidStorageName(storageName) {
     - hyphen is not allowed;
   */
   if (storageName.length > 255) return false
-  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/)
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/, true)
 }
