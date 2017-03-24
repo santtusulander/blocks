@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, ButtonToolbar, Modal } from 'react-bootstrap'
-import { List, fromJS } from 'immutable'
+import { List, fromJS, Map } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
