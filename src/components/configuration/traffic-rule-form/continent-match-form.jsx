@@ -8,7 +8,9 @@ import continents from '../../../constants/continents'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-export default reduxForm({ form: 'continents-traffic-match' })(({ onSave, onCancel, matchIndex, matchType, handleSubmit }) => {
+const validate = ({ continents = [] }) => !continents.length && { continents: 'Required.' }
+
+export default reduxForm({ form: 'continents-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
   const saveMatch = values => {
     const labelText = values.continents.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
@@ -24,7 +26,7 @@ export default reduxForm({ form: 'continents-traffic-match' })(({ onSave, onCanc
         placeholder={"Enter continent name"}
         multiple={true}
         options={continents}
-        label="Country"/>
+        label="Continent"/>
         <FormFooterButtons>
           <Button
             id='cancel-button'
@@ -35,6 +37,7 @@ export default reduxForm({ form: 'continents-traffic-match' })(({ onSave, onCanc
           <Button
             id='submit-button'
             type='submit'
+            disabled={invalid}
             bsStyle="primary">
             {typeof matchIndex === 'number'
               ? <FormattedMessage id='portal.common.button.save' />

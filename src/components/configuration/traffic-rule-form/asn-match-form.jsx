@@ -6,7 +6,9 @@ import { reduxForm } from 'redux-form'
 import ASNTypeahead from '../../form/field-form-group-asn-lookup'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-export default reduxForm({ form: 'asn-traffic-match' })(({ onSave, onCancel, matchIndex, matchType, handleSubmit }) => {
+const validate = ({ AsnLookup = [] }) => !AsnLookup.length && { AsnLookup: 'Required.' }
+
+export default reduxForm({ form: 'asn-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
   const saveMatch = values => {
     const labelText = values.AsnLookup.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
@@ -27,6 +29,7 @@ export default reduxForm({ form: 'asn-traffic-match' })(({ onSave, onCancel, mat
           <Button
             id='submit-button'
             type='submit'
+            disabled={invalid}
             bsStyle="primary">
             {typeof matchIndex === 'number'
               ? <FormattedMessage id='portal.common.button.save' />

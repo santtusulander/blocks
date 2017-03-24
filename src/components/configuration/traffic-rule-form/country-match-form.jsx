@@ -8,7 +8,9 @@ import countries from '../../../constants/country-list'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-export default reduxForm({ form: 'countries-traffic-match' })(({ onSave, onCancel, matchIndex, matchType, handleSubmit }) => {
+const validate = ({ countries = [] }) => !countries.length && { countries: 'Required.' }
+
+export default reduxForm({ form: 'countries-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
   const saveMatch = values => {
     const labelText = values.countries.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
@@ -35,6 +37,7 @@ export default reduxForm({ form: 'countries-traffic-match' })(({ onSave, onCance
           <Button
             id='submit-button'
             type='submit'
+            disabled={invalid}
             bsStyle="primary">
             {typeof matchIndex === 'number'
               ? <FormattedMessage id='portal.common.button.save' />
