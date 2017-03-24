@@ -158,7 +158,7 @@ export class TokenAuth extends React.Component {
             />
 
             <hr/>
-            
+
             <h5>
               <FormattedMessage id="portal.policy.edit.tokenauth.advanced_options.text" />
             </h5>
@@ -167,7 +167,15 @@ export class TokenAuth extends React.Component {
 
             {this.renderAdvancedOptions()}
 
-            <FormFooterButtons>
+            <FormFooterButtons className="token-auth-no-side-padding">
+
+              <Button
+                className="pull-left token-auth-no-side-padding"
+                bsStyle="link"
+              >
+                <FormattedMessage id="portal.policy.edit.tokenauth.viewSample.text"/>
+              </Button>
+
               <Button
                 id="cancel-btn"
                 className="btn-secondary"
@@ -195,13 +203,13 @@ export class TokenAuth extends React.Component {
           overlapping={true}
         >
           {this.state.detailForm === 'schema' &&
-            <TokenSchema 
+            <TokenSchema
               schema={schema}
               close={this.closeDetailForm}
             />
           }
           {this.state.detailForm === 'streaming' &&
-            <TokenStreaming 
+            <TokenStreaming
               type={type}
               streaming_ttl={streaming_ttl}
               streaming_add_ip_addr={streaming_add_ip_addr}

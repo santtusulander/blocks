@@ -1,6 +1,11 @@
 $input-width: 324px;
 $input-height: 36px;
 
+.token-auth-no-side-padding {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .options-item {
   min-height: $bar-height;
   padding-left: 15px;
