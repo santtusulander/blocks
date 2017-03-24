@@ -440,11 +440,11 @@ export function getRolesForUser(user, roles) {
  * @param pattern
  * @returns {boolean}
  */
-export function matchesRegexp(string, pattern) {
+export function matchesRegexp(string, pattern, caseSensitive = false) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = new RegExp(pattern, 'i');
+  var testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
   return testPattern.test(string);
 }
 

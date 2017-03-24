@@ -325,8 +325,8 @@ export function isValidEstimatedUsage(str) {
 }
 
 /**
- * Check if valid host-name
- * @param hostName
+ * Check if valid Storage -name
+ * @param storageName
  * @returns {boolean|*}
  */
 export function isValidStorageName(storageName) {
@@ -334,9 +334,9 @@ export function isValidStorageName(storageName) {
     - isn't longer than 255 characters.
     Each segment:
     - contains at least one character and a maximum of 63 characters;
-    - consists only of allowed characters [a-zA-Z0-9-];
+    - consists only of allowed characters [a-z0-9-];
     - hyphen is not allowed;
   */
   if (storageName.length > 255) return false
-  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/)
+  return matchesRegexp(storageName, /^[a-z\d]([a-z\d]{0,61}[a-z\d])?(\[a-z\d]([a-z\d]{0,61}[a-z\d])?)*?$/, true)
 }
