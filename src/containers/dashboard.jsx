@@ -31,6 +31,7 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+import accountActions from '../redux/modules/entities/accounts/actions'
 import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
 
 import groupActions from '../redux/modules/entities/groups/actions'
@@ -113,6 +114,9 @@ export class Dashboard extends React.Component {
   fetchData(urlParams, filters, activeAccount) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
+      const {brand, account : id} = urlParams
+      this.props.fetchAccount({brand, id})
+
       const params = { brand: urlParams.brand, account: urlParams.account }
 
       let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
@@ -157,7 +161,8 @@ export class Dashboard extends React.Component {
         this.props.dashboardActions.fetchDashboard(dashboardOpts, accountType),
         fetchProviders,
         fetchStorageData
-      ]).then(this.props.dashboardActions.finishFetching)
+      ])
+      .then(this.props.dashboardActions.finishFetching, this.props.dashboardActions.finishFetching)
     }
   }
 
@@ -446,6 +451,7 @@ Dashboard.propTypes = {
   cityData: PropTypes.instanceOf(List),
   dashboard: PropTypes.instanceOf(Map),
   dashboardActions: PropTypes.object,
+  fetchAccount: PropTypes.func,
   fetchGroups: PropTypes.func,
   fetchStorageMetrics: PropTypes.func,
   fetchStorages: PropTypes.func,
@@ -477,7 +483,7 @@ Dashboard.defaultProps = {
   user: Map()
 }
 
-function mapStateToProps(state, { params: { account } }) {
+const mapStateToProps = (state, { params: { account } }) => {
   return {
     getGroupIds: () => getIdsByAccount(state, account),
     activeAccount: getAccountById(state, account),
@@ -492,8 +498,9 @@ function mapStateToProps(state, { params: { account } }) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAccount: requestParams => dispatch(accountActions.fetchOne(requestParams)),
     fetchStorages: requestParams => dispatch(storageActions.fetchAll(requestParams)),
     fetchGroups: requestParams => dispatch(groupActions.fetchAll(requestParams)),
     fetchStorageMetrics: requestParams => dispatch(fetchStorageMetrics(requestParams)),
