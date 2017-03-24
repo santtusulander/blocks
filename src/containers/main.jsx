@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux'
 import { Map, List } from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-//import * as accountActionCreators from '../redux/modules/account'
-//import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
@@ -26,14 +24,6 @@ import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
-import {
-  ENTRY_ROUTE_ROOT,
-  ENTRY_ROUTE_DEFAULT,
-  ENTRY_ROUTE_SERVICE_PROVIDER
-} from '../constants/routes.js'
-import * as PERMISSIONS from '../constants/permissions.js'
-import checkPermissions from '../util/permissions'
-import { userIsServiceProvider } from '../util/helpers'
 
 export class Main extends React.Component {
   constructor(props) {
@@ -65,47 +55,8 @@ export class Main extends React.Component {
         this.props.userActions.fetchUser(action.payload.username)
         this.props.rolesActions.fetchRoles()
 
-        //this.props.router.push('')
-        // const accountId = this.props.activeAccount && this.props.activeAccount.size
-        //   ? this.props.activeAccount.get('id')
-        //   : this.props.params.account
-        //
-        // this.fetchAccountData(accountId, this.props.accounts)
       })
   }
-
-  // //update account if account prop changed (in url) or clear active if there is no account in route
-  // componentWillReceiveProps(nextProps){
-  //   const { user, accounts, location, params: { account } } = this.props
-  //   const nextCurrentUser = nextProps.user.get('currentUser')
-  //   const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
-  //   const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
-  //   const currentUserExists = !!nextCurrentUser.size
-  //   const accountChanged = account !== nextProps.params.account
-  //
-  //   !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
-  //   if (accountChanged) {
-  //     this.fetchAccountData(nextProps.params.account, accounts)
-  //   }
-  //
-  //   if (currentUserChanged && currentUserExists && isAccessingRootRoute) {
-  //     const entryPath = userIsServiceProvider(nextCurrentUser) ? ENTRY_ROUTE_SERVICE_PROVIDER : ENTRY_ROUTE_DEFAULT
-  //     this.props.router.push(entryPath)
-  //   }
-  // }
-  // fetchAccountData(account, accounts) {
-  //   if(accounts && accounts.isEmpty() && checkPermissions(
-  //     this.props.roles,
-  //     this.props.currentUser,
-  //     PERMISSIONS.VIEW_CONTENT_ACCOUNTS
-  //   )) {
-  //     this.props.accountActions.fetchAccounts('udn')
-  //   }
-  //   if(account) {
-  //     this.props.accountActions.fetchAccount('udn', account)
-  //     this.props.groupActions.fetchGroups('udn', account)
-  //   }
-  // }
 
   logOut() {
     this.props.userActions.logOut()
@@ -115,6 +66,7 @@ export class Main extends React.Component {
         this.props.userActions.destroyStore()
       })
   }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.uiActions.changeNotification(message)
@@ -279,7 +231,6 @@ const mapStateToProps = (state, ownProps) => {
 
   const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params
   const {entities, ...rest} = state
-
 
   const stateMap = Map(rest)
   const fetching = stateMap.some(
