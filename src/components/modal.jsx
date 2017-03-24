@@ -26,6 +26,9 @@ class ModalWindow extends React.Component {
       closeModal,
       content,
       continueButton,
+      auxiliaryButton,
+      auxiliaryButtonHandler,
+      auxiliaryButtonText,
       deleteButton,
       error,
       handleSubmit,
@@ -68,7 +71,7 @@ class ModalWindow extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <ButtonToolbar className="pull-right">
+            <ButtonToolbar className="pull-right modal-button-toolbar">
               {closeButton &&
               <Button
                 bsStyle="primary"
@@ -143,6 +146,14 @@ class ModalWindow extends React.Component {
                 type="submit">
                 <FormattedMessage id="portal.button.reload"/>
               </Button>}
+
+              {auxiliaryButton &&
+              <Button
+                className="btn-secondary pull-left"
+                onClick={auxiliaryButtonHandler}
+                >
+                {auxiliaryButtonText}
+              </Button>}
             </ButtonToolbar>
           </Modal.Footer>
         </form>
@@ -160,6 +171,12 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
+  auxiliaryButton: PropTypes.bool,
+  auxiliaryButtonText: PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.node
+  ]),
+  auxiliaryButtonHandler: PropTypes.func,
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,

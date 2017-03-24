@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal } from 'react-bootstrap'
 import Immutable from 'immutable'
+import { bindActionCreators } from 'redux'
 
 import { injectIntl, FormattedMessage } from 'react-intl'
 
@@ -18,6 +19,8 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
+
+import * as uiActionCreators from '../../../redux/modules/ui'
 
 const validate = ({ shared_key }) => {
   let errors = {}
@@ -172,6 +175,15 @@ export class TokenAuth extends React.Component {
               <Button
                 className="pull-left token-auth-no-side-padding"
                 bsStyle="link"
+                onClick={() => {
+                  this.props.uiActions.showInfoDialog({
+                    okButton: true,
+                    cancelButton: true,
+                    auxiliaryButton: true,
+                    auxiliaryButtonHandler: () => {},
+                    auxiliaryButtonText: 'SAMPle code'
+                  })
+                }}
               >
                 <FormattedMessage id="portal.policy.edit.tokenauth.viewSample.text"/>
               </Button>
@@ -235,9 +247,15 @@ TokenAuth.propTypes = {
   ...reduxFormPropTypes
 }
 
+const mapDispatchToProps = (dispatch) => (
+  {
+    uiActions: bindActionCreators(uiActionCreators, dispatch)
+  }
+)
+
 const form = reduxForm({
   form: 'token-auth-form',
   validate
 })(TokenAuth)
 
-export default connect()(injectIntl(form))
+export default connect(null, mapDispatchToProps)(injectIntl(form))
