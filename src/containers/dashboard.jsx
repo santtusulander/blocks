@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { List, Map } from 'immutable'
+import { List, Map, is } from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
@@ -94,7 +94,8 @@ export class Dashboard extends React.Component {
     if (this.props.activeAccount !== nextProps.activeAccount) {
       this.props.filterActions.resetContributionFilters()
     }
-    if ((prevParams !== params || this.props.filters !== nextProps.filters || this.props.activeAccount !== nextProps.activeAccount) && nextProps.activeAccount.size !== 0) {
+    
+    if ( prevParams !== params || !is(this.props.filters,nextProps.filters) ) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
     // TODO: remove this timeout as part of UDNP-1426
