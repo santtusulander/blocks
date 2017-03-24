@@ -121,6 +121,13 @@
   "portal.configuration.gtm.table.actions.label": "Actions",
   "portal.configuration.gtm.table.empty.text": "No traffic rules have been added yet.",
 
+  "portal.configuration.advanced.requestPolicies.label": "Override Request Policies",
+  "portal.configuration.advanced.responsePolicies.label": "Override Response Policies",
+  "portal.configuration.advanced.finalRequestPolicies.label": "Override Final Request Policies",
+  "portal.configuration.advanced.finalResponsePolicies.label": "Override Final Response Policies",
+  "portal.configuration.advanced.save.text": "Changes will be applied during next publishing.",
+  "portal.configuration.advanced.text.placeholder": "Please enter policy...",
+
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
   "portal.configuration.deleteSuccess.text": "Property deleted successfully",
