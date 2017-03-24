@@ -45,10 +45,9 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: false
+      asperaUpload: false,
+      fileUploader: null
     }
-
-    this.fileUploader = null
 
     this.toggleUploadMehtod = this.toggleUploadMehtod.bind(this)
 
@@ -103,7 +102,9 @@ class Storage extends Component {
    */
   initFileUploader(action) {
     const { gatewayHostname, uploadHandlers } = this.props
-    this.fileUploader = FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers)
+    this.setState({
+      fileUploader: FileUploader.initialize(action.payload, gatewayHostname, uploadHandlers)
+    })
   }
 
   toggleUploadMehtod(asperaUpload) {
@@ -174,7 +175,7 @@ class Storage extends Component {
                 contents={storageContents}
                 asperaUpload={this.state.asperaUpload}
                 onMethodToggle={this.toggleUploadMehtod}
-                fileUploader={this.fileUploader}
+                fileUploader={this.state.fileUploader}
               />
             </PageContainer>
 
