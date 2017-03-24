@@ -4,9 +4,12 @@ import { Modal } from 'react-bootstrap'
 import IconClose from '../../icons/icon-close'
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import IconCaretRight from '../../icons/icon-caret-right'
+
 import ContinentMatchConditionForm from './continent-match-form'
 import CountryMatchConditionForm from './country-match-form'
 import ASNMatchConditionForm from './asn-match-form'
+import CIDRMatchConditionForm from './ipv4cidr-match-form'
+import AddressMatchConditionForm from './ipv4address-match-form'
 
 const matches = [
   { matchType: 'continent', label: 'Continent'},
@@ -74,14 +77,14 @@ class MatchesForm extends Component {
         title = 'IPv4 Address'
         subtitle = 'Specify all continents that should be matched'
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = AddressMatchConditionForm
         break
 
       case 'ipv4cidr':
         title = 'IPv4 CIDR'
         subtitle = 'Specify all continents that should be matched'
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = CIDRMatchConditionForm
         break
 
       case 'asn':
