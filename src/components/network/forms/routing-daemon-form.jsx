@@ -8,7 +8,7 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import IsAllowed from '../../is-allowed'
 import LoadingSpinnerSmall from '../../loading-spinner/loading-spinner-sm'
 
-import { checkForErrors } from '../../../util/helpers'
+import { checkForErrors, formatASN } from '../../../util/helpers'
 import { fetchASOverview } from '../../../util/network-helpers'
 import { isValidTextField, isValidIP, isInt } from '../../../util/validators'
 import { ROUTING_DEAMON_BGP_NAME_MIN_LEN, ROUTING_DEAMON_BGP_NAME_MAX_LEN } from '../../../constants/network'
@@ -101,16 +101,16 @@ class RoutingDaemonForm extends React.Component {
     })
 
     fetchASOverview(BGPNumber)
-      .then(({ data: { holder } }) => {
-        holder = holder ? holder : ''
+      .then((resp) => {
+        const organization = resp[0].organization ? formatASN(resp[0]) : ''
         this.setState({
           BGPNumber,
-          BGPName: holder.length ? holder : null,
-          BGPNameNotFound: !holder.length,
+          BGPName: organization.length ? organization : null,
+          BGPNameNotFound: !organization.length,
           BGPNumberIsEmpty: false,
           isFetchingBGPName: false,
           BGPNumberInvalid: false
-        }, () => this.setBGPName(holder, BGPNumber))
+        }, () => this.setBGPName(organization, BGPNumber))
       })
       .catch(() => {
         this.setState({

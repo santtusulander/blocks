@@ -24,7 +24,6 @@ export const MAX_LATITUDE = 90
 export const MIN_LONGTITUDE = -180
 export const MAX_LONGTITUDE = 180
 
-export const RIPE_STAT_DATA_API_ENDPOINT = 'https://stat.ripe.net/data'
 
 export const LOCATION_CLOUD_PROVIDER_OPTIONS = [
   { value: 'Bare Metal', label: 'Bare Metal' }
