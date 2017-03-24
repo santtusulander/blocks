@@ -174,9 +174,9 @@ export class Dashboard extends React.Component {
   }
 
   getCityData(south, west, north, east) {
-    const { params, filters } = this.props
+    const { params: { brand, account }, filters } = this.props
     return getCitiesWithinBounds({
-      params,
+      params: { brand, account },
       filters,
       coordinates: { south, west, north, east },
       actions: this.props.trafficActions
