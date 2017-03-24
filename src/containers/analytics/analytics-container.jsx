@@ -1,5 +1,5 @@
 import React from 'react'
-import Immutable, {toJS} from 'immutable'
+import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -152,7 +152,7 @@ class AnalyticsContainer extends React.Component {
     const tabConfigFilters = tabConfig.get('filters')
     const isTrafficConfig = (tabConfig.get('key') === 'traffic')
     const isSPAccount = accountIsServiceProviderType(this.props.activeAccount)
-    //Remove 'recodrType' filter from Traffic tab for SP accounts
+    //Remove 'recordType' filter from Traffic tab for SP accounts
     const showFilters = (isTrafficConfig && isSPAccount) ? tabConfigFilters.filter(item => item !== 'recordType') : tabConfigFilters
 
     return (
