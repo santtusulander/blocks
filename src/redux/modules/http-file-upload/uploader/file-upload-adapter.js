@@ -10,11 +10,13 @@ import * as actionTypes from '../actionTypes'
 const fileUploadAdapter = (resolve, reject, config) => {
   const {url, uploadHandlers, fileName, data, headers, method, timeout, responseType} = config
 
+  /* PROPERTIES FOR BINDING EVENT LISTENERS */
   const loadEvent = 'onreadystatechange'
   const errorEvent = 'onerror'
   const progressEvent = 'onprogress'
   const loadstartEvent = 'onloadstart'
 
+  /* 204 STATUS CODE FOR IE BROWSER */
   const ie204 = 1223
   const noContent = 'No Content'
 
@@ -62,13 +64,21 @@ const fileUploadAdapter = (resolve, reject, config) => {
   }
 
   /* UPDATE HEADERS */
-  const xsrf = config.withCredentials || isURLSameOrigin(url) ? cookies.read(config.xsrfCookieName) : undefined
+  const xsrf = config.withCredentials || isURLSameOrigin(url) ?
+    cookies.read(config.xsrfCookieName) :
+    undefined
 
-  if (xsrf) headers[config.xsrfHeaderName] = xsrf
+  if (xsrf) {
+    headers[config.xsrfHeaderName] = xsrf
+  }
 
-  if (data instanceof FormData) delete headers['Content-Type']
+  if (data instanceof FormData) {
+    delete headers['Content-Type']
+  }
 
-  if (config.withCredentials) xhr.withCredentials = true
+  if (config.withCredentials) {
+    xhr.withCredentials = true
+  }
 
   if ('setRequestHeader' in xhr) {
     utils.forEach(headers, (val, key) => {

@@ -340,7 +340,6 @@ const mapDispatchToProps = (dispatch) => {
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
     fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
-    // initUploadHandler: (name) => (params) => dispatch(actions[UPLOAD_FILE](name, params)),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),
     toggleModal: uiActions.toggleAccountManagementModal
