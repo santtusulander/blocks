@@ -4,6 +4,7 @@ import { List, fromJS } from 'immutable'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
+import classNames from 'classnames'
 
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
@@ -18,31 +19,35 @@ class ContentTargeting extends React.Component {
   }
 
   componentWillMount() {
-    const { match } = this.props
+    const { match, change } = this.props
 
-    this.props.change('value', match.get('value').toJS().map(item => ({id: item, label: country_list.find(ctr => ctr.id === item ).label})))
-    this.props.change('inverted', match.get('inverted'))
+    change('value', match.get('value').toJS()
+                                      .map(item => ({id: item, label: country_list.find(ctr => ctr.id === item).label})))
+    change('inverted', match.get('inverted'))
   }
 
   saveChanges({value, inverted}) {
-    const { match } = this.props
+    const { path, match, changeValue, activateMatch } = this.props
 
-    this.props.changeValue(this.props.path, fromJS({
+    changeValue(path, fromJS({
       field: match.get('field'),
       type: match.get('type'),
       inverted,
       value: value.map(item => item.id)
     }))
-    this.props.activateMatch(null)
+    activateMatch(null)
   }
 
   render() {
-    const { handleSubmit, invalid, close, exclude, countries } = this.props
+    const { handleSubmit, invalid, close, exclude, value } = this.props
     const typeOptions = [
       {value: 'in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersFrom'})},
       {value: 'not_in', label: this.props.intl.formatMessage({id: 'portal.policy.edit.policies.matchContentTargeting.inclusion.usersNotFrom'})}
     ]
-    const countryOptions = country_list.filter(country => countries.indexOf(country) < 0)
+    const countryOptions = country_list.filter(country => value.indexOf(country) < 0)
+    const label = exclude
+                  ? <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.exclude.text" />
+                  : <FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.include.text" />
 
     return (
       <div>
@@ -57,13 +62,13 @@ class ContentTargeting extends React.Component {
               className="input-select"
               component={FieldFormGroupSelect}
               options={typeOptions}
-              format={(v) => v ? 'in' : 'not_in'}
-              normalize={(v) => v === 'in' ? true : false}
-              label={<FormattedMessage id="portal.policy.edit.policies.matchContentTargeting.action.text" />}
+              format={(v) => v ? 'not_in' : 'in'}
+              normalize={(v) => !(v === 'in')}
+              label={label}
             />
 
             <Field
-              className={exclude ? 'exclude' : ''}
+              className={classNames({'exclude': exclude})}
               name="value"
               component={FieldFormGroupTypeahead}
               multiple={true}
@@ -99,8 +104,14 @@ class ContentTargeting extends React.Component {
 
 ContentTargeting.displayName = 'ContentTargeting'
 ContentTargeting.propTypes = {
+  activateMatch: React.PropTypes.func,
+  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
+  exclude: React.PropTypes.bool,
+  handleSubmit: React.PropTypes.func,
+  match: React.PropTypes.instanceOf(Map),
   path: React.PropTypes.instanceOf(List),
+  value: React.PropTypes.array,
   ...reduxFormPropTypes
 }
 
@@ -110,15 +121,11 @@ const form = reduxForm({
 
 ContentTargeting.defaultProps = {
   inverted: false,
-  value: [],
-  countries: []
+  value: []
 }
 
 const selector = formValueSelector('content-targeting-form')
 
 export default connect(state => ({
-  exclude: selector(state, 'inverted'),
-  countries: selector(state, 'value'),
-  value: selector(state, 'value'),
-  inverted: selector(state, 'inverted')
+  exclude: selector(state, 'inverted')
 }))(injectIntl(form))
