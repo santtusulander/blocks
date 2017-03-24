@@ -1,3 +1,12 @@
 .configuration-advanced {
-  //
+  .section-header-container {
+    .section-header-layout {
+      justify-content: flex-start;
+
+      .section-header-addon.before {
+        margin-top: 7px;
+        margin-right: 10px;
+      }
+    }
+  }
 }
