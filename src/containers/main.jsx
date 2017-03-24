@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux'
-import Immutable from 'immutable'
+import { Map, List } from 'immutable'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
+//import * as accountActionCreators from '../redux/modules/account'
+//import * as groupActionCreators from '../redux/modules/group'
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
 import * as rolesActionCreators from '../redux/modules/roles'
+
+import { getById as getAccountById, getByBrand as getAccountsByBrand} from '../redux/modules/entities/accounts/selectors'
+import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
+import { getById as getPropertyById } from '../redux/modules/entities/properties/selectors'
+
 import { getGlobalFetching } from '../redux/modules/fetching/selectors'
 
 import Header from './header'
@@ -60,46 +65,48 @@ export class Main extends React.Component {
         this.props.userActions.fetchUser(action.payload.username)
         this.props.rolesActions.fetchRoles()
 
-        const accountId = this.props.activeAccount && this.props.activeAccount.size
-          ? this.props.activeAccount.get('id')
-          : this.props.params.account
-
-        this.fetchAccountData(accountId, this.props.accounts)
+        //this.props.router.push('')
+        // const accountId = this.props.activeAccount && this.props.activeAccount.size
+        //   ? this.props.activeAccount.get('id')
+        //   : this.props.params.account
+        //
+        // this.fetchAccountData(accountId, this.props.accounts)
       })
   }
 
-  //update account if account prop changed (in url) or clear active if there is no account in route
-  componentWillReceiveProps(nextProps){
-    const { user, accounts, location, params: { account } } = this.props
-    const nextCurrentUser = nextProps.user.get('currentUser')
-    const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
-    const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
-    const currentUserExists = !!nextCurrentUser.size
-    const accountChanged = account !== nextProps.params.account
+  // //update account if account prop changed (in url) or clear active if there is no account in route
+  // componentWillReceiveProps(nextProps){
+  //   const { user, accounts, location, params: { account } } = this.props
+  //   const nextCurrentUser = nextProps.user.get('currentUser')
+  //   const isAccessingRootRoute = location.pathname === ENTRY_ROUTE_ROOT
+  //   const currentUserChanged = !user.get('currentUser').equals(nextCurrentUser)
+  //   const currentUserExists = !!nextCurrentUser.size
+  //   const accountChanged = account !== nextProps.params.account
+  //
+  //   !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
+  //   if (accountChanged) {
+  //     this.fetchAccountData(nextProps.params.account, accounts)
+  //   }
+  //
+  //   if (currentUserChanged && currentUserExists && isAccessingRootRoute) {
+  //     const entryPath = userIsServiceProvider(nextCurrentUser) ? ENTRY_ROUTE_SERVICE_PROVIDER : ENTRY_ROUTE_DEFAULT
+  //     this.props.router.push(entryPath)
+  //   }
+  // }
+  // fetchAccountData(account, accounts) {
+  //   if(accounts && accounts.isEmpty() && checkPermissions(
+  //     this.props.roles,
+  //     this.props.currentUser,
+  //     PERMISSIONS.VIEW_CONTENT_ACCOUNTS
+  //   )) {
+  //     this.props.accountActions.fetchAccounts('udn')
+  //   }
+  //   if(account) {
+  //     this.props.accountActions.fetchAccount('udn', account)
+  //     this.props.groupActions.fetchGroups('udn', account)
+  //   }
+  // }
 
-    !nextProps.params.account && nextProps.accountActions.clearActiveAccount()
-    if (accountChanged) {
-      this.fetchAccountData(nextProps.params.account, accounts)
-    }
-
-    if (currentUserChanged && currentUserExists && isAccessingRootRoute) {
-      const entryPath = userIsServiceProvider(nextCurrentUser) ? ENTRY_ROUTE_SERVICE_PROVIDER : ENTRY_ROUTE_DEFAULT
-      this.props.router.push(entryPath)
-    }
-  }
-  fetchAccountData(account, accounts) {
-    if(accounts && accounts.isEmpty() && checkPermissions(
-      this.props.roles,
-      this.props.currentUser,
-      PERMISSIONS.VIEW_CONTENT_ACCOUNTS
-    )) {
-      this.props.accountActions.fetchAccounts('udn')
-    }
-    if(account) {
-      this.props.accountActions.fetchAccount('udn', account)
-      this.props.groupActions.fetchGroups('udn', account)
-    }
-  }
   logOut() {
     this.props.userActions.logOut()
       .then(() => {
@@ -227,61 +234,64 @@ export class Main extends React.Component {
 
 Main.displayName = 'Main'
 Main.propTypes = {
-  accountActions: React.PropTypes.object,
-  accounts: React.PropTypes.instanceOf(Immutable.List),
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  activeHost: React.PropTypes.instanceOf(Immutable.Map),
-  asperaNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-  breadcrumbs: React.PropTypes.instanceOf(Immutable.Map),
-  children: React.PropTypes.node,
-  currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  fetching: React.PropTypes.bool,
-  groupActions: React.PropTypes.object,
-  infoDialogOptions: React.PropTypes.instanceOf(Immutable.Map),
-  location: React.PropTypes.object,
-  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
-  params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  rolesActions: React.PropTypes.object,
-  router: React.PropTypes.object,
-  routes: React.PropTypes.array,
-  showErrorDialog: React.PropTypes.bool,
-  showInfoDialog: React.PropTypes.bool,
-  theme: React.PropTypes.string,
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  userActions: React.PropTypes.object,
-  viewingChart: React.PropTypes.bool
+  accounts: PropTypes.instanceOf(List),
+  activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
+  activeHost: PropTypes.instanceOf(Map),
+  asperaNotification: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  breadcrumbs: PropTypes.instanceOf(Map),
+  children: PropTypes.node,
+  currentUser: PropTypes.instanceOf(Map),
+  fetching: PropTypes.bool,
+  infoDialogOptions: PropTypes.instanceOf(Map),
+  location: PropTypes.object,
+  notification: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  params: PropTypes.object,
+  roles: PropTypes.instanceOf(List),
+  rolesActions: PropTypes.object,
+  router: PropTypes.object,
+  routes: PropTypes.array,
+  showErrorDialog: PropTypes.bool,
+  showInfoDialog: PropTypes.bool,
+  theme: PropTypes.string,
+  uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Map),
+  userActions: PropTypes.object,
+  viewingChart: PropTypes.bool
 }
 
 Main.defaultProps = {
-  accounts: Immutable.List(),
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  activeHost: Immutable.Map(),
-  currentUser: Immutable.Map(),
-  roles: Immutable.List(),
-  user: Immutable.Map()
+  accounts: List(),
+  activeAccount: Map(),
+  activeGroup: Map(),
+  activeHost: Map(),
+  currentUser: Map(),
+  roles: List(),
+  user: Map()
 }
 
 Main.childContextTypes = {
-  currentUser: React.PropTypes.instanceOf(Immutable.Map),
-  roles: React.PropTypes.instanceOf(Immutable.List)
+  currentUser: PropTypes.instanceOf(Map),
+  roles: PropTypes.instanceOf(List)
 }
 
-function mapStateToProps({entities, ...state}) {
+const mapStateToProps = (state, ownProps) => {
 
-  const stateMap = Immutable.Map(state)
+  const {brand = 'udn', account, group, property /*, storage*/} = ownProps.params
+  const {entities, ...rest} = state
+
+
+  const stateMap = Map(rest)
   const fetching = stateMap.some(
     store => store && (store.get ? store.get('fetching') : store.fetching)
   ) || getGlobalFetching({entities, ...state})
 
   return {
-    accounts: state.account.get('allAccounts'),
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
-    activeHost: state.host.get('activeHost'),
+    accounts: getAccountsByBrand(state, brand),
+    activeAccount: getAccountById(state, account),
+    activeGroup: getGroupById(state, group),
+    activeHost: getPropertyById(state, property),
+
     asperaNotification: state.ui.get('asperaNotification'),
     currentUser: state.user.get('currentUser'),
     fetching,
@@ -297,10 +307,8 @@ function mapStateToProps({entities, ...state}) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    accountActions: bindActionCreators(accountActionCreators, dispatch),
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
     rolesActions: bindActionCreators(rolesActionCreators, dispatch)
