@@ -16,7 +16,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT, TA_TYPE_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 const validate = ({ shared_key }) => {
@@ -47,7 +47,7 @@ export class TokenAuth extends React.Component {
     this.props.change('shared_key', set.get('shared_key'))
     this.props.change('schema', set.get('schema') || Immutable.List(SCHEMA_DEFAULT))
     this.props.change('encryption', set.get('encryption') || ENCRYPTION_DEFAULT)
-    this.props.change('type', set.get('type'))
+    this.props.change('type', set.get('type') || TA_TYPE_DEFAULT)
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
     this.props.change('streaming_encryption', set.get('streaming_encryption'))
