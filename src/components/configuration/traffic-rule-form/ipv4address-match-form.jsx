@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
 import { isValidIP } from '../../../util/validators'
@@ -10,22 +10,26 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 const validate = ({ ipv4Address = [] }) => {
   if (!ipv4Address.length) {
-    return { ipv4CIDR: 'Required.' }
+    return { ipv4CIDR: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
   }
 
   for(const value of ipv4Address) {
 
     if (!isValidIP(value.label)) {
-      return { ipv4Address: 'Some of the values you entered could not be resolved as IPv4 addresses.' }
+      return { ipv4Address: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.input.error" /> }
     }
   }
 }
 
-export default reduxForm({ form: 'ipv4Address-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
+const IPv4AddressMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const saveMatch = values => {
     const labelText = values.ipv4Address.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
-    onSave({ values, label: `IPv4 Addresses: ${labelText}`, matchType }, matchIndex)
+    onSave({
+      values,
+      label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.items" values={{ items: labelText }} />,
+      matchType
+    }, matchIndex)
     onCancel()
   }
 
@@ -34,12 +38,12 @@ export default reduxForm({ form: 'ipv4Address-traffic-match', validate })(({ onS
       <Field
         name="ipv4Address"
         component={Typeahead}
-        placeholder={"Enter IPv4 addresses, eg. 10.1.1.1"}
+        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.ipv4address.input.placeholder" })}
         multiple={true}
         allowNew={true}
         options={[]}
         validation={(value) => value && isValidIP(value.label)}
-        label="IPv4 Address"/>
+        label={<FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address" />}/>
         <FormFooterButtons>
           <Button
             id='cancel-button'
@@ -59,4 +63,17 @@ export default reduxForm({ form: 'ipv4Address-traffic-match', validate })(({ onS
         </FormFooterButtons>
     </form>
   )
-})
+}
+
+IPv4AddressMatchForm.displayName = 'IPv4AddressMatchForm'
+IPv4AddressMatchForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  intl: PropTypes.object,
+  invalid: PropTypes.bool,
+  matchIndex: PropTypes.number,
+  matchType: PropTypes.string,
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func
+}
+
+export default reduxForm({ form: 'ipv4Address-traffic-match', validate })(injectIntl(IPv4AddressMatchForm))

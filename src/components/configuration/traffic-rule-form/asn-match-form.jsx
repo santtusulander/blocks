@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { reduxForm } from 'redux-form'
@@ -10,7 +10,7 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 const validate = ({ AsnLookup = [] }) => checkForErrors({ AsnLookup })
 
-export default reduxForm({ form: 'asn-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
+const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
   const saveMatch = values => {
     const labelText = values.AsnLookup.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
@@ -40,4 +40,16 @@ export default reduxForm({ form: 'asn-traffic-match', validate })(({ onSave, onC
         </FormFooterButtons>
     </form>
   )
-})
+}
+
+ASNMatchForm.displayName = 'ASNMatchForm'
+ASNMatchForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  invalid: PropTypes.bool,
+  matchIndex: PropTypes.number,
+  matchType: PropTypes.string,
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func
+}
+
+export default reduxForm({ form: 'asn-traffic-match', validate })(ASNMatchForm)

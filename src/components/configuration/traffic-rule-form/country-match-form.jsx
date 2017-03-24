@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
 import countries from '../../../constants/country-list'
@@ -11,11 +11,15 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 const validate = ({ countries = [] }) => checkForErrors({ countries })
 
-export default reduxForm({ form: 'countries-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
+const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const saveMatch = values => {
     const labelText = values.countries.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
-    onSave({ values, label: `Countries: ${labelText}`, matchType }, matchIndex)
+    onSave({
+      values,
+      label: <FormattedMessage id="portal.configuration.traffic.rules.match.country.items" values={{ items: labelText }} />,
+      matchType
+    }, matchIndex)
     onCancel()
   }
 
@@ -24,10 +28,10 @@ export default reduxForm({ form: 'countries-traffic-match', validate })(({ onSav
       <Field
         name="countries"
         component={Typeahead}
-        placeholder={"Entry contry name, or 2 letter code ISO code"}
+        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.country.input.placeholder" })}
         multiple={true}
         options={countries}
-        label="Country"/>
+        label={<FormattedMessage id="portal.configuration.traffic.rules.match.country" />}/>
         <FormFooterButtons>
           <Button
             id='cancel-button'
@@ -47,4 +51,17 @@ export default reduxForm({ form: 'countries-traffic-match', validate })(({ onSav
         </FormFooterButtons>
     </form>
   )
-})
+}
+
+CountryMatchForm.displayName = 'CountryMatchForm'
+CountryMatchForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  intl: PropTypes.object,
+  invalid: PropTypes.bool,
+  matchIndex: PropTypes.number,
+  matchType: PropTypes.string,
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func
+}
+
+export default reduxForm({ form: 'countries-traffic-match', validate })(injectIntl(CountryMatchForm))

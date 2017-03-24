@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button } from 'react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
 import continents from '../../../constants/continents'
@@ -11,11 +11,15 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 
 const validate = ({ continents = [] }) => checkForErrors({ continents })
 
-export default reduxForm({ form: 'continents-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
+const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
   const saveMatch = values => {
     const labelText = values.continents.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
-    onSave({ values, label: `Continents: ${labelText}`, matchType }, matchIndex)
+    onSave({
+      values,
+      label: <FormattedMessage id="portal.configuration.traffic.rules.match.continent.items" values={{ items: labelText }} />,
+      matchType
+    }, matchIndex)
     onCancel()
   }
 
@@ -24,10 +28,10 @@ export default reduxForm({ form: 'continents-traffic-match', validate })(({ onSa
       <Field
         name="continents"
         component={Typeahead}
-        placeholder={"Enter continent name"}
+        placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.continent.input.placeholder" })}
         multiple={true}
         options={continents}
-        label="Continent"/>
+        label={<FormattedMessage id="portal.configuration.traffic.rules.match.continent" />}/>
         <FormFooterButtons>
           <Button
             id='cancel-button'
@@ -47,4 +51,17 @@ export default reduxForm({ form: 'continents-traffic-match', validate })(({ onSa
         </FormFooterButtons>
     </form>
   )
-})
+}
+
+ContinentMatchForm.displayName = 'ContinentMatchForm'
+ContinentMatchForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  intl: PropTypes.object,
+  invalid: PropTypes.bool,
+  matchIndex: PropTypes.number,
+  matchType: PropTypes.string,
+  onCancel: PropTypes.func,
+  onSave: PropTypes.func
+}
+
+export default reduxForm({ form: 'continents-traffic-match', validate })(injectIntl(ContinentMatchForm))
