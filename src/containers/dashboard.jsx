@@ -31,6 +31,8 @@ import * as filtersActionCreators from '../redux/modules/filters'
 import * as mapboxActionCreators from '../redux/modules/mapbox'
 import * as trafficActionCreators from '../redux/modules/traffic'
 
+import { getById as getAccountById} from '../redux/modules/entities/accounts/selectors'
+
 import groupActions from '../redux/modules/entities/groups/actions'
 import { getIdsByAccount } from '../redux/modules/entities/groups/selectors'
 
@@ -478,7 +480,7 @@ Dashboard.defaultProps = {
 function mapStateToProps(state, { params: { account } }) {
   return {
     getGroupIds: () => getIdsByAccount(state, account),
-    activeAccount: state.account.get('activeAccount'),
+    activeAccount: getAccountById(state, account),
     dashboard: state.dashboard.get('dashboard'),
     fetching: state.dashboard.get('fetching'),
     filterOptions: state.filters.get('filterOptions'),
