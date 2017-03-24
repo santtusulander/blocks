@@ -3,10 +3,12 @@ import { Button } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { reduxForm } from 'redux-form'
 
+import { checkForErrors } from '../../../util/helpers'
+
 import ASNTypeahead from '../../form/field-form-group-asn-lookup'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ AsnLookup = [] }) => !AsnLookup.length && { AsnLookup: 'Required.' }
+const validate = ({ AsnLookup = [] }) => checkForErrors({ AsnLookup })
 
 export default reduxForm({ form: 'asn-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 

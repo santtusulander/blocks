@@ -4,11 +4,12 @@ import { FormattedMessage } from 'react-intl'
 import { reduxForm, Field } from 'redux-form'
 
 import continents from '../../../constants/continents'
+import { checkForErrors } from '../../../util/helpers'
 
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ continents = [] }) => !continents.length && { continents: 'Required.' }
+const validate = ({ continents = [] }) => checkForErrors({ continents })
 
 export default reduxForm({ form: 'continents-traffic-match', validate })(({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
