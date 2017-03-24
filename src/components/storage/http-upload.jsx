@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Map, fromJS } from 'immutable'
-import classnames from 'classnames'
+import classNames from 'classnames'
 
 import selectors from '../../redux/modules/http-file-upload/selectors'
 import actions from '../../redux/modules/http-file-upload/actions'
+import * as actionTypes from '../../redux/modules/http-file-upload/actionTypes'
 import UploadStatusContainer from './file-upload-status-container'
 
 /**
@@ -83,15 +84,26 @@ class HTTPUpload extends Component {
   }
 
   render() {
-    const dropZoneClassNames = classnames(
+    const dropZoneClassNames = classNames(
       "filedrop-area",
       { "drag-active": this.state.dropZoneActive },
       { "error": this.state.dropZoneInvalid }
     );
 
-    const uploads = this.props.uploads
-      .map((stats, name) => ({ name, progress: stats.get('progress'), type: 'file' }))
-      .toArray()
+    const uploads = !this.props.uploads.size ?
+      [] :
+      this.props.uploads.map((stats, name) => ({
+        name,
+        type: 'file',
+        progress: stats.get('progress', 0),
+        error: stats.get('error', false),
+        cancel: () => {
+          if (stats.has('xhr')) stats.get('xhr')['abort']()
+          this.props[actionTypes.UPLOAD_FINISHED](name)
+        }
+      })).toArray()
+
+    const cancelAll = () => uploads.forEach(u => u.cancel())
 
     return (
       <div>
@@ -106,8 +118,9 @@ class HTTPUpload extends Component {
           </div>
         </div>
         <UploadStatusContainer
+          cancelAll={cancelAll}
           uploads={uploads}
-          inlineStyle={{'display': uploads.length ? 'block' : 'none'}}
+          inlineStyle={{'display': this.props.uploads.size ? 'block' : 'none'}}
         />
       </div>
     )

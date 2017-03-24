@@ -25,7 +25,7 @@ class AddChargeNumbersModal extends React.Component {
     if (activeServiceItem.size) {
       isService = activeServiceItem.has('service_id')
       hasFlowDirection = isService && activeServiceItem.get('service_id') === MEDIA_DELIVERY_SERVICE_ID
-      serviceInfoItem = isService 
+      serviceInfoItem = isService
                         ? getServiceById(servicesInfo, activeServiceItem.get('service_id'))
                         : getServiceByOptionId(servicesInfo, activeServiceItem.get('option_id'))
       itemDetails = isService
@@ -47,10 +47,11 @@ class AddChargeNumbersModal extends React.Component {
             cancel={onCancel}
             overlapping={true}
           >
-            <ChargeNumbersForm 
+            <ChargeNumbersForm
               initialValues={initialValues}
               activeServiceItem={activeServiceItem}
               hasFlowDirection={hasFlowDirection}
+              isEnabled={this.props.isEnabled}
               hasRegionalBilling={itemDetails.get('supports_regional_billing')}
               hasGlobalBilling={itemDetails.get('supports_global_billing')}
               onCancel={onCancel}
@@ -71,8 +72,9 @@ AddChargeNumbersModal.defaultProps = {
 
 AddChargeNumbersModal.displayName = 'AddChargeNumbersModal'
 AddChargeNumbersModal.propTypes = {
-  activeServiceItem: PropTypes.instanceOf(Map), 
+  activeServiceItem: PropTypes.instanceOf(Map),
   initialValues: PropTypes.object,
+  isEnabled: PropTypes.bool,
   onCancel: PropTypes.func,
   onDisable: PropTypes.func,
   onSubmit: PropTypes.func,

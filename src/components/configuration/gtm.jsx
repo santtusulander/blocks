@@ -21,12 +21,17 @@ import FieldFormGroupToggle from '../form/field-form-group-toggle'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
 import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
+import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
 
 const validate = ({ cdnName, cName }) => {
   const conditions = {
     cdnName: {
-      condition: !isValidTextField(cdnName),
-      errorText: <MultilineTextFieldError fieldLabel="portal.configuration.gtm.trafficConfig.cdnName.label" />
+      condition: !isValidTextField(cdnName, GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH),
+      errorText: <MultilineTextFieldError
+                    fieldLabel="portal.configuration.gtm.trafficConfig.cdnName.label"
+                    minValue={GTM_CDN_NAME_MIN_LENGTH}
+                    maxValue={GTM_CDN_NAME_MAX_LENGTH}
+                  />
     },
     cName: {
       condition: !isValidCName(cName),

@@ -207,7 +207,7 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     return Promise.all([
       metricsActions.fetchHostMetrics(metricsOpts),
       metricsActions.fetchDailyHostTraffic(metricsOpts),
-      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true }))
+      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: moment().utc().startOf('month').format('X') }))
     ])
   }
 

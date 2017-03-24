@@ -39,6 +39,7 @@ export const STREAMING_ENCRYPTION_OPTIONS = [
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 export const STREAMING_ENCRYPTION_DEFAULT = 'HMAC_SHA1'
+export const TA_TYPE_DEFAULT = 'standard'
 
 export const MIN_TTL = 1
 export const MAX_TTL = 2147483647
