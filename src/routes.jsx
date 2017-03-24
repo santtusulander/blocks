@@ -50,7 +50,7 @@ import ConfigurationDefaults from './components/configuration/defaults'
 import ConfigurationPolicies from './components/configuration/policies'
 import ConfigurationSecurity from './components/configuration/security'
 import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
-
+import ConfigurationAdvanced from './components/configuration/advanced'
 
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
@@ -278,6 +278,7 @@ export const getRoutes = store => {
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
             <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
+            <Route path={routes.configurationTabAdvanced} component={ConfigurationAdvanced}/>
           </Route>
 
           {/* Storage - routes */}
