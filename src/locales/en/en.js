@@ -159,6 +159,9 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
   'portal.analytics.tabs.storage.label': 'Storage',
+  'portal.analytics.tabs.storage.storageTitle': 'Storage',
+  'portal.analytics.tabs.storage.groupTitle': 'Group Storage',
+  'portal.analytics.tabs.storage.accountTitle': 'Account Storage',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -433,8 +436,14 @@ const TRANSLATED_MESSAGES = {
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
 
+  'portal.content.addHost.serviceType.text': 'Service Type',
+  'portal.content.addHost.serviceType.required': 'Service Type is required',
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
+
+  'portal.content.addHost.large.text': 'Media Delivery',
+  'portal.content.addHost.msd.text': 'VOD Streaming',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 

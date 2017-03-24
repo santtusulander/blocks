@@ -49,7 +49,7 @@ const AnalysisStorage = ({
           chartLabel={intl.formatMessage({id: dateRangeLabel})}
           data={chartData.toJS()}
           dataKey={storageType}
-          comparisonDataKey={"historical_"+storageType}
+          comparisonDataKey={`historical_${storageType}`}
           keyLabel={storageType === 'bytes'
             ? intl.formatMessage({id: "portal.analysis.filters.storageType.usage.title"})
             : intl.formatMessage({id: "portal.analysis.filters.storageType.files.title"})}

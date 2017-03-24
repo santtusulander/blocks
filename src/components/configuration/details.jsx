@@ -87,7 +87,7 @@ class ConfigurationDetails extends React.Component {
 
     if(!storages.isEmpty()) {
       options = storages.reduce((opt, storage) => opt.concat({
-        value: storage.getIn(['gateway', 'hostname']),
+        value: storage.getIn(['origin', 'hostname']),
         label: storage.get('ingest_point_id')
       }), options)
     }
@@ -129,6 +129,19 @@ class ConfigurationDetails extends React.Component {
             </Col>
             <Col xs={9}>
               <FormControl.Static>{this.props.deploymentMode}</FormControl.Static>
+            </Col>
+          </FormGroup>
+        </Row>
+
+        <Row>
+          <FormGroup>
+            <Col xs={3}>
+              <ControlLabel>
+                <FormattedMessage id="portal.configuration.details.serviceType.text"/>
+              </ControlLabel>
+            </Col>
+            <Col xs={9}>
+              <FormControl.Static>{this.props.serviceTypeText}</FormControl.Static>
             </Col>
           </FormGroup>
         </Row>
@@ -408,6 +421,7 @@ ConfigurationDetails.propTypes = {
   params: React.PropTypes.object,
   readOnly: React.PropTypes.bool,
   saveChanges: React.PropTypes.func,
+  serviceTypeText: React.PropTypes.string,
   storagePermission: React.PropTypes.object,
   storages: React.PropTypes.instanceOf(Immutable.List)
 }
