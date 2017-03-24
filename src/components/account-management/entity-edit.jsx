@@ -98,10 +98,11 @@ class EntityEdit extends React.Component {
     this.onServiceChange && this.onServiceChange(entity.get('services'))
   }
 
-  showServiceItemForm(serviceId, optionId, onChange) {
+  showServiceItemForm(serviceId, optionId, onChange, isEnabled) {
     this.setState({
       activeServiceItem: this.getActiveServiceItem(serviceId, optionId),
-      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId)
+      activeServiceItemPath: this.getActiveServiceItemPath(serviceId, optionId),
+      isEnabled
     })
     // callback to update ServiceOptionSelector field from AccountForm
     this.onServiceChange = onChange
@@ -140,6 +141,7 @@ class EntityEdit extends React.Component {
 
         <AddChargeNumbersModal
           activeServiceItem={this.state.activeServiceItem}
+          isEnabled={this.state.isEnabled}
           onCancel={() => this.setState({ activeServiceItem: Map(), activeServiceItemPath: null })}
           onDisable={this.onDisableServiceItem}
           onSubmit={this.onChangeServiceItem}
