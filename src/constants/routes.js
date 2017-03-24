@@ -105,4 +105,6 @@ const ROUTES = {
   networkPod: '/network/:brand/:account/groups/:group/:network/:pop/:pod'
 }
 
+export const ENTRY_ROUTE_ROOT = ROUTES.root
+
 export default ROUTES
