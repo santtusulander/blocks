@@ -45,9 +45,9 @@ export class TokenAuth extends React.Component {
     const { set } = this.props
 
     this.props.change('shared_key', set.get('shared_key'))
-    this.props.change('schema', set.get('schema') || Immutable.List(SCHEMA_DEFAULT))
-    this.props.change('encryption', set.get('encryption') || ENCRYPTION_DEFAULT)
-    this.props.change('type', set.get('type') || TA_TYPE_DEFAULT)
+    this.props.change('schema', set.get('schema', Immutable.List(SCHEMA_DEFAULT)))
+    this.props.change('encryption', set.get('encryption', ENCRYPTION_DEFAULT))
+    this.props.change('type', set.get('type', TA_TYPE_DEFAULT))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
     this.props.change('streaming_encryption', set.get('streaming_encryption'))
