@@ -336,7 +336,7 @@ export function changedParamsFiltersQS(props, nextProps) {
  * @returns {*}
  */
 export function formatUnixTimestamp(unix, format = 'MM/DD/YYYY') {
-  return moment.unix(unix).isValid() ? moment.unix(unix).format(format) : formatDate(unix, format)
+  return moment.unix(unix).isValid() ? moment.unix(unix).utc().format(format) : formatDate(unix, format)
 }
 
 /**
@@ -356,7 +356,7 @@ export function unixTimestampToDate(unix) {
  * @returns {*}
  */
 export function formatDate(date, format = 'MM/DD/YYYY') {
-  return moment(date).format(format)
+  return moment(date).utc().format(format)
 }
 
 
@@ -440,11 +440,11 @@ export function getRolesForUser(user, roles) {
  * @param pattern
  * @returns {boolean}
  */
-export function matchesRegexp(string, pattern) {
+export function matchesRegexp(string, pattern, caseSensitive = false) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = new RegExp(pattern, 'i');
+  var testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
   return testPattern.test(string);
 }
 
@@ -700,4 +700,14 @@ export function hasService(group, serviceID) {
 export function hasOption(group, optionID) {
   const services = group && group.get('services')
   return services && services.some(service => service.get('options').some(option => option.get('option_id') === optionID))
+}
+
+/**
+ * Format ASN number
+ *
+ * @param asnObj
+ * @returns {string}
+ */
+export function formatASN(asnObj) {
+  return asnObj ? `ASN${asnObj.asn} (${asnObj.organization})` : ''
 }

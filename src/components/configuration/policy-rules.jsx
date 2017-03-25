@@ -9,7 +9,6 @@ import ActionButtons from '../../components/action-buttons.jsx'
 import {
   getScriptLua,
   matchIsContentTargeting,
-  actionIsTokenAuth,
   parsePolicy,
   parseCountriesByResponseCodes,
   ALLOW_RESPONSE_CODES,
@@ -18,8 +17,6 @@ import {
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
-
-import IsAdmin from '../is-admin'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -108,11 +105,6 @@ class ConfigurationPolicyRules extends React.Component {
         actionsLabel = sets.map(set => set.setkey).join(', ')
       }
 
-      {/*
-        TODO: remove UDN admin checks as part of UDNP-1713
-        Allow CT / TA modification only for UDN Admin
-      */}
-      const ruleNeedsAdmin = matchIsContentTargeting(policy.get('match')) || actionIsTokenAuth(sets)
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -127,14 +119,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
-            {/* Allow CT / TA modification only for UDN Admin */}
-            {ruleNeedsAdmin ?
-              <IsAdmin>
-                {actionButtons}
-              </IsAdmin>
-              :
-              actionButtons
-            }
+            {actionButtons}
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"

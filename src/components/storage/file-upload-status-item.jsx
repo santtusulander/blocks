@@ -4,10 +4,11 @@ import TruncatedTitle from '../truncated-title'
 import IconFolder from '../icons/icon-folder'
 import IconClose from '../icons/icon-close'
 import IconFile from '../icons/icon-file'
+import classNames from 'classnames'
 
-const FileUploadStatusItem = ({name, progress, type}) => {
+const FileUploadStatusItem = ({ name, progress, error, type, cancel }) => {
   return (
-    <div className='file-upload-status-item'>
+    <div className={classNames('file-upload-status-item', { error })}>
       <div className='file-upload-status-type-icon'>
         {(type === 'file') && <IconFile />}
         {(type === 'directory') && <IconFolder />}
@@ -21,7 +22,7 @@ const FileUploadStatusItem = ({name, progress, type}) => {
       <Button
         bsStyle='link'
         className='file-update-status-remove-icon'
-        onClick={() => {}}>
+        onClick={cancel}>
         <IconClose />
       </Button>
     </div>
@@ -30,6 +31,8 @@ const FileUploadStatusItem = ({name, progress, type}) => {
 
 FileUploadStatusItem.displayName = "FileUploadStatusItem"
 FileUploadStatusItem.propTypes = {
+  cancel: PropTypes.func,
+  error: PropTypes.bool,
   name: PropTypes.string,
   progress: PropTypes.number,
   type: PropTypes.oneOf(["file", "directory"])
