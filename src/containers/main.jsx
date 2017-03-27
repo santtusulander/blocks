@@ -146,32 +146,32 @@ export class Main extends React.Component {
           params={this.props.params}
           pathname={this.props.location.pathname}
           roles={this.props.roles}
-          />
+        />
 
-          <Header
-            accounts={this.props.accounts}
-            activeAccount={this.props.activeAccount}
-            activeGroup={this.props.activeGroup}
-            activeHost={this.props.activeHost}
-            breadcrumbs={this.props.breadcrumbs}
-            fetching={this.props.fetching}
-            fetchAccountData={this.fetchAccountData}
-            theme={this.props.theme}
-            handleThemeChange={this.props.uiActions.changeTheme}
-            location={this.props.location}
-            logOut={this.logOut}
-            routes={this.props.routes}
-            pathname={this.props.location.pathname}
-            params={this.props.params}
-            roles={this.props.roles}
-            toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
-            user={this.props.currentUser}/>
+        <Header
+          accounts={this.props.accounts}
+          activeAccount={this.props.activeAccount}
+          activeGroup={this.props.activeGroup}
+          activeHost={this.props.activeHost}
+          breadcrumbs={this.props.breadcrumbs}
+          fetching={this.props.fetching}
+          fetchAccountData={this.fetchAccountData}
+          theme={this.props.theme}
+          handleThemeChange={this.props.uiActions.changeTheme}
+          location={this.props.location}
+          logOut={this.logOut}
+          routes={this.props.routes}
+          pathname={this.props.location.pathname}
+          params={this.props.params}
+          roles={this.props.roles}
+          toggleAccountManagementModal={this.props.uiActions.toggleAccountManagementModal}
+          user={this.props.currentUser}/>
 
         <div className="content-container">
           {this.props.children}
         </div>
 
-            <Footer />
+        <Footer />
 
         {this.props.showErrorDialog &&
         <ModalWindow

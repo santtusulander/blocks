@@ -132,7 +132,7 @@
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
 
   "portal.configuration.gtm.gtmToggle.label": "Allow 3rd-party CDN to serve content",
-  "portal.configuration.gtm.gtmToggle.help": "Allow 3rd-party CDN to serve content help",
+  "portal.configuration.gtm.gtmToggle.help": "User can enable splitting traffic between the UDN and 3rd party CDNs by using the GTM",
   "portal.configuration.gtm.gtmToggle.readOnly.text": "Global Traffic Manager is {status}",
   "portal.configuration.gtm.gtmToggle.readOnly.enabled.text": "enabled",
   "portal.configuration.gtm.gtmToggle.readOnly.disabled.text": "disabled",
@@ -145,7 +145,7 @@
   "portal.configuration.gtm.trafficConfig.cName.required": "CNAME is required",
   "portal.configuration.gtm.trafficConfig.cName.validation.text": "Please enter a valid CNAME",
   "portal.configuration.gtm.trafficConfig.ROW.label": "Rest-of-world traffic served by 3rd party",
-  "portal.configuration.gtm.trafficConfig.ROW.help": "Rest-of-world traffic served by 3rd party help",
+  "portal.configuration.gtm.trafficConfig.ROW.help": "When enabled this nominates the 3rd party network to be the default CDN for delivering all traffic for which there are no explicit GTM rules defined",
   "portal.configuration.gtm.trafficConfig.ROW.readOnly.enabled.text": "Yes",
   "portal.configuration.gtm.trafficConfig.ROW.readOnly.disabled.text": "No",
   "portal.configuration.gtm.table.label": "Traffic Rules",

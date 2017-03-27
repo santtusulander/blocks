@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
@@ -14,10 +14,13 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.unmock('../../util/status-codes')
-jest.unmock('../groups.jsx')
+jest.unmock('../../../util/status-codes')
+jest.unmock('../account.jsx')
 
-import { Groups } from '../groups.jsx'
+import { Account } from '../account.jsx'
+
+console.log = function() {}
+
 
 function groupActionsMaker() {
   return {
@@ -85,6 +88,7 @@ const fakeMetrics = Immutable.fromJS([
 
 const urlParams = {brand: 'udn', account: '1'}
 
+
 describe('Groups', () => {
   let props = {}
   let subject = null
@@ -106,9 +110,9 @@ describe('Groups', () => {
         params: urlParams,
         groups: Immutable.List(['1','2']),
         metrics: fakeMetrics,
-        viewingChart: viewingChart || false
+        viewingChart: viewingChart || false,
       }
-      return shallow(<Groups {...props}/>)
+      return shallow(<Account {...props}/>)
     }
   })
 
@@ -130,13 +134,4 @@ describe('Groups', () => {
     expect(subject().find('ContentItems').props().viewingChart).toBe(false)
   });
 
-  it('should add a new group when called', () => {
-    subject().instance().createGroup({data: {name: 'bbb'}})
-    expect(groupActions.createGroup.mock.calls[0]).toEqual(['udn','1',{name: 'bbb'}])
-  })
-
-  it('should delete a group when clicked', () => {
-    subject().instance().deleteGroup(Immutable.fromJS({id: 'aaa'}))
-    expect(groupActions.deleteGroup.mock.calls[0]).toEqual(['udn','1','aaa'])
-  })
 })
