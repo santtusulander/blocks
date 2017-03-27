@@ -7,6 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import * as asnActionCreators from '../../redux/modules/asn'
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
 import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY } from '../../constants/network'
+import { formatASN } from '../../util/helpers'
 
 
 class FieldFormGroupAsnLookup extends Component {
@@ -26,13 +27,13 @@ class FieldFormGroupAsnLookup extends Component {
     }
 
     const filterType = parseInt(query) ? 'asn' : 'organization'
-    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: query })
+    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: escape(query)})
       .then(resp => {
         let options = []
         resp.payload.forEach(item => {
           options.push({
             id: item.asn,
-            label: `ASN${item.asn} (${item.organization})`
+            label: formatASN(item)
           })
         })
 
@@ -41,9 +42,11 @@ class FieldFormGroupAsnLookup extends Component {
   }
 
   render() {
+    const label = this.props.withoutLabel ? null : <FormattedMessage id="portal.common.typeahead.asnLookup.label"/>
+
     return (
       <Field
-        name="AsnLookup"
+        name={this.props.name || 'AsnLookup'}
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}
@@ -51,7 +54,7 @@ class FieldFormGroupAsnLookup extends Component {
         minLength={ASN_STARTING_SEARCH_COUNT}
         delay={ASN_SEARCH_DELAY}
         options={this.state.options}
-        label={<FormattedMessage id="portal.common.typeahead.asnLookup.label"/>}
+        label={label}
         placeholder={this.props.intl.formatMessage({id: 'portal.common.typeahead.asnLookup.placeholder'})}
         emptyLabel={this.props.intl.formatMessage({id: 'portal.common.search.no-results.text'})}
         onSearch={this.onSearch} />
@@ -63,7 +66,9 @@ class FieldFormGroupAsnLookup extends Component {
 FieldFormGroupAsnLookup.displayName = 'FieldFormGroupAsnLookup'
 FieldFormGroupAsnLookup.propTypes = {
   asnActions: PropTypes.object,
-  intl: PropTypes.object
+  intl: PropTypes.object,
+  name: PropTypes.string,
+  withoutLabel: PropTypes.bool
 }
 
 function mapDispatchToProps(dispatch) {

@@ -159,6 +159,9 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
   'portal.analytics.tabs.storage.label': 'Storage',
+  'portal.analytics.tabs.storage.storageTitle': 'Storage',
+  'portal.analytics.tabs.storage.groupTitle': 'Group Storage',
+  'portal.analytics.tabs.storage.accountTitle': 'Account Storage',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -335,6 +338,10 @@ const TRANSLATED_MESSAGES = {
   'portal.policy.edit.matcher.doesntExist.text': 'Does not exist',
   'portal.policy.edit.matcher.contains.text': 'Contains',
   'portal.policy.edit.matcher.doesntContain.text': 'Does not contain',
+  'portal.policy.edit.matcher.equals.text': 'Equals',
+  'portal.policy.edit.matcher.doesntEqual.text': 'Does not equal',
+  'portal.policy.edit.matcher.empty.text': 'Empty',
+  'portal.policy.edit.matcher.doesntEmpty.text': 'Does not empty',
   'portal.policy.edit.matcher.name.text': 'Name',
   'portal.policy.edit.mimetype.header': 'MIME Type',
   'portal.policy.edit.mimetype.disclaimer': 'Match one or more MIME types like text/html, application/javascript',
@@ -433,8 +440,14 @@ const TRANSLATED_MESSAGES = {
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
 
+  'portal.content.addHost.serviceType.text': 'Service Type',
+  'portal.content.addHost.serviceType.required': 'Service Type is required',
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
+
+  'portal.content.addHost.large.text': 'Media Delivery',
+  'portal.content.addHost.msd.text': 'VOD Streaming',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
@@ -772,6 +785,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.CHANGING': 'CHANGING...',
   'portal.button.save': 'Save',
   'portal.button.send': 'Send',
+  'portal.button.restore': 'Restore',
   'portal.button.configure': 'Configure',
   'portal.button.SAVE': 'SAVE',
   'portal.button.saving': 'SAVING...',

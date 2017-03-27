@@ -25,7 +25,7 @@ const FieldFormGroupCheckbox  = ({
         <Checkbox
           className={className}
           disabled={disabled}
-          field={input}
+          {...input}
         />
 
           { addonAfter &&

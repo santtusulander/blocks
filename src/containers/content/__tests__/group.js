@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
@@ -11,10 +11,10 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.unmock('../../redux/modules/fetching/actions.js')
-jest.unmock('../hosts.jsx')
-jest.unmock('../../util/status-codes')
-import { Hosts } from '../hosts.jsx'
+jest.unmock('../../../redux/modules/fetching/actions.js')
+jest.unmock('../group.jsx')
+jest.unmock('../../../util/status-codes')
+import Group from '../group.jsx'
 
 function propertyActionsMaker() {
   return {
@@ -68,7 +68,7 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
-describe('Hosts', () => {
+describe('Group', () => {
   let props = {}
   let subject = null
   const fetchGroupData = () => Promise.resolve()
@@ -79,7 +79,7 @@ describe('Hosts', () => {
       props = {
         uiActions: uiActionsMaker(),
         deleteProperty: propertyActions.remove,
-        createNewProperty: propertyActions.create,
+        createProperty: propertyActions.create,
         fetchGroupData,
         fetchMetricsData,
         fetching: true,
@@ -89,7 +89,7 @@ describe('Hosts', () => {
         metrics: fakeMetrics,
         viewingChart: viewingChart || false
       }
-      return shallow(<Hosts {...props}/>)
+      return shallow(<Group {...props}/>)
     }
   })
   it('should exist', () => {
@@ -118,7 +118,7 @@ describe('Hosts', () => {
   });
 
   it('should add a new host when called', () => {
-    subject().instance().createNewHost('bbb','production')
+    subject().instance().createNewHost('bbb','production', 'large')
     expect(propertyActions.create.mock.calls[0]).toEqual(['udn','1','1', fakePayload])
   })
 

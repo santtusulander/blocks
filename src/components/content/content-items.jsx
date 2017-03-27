@@ -3,7 +3,6 @@ import d3 from 'd3'
 import { ButtonGroup, ButtonToolbar } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import Immutable from 'immutable'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage } from 'react-intl';
 
 import {
@@ -222,6 +221,8 @@ class ContentItems extends React.Component {
         break
     }
   }
+
+  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
       .then((response) => {
@@ -477,13 +478,6 @@ class ContentItems extends React.Component {
             this.props.contentItems.isEmpty() && storages.isEmpty() && properties.isEmpty() ?
               <NoContentItems content={ifNoContent} />
             :
-            <ReactCSSTransitionGroup
-              component="div"
-              className="content-transition"
-              transitionName="content-transition"
-              transitionEnterTimeout={400}
-              transitionLeaveTimeout={250}
-            >
 
             <div
               key={viewingChart}
@@ -592,7 +586,6 @@ class ContentItems extends React.Component {
                   )
                 })}
               </div>
-            </ReactCSSTransitionGroup>
           )}
 
           {this.state.showModal && this.getTier() === 'brand' &&
@@ -629,6 +622,7 @@ class ContentItems extends React.Component {
               >
 
               <AddHost
+                activeGroup={activeGroup}
                 createHost={this.onItemAdd}
                 cancelChanges={this.hideModal}
               />

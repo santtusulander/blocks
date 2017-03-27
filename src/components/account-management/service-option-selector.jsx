@@ -40,7 +40,7 @@ class ServiceOptionSelector extends React.Component {
     if (typeof serviceIndex === 'undefined') {
       return false
     }
- 
+
     if(option.requires_charge_number) {
       this.props.showServiceItemForm(serviceId, optionId, callback)
     } else {
@@ -81,7 +81,7 @@ class ServiceOptionSelector extends React.Component {
                 onClick={(e) => {
                   if (isService) {
                     e.stopPropagation()
-                    this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback)
+                    this.props.showServiceItemForm(itemInfo.value, null, onChangeCallback, isEnabled)
                   }
                 }}
               >

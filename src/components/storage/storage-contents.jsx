@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Col, FormGroup } from 'react-bootstrap'
+// UDNP-3205 - Hide HTTP File Upload
+// import { Col, FormGroup } from 'react-bootstrap'
 import { Map } from 'immutable'
 
 import SectionContainer from '../layout/section-container'
@@ -12,8 +13,10 @@ import ButtonDropdown from '../button-dropdown'
 import Button from '../button'
 import IconAdd from '../icons/icon-add'
 
-import Toggle from '../toggle'
+// UDNP-3205 - Hide HTTP File Upload
+// import Toggle from '../toggle'
 
+// eslint-disable-next-line no-unused-vars
 const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
@@ -37,19 +40,22 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
     <SectionContainer>
       <SectionHeader
         sectionHeaderTitle={headerTitle}>
-        <FormGroup className="upload-toggle-group">
-          <Col className="pull-left">
-            <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
-          </Col>
-          <Col xs={6} className="pull-right">
-            <Toggle
-              value={asperaUpload}
-              onText='ON'
-              offText='OFF'
-              changeValue={onMethodToggle}
-            />
-          </Col>
-        </FormGroup>
+        {/*
+          // UDNP-3205 - Hide HTTP File Upload
+          <FormGroup className="upload-toggle-group">
+            <Col className="pull-left">
+              <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
+            </Col>
+            <Col xs={6} className="pull-right">
+              <Toggle
+                value={asperaUpload}
+                onText='ON'
+                offText='OFF'
+                changeValue={onMethodToggle}
+              />
+            </Col>
+          </FormGroup>
+        */}
         { asperaUpload &&
           <ButtonDropdown
             bsStyle="success"
@@ -67,8 +73,13 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
             ]}
           />
         }
-        { !asperaUpload && fileUploader &&
-          <Button bsStyle="success" icon={true} onClick={openFileDialog}>
+        { !asperaUpload &&
+          <Button
+            bsStyle="success"
+            icon={true}
+            onClick={openFileDialog}
+            disabled={!fileUploader}
+          >
             <IconAdd/>
           </Button>
         }

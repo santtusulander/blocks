@@ -36,7 +36,7 @@ const FieldFormGroupTypeahead = ({
   const renderToken = (token, onRemove, key) => {
 
     // Add validation classes to rendered tokens if custom validation rule is defined
-    const validationClass = (validation) ? validation(token) ? 'valid' : 'invalid' : 'valid'
+    const validationClass = (validation) ? validation(token) ? 'valid' : 'invalid' : ''
 
     return (
       <div className={classNames('token token-removeable', `token__${validationClass}`)} key={key}>
@@ -48,7 +48,7 @@ const FieldFormGroupTypeahead = ({
 
   return (
     <FormGroup
-      className={classNames('typeahead-form-group', {'has-error': error && dirty})}
+      className={classNames('typeahead-form-group', {'has-error': error && dirty}, className)}
       controlId={input.name}
       validationState={getReduxFormValidationState(meta)}>
 
@@ -73,6 +73,7 @@ const FieldFormGroupTypeahead = ({
         onSearch={onSearch}
         onBlur={() => input.onBlur(input.value)}
         options={options}
+        selected={Array.isArray(input.value) ? input.value : [input.value]}
         renderToken={renderToken}
       />
 

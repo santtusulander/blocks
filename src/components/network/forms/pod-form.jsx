@@ -114,8 +114,8 @@ const asyncValidate = ({ UILocalAS }) => {
   }
 
   return fetchASOverview(UILocalAS)
-    .then(({ data: { holder } }) => {
-      if (!holder) {
+    .then((resp) => {
+      if (!resp[0]) {
         throw {
           UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
         }
@@ -214,7 +214,7 @@ const PodForm = ({
   submitting,
   dirty,
   footprintPermissions,
-
+  error,
   onShowFootprintModal,
   onEditFootprint,
 
@@ -256,6 +256,12 @@ const PodForm = ({
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
+      {
+        error &&
+        <p className='has-error'>
+          <span className='help-block'>{error}</span>
+        </p>
+      }
       <Field
         type="text"
         name="UIName"
