@@ -68,8 +68,8 @@ export function convertToBytes(value, units) {
   }
 }
 
-export function formatBytesToUnit(value, unit) {
-  const formatted = separateUnit(formatBytes(value))
+export function formatBytesToUnit(value, unit, format) {
+  const formatted = separateUnit(formatBytes(value, null, format || '0,0'))
   const coefficient = UNITS_COEFFICIENTS.get(formatted.unit) / UNITS_COEFFICIENTS.get(unit)
   return Number(numeral(formatted.value * coefficient).format('0[.000]'))
 }
