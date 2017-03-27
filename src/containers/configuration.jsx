@@ -99,6 +99,7 @@ export class Configuration extends React.Component {
   getActiveConfig() {
     return this.props.activeHost.getIn(['services',0,'configurations',this.state.activeConfig])
   }
+
   changeValue(path, value) {
     return this.changeValues([[path, value]])
   }

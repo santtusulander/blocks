@@ -1,6 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import { Route, IndexRedirect, IndexRoute } from 'react-router'
+import { Route, IndexRedirect } from 'react-router'
+import { getById as getAccountById } from './redux/modules/entities/accounts/selectors'
+import { getFetchingByTag } from './redux/modules/fetching/selectors'
 
 import * as PERMISSIONS from './constants/permissions'
 import routes, { ENTRY_ROUTE_ROOT } from './constants/routes'
@@ -52,14 +54,16 @@ import ConfigurationSecurity from './components/configuration/security'
 import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
 import ConfigurationAdvanced from './components/configuration/advanced'
 
-import Accounts from './containers/accounts'
+import BrandContainer from './containers/content/brand'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
-import Groups from './containers/groups'
+import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
-import Hosts from './containers/hosts'
+
+import GroupContainer from './containers/content/group'
+
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
@@ -166,11 +170,10 @@ const UserIsNotLoggedIn = UserAuthWrapper({
 const AccountIsSP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
-      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
-      state.account.get('activeAccount')
+      getAccountById(state, ownProps.params.account)
     return account
   },
-  authenticatingSelector: (state) => state.account.get('fetching'),
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsSP',
   predicate: (account) => {
     if(!account) {
@@ -189,15 +192,14 @@ const AccountIsSP = UserAuthWrapper({
 const AccountIsCP = UserAuthWrapper({
   authSelector: (state, ownProps) => {
     const account =
-      state.account.get('allAccounts').find((acc) => acc.get('id') === Number(ownProps.params.account)) ||
-      state.account.get('activeAccount')
+      getAccountById(state, ownProps.params.account)
     return {
       account,
       accountId: ownProps.params.account
     }
 
   },
-  authenticatingSelector: (state) => state.account.get('fetching'),
+  authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsCP',
   predicate: ({account}) => {
     if(!account) {
@@ -227,9 +229,12 @@ export const getRoutes = store => {
       <Route path="/reset-password/:token" component={UserIsNotLoggedIn(SetPassword)}/>
       <Route path="styleguide" component={UserIsNotLoggedIn(Styleguide)}/>
 
-      { /* Routes below are protected by login*/}
+      { /* Routes below are protected by login
       <IndexRoute component={UserIsLoggedIn(Main)} />
+      */}
       <Route component={UserIsLoggedIn(Main)}>
+        {/* redirect to /content if in root*/ }
+        <IndexRedirect to={routes.content} />
         <Route path="starburst-help" component={StarburstHelp}/>
         <Route path="configure/purge" component={Purge}/>
 
@@ -255,10 +260,10 @@ export const getRoutes = store => {
         <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>
           <IndexRedirect to={getRoute('contentBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
-            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-            <Route path={routes.contentGroups} component={Groups}/>
-            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+            <Route path={routes.contentBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
+            <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(BrandContainer)}/>
+            <Route path={routes.contentGroups} component={AccountContainer}/>
+            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(GroupContainer)}/>
           </Route>
 
           {/* Properties - routes */}
@@ -290,7 +295,7 @@ export const getRoutes = store => {
         <Route path={routes.network} component={AccountIsSP(UserHasPermission(PERMISSIONS.VIEW_NETWORK_SECTION, store))}>
           <IndexRedirect to={getRoute('networkBrand', {brand: 'udn'})} />
           <Route component={ContentTransition}>
-            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(Accounts)}/>
+            <Route path={routes.networkBrand} component={UserCanListAccounts(store)(BrandContainer)}/>
             <Route path={routes.networkAccount} component={UserCanViewAccountDetail(store)(Network)}/>
           </Route>
           <Route path={routes.networkGroups} component={Network}/>

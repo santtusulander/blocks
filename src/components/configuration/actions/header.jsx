@@ -89,11 +89,7 @@ class Header extends React.Component {
         }])
       })
     }
-    this.props.changeValue(
-      this.props.path,
-      newSet
-    )
-    this.props.close()
+    this.props.saveAction(this.props.path, this.props.setKey, newSet)
   }
   render() {
 
@@ -239,11 +235,12 @@ class Header extends React.Component {
 
 Header.displayName = 'Header'
 Header.propTypes = {
-  changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   intl: intlShape.isRequired,
   path: React.PropTypes.instanceOf(Immutable.List),
-  set: React.PropTypes.instanceOf(Immutable.Map)
+  saveAction: React.PropTypes.func,
+  set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.instanceOf(Immutable.Map)
 }
 
 export default injectIntl(Header)

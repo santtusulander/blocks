@@ -129,6 +129,7 @@
 @import 'components/configuration/token-auth';
 @import 'components/configuration/gtm';
 @import 'components/configuration/advanced';
+@import 'components/configuration/policy-weight';
 
 // Layouts
 @import 'components/layout/content';
@@ -163,6 +164,8 @@
 
 // Shared
 @import 'components/shared/action-items-container';
+@import 'components/shared/double-side-modal';
+@import 'components/shared/banner-notification';
 
 // Transitions
 // ===========

@@ -6,10 +6,22 @@ import {
   VOD_STREAMING_TOKEN_AUTH
 } from './service-permissions'
 
-export const DEFAULT_MATCH_JS = {match: {field: null, cases: [['',[]]]}}
-export const DEFAULT_MATCH = Immutable.fromJS(DEFAULT_MATCH_JS)
+export const DEFAULT_RULE_JS = {
+  rule_name: '',
+  rule_body: {}
+}
 
-export const DEFAULT_ACTION_PATH = [0, 'match', 'cases', 0, 1]
+export const DEFAULT_CONDITION_JS = {
+  type: 'equals',
+  field: null,
+  field_detail: '',
+  value: '',
+  inverted: false,
+  _temp: true
+}
+
+export const DEFAULT_RULE = Immutable.fromJS(DEFAULT_RULE_JS)
+export const DEFAULT_CONDITION = Immutable.fromJS(DEFAULT_CONDITION_JS)
 
 export const POLICY_TYPES = {
   REQUEST: 'request_policy',
@@ -56,7 +68,7 @@ export const availableMatches = [
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST, POLICY_TYPES.FINAL_REQUEST]
   },
   {
-    key: 'content_targeting',
+    key: 'content_targeting_country_code',
     name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
@@ -96,6 +108,12 @@ export const availableActions = [
     name: 'portal.policy.edit.actionSelection.tokenauth.text',
     compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
     servicePermissions: [ MEDIA_DELIVERY_TOKEN_AUTH, VOD_STREAMING_TOKEN_AUTH ]
+  },
+  {
+    key: 'reply',
+    name: 'portal.policy.edit.matchesSelection.contentTargeting.text',
+    compatibleWith: [POLICY_TYPES.DEFAULT, POLICY_TYPES.REQUEST],
+    servicePermissions: [ MEDIA_DELIVERY_CONTENT_TARGETTING ]
   },
   {
     key: null,
