@@ -272,13 +272,16 @@ class ContentItems extends React.Component {
 
   renderAddButton (propertyCreationIsAllowed, storageCreationIsAllowed) {
     if(this.getTier() === 'group') {
-      console.log('TEST',propertyCreationIsAllowed, storageCreationIsAllowed )
       if (propertyCreationIsAllowed && storageCreationIsAllowed) {
         return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
       }
 
       if (storageCreationIsAllowed) {
-        return <UDNButton bsStyle="success" icon={true} onClick={this.showStorageModal}><IconAdd/></UDNButton>
+        return <UDNButton bsStyle="success" icon={true} onClick={() => this.showStorageModal()}><IconAdd/></UDNButton>
+      }
+
+      if (!propertyCreationIsAllowed && !storageCreationIsAllowed) {
+        return <UDNButton bsStyle="success" disabled={true} icon={true}><IconAdd/></UDNButton>
       }
     }
 
