@@ -68,12 +68,14 @@ export const checkChangeInBounds = (currentBounds, newBounds) => {
  * Fetches city data with specific bounds and options
  *
  * @method getCitiesWithinBounds
- * @param  {object}              params                   Object of values to match
- * @param  {object}              filters                  Filters to match, e.g. date range
- * @param  {string}              location                 [description]
- * @param  {object}              coordinates              Object of map bounds, lngLat coordinates
- * @param  {string}              activeHostConfiguredName String of active host
- * @param  {object}              actions                  Object of which actions should be called
+ * @param  {Object}              params                   Object of values to match
+ * @param  {Object}              filters                  Filters to match, e.g. date range
+ * @param  {String}              location                 Page location
+ * @param  {Object}              coordinates              Object of map bounds, lngLat coordinates
+ * @param  {String}              activeHostConfiguredName String of active host
+ * @param  {Object}              actions                  Object of which actions should be called
+ * @param  {Object}              aggregation              Aggregation settings
+ * @returns {Promise}
  */
 export function getCitiesWithinBounds({ params, filters, location, coordinates, activeHostConfiguredName, actions, aggregation } = {}) {
   const { byCityOpts } = buildFetchOpts({
