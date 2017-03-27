@@ -59,7 +59,7 @@ export const fetchAll = ({ brand }) => {
  * @param  {[type]} payload [data to create account with]
  */
 export const create = ({ brand, payload }) =>
-  axios.post(baseURL(brand), payload)
+  axios.post(baseURL(brand), payload, { headers: { 'Content-Type': 'application/json' } } )
     .then(({ data }) => {
 
       const brandAccounts = {
@@ -77,7 +77,7 @@ export const create = ({ brand, payload }) =>
  * @param  {[type]} payload [data to update account with]
  */
 export const update = ({ brand, id, payload }) =>
-  axios.put(`${baseURL(brand)}/${id}`, payload)
+  axios.put(`${baseURL(brand)}/${id}`, payload, { headers: { 'Content-Type': 'application/json' } } )
     .then(({ data }) => {
 
       const brandAccounts = {

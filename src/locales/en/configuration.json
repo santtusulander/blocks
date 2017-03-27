@@ -59,6 +59,12 @@
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
   "portal.policy.edit.matcher.value.text": "Value",
 
+  "portal.configuration.condition.and": "AND",
+  "portal.configuration.condition.or": "OR",
+
+  "portal.configuration.traffic.rules.rule.modal.create.title": "Add Traffic Rule",
+  "portal.configuration.traffic.rules.rule.modal.edit.title": "Edit Traffic Role",
+
   "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
   "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
   "portal.policy.edit.defaults.allowCookies.text": "UDN Tracking Cookie",
@@ -99,7 +105,7 @@
   "portal.configuration.details.deploymentMode.unknown": "Unknown",
 
   "portal.configuration.gtm.gtmToggle.label": "Allow 3rd-party CDN to serve content",
-  "portal.configuration.gtm.gtmToggle.help": "Allow 3rd-party CDN to serve content help",
+  "portal.configuration.gtm.gtmToggle.help": "User can enable splitting traffic between the UDN and 3rd party CDNs by using the GTM",
   "portal.configuration.gtm.gtmToggle.readOnly.text": "Global Traffic Manager is {status}",
   "portal.configuration.gtm.gtmToggle.readOnly.enabled.text": "enabled",
   "portal.configuration.gtm.gtmToggle.readOnly.disabled.text": "disabled",
@@ -112,7 +118,7 @@
   "portal.configuration.gtm.trafficConfig.cName.required": "CNAME is required",
   "portal.configuration.gtm.trafficConfig.cName.validation.text": "Please enter a valid CNAME",
   "portal.configuration.gtm.trafficConfig.ROW.label": "Rest-of-world traffic served by 3rd party",
-  "portal.configuration.gtm.trafficConfig.ROW.help": "Rest-of-world traffic served by 3rd party help",
+  "portal.configuration.gtm.trafficConfig.ROW.help": "When enabled this nominates the 3rd party network to be the default CDN for delivering all traffic for which there are no explicit GTM rules defined",
   "portal.configuration.gtm.trafficConfig.ROW.readOnly.enabled.text": "Yes",
   "portal.configuration.gtm.trafficConfig.ROW.readOnly.disabled.text": "No",
   "portal.configuration.gtm.table.label": "Traffic Rules",
@@ -120,6 +126,9 @@
   "portal.configuration.gtm.table.match.label": "Match conditions",
   "portal.configuration.gtm.table.actions.label": "Actions",
   "portal.configuration.gtm.table.empty.text": "No traffic rules have been added yet.",
+  "portal.configuration.gtm.policyWeight.label": "Percentage of traffic that UDN will serve",
+  "portal.configuration.gtm.policyWeight.percentageByMainProvider.percentage": "% UDN",
+  "portal.configuration.gtm.policyWeight.secondaryProvider.percentage": "{percentage}% served by 3rd party {provider}",
 
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
@@ -169,5 +178,8 @@
   "portal.configurationList.by.text": "By",
   "portal.configurationList.status.text": "Status",
   "portal.configurationList.activeVersion.text": "Active Version",
-  "portal.configurationList.belongsTo.text": "Belongs to"
+  "portal.configurationList.belongsTo.text": "Belongs to",
+
+  "portal.policy.edit.policies.matchType.action.all": "ALL conditions match",
+  "portal.policy.edit.policies.matchType.action.any": "ANY conditions match"
 }

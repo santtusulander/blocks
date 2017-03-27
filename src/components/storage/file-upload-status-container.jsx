@@ -21,7 +21,7 @@ class FileUploadStatus extends React.Component {
   }
 
   render() {
-    const { uploads, inlineStyle } = this.props
+    const { uploads, inlineStyle, cancelAll } = this.props
     return (
       <div className='file-upload-status-wrapper' style={inlineStyle}>
         <div className='file-upload-status-header'>
@@ -41,7 +41,7 @@ class FileUploadStatus extends React.Component {
           <div className='file-upload-status-cancel-link'>
             <Button
               bsStyle="link"
-              onClick={() => {}}>
+              onClick={() => cancelAll(uploads)}>
               <FormattedMessage id="portal.storage.uploadContent.cancel.text" />
             </Button>
           </div>
@@ -54,6 +54,7 @@ class FileUploadStatus extends React.Component {
 
 FileUploadStatus.displayName = "FileUploadStatus"
 FileUploadStatus.propTypes = {
+  cancelAll: PropTypes.func,
   inlineStyle: PropTypes.object,
   uploads: PropTypes.array
 }
