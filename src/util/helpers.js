@@ -22,23 +22,23 @@ const UNITS_COEFFICIENTS = Map({
 })
 
 export function formatBytes(bytes, setMax, customFormat) {
-  let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format(customFormat || '0,0') + ' PB'
+  let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format(customFormat || '0,0.0') + ' PB'
   bytes         = bytes || 0
 
   if((setMax || bytes) < BYTE_BASE) {
-    formatted = numeral(bytes).format(customFormat || '0,0') + ' B'
+    formatted = numeral(bytes).format(customFormat || '0,0.0') + ' B'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
-    formatted = numeral(bytes / BYTE_BASE).format(customFormat || '0,0') + ' KB'
+    formatted = numeral(bytes / BYTE_BASE).format(customFormat || '0,0.0') + ' KB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format(customFormat || '0,0') + ' MB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format(customFormat || '0,0.0') + ' MB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format(customFormat || '0,0') + ' GB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format(customFormat || '0,0.0') + ' GB'
   }
   else if((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
-    formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format(customFormat || '0,0') + ' TB'
+    formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format(customFormat || '0,0.0') + ' TB'
   }
   return formatted
 }
