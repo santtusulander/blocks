@@ -16,7 +16,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT, TA_TYPE_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 const validate = ({ shared_key }) => {
@@ -45,21 +45,20 @@ export class TokenAuth extends React.Component {
     const { set } = this.props
 
     this.props.change('shared_key', set.get('shared_key'))
-    this.props.change('schema', set.get('schema') || Immutable.List(SCHEMA_DEFAULT))
-    this.props.change('encryption', set.get('encryption') || ENCRYPTION_DEFAULT)
-    this.props.change('type', set.get('type'))
+    this.props.change('schema', set.get('schema', Immutable.List(SCHEMA_DEFAULT)))
+    this.props.change('encryption', set.get('encryption', ENCRYPTION_DEFAULT))
+    this.props.change('type', set.get('type', TA_TYPE_DEFAULT))
     this.props.change('streaming_ttl', set.get('streaming_ttl'))
     this.props.change('streaming_add_ip_addr', set.get('streaming_add_ip_addr'))
     this.props.change('streaming_encryption', set.get('streaming_encryption'))
   }
 
   saveChanges(values) {
-    const { close, invalid, changeValue, path} = this.props
+    const { invalid, path} = this.props
     const { type, shared_key, encryption, streaming_ttl, streaming_add_ip_addr, schema, streaming_encryption } = values
-    const setPath = path.slice(0, -1)
 
     if (!invalid) {
-      const newSet = Immutable.fromJS({tokenauth: {
+      const newSet = Immutable.fromJS({
         type,
         shared_key,
         schema,
@@ -67,10 +66,9 @@ export class TokenAuth extends React.Component {
         streaming_add_ip_addr,
         encryption,
         streaming_encryption
-      }})
+      })
 
-      changeValue(setPath, newSet)
-      close()
+      this.props.saveAction(path, this.props.setKey, newSet)
     }
   }
 
@@ -223,6 +221,7 @@ TokenAuth.propTypes = {
   invalid: React.PropTypes.bool,
   path: React.PropTypes.instanceOf(Immutable.List),
   set: React.PropTypes.instanceOf(Immutable.Map),
+  setKey: React.PropTypes.string,
   shared_key: React.PropTypes.string,
   ...reduxFormPropTypes
 }
