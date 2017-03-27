@@ -68,8 +68,8 @@ export function convertToBytes(value, units) {
   }
 }
 
-export function formatBytesToUnit(value, unit) {
-  const formatted = separateUnit(formatBytes(value))
+export function formatBytesToUnit(value, unit, format) {
+  const formatted = separateUnit(formatBytes(value, null, format || '0,0'))
   const coefficient = UNITS_COEFFICIENTS.get(formatted.unit) / UNITS_COEFFICIENTS.get(unit)
   return Number(numeral(formatted.value * coefficient).format('0[.000]'))
 }
@@ -440,11 +440,11 @@ export function getRolesForUser(user, roles) {
  * @param pattern
  * @returns {boolean}
  */
-export function matchesRegexp(string, pattern) {
+export function matchesRegexp(string, pattern, caseSensitive = false) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = new RegExp(pattern, 'i');
+  var testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
   return testPattern.test(string);
 }
 
