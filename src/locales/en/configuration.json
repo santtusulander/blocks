@@ -126,6 +126,9 @@
   "portal.configuration.gtm.table.match.label": "Match conditions",
   "portal.configuration.gtm.table.actions.label": "Actions",
   "portal.configuration.gtm.table.empty.text": "No traffic rules have been added yet.",
+  "portal.configuration.gtm.policyWeight.label": "Percentage of traffic that UDN will serve",
+  "portal.configuration.gtm.policyWeight.percentageByMainProvider.percentage": "% UDN",
+  "portal.configuration.gtm.policyWeight.secondaryProvider.percentage": "{percentage}% served by 3rd party {provider}",
 
   "portal.configuration.updateSuccessfull.text": "Configurations successfully saved",
   "portal.configuration.updateFailed.text": "Saving configurations failed: {reason}",
