@@ -49,16 +49,19 @@ import ConfigurationDetails from './components/configuration/details'
 import ConfigurationDefaults from './components/configuration/defaults'
 import ConfigurationPolicies from './components/configuration/policies'
 import ConfigurationSecurity from './components/configuration/security'
-import ConfigurationStreaming from './components/configuration/streaming'
+import ConfigurationGlobalTrafficManager from './components/configuration/gtm'
+
 
 import Accounts from './containers/accounts'
 import Configuration from './containers/configuration'
 import Dashboard from './containers/dashboard'
 // UDNP-2218: Route to "Having Trouble?" page. Not yet supported by backend.
 // import HavingTrouble from './containers/having-trouble'
-import Groups from './containers/groups'
+import AccountContainer from './containers/content/account'
 import Network from './containers/network/network'
-import Hosts from './containers/hosts'
+
+import GroupContainer from './containers/content/group'
+
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
@@ -256,8 +259,8 @@ export const getRoutes = store => {
           <Route component={ContentTransition}>
             <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
-            <Route path={routes.contentGroups} component={Groups}/>
-            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+            <Route path={routes.contentGroups} component={AccountContainer}/>
+            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(GroupContainer)}/>
           </Route>
 
           {/* Properties - routes */}
@@ -276,7 +279,7 @@ export const getRoutes = store => {
             <Route path={routes.configurationTabPolicies} component={ConfigurationPolicies}>
               <Route path={routes.configurationTabPoliciesEditPolicy}/>
             </Route>
-            <Route path={routes.configurationTabStreaming} component={ConfigurationStreaming}/>
+            <Route path={routes.configurationTabGlobalTrafficManager} component={ConfigurationGlobalTrafficManager}/>
           </Route>
 
           {/* Storage - routes */}

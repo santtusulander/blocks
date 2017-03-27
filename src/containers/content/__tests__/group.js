@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
@@ -11,19 +11,18 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.unmock('../../redux/modules/fetching/actions.js')
-jest.unmock('../hosts.jsx')
-jest.unmock('../../util/status-codes')
-import { Hosts } from '../hosts.jsx'
+jest.unmock('../../../redux/modules/fetching/actions.js')
+jest.unmock('../group.jsx')
+jest.unmock('../../../util/status-codes')
+import Group from '../group.jsx'
 
-function hostActionsMaker() {
+function propertyActionsMaker() {
   return {
-    startFetching: jest.fn(),
-    fetchHosts: jest.fn(),
-    createHost: jest.fn(),
-    deleteHost: jest.fn()
+    remove: jest.fn(),
+    create: jest.fn()
   }
 }
+
 function uiActionsMaker() {
   return {
     toggleChartView: jest.fn()
@@ -31,6 +30,18 @@ function uiActionsMaker() {
 }
 
 const urlParams = {brand: 'udn', account: '1', group: '1'}
+
+const fakePayload = {
+  services:[{
+    service_type: "large",
+    deployment_mode: 'production',
+    configurations: [{
+      edge_configuration: {
+        published_name: 'bbb'
+      }
+    }]
+  }]
+}
 
 const fakeMetrics = Immutable.fromJS([
   {
@@ -57,17 +68,18 @@ const fakeMetrics = Immutable.fromJS([
   }
 ])
 
-describe('Hosts', () => {
+describe('Group', () => {
   let props = {}
   let subject = null
   const fetchGroupData = () => Promise.resolve()
   const fetchMetricsData = jest.fn()
-  const hostActions = hostActionsMaker()
+  const propertyActions = propertyActionsMaker()
   beforeEach(() => {
     subject = viewingChart => {
       props = {
-        hostActions,
         uiActions: uiActionsMaker(),
+        deleteProperty: propertyActions.remove,
+        createProperty: propertyActions.create,
         fetchGroupData,
         fetchMetricsData,
         fetching: true,
@@ -77,7 +89,7 @@ describe('Hosts', () => {
         metrics: fakeMetrics,
         viewingChart: viewingChart || false
       }
-      return shallow(<Hosts {...props}/>)
+      return shallow(<Group {...props}/>)
     }
   })
   it('should exist', () => {
@@ -106,12 +118,12 @@ describe('Hosts', () => {
   });
 
   it('should add a new host when called', () => {
-    subject().instance().createNewHost('bbb','production')
-    expect(hostActions.createHost.mock.calls[0]).toEqual(['udn','1','1','bbb','production'])
+    subject().instance().createNewHost('bbb','production', 'large')
+    expect(propertyActions.create.mock.calls[0]).toEqual(['udn','1','1', fakePayload])
   })
 
   it('should delete a host when clicked', () => {
     subject().instance().deleteHost('aaa')
-    expect(hostActions.deleteHost.mock.calls[0]).toEqual(['udn','1','1','aaa'])
+    expect(propertyActions.remove.mock.calls[0]).toEqual(['udn','1','1','aaa'])
   })
 })

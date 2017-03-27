@@ -3,12 +3,12 @@ import Reader from './file-reader'
 import * as api from '../api'
 
 /**
- * _accessKey, _onProgress, _gateway - using Symbols as private members of Uploader
+ * _accessKey, _uploadHandlers, _gateway - using Symbols as private members of Uploader
  * @type {Symbol}
  * @private
  */
 const _accessKey = Symbol('accessKey')
-const _onProgress= Symbol('onProgress')
+const _uploadHandlers = Symbol('uploadHandlers')
 const _gateway = Symbol('gateway')
 
 /**
@@ -25,20 +25,20 @@ class Uploader {
    * Initialize and return new Uploader instance
    * @param accessKey {string} - upload access key
    * @param gateway {string} - gateway host
-   * @param onProgress {function} - handler wrapper
+   * @param uploadHandlers {object} - handlers wrapper
    * @returns {Uploader}
    */
-  static initialize(accessKey, gateway, onProgress) {
+  static initialize(accessKey, gateway, uploadHandlers) {
     if (!arguments.length || [...arguments].includes(undefined)) {
       throw new Error(`${Uploader.displayName} initialization failed`)
     }
 
-    return new Uploader(accessKey, gateway, onProgress)
+    return new Uploader(accessKey, gateway, uploadHandlers)
   }
 
-  constructor(accessKey, gateway, onProgress) {
+  constructor(accessKey, gateway, uploadHandlers) {
     this[_accessKey] = accessKey
-    this[_onProgress] = onProgress
+    this[_uploadHandlers] = uploadHandlers
     this[_gateway] = gateway
 
     this.openFileDialog = this.openFileDialog.bind(this)
@@ -54,8 +54,8 @@ class Uploader {
     return this[_gateway]
   }
 
-  get onProgress() {
-    return this[_onProgress]
+  get uploadHandlers() {
+    return this[_uploadHandlers]
   }
 
   /**
@@ -63,7 +63,7 @@ class Uploader {
    * @param file {File} - HTML File object to upload
    */
   uploadFile(file) {
-    api.uploadFile(this.accessKey, this.gateway, file, this.onProgress)
+    api.uploadFile(this.accessKey, this.gateway, file, this.uploadHandlers)
   }
 
   /**
@@ -71,7 +71,7 @@ class Uploader {
    * @param files []
    */
   processFiles(files) {
-    for (const file of files) Reader.readFile(file).then(this.uploadFile)
+    [...files].forEach(file => Reader.readFile(file).then(this.uploadFile))
   }
 
   /**

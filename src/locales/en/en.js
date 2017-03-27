@@ -159,6 +159,9 @@ const TRANSLATED_MESSAGES = {
   'portal.analytics.tabs.onOffNet.groupTitle': 'Group SP On/Off Net',
   'portal.analytics.tabs.onOffNet.accountTitle': 'Account SP On/Off Net',
   'portal.analytics.tabs.storage.label': 'Storage',
+  'portal.analytics.tabs.storage.storageTitle': 'Storage',
+  'portal.analytics.tabs.storage.groupTitle': 'Group Storage',
+  'portal.analytics.tabs.storage.accountTitle': 'Account Storage',
   'portal.analytics.tabs.serviceProviders.propertyTitle': 'Property SP Contribution',
   'portal.analytics.tabs.serviceProviders.groupTitle': 'Group SP Contribution',
   'portal.analytics.tabs.serviceProviders.accountTitle': 'Account SP Contribution',
@@ -433,8 +436,14 @@ const TRANSLATED_MESSAGES = {
   'portal.content.addHost.deploymentMode.text': 'Deployment Mode',
   'portal.content.addHost.deploymentMode.required': 'Deployment Mode is required',
 
+  'portal.content.addHost.serviceType.text': 'Service Type',
+  'portal.content.addHost.serviceType.required': 'Service Type is required',
+
   'portal.content.addHost.trial.text': 'Trial',
   'portal.content.addHost.production.text': 'Production',
+
+  'portal.content.addHost.large.text': 'Media Delivery',
+  'portal.content.addHost.msd.text': 'VOD Streaming',
 
   'portal.contentItemList.lastEdited.text': 'Last Edited',
 
@@ -518,17 +527,28 @@ const TRANSLATED_MESSAGES = {
   'portal.accountManagement.users.text': 'USERS',
   'portal.accountManagement.dns.text': 'DNS',
   'portal.accountManagement.roles.text': 'ROLES',
+  'portal.accountManagement.groups.created': 'Group created.',
+  'portal.accountManagement.groups.delete': 'Group deleted.',
 
   'portal.accountManagement.storages.text': 'STORAGE',
   'portal.accountManagement.properties.text': 'PROPERTIES',
   'portal.accountManagement.accountUpdated.text': 'Account detail updates saved.',
   'portal.accountManagement.accountCreated.text': 'Account created.',
+  'portal.accountManagement.accountDeleted.text': 'Account deleted.',
   'portal.accountManagement.groupUpdated.text': 'Group detail updates saved.',
   'portal.accountManagement.groupCreated.text': 'Group created.',
   'portal.accountManagement.groupDeleted.text': 'Group deleted.',
+  'portal.accountManagement.userCreated.text': 'User added.',
   'portal.accountManagement.userUpdated.text': 'Updates to user saved.',
   'portal.accountManagement.passwordUpdated.text': 'User password updated.',
   'portal.accountManagement.propertyDeleted.text': 'Property {propertyName} deleted.',
+  'portal.accountManagement.dnsCreated.text': 'Record added.',
+  'portal.accountManagement.dnsUpdated.text': 'Record saved',
+  'portal.accountManagement.dnsDeleted.text': 'Record deleted',
+  'portal.accountManagement.dnsDeleted.failed.text': 'Deleting record failed',
+  'portal.accountManagement.dns.domain.created.text': 'Domain created.',
+  'portal.accountManagement.dns.domain.updated.text': 'Domain saved.',
+  'portal.accountManagement.dns.domain.deleted.text': 'Domain deleted.',
 
   'portal.accountManagement.dns.form.new.text' : 'New Domain',
   'portal.accountManagement.dns.form.edit.text' : 'New Domain',
