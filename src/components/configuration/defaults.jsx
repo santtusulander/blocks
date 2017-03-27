@@ -21,7 +21,7 @@ import {
 } from '../../util/policy-config'
 import { getActiveMatchSetForm, secondsToUnit, secondsFromUnit } from './helpers'
 import { MODIFY_PROPERTY } from '../../constants/permissions'
-import { POLICY_TYPES, DEFAULT_MATCH } from '../../constants/property-config'
+import { POLICY_TYPES, DEFAULT_CONDITION} from '../../constants/property-config'
 
 const policyPath = Immutable.List([POLICY_TYPES.DEFAULT, 'policy_rules'])
 const getNameIndex = config => config.getIn(policyPath)
@@ -63,7 +63,7 @@ class ConfigurationDefaults extends React.Component {
   addRule(e) {
     e.preventDefault()
     this.setState({ isEditingRule: false })
-    const defaultPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT, 'policy_rules']).push(Immutable.fromJS(DEFAULT_MATCH))
+    const defaultPolicies = this.props.config.getIn([POLICY_TYPES.DEFAULT, 'policy_rules']).push(Immutable.fromJS(DEFAULT_CONDITION))
     this.props.changeValue([POLICY_TYPES.DEFAULT, 'policy_rules'], defaultPolicies)
     this.props.activateRule([POLICY_TYPES.DEFAULT, 'policy_rules', defaultPolicies.size - 1])
     this.props.activateMatch([POLICY_TYPES.DEFAULT, 'policy_rules', defaultPolicies.size - 1, 'match'])

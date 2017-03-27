@@ -8,7 +8,7 @@ class AnalysisHorizontalBar extends React.Component {
     return this.props.xAxisFormat ?
       numeral(val).format(this.props.xAxisFormat)
     : this.props.xAxisCustomFormat ?
-      this.props.xAxisCustomFormat(numeral(val).format('0'))
+      this.props.xAxisCustomFormat(numeral(val).format('0'), null, '0,0.0')
     : numeral(val).format('0 a')
   }
   render() {
