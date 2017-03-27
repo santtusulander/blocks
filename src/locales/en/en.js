@@ -33,7 +33,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.list.search.empty.text': 'No accounts found',
 
   'portal.dnsRecord.delete.title': 'Delete Record?',
-  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
+  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in interruption of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
   'portal.dnsDomain.delete.disclaimer.text': 'Are you sure you want to delete {itemToDelete}?',
