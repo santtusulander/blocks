@@ -63,7 +63,7 @@ class MatchesForm extends Component {
     let title = <FormattedMessage id="portal.configuration.traffic.rules.matches.modal.title" />
     let subtitle = <FormattedMessage id="portal.configuration.traffic.rules.matches.modal.subtitle" />
     let matchType = undefined
-    let Form = this.renderMatchSelection
+    let Form = this.MatchSelection
 
     switch(this.props.chosenMatch.matchType) {
 
