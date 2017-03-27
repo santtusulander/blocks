@@ -47,6 +47,7 @@ class FieldFormGroupAsnLookup extends Component {
     return (
       <Field
         name={this.props.name || 'AsnLookup'}
+        disabled={this.props.disabled}
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}
@@ -66,6 +67,7 @@ class FieldFormGroupAsnLookup extends Component {
 FieldFormGroupAsnLookup.displayName = 'FieldFormGroupAsnLookup'
 FieldFormGroupAsnLookup.propTypes = {
   asnActions: PropTypes.object,
+  disabled: PropTypes.bool,
   intl: PropTypes.object,
   name: PropTypes.string,
   withoutLabel: PropTypes.bool
