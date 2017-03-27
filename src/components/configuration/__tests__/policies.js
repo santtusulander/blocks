@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 jest.unmock('../policies.jsx')
 import ConfigurationPolicies from '../policies.jsx'
 import ConfigurationSidebar from '../sidebar.jsx'
-import { POLICY_TYPES, DEFAULT_MATCH } from '../../../constants/property-config'
+import { POLICY_TYPES, DEFAULT_CONDITION } from '../../../constants/property-config'
 
 const fakeConfig = Immutable.fromJS(
 {
