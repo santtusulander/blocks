@@ -1,13 +1,18 @@
 import { createAction } from 'redux-actions'
-import { UPLOAD_FILE } from './actionTypes'
+import * as actionTypes from './actionTypes'
 
-const uploadActionParser = (name, { lengthComputable, loaded, total }) => {
-  const progress = lengthComputable ? parseInt(loaded / total * 100) : 0
+const uploadStarted = (fileName, xhr) => ({[ fileName ]: { xhr }})
 
-  return { [name]: { progress, status }}
-}
+const uploading = (fileName, xhr, progress) => ({[ fileName ]: { xhr, progress }})
+
+const uploadFinished = (fileName) => fileName
+
+const uploadFailure = (fileName) => ({[ fileName ]: { error: true }})
 
 export default {
-  [UPLOAD_FILE]: createAction(UPLOAD_FILE, uploadActionParser)
+  [actionTypes.UPLOAD_FILE]: createAction(actionTypes.UPLOAD_FILE, uploadStarted),
+  [actionTypes.UPLOAD_PROGRESS]: createAction(actionTypes.UPLOAD_PROGRESS, uploading),
+  [actionTypes.UPLOAD_FINISHED]: createAction(actionTypes.UPLOAD_FINISHED, uploadFinished),
+  [actionTypes.UPLOAD_FAILURE]: createAction(actionTypes.UPLOAD_FAILURE, uploadFailure)
 }
 
