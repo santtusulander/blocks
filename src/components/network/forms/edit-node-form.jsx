@@ -311,8 +311,7 @@ class NetworkEditNodeForm extends React.Component {
       nodes,
       pristine,
       submitting,
-      error,
-      readOnly
+      error
     } = this.props
 
     const { hasMultipleNodes } = this.state
