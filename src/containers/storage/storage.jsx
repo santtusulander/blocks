@@ -40,6 +40,8 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import { getContentUrl } from '../../util/routes.js'
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
+const FORMAT = '0,0.0'
+
 class Storage extends Component {
   constructor(props) {
     super(props)
@@ -270,9 +272,9 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const average = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'average']) : 0
-  const current = formatBytesToUnit(average, unit)
-  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
+  const ending = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'ending']) : 0
+  const current = formatBytesToUnit(ending, unit, FORMAT)
+  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit, FORMAT) : 0
   const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
   const locations = storage.get('clusters').map((cluster) => {
