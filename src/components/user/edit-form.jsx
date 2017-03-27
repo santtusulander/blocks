@@ -421,7 +421,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'user-edit-form',
   validate: validate,
   onSubmitFail: (errors, dispatch) => {
-    if(errors.current_password) {
+    if(errors && errors.current_password) {
       dispatch( blur('user-edit-form', 'current_password', '') )
     }
   }
