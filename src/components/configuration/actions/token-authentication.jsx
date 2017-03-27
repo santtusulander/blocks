@@ -179,9 +179,11 @@ export class TokenAuth extends React.Component {
                   this.props.uiActions.showInfoDialog({
                     okButton: true,
                     cancelButton: true,
-                    auxiliaryButton: true,
-                    auxiliaryButtonHandler: () => {},
-                    auxiliaryButtonText: 'SAMPle code'
+                    cancel: () => this.props.uiActions.hideInfoDialog(),
+                    auxiliaryButton: {
+                      handler: () => {},
+                      text: 'SAMPle code'
+                    }
                   })
                 }}
               >

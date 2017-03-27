@@ -18,8 +18,6 @@ class ModalWindow extends React.Component {
   render() {
     const {
       auxiliaryButton,
-      auxiliaryButtonHandler,
-      auxiliaryButtonText,
       cancel,
       cancelButton,
       children,
@@ -39,6 +37,7 @@ class ModalWindow extends React.Component {
       okButton,
       onSubmit,
       reloadButton,
+      secondaryButton,
       stayButton,
       submitButton,
       submitting,
@@ -72,6 +71,14 @@ class ModalWindow extends React.Component {
 
           <Modal.Footer>
             <ButtonToolbar className="pull-right modal-button-toolbar">
+              {secondaryButton &&
+              <Button
+                className="btn-secondary"
+                onClick={secondaryButton.handler}
+                >
+                {secondaryButton.text}
+              </Button>}
+
               {closeButton &&
               <Button
                 bsStyle="primary"
@@ -150,9 +157,9 @@ class ModalWindow extends React.Component {
               {auxiliaryButton &&
               <Button
                 className="btn-secondary pull-left"
-                onClick={auxiliaryButtonHandler}
+                onClick={auxiliaryButton.handler}
                 >
-                {auxiliaryButtonText}
+                {auxiliaryButton.text}
               </Button>}
             </ButtonToolbar>
           </Modal.Footer>
@@ -171,12 +178,13 @@ class ModalWindow extends React.Component {
 
 ModalWindow.displayName = 'ModalWindow'
 ModalWindow.propTypes = {
-  auxiliaryButton: PropTypes.bool,
-  auxiliaryButtonHandler: PropTypes.func,
-  auxiliaryButtonText: PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.node
-  ]),
+  auxiliaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   cancel: PropTypes.func,
   cancelButton: PropTypes.bool,
   children: PropTypes.node,
@@ -197,6 +205,13 @@ ModalWindow.propTypes = {
   okButton: PropTypes.bool,
   onSubmit: PropTypes.func,
   reloadButton: PropTypes.bool,
+  secondaryButton: PropTypes.shape({
+    handler: PropTypes.func,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ])
+  }),
   stayButton: PropTypes.bool,
   submitButton: PropTypes.bool,
   title: PropTypes.oneOfType([
