@@ -11,25 +11,33 @@ import RuleForm from './rule-form'
 
 class TrafficRuleFormContainer extends Component {
 
-  state = { chosenMatch: undefined }
+  constructor(props) {
+    super(props)
+    this.state = { chosenMatch: undefined }
+    this.onSaveRule = this.onSaveRule.bind(this)
+    this.chooseMatch = this.chooseMatch.bind(this)
+    this.onSaveMatch = this.onSaveMatch.bind(this)
+  }
 
-  onSaveRule = (values) => {
+  onSaveRule(values) {
     return this.props.initialValues.name
       ? console.log('edit rule', values)
       : console.log('create rule', values)
   }
 
-  chooseMatch = (chosenMatch) => this.setState({ chosenMatch })
+  chooseMatch(chosenMatch) {
+    this.setState({ chosenMatch })
+  }
 
-  cancelMatch = () => this.setState({ chosenMatch: undefined })
-
-  saveMatch = (match, index) => {
+  onSaveMatch(match, index) {
     typeof index === 'number' ? this.props.editMatch(index, match) : this.props.addMatch(match)
   }
 
   render() {
     const { activeCondition, initialValues, onCancel, handleSubmit, hasMatches } = this.props
     const { chosenMatch } = this.state
+
+    const cancelMatch = () => this.chooseMatch()
     const disabled = !!chosenMatch
 
     return (
@@ -53,9 +61,9 @@ class TrafficRuleFormContainer extends Component {
         </div>
         {chosenMatch &&
           <MatchesForm
-            onCancel={this.cancelMatch}
+            onCancel={cancelMatch}
             chooseMatch={this.chooseMatch}
-            saveMatch={this.saveMatch}
+            saveMatch={this.onSaveMatch}
             chosenMatch={chosenMatch}/>}
       </Modal>
     )
