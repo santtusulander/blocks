@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import IconInfo from '../../components/icons/icon-info'
+import IconProblem from '../../components/icons/icon-problem'
 
 export const BANNER_NOTIFICATION_NO_LOCAL_STORAGE = 'BANNER_NOTIFICATION_NO_LOCAL_STORAGE'
 
@@ -17,7 +17,7 @@ class BannerNotification extends React.Component {
         return (
           <div>
             <span id="container-text" className="text">
-              <IconInfo />
+              <IconProblem />
               <FormattedMessage id="portal.login.localStorage.error.text"/>
             </span>
           </div>
