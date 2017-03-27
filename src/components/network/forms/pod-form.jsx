@@ -256,7 +256,7 @@ const PodForm = ({
 
   return (
     <form className="sp-pod-form" onSubmit={handleSubmit(onSave)}>
-      { //This block will be shown when SubmissionError has been thrown form async call
+      {
         error &&
         <p className='has-error'>
           <span className='help-block'>{error}</span>
