@@ -6,9 +6,6 @@ import { injectIntl } from 'react-intl'
 import SidePanel from '../../../components/side-panel'
 import RoutingDaemonForm from '../../../components/network/forms/routing-daemon-form'
 
-import checkPermissions from '../../../util/permissions'
-import * as PERMISSIONS from '../../../constants/permissions'
-
 class RoutingDaemonFormContainer extends React.Component {
 
   constructor(props) {
