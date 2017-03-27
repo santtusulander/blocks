@@ -59,7 +59,9 @@ import Dashboard from './containers/dashboard'
 // import HavingTrouble from './containers/having-trouble'
 import Groups from './containers/groups'
 import Network from './containers/network/network'
-import Hosts from './containers/hosts'
+
+import GroupContainer from './containers/content/group'
+
 import Login from './containers/login'
 import Main from './containers/main'
 import NotFoundPage from './containers/not-found-page'
@@ -258,7 +260,7 @@ export const getRoutes = store => {
             <Route path={routes.contentBrand} component={UserCanListAccounts(store)(Accounts)}/>
             <Route path={routes.contentAccount} component={UserCanViewAccountDetail(store)(Accounts)}/>
             <Route path={routes.contentGroups} component={Groups}/>
-            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(Hosts)}/>
+            <Route path={routes.contentGroup} component={UserCanViewHosts(store)(GroupContainer)}/>
           </Route>
 
           {/* Properties - routes */}
