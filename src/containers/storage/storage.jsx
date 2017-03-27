@@ -47,7 +47,7 @@ class Storage extends Component {
     super(props)
 
     this.state = {
-      asperaUpload: false,
+      asperaUpload: true,
       fileUploader: null
     }
 
@@ -86,10 +86,11 @@ class Storage extends Component {
     if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
   }
 
-  componentDidMount() {
-    const { brand, account, group, storage } = this.props.params
-    this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
-  }
+  // UDNP-3205 - Hide HTTP File Upload
+  // componentDidMount() {
+  //   const { brand, account, group, storage } = this.props.params
+  //   this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
+  // }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
     if (group && !hasStorageService) {
@@ -211,7 +212,8 @@ Storage.propTypes = {
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
-  initStorageAccessKey: PropTypes.func,
+  // UDNP-3205 - Hide HTTP File Upload
+  // initStorageAccessKey: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
