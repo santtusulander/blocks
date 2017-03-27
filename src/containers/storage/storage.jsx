@@ -40,12 +40,14 @@ import { STORAGE_SERVICE_ID } from '../../constants/service-permissions'
 import { getContentUrl } from '../../util/routes.js'
 import { formatBytesToUnit, formatBytes, separateUnit } from '../../util/helpers'
 
+const FORMAT = '0,0.0'
+
 class Storage extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      asperaUpload: false,
+      asperaUpload: true,
       fileUploader: null
     }
 
@@ -84,10 +86,11 @@ class Storage extends Component {
     if (!this.props.group && this.props.params) this.props.fetchGroupData(this.props.params)
   }
 
-  componentDidMount() {
-    const { brand, account, group, storage } = this.props.params
-    this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
-  }
+  // UDNP-3205 - Hide HTTP File Upload
+  // componentDidMount() {
+  //   const { brand, account, group, storage } = this.props.params
+  //   this.props.initStorageAccessKey(brand, account, group, storage).then(this.initFileUploader)
+  // }
 
   componentWillReceiveProps ({ group, hasStorageService, params}) {
     if (group && !hasStorageService) {
@@ -209,7 +212,8 @@ Storage.propTypes = {
   gatewayHostname: PropTypes.string,
   group: PropTypes.instanceOf(Map),
   hasStorageService: PropTypes.bool,
-  initStorageAccessKey: PropTypes.func,
+  // UDNP-3205 - Hide HTTP File Upload
+  // initStorageAccessKey: PropTypes.func,
   params: PropTypes.object,
   router: PropTypes.object,
   storage: PropTypes.instanceOf(Map),
@@ -270,9 +274,9 @@ const getMockContents = (storage) => (
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))
-  const average = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'average']) : 0
-  const current = formatBytesToUnit(average, unit)
-  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit) : 0
+  const ending = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'ending']) : 0
+  const current = formatBytesToUnit(ending, unit, FORMAT)
+  const peak = storageMetrics ? formatBytesToUnit(storageMetrics.getIn(['totals', storageType, 'peak']), unit, FORMAT) : 0
   const gain = storageMetrics ? storageMetrics.getIn(['totals', storageType, 'percent_change']) : 0
 
   const locations = storage.get('clusters').map((cluster) => {

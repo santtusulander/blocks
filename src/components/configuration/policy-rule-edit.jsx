@@ -153,10 +153,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     const ruleType = this.props.rulePath.get(0, null)
-    const ruleMatchType = this.props.rule.get('rule_body').get('match_type') || 'all';
+    const ruleMatchType = this.props.rule.get('rule_body').get('match_type', 'or');
 
     return (
-      <form className="configuration-policy-rule-edit" onSubmit={this.submitForm}>
+      <form className="configuration-rule-edit" onSubmit={this.submitForm}>
         <Modal.Header>
           <h1><FormattedMessage id={ModalTitle}/></h1>
         </Modal.Header>
@@ -318,8 +318,8 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               value={ruleMatchType}
               disabled={flattenedPolicy.matches.length < 2}
               options={[
-                {value: 'all', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
-                {value: 'any', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
+                {value: 'and', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.all" />},
+                {value: 'or', label: <FormattedMessage id="portal.policy.edit.policies.matchType.action.any" />}
               ]}/>
           </FormGroup>
 

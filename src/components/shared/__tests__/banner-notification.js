@@ -27,11 +27,11 @@ describe('BannerNotification', () => {
     expect(notification.find("#container-text").length).toBe(0)
   })
 
-  it('should display IconInfo when state is BANNER_NOTIFICATION_NO_LOCAL_STORAGE', () => {
+  it('should display IconProblem when state is BANNER_NOTIFICATION_NO_LOCAL_STORAGE', () => {
     const notification = shallow(
       <BannerNotification notificationCode={BANNER_NOTIFICATION_NO_LOCAL_STORAGE}/>
     )
 
-    expect(notification.find("IconInfo").length).toBe(1)
+    expect(notification.find("IconProblem").length).toBe(1)
   })
 })

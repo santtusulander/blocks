@@ -41,7 +41,7 @@ export function getMatchFilterType(item) {
     return item.get('inverted') ? 'does_not_empty' : 'empty'
   }
 
-  throw new Error('Unexpected condition type')
+  return item.get('type')
 }
 
 export function policyContainsMatchField(policy, field, count) {

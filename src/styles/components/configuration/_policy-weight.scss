@@ -1,0 +1,120 @@
+$thumb-width: 24px;
+$slidre-height: 4px;
+$slider-vertical-margin: 20px;
+$slider-width: 60%;
+
+.policy-weight {
+  padding: 20px;
+  background-color: #367085;
+
+  .policy-weight-label {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .policy-weight-scale {
+    display: inline-block;
+    width: $slider-width;
+    padding-right: 10px;
+
+    .policy-weight-slider {
+      position: relative;
+      z-index: 10; //TODO: abstract this value in the scope of UDNP-2181
+      width: 100%;
+      height: $slidre-height;
+      margin: $slider-vertical-margin 0;
+      cursor: pointer;
+      background-color: rgba($black, 0.3);
+      background-image: linear-gradient($gradient-teal, $gradient-teal);
+      background-repeat: no-repeat;
+      border-radius: 10px;
+      outline: none;
+      -webkit-appearance: none;
+
+      &::-moz-range-track {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+      }
+
+      &::-moz-focus-outer {
+        border: 0;
+      }
+
+      &::-moz-range-thumb {
+        width: $thumb-width;
+        height: $thumb-width;
+        background: $gradient-teal;
+        border: 0;
+        border-radius: 50%;
+      }
+
+      &::-webkit-slider-thumb {
+        position: relative;
+        left: 0;
+        width: $thumb-width;
+        height: $thumb-width;
+        background: $gradient-teal;
+        border: 0;
+        border-radius: 50%;
+        -webkit-appearance: none;
+      }
+    }
+
+    .ruler {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      .tick {
+        position: relative;
+        width: $thumb-width;
+        height: 24px;
+        flex-grow: 0;
+
+        &:last-child {
+          direction: rtl;
+        }
+
+        &::before {
+          position: relative;
+          top: calc(-#{$slider-vertical-margin} - #{$slidre-height});
+          display: block;
+          width: 4px;
+          height: $slidre-height;
+          margin: auto;
+          background-color: rgba($black, 0.4);
+          content: '';
+
+        }
+
+        &:last-child::before {
+          right: 0;
+          width: 5px;
+          margin: 0;
+          border-top-right-radius: 50%;
+          border-bottom-right-radius: 50%;
+        }
+
+        .tick-label {
+          position: absolute;
+        }
+      }
+
+    }
+
+  }
+
+  .policy-weight-percentage {
+    display: inline-block;
+    width: 100% - $slider-width;
+    height: 100%;
+    text-align: center;
+    vertical-align: bottom;
+
+    .primary {
+      font-size: 30px;
+      color: $white;
+    }
+  }
+}
