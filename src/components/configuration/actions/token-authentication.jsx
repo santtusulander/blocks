@@ -122,6 +122,7 @@ export class TokenAuth extends React.Component {
 
   showSampleOutputDialog() {
     this.props.uiActions.showInfoDialog({
+      className: 'token-auth-sample-dialog',
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
       children: this.renderSampleOutputDialogChildren(),
       okButton: true,
@@ -136,6 +137,7 @@ export class TokenAuth extends React.Component {
 
   showSampleCodeDialog() {
     this.props.uiActions.showInfoDialog({
+      className: 'token-auth-sample-dialog',
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{hashMethod: 'MD5'}} />,
       children: this.renderSampleCodeDialogChildren(),
       okButton: true,
