@@ -12,11 +12,19 @@ import FormFooterButtons from '../../form/form-footer-buttons'
 import ActionButtons from '../../action-buttons'
 import IconAdd from '../../icons/icon-add'
 
+const conditionOptions = [
+  ['or', <FormattedMessage id="portal.configuration.condition.or" />],
+  ['and', <FormattedMessage id="portal.configuration.condition.and" />]
+]
+
 /**
  * Field array for matches
  */
-const Matches = ({ fields, activeCondition, chooseMatch, disabled }) => {
+const Matches = ({ fields, activeCondition = 'or', chooseMatch, disabled }) => {
+
   const matchArrayLength = fields.length
+  const [ , conditionLabel ] = conditionOptions.find(([ value ]) => value === activeCondition)
+
   return (
     <div className="conditions">
       {fields.map((match, index) => {
@@ -34,7 +42,7 @@ const Matches = ({ fields, activeCondition, chooseMatch, disabled }) => {
                 <Col xs={10} className="condition-info-column" onClick={onEdit}>
 
                   <p>{input.value.label}</p>
-                  {index + 1 !== matchArrayLength && <h4>{activeCondition.toUpperCase()}</h4>}
+                  {index + 1 !== matchArrayLength && <h4>{conditionLabel}</h4>}
 
                 </Col>
                 <Col xs={2} className="text-right">
@@ -79,10 +87,7 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
               <Field
                 disabled={disabled}
                 name="condition"
-                options={[
-                  ['or', <FormattedMessage id="portal.configuration.condition.or" />],
-                  ['and', <FormattedMessage id="portal.configuration.condition.and" />]
-                ]}
+                options={conditionOptions}
                 component={FormGroupSelect}/>}
               <Button
                 disabled={disabled}
