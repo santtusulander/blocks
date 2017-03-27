@@ -44,6 +44,8 @@ export class TokenAuth extends React.Component {
     this.saveChanges = this.saveChanges.bind(this)
     this.closeDetailForm = this.closeDetailForm.bind(this)
     this.showSampleCodeDialog = this.showSampleCodeDialog.bind(this)
+
+    this.notificationTimeout = null
   }
 
   componentWillMount() {
@@ -154,10 +156,20 @@ export class TokenAuth extends React.Component {
 
     try {
       const result = document.execCommand('copy')
-      console.log(result)
+      result
+        ?
+        this.showNotification(<FormattedMessage id="portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.successful.message" />)
+        :
+        this.showNotification(<FormattedMessage id="portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.unsuccessful.message" />)
     } catch (e) {
-      console.log('nope!', e)
+      this.showNotification(<FormattedMessage id="portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.unsuccessful.message" />)
     }
+  }
+
+  showNotification(message) {
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
   }
 
   renderSampleOutputDialogChildren() {
