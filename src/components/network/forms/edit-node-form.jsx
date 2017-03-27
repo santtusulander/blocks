@@ -185,13 +185,13 @@ class NetworkEditNodeForm extends React.Component {
   }
 
   getFields() {
-    const { nodes, nodeValues } = this.props
+    const { nodes, nodeValues, readOnly } = this.props
     const { hasMultipleNodes, expandedFields } = this.state
-
     const fields = [
       {
         name: 'status',
         component: FieldFormGroupSelect,
+        disabled: readOnly,
         options: STATUS_OPTIONS.map(({value, label}) => ({ value, label: this.props.intl.formatMessage({id: label}) })),
         labelId: 'portal.network.item.status.label'
       },
@@ -311,7 +311,8 @@ class NetworkEditNodeForm extends React.Component {
       nodes,
       pristine,
       submitting,
-      error
+      error,
+      readOnly
     } = this.props
 
     const { hasMultipleNodes } = this.state
@@ -424,6 +425,7 @@ NetworkEditNodeForm.propTypes = {
   onCancel: React.PropTypes.func,
   onDelete: React.PropTypes.func,
   onSave: React.PropTypes.func,
+  readOnly: React.PropTypes.bool,
   show: React.PropTypes.bool,
   ...reduxFormPropTypes
 }
