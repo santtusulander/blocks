@@ -34,14 +34,14 @@ var server = new WebpackDevServer(compiler, {
       secure: false
     },
     '/cis_north': {
-      target: 'http://cis-us-dal-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
+      target: 'http://cis-eu-fra1-srvc0-north0.cdx-dev.unifieddeliverynetwork.net:8080',
       secure: false,
       pathRewrite: {
         '/cis_north' : ''
       }
     },
     '/cis_south': {
-      target: 'http://cis-us-dal-srvc0-south0.cdx-dev.unifieddeliverynetwork.net:8080',
+      target: 'http://cis-eu-fra1-srvc0-south0.cdx-dev.unifieddeliverynetwork.net:8080',
       secure: false,
       pathRewrite: {
         '/cis_south' : ''
