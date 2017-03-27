@@ -85,7 +85,7 @@ export function getCitiesWithinBounds({ params, filters, location, coordinates, 
   })
 
   actions.startFetching()
-  actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation }).then(
+  return actions.fetchByCity({...byCityOpts, aggregate_granularity: aggregation }).then(
     actions.finishFetching()
   )
 }
