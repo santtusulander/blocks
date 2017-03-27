@@ -17,7 +17,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS, SAMPLE_CODE_LANGUAGE_OPTIONS, SAMPLE_CODE_LANGUAGE_DEFAULT, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -38,7 +38,7 @@ export class TokenAuth extends React.Component {
 
     this.state = {
       detailForm: null,
-      activeSampleCodeTab: 0
+      activeSampleCodeTab: SAMPLE_CODE_LANGUAGE_DEFAULT
     }
 
     this.saveChanges = this.saveChanges.bind(this)
@@ -179,8 +179,10 @@ export class TokenAuth extends React.Component {
           }}
         >
         {
-          ['Java', 'Python', 'Javascript'].map((tab, i) => (
-            <NavItem key={i} eventKey={i}>{tab}</NavItem>
+          SAMPLE_CODE_LANGUAGE_OPTIONS.map(option => (
+            <NavItem key={option.value} eventKey={option.value}>
+              {option.label}
+            </NavItem>
           ))
         }
         </Nav>
