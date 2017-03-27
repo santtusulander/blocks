@@ -183,7 +183,7 @@ class BreadcrumbsItem extends React.Component {
       // Label with the page name
       links.push({
         label: <FormattedMessage id="portal.network.network.title"/>,
-        url: getNetworkUrl('account', params.account, params)
+        url: params.group && getNetworkUrl('account', params.account, params)
       })
 
     } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
