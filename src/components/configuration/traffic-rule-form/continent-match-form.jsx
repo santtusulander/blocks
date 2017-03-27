@@ -9,7 +9,7 @@ import { checkForErrors } from '../../../util/helpers'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ continents = [] }) => checkForErrors({ continents })
+const validate = ({ continents }) => checkForErrors({ continents })
 
 const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
@@ -32,23 +32,23 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
         multiple={true}
         options={continents}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.continent" />}/>
-        <FormFooterButtons>
-          <Button
-            id='cancel-button'
-            className="btn-outline"
-            onClick={onCancel}>
-            <FormattedMessage id='portal.common.button.cancel' />
-          </Button>
-          <Button
-            id='submit-button'
-            type='submit'
-            disabled={invalid}
-            bsStyle="primary">
-            {typeof matchIndex === 'number'
-              ? <FormattedMessage id='portal.common.button.save' />
-              : <FormattedMessage id='portal.common.button.add' />}
-          </Button>
-        </FormFooterButtons>
+      <FormFooterButtons>
+        <Button
+          id='cancel-button'
+          className="btn-outline"
+          onClick={onCancel}>
+          <FormattedMessage id='portal.common.button.cancel' />
+        </Button>
+        <Button
+          id='submit-button'
+          type='submit'
+          disabled={invalid}
+          bsStyle="primary">
+          {typeof matchIndex === 'number'
+            ? <FormattedMessage id='portal.common.button.save' />
+            : <FormattedMessage id='portal.common.button.add' />}
+        </Button>
+      </FormFooterButtons>
     </form>
   )
 }
@@ -64,4 +64,6 @@ ContinentMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-export default reduxForm({ form: 'continents-traffic-match', validate })(injectIntl(ContinentMatchForm))
+const Form = reduxForm({ form: 'continents-traffic-match', validate })(injectIntl(ContinentMatchForm))
+Form.defaultProps = { initialValues: { continents: [] } }
+export default Form

@@ -8,7 +8,7 @@ import { isValidIPv4Address } from '../../../util/validators'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ ipv4CIDR = [] }) => {
+const validate = ({ ipv4CIDR }) => {
   if (!ipv4CIDR.length) {
     return { ipv4CIDR: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
   }
@@ -44,23 +44,23 @@ const IPv4CIDRMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubm
         options={[]}
         validation={(value) => value && isValidIPv4Address(value.label, true)}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr" />}/>
-        <FormFooterButtons>
-          <Button
-            id='cancel-button'
-            className="btn-outline"
-            onClick={onCancel}>
-            <FormattedMessage id='portal.common.button.cancel' />
-          </Button>
-          <Button
-            id='submit-button'
-            type='submit'
-            disabled={invalid}
-            bsStyle="primary">
-            {typeof matchIndex === 'number'
-              ? <FormattedMessage id='portal.common.button.save' />
-              : <FormattedMessage id='portal.common.button.add' />}
-          </Button>
-        </FormFooterButtons>
+      <FormFooterButtons>
+        <Button
+          id='cancel-button'
+          className="btn-outline"
+          onClick={onCancel}>
+          <FormattedMessage id='portal.common.button.cancel' />
+        </Button>
+        <Button
+          id='submit-button'
+          type='submit'
+          disabled={invalid}
+          bsStyle="primary">
+          {typeof matchIndex === 'number'
+            ? <FormattedMessage id='portal.common.button.save' />
+            : <FormattedMessage id='portal.common.button.add' />}
+        </Button>
+      </FormFooterButtons>
     </form>
   )
 }
@@ -76,4 +76,6 @@ IPv4CIDRMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-export default reduxForm({ form: 'ipv4CIDR-traffic-match', validate })(injectIntl(IPv4CIDRMatchForm))
+const Form = reduxForm({ form: 'ipv4CIDR-traffic-match', validate })(injectIntl(IPv4CIDRMatchForm))
+Form.defaultProps = { initialValues: { ipv4CIDR: [] } }
+export default Form

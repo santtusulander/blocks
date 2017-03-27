@@ -9,7 +9,7 @@ import { checkForErrors } from '../../../util/helpers'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ countries = [] }) => checkForErrors({ countries })
+const validate = ({ countries }) => checkForErrors({ countries })
 
 const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
@@ -32,23 +32,23 @@ const CountryMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmi
         multiple={true}
         options={countries}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.country" />}/>
-        <FormFooterButtons>
-          <Button
-            id='cancel-button'
-            className="btn-outline"
-            onClick={onCancel}>
-            <FormattedMessage id='portal.common.button.cancel' />
-          </Button>
-          <Button
-            id='submit-button'
-            type='submit'
-            disabled={invalid}
-            bsStyle="primary">
-            {typeof matchIndex === 'number'
-              ? <FormattedMessage id='portal.common.button.save' />
-              : <FormattedMessage id='portal.common.button.add' />}
-          </Button>
-        </FormFooterButtons>
+      <FormFooterButtons>
+        <Button
+          id='cancel-button'
+          className="btn-outline"
+          onClick={onCancel}>
+          <FormattedMessage id='portal.common.button.cancel' />
+        </Button>
+        <Button
+          id='submit-button'
+          type='submit'
+          disabled={invalid}
+          bsStyle="primary">
+          {typeof matchIndex === 'number'
+            ? <FormattedMessage id='portal.common.button.save' />
+            : <FormattedMessage id='portal.common.button.add' />}
+        </Button>
+      </FormFooterButtons>
     </form>
   )
 }
@@ -64,4 +64,6 @@ CountryMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-export default reduxForm({ form: 'countries-traffic-match', validate })(injectIntl(CountryMatchForm))
+const Form = reduxForm({ form: 'countries-traffic-match', validate })(injectIntl(CountryMatchForm))
+Form.defaultProps = { initialValues: { countries: [] } }
+export default Form

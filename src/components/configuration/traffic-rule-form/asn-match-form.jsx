@@ -8,7 +8,7 @@ import { checkForErrors } from '../../../util/helpers'
 import ASNTypeahead from '../../form/field-form-group-asn-lookup'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ AsnLookup = [] }) => checkForErrors({ AsnLookup })
+const validate = ({ AsnLookup }) => checkForErrors({ AsnLookup })
 
 const ASNMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid }) => {
 
@@ -56,4 +56,6 @@ ASNMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-export default reduxForm({ form: 'asn-traffic-match', validate })(ASNMatchForm)
+const Form = reduxForm({ form: 'asn-traffic-match', validate })(ASNMatchForm)
+Form.defaultProps = { initialValues: { AsnLookup: [] } }
+export default Form

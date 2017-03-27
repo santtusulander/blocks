@@ -8,7 +8,7 @@ import { isValidIP } from '../../../util/validators'
 import Typeahead from '../../form/field-form-group-typeahead'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-const validate = ({ ipv4Address = [] }) => {
+const validate = ({ ipv4Address }) => {
   if (!ipv4Address.length) {
     return { ipv4CIDR: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
   }
@@ -44,23 +44,23 @@ const IPv4AddressMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleS
         options={[]}
         validation={(value) => value && isValidIP(value.label)}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address" />}/>
-        <FormFooterButtons>
-          <Button
-            id='cancel-button'
-            className="btn-outline"
-            onClick={onCancel}>
-            <FormattedMessage id='portal.common.button.cancel' />
-          </Button>
-          <Button
-            id='submit-button'
-            type='submit'
-            disabled={invalid}
-            bsStyle="primary">
-            {typeof matchIndex === 'number'
-              ? <FormattedMessage id='portal.common.button.save' />
-              : <FormattedMessage id='portal.common.button.add' />}
-          </Button>
-        </FormFooterButtons>
+      <FormFooterButtons>
+        <Button
+          id='cancel-button'
+          className="btn-outline"
+          onClick={onCancel}>
+          <FormattedMessage id='portal.common.button.cancel' />
+        </Button>
+        <Button
+          id='submit-button'
+          type='submit'
+          disabled={invalid}
+          bsStyle="primary">
+          {typeof matchIndex === 'number'
+            ? <FormattedMessage id='portal.common.button.save' />
+            : <FormattedMessage id='portal.common.button.add' />}
+        </Button>
+      </FormFooterButtons>
     </form>
   )
 }
@@ -76,4 +76,6 @@ IPv4AddressMatchForm.propTypes = {
   onSave: PropTypes.func
 }
 
-export default reduxForm({ form: 'ipv4Address-traffic-match', validate })(injectIntl(IPv4AddressMatchForm))
+const Form = reduxForm({ form: 'ipv4Address-traffic-match', validate })(injectIntl(IPv4AddressMatchForm))
+Form.defaultProps = { initialValues: { ipv4Address: [] } }
+export default Form
