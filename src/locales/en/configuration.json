@@ -27,7 +27,10 @@
   "portal.policy.edit.tokenauth.shared_key.required.error": "Shared Key is required",
   "portal.policy.edit.tokenauth.streaming_ttl.required.error": "Segment TTL is required",
   "portal.policy.edit.tokenauth.check_client_ip.help.text": "Enables checking of the Client’s IP address for every request for a chunk. If the IP value changes, the request is considered invalid.",
-  "portal.policy.edit.tokenauth.viewSample.text": "View sample output",
+  "portal.policy.edit.tokenauth.viewSampleButton.text": "View sample output",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.title": "Sample Token Output",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text": "Sample code",
+  "portal.policy.edit.tokenauth.sampleCodeDialog.title": "Sample Code / Generate {hashMethod} Hash",
 
   "portal.policy.edit.policies.header.text": "Header",
   "portal.policy.edit.matchesSelection.url.text": "URL",

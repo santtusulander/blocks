@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal, Table } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 
@@ -118,6 +118,47 @@ export class TokenAuth extends React.Component {
     )
   }
 
+  showSampleOutputDialog() {
+    this.props.uiActions.showInfoDialog({
+      title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
+      content: this.renderSampleOutput(),
+      okButton: true,
+      cancelButton: true,
+      cancel: () => this.props.uiActions.hideInfoDialog(),
+      auxiliaryButton: {
+        handler: () => this.showSampleCodeDialog(),
+        text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text" />
+      }
+    })
+  }
+
+  showSampleCodeDialog() {
+    this.props.uiActions.showInfoDialog({
+      title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{hashMethod: 'MD5'}} />,
+      okButton: true,
+      cancel: () => this.props.uiActions.hideInfoDialog()
+    })
+  }
+
+  renderSampleOutput() {
+    return (
+      <Table striped={true} className="fixed-layout">
+        <thead>
+          <tr>
+            <th>Table Header</th>
+            <th>Table Header</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </Table>
+    )
+  }
+
   render() {
     const {
       close,
@@ -175,19 +216,9 @@ export class TokenAuth extends React.Component {
               <Button
                 className="pull-left token-auth-no-side-padding"
                 bsStyle="link"
-                onClick={() => {
-                  this.props.uiActions.showInfoDialog({
-                    okButton: true,
-                    cancelButton: true,
-                    cancel: () => this.props.uiActions.hideInfoDialog(),
-                    auxiliaryButton: {
-                      handler: () => {},
-                      text: 'SAMPle code'
-                    }
-                  })
-                }}
+                onClick={() => this.showSampleOutputDialog()}
               >
-                <FormattedMessage id="portal.policy.edit.tokenauth.viewSample.text"/>
+                <FormattedMessage id="portal.policy.edit.tokenauth.viewSampleButton.text" />
               </Button>
 
               <Button
