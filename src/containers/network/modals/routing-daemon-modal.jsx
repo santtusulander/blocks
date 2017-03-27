@@ -6,6 +6,9 @@ import { injectIntl } from 'react-intl'
 import SidePanel from '../../../components/side-panel'
 import RoutingDaemonForm from '../../../components/network/forms/routing-daemon-form'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 class RoutingDaemonFormContainer extends React.Component {
 
   constructor(props) {
@@ -25,7 +28,8 @@ class RoutingDaemonFormContainer extends React.Component {
       intl,
       onCancel,
       show,
-      initialValues
+      initialValues,
+      readOnly
     } = this.props
 
     const edit = !!initialValues.bgp_as_number
@@ -43,6 +47,7 @@ class RoutingDaemonFormContainer extends React.Component {
         editing={edit}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
+        readOnly={readOnly}
       />
       </SidePanel>
     )
@@ -55,6 +60,7 @@ RoutingDaemonFormContainer.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  readOnly: PropTypes.bool,
   show: PropTypes.bool
 }
 
