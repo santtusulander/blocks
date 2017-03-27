@@ -60,9 +60,11 @@ $token-horizontal-padding: em(12px, $form-font-size);
     }
   }
 
-  .token-removeable {
-    padding-right: em(26px, $form-font-size);
-    cursor: pointer;
+  &:not(.disabled) {
+    .token-removeable {
+      padding-right: em(26px, $form-font-size);
+      cursor: pointer;
+    }
   }
 
   .token-selected {
@@ -75,6 +77,21 @@ $token-horizontal-padding: em(12px, $form-font-size);
 
     .light-theme & {
       box-shadow: 0 0 0 2px rgba($black, 0.4);
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed !important;
+    opacity: 0.3;
+
+    .form-control {
+      pointer-events: none;
+    }
+
+    .token-removeable {
+      .close-button {
+        display: none;
+      }
     }
   }
 }
