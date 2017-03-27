@@ -221,6 +221,8 @@ class ContentItems extends React.Component {
         break
     }
   }
+
+  //TODO: UDNP-3177 Refactor to use entities/redux
   editItem(id) {
     this.props.fetchItem(id)
       .then((response) => {

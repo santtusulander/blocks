@@ -58,7 +58,6 @@ export class Group extends React.Component {
         }]
       }]
     }
-
     return this.props.createProperty(
       this.props.params.brand,
       this.props.params.account,
