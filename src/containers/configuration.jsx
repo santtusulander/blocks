@@ -38,6 +38,7 @@ import TruncatedTitle from '../components/truncated-title'
 import IsAllowed from '../components/is-allowed'
 import ModalWindow from '../components/modal'
 import Tabs from '../components/tabs'
+import IsAdmin from '../components/is-admin'
 
 import ConfigurationVersions from '../components/configuration/versions'
 import ConfigurationPublishVersion from '../components/configuration/publish-version'
@@ -370,6 +371,14 @@ export class Configuration extends React.Component {
             </Link>
           </li>
 
+          <IsAdmin>
+            <li data-eventKey='advanced'>
+              <Link to={baseUrl + '/advanced'} activeClassName="active">
+              <FormattedMessage id="portal.configuration.advanced.text" />
+              </Link>
+            </li>
+          </IsAdmin>
+
           {/* Hide in 1.0 – UDNP-1406
           <li data-eventKey={'performance'}>
             <FormattedMessage id="portal.configuration.performance.text"/>
@@ -454,7 +463,7 @@ export class Configuration extends React.Component {
             dialogClassName="configuration-sidebar"
             onHide={this.togglePublishModal}>
             <Modal.Header>
-              <h1>Publish Version</h1>
+              <h1><FormattedMessage id="portal.configuration.sidebar.pubVer.text" /></h1>
               <p>{this.props.params.property}</p>
             </Modal.Header>
             <Modal.Body>
