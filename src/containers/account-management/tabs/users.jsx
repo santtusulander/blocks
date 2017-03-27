@@ -265,13 +265,10 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   saveUser(user) {
-    // Get the username from the user we have in state for editing purposes.
-    //user.username = this.state.userToEdit.get('username')
-
     return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
+          this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
