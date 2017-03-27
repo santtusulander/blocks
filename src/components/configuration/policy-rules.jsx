@@ -7,13 +7,10 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 import Confirmation from '../confirmation.jsx'
 import ActionButtons from '../../components/action-buttons.jsx'
 import {
-  actionIsTokenAuth,
   parsePolicy
 } from '../../util/policy-config'
 
 import { MODIFY_PROPERTY, DELETE_PROPERTY } from '../../constants/permissions'
-
-import IsAdmin from '../is-admin'
 
 class ConfigurationPolicyRules extends React.Component {
   constructor(props) {
@@ -80,7 +77,7 @@ class ConfigurationPolicyRules extends React.Component {
       const { matches, sets } = parsePolicy(rule, [])
       const matchLabel = matches.map(match => match.field).join(', ')
       const actionsLabel = sets.map(set => set.setkey).join(', ')
-      const ruleNeedsAdmin = actionIsTokenAuth(sets)
+
       const actionButtons = (
         <ActionButtons
           permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
@@ -95,13 +92,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
           <td className="nowrap-column">
-            {ruleNeedsAdmin ?
-              <IsAdmin>
-                {actionButtons}
-              </IsAdmin>
-              :
-              actionButtons
-            }
+            {actionButtons}
             {this.state[`${type}_policy`] !== false &&
               <ReactCSSTransitionGroup
                 component="div"

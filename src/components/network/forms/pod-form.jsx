@@ -114,8 +114,8 @@ const asyncValidate = ({ UILocalAS }) => {
   }
 
   return fetchASOverview(UILocalAS)
-    .then(({ data: { holder } }) => {
-      if (!holder) {
+    .then((resp) => {
+      if (!resp[0]) {
         throw {
           UILocalAS: <FormattedMessage id="portal.network.podForm.localAS.notFound.error"/>
         }

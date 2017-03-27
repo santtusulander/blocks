@@ -1,63 +1,52 @@
-import React from 'react'
-import Immutable from 'immutable'
+import React, {PropTypes} from 'react'
+import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import * as accountActionCreators from '../redux/modules/account'
-import * as groupActionCreators from '../redux/modules/group'
-import * as metricsActionCreators from '../redux/modules/metrics'
-import * as uiActionCreators from '../redux/modules/ui'
+import * as metricsActionCreators from '../../redux/modules/metrics'
+import * as uiActionCreators from '../../redux/modules/ui'
 
-import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
-import propertyActions from '../redux/modules/entities/properties/actions'
+import accountActions from '../../redux/modules/entities/accounts/actions'
+import groupActions from '../../redux/modules/entities/groups/actions'
+import storageActions from '../../redux/modules/entities/CIS-ingest-points/actions'
+import propertyActions from '../../redux/modules/entities/properties/actions'
 
-import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
-import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../redux/modules/entities/properties/selectors'
+import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
+import { getById as getGroupById } from '../../redux/modules/entities/groups/selectors'
 
-import { fetchMetrics as fetchStorageMetrics } from '../redux/modules/entities/storage-metrics/actions'
+import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
+import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
-import ContentItems from '../components/content/content-items'
+import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
-import * as PERMISSIONS from '../constants/permissions'
-import CONTENT_ITEMS_TYPES from '../constants/content-items-types'
-import checkPermissions from '../util/permissions'
-import {getStoragePermissions} from '../util/permissions'
+import { fetchMetrics as fetchStorageMetrics } from '../../redux/modules/entities/storage-metrics/actions'
+
+import ContentItems from '../../components/content/content-items'
+
+import * as PERMISSIONS from '../../constants/permissions'
+import CONTENT_ITEMS_TYPES from '../../constants/content-items-types'
+
+import checkPermissions, {getStoragePermissions} from '../../util/permissions'
+import { getAnalyticsUrlFromParams } from '../../util/routes'
 
 import {FormattedMessage, injectIntl} from 'react-intl'
-import { getAnalyticsUrlFromParams } from '../util/routes'
 
-export class Hosts extends React.Component {
+export class Group extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      fetching: false
-    }
-
-    this.startFetching = this.startFetching.bind(this)
-    this.stopFetching = this.stopFetching.bind(this)
     this.deleteHost = this.deleteHost.bind(this)
     this.sortItems = this.sortItems.bind(this)
     this.createNewHost = this.createNewHost.bind(this)
   }
   componentWillMount() {
-    this.startFetching();
     this.props.fetchGroupData()
-      .then(this.stopFetching, this.stopFetching)
-
     this.props.fetchMetricsData()
   }
 
-  startFetching() {
-    this.setState({fetching: true});
-  }
-
-  stopFetching() {
-    this.setState({fetching: false});
-  }
-
   createNewHost(id, deploymentMode, serviceType) {
+    /* Create initial services and configurations for property */
     const payload = {
       services:[{
         service_type: serviceType,
@@ -69,22 +58,22 @@ export class Hosts extends React.Component {
         }]
       }]
     }
-    return this.props.createNewProperty(
+    return this.props.createProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
-      payload)
+      payload
+    )
   }
 
   deleteHost(id) {
-    this.props.deleteProperty(
+    return this.props.deleteProperty(
       this.props.params.brand,
       this.props.params.account,
       this.props.params.group,
       id
     )
   }
-
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
   }
@@ -107,10 +96,12 @@ export class Hosts extends React.Component {
 
     return (
       <ContentItems
-        activeAccount={this.props.activeAccount}
+        activeAccount={activeAccount}
         activeGroup={activeGroup}
         brand={brand}
+        group={group}
         params={params}
+
         className="hosts-container"
         changeNotification={this.props.uiActions.changeNotification}
         storages={this.props.storages}
@@ -118,9 +109,8 @@ export class Hosts extends React.Component {
 
         createNewItem={this.createNewHost}
         deleteItem={this.deleteHost}
-        fetching={this.state.fetching}
+        fetching={this.props.fetching}
         fetchingMetrics={this.props.fetchingMetrics}
-        group={group}
         headerText={{ summary: <FormattedMessage id="portal.hosts.groupContentSummary.text"/>, label: breadcrumbs[1].label }}
         ifNoContent={activeGroup ? `${activeGroup.get('name')} contains no properties` : <FormattedMessage id="portal.loading.text"/>}
         // TODO: We need to use published_hosts permissions from the north API
@@ -145,38 +135,40 @@ export class Hosts extends React.Component {
   }
 }
 
-Hosts.displayName = 'Hosts'
-Hosts.propTypes = {
-  activeAccount: React.PropTypes.instanceOf(Immutable.Map),
-  activeGroup: React.PropTypes.instanceOf(Immutable.Map),
-  createNewProperty: React.PropTypes.func,
-  deleteProperty: React.PropTypes.func,
-  fetchGroupData: React.PropTypes.func,
-  fetchMetricsData: React.PropTypes.func,
-  fetchingMetrics: React.PropTypes.bool,
-  params: React.PropTypes.object,
-  properties: React.PropTypes.instanceOf(Immutable.List),
-  roles: React.PropTypes.instanceOf(Immutable.List),
-  sortDirection: React.PropTypes.number,
-  sortValuePath: React.PropTypes.instanceOf(Immutable.List),
-  storages: React.PropTypes.instanceOf(Immutable.Iterable),
-  uiActions: React.PropTypes.object,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  viewingChart: React.PropTypes.bool
+Group.displayName = 'Group'
+Group.propTypes = {
+  activeAccount: PropTypes.instanceOf(Map),
+  activeGroup: PropTypes.instanceOf(Map),
+  createProperty: PropTypes.func,
+  deleteProperty: PropTypes.func,
+  fetchGroupData: PropTypes.func,
+  fetchMetricsData: PropTypes.func,
+  fetching: PropTypes.bool,
+  fetchingMetrics: PropTypes.bool,
+  params: PropTypes.object,
+  properties: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(List),
+  sortDirection: PropTypes.number,
+  sortValuePath: PropTypes.instanceOf(List),
+  storages: PropTypes.instanceOf(List),
+  uiActions: PropTypes.object,
+  user: PropTypes.instanceOf(Map),
+  viewingChart: PropTypes.bool
 }
-Hosts.defaultProps = {
-  activeAccount: Immutable.Map(),
-  activeGroup: Immutable.Map(),
-  roles: Immutable.List(),
-  sortValuePath: Immutable.List(),
-  storages: Immutable.List(),
-  user: Immutable.Map()
+Group.defaultProps = {
+  activeAccount: Map(),
+  activeGroup: Map(),
+  roles: List(),
+  sortValuePath: List(),
+  storages: List(),
+  user: Map()
 }
 
-const mapStateToProps = (state, { params: { group } }) => {
+const mapStateToProps = (state, { params: { account, group } }) => {
   return {
-    activeAccount: state.account.get('activeAccount'),
-    activeGroup: state.group.get('activeGroup'),
+    activeAccount: getAccountById( state, account),
+    activeGroup: getGroupById(state, group),
+    fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group),
     storages: getStoragesByGroup(state, group),
@@ -190,8 +182,7 @@ const mapStateToProps = (state, { params: { group } }) => {
 
 const mapDispatchToProps =  (dispatch, ownProps) => {
   const {brand, account, group} = ownProps.params
-  const accountActions = bindActionCreators(accountActionCreators, dispatch)
-  const groupActions = bindActionCreators(groupActionCreators, dispatch)
+
   const metricsActions = bindActionCreators(metricsActionCreators, dispatch)
   const metricsOpts = {
     account: account,
@@ -199,11 +190,11 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     startDate: moment.utc().endOf('day').add(1,'second').subtract(28, 'days').format('X'),
     endDate: moment.utc().endOf('day').format('X')
   }
+
   const fetchGroupData = () => {
     return Promise.all([
-      accountActions.fetchAccount(brand, account),
-      groupActions.fetchGroup(brand, account, group),
-
+      dispatch(accountActions.fetchOne({brand, id: account})),
+      dispatch(groupActions.fetchOne({brand, account, id: group})),
       dispatch(storageActions.fetchAll({ brand, account, group })),
       dispatch(propertyActions.fetchAll({ brand, account, group }))
     ])
@@ -211,9 +202,12 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
 
   const fetchMetricsData = () => {
     metricsActions.startHostFetching()
-    metricsActions.fetchHostMetrics(metricsOpts)
-    metricsActions.fetchDailyHostTraffic(metricsOpts),
-    dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true }))
+
+    return Promise.all([
+      metricsActions.fetchHostMetrics(metricsOpts),
+      metricsActions.fetchDailyHostTraffic(metricsOpts),
+      dispatch(fetchStorageMetrics({ ...metricsOpts, include_history: true, startDate: moment().utc().startOf('month').format('X') }))
+    ])
   }
 
   return {
@@ -221,8 +215,9 @@ const mapDispatchToProps =  (dispatch, ownProps) => {
     fetchMetricsData: fetchMetricsData,
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    createNewProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload}))
+    createProperty: (brand, account, group, payload) => dispatch(propertyActions.create({brand, account, group, payload}))
+
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Hosts));
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Group));
