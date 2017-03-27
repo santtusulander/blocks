@@ -136,7 +136,11 @@ export class TokenAuth extends React.Component {
     this.props.uiActions.showInfoDialog({
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{hashMethod: 'MD5'}} />,
       okButton: true,
-      cancel: () => this.props.uiActions.hideInfoDialog()
+      cancel: () => this.props.uiActions.hideInfoDialog(),
+      secondaryButton: {
+        handler: () => {},
+        text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleCodeDialog.copyCodeButton.text" />
+      }
     })
   }
 

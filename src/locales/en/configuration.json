@@ -31,6 +31,7 @@
   "portal.policy.edit.tokenauth.sampleOutputDialog.title": "Sample Token Output",
   "portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text": "Sample code",
   "portal.policy.edit.tokenauth.sampleCodeDialog.title": "Sample Code / Generate {hashMethod} Hash",
+  "portal.policy.edit.tokenauth.sampleCodeDialog.copyCodeButton.text": "Copy code",
 
   "portal.policy.edit.policies.header.text": "Header",
   "portal.policy.edit.matchesSelection.url.text": "URL",
