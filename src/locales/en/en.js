@@ -785,6 +785,7 @@ const TRANSLATED_MESSAGES = {
   'portal.button.CHANGING': 'CHANGING...',
   'portal.button.save': 'Save',
   'portal.button.send': 'Send',
+  'portal.button.restore': 'Restore',
   'portal.button.configure': 'Configure',
   'portal.button.SAVE': 'SAVE',
   'portal.button.saving': 'SAVING...',

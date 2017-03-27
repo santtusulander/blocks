@@ -36,6 +36,7 @@ const ROUTES = {
   configurationTabPolicies: 'policies',
   configurationTabSecurity: 'security',
   configurationTabGlobalTrafficManager: 'gtm',
+  configurationTabAdvanced: 'advanced',
 
   configurationTabPoliciesEditPolicy: ':editOrDelete/id/:policyId/type/:policyType',
 
