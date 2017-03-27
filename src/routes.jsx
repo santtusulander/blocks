@@ -101,7 +101,6 @@ const analyticsTabs = [
   [PERMISSIONS.ALLOW_ALWAYS, routes.analyticsTabContribution, AnalyticsTabContribution],
 
   [PERMISSIONS.VIEW_ANALYTICS_STORAGE, routes.analyticsTabStorage, AnalyticsTabStorage],
-  [PERMISSIONS.VIEW_ANALYTICS_STORAGE, routes.analyticsStorage, AnalyticsTabStorage],
   [PERMISSIONS.VIEW_ANALYTICS_UNIQUE_VISITORS, routes.analyticsTabVisitors, AnalyticsTabVisitors],
   [PERMISSIONS.VIEW_ANALYTICS_FILE_ERROR, routes.analyticsTabFileError, AnalyticsTabFileError],
   [PERMISSIONS.VIEW_ANALYTICS_URL, routes.analyticsTabUrlReport, AnalyticsTabUrlReport],
@@ -252,6 +251,9 @@ export const getRoutes = store => {
               {getAnalyticsTabRoutes(store)}
           </Route>
           <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
+              {getAnalyticsTabRoutes(store)}
+          </Route>
+          <Route path={routes.analyticsStorage} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
         </Route>
