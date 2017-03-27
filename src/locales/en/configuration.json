@@ -59,6 +59,12 @@
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
   "portal.policy.edit.matcher.value.text": "Value",
 
+  "portal.configuration.condition.and": "AND",
+  "portal.configuration.condition.or": "OR",
+
+  "portal.configuration.traffic.rules.rule.modal.create.title": "Add Traffic Rule",
+  "portal.configuration.traffic.rules.rule.modal.edit.title": "Edit Traffic Role",
+
   "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
   "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
   "portal.policy.edit.defaults.allowCookies.text": "UDN Tracking Cookie",

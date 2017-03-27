@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 import { reduxForm, propTypes, formValueSelector, arrayPush, arraySplice } from 'redux-form'
 
 import MatchesForm from './matches-form'
@@ -36,6 +37,9 @@ class TrafficRuleFormContainer extends Component {
   render() {
     const { activeCondition, initialValues, onCancel, handleSubmit, hasMatches } = this.props
     const { chosenMatch } = this.state
+    const titleId = this.props.initialValues.name
+      ? "portal.configuration.traffic.rules.rule.modal.edit.title"
+      : "portal.configuration.traffic.rules.rule.modal.create.title"
 
     const cancelMatch = () => this.chooseMatch()
     const disabled = !!chosenMatch
@@ -44,8 +48,8 @@ class TrafficRuleFormContainer extends Component {
       <Modal show={true} dialogClassName="side-panel double-side-modal-container">
         <div className={classnames("primary-side-modal", { disabled })}>
           <Modal.Header>
-            <h1>Add Traffic Rule</h1>
-            <p>placeholder subtitle</p>
+            <h1><FormattedMessage id={titleId}/></h1>
+            <p>{this.props.initialValues.name}</p>
           </Modal.Header>
           <Modal.Body>
             <RuleForm
