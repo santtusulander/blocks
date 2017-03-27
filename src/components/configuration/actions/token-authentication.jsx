@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, Modal, Table, Nav, NavItem } from 'react-bootstrap'
+import { Button, Modal, Table, Nav, NavItem, FormControl } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 
@@ -143,10 +143,21 @@ export class TokenAuth extends React.Component {
       okButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
       secondaryButton: {
-        handler: () => {},
+        handler: () => this.copySampleCodeToClipboard(),
         text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleCodeDialog.copyCodeButton.text" />
       }
     })
+  }
+
+  copySampleCodeToClipboard() {
+    document.querySelector('.token-auth-sample-code-textarea').select()
+
+    try {
+      const result = document.execCommand('copy')
+      console.log(result)
+    } catch (e) {
+      console.log('nope!', e)
+    }
   }
 
   renderSampleOutputDialogChildren() {
@@ -159,6 +170,10 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+          </tr>
           <tr>
             <td>1</td>
             <td>2</td>
@@ -188,7 +203,12 @@ export class TokenAuth extends React.Component {
           ))
         }
         </Nav>
-        {this.state.activeSampleCodeTab}
+        <FormControl
+          componentClass="textarea"
+          readOnly={true}
+          className='token-auth-sample-code-textarea'
+          value={this.state.activeSampleCodeTab}
+        />
       </div>
     )
   }
