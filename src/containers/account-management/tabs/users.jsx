@@ -271,7 +271,7 @@ export class AccountManagementAccountUsers extends React.Component {
     return this.props.userActions.updateUser(this.state.userToEdit.get('email'), user)
       .then((response) => {
         if (!response.error) {
-          this.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
+          this.props.showNotification(<FormattedMessage id="portal.account.editUser.userIsUpdated.text" />)
 
           this.setState({
             userToEdit: null,
