@@ -86,6 +86,12 @@
   "portal.configuration.traffic.rules.match.ipv4address.input.placeholder": "Enter IPv4 addresses, eg. 10.1.1.1",
   "portal.configuration.traffic.rules.match.ipv4cidr.input.placeholder": "Enter IPv4 addresses in CIDR notation, eg. 10.1.1.1/24",
 
+  "portal.configuration.condition.and": "AND",
+  "portal.configuration.condition.or": "OR",
+
+  "portal.configuration.traffic.rules.rule.modal.create.title": "Add Traffic Rule",
+  "portal.configuration.traffic.rules.rule.modal.edit.title": "Edit Traffic Role",
+
   "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
   "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
   "portal.policy.edit.defaults.allowCookies.text": "UDN Tracking Cookie",

@@ -79,7 +79,10 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
               <Field
                 disabled={disabled}
                 name="condition"
-                options={[['or', 'OR'], ['and', 'AND']]}
+                options={[
+                  ['or', <FormattedMessage id="portal.configuration.condition.or" />],
+                  ['and', <FormattedMessage id="portal.configuration.condition.and" />]
+                ]}
                 component={FormGroupSelect}/>}
               <Button
                 disabled={disabled}
