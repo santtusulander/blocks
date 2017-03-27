@@ -57,7 +57,7 @@ class MatchesForm extends Component {
     let title = 'Choose Match'
     let subtitle = 'Select the match type'
     let matchType = undefined
-    let Form = this.renderMatchSelection
+    let Form = this.MatchSelection
 
     switch(this.props.chosenMatch.matchType) {
 
