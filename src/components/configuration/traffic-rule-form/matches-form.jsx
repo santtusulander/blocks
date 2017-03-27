@@ -29,19 +29,26 @@ class MatchesForm extends Component {
     }
   }
 
-  renderMatchSelection = () => (
-    <ul className="condition-selection list-unstyled">
-      <li/>
-      {matches.map(({ matchType, label }, i) =>
-        <li key={i}>
-          <a onClick={() => this.props.chooseMatch({ matchType })}>
-            <IconCaretRight width={28} height={28} />
-            {label}
-          </a>
-        </li>
-      )}
-    </ul>
-  )
+  constructor(props) {
+    super(props)
+    this.MatchSelection = this.MatchSelection.bind(this)
+  }
+
+  MatchSelection() {
+    return (
+      <ul className="condition-selection list-unstyled">
+        <li/>
+        {matches.map(({ matchType, label }, i) =>
+          <li key={i}>
+            <a onClick={() => this.props.chooseMatch({ matchType })}>
+              <IconCaretRight width={28} height={28} />
+              {label}
+            </a>
+          </li>
+        )}
+      </ul>
+    )
+  }
 
   render() {
 
