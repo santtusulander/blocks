@@ -22,6 +22,7 @@ import Footer from '../components/footer'
 
 import ModalWindow from '../components/modal'
 import Notification from '../components/notification'
+import BannerNotification from '../components/shared/banner-notification'
 import AsperaNotification from '../components/storage/aspera-notification'
 import LoadingSpinner from '../components/loading-spinner/loading-spinner'
 
@@ -80,6 +81,10 @@ export class Main extends React.Component {
 
   hideAsperaNotification() {
     this.props.uiActions.changeAsperaNotification()
+  }
+
+  hideBannerNotification() {
+    this.props.uiActions.changeBannerNotification()
   }
 
   render() {
@@ -179,6 +184,22 @@ export class Main extends React.Component {
           }
         </ReactCSSTransitionGroup>
 
+        <ReactCSSTransitionGroup
+          component="div"
+          className="banner-notification-transition"
+          transitionName="banner-notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.props.bannerNotification ?
+            <BannerNotification
+              handleClose={this.hideBannerNotification}
+              notificationCode={this.props.bannerNotification}
+            />
+            : ''
+          }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -191,6 +212,8 @@ Main.propTypes = {
   activeGroup: PropTypes.instanceOf(Map),
   activeHost: PropTypes.instanceOf(Map),
   asperaNotification: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  bannerNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+
   breadcrumbs: PropTypes.instanceOf(Map),
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
@@ -244,6 +267,7 @@ const mapStateToProps = (state, ownProps) => {
     activeHost: getPropertyById(state, property),
 
     asperaNotification: state.ui.get('asperaNotification'),
+    bannerNotification: state.ui.get('bannerNotification'),
     currentUser: state.user.get('currentUser'),
     fetching,
     notification: state.ui.get('notification'),
