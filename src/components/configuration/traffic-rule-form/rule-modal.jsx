@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
-import { reduxForm, propTypes, formValueSelector, arrayPush, arraySplice } from 'redux-form'
+import { formValueSelector, arrayPush, arraySplice } from 'redux-form'
 
 import MatchesForm from './matches-form'
 import RuleForm from './rule-form'
@@ -35,7 +35,7 @@ class TrafficRuleFormContainer extends Component {
   }
 
   render() {
-    const { activeCondition, initialValues, onCancel, handleSubmit, hasMatches } = this.props
+    const { activeCondition, initialValues, onCancel, hasMatches } = this.props
     const { chosenMatch } = this.state
     const titleId = this.props.initialValues.name
       ? "portal.configuration.traffic.rules.rule.modal.edit.title"
@@ -58,7 +58,6 @@ class TrafficRuleFormContainer extends Component {
               disabled={disabled}
               chooseMatch={this.chooseMatch}
               initialValues={initialValues}
-              handleSubmit={handleSubmit}
               onSubmit={this.onSaveRule}
               onCancel={!disabled && onCancel}/>
           </Modal.Body>
@@ -76,12 +75,12 @@ class TrafficRuleFormContainer extends Component {
 
 TrafficRuleFormContainer.displayName = "TrafficRuleFormContainer"
 TrafficRuleFormContainer.propTypes = {
+  activeCondition: PropTypes.string,
   addMatch: PropTypes.func,
   editMatch: PropTypes.func,
-  handleSubmit: PropTypes.func,
   hasMatches: PropTypes.bool,
-  onCancel: PropTypes.func,
-  ...propTypes
+  initialValues: PropTypes.object,
+  onCancel: PropTypes.func
 }
 
 //until integrated into UI
@@ -103,9 +102,7 @@ const dispatchToProps = dispatch => ({
   editMatch: (index, match) => dispatch(arraySplice('traffic-rule-form', 'matchArray', index, 1, match))
 })
 
-const form = reduxForm({ form: 'traffic-rule-form' })(TrafficRuleFormContainer)
-
 export default connect(
   stateToProps,
   dispatchToProps
-)(form)
+)(TrafficRuleFormContainer)

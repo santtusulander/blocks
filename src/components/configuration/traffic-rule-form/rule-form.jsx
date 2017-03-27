@@ -3,8 +3,11 @@ import React, { PropTypes } from 'react'
 import { Button, Col, Row, ButtonToolbar } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { Field, FieldArray } from 'redux-form'
+import { reduxForm } from 'redux-form'
 
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
+
+import { checkForErrors } from '../../../util/helpers'
 
 import Input from '../../form/field-form-group'
 import FormGroupSelect from '../../form/field-form-group-select'
@@ -16,6 +19,10 @@ const conditionOptions = [
   ['or', <FormattedMessage id="portal.configuration.condition.or" />],
   ['and', <FormattedMessage id="portal.configuration.condition.and" />]
 ]
+
+const validate = ({ name }) => {
+  return checkForErrors({ name })
+}
 
 /**
  * Field array for matches
@@ -143,4 +150,4 @@ RuleForm.propTypes = {
   onSubmit: PropTypes.func
 }
 
-export default keyStrokeSupport(RuleForm)
+export default reduxForm({ form: 'traffic-rule-form', validate })(keyStrokeSupport(RuleForm))
