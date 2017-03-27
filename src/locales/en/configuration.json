@@ -59,6 +59,12 @@
   "portal.policy.edit.policies.saveMatch.text": "Save Match",
   "portal.policy.edit.matcher.value.text": "Value",
 
+  "portal.configuration.condition.and": "AND",
+  "portal.configuration.condition.or": "OR",
+
+  "portal.configuration.traffic.rules.rule.modal.create.title": "Add Traffic Rule",
+  "portal.configuration.traffic.rules.rule.modal.edit.title": "Edit Traffic Role",
+
   "portal.policy.edit.actionSelection.tokenauth.text": "Token Authentication",
   "portal.policy.edit.defaults.removeVaryHeader.text": "Remove Vary Header from response",
   "portal.policy.edit.defaults.allowCookies.text": "UDN Tracking Cookie",
@@ -172,5 +178,8 @@
   "portal.configurationList.by.text": "By",
   "portal.configurationList.status.text": "Status",
   "portal.configurationList.activeVersion.text": "Active Version",
-  "portal.configurationList.belongsTo.text": "Belongs to"
+  "portal.configurationList.belongsTo.text": "Belongs to",
+
+  "portal.policy.edit.policies.matchType.action.all": "ALL conditions match",
+  "portal.policy.edit.policies.matchType.action.any": "ANY conditions match"
 }

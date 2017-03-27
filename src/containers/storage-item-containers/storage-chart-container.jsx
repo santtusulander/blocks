@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Map, List } from 'immutable'
+import { FormattedMessage } from 'react-intl'
 
 import { buildReduxId } from '../../redux/util'
 
@@ -16,11 +17,17 @@ const StorageChartContainer = props => {
   const { ingest_point_id, estimated_usage } = props.storageEntity.toJS()
   const { totals: { bytes = {}, historical_bytes = {}} } = props.storageMetrics.toJS()
 
-  return props.showingAggregate
-    ? <AggregatedStorageChart
-        bytes={bytes}
-        historicalBytes={historical_bytes}
-        estimate={estimated_usage} />
+  //Estimated usage 0 means 0 storage available, show no-data text for dashboard in that case
+  const aggregatedStorageChart = estimated_usage ?
+    <AggregatedStorageChart bytes={bytes} historicalBytes={historical_bytes} estimate={estimated_usage} />
+    : (
+      <div className="no-data">
+        <FormattedMessage id="portal.common.no-data.text"/>
+      </div>
+    )
+
+
+  return props.showingAggregate ? aggregatedStorageChart
     : (
       <StorageItemChart
         analyticsLink={props.analyticsLink}
