@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Button, Modal, Table } from 'react-bootstrap'
+import { Button, Modal, Table, Nav, NavItem } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
 
@@ -37,11 +37,13 @@ export class TokenAuth extends React.Component {
     super(props)
 
     this.state = {
-      detailForm: null
+      detailForm: null,
+      activeSampleCodeTab: 0
     }
 
     this.saveChanges = this.saveChanges.bind(this)
     this.closeDetailForm = this.closeDetailForm.bind(this)
+    this.showSampleCodeDialog = this.showSampleCodeDialog.bind(this)
   }
 
   componentWillMount() {
@@ -121,7 +123,7 @@ export class TokenAuth extends React.Component {
   showSampleOutputDialog() {
     this.props.uiActions.showInfoDialog({
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
-      content: this.renderSampleOutput(),
+      children: this.renderSampleOutputDialogChildren(),
       okButton: true,
       cancelButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -135,6 +137,7 @@ export class TokenAuth extends React.Component {
   showSampleCodeDialog() {
     this.props.uiActions.showInfoDialog({
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{hashMethod: 'MD5'}} />,
+      children: this.renderSampleCodeDialogChildren(),
       okButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
       secondaryButton: {
@@ -144,7 +147,7 @@ export class TokenAuth extends React.Component {
     })
   }
 
-  renderSampleOutput() {
+  renderSampleOutputDialogChildren() {
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -160,6 +163,29 @@ export class TokenAuth extends React.Component {
           </tr>
         </tbody>
       </Table>
+    )
+  }
+
+  renderSampleCodeDialogChildren() {
+    return (
+      <div>
+        <Nav
+          style={{background: 'none'}}
+          bsStyle='tabs'
+          activeKey={this.state.activeSampleCodeTab}
+          onSelect={key => {
+            this.setState( { activeSampleCodeTab: key } )
+            setTimeout(this.showSampleCodeDialog, 0)
+          }}
+        >
+        {
+          ['Java', 'Python', 'Javascript'].map((tab, i) => (
+            <NavItem key={i} eventKey={i}>{tab}</NavItem>
+          ))
+        }
+        </Nav>
+        {this.state.activeSampleCodeTab}
+      </div>
     )
   }
 
