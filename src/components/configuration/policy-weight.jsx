@@ -59,7 +59,7 @@ class PolicyWeight extends Component {
         <div className="policy-weight-percentage">
           <div className="primary">
             <strong>{numeral(this.state.value).format(numbersFormat)}</strong>
-            % UDN
+            <FormattedMessage id="portal.configuration.gtm.policyWeight.percentageByMainProvider.percentage" />
           </div>
           <div className="secondary">
             <FormattedMessage
