@@ -4,7 +4,7 @@ import * as actionTypes from './actionTypes'
 
 const UPLOAD_VERSION = 'v1'
 const UPLOAD_PROTOCOL = 'https://'
-const UPLOAD_PORT = ':8080'
+const UPLOAD_PORT = ':443'
 
 /**
  * Upload file via POST request to API
