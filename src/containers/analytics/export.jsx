@@ -3,6 +3,7 @@ import {Map, List} from 'immutable'
 import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'
 
+import { getByAccountId, getByGroupId, getByStorageId, getDataForStorageAnalysisChart } from '../../redux/modules/entities/storage-metrics/selectors'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 import IconExport from '../../components/icons/icon-export.jsx'
 
@@ -86,6 +87,7 @@ AnalyticsExport.propTypes = {
   onOffStats: PropTypes.instanceOf(List),
   params: PropTypes.object,
   serviceTypes: PropTypes.instanceOf(List),
+  storageUsage: PropTypes.instanceOf(List),
   traffic: PropTypes.instanceOf(List),
   trafficByTime: PropTypes.instanceOf(List),
   urlMetrics: PropTypes.instanceOf(List),
@@ -99,12 +101,23 @@ AnalyticsExport.defaultProps = {
   fileErrorURLs: List(),
   onOffStats: List(),
   serviceTypes: List(),
+  storageUsage: List(),
   trafficByTime: List(),
   urlMetrics: List(),
   visitorsByTime: List()
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { params: { account, group, storage } }) {
+  let getStorageByParent
+
+  if(storage) {
+    getStorageByParent = getByStorageId(state, storage)
+  } else if(group) {
+    getStorageByParent = getByGroupId(state, group)
+  } else {
+    getStorageByParent = getByAccountId(state, account)
+  }
+
   return {
     activeAccount: state.account.get('activeAccount'),
     activeGroup: state.group.get('activeGroup'),
@@ -112,6 +125,7 @@ function mapStateToProps(state) {
     fileErrorURLs: state.reports.get('fileErrorURLs'),
     onOffStats: state.traffic.get('onOffNet').get('detail'),
     serviceTypes: state.ui.get('analysisServiceTypes'),
+    storageUsage: getStorageByParent && getStorageByParent.get('detail'),
     trafficByTime: state.traffic.getIn(['byTime', 'details']),
     traffic: state.traffic.getIn(['traffic', 0, 'detail']),
     urlMetrics: state.reports.get('urlMetrics'),
