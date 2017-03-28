@@ -27,8 +27,8 @@ class FileExtension extends React.Component {
   }
 
   extensionsFromMatchCase(match) {
-    const matchCase = match.getIn(['cases', 0, 0])
-    const rawExtensionList = matchCase.match(FILE_EXTENSION_REGEXP)[1];
+    const value = match.get('value')
+    const rawExtensionList = value.match(FILE_EXTENSION_REGEXP)[1];
 
     if (rawExtensionList) {
       return rawExtensionList.split('|').map(extension => { return { id: extension, label: extension } })
@@ -73,10 +73,10 @@ class FileExtension extends React.Component {
   saveChanges() {
     const matchCase = this.matchCaseFromExtensions(this.state.extensions)
     let newMatch = this.props.match
-    newMatch = newMatch.setIn(['cases', 0, 0], matchCase)
+    newMatch = newMatch.set('value', matchCase)
 
     this.props.changeValue(this.props.path, newMatch)
-    this.props.close()
+    this.props.activateMatch(null)
   }
 
   render() {
@@ -123,6 +123,7 @@ class FileExtension extends React.Component {
 
 FileExtension.displayName = 'FileExtension'
 FileExtension.propTypes = {
+  activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
   match: React.PropTypes.instanceOf(Immutable.Map),

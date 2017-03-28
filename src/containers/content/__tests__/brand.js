@@ -2,7 +2,7 @@ import React from 'react'
 import Immutable from 'immutable'
 import {shallow} from 'enzyme'
 
-jest.mock('../../util/helpers', () => {
+jest.mock('../../../util/helpers', () => {
   return {
     getAnalyticsUrl: jest.fn(),
     getContentUrl: jest.fn(),
@@ -15,10 +15,10 @@ jest.mock('../../util/helpers', () => {
   }
 })
 
-jest.unmock('../accounts.jsx')
-jest.unmock('../../util/status-codes')
+jest.unmock('../brand.jsx')
+jest.unmock('../../../util/status-codes')
 
-const Accounts = require('../accounts.jsx').Accounts
+import Brand from '../brand.jsx'
 
 function accountActionsMaker() {
   return {
@@ -84,11 +84,11 @@ const fakeMetrics = Immutable.fromJS([
 
 const urlParams = {brand: 'udn'}
 
-describe('Accounts', () => {
+describe('Brand', () => {
   it('should exist', () => {
     const fetchData=jest.fn()
     let accounts = shallow(
-      <Accounts
+      <Brand
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
@@ -105,7 +105,7 @@ describe('Accounts', () => {
     const accountActions = accountActionsMaker()
     const fetchData=jest.fn()
     shallow(
-      <Accounts
+      <Brand
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
@@ -120,7 +120,7 @@ describe('Accounts', () => {
 
   it('should render contentItems component', () => {
     const accounts = shallow(
-      <Accounts
+      <Brand
         accountActions={accountActionsMaker()}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
@@ -130,13 +130,14 @@ describe('Accounts', () => {
         metrics={fakeMetrics}
         username="test"/>
     )
-    expect(accounts.find('.groups-container').length).toBe(1)
+    expect(accounts.find('ContentItems').length).toBe(1)
   });
 
   it('should delete an account when clicked', () => {
     const accountActions = accountActionsMaker()
+    const removeAccount = jest.fn(() => Promise.resolve() )
     let accounts = shallow(
-      <Accounts
+      <Brand
         accountActions={accountActions}
         uiActions={uiActionsMaker()}
         metricsActions={metricsActionsMaker()}
@@ -144,9 +145,11 @@ describe('Accounts', () => {
         accounts={fakeAccounts}
         params={urlParams}
         username="test"
-        metrics={fakeMetrics}/>
+        metrics={fakeMetrics}
+        removeAccount={removeAccount}
+      />
     )
     accounts.instance().deleteAccount('1')
-    expect(accountActions.deleteAccount.mock.calls[0]).toEqual(['udn','1'])
+    expect(removeAccount.mock.calls[0]).toEqual([{brand: 'udn', id: '1'}])
   })
 })
