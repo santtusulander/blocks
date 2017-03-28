@@ -78,3 +78,13 @@ $token-horizontal-padding: em(12px, $form-font-size);
     }
   }
 }
+
+.asn-lookup {
+  input::-webkit-contacts-auto-fill-button {
+    position: absolute;
+    right: 0;
+    display: none !important;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
