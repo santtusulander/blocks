@@ -57,3 +57,12 @@
     opacity: 0;
   }
 }
+
+// This is hack to fix Aspera plugin DOM magic
+// UDNP-3208 - Drop zone disappears after Aspera is connected on Safari and IE11
+#aspera-web-container {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  z-index: -999 !important;
+}
