@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react'
 
-const CustomLegend = ({ data = [], payload }) => {
+const CustomLegend = ({ data = [], payload, order }) => {
   if(!data.length && payload.length) {
     data = payload.map((pl) => pl.payload )
+  }
+  if(order) {
+    data.sort((a, b) => order.indexOf(a.dataKey) - order.indexOf(b.dataKey))
   }
   return (
     <div className="bar-chart-legend">
@@ -21,7 +24,8 @@ const CustomLegend = ({ data = [], payload }) => {
 CustomLegend.displayName = "CustomLegend"
 CustomLegend.propTypes = {
   data: PropTypes.array,
-  payload: PropTypes.array
+  payload: PropTypes.array,
+  order: PropTypes.array
 }
 
 export default CustomLegend
