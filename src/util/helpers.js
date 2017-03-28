@@ -361,7 +361,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 
 
 export function filterAccountsByUserName (accounts) {
-  // placeholder for now
+  // placeholder for now 
   return accounts
 }
 
