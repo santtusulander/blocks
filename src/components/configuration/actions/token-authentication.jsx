@@ -129,11 +129,11 @@ export class TokenAuth extends React.Component {
     )
   }
 
-  showSampleOutputDialog(values) {
+  showSampleOutputDialog() {
     this.props.uiActions.showInfoDialog({
       className: 'token-auth-sample-dialog',
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
-      children: this.renderSampleOutputDialogChildren(values),
+      children: this.renderSampleOutputDialogChildren(this.props.tokenValues),
       okButton: true,
       cancelButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -145,9 +145,12 @@ export class TokenAuth extends React.Component {
   }
 
   showSampleCodeDialog() {
+    const { encryption } = this.props.tokenValues
+
+    const hashMethod = ENCRYPTION_OPTIONS.filter(({value}) => encryption === value)[0].label
     this.props.uiActions.showInfoDialog({
       className: 'token-auth-sample-dialog',
-      title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{hashMethod: 'MD5'}} />,
+      title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleCodeDialog.title' values={{ hashMethod }} />,
       children: this.renderSampleCodeDialogChildren(),
       okButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -180,7 +183,7 @@ export class TokenAuth extends React.Component {
     // this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
   }
 
-  renderSampleOutputDialogChildren(values = {}) {
+  renderSampleOutputDialogChildren({ schema }) {
     const renderRow = (titleID, content) => {
       return (
         <tr>
@@ -199,10 +202,10 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          { values.schema &&
+          { schema &&
             renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
-              values.schema.map(item => (
+              schema.map(item => (
                 this.props.intl.formatMessage({
                   id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
                 })
@@ -306,7 +309,7 @@ export class TokenAuth extends React.Component {
               <Button
                 className="pull-left token-auth-no-side-padding"
                 bsStyle="link"
-                onClick={() => this.showSampleOutputDialog(tokenValues)}
+                onClick={() => this.showSampleOutputDialog()}
               >
                 <FormattedMessage id="portal.policy.edit.tokenauth.viewSampleButton.text" />
               </Button>
