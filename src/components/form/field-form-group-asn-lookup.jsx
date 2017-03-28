@@ -3,16 +3,18 @@ import { Field } from 'redux-form'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 import axios from 'axios'
-import { BASE_URL_NORTH } from '../../redux/util'
+import { BASE_URL_NORTH, qsBuilder } from '../../redux/util'
 
 import FieldFormGroupTypeahead from '../form/field-form-group-typeahead'
 import { ASN_STARTING_SEARCH_COUNT, ASN_SEARCH_DELAY, ASN_ITEMS_COUNT_TO_SEARCH } from '../../constants/network'
 import { formatASN } from '../../util/helpers'
 
-const fetchAsns = (filterBy, filterValue) =>
-  axios.get(`${BASE_URL_NORTH}/asns?filter_by=${filterBy}&filter_value=${filterValue}&page_size=${ASN_ITEMS_COUNT_TO_SEARCH}`)
-    .then(res => res ? res.data.data : [])
+const fetchAsns = (filterBy, filterValue) => {
+  const queryParams = qsBuilder({ filter_by: filterBy, filter_value: filterValue, page_size: ASN_ITEMS_COUNT_TO_SEARCH })
 
+  return axios.get(`${BASE_URL_NORTH}/asns${queryParams}`)
+    .then(res => res ? res.data.data : [])
+}
 class FieldFormGroupAsnLookup extends Component {
   constructor(props) {
     super(props)
