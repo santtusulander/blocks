@@ -169,22 +169,20 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               onChange={this.handleChange(this.props.rulePath.concat(['rule_name']))}/>
           </FormGroup>
 
-          {ruleType !== POLICY_TYPES.DEFAULT &&
-            <FormGroup>
-              <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
-              <Select
-                className="input-select"
-                value={ruleType}
-                onSelect={this.props.changeActiveRuleType}
-                options={[
-                  { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
-                  { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
-                  { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
-                  { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
-                ]}
-              />
-            </FormGroup>
-          }
+          <FormGroup>
+            <ControlLabel><FormattedMessage id="portal.policy.edit.editRule.type.text"/></ControlLabel>
+            <Select
+              className="input-select"
+              value={ruleType}
+              onSelect={this.props.changeActiveRuleType}
+              options={[
+                { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
+                { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
+                { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
+                { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
+              ]}
+            />
+          </FormGroup>
 
           <Row className="header-btn-row">
             <Col xs={8}>

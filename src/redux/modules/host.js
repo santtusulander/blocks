@@ -65,13 +65,13 @@ export function deleteFailure(state) {
 export function fetchSuccess(state, action) {
   let host = action.payload
   host.services[0].configurations = host.services[0].configurations.map(config => {
-    if(!config.default_policy || !config.default_policy.policy_rules) {
-      config.default_policy = {policy_rules:[]}
+    if (!config.defaults) {
+      config.defaults = {}
     }
-    if(!config.request_policy || !config.request_policy.policy_rules) {
+    if (!config.request_policy || !config.request_policy.policy_rules) {
       config.request_policy = {policy_rules:[]}
     }
-    if(!config.response_policy || !config.response_policy.policy_rules) {
+    if (!config.response_policy || !config.response_policy.policy_rules) {
       config.response_policy = {policy_rules:[]}
     }
     return config;
