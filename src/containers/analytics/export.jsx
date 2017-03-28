@@ -40,6 +40,9 @@ class AnalyticsExport extends React.Component {
       case 'url-report':
         exportData = [this.props.urlMetrics]
         break
+      case 'storage':
+        exportData = [this.props.storageUsage]
+        break
     }
     const hasAllData = exportData.every(data => typeof data !== 'undefined' && data.size)
     return hasAllData ? exportData : []
