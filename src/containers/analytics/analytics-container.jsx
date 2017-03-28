@@ -151,7 +151,7 @@ class AnalyticsContainer extends React.Component {
     ]
     const tabConfigFilters = tabConfig.get('filters')
     const isTrafficConfig = (tabConfig.get('key') === 'traffic')
-    const isSPAccount = accountIsServiceProviderType(this.props.activeAccount)
+    const isSPAccount = this.props.activeAccount && accountIsServiceProviderType(this.props.activeAccount)
     //UDNP-1859: Remove 'recordType' filter from Traffic tab for SP accounts
     const showFilters = (isTrafficConfig && isSPAccount) ? tabConfigFilters.filter(item => item !== 'recordType') : tabConfigFilters
 
