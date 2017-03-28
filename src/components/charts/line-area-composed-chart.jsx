@@ -47,14 +47,6 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
               margin={isMiniChart ? {} : {left:50, bottom: 30, top: 100}}
               className={classNames({'comparison': isComparison}, {'non-stacked': !isComparison})}
           >
-            <Area
-              isAnimationActive={false}
-              fillOpacity={0.9}
-              dataKey={dataKey}
-              stackId="1"
-              name={keyLabel}
-              className="storage"
-            />
             { isComparison &&
               <Area
                 isAnimationActive={false}
@@ -65,6 +57,14 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
                 className="comparison_storage"
               />
             }
+            <Area
+              isAnimationActive={false}
+              fillOpacity={0.9}
+              dataKey={dataKey}
+              stackId="1"
+              name={keyLabel}
+              className="storage"
+            />
             { haveEstimate &&
               <Line dataKey="estimate" name="Estimate" isAnimationActive={false} className="estimate" dot={false} />
             }
@@ -90,7 +90,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
               <Legend
                 wrapperStyle={{top: 20, right: 20, left: 'auto', width: 'auto'}}
                 margin={{top: 0, left: 0, right: 0, bottom: 0}}
-                content={<CustomLegend />}
+                content={<CustomLegend order={[dataKey, comparisonDataKey]} />}
               />
             }
 
