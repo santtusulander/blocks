@@ -30,6 +30,8 @@
   "portal.policy.edit.tokenauth.viewSampleButton.text": "View sample output",
   "portal.policy.edit.tokenauth.sampleOutputDialog.title": "Sample Token Output",
   "portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text": "Sample code",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title": "Schema",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.table.sampleURL.title": "Sample URL",
   "portal.policy.edit.tokenauth.sampleCodeDialog.title": "Sample Code / Generate {hashMethod} Hash",
   "portal.policy.edit.tokenauth.sampleCodeDialog.copyCodeButton.text": "Copy code",
   "portal.policy.edit.tokenauth.sampleCodeDialog.copyCode.successful.message": "Code sample copied to clipboard successfully.",

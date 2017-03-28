@@ -42,6 +42,8 @@ export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
   {label: 'Javascript', value: 3}
 ]
 
+export const STANDARD_TOKEN_SAMPLE_URL = 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8'
+
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
 export const STREAMING_ENCRYPTION_DEFAULT = 'HMAC_SHA1'

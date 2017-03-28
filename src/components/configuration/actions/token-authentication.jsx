@@ -16,8 +16,15 @@ import IconChevronRight from '../../icons/icon-chevron-right'
 import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
+import TruncatedTitle from '../../truncated-title'
 
-import { ENCRYPTION_OPTIONS, SAMPLE_CODE_LANGUAGE_OPTIONS, SCHEMA_OPTIONS, SAMPLE_CODE_LANGUAGE_DEFAULT, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS,
+         SAMPLE_CODE_LANGUAGE_OPTIONS,
+         SCHEMA_OPTIONS,
+         SAMPLE_CODE_LANGUAGE_DEFAULT,
+         SCHEMA_DEFAULT,
+         ENCRYPTION_DEFAULT,
+         STANDARD_TOKEN_SAMPLE_URL } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -174,17 +181,24 @@ export class TokenAuth extends React.Component {
   }
 
   renderSampleOutputDialogChildren(values = {}) {
+    const renderRow = (titleID, content) => {
+      return (
+        <tr>
+          <td><FormattedMessage id={titleID} /></td>
+          <td><TruncatedTitle content={content} /></td>
+        </tr>
+      )
+    }
+
     const renderSchemaRow = (schema) => {
       const schemaLabels = schema.map(item => (
         this.props.intl.formatMessage({
           id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
         })
       ))
-      return (
-        <tr>
-          <td>Schema</td>
-          <td>{schemaLabels.join(' + ')}</td>
-        </tr>
+      return renderRow(
+        'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
+        schemaLabels.join(' + ')
       )
     }
 
@@ -197,7 +211,11 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {values.schema && renderSchemaRow(values.schema) }
+          { values.schema && renderSchemaRow(values.schema) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.sampleURL.title',
+              STANDARD_TOKEN_SAMPLE_URL
+          ) }
         </tbody>
       </Table>
     )
