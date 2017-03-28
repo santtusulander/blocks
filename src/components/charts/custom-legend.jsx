@@ -24,8 +24,8 @@ const CustomLegend = ({ data = [], payload, order }) => {
 CustomLegend.displayName = "CustomLegend"
 CustomLegend.propTypes = {
   data: PropTypes.array,
-  payload: PropTypes.array,
-  order: PropTypes.array
+  order: PropTypes.array,
+  payload: PropTypes.array
 }
 
 export default CustomLegend
