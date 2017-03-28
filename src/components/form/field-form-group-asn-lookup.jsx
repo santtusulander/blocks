@@ -47,6 +47,7 @@ class FieldFormGroupAsnLookup extends Component {
     return (
       <Field
         name={this.props.name || 'AsnLookup'}
+        className='asn-lookup'
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}
