@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, propTypes as reduxFormPropTypes } from 'redux-form'
+import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } from 'redux-form'
 import { Button, Modal, Table, Nav, NavItem, FormControl } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
@@ -122,11 +122,11 @@ export class TokenAuth extends React.Component {
     )
   }
 
-  showSampleOutputDialog() {
+  showSampleOutputDialog(values) {
     this.props.uiActions.showInfoDialog({
       className: 'token-auth-sample-dialog',
       title: <FormattedMessage id='portal.policy.edit.tokenauth.sampleOutputDialog.title'/>,
-      children: this.renderSampleOutputDialogChildren(),
+      children: this.renderSampleOutputDialogChildren(values),
       okButton: true,
       cancelButton: true,
       cancel: () => this.props.uiActions.hideInfoDialog(),
@@ -167,12 +167,13 @@ export class TokenAuth extends React.Component {
   }
 
   showNotification(message) {
-    clearTimeout(this.notificationTimeout)
-    this.props.uiActions.changeNotification(message)
-    this.notificationTimeout = setTimeout(this.props.uiActions.changeNotification, 10000)
+    console.log(message.props.id)
+    // clearTimeout(this.notificationTimeout)
+    // this.props.uiActions.changeSidePanelNotification(message)
+    // this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
   }
 
-  renderSampleOutputDialogChildren() {
+  renderSampleOutputDialogChildren(values = {}) {
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -182,14 +183,12 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-          </tr>
+          {values.schema &&
+            <tr>
+              <td>Schema</td>
+              <td>{values.schema.join(' + ')}</td>
+            </tr>
+          }
         </tbody>
       </Table>
     )
@@ -231,6 +230,7 @@ export class TokenAuth extends React.Component {
       invalid,
       submitting,
       schema,
+      tokenValues,
       type,
       streaming_ttl,
       streaming_add_ip_addr,
@@ -282,7 +282,7 @@ export class TokenAuth extends React.Component {
               <Button
                 className="pull-left token-auth-no-side-padding"
                 bsStyle="link"
-                onClick={() => this.showSampleOutputDialog()}
+                onClick={() => this.showSampleOutputDialog(tokenValues)}
               >
                 <FormattedMessage id="portal.policy.edit.tokenauth.viewSampleButton.text" />
               </Button>
@@ -346,6 +346,18 @@ TokenAuth.propTypes = {
   ...reduxFormPropTypes
 }
 
+const authFormSelector = formValueSelector('token-auth-form')
+
+const mapStateToProps = (state) => (
+  {
+    tokenValues: {
+      encryption: authFormSelector(state, 'encryption'),
+      schema: authFormSelector(state, 'schema'),
+      sharedKey: authFormSelector(state, 'shared_key')
+    }
+  }
+)
+
 const mapDispatchToProps = (dispatch) => (
   {
     uiActions: bindActionCreators(uiActionCreators, dispatch)
@@ -357,4 +369,4 @@ const form = reduxForm({
   validate
 })(TokenAuth)
 
-export default connect(null, mapDispatchToProps)(injectIntl(form))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(form))
