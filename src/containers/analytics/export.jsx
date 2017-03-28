@@ -3,7 +3,7 @@ import {Map, List} from 'immutable'
 import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'
 
-import { getByAccountId, getByGroupId, getByStorageId, getDataForStorageAnalysisChart } from '../../redux/modules/entities/storage-metrics/selectors'
+import { getByAccountId, getByGroupId, getByStorageId } from '../../redux/modules/entities/storage-metrics/selectors'
 import { createCSVExporters } from '../../util/analysis-csv-export'
 import IconExport from '../../components/icons/icon-export.jsx'
 
