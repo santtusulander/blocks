@@ -17,7 +17,7 @@ import FieldFormGroup from '../../form/field-form-group'
 import FieldFormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
 
-import { ENCRYPTION_OPTIONS, SAMPLE_CODE_LANGUAGE_OPTIONS, SAMPLE_CODE_LANGUAGE_DEFAULT, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
+import { ENCRYPTION_OPTIONS, SAMPLE_CODE_LANGUAGE_OPTIONS, SCHEMA_OPTIONS, SAMPLE_CODE_LANGUAGE_DEFAULT, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -174,6 +174,20 @@ export class TokenAuth extends React.Component {
   }
 
   renderSampleOutputDialogChildren(values = {}) {
+    const renderSchemaRow = (schema) => {
+      const schemaLabels = schema.map(item => (
+        this.props.intl.formatMessage({
+          id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
+        })
+      ))
+      return (
+        <tr>
+          <td>Schema</td>
+          <td>{schemaLabels.join(' + ')}</td>
+        </tr>
+      )
+    }
+
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -183,12 +197,7 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {values.schema &&
-            <tr>
-              <td>Schema</td>
-              <td>{values.schema.join(' + ')}</td>
-            </tr>
-          }
+          {values.schema && renderSchemaRow(values.schema) }
         </tbody>
       </Table>
     )
