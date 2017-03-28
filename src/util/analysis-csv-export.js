@@ -80,8 +80,12 @@ export function createCSVExporters(filenamePart) {
     'url-report': urlMetrics => {
       generate('URL Report', urlMetrics)
     },
-    'storage-usage': storageStats => {
-      const data = storageStats.map(mapTimestamps)
+    'storage': storageStats => {
+      const data = storageStats.map(item => {
+        return item
+          .set('historical_timestamp', moment.utc(item.get('historical_timestamp'), 'X').format())
+          .set('timestamp', moment.utc(item.get('timestamp'), 'X').format())
+      })
       generate('Storage Usage', data)
     }
   }
