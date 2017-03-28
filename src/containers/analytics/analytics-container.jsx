@@ -18,7 +18,7 @@ import DateRanges from '../../constants/date-ranges'
 import PageContainer from '../../components/layout/page-container'
 import Content from '../../components/layout/content'
 
-import { getTabName, userIsServiceProvider } from '../../util/helpers.js'
+import { getTabName, userIsServiceProvider, accountIsServiceProviderType } from '../../util/helpers.js'
 import checkPermissions from '../../util/permissions'
 import * as PERMISSIONS from '../../constants/permissions'
 import analyticsTabConfig from '../../constants/analytics-tab-config'
@@ -141,7 +141,7 @@ class AnalyticsContainer extends React.Component {
       return null
     }
 
-    const thisTabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
+    const tabConfig = analyticsTabConfig.find(tab => tab.get('key') === getTabName(pathname))
     const activeAccountProviderType = activeAccount && activeAccount.get('provider_type')
     const dateRanges = [
       DateRanges.MONTH_TO_DATE,
@@ -149,6 +149,11 @@ class AnalyticsContainer extends React.Component {
       DateRanges.THIS_WEEK,
       DateRanges.LAST_WEEK
     ]
+    const tabConfigFilters = tabConfig.get('filters')
+    const isTrafficConfig = (tabConfig.get('key') === 'traffic')
+    const isSPAccount = this.props.activeAccount && accountIsServiceProviderType(this.props.activeAccount)
+    //UDNP-1859: Remove 'recordType' filter from Traffic tab for SP accounts
+    const showFilters = (isTrafficConfig && isSPAccount) ? tabConfigFilters.filter(item => item !== 'recordType') : tabConfigFilters
 
     return (
       <AnalyticsFilters
@@ -158,7 +163,7 @@ class AnalyticsContainer extends React.Component {
         onFilterChange={this.onFilterChange}
         filters={filters}
         filterOptions={filterOptions}
-        showFilters={thisTabConfig.get('filters')}
+        showFilters={showFilters}
       />
     )
   }

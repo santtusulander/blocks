@@ -16,6 +16,10 @@ $section-header-bottom-margin: rem(24px);
     .section-header-addon {
       flex-grow: 2;
     }
+
+    .section-header-addon.before {
+      flex-grow: 0;
+    }
   }
 
   h3 {
