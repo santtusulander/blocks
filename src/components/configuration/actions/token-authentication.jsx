@@ -190,18 +190,6 @@ export class TokenAuth extends React.Component {
       )
     }
 
-    const renderSchemaRow = (schema) => {
-      const schemaLabels = schema.map(item => (
-        this.props.intl.formatMessage({
-          id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
-        })
-      ))
-      return renderRow(
-        'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
-        schemaLabels.join(' + ')
-      )
-    }
-
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -211,7 +199,16 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          { values.schema && renderSchemaRow(values.schema) }
+          { values.schema &&
+            renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
+              values.schema.map(item => (
+                this.props.intl.formatMessage({
+                  id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
+                })
+              )).join(' + ')
+            )
+          }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.sampleURL.title',
               STANDARD_TOKEN_SAMPLE_URL
