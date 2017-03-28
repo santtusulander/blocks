@@ -27,7 +27,7 @@ class FieldFormGroupAsnLookup extends Component {
     }
 
     const filterType = parseInt(query) ? 'asn' : 'organization'
-    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: query })
+    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: escape(query)})
       .then(resp => {
         let options = []
         resp.payload.forEach(item => {
@@ -47,6 +47,7 @@ class FieldFormGroupAsnLookup extends Component {
     return (
       <Field
         name={this.props.name || 'AsnLookup'}
+        className='asn-lookup'
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}

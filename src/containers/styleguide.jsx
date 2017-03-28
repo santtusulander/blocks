@@ -60,6 +60,7 @@ import StorageKPI from '../components/storage/storage-kpi'
 import StorageItemChart from '../components/content/storage/storage-item-chart'
 import SortableMultiSelector from '../components/sortable-multi-selector'
 import FileUploadStatus from '../components/storage/file-upload-status-container.jsx'
+import PolicyWeight from '../components/configuration/policy-weight'
 
 import IconAccount       from '../components/icons/icon-account'
 import IconAdd           from '../components/icons/icon-add'
@@ -1193,6 +1194,9 @@ class Styleguide extends React.Component {
             onChange={val => this.setState({ sortableMultiSelectorItems: Immutable.List(val) })}
             value={this.state.sortableMultiSelectorItems}
           />
+
+          <h1 className="page-header">Slider</h1>
+            <PolicyWeight secondaryProvider="CDN" onChange={() => {}} />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

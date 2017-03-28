@@ -42,7 +42,7 @@ class ServiceOptionSelector extends React.Component {
     }
 
     if(option.requires_charge_number) {
-      this.props.showServiceItemForm(serviceId, optionId, callback)
+      this.props.showServiceItemForm(serviceId, optionId, callback, optionValue)
     } else {
       this.changeOptionValue(serviceId, optionId, optionValue, serviceIndex, optionIndex)
     }

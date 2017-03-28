@@ -4,15 +4,20 @@ import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 
+import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
-import { changeTheme } from '../redux/modules/ui'
+import { changeTheme, IS_LOCAL_STORAGE_SUPPORTED } from '../redux/modules/ui'
 
 import LoginForm from '../components/login/login-form.jsx'
 import LoginFormTwoFactorCode from '../components/login/login-form-two-factor-code.jsx'
 import LoginFormTwoFactorApp from '../components/login/login-form-two-factor-app.jsx'
 
+import { BANNER_NOTIFICATION_NO_LOCAL_STORAGE } from '../components/shared/banner-notification'
 import { getUserToken, getUserName, getUITheme } from '../util/local-storage'
 import { isValidEmail } from '../util/validators'
+
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import BannerNotification from '../components/shared/banner-notification'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -35,6 +40,12 @@ export class Login extends React.Component {
     this.saveUserName = this.saveUserName.bind(this)
   }
 
+  componentWillMount() {
+    if (!IS_LOCAL_STORAGE_SUPPORTED) {
+      this.props.uiActions.changeBannerNotification(BANNER_NOTIFICATION_NO_LOCAL_STORAGE)
+    }
+  }
+
   componentDidMount(){
     const token = getUserToken()
     const redirect = this.props.location.query.redirect
@@ -53,6 +64,12 @@ export class Login extends React.Component {
     } else if ( redirect ) {
       // No token. Login required
       // we had redirect but no token
+    }
+  }
+
+  componentWillUnmount() {
+    if (!IS_LOCAL_STORAGE_SUPPORTED) {
+      this.props.uiActions.changeBannerNotification('')
     }
   }
 
@@ -208,17 +225,38 @@ export class Login extends React.Component {
     }
 
     return (
-      renderForm()
+      <div>
+        {renderForm()}
+
+        <ReactCSSTransitionGroup
+          component="div"
+          className="banner-notification-transition"
+          transitionName="banner-notification-transition"
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={500}
+          transitionAppear={true}
+          transitionAppearTimeout={1000}>
+          {this.props.bannerNotification ?
+            <BannerNotification
+              handleClose={this.hideBannerNotification}
+              notificationCode={this.props.bannerNotification}
+            />
+            : ''
+          }
+        </ReactCSSTransitionGroup>
+      </div>
     )
   }
 }
 
 Login.displayName = 'Login'
 Login.propTypes = {
+  bannerNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   fetching: React.PropTypes.bool,
   location: React.PropTypes.object,
   router: React.PropTypes.object,
   setUiTheme: React.PropTypes.func,
+  uiActions: React.PropTypes.object,
   userActions: React.PropTypes.object,
   username: React.PropTypes.string
 }
@@ -226,13 +264,15 @@ Login.propTypes = {
 function mapStateToProps(state) {
   return {
     fetching: state.user && state.user.get('fetching') || state.account && state.account.get('fetching'),
-    username: state.user.get('username') || getUserName() || null
+    username: state.user.get('username') || getUserName() || null,
+    bannerNotification: state.ui.get('bannerNotification')
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setUiTheme: () => dispatch(changeTheme( getUITheme() )),
+    uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
 }

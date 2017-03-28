@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl'
 
 import IconEmail from '../icons/icon-email.jsx'
 import IconPassword from '../icons/icon-password.jsx'
+import { IS_LOCAL_STORAGE_SUPPORTED } from '../../redux/modules/ui'
 
 export class LoginForm extends Component {
   constructor(props) {
@@ -108,6 +109,7 @@ export class LoginForm extends Component {
                 <FormControl
                   type="text"
                   id="username"
+                  disabled={!IS_LOCAL_STORAGE_SUPPORTED}
                   onFocus={this.checkUsernameActive(true)}
                   onBlur={this.checkUsernameActive(false)}
                   value={this.state.username}
@@ -122,6 +124,7 @@ export class LoginForm extends Component {
                 <FormControl
                   id="password"
                   type="password"
+                  disabled={!IS_LOCAL_STORAGE_SUPPORTED}
                   onFocus={this.checkPasswordActive(true)}
                   onBlur={this.checkPasswordActive(false)}
                   value={this.state.password}
@@ -131,8 +134,10 @@ export class LoginForm extends Component {
             <Row>
               <Col xs={4}>
                 <div className="remember-checkbox">
-                  <Checkbox onChange={this.toggleRemember}
-                            checked={this.state.rememberUsername}>
+                  <Checkbox
+                    disabled={!IS_LOCAL_STORAGE_SUPPORTED}
+                    onChange={this.toggleRemember}
+                    checked={this.state.rememberUsername}>
                     <FormattedMessage id="portal.login.rememberMe.text" />
                   </Checkbox>
                 </div>
@@ -140,12 +145,14 @@ export class LoginForm extends Component {
               <Col xs={8}>
                 <Button type="submit" bsStyle="primary"
                         className="pull-right"
-                        disabled={this.props.fetching || !this.state.username || !this.state.password}>
+                        disabled={this.props.fetching || !this.state.username || !this.state.password || !IS_LOCAL_STORAGE_SUPPORTED}>
                   {this.props.fetching ? <FormattedMessage id="portal.button.loggingIn"/> : <FormattedMessage id="portal.button.login"/>}
                 </Button>
-                <Link to={`/forgot-password`} className="btn btn-link pull-right">
-                  <FormattedMessage id="portal.login.forgotPassword.text"/>
-                </Link>
+                {IS_LOCAL_STORAGE_SUPPORTED &&
+                  <Link to={`/forgot-password`} className="btn btn-link pull-right">
+                    <FormattedMessage id="portal.login.forgotPassword.text"/>
+                  </Link>
+                }
               </Col>
             </Row>
           </form>

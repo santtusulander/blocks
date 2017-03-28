@@ -11,17 +11,11 @@ import { FormattedMessage } from 'react-intl'
 class AnalyticsExport extends React.Component {
   constructor(props){
     super(props)
+    this.getExportData = this.getExportData.bind(this)
     this.exportCSV = this.exportCSV.bind(this)
   }
-  exportCSV() {
-    const {
-      activeAccount, activeGroup, activeTab,
-      params: {group, property}
-    } = this.props
-    const groupPart = group ? ` - ${activeGroup.get('name')}` : ''
-    const propertyPart = property ? ` - ${property}` : ''
-    const fileName = `${activeAccount.get('name')}${groupPart}${propertyPart}`
-    const exporters = createCSVExporters(fileName)
+
+  getExportData(activeTab) {
     let exportData = []
     switch(activeTab) {
       case 'traffic':
@@ -46,16 +40,34 @@ class AnalyticsExport extends React.Component {
         exportData = [this.props.urlMetrics]
         break
     }
+    const hasAllData = exportData.every(data => typeof data !== 'undefined' && data.size)
+    return hasAllData ? exportData : []
+  }
+
+  exportCSV() {
+    const {
+      activeAccount, activeGroup, activeTab,
+      params: {group, property}
+    } = this.props
+    const groupPart = group ? ` - ${activeGroup.get('name')}` : ''
+    const propertyPart = property ? ` - ${property}` : ''
+    const fileName = `${activeAccount.get('name')}${groupPart}${propertyPart}`
+    const exporters = createCSVExporters(fileName)
+    const exportData = this.getExportData(activeTab)
+
     if(exportData.length) {
       exporters[activeTab](...exportData)
     }
   }
+
   render() {
+    const { activeTab } = this.props
+    const exportData = this.getExportData(activeTab)
     return (
       <Button
         bsStyle="primary"
         className="has-icon"
-        disabled={this.props.activeTab === 'playback-demo'}
+        disabled={!exportData.length || activeTab === 'playback-demo'}
         onClick={this.exportCSV}>
         <IconExport />
         <FormattedMessage id="portal.button.export"/>
