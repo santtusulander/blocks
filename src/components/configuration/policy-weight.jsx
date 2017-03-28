@@ -3,25 +3,9 @@ import { FormattedMessage } from 'react-intl'
 import numeral from 'numeral'
 
 class PolicyWeight extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      value: props.initialValue
-    }
-
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange(e) {
-    this.setState({
-      value: e.target.value
-    })
-    this.props.onChange(e.target.value)
-  }
 
   render() {
-    const { secondaryProvider, steps } = this.props
+    const { steps, value, ...inputProps } = this.props
     const min = 0, max = 100
     const numbersFormat = '0.[00]'
 
@@ -44,13 +28,13 @@ class PolicyWeight extends Component {
         </div>
         <div className="policy-weight-scale">
           <input className="policy-weight-slider"
+            {...inputProps}
             type="range"
             min={min}
             max={max}
-            value={this.state.value}
+            value={value}
             step={(max - min) / steps}
-            style={{'backgroundSize': `${(this.state.value - min) * 100 / (max - min)}% 100%`}}
-            onChange={this.handleChange}
+            style={{'backgroundSize': `${(value - min) * 100 / (max - min)}% 100%`}}
           />
           <div className="ruler">
             {ticks(steps)}
@@ -58,16 +42,13 @@ class PolicyWeight extends Component {
         </div>
         <div className="policy-weight-percentage">
           <div className="primary">
-            <strong>{numeral(this.state.value).format(numbersFormat)}</strong>
+            <strong>{numeral(value).format(numbersFormat)}</strong>
             <FormattedMessage id="portal.configuration.gtm.policyWeight.percentageByMainProvider.percentage" />
           </div>
           <div className="secondary">
             <FormattedMessage
               id="portal.configuration.gtm.policyWeight.secondaryProvider.percentage"
-              values={{
-                percentage: numeral(100 - this.state.value).format(numbersFormat),
-                provider: secondaryProvider
-              }} />
+              values={{ percentage: numeral(100 - value).format(numbersFormat) }} />
           </div>
         </div>
       </div>
@@ -76,16 +57,15 @@ class PolicyWeight extends Component {
 }
 
 PolicyWeight.defaultProps = {
-  steps: 10,
-  initialValue: 100
+  steps: 10
 }
 
 PolicyWeight.displayName = 'PolicyWeight'
 PolicyWeight.propTypes = {
-  initialValue: PropTypes.number,
+  disabled: PropTypes.bool,
   onChange: PropTypes.func,
-  secondaryProvider: PropTypes.string.isRequired,
-  steps: PropTypes.number
+  steps: PropTypes.number,
+  value: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
 }
 
 export default PolicyWeight
