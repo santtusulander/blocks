@@ -5,7 +5,15 @@ $slider-width: 60%;
 
 .policy-weight {
   padding: 20px;
-  background-color: #367085;
+
+  .dark-theme & {
+    color: $dt-text-color;
+    background-color: rgba($white, 0.1);
+  }
+
+  .light-theme & {
+    background-color: rgba($white, 0.1);
+  }
 
   .policy-weight-label {
     font-size: 18px;
