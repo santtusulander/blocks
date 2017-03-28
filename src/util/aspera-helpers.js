@@ -19,7 +19,7 @@ export class Aspera {
       sdkLocation: ASPERA_CONNECT_INSTALLER,
       minVersion: ASPERA_MIN_VER,
       dragDropEnabled: dragDropEnabled,
-      containerId: containerId
+      id: containerId
     });
 
     this.asperaInitConnect = this.asperaInitConnect.bind(this)
