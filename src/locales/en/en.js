@@ -8,6 +8,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountName.placeholder.text': 'Account Name',
   'portal.account.manage.accountType.text': 'Account Type',
   'portal.account.manage.services.text': 'Services',
+  'portal.account.manage.noServices.text': 'No Services Enabled',
   'portal.account.manage.providerTypeUnknown.text': 'Unknown',
   'portal.account.manage.editAccount.title': 'Edit Account',
   'portal.account.manage.newAccount.title': 'Add New Account',
