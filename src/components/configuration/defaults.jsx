@@ -70,7 +70,7 @@ class ConfigurationDefaults extends React.Component {
 
   render() {
     const { config, intl, readOnly } = this.props
-    const cachControlEtagOptions = [
+    const cacheControlEtagOptions = [
       { value: 'strong', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>},
       { value: 'weak', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>},
       { value: 'false', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>}
@@ -141,7 +141,7 @@ class ConfigurationDefaults extends React.Component {
             <Field
               name="cache_control_check_etag"
               component={FieldFormGroupSelect}
-              options={cachControlEtagOptions}
+              options={cacheControlEtagOptions}
               onChange={this.handleChange(['defaults','cache_control_check_etag'])}
             />
           </Col>
