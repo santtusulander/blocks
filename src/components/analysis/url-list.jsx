@@ -67,9 +67,9 @@ class AnalysisURLList extends React.Component {
     let minHeight
     const listContainer = this.refs.listContainer
     if (listContainer) {
-      const footerRect = document.querySelector('footer.footer').getBoundingClientRect()
-      const containerRect = listContainer.getBoundingClientRect()
-      minHeight = Math.max(0, window.innerHeight - containerRect.top - footerRect.bottom + containerRect.bottom)
+      const { bottom: footerBottom } = document.querySelector('footer.footer').getBoundingClientRect()
+      const { top: containerTop, bottom: containerBottom } = listContainer.getBoundingClientRect()
+      minHeight = Math.max(0, window.innerHeight - containerTop - footerBottom + containerBottom)
     }
 
     return (
