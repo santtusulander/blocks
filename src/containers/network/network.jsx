@@ -932,7 +932,7 @@ Network.propTypes = {
   params: PropTypes.object,
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
