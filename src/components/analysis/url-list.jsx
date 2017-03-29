@@ -64,8 +64,16 @@ class AnalysisURLList extends React.Component {
 
     const finalURLs = filteredURLs.slice(0, 15)
 
+    let minHeight = 0
+    const listContainer = this.refs.listContainer
+    if (listContainer) {
+      const footerRect = document.querySelector('footer.footer').getBoundingClientRect()
+      const containerRect = listContainer.getBoundingClientRect()
+      minHeight = window.innerHeight - containerRect.top - (footerRect.bottom - containerRect.bottom)
+    }
+
     return (
-      <div>
+      <div ref="listContainer" style={{ minHeight }}>
         <table className="table table-striped table-analysis">
           <thead>
             <tr>
