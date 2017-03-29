@@ -136,11 +136,12 @@ export class TokenAuth extends React.Component {
       children: this.renderSampleOutputDialogChildren(this.props.tokenValues),
       okButton: true,
       cancelButton: true,
-      cancel: () => this.props.uiActions.hideInfoDialog(),
-      auxiliaryButton: {
-        handler: () => this.showSampleCodeDialog(),
-        text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text" />
-      }
+      cancel: () => this.props.uiActions.hideInfoDialog()
+      // UDNP-**** this part should be uncommented whenever we have the sample codes
+      // auxiliaryButton: {
+      //   handler: () => this.showSampleCodeDialog(),
+      //   text: <FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text" />
+      // }
     })
   }
 
@@ -177,10 +178,11 @@ export class TokenAuth extends React.Component {
   }
 
   showNotification(message) {
-    console.log(message.props.id)
-    // clearTimeout(this.notificationTimeout)
-    // this.props.uiActions.changeSidePanelNotification(message)
-    // this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
+    // UDNP-**** toast notification element won't be visible because it's under the Token Authentication modal!
+    // So if we want to show a message about copy operation status we should find another way
+    clearTimeout(this.notificationTimeout)
+    this.props.uiActions.changeSidePanelNotification(message)
+    this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
   }
 
   renderSampleOutputDialogChildren({ schema }) {
@@ -257,7 +259,6 @@ export class TokenAuth extends React.Component {
       invalid,
       submitting,
       schema,
-      tokenValues,
       type,
       streaming_ttl,
       streaming_add_ip_addr,
