@@ -152,7 +152,7 @@ Group.propTypes = {
   fetchingMetrics: PropTypes.bool,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),

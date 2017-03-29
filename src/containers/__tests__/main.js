@@ -6,6 +6,8 @@ jest.unmock('../main.jsx')
 jest.unmock('../../redux/modules/fetching/actions.js')
 import { Main } from '../main.jsx'
 
+const fakeRole = {1: 'a'}
+
 jest.mock('../../util/helpers', () => {
   return {
     filterAccountsByUserName: jest.fn()
@@ -47,7 +49,7 @@ function groupActionsMaker() {
 
 function rolesActionsMaker() {
   return {
-    fetchRoles: jest.fn()
+    fetchOne: jest.fn()
   }
 }
 
@@ -63,7 +65,7 @@ function userActionsMaker(cbResponse, actionObject) {
   return {
     startFetching: jest.fn(),
     setLogin: jest.fn(),
-    fetchUser: jest.fn(),
+    fetchUser: jest.fn(() => Promise.resolve()),
     destroyStore: jest.fn(),
     checkToken: jest.fn().mockImplementation(() => ({ then: cb => cb(actionObject) })),
     logOut: jest.fn().mockImplementation(() => {
@@ -167,9 +169,8 @@ describe('Main', () => {
     expect(userActions.checkToken.mock.calls.length).toBe(1);
   });
 
-  it('should fetch user and roles if token check ok', () => {
+  it('should fetch user', () => {
     subject()
-    expect(rolesActions.fetchRoles.mock.calls.length).toBe(1);
     expect(userActions.fetchUser.mock.calls.length).toBe(1);
   });
 
@@ -181,15 +182,15 @@ describe('Main', () => {
   */
 
   it('should show footer if logged in and not fetching', () => {
-    expect(subject(null, true, { a: 'b' }, ['a']).find('Footer').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, fakeRole).find('Footer').length).toBe(1);
   });
 
   it('should show header if logged in', () => {
-    expect(subject(null, true, { a: 'b' }, ['a']).find('Header').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, fakeRole).find('Header').length).toBe(1);
   });
 
   it('should show navigation if logged in', () => {
-    expect(subject(null, true, { a: 'b' }, ['a']).find('Navigation').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, fakeRole).find('Navigation').length).toBe(1);
   });
 
   it('should show loading spinner if logged in and no current user or roles', () => {
@@ -197,7 +198,7 @@ describe('Main', () => {
   });
 
   it('should have .chart-view class when viewing charts', () => {
-    expect(subject(null, true, { a: 'b' }, ['a']).find('.chart-view').length).toBe(1);
+    expect(subject(null, true, { a: 'b' }, fakeRole).find('.chart-view').length).toBe(1);
   });
 
   it('handles a successful log out attempt', () => {
@@ -209,7 +210,7 @@ describe('Main', () => {
 
   it('should set roles and currentUser in getChildContext()', () => {
     const testUser = fromJS({ a: 'b' })
-    const testRoles = fromJS(['b'])
+    const testRoles = fromJS(fakeRole)
 
     const wrapper = subject(null, true, testUser, testRoles)
     expect(wrapper.instance().getChildContext()).toEqual({roles: testRoles, currentUser: testUser})

@@ -16,7 +16,7 @@ describe('Navigation', () => {
 
   const currentUser = new Map()
   const params = {account: "1", brand: "udn"}
-  const roles = new List()
+  const roles = new Map()
   const router = fakeRouterMaker()
 
   beforeEach(() => {
