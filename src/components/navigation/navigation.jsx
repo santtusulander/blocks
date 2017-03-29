@@ -68,7 +68,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         <li>
           <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
             <IconDashboard />
-            <span>Dashboard</span>
+            <FormattedMessage id="portal.navigation.dashboard.text"/>            
           </Link>
         </li>
 
