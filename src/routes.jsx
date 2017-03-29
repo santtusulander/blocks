@@ -208,7 +208,7 @@ const AccountIsCP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
     return redirectPath
   },
   allowRedirectBack: false

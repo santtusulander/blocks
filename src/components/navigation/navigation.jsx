@@ -62,21 +62,18 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   const isSP = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
   const isCP = userIsContentProvider(currentUser) || accountIsContentProviderType(activeAccount)
 
+  /* When users with SP accounts log in, the initial route is still '/content/udn' before we redirect to 'dashboard/udn'.
+    Hence, we need to set active class for dashboard before redirecting */
+  const dashboardSPActive = contentActive && isSP
+
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
-        <li>
-          <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
-            <IconDashboard />
-            <FormattedMessage id="portal.navigation.dashboard.text"/>            
-          </Link>
-        </li>
-
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
-            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
+            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive}>
               {isCP ? <IconContent/> : <IconBrowse />}
               <span>
                 {isCP
@@ -88,9 +85,16 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
           </li>
         </IsAllowed>
 
+        <li>
+          <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+            <IconDashboard />
+            <FormattedMessage id="portal.navigation.dashboard.text"/>
+          </Link>
+        </li>
+
         {isSP &&
           <li>
-            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
+            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={networkActive}>
               <IconNetwork />
               <span><FormattedMessage id="portal.navigation.network.text"/></span>
             </Link>
