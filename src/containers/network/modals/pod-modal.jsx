@@ -296,6 +296,11 @@ class PodFormContainer extends React.Component {
 
     const subTitle = `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} ${edit ? ' / ' + initialValues.pod_name : ''}`
 
+    let footprintIATACode = pop.get('iata')
+    if (footprintIATACode) {
+      footprintIATACode = footprintIATACode.toLowerCase()
+    }
+
     return (
       <div>
         <SidePanel
@@ -335,7 +340,7 @@ class PodFormContainer extends React.Component {
         <FootprintFormContainer
           accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
-          location={pop.get('iata').toLowerCase()}
+          location={footprintIATACode}
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
