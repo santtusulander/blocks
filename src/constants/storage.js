@@ -10,10 +10,7 @@ export const STORAGE_ESTIMATE_UNITS_DEFAULT = 'tb'
 export const STORAGE_ESTIMATE_UNITS = [
   ['pb', 'PB'],
   ['tb', 'TB'],
-  ['gb', 'GB'],
-  ['mb', 'MB'],
-  ['kb', 'KB'],
-  ['b', 'B']
+  ['gb', 'GB']
 ]
 // Storage metrics shift time, need according to some delay
 export const STORAGE_METRICS_SHIFT_TIME = 2
