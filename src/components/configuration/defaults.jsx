@@ -70,6 +70,17 @@ class ConfigurationDefaults extends React.Component {
 
   render() {
     const { config, intl, readOnly } = this.props
+    const cachControlEtagOptions = [
+      { value: 'strong', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>},
+      { value: 'weak', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>},
+      { value: 'false', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>}
+    ]
+    const ttlUnitOptions = [
+      {value: 'seconds', label: <FormattedMessage id="portal.units.seconds"/>},
+      {value: 'minutes', label: <FormattedMessage id="portal.units.minutes"/>},
+      {value: 'hours', label: <FormattedMessage id="portal.units.hours"/>},
+      {value: 'days', label: <FormattedMessage id="portal.units.days"/>}
+    ]
 
     if (!config || !config.size) {
       return (
@@ -130,11 +141,7 @@ class ConfigurationDefaults extends React.Component {
             <Field
               name="cache_control_check_etag"
               component={FieldFormGroupSelect}
-              options={[
-                { value: 'strong', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagStrong.text"/>},
-                { value: 'weak', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagWeak.text"/>},
-                { value: 'false', label: <FormattedMessage id="portal.policy.edit.defaults.enableEtagFalse.text"/>}
-              ]}
+              options={cachControlEtagOptions}
               onChange={this.handleChange(['defaults','cache_control_check_etag'])}
             />
           </Col>
@@ -170,12 +177,7 @@ class ConfigurationDefaults extends React.Component {
             <Field
               name="ttlUnit"
               component={FieldFormGroupSelect}
-              options={[
-                {value: 'seconds', label: <FormattedMessage id="portal.units.seconds"/>},
-                {value: 'minutes', label: <FormattedMessage id="portal.units.minutes"/>},
-                {value: 'hours', label: <FormattedMessage id="portal.units.hours"/>},
-                {value: 'days', label: <FormattedMessage id="portal.units.days"/>}
-              ]}
+              options={ttlUnitOptions}
               onChange={this.handleTtlUnitChange()}
             />
           </Col>

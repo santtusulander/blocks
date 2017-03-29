@@ -153,7 +153,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
 
     const ruleType = this.props.rulePath.get(0, null)
-    const ruleMatchType = this.props.rule.get('rule_body').get('match_type', 'or');
+    const ruleMatchType = this.props.rule.get('rule_body').get('match_type', 'or')
+    const ruleTypeOptions = [
+      { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
+      { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
+      { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
+      { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
+    ]
 
     return (
       <form className="configuration-rule-edit" onSubmit={this.submitForm}>
@@ -175,12 +181,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               className="input-select"
               value={ruleType}
               onSelect={this.props.changeActiveRuleType}
-              options={[
-                { label: <FormattedMessage id="portal.configuration.policies.requestFromClient.text" />, value: POLICY_TYPES.REQUEST },
-                { label: <FormattedMessage id="portal.configuration.policies.requestToOrigin.text" />, value: POLICY_TYPES.FINAL_REQUEST },
-                { label: <FormattedMessage id="portal.configuration.policies.responseFromOrigin.text" />, value: POLICY_TYPES.RESPONSE },
-                { label: <FormattedMessage id="portal.configuration.policies.responseToClient.text" />, value: POLICY_TYPES.FINAL_RESPONSE }
-              ]}
+              options={ruleTypeOptions}
             />
           </FormGroup>
 
