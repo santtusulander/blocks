@@ -8,6 +8,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.manage.accountName.placeholder.text': 'Account Name',
   'portal.account.manage.accountType.text': 'Account Type',
   'portal.account.manage.services.text': 'Services',
+  'portal.account.manage.noServices.text': 'No Services Enabled',
   'portal.account.manage.providerTypeUnknown.text': 'Unknown',
   'portal.account.manage.editAccount.title': 'Edit Account',
   'portal.account.manage.newAccount.title': 'Add New Account',
@@ -33,7 +34,7 @@ const TRANSLATED_MESSAGES = {
   'portal.account.list.search.empty.text': 'No accounts found',
 
   'portal.dnsRecord.delete.title': 'Delete Record?',
-  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in denial of service.',
+  'portal.dnsRecord.delete.disclaimer.text': 'Deleting {itemToDelete} may result in interruption of service.',
 
   'portal.dnsDomain.delete.title': 'Delete Domain?',
   'portal.dnsDomain.delete.disclaimer.text': 'Are you sure you want to delete {itemToDelete}?',
