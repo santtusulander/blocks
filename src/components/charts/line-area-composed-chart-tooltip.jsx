@@ -5,8 +5,8 @@ import classNames from 'classnames'
 import './line-area-composed-chart-tooltip.scss'
 
 const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatBytes, iconClassNamePicker, ignoreValues=[] }) => {
-  const timestamp = payload && payload[0] && payload[0].payload && payload[0].payload.timestamp
-  const comparisonTimestamp = payload && payload[0] && payload[0].payload && payload[0].payload.historical_timestamp
+  const timestamp = payload[0] && payload[0].payload && payload[0].payload.timestamp
+  const comparisonTimestamp = payload[0] && payload[0].payload && payload[0].payload.historical_timestamp
 
   return (
     <div className="line-area-composed-chart-tooltip">
@@ -27,7 +27,7 @@ const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatByt
             </span>
           </div>
         </div>
-      )}
+      ).reverse()}
     </div>
   )
 }
