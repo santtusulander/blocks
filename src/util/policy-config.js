@@ -64,13 +64,17 @@ export function actionIsTokenAuth(sets) {
 }
 
 const parseConditions = (items, path) => {
-  return items ? items.map((item, i) => ({
-    field: item.get('field'),
-    fieldDetail: item.get('field_detail'),
-    filterType: getMatchFilterType(item),
-    values: Array.isArray(item.get('value')) ? item.get('value') : [item.get('value')],
-    path: path.concat([i])
-  })).toJS() : []
+  return items ? items.map((item, i) => {
+    const value = item.get('value').size >= 0 ? item.get('value').toJS() : item.get('value')
+    const obj = {
+      field: item.get('field'),
+      fieldDetail: item.get('field_detail'),
+      filterType: getMatchFilterType(item),
+      values: (Array.isArray(value)) ? value : [value],
+      path: path.concat([i])
+    }
+    return obj
+  }).toJS() : []
 }
 
 const parseActions = (items, path) => {
