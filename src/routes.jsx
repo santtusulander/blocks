@@ -250,10 +250,11 @@ export const getRoutes = store => {
           <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
-          <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
-              {getAnalyticsTabRoutes(store)}
-          </Route>
           <Route path={routes.analyticsStorage} component={AnalyticsContainer}>
+              <IndexRedirect to={routes.analyticsTabStorage} />
+              <Route path={routes.analyticsTabStorage} component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
+          </Route>
+          <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
         </Route>
