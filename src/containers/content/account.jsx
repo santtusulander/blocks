@@ -24,6 +24,7 @@ import groupActions from '../../redux/modules/entities/groups/actions'
 import { getById as getAccountById } from '../../redux/modules/entities/accounts/selectors'
 import { getByAccount as getGroupsByAccount } from '../../redux/modules/entities/groups/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import * as metricsActionCreators from '../../redux/modules/metrics'
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -218,7 +219,7 @@ export class Account extends React.Component {
           fetchingMetrics={this.props.fetchingMetrics}
           headerText={{ summary: headerText, label: breadcrumbs[0].label }}
           ifNoContent={activeAccount ? `${activeAccount.get('name')} contains no groups` : <FormattedMessage id="portal.loading.text"/>}
-          isAllowedToConfigure={checkPermissions(this.props.roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
+          isAllowedToConfigure={checkPermissions(roles, this.props.user.get('currentUser'), PERMISSIONS.MODIFY_GROUP)}
           locationPermissions={getLocationPermissions(roles, this.props.user.get('currentUser'))}
           metrics={this.props.metrics}
           nextPageURLBuilder={nextPageURLBuilder}
@@ -292,7 +293,7 @@ const mapStateToProps = (state, ownProps) => {
     groups: getGroupsByAccount(state, account),
 
     metrics: state.metrics.get('groupMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

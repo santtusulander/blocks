@@ -11,6 +11,8 @@ import ProviderTypes from '../../constants/provider-types'
 
 import SelectorComponent from './selector-component.jsx'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 const tierHierarchy = [
   'property',
   'group',
@@ -257,7 +259,7 @@ AccountSelector.propTypes = {
   params: PropTypes.object,
   resetChanged: PropTypes.func,
   restrictedTo: PropTypes.string,
-  roles: React.PropTypes.instanceOf(List),
+  roles: React.PropTypes.instanceOf(Map),
   searchValue: PropTypes.string,
   startTier: PropTypes.string,
   topBarAction: PropTypes.func,
@@ -265,7 +267,7 @@ AccountSelector.propTypes = {
 }
 AccountSelector.defaultProps = {
   items: List(),
-  roles: List(),
+  roles: Map(),
   currentUser: Map()
 }
 
@@ -280,7 +282,7 @@ function mapStateToProps(state, {as}) {
     },
     items: accountSelector.get('items'),
     open: accountSelector.get('open'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     searchValue: accountSelector.get('searchValue'),
     currentUser: state.user.get('currentUser')
   }
