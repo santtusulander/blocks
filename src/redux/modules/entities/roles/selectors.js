@@ -7,7 +7,7 @@ import {getEntityById} from '../../entity/selectors'
  * @return {} Map
  */
 export const getById = (state, id) => {
-  return getEntityById(state, 'userPermissions', id)
+  return getEntityById(state, 'roles', id)
 }
 
 /**
@@ -17,5 +17,5 @@ export const getById = (state, id) => {
  * @return Map
  */
 export const getAll = (state) => {
-  return state.entities.userPermissions
+  return state.entities.roles
 }

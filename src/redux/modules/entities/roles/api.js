@@ -9,7 +9,7 @@ const baseUrl = (id) => {
   return `${BASE_URL_AAA}/roles/${id}/services`
 }
 
-const rolePermissionSchema = new schema.Entity('userPermissions', {}, {
+const rolePermissionSchema = new schema.Entity('roles', {}, {
   processStrategy: (value, parent, key) => {
 
     //To provide compability with the old permissionMapping
