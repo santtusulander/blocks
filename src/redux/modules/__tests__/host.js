@@ -32,7 +32,7 @@ describe('Host Module', () => {
           configurations: [{
             config_id: 1,
             edge_configuration: { trial_name: 'aa' },
-            default_policy: {policy_rules:[]},
+            defaults: {},
             request_policy: {policy_rules:[]},
             response_policy: {policy_rules:[]}
           }],
@@ -81,7 +81,7 @@ describe('Host Module', () => {
           {
             configurations: [{
               config_id: 1,
-              default_policy: {policy_rules:[]},
+              defaults: {},
               request_policy: {policy_rules:[]},
               response_policy: {policy_rules:[]}
             }],

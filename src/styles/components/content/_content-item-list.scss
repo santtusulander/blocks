@@ -177,9 +177,16 @@
     display: flex;
     height: $content-item-list-height;
     margin: 0 700px 0 450px;
-    background-color: rgba($dark-blue, 0.8);
     align-items: center;
     justify-content: center;
+
+    &.dark-theme {
+      background-color: rgba($dark-blue, 0.8);
+    }
+
+    &.light-theme {
+      background-color: $white;
+    }
 
     //needed to make mini-chart responsive
     .line-area-composed-chart-container,

@@ -95,3 +95,14 @@ $token-horizontal-padding: em(12px, $form-font-size);
     }
   }
 }
+
+// UDNP-3199: Fix Safari issue with unneeded autofill icon in asn typeahead input
+.asn-lookup {
+  input::-webkit-contacts-auto-fill-button {
+    position: absolute;
+    right: 0;
+    display: none !important;
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
