@@ -1,8 +1,4 @@
 $input-height: 36px;
-$confirmation-slider-min-height-lg: 25px;
-$confirmation-slider-min-height-sm: 60px;
-$confirmation-slider-padding-top-lg: 5px;
-$confirmation-slider-padding-top-sm: 12px;
 
 .configuration-gtm {
   .help-icon {
@@ -37,25 +33,6 @@ $confirmation-slider-padding-top-sm: 12px;
   .traffic-config {
     .row {
       margin-bottom: 15px;
-    }
-  }
-
-  .confirmation-slider {
-    padding-bottom: 0;
-
-    @media (min-width: $screen-lg-min) {
-      min-height: $confirmation-slider-min-height-lg;
-      padding-top: $confirmation-slider-padding-top-lg;
-    }
-
-    @include md {
-      min-height: $confirmation-slider-min-height-sm;
-      padding-top: $confirmation-slider-padding-top-sm;
-    }
-
-    @media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
-      min-height: $confirmation-slider-min-height-sm;
-      padding-top: $confirmation-slider-padding-top-sm;
     }
   }
 
