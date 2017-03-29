@@ -235,8 +235,8 @@ export function secondsToUnit(value, unit) {
   return value
 }
 
-export function secondsFromUnit(value, unit) {
-  value = Number(value || 0)
+export function secondsFromUnit(value = 0, unit) {
+  value = Number(value)
   switch(unit) {
     case 'minutes':
       value = value * 60
@@ -249,4 +249,17 @@ export function secondsFromUnit(value, unit) {
       break
   }
   return value
+}
+
+export function unitFromSeconds(value = 0) {
+  value = Number(value)
+  switch(0) {
+    case (value % 86400):
+      return 'days'
+    case (value % 3600):
+      return 'hours'
+    case (value % 60):
+      return 'minutes'
+  }
+  return 'seconds'
 }

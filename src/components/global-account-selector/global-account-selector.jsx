@@ -199,9 +199,9 @@ class AccountSelector extends Component {
       this.props.items.filter(item => item.get(1).toLowerCase().includes(searchValue)) :
       this.props.items
     return itemsToSort.sort((a,b) => {
-
-      const aLower = `${a.first()}`.toLowerCase()
-      const bLower = `${b.first()}`.toLowerCase()
+      const aLower = a.get(1).toLowerCase()
+      const bLower = b.get(1).toLowerCase()
+      
       if ( aLower < bLower ) return -1
       if ( aLower > bLower ) return 1
       return 0

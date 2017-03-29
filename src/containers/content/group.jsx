@@ -64,7 +64,9 @@ export class Group extends React.Component {
       this.props.params.account,
       this.props.params.group,
       payload
-    )
+      ).then(({ error, payload }) => (
+          { item: 'Property', error, payload }
+      ))
   }
 
   deleteHost(id) {
@@ -73,7 +75,9 @@ export class Group extends React.Component {
       this.props.params.account,
       this.props.params.group,
       id
-    )
+    ).then(({ error, payload }) => (
+        { item: 'Property', error, payload }
+    ))
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})

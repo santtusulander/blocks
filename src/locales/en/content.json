@@ -45,6 +45,7 @@
   "portal.content.property.purgeStatus.table.initiatedBy.label": "Initiated By",
   "portal.content.property.purgeStatus.table.description.label": "Description",
 
-  "portal.content.account.createAccount.status": "Account created successfully.",
-  "portal.content.property.createProperty.status": "Property created successfully."
+  "portal.content.createEntity.status": "{item} created.",
+  "portal.content.updateEntity.status": "{item} details saved.",
+  "portal.content.deleteEntity.status": "{item} deleted."
 }

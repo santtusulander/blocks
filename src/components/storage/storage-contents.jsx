@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
-// UDNP-3205 - Hide HTTP File Upload
-// import { Col, FormGroup } from 'react-bootstrap'
+import { Col, FormGroup } from 'react-bootstrap'
 import { Map } from 'immutable'
 
 import SectionContainer from '../layout/section-container'
@@ -13,10 +12,8 @@ import ButtonDropdown from '../button-dropdown'
 import Button from '../button'
 import IconAdd from '../icons/icon-add'
 
-// UDNP-3205 - Hide HTTP File Upload
-// import Toggle from '../toggle'
+import Toggle from '../toggle'
 
-// eslint-disable-next-line no-unused-vars
 const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstanse, gatewayHostname, storageId, brandId, accountId, groupId, fileUploader }) => {
   const hasContents = contents && contents.length > 0
   const headerTitle = hasContents
@@ -40,22 +37,19 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
     <SectionContainer>
       <SectionHeader
         sectionHeaderTitle={headerTitle}>
-        {/*
-          // UDNP-3205 - Hide HTTP File Upload
-          <FormGroup className="upload-toggle-group">
-            <Col className="pull-left">
-              <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
-            </Col>
-            <Col xs={6} className="pull-right">
-              <Toggle
-                value={asperaUpload}
-                onText='ON'
-                offText='OFF'
-                changeValue={onMethodToggle}
-              />
-            </Col>
-          </FormGroup>
-        */}
+        <FormGroup className="upload-toggle-group">
+          <Col className="pull-left">
+            <FormattedMessage id='portal.storage.summaryPage.contents.asperaToggle.title' />
+          </Col>
+          <Col xs={6} className="pull-right">
+            <Toggle
+              value={asperaUpload}
+              onText='ON'
+              offText='OFF'
+              changeValue={onMethodToggle}
+            />
+          </Col>
+        </FormGroup>
         { asperaUpload &&
           <ButtonDropdown
             bsStyle="success"

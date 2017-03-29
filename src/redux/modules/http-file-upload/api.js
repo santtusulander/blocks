@@ -3,8 +3,8 @@ import fileUploadAdapter from './uploader/file-upload-adapter'
 import * as actionTypes from './actionTypes'
 
 const UPLOAD_VERSION = 'v1'
-const UPLOAD_PROTOCOL = 'http://'
-const UPLOAD_PORT = ':8080'
+const UPLOAD_PROTOCOL = 'https://'
+const UPLOAD_PORT = ':443'
 
 /**
  * Upload file via POST request to API

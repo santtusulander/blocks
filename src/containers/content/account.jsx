@@ -71,6 +71,7 @@ export class Account extends React.Component {
     const {brand, account} = this.props.params
 
     return this.props.createGroup({brand, account, payload: data})
+      .then(({ error, payload }) => ({ item: 'Group', error, payload }))
       //TODO: Should we support adding users to group`?
       //.then(({ payload }) => {
       //   return Promise.all(usersToAdd.map(email => {
@@ -91,7 +92,9 @@ export class Account extends React.Component {
     const {brand, account} = this.props.params
 
     return this.props.updateGroup({brand, account, id: groupId, payload: data})
-
+      .then(({ error, payload }) => (
+        { item: 'Group', error, payload }
+      ))
     // TODO: Should we support users in groups?
     // const groupIdsByEmail = email => this.props.user.get('allUsers')
     //   .find(user => user.get('email') === email)

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
-         ASPERA_DEFAULT_PATH, ASPERA_DEFAULT_DESTINATION_ROOT
+         ASPERA_DEFAULT_PATH
        } from '../../constants/storage'
 
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -138,7 +138,6 @@ class AsperaUpload extends Component {
       "remote_user": this.state.accessKey,
       "remote_password": this.state.accessKey,
       "direction": ASPERA_DEFAULT_PATH,
-      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
       "ssh_port": ASPERA_DEFAULT_PORT
     }
 
@@ -282,13 +281,13 @@ class AsperaUpload extends Component {
     )
 
     return (
-      <div id={ASPERA_UPLOAD_CONTAINER_ID}>
+      <div>
         <div id={ASPERA_DRAG_N_DROP_CONTAINER_ID}
              className="filedrop-container"
              onClick={openUploadModalOnClick ? this.onFileUploadClick : null} >
 
           <div className={classNames}>
-            <div className="welcome-text">
+            <div className="welcome-text" id={ASPERA_UPLOAD_CONTAINER_ID}>
               { this.displayInsideDropZone() }
             </div>
           </div>

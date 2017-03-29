@@ -17,7 +17,7 @@ class ConfigurationPolicyRules extends React.Component {
     super(props);
 
     this.state = {
-      default_policy: null,
+      defaults: null,
       request_policy: null,
       final_request_policy: null,
       response_policy: null,
