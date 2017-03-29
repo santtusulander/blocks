@@ -30,11 +30,15 @@ export function getMatchFilterType(item) {
   }
 
   if(item.get('type') === 'in') {
+    return item.get('inverted') ? 'not_in' : 'in'
+  }
+
+  if(item.get('type') === 'substr') {
     return item.get('inverted') ? 'does_not_contain' : 'contains'
   }
 
   if(item.get('type') === 'equals') {
-    return item.get('inverted') ? 'does_not_equals' : 'equals'
+    return item.get('inverted') ? 'does_not_equal' : 'equals'
   }
 
   if(item.get('type') === 'empty') {
