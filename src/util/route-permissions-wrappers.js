@@ -4,7 +4,7 @@ import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 
-import { getAll as getRoles } from '../redux/modules/entities/user-permissions/selectors'
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
