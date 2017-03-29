@@ -144,7 +144,7 @@ Navigation.propTypes = {
   activeAccount: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object
 }
 

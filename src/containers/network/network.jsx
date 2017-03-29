@@ -59,6 +59,8 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { buildReduxId } from '../../redux/util'
 
 import Content from '../../components/layout/content'
@@ -981,7 +983,7 @@ const mapStateToProps = (state, ownProps) => {
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     currentUser: state.user.get('currentUser')
   };
 }

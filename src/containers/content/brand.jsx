@@ -161,7 +161,7 @@ Brand.propTypes = {
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
@@ -171,11 +171,11 @@ Brand.propTypes = {
 }
 
 Brand.defaultProps = {
-  Brand: List(),
+  accounts: List(),
   activeAccount: Map(),
   dailyTraffic: List(),
   metrics: List(),
-  roles: List(),
+  roles: Map(),
   user: Map()
 }
 

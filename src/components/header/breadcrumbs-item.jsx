@@ -210,7 +210,7 @@ BreadcrumbsItem.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   params: PropTypes.object,
   pathname: PropTypes.string,
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   user: PropTypes.instanceOf(Immutable.Map)
 }

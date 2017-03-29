@@ -12,6 +12,8 @@ import {
   getTotalTraffics
 } from '../../redux/modules/entities/properties/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 
@@ -144,7 +146,7 @@ const makeMapStateToProps = () => {
       dailyTraffic: getPropertyDailyTrafficById(state, propertyId),
       totalTraffics: getTotalTraffics(state),
       user: state.user,
-      roles: state.roles
+      roles: getRoles(state)
     }
   }
 
