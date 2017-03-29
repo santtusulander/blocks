@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import {
   getAnalyticsUrlFromParams,
   getContentUrl,
-  getNetworkUrl
+  getDashboardUrl
 } from '../../util/routes.js'
 
 import accountActions from '../../redux/modules/entities/accounts/actions'
@@ -101,7 +101,7 @@ export class Brand extends React.Component {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
         return getContentUrl('groups', accountID, this.props.params)
       } else {
-        return getNetworkUrl('groups', accountID, this.props.params)
+        return getDashboardUrl('account', accountID, this.props.params)
       }
     }
     const analyticsURLBuilder = (...account) => {
