@@ -233,7 +233,6 @@ GroupForm.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   onCancel: PropTypes.func,
   onChangeServiceItem: PropTypes.func,

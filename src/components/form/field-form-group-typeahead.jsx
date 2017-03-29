@@ -58,7 +58,7 @@ const FieldFormGroupTypeahead = ({
         {...input}
         allowNew={allowNew}
         asyncMode={asyncMode}
-        className={className}
+        className={classNames({disabled: disabled}, className)}
         disabled={disabled}
         filterBy={filterBy}
         labelKey={labelKey}
