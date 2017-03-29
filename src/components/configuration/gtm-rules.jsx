@@ -93,29 +93,31 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </HelpTooltip>
         </td>
         <td>{actionsLabel}</td>
-        <td className="nowrap-column">
-          {actionButtons}
-          {this.state.policy !== null &&
-            <ReactCSSTransitionGroup
-              component="div"
-              className="confirmation-transition"
-              transitionName="confirmation-transition"
-              transitionEnterTimeout={10}
-              transitionLeaveTimeout={500}
-              transitionAppear={true}
-              transitionAppearTimeout={10}>
-              {this.state.policy === i &&
-                <Confirmation
-                  cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
-                  confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
-                  handleConfirm={this.deleteRule(i)}
-                  handleCancel={this.closeConfirmation}>
-                  <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
-                </Confirmation>
-              }
-            </ReactCSSTransitionGroup>
-          }
-        </td>
+        {actionButtons &&
+          <td className="nowrap-column">
+            {actionButtons}
+            {this.state.policy !== null &&
+              <ReactCSSTransitionGroup
+                component="div"
+                className="confirmation-transition"
+                transitionName="confirmation-transition"
+                transitionEnterTimeout={10}
+                transitionLeaveTimeout={500}
+                transitionAppear={true}
+                transitionAppearTimeout={10}>
+                {this.state.policy === i &&
+                  <Confirmation
+                    cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                    confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
+                    handleConfirm={this.deleteRule(i)}
+                    handleCancel={this.closeConfirmation}>
+                    <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
+                  </Confirmation>
+                }
+              </ReactCSSTransitionGroup>
+            }
+          </td>
+        }
       </tr>
     )
   }
@@ -134,7 +136,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
               <th><FormattedMessage id="portal.configuration.gtm.table.name.label"/></th>
               <th><FormattedMessage id="portal.configuration.gtm.table.match.label"/></th>
               <th><FormattedMessage id="portal.configuration.gtm.table.actions.label"/></th>
-              <th width="1%" />
+              {!this.props.readOnly && <th width="1%" />}
             </tr>
           </thead>
           <tbody>

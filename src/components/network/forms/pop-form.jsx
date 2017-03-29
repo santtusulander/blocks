@@ -62,7 +62,8 @@ const NetworkPopForm = (props) => {
     initialValues,
     hasPods,
     dirty,
-    handleSubmit
+    handleSubmit,
+    readOnly
   } = props
 
   const edit = !!initialValues.id
@@ -85,7 +86,8 @@ const NetworkPopForm = (props) => {
           name="name"
           placeholder={intl.formatMessage({id: 'portal.network.popEditForm.popName.placeholder'})}
           component={FieldFormGroup}
-          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />} />
+          label={<FormattedMessage id="portal.network.popEditForm.popName.label" />}
+          disabled={readOnly} />
 
         {edit &&
           <Field
@@ -93,6 +95,7 @@ const NetworkPopForm = (props) => {
             component={FieldFormGroupSelect}
             options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
             label={<FormattedMessage id="portal.network.item.status.label" />}
+            disabled={readOnly}
           />
         }
 
@@ -101,13 +104,14 @@ const NetworkPopForm = (props) => {
           className="input-select"
           component={FieldFormGroupSelect}
           options={initialValues.billingRegionOptions}
-          label={<FormattedMessage id="portal.network.popEditForm.billing_region.label" />} />
+          label={<FormattedMessage id="portal.network.popEditForm.billing_region.label" />}
+          disabled={readOnly} />
 
         <Field
           name="locationId"
           className="input-select"
           component={FieldFormGroupSelect}
-          disabled={edit}
+          disabled={edit || readOnly}
           options={initialValues.locationOptions}
           label={<FormattedMessage id="portal.network.popEditForm.locationId.label" />} />
 
@@ -115,7 +119,7 @@ const NetworkPopForm = (props) => {
           ? <Field
               name="id"
               component={FieldFormGroupNumber}
-              disabled={edit}
+              disabled={edit || readOnly}
               addonBefore={`${iata}`}
               min={POP_ID_MIN}
               max={POP_ID_MAX}
@@ -169,6 +173,7 @@ NetworkPopForm.propTypes = {
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
   popId: PropTypes.string,
+  readOnly: PropTypes.bool,
 
   ...reduxFormPropTypes
 }
