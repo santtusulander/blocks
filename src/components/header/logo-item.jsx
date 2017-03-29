@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { Map } from 'immutable'
 import { Link } from 'react-router'
 
