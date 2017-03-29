@@ -14,6 +14,9 @@ import {
 } from '../../constants/property-config'
 
 import { FormattedMessage } from 'react-intl'
+import country_list from '../../constants/country-list'
+
+const getFormattedCountry = (item) => country_list.find(ctr => ctr.id === item).label
 
 class ConfigurationPolicyRuleEdit extends React.Component {
   constructor(props) {
@@ -32,6 +35,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.activateMatch = this.activateMatch.bind(this)
     this.activateSet = this.activateSet.bind(this)
     this.submitForm = this.submitForm.bind(this)
+    this.renderConditionName = this.renderConditionName.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -139,6 +143,28 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   submitForm(e) {
     e.preventDefault()
     this.props.hideAction()
+  }
+
+  renderConditionName(match) {
+    if(match.field === 'content_targeting_country_code') {
+      return (
+        <div className="condition-name">
+          {'Countries: '}
+          <TruncatedTitle
+            content={match.values.map(getFormattedCountry).join(', ')}
+          />
+        </div>
+      )
+    }
+    
+    return (
+      <div className="condition-name">
+        {match.field}&nbsp;:&nbsp;
+        <TruncatedTitle
+          content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}
+        />
+      </div>
+    )
   }
 
   render() {
@@ -257,15 +283,19 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 filterText = 'Does not exist'
               }
               else if(match.filterType === 'contains') {
-                filterText = `Contains ${match.containsVal}`
+                filterText = match.field === 'content_targeting_country_code'
+                             ? 'Users from'
+                             : `Contains: ${match.values}`
               }
               else if(match.filterType === 'does_not_contain') {
-                filterText = `Does not contain ${match.containsVal}`
+                filterText = match.field === 'content_targeting_country_code'
+                             ? 'Users not from'
+                             : `Does not contain: ${match.values}`
               }
               else if(match.filterType === 'equals') {
                 filterText = `Equals`
               }
-              else if(match.filterType === 'does_not_equal') {
+              else if(match.filterType === 'does_not_equals') {
                 filterText = `Does not equal`
               }
               else if(match.filterType === 'empty') {
@@ -275,19 +305,13 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                 filterText = `Is not empty`
               }
 
-              let matchName = (<div className="condition-name">
-                {match.field}&nbsp;:&nbsp;
-                <TruncatedTitle
-                  content={match.fieldDetail ? match.fieldDetail : match.values.join(', ')}/>
-              </div>)
-
               return (
                 <div key={i}
                   className={active ? 'condition clearfix active' : 'condition clearfix'}
                   onClick={this.activateMatch(match.path)}>
                   <Col xs={7}>
                     {match.field ?
-                      matchName
+                      this.renderConditionName(match)
                       : <p><FormattedMessage id="portal.policy.edit.editRule.chooseCondition.text"/></p>
                     }
                   </Col>
@@ -325,13 +349,15 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <ButtonToolbar className="text-right">
             <Button
               bsStyle="primary"
-              onClick={this.props.cancelAction}>
+              onClick={this.props.cancelAction}
+            >
               <FormattedMessage id="portal.button.cancel"/>
             </Button>
             <Button
               bsStyle="primary"
               onClick={this.props.hideAction}
-              disabled={disableButton()}>
+              disabled={disableButton()}
+            >
               <FormattedMessage id="portal.button.add"/>
             </Button>
           </ButtonToolbar>
