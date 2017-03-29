@@ -64,12 +64,12 @@ class AnalysisURLList extends React.Component {
 
     const finalURLs = filteredURLs.slice(0, 15)
 
-    let minHeight = 0
+    let minHeight
     const listContainer = this.refs.listContainer
     if (listContainer) {
       const footerRect = document.querySelector('footer.footer').getBoundingClientRect()
       const containerRect = listContainer.getBoundingClientRect()
-      minHeight = window.innerHeight - containerRect.top - (footerRect.bottom - containerRect.bottom)
+      minHeight = Math.max(0, window.innerHeight - containerRect.top - footerRect.bottom + containerRect.bottom)
     }
 
     return (
