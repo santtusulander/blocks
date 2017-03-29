@@ -33,9 +33,19 @@ $input-height: 36px;
     }
   }
 
-  .confirmation-slider .btn-toolbar {
-    .btn-sm {
-      margin-top: -4px;
+  .confirmation-slider {
+    padding-bottom: 0;
+
+    @media (min-width: $screen-lg-min) {
+      padding-top: 5px;
+    }
+
+    @include md {
+      padding-top: 12px;
+    }
+
+    @media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+      padding-top: 12px;
     }
   }
 
