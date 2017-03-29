@@ -43,5 +43,9 @@
   "portal.content.property.purgeStatus.table.startTime.label": "Start Time",
   "portal.content.property.purgeStatus.table.endTime.label": "End Time",
   "portal.content.property.purgeStatus.table.initiatedBy.label": "Initiated By",
-  "portal.content.property.purgeStatus.table.description.label": "Description"
+  "portal.content.property.purgeStatus.table.description.label": "Description",
+
+  "portal.content.createEntity.status": "{item} created.",
+  "portal.content.updateEntity.status": "{item} details saved.",
+  "portal.content.deleteEntity.status": "{item} deleted."
 }

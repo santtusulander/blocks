@@ -144,7 +144,7 @@ class ContentItems extends React.Component {
           })
         } else if(item) {
           this.hideModal()
-          this.showNotification(`${item} created.`)
+          this.showNotification(<FormattedMessage id="portal.content.createEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -163,7 +163,7 @@ class ContentItems extends React.Component {
           })
         } else if(item) {
           this.hideModal()
-          this.showNotification(`${item} detail saved.`)
+          this.showNotification(<FormattedMessage id="portal.content.updateEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -182,7 +182,7 @@ class ContentItems extends React.Component {
           })
         } else if(item) {
           this.hideModal()
-          this.showNotification(`${item} deleted.`)
+          this.showNotification(<FormattedMessage id="portal.content.deleteEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
