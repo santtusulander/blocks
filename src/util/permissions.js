@@ -71,8 +71,9 @@ permissionMapping[PERMISSIONS.VIEW_CONTENT_ACCOUNTS] =
     // do role checking in our permission mapping functions. This should be removed
     // once we come up with a better way to support listing accounts for the
     // contribution report post 1.0.1. The work to fix this is tracked by UDNP-1557.
-    let isSuperAdmin = roleId === 1 // NOTE: 1 is the role ID for UDN Admins
-    let canListAccounts = role.getIn([ 'aaa', 'accounts', 'list', 'allowed'], false)
+    const isSuperAdmin = roleId === 1 // NOTE: 1 is the role ID for UDN Admins
+
+    const canListAccounts = role.getIn([ 'aaa', 'accounts', 'list', 'allowed'], false)
     return isSuperAdmin && canListAccounts
   }
 permissionMapping[PERMISSIONS.VIEW_CONTENT_GROUPS] =

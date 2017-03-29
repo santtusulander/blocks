@@ -159,7 +159,7 @@ Group.propTypes = {
 Group.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
-  roles: List(),
+  roles: Map(),
   sortValuePath: List(),
   storages: List(),
   user: Map()
