@@ -28,6 +28,9 @@ import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/s
 
 import { buildReduxId } from '../../../redux/util'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
 import NetworkPopForm from '../../../components/network/forms/pop-form.jsx'
@@ -163,7 +166,7 @@ class PopFormContainer extends Component {
   }
 
   render() {
-    const { initialValues, iata, onCancel, group, network, popId, popPermissions } = this.props
+    const { initialValues, iata, onCancel, group, network, popId, allowModify } = this.props
 
     const { showDeleteModal } = this.state
 
@@ -197,7 +200,7 @@ class PopFormContainer extends Component {
             onDelete={() => this.onToggleDeleteModal(true)}
             onSave={(values) => this.onSave(edit, values)}
             onCancel={() => onCancel()}
-            popPermissions={popPermissions}
+            readOnly={!allowModify}
           />
 
         </SidePanel>
@@ -223,6 +226,7 @@ class PopFormContainer extends Component {
 PopFormContainer.displayName = "PopFormContainer"
 PopFormContainer.propTypes = {
   accountId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -244,7 +248,6 @@ PopFormContainer.propTypes = {
   onUpdate: PropTypes.func,
   pods: PropTypes.instanceOf(List),
   popId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  popPermissions: PropTypes.object,
   selectedEntityId: PropTypes.string,
   showNotification: PropTypes.func
 }
@@ -253,6 +256,8 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
+  const roles = state.roles.get('roles')
+  const currentUser = state.user.get('currentUser')
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
 
@@ -278,6 +283,7 @@ const mapStateToProps = (state, ownProps) => {
     pop,
     pods,
     iata: selectedLocation ? selectedLocation.get('iataCode') : '',
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POP),
 
     initialValues: {
       id: edit && pop ? pop.get('id').replace(/\D/g, '') : null,

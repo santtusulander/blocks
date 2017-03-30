@@ -361,7 +361,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 
 
 export function filterAccountsByUserName (accounts) {
-  // placeholder for now
+  // placeholder for now 
   return accounts
 }
 
@@ -479,24 +479,15 @@ export function userHasRole(user, roleToFind) {
 }
 
 export function accountIsServiceProviderType(account) {
-  if (!account) {
-    throw new Error('Account not found')
-  }
-  return account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
+  return account && account.getIn(['provider_type']) === ACCOUNT_TYPE_SERVICE_PROVIDER
 }
 
 export function accountIsContentProviderType(account) {
-  if (!account) {
-    throw new Error('Account not found')
-  }
-  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
+  return account && account.getIn(['provider_type']) === ACCOUNT_TYPE_CONTENT_PROVIDER
 }
 
 export function accountIsCloudProviderType(account) {
-  if (!account) {
-    throw new Error('Account not found')
-  }
-  return account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
+  return account && account.getIn(['provider_type']) === ACCOUNT_TYPE_CLOUD_PROVIDER
 }
 
 export function getAccountByID(accounts, ids) {

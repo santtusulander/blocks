@@ -30,6 +30,9 @@ import RoutingDaemonFormContainer from './routing-daemon-modal'
 
 import { STATUS_VALUE_DEFAULT } from '../../../constants/network'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 class PodFormContainer extends React.Component {
   constructor(props) {
     super(props)
@@ -274,13 +277,13 @@ class PodFormContainer extends React.Component {
       UIDiscoveryMethod,
       pop,
       podId,
+      allowModify,
 
       group,
       //account,
       hasNodes,
       network,
       footprints,
-      podPermissions,
       footprintPermissions
     } = this.props
 
@@ -292,6 +295,11 @@ class PodFormContainer extends React.Component {
       <FormattedMessage id="portal.network.podForm.newPod.title"/>
 
     const subTitle = `${group.get('name')} / ${network.get('name')} / ${pop.get('name')} ${edit ? ' / ' + initialValues.pod_name : ''}`
+
+    let footprintIATACode = pop.get('iata')
+    if (footprintIATACode) {
+      footprintIATACode = footprintIATACode.toLowerCase()
+    }
 
     return (
       <div>
@@ -307,6 +315,7 @@ class PodFormContainer extends React.Component {
             footprints={footprints}
             hasNodes={hasNodes}
             initialValues={initialValues}
+            readOnly={!allowModify}
 
             onSave={(values) => this.onSave(edit, values)}
             onDelete={() => this.onToggleDeleteModal(true)}
@@ -322,7 +331,6 @@ class PodFormContainer extends React.Component {
             UIFootprints={UIFootprints}
             UIDiscoveryMethod={UIDiscoveryMethod}
 
-            podPermissions={podPermissions}
             footprintPermissions={footprintPermissions}
           />
 
@@ -332,7 +340,7 @@ class PodFormContainer extends React.Component {
         <FootprintFormContainer
           accountId={Number(this.props.accountId)}
           footprintId={this.state.footprintId}
-          location={pop.get('iata').toLowerCase()}
+          location={footprintIATACode}
           onCancel={this.hideFootprintModal}
           show={true}
           addFootprintToPod={this.addFootprintToPod}
@@ -345,6 +353,7 @@ class PodFormContainer extends React.Component {
           onCancel={this.hideRoutingDaemonModal}
           onSave={this.saveBGP}
           show={true}
+          readOnly={!allowModify}
         />
         }
 
@@ -378,6 +387,7 @@ PodFormContainer.propTypes = {
   UIFootprints: PropTypes.array,
 
   accountId: PropTypes.string,
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchFootprints: PropTypes.func,
@@ -399,7 +409,6 @@ PodFormContainer.propTypes = {
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   podId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  podPermissions: PropTypes.object,
   pop: PropTypes.instanceOf(Map),
   popId: PropTypes.string,
   pushFormVal: PropTypes.func,
@@ -423,6 +432,9 @@ const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('pod-form')
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
+
+  const roles = state.roles.get('roles')
+  const currentUser = state.user.get('currentUser')
 
   const edit = !!ownProps.podId
   const pop = ownProps.popId && getPopById(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId))
@@ -458,6 +470,7 @@ const mapStateToProps = (state, ownProps) => {
     hasNodes: pod && !getNodesByPod(state, buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId, ownProps.podId)).isEmpty(),
     network: ownProps.networkId && getNetworkById(state, buildReduxId(ownProps.groupId, ownProps.networkId)),
     footprints: ownProps.accountId && getFootprintsByAccount(state)(ownProps.accountId).toJS(),
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_POD),
     pop,
     pod,
 

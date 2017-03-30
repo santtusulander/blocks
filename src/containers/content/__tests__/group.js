@@ -18,8 +18,8 @@ import Group from '../group.jsx'
 
 function propertyActionsMaker() {
   return {
-    remove: jest.fn(),
-    create: jest.fn()
+    remove: jest.fn(() => Promise.resolve()),
+    create: jest.fn(() => Promise.resolve())
   }
 }
 

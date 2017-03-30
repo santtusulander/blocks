@@ -33,7 +33,8 @@ class FieldFormGroupAsnLookup extends Component {
 
     const filterType = parseInt(query) ? 'asn' : 'organization'
 
-    fetchAsns(filterType, escape(query))
+    // UDNP-3200 - Double escape asn search query to prevent 500 Internal Server Error
+    fetchAsns(filterType, escape(escape(query)))
       .then(asns => {
         const options = asns.map(item => ({
           id: item.asn,
@@ -50,6 +51,8 @@ class FieldFormGroupAsnLookup extends Component {
     return (
       <Field
         name={this.props.name || 'AsnLookup'}
+        disabled={this.props.disabled}
+        className='asn-lookup'
         asyncMode={true}
         useCache={false}
         component={FieldFormGroupTypeahead}
@@ -68,6 +71,7 @@ class FieldFormGroupAsnLookup extends Component {
 
 FieldFormGroupAsnLookup.displayName = 'FieldFormGroupAsnLookup'
 FieldFormGroupAsnLookup.propTypes = {
+  disabled: PropTypes.bool,
   intl: PropTypes.object,
   name: PropTypes.string,
   withoutLabel: PropTypes.bool
