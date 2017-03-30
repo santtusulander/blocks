@@ -367,6 +367,7 @@ export const logOut = createAction(USER_LOGGED_OUT, () => {
       {headers: {'X-Auth-Token': token}}
     )
   }
+  return Promise.resolve({ message: 'Token not found' })
 })
 
 export const getStorageAccessKey = createAction(USER_ACCESS_KEY_RECEIVED, (brandId, accountId, groupId, storageId) => {

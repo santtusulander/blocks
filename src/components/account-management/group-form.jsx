@@ -61,6 +61,7 @@ const GroupForm = ({
   onDeleteHost,
   onShowLocation,
   onSubmit,
+  readOnly,
   serviceOptions,
   showServiceItemForm,
   submitting
@@ -83,7 +84,8 @@ const GroupForm = ({
         id="name-field"
         placeholder={intl.formatMessage({id: 'portal.account.groupForm.name.text'})}
         component={FieldFormGroup}
-        label={<FormattedMessage id="portal.account.groupForm.name.label" />}/>
+        label={<FormattedMessage id="portal.account.groupForm.name.label" />}
+        disabled={readOnly} />
 
         <hr/>
 
@@ -240,6 +242,7 @@ GroupForm.propTypes = {
   onDeleteHost: PropTypes.func,
   onShowLocation: PropTypes.func,
   onSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
   serviceOptions: PropTypes.array,
   showServiceItemForm: PropTypes.func,
   ...reduxFormPropTypes

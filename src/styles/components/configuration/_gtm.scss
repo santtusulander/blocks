@@ -5,7 +5,6 @@ $input-height: 36px;
     .btn-icon {
       width: $input-height;
       height: $input-height;
-      margin: 0 0 0 20px;
       color: $white;
       background-color: rgba($black, 0.2);
       border-radius: 50%;
@@ -14,6 +13,10 @@ $input-height: 36px;
       &:focus {
         text-decoration: none;
       }
+    }
+
+    span {
+      margin-right: 20px;
     }
   }
 
@@ -30,22 +33,6 @@ $input-height: 36px;
   .traffic-config {
     .row {
       margin-bottom: 15px;
-    }
-  }
-
-  .confirmation-slider {
-    padding-bottom: 0;
-
-    @media (min-width: $screen-lg-min) {
-      padding-top: 5px;
-    }
-
-    @include md {
-      padding-top: 12px;
-    }
-
-    @media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
-      padding-top: 12px;
     }
   }
 
