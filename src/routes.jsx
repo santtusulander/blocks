@@ -243,18 +243,14 @@ export const getRoutes = store => {
           <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
-
           <Route path={routes.analyticsStorage} component={AnalyticsContainer}>
-              <Route path='/' component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
+              <IndexRedirect to={routes.analyticsTabStorage} />
+              <Route path={routes.analyticsTabStorage} component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
           </Route>
-
           <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
-
         </Route>
-
-
 
         {/* Content / CP Accounts - routes */}
         <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>
