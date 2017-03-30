@@ -53,6 +53,7 @@ class TrafficRuleFormContainer extends Component {
           </Modal.Header>
           <Modal.Body>
             <RuleForm
+              edit={this.props.initialValues.name}
               hasMatches={hasMatches}
               activeCondition={activeCondition}
               disabled={disabled}
@@ -101,9 +102,15 @@ const stateToProps = (state, { rule }) => {
   }
 }
 
-const dispatchToProps = (dispatch, { rule }) => ({
-  addRule: values => dispatch(arrayPush('gtmForm', 'rules', values)),
-  editRule: values => dispatch(arraySplice('gtmForm', 'rules', rule.index, 1, values)),
+const dispatchToProps = (dispatch, { rule, onCancel }) => ({
+  addRule: values => {
+    dispatch(arrayPush('gtmForm', 'rules', values))
+    onCancel()
+  },
+  editRule: values => {
+    dispatch(arraySplice('gtmForm', 'rules', rule.index, 1, values))
+    onCancel()
+  },
   addMatch: match => dispatch(arrayPush('traffic-rule-form', 'matchArray', match)),
   editMatch: (index, match) => dispatch(arraySplice('traffic-rule-form', 'matchArray', index, 1, match))
 })

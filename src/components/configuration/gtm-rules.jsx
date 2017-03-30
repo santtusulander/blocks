@@ -15,43 +15,42 @@ class ConfigurationGTMTrafficRules extends React.Component {
     super(props);
 
     this.state = {
-      rule: null
+      activeIndex: undefined
     }
 
     this.deleteRule = this.deleteRule.bind(this)
     this.renderRules = this.renderRules.bind(this)
     this.renderRule = this.renderRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
-    this.closeConfirmation = this.closeConfirmation.bind(this)
+    this.toggleConfirmation = this.toggleConfirmation.bind(this)
   }
 
   deleteRule(index, remove) {
     return () => {
       remove(index)
-      this.closeConfirmation()
+      this.toggleConfirmation()
     }
   }
 
   showConfirmation(index) {
     return () => {
-      this.setState({
-        rule: index
-      })
+      this.toggleConfirmation(index)
     }
   }
 
-  closeConfirmation() {
-    this.setState({
-      rule: null
-    })
+  toggleConfirmation(activeIndex) {
+    this.setState({ activeIndex })
   }
 
   renderRule({ input, index, fields }) {
     const conditionOptions = {
-      'or': <FormattedMessage id="portal.configuration.condition.or" />,
-      'and': <FormattedMessage id="portal.configuration.condition.and" />
+      'or': "portal.configuration.condition.or",
+      'and': "portal.configuration.condition.and"
     }
-    const matches = input.value.matchArray.map(({ label }) => label).join(conditionOptions[input.value.condition])
+    const matches = input.value.matchArray
+      .map(({ label }) => label)
+      .join(` ${this.props.intl.formatMessage({ id: conditionOptions[input.value.condition] })} `)
+
     const policyWeight = input.value.policyWeight
     const trafficSplit = policyWeight < 100
       ? <FormattedMessage id="portal.configuration.gtm.table.action.split" values={{ UDNServed: policyWeight, otherServed: 100 - policyWeight }}/>
@@ -75,7 +74,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
               permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
               onEdit={() => this.props.editRule(index)}
               onDelete={this.showConfirmation(index)} />}
-          {this.state.rule !== null &&
+          {this.state.activeIndex !== undefined &&
             <ReactCSSTransitionGroup
               component="div"
               className="confirmation-transition"
@@ -84,12 +83,12 @@ class ConfigurationGTMTrafficRules extends React.Component {
               transitionLeaveTimeout={500}
               transitionAppear={true}
               transitionAppearTimeout={10}>
-              {this.state.rule === index &&
+              {this.state.activeIndex === index &&
                 <Confirmation
                   cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
                   confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
                   handleConfirm={this.deleteRule(index, fields.remove)}
-                  handleCancel={this.closeConfirmation}>
+                  handleCancel={() => this.toggleConfirmation()}>
                   <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                 </Confirmation>
               }
@@ -129,6 +128,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
           </thead>
           <FieldArray
             name="rules"
+            activeIndex={this.state.activeIndex}
             component={this.renderRules}/>
         </Table>
       </div>
