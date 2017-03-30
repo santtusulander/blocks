@@ -55,7 +55,7 @@ var server = new WebpackDevServer(compiler, {
     },
 
     '/analytics': {
-      target: 'http://portal-analytics.dal.cdx-dev.unifieddeliverynetwork.net:3030',
+      target: 'http://mapi.sjc.cdx-dev.unifieddeliverynetwork.net:3030',
       pathRewrite: {
         '^/analytics([^-][^?]*)\\??(.*)$' : '/analytics/$1/?$2'
       }
