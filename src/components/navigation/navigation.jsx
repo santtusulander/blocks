@@ -61,7 +61,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
 
   const isSP = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
   const isCP = userIsContentProvider(currentUser) || accountIsContentProviderType(activeAccount)
-
+  const isUDNAdmin = !isSP && !isCP
   /* When users with SP accounts log in, the initial route is still '/content/udn' before we redirect to 'dashboard/udn'.
     Hence, we need to set active class for dashboard before redirecting */
   const dashboardSPActive = contentActive && isSP
@@ -85,12 +85,15 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
           </li>
         </IsAllowed>
 
-        <li>
-          <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
-            <IconDashboard />
-            <FormattedMessage id="portal.navigation.dashboard.text"/>
-          </Link>
-        </li>
+        {/* Hide Dashboard icon as a second item in navbar when the user is UDN admin */}
+        { !isUDNAdmin &&
+          <li>
+            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+              <IconDashboard />
+              <FormattedMessage id="portal.navigation.dashboard.text"/>
+            </Link>
+          </li>
+        }
 
         {isSP &&
           <li>
@@ -110,6 +113,16 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
             </Link>
           </li>
         </IsAllowed>
+
+        {/* Display Dashboard icon as a third item in navbar when the user is UDN admin */}
+        { isUDNAdmin &&
+          <li>
+            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+              <IconDashboard />
+              <FormattedMessage id="portal.navigation.dashboard.text"/>
+            </Link>
+          </li>
+        }
 
         <IsAllowed to={VIEW_SECURITY_SECTION}>
           <li>
