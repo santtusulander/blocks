@@ -25,6 +25,8 @@ import {
   VIEW_SUPPORT_SECTION
 } from '../../constants/permissions'
 
+import { UDN_CORE_ACCOUNT_ID } from '../../constants/account-management-options'
+
 import {
   accountIsServiceProviderType,
   accountIsContentProviderType,
@@ -51,8 +53,9 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
     networkActive = router.isActive(getRoute('network')) ? ' active' : '',
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
+  const isUDNCore = (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)
   const contentOrNetworkUrlBuilder = (params, currentUser, roles) => {
-    if (router.isActive(getRoute('network'))) {
+    if (router.isActive(getRoute('network')) && (!isUDNCore)) {
       return getNetworkUrlFromParams(params, currentUser, roles)
     } else {
       return getContentUrlFromParams(params, currentUser, roles)
@@ -69,9 +72,21 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
+        {/* Display Dashboard icon as a first item in navbar when account is UDN Core */}
+        { isUDNCore &&
+          <IsAllowed to={VIEW_CONTENT_SECTION}>
+            <li>
+              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+                <IconDashboard />
+                <FormattedMessage id="portal.navigation.dashboard.text"/>
+              </Link>
+            </li>
+          </IsAllowed>
+        }
+
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
-        List view or starburst view, depending which one they used. */}
-        <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
+            List view or starburst view, depending which one they used. */}
+        <IsAllowed to={VIEW_CONTENT_SECTION} not={(isUDNCore ? false : isSP)}>
           <li>
             <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive}>
               {isCP ? <IconContent/> : <IconBrowse />}
@@ -87,15 +102,17 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
 
         {/* Hide Dashboard icon as a second item in navbar when the user is UDN admin */}
         { !isUDNAdmin &&
-          <li>
-            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
-              <IconDashboard />
-              <FormattedMessage id="portal.navigation.dashboard.text"/>
-            </Link>
-          </li>
+          <IsAllowed to={VIEW_CONTENT_SECTION} not={isUDNCore}>
+            <li>
+              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+                <IconDashboard />
+                <FormattedMessage id="portal.navigation.dashboard.text"/>
+              </Link>
+            </li>
+          </IsAllowed>
         }
 
-        {isSP &&
+        {(isSP || isUDNCore) &&
           <li>
             <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={networkActive}>
               <IconNetwork />
@@ -116,12 +133,14 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
 
         {/* Display Dashboard icon as a third item in navbar when the user is UDN admin */}
         { isUDNAdmin &&
-          <li>
-            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
-              <IconDashboard />
-              <FormattedMessage id="portal.navigation.dashboard.text"/>
-            </Link>
-          </li>
+          <IsAllowed to={VIEW_CONTENT_SECTION} not={isUDNCore}>
+            <li>
+              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+                <IconDashboard />
+                <FormattedMessage id="portal.navigation.dashboard.text"/>
+              </Link>
+            </li>
+          </IsAllowed>
         }
 
         <IsAllowed to={VIEW_SECURITY_SECTION}>

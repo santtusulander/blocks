@@ -240,7 +240,7 @@ Header.propTypes = {
   path: React.PropTypes.instanceOf(Immutable.List),
   saveAction: React.PropTypes.func,
   set: React.PropTypes.instanceOf(Immutable.Map),
-  setKey: React.PropTypes.instanceOf(Immutable.Map)
+  setKey: React.PropTypes.string
 }
 
 export default injectIntl(Header)
