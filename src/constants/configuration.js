@@ -21,7 +21,7 @@ export const SCHEMA_LABEL_MAP = {
   URL: "portal.policy.edit.tokenauth.sampleOutputDialog.table.url.title",
   REFERRER: "portal.policy.edit.tokenauth.sampleOutputDialog.table.referrer.title",
   USER_AGENT: "portal.policy.edit.tokenauth.sampleOutputDialog.table.user_agent.title",
-  EXPIRES: "portal.policy.edit.tokenauth.sampleOutputDialog.table.ttl.title"
+  EXPIRES: "portal.policy.edit.tokenauth.sampleOutputDialog.table.expires.title"
 }
 
 export const SCHEMA_OPTIONS = [
@@ -53,9 +53,7 @@ export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
 export const STATIC_TOKEN_SAMPLE_VALUES = {
   IP:'10.130.1.2',
   URL: 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8',
-  USER_AGENT: 'Chrome',
-  REFERRER: 'www.video.com',
-  EXPIRES: 3600
+  REFERRER: 'www.video.com'
 }
 
 export const SCHEMA_DEFAULT = ['URL']

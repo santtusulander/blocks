@@ -4,8 +4,8 @@ import { Field, reduxForm, formValueSelector, propTypes as reduxFormPropTypes } 
 import { Button, Modal, Table, Nav, NavItem, FormControl } from 'react-bootstrap'
 import Immutable from 'immutable'
 import { bindActionCreators } from 'redux'
-
 import { injectIntl, FormattedMessage } from 'react-intl'
+import moment from 'moment'
 
 import HasServicePermission from '../../has-service-permission'
 
@@ -28,7 +28,7 @@ import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions
 
 import * as uiActionCreators from '../../../redux/modules/ui'
 
-import { generateStaticTokenTableData } from '../../../util/token-authentication'
+import { generateStaticTokenTableData, generateTokenData, generateTokenHash } from '../../../util/token-authentication'
 
 const validate = ({ shared_key }) => {
   let errors = {}
@@ -186,20 +186,28 @@ export class TokenAuth extends React.Component {
     this.notificationTimeout = setTimeout(this.props.uiActions.changeSidePanelNotification, 10000)
   }
 
-  renderSampleOutputDialogChildren({ schema }) {
+  renderSampleOutputDialogChildren({ schema, encryption, sharedKey }) {
     const renderRow = (titleID, content) => {
       return (
-        <tr>
+        <tr className="sample-token-output-table-row">
           <td><FormattedMessage id={titleID} /></td>
-          <td><TruncatedTitle content={content} /></td>
+          <td><TruncatedTitle content={String(content)} /></td>
         </tr>
       )
     }
 
-    const schemaOptions = schema && schema.map(item => (
+    const schemaOptions = schema.map(item => (
       SCHEMA_OPTIONS.filter(({value}) => value === item)[0]
     ))
-    const tableRows = schema && generateStaticTokenTableData(schema)
+    const tokenValues = {
+      USER_AGENT: navigator.userAgent,
+      EXPIRES: moment().add(6, 'hour')
+    }
+    const tableValues = {
+      ...tokenValues,
+      EXPIRES: moment(tokenValues.EXPIRES).utc()
+    }
+    const tableRows = generateStaticTokenTableData(schema, tableValues)
 
     return (
       <Table striped={true} className="fixed-layout">
@@ -219,11 +227,11 @@ export class TokenAuth extends React.Component {
           { tableRows && tableRows.map(row => renderRow(row.labelID, row.value)) }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
-              'Token Schema Data'
+              generateTokenData(schema, tokenValues)
           ) }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_hash.title',
-              'Token Hash'
+              generateTokenHash(encryption, sharedKey, generateTokenData(schema, tokenValues))
           ) }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.final_url.title',
@@ -270,6 +278,10 @@ export class TokenAuth extends React.Component {
       invalid,
       submitting,
       schema,
+      tokenValues: {
+        encryption,
+        sharedKey
+      },
       type,
       streaming_ttl,
       streaming_add_ip_addr,
@@ -321,6 +333,7 @@ export class TokenAuth extends React.Component {
               <Button
                 className="pull-left token-auth-no-side-padding"
                 bsStyle="link"
+                disabled={!(encryption === 'MD5') && !sharedKey}
                 onClick={() => this.showSampleOutputDialog()}
               >
                 <FormattedMessage id="portal.policy.edit.tokenauth.viewSampleButton.text" />

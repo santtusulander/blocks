@@ -35,7 +35,7 @@
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.ip.title": "Sample IP Address",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.user_agent.title": "User Agent",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.referrer.title": "Referrer",
-  "portal.policy.edit.tokenauth.sampleOutputDialog.table.ttl.title": "TTL",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.table.expires.title": "End Date",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title": "Token Schema Data",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.token_hash.title": "Token Hash",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.final_url.title": "Final URL",
