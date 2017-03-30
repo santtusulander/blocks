@@ -42,7 +42,11 @@ export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
   {label: 'Javascript', value: 3}
 ]
 
-export const STANDARD_TOKEN_SAMPLE_URL = 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8'
+export const STATIC_TOKEN_SAMPLE_URL = 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8'
+export const STATIC_TOKEN_SAMPLE_IP = '10.130.1.2'
+export const STATIC_TOKEN_SAMPLE_USER_AGENT = 'Chrome'
+export const STATIC_TOKEN_SAMPLE_REFERRER = 'www.video.com'
+export const STATIC_TOKEN_SAMPLE_TTL = 3600
 
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'

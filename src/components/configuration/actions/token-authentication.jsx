@@ -24,7 +24,11 @@ import { ENCRYPTION_OPTIONS,
          SAMPLE_CODE_LANGUAGE_DEFAULT,
          SCHEMA_DEFAULT,
          ENCRYPTION_DEFAULT,
-         STANDARD_TOKEN_SAMPLE_URL } from '../../../constants/configuration'
+         STATIC_TOKEN_SAMPLE_URL,
+         STATIC_TOKEN_SAMPLE_IP,
+         STATIC_TOKEN_SAMPLE_USER_AGENT,
+         STATIC_TOKEN_SAMPLE_REFERRER,
+         STATIC_TOKEN_SAMPLE_TTL } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
@@ -195,6 +199,10 @@ export class TokenAuth extends React.Component {
       )
     }
 
+    const schemaOptions = schema.map(item => (
+      SCHEMA_OPTIONS.filter(({value}) => value === item)[0]
+    ))
+
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
@@ -207,16 +215,40 @@ export class TokenAuth extends React.Component {
           { schema &&
             renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
-              schema.map(item => (
-                this.props.intl.formatMessage({
-                  id: SCHEMA_OPTIONS.filter(({value}) => value === item)[0].label
-                })
-              )).join(' + ')
+              schemaOptions.map(({ label }) => this.props.intl.formatMessage({ id: label })).join(' + ')
             )
           }
           { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.sampleURL.title',
-              STANDARD_TOKEN_SAMPLE_URL
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.url.title',
+              STATIC_TOKEN_SAMPLE_URL
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.ip.title',
+              STATIC_TOKEN_SAMPLE_IP
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.user_agent.title',
+              STATIC_TOKEN_SAMPLE_USER_AGENT
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.referrer.title',
+              STATIC_TOKEN_SAMPLE_REFERRER
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.ttl.title',
+              String(STATIC_TOKEN_SAMPLE_TTL)
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
+              'Token Schema Data'
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_hash.title',
+              'Token Hash'
+          ) }
+          { renderRow(
+              'portal.policy.edit.tokenauth.sampleOutputDialog.table.final_url.title',
+              'Final URL'
           ) }
         </tbody>
       </Table>
