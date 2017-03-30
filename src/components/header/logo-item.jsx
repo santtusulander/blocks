@@ -37,7 +37,7 @@ class LogoItem extends React.Component {
 
   updateLogoLink(user) {
     const logoLink = userIsServiceProvider(user) ?
-      getRoute('networkAccount', {brand: 'udn', account: user.get('account_id')}) :
+      getRoute('dashboardAccount', {brand: 'udn', account: user.get('account_id')}) :
       getRoute('contentAccount', {brand: 'udn', account: user.get('account_id')})
 
     this.setState({ logoLink })

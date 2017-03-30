@@ -46,6 +46,14 @@ const FieldFormGroupTypeahead = ({
     )
   }
 
+  const selectedValues = () => {
+    if (input.value) {
+      return Array.isArray(input.value) ? input.value : [input.value]
+    }
+
+    return []
+  }
+
   return (
     <FormGroup
       className={classNames('typeahead-form-group', {'has-error': error && dirty}, className)}
@@ -58,7 +66,7 @@ const FieldFormGroupTypeahead = ({
         {...input}
         allowNew={allowNew}
         asyncMode={asyncMode}
-        className={className}
+        className={classNames({disabled: disabled}, className)}
         disabled={disabled}
         filterBy={filterBy}
         labelKey={labelKey}
@@ -73,7 +81,7 @@ const FieldFormGroupTypeahead = ({
         onSearch={onSearch}
         onBlur={() => input.onBlur(input.value)}
         options={options}
-        selected={Array.isArray(input.value) ? input.value : [input.value]}
+        selected={selectedValues()}
         renderToken={renderToken}
       />
 

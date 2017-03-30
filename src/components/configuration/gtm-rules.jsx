@@ -123,7 +123,7 @@ class ConfigurationGTMTrafficRules extends React.Component {
               <th><FormattedMessage id="portal.configuration.gtm.table.name.label"/></th>
               <th><FormattedMessage id="portal.configuration.gtm.table.match.label"/></th>
               <th><FormattedMessage id="portal.configuration.gtm.table.action.label"/></th>
-              <th width="1%" />
+              {!this.props.readOnly && <th width="1%" />}
             </tr>
           </thead>
           <FieldArray

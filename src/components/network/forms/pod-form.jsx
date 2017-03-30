@@ -204,6 +204,7 @@ renderFootprint.displayName = 'renderFootprint'
 const PodForm = ({
   asyncValidating,
   handleSubmit,
+  readOnly,
   hasNodes,
   intl,
   invalid,
@@ -265,7 +266,7 @@ const PodForm = ({
       <Field
         type="text"
         name="UIName"
-        disabled={edit}
+        disabled={edit || readOnly}
         id="pod_name-field"
         placeholder={intl.formatMessage({id: 'portal.network.podForm.name.text'})}
         component={FieldFormGroup}
@@ -277,6 +278,7 @@ const PodForm = ({
           component={FieldFormGroupSelect}
           options={STATUS_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
           label={<FormattedMessage id="portal.network.item.status.label" />}
+          disabled={readOnly}
         />
       }
 
@@ -286,6 +288,7 @@ const PodForm = ({
         component={FieldFormGroupSelect}
         options={LBMETHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.lbMethod.label"})}
+        disabled={readOnly}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -300,6 +303,7 @@ const PodForm = ({
         component={FieldFormGroupSelect}
         options={POD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.type.label"})}
+        disabled={readOnly}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -315,6 +319,7 @@ const PodForm = ({
         component={FieldFormGroup}
         addonBefore={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.as.label' })}
         label={<FormattedMessage id="portal.network.podForm.localAS.label" />}
+        disabled={readOnly}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -329,6 +334,7 @@ const PodForm = ({
         component={FieldFormGroupSelect}
         options={REQUEST_FWD_TYPE_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={intl.formatMessage({id: "portal.network.podForm.requestForwardType.label"})}
+        disabled={readOnly}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -344,6 +350,7 @@ const PodForm = ({
         id="provider_weight-field"
         component={FieldFormGroup}
         label={<FormattedMessage id="portal.network.podForm.providerWeight.label" />}
+        disabled={readOnly}
         addonAfter={
           <HelpTooltip
             id="tooltip-help"
@@ -358,6 +365,7 @@ const PodForm = ({
         component={FieldFormGroupSelect}
         options={SALT_ROLE_OPTIONS.map(({value, label}) => ({ value, label: intl.formatMessage({id: label}) }))}
         label={<FormattedMessage id="portal.network.podForm.saltRole.label" />}
+        disabled={readOnly}
       />
 
       <Field
@@ -369,6 +377,7 @@ const PodForm = ({
         options={[]}
         validation={validateCIDRToken}
         label={<FormattedMessage id="portal.network.podForm.ipList.label" />}
+        disabled={readOnly}
       />
 
       <hr/>
@@ -377,7 +386,7 @@ const PodForm = ({
         name="UIDiscoveryMethod"
         className="input-select"
         component={FieldFormGroupSelect}
-        disabled={!discoveryMethodChangeAllowed}
+        disabled={!discoveryMethodChangeAllowed || readOnly}
         options={DISCOVERY_METHOD_OPTIONS.map(({value, label}) => { return { value, label: intl.formatMessage({id: label}) }})}
         label={<FormattedMessage id="portal.network.podForm.discoveryMethod.label" />}
         addonAfter={
@@ -409,7 +418,7 @@ const PodForm = ({
           className="action-item-search search-input-group"
           component={FieldFormGroupTypeahead}
           labelKey='name'
-          disabled={availableFootprints.length === 0}
+          disabled={availableFootprints.length === 0 || readOnly}
           name="footprintSearch"
           placeholder={noFootprintsPlaceholder}
           options={availableFootprints}

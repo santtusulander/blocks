@@ -25,7 +25,11 @@ import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
 import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
 
-const validate = ({ cdnName, cName }) => {
+const validate = ({ GTMToggle, cdnName, cName }) => {
+  if (!GTMToggle) {
+    return {}
+  }
+
   const conditions = {
     cdnName: {
       condition: !isValidTextField(cdnName, GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH),
