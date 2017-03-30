@@ -120,8 +120,8 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         </IsAllowed>
 
         {/* Display Dashboard icon as a third item in navbar when the user is UDN admin */}
-        { isUDNAdmin &&
-          <IsAllowed to={VIEW_CONTENT_SECTION} not={isUDNCore}>
+        { (isUDNAdmin || isUDNCore) &&
+          <IsAllowed to={VIEW_CONTENT_SECTION}>
             <li>
               <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
                 <IconDashboard />
