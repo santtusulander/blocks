@@ -23,15 +23,12 @@ import { ENCRYPTION_OPTIONS,
          SCHEMA_OPTIONS,
          SAMPLE_CODE_LANGUAGE_DEFAULT,
          SCHEMA_DEFAULT,
-         ENCRYPTION_DEFAULT,
-         STATIC_TOKEN_SAMPLE_URL,
-         STATIC_TOKEN_SAMPLE_IP,
-         STATIC_TOKEN_SAMPLE_USER_AGENT,
-         STATIC_TOKEN_SAMPLE_REFERRER,
-         STATIC_TOKEN_SAMPLE_TTL } from '../../../constants/configuration'
+         ENCRYPTION_DEFAULT } from '../../../constants/configuration'
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 import * as uiActionCreators from '../../../redux/modules/ui'
+
+import { generateStaticTokenTableData } from '../../../util/token-authentication'
 
 const validate = ({ shared_key }) => {
   let errors = {}
@@ -199,9 +196,10 @@ export class TokenAuth extends React.Component {
       )
     }
 
-    const schemaOptions = schema.map(item => (
+    const schemaOptions = schema && schema.map(item => (
       SCHEMA_OPTIONS.filter(({value}) => value === item)[0]
     ))
+    const tableRows = schema && generateStaticTokenTableData(schema)
 
     return (
       <Table striped={true} className="fixed-layout">
@@ -218,26 +216,7 @@ export class TokenAuth extends React.Component {
               schemaOptions.map(({ label }) => this.props.intl.formatMessage({ id: label })).join(' + ')
             )
           }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.url.title',
-              STATIC_TOKEN_SAMPLE_URL
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.ip.title',
-              STATIC_TOKEN_SAMPLE_IP
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.user_agent.title',
-              STATIC_TOKEN_SAMPLE_USER_AGENT
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.referrer.title',
-              STATIC_TOKEN_SAMPLE_REFERRER
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.ttl.title',
-              String(STATIC_TOKEN_SAMPLE_TTL)
-          ) }
+          { tableRows && tableRows.map(row => renderRow(row.labelID, row.value)) }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
               'Token Schema Data'

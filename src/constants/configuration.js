@@ -16,6 +16,14 @@ export const TOKEN_AUTH_STATIC = 'standard'
 export const TOKEN_AUTH_STREAMING = 'on_demand_hls'
 export const TTL_DEFAULT = 6 * 60 * 60 // 6 hours in seconds
 
+export const SCHEMA_LABEL_MAP = {
+  IP: "portal.policy.edit.tokenauth.sampleOutputDialog.table.ip.title",
+  URL: "portal.policy.edit.tokenauth.sampleOutputDialog.table.url.title",
+  REFERRER: "portal.policy.edit.tokenauth.sampleOutputDialog.table.referrer.title",
+  USER_AGENT: "portal.policy.edit.tokenauth.sampleOutputDialog.table.user_agent.title",
+  EXPIRES: "portal.policy.edit.tokenauth.sampleOutputDialog.table.ttl.title"
+}
+
 export const SCHEMA_OPTIONS = [
   {label: 'portal.policy.edit.tokenauth.schema.ip.text', value: 'IP'},
   {label: 'portal.policy.edit.tokenauth.schema.url.text', value: 'URL'},
@@ -42,11 +50,13 @@ export const SAMPLE_CODE_LANGUAGE_OPTIONS = [
   {label: 'Javascript', value: 3}
 ]
 
-export const STATIC_TOKEN_SAMPLE_URL = 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8'
-export const STATIC_TOKEN_SAMPLE_IP = '10.130.1.2'
-export const STATIC_TOKEN_SAMPLE_USER_AGENT = 'Chrome'
-export const STATIC_TOKEN_SAMPLE_REFERRER = 'www.video.com'
-export const STATIC_TOKEN_SAMPLE_TTL = 3600
+export const STATIC_TOKEN_SAMPLE_VALUES = {
+  IP:'10.130.1.2',
+  URL: 'www.unifieddeliverynetwork.net/bigbuckbunny/stream.m3u8',
+  USER_AGENT: 'Chrome',
+  REFERRER: 'www.video.com',
+  EXPIRES: 3600
+}
 
 export const SCHEMA_DEFAULT = ['URL']
 export const ENCRYPTION_DEFAULT = 'HMAC_SHA1'
