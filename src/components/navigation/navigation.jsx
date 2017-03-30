@@ -72,6 +72,18 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   return (
     <nav className='navigation-sidebar text-sm'>
       <ul>
+        {/* Display Dashboard icon as a first item in navbar when account is UDN Core */}
+        { isUDNCore &&
+          <IsAllowed to={VIEW_CONTENT_SECTION}>
+            <li>
+              <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+                <IconDashboard />
+                <FormattedMessage id="portal.navigation.dashboard.text"/>
+              </Link>
+            </li>
+          </IsAllowed>
+        }
+
         {/* TODO: “Content" should link to the Account or Group that they looked at last when they navigated in content in this session.
             List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={(isUDNCore ? false : isSP)}>
