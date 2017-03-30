@@ -19,20 +19,31 @@ class ConfigurationDefaults extends React.Component {
     super(props)
 
     this.handleChange = this.handleChange.bind(this)
+    this.updateProps = this.updateProps.bind(this)
     this.handleTtlValueChange = this.handleTtlValueChange.bind(this)
     this.handleTtlUnitChange = this.handleTtlUnitChange.bind(this)
     this.updateCacheKeyQueryString = this.updateCacheKeyQueryString.bind(this)
   }
 
   componentWillMount() {
-    const { config, change } = this.props 
+    this.updateProps(this.props.config)
+  }
 
-    change('allow_cookies', config.getIn(['edge_configuration', 'allow_cookies'], false))
-    change('response_remove_vary', config.getIn(['defaults', 'response_remove_vary'], false))
-    change('cache_name_ignore_case', config.getIn(['defaults', 'cache_name_ignore_case'], false))
-    change('cache_control_check_etag', config.getIn(['defaults', 'cache_control_check_etag'], 'false'))
-    change('cache_control_honor_origin', config.getIn(['defaults', 'cache_control_honor_origin'], false))
-    change('cache_control_max_age', config.getIn(['defaults', 'cache_control_max_age'], 0))
+  componentWillReceiveProps(nextProps) {
+    const { config } = nextProps
+
+    if (this.props.config !== config) {
+      this.updateProps(config)
+    }
+  }
+
+  updateProps(config) {
+    this.props.change('allow_cookies', config.getIn(['edge_configuration', 'allow_cookies'], false))
+    this.props.change('response_remove_vary', config.getIn(['defaults', 'response_remove_vary'], false))
+    this.props.change('cache_name_ignore_case', config.getIn(['defaults', 'cache_name_ignore_case'], false))
+    this.props.change('cache_control_check_etag', config.getIn(['defaults', 'cache_control_check_etag'], 'false'))
+    this.props.change('cache_control_honor_origin', config.getIn(['defaults', 'cache_control_honor_origin'], false))
+    this.props.change('cache_control_max_age', config.getIn(['defaults', 'cache_control_max_age'], 0))
 
     const ttl = config.getIn(['defaults', 'cache_control_max_age'], 0)
     const ttlUnit = unitFromSeconds(ttl)

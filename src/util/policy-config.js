@@ -197,5 +197,5 @@ export const getTokenAuthRules = (properties) => {
  * @return returns true if the rule at the given path is empty
  */
 export const isPolicyRuleEmpty = (config, rulePath) => {
-  return !!config.getIn(rulePath.concat(['rule_body', 'actions']), List()).size
+  return !config.getIn(rulePath.concat(['rule_body', 'actions']), List()).size
 }
