@@ -64,7 +64,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   const isUDNAdmin = !isSP && !isCP
   /* When users with SP accounts log in, the initial route is still '/content/udn' before we redirect to 'dashboard/udn'.
     Hence, we need to set active class for dashboard before redirecting */
-  const dashboardSPActive = contentActive && isSP
+  const dashboardSPActive = isSP && contentActive
 
   return (
     <nav className='navigation-sidebar text-sm'>
