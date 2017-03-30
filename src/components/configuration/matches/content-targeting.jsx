@@ -11,6 +11,11 @@ import FieldFormGroupTypeahead from '../../form/field-form-group-typeahead'
 
 import country_list from '../../../constants/country-list'
 
+const getFormattedCountry = (item) => ({
+  id: item,
+  label: country_list.find(ctr => ctr.id === item).label
+})
+
 class ContentTargeting extends React.Component {
   constructor(props) {
     super(props);
@@ -20,9 +25,12 @@ class ContentTargeting extends React.Component {
 
   componentWillMount() {
     const { match, change } = this.props
+    const countries = match.get('value')
 
-    change('value', match.get('value').toJS()
-                                      .map(item => ({id: item, label: country_list.find(ctr => ctr.id === item).label})))
+    if (countries && countries.size) {
+      change('value', countries.toJS().map(getFormattedCountry))
+    }
+
     change('inverted', match.get('inverted'))
   }
 
@@ -31,7 +39,7 @@ class ContentTargeting extends React.Component {
 
     changeValue(path, fromJS({
       field: match.get('field'),
-      type: match.get('type'),
+      type: 'in',
       inverted,
       value: value.map(item => item.id)
     }))
