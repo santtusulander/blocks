@@ -37,3 +37,14 @@ export const generateTokenHash = (method, key, string) => {
       return MD5(string).toString(enc.Hex)
   }
 }
+
+export const generateFinalURL = (url = STATIC_TOKEN_SAMPLE_VALUES.URL, token, args) => {
+  let finalURL = url
+  if (finalURL.indexOf('http') !== 0) {
+    finalURL = `http://${finalURL}`
+  }
+  finalURL = `${finalURL}?token=${token}`
+  return args.reduce((finalURL, arg) => (
+    `${finalURL}&${arg.label}=${arg.value}`
+  ), finalURL)
+}
