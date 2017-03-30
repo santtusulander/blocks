@@ -245,7 +245,7 @@ export const getRoutes = store => {
           </Route>
 
           <Route path={routes.analyticsStorage} component={AnalyticsContainer}>
-              <Route path='/' component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
+              <IndexRoute component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
           </Route>
 
           <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
