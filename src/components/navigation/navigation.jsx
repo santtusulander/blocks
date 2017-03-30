@@ -27,13 +27,17 @@ import {
 
 import {
   accountIsServiceProviderType,
-  userIsServiceProvider
+  accountIsContentProviderType,
+  userIsServiceProvider,
+  userIsContentProvider
 } from '../../util/helpers'
 
 import IconAccount from '../icons/icon-account.jsx'
 import IconAnalytics from '../icons/icon-analytics.jsx'
+import IconBrowse from '../icons/icon-browse.jsx'
 import IconContent from '../icons/icon-content.jsx'
 import IconDashboard from '../icons/icon-dashboard.jsx'
+import IconNetwork from '../icons/icon-network.jsx'
 import IconServices from '../icons/icon-services.jsx'
 import IconSecurity from '../icons/icon-security.jsx'
 import IconSupport from '../icons/icon-support.jsx'
@@ -56,6 +60,11 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   }
 
   const isSP = userIsServiceProvider(currentUser) || accountIsServiceProviderType(activeAccount)
+  const isCP = userIsContentProvider(currentUser) || accountIsContentProviderType(activeAccount)
+  const isUDNAdmin = !isSP && !isCP
+  /* When users with SP accounts log in, the initial route is still '/content/udn' before we redirect to 'dashboard/udn'.
+    Hence, we need to set active class for dashboard before redirecting */
+  const dashboardSPActive = contentActive && isSP
 
   return (
     <nav className='navigation-sidebar text-sm'>
@@ -64,30 +73,36 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
         List view or starburst view, depending which one they used. */}
         <IsAllowed to={VIEW_CONTENT_SECTION} not={isSP}>
           <li>
-            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
-              <IconContent />
+            <Link to={contentOrNetworkUrlBuilder(params, currentUser, roles)} activeClassName="active" className={contentActive}>
+              {isCP ? <IconContent/> : <IconBrowse />}
               <span>
-                <FormattedMessage id="portal.navigation.content.text"/>
+                {isCP
+                  ? <FormattedMessage id="portal.navigation.content.text"/>
+                  : <FormattedMessage id="portal.navigation.browse.text"/>
+                }
               </span>
             </Link>
           </li>
         </IsAllowed>
 
-        {isSP &&
+        {/* Hide Dashboard icon as a second item in navbar when the user is UDN admin */}
+        { !isUDNAdmin &&
           <li>
-            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={contentActive || networkActive}>
-              <IconContent />
-              <span><FormattedMessage id="portal.navigation.network.text"/></span>
+            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+              <IconDashboard />
+              <FormattedMessage id="portal.navigation.dashboard.text"/>
             </Link>
           </li>
         }
 
-        <li>
-          <Link to={getDashboardUrlFromParams(params)} activeClassName="active">
-            <IconDashboard />
-            <span>Dashboard</span>
-          </Link>
-        </li>
+        {isSP &&
+          <li>
+            <Link to={getNetworkUrlFromParams(params, currentUser, roles)} activeClassName="active" className={networkActive}>
+              <IconNetwork />
+              <span><FormattedMessage id="portal.navigation.network.text"/></span>
+            </Link>
+          </li>
+        }
 
         {/* Analytics should always default to account level analytics, and not depend on the content leaf. */}
         <IsAllowed to={VIEW_ANALYTICS_SECTION}>
@@ -98,6 +113,16 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
             </Link>
           </li>
         </IsAllowed>
+
+        {/* Display Dashboard icon as a third item in navbar when the user is UDN admin */}
+        { isUDNAdmin &&
+          <li>
+            <Link to={getDashboardUrlFromParams(params)} activeClassName="active" className={dashboardSPActive}>
+              <IconDashboard />
+              <FormattedMessage id="portal.navigation.dashboard.text"/>
+            </Link>
+          </li>
+        }
 
         <IsAllowed to={VIEW_SECURITY_SECTION}>
           <li>

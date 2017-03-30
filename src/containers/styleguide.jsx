@@ -73,6 +73,7 @@ import IconArrowLgRight  from '../components/icons/icon-arrow-lg-right'
 import IconArrowLeft     from '../components/icons/icon-arrow-left'
 import IconArrowLgUp     from '../components/icons/icon-arrow-lg-up'
 import IconArrowUp       from '../components/icons/icon-arrow-up'
+import IconBrowse        from '../components/icons/icon-browse'
 import IconCaretRight    from '../components/icons/icon-caret-right'
 import IconCaretDown     from '../components/icons/icon-caret-down'
 import IconChart         from '../components/icons/icon-chart'
@@ -80,9 +81,9 @@ import IconCheck         from '../components/icons/icon-check'
 import IconChevronRight  from '../components/icons/icon-chevron-right'
 import IconChevronRightBold from '../components/icons/icon-chevron-right-bold'
 import IconClose         from '../components/icons/icon-close'
+import IconContent       from '../components/icons/icon-content'
 import IconComments      from '../components/icons/icon-comments'
 import IconConfiguration from '../components/icons/icon-configuration'
-import IconContent       from '../components/icons/icon-content'
 import IconClock         from '../components/icons/icon-clock'
 import IconDelete        from '../components/icons/icon-delete'
 import IconEdit          from '../components/icons/icon-edit'
@@ -96,6 +97,7 @@ import IconInfo          from '../components/icons/icon-info'
 import IconIntegration   from '../components/icons/icon-integration'
 import IconItemChart     from '../components/icons/icon-item-chart'
 import IconItemList      from '../components/icons/icon-item-list'
+import IconNetwork       from '../components/icons/icon-network'
 import IconPassword      from '../components/icons/icon-password'
 import IconProblem       from '../components/icons/icon-problem'
 import IconQuestion      from '../components/icons/icon-question'
@@ -1300,9 +1302,9 @@ class Styleguide extends React.Component {
             IconConfiguration
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
-            <IconContent />
+            <IconBrowse />
             <br />
-            IconContent
+            IconBrowse
           </span>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>
             <IconDelete />
@@ -1433,6 +1435,16 @@ class Styleguide extends React.Component {
             <IconClock />
             <br />
             IconClock
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconNetwork />
+            <br />
+            IconNetwork
+          </span>
+          <span className="col-xs-3" style={{marginBottom: '1em'}}>
+            <IconContent />
+            <br />
+            IconContent
           </span>
         </div>
 

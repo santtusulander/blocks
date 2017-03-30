@@ -474,6 +474,7 @@ const TRANSLATED_MESSAGES = {
   'portal.header.menu.editProfile.text': 'Edit Profile',
 
   'portal.navigation.content.text': 'Content',
+  'portal.navigation.browse.text': 'Browse',
   'portal.navigation.analytics.text': 'Analytics',
   'portal.navigation.security.text': 'Security',
   'portal.navigation.services.text': 'Services',

@@ -8,7 +8,7 @@ import ModalServerValidation from '../tools/modals/server-validation.jsx'
 import { injectIntl } from 'react-intl'
 
 import IconDig from '../../../components/icons/icon-dig'
-import IconContent from '../../../components/icons/icon-content'
+import IconBrowse from '../../../components/icons/icon-browse'
 import IconMtr from '../../../components/icons/icon-mtr'
 import IconServerValidation from '../../../components/icons/icon-server-validation'
 
@@ -68,7 +68,7 @@ class SupportTabTools extends React.Component {
           <SupportToolPanel
             active={this.state.activePanel === 'geo-lookup'}
             onClick={this.setActivePanel('geo-lookup')}
-            icon={<IconContent className="pale-blue" width={100} height={100} />}
+            icon={<IconBrowse className="pale-blue" width={100} height={100} />}
             body={this.props.intl.formatMessage({id: 'portal.support.tools.geoLookup.panelBody.text'})}
             title={this.props.intl.formatMessage({id: 'portal.support.tools.geoLookup.panelTitle.text'})}/>
           <SupportToolPanel
