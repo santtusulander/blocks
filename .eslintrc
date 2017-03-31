@@ -107,7 +107,7 @@
     "no-script-url": 0,
     "no-self-compare": 0,
     "no-sequences": 0,
-    "no-shadow": 0,
+    "no-shadow": [2, { "allow": ["e", "brand", "account", "group", "payload", "resp", "data", "dataKey", "datasets", "params", "dashboardParams"] }],
     "no-shadow-restricted-names": 2,
     "no-spaced-func": 0,
     "no-sparse-arrays": 2,
