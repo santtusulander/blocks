@@ -120,7 +120,8 @@ const NetworkLocationForm = (props) => {
     isFetchingLocation,
     onCancel,
     onDelete,
-    submitting
+    submitting,
+    readOnly
   } = props;
 
   const actionButtonTitle = submitting ? <FormattedMessage id="portal.button.saving"/> :
@@ -141,7 +142,7 @@ const NetworkLocationForm = (props) => {
         <Col md={7}>
           <Field
             name="name"
-            disabled={edit}
+            disabled={edit || readOnly}
             type="text"
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.name.placeholder'})}
             component={FieldFormGroup}
@@ -160,6 +161,7 @@ const NetworkLocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.iataCode.placeholder'})}
             component={FieldFormGroupTypeahead}
             label={<FormattedMessage id="portal.network.locationForm.iataCode.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -172,8 +174,8 @@ const NetworkLocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.latitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.latitude.label" />}
             onBlur={askForFetchLocation}
-
-        />
+            disabled={readOnly}
+          />
         </Col>
         <Col md={5}>
           <Field
@@ -183,6 +185,7 @@ const NetworkLocationForm = (props) => {
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.longitude.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.longitude.label" />}
             onBlur={askForFetchLocation}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -209,6 +212,7 @@ const NetworkLocationForm = (props) => {
             options={cloudProvidersOptions}
             component={FieldFormGroupSelect}
             label={intl.formatMessage({id: 'portal.network.locationForm.cloudProvider.label'})}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -219,7 +223,7 @@ const NetworkLocationForm = (props) => {
             className="input-select"
             type="select"
             options={cloudProvidersIdOptions}
-            disabled={edit}
+            disabled={edit || readOnly}
             required={false}
             unselectedValue={null}
             component={FieldFormGroupSelect}
@@ -236,6 +240,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderRegion.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.cloudProviderRegion.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -247,6 +252,7 @@ const NetworkLocationForm = (props) => {
             component={FieldFormGroup}
             placeholder={intl.formatMessage({id: 'portal.network.locationForm.cloudProviderLocationId.placeholder'})}
             label={<FormattedMessage id="portal.network.locationForm.cloudProviderLocationId.label" />}
+            disabled={readOnly}
           />
         </Col>
       </Row>
@@ -292,6 +298,7 @@ NetworkLocationForm.propTypes = {
   invalid: PropTypes.bool,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
+  readOnly: PropTypes.bool,
   ...reduxFormPropTypes
 };
 

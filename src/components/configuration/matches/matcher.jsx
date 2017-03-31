@@ -29,6 +29,7 @@ class Matcher extends React.Component {
     this.handleContainsValChange = this.handleContainsValChange.bind(this)
     this.validate = this.validate.bind(this)
     this.saveChanges = this.saveChanges.bind(this)
+    this.renderValueField = this.renderValueField.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,41 +82,49 @@ class Matcher extends React.Component {
 
     newMatch = newMatch.delete('_temp')
 
-    if (this.props.contains) {
+    if (this.props.hasContains) {
       newMatch = newMatch.set('field_detail', this.state.val)
     }
 
     switch (this.state.activeFilter) {
       case 'exists':
         newMatch = newMatch.set('type', 'exists')
+                           .set('value', '')
+                           .set('inverted', false)
         break
       case 'contains':
-        newMatch = newMatch.set('type', 'in')
+        newMatch = newMatch.set('type', 'substr')
                            .set('value', this.state.containsVal)
+                           .set('inverted', false)
         break
       case 'equals':
         newMatch = newMatch.set('type', 'equals')
                            .set('value', this.state.val)
+                           .set('inverted', false)
         break
       case 'empty':
         newMatch = newMatch.set('type', 'empty')
+                           .set('value', '')
+                           .set('inverted', false)
         break
       case 'does_not_exist':
         newMatch = newMatch.set('type', 'exists')
+                           .set('value', '')
                            .set('inverted', true)
         break
       case 'does_not_contain':
-        newMatch = newMatch.set('type', 'in')
+        newMatch = newMatch.set('type', 'substr')
                            .set('value', this.state.containsVal)
                            .set('inverted', true)
         break
-      case 'does_not_equals':
+      case 'does_not_equal':
         newMatch = newMatch.set('type', 'equals')
                            .set('value', this.state.val)
                            .set('inverted', true)
         break
       case 'does_not_empty':
         newMatch = newMatch.set('type', 'empty')
+                           .set('value', '')
                            .set('inverted', true)
         break
     }
@@ -124,14 +133,41 @@ class Matcher extends React.Component {
     this.props.activateMatch(null)
   }
 
+  renderValueField() {
+    const hasValueField = this.state.activeFilter === 'equals' ||
+                          this.state.activeFilter === 'does_not_equal' || 
+                          this.state.activeFilter === 'contains' || 
+                          this.state.activeFilter === 'does_not_contain'
+
+    return (
+      <div>
+        {(this.props.hasContains || hasValueField) &&
+        <FormGroup controlId="matches_val">
+          <ControlLabel>{this.props.label}</ControlLabel>
+          <FormControl
+            type="text"
+            placeholder={this.props.placeholder}
+            value={this.state.val}
+            onChange={this.handleValChange}
+          />
+        </FormGroup>
+        }
+
+        <hr />
+      </div>
+    )
+  }
+
   render() {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
-      this.state.activeFilter === 'does_not_contain';
+      this.state.activeFilter === 'does_not_contain'
  
-    let matchOpts = [
-      ['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>],
-      ['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>]
-    ]
+    let matchOpts = []
+
+    if(this.props.hasExists) {
+      matchOpts.push(['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>])
+      matchOpts.push(['does_not_exist', <FormattedMessage id="portal.policy.edit.matcher.doesntExist.text"/>])
+    }
 
     if(this.props.hasContains) {
       matchOpts.push(['contains', <FormattedMessage id="portal.policy.edit.matcher.contains.text"/>])
@@ -157,17 +193,7 @@ class Matcher extends React.Component {
           <p>{this.props.description}</p>
         </Modal.Header>
         <Modal.Body>
-          <FormGroup controlId="matches_val">
-            <ControlLabel>{this.props.label}</ControlLabel>
-            <FormControl
-              type="text"
-              placeholder={this.props.placeholder}
-              value={this.state.val}
-              onChange={this.handleValChange}
-            />
-          </FormGroup>
-
-          <hr />
+          {this.renderValueField()}
 
           {!this.props.disableRuleSelector &&
             <div className="form-groups">
@@ -229,12 +255,12 @@ Matcher.propTypes = {
   activateMatch: React.PropTypes.func,
   changeValue: React.PropTypes.func,
   close: React.PropTypes.func,
-  contains: React.PropTypes.bool,
   description: React.PropTypes.string,
   disableRuleSelector: React.PropTypes.bool,
   hasContains: React.PropTypes.bool,
   hasEmpty: React.PropTypes.bool,
   hasEquals: React.PropTypes.bool,
+  hasExists: React.PropTypes.bool,
   label: React.PropTypes.string,
   match: React.PropTypes.instanceOf(Immutable.Map),
   name: React.PropTypes.string,

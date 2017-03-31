@@ -1,6 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
+export const UDN_CORE_ACCOUNT_ID = 1;
+
 export const ACCOUNT_TYPE_CONTENT_PROVIDER = 1;
 export const ACCOUNT_TYPE_SERVICE_PROVIDER = 2;
 export const ACCOUNT_TYPE_CLOUD_PROVIDER = 3;

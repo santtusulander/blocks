@@ -34,6 +34,9 @@ import GroupForm from '../../../components/account-management/group-form'
 import { getServiceOptions, getServicesInfo } from '../../../redux/modules/service-info/selectors'
 import { getServiceOptionsForGroup } from '../../../util/services-helpers'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 import '../../../components/account-management/group-form.scss'
 
 class GroupFormContainer extends React.Component {
@@ -201,6 +204,7 @@ class GroupFormContainer extends React.Component {
   render() {
     const {
       account,
+      allowModify,
       canEditServices,
       canSeeLocations,
       groupId,
@@ -219,7 +223,6 @@ class GroupFormContainer extends React.Component {
       invalid,
       networks,
       serviceOptions,
-      locationPermissions,
       showServiceItemForm
     } = this.props
 
@@ -279,9 +282,9 @@ class GroupFormContainer extends React.Component {
             onDeleteHost={this.handleDeleteHost}
             onSubmit={this.onSubmit}
             onShowLocation={this.showLocationForm}
-            locationPermissions={locationPermissions}
             serviceOptions={serviceOptions}
             showServiceItemForm={showServiceItemForm}
+            readOnly={!allowModify}
           />
         </SidePanel>
 
@@ -311,7 +314,6 @@ class GroupFormContainer extends React.Component {
           onCancel={this.hideLocationForm}
           show={true}
           locationId={this.state.selectedLocationId}
-          locationPermissions={locationPermissions}
         />
       }
 
@@ -325,6 +327,7 @@ GroupFormContainer.displayName = "GroupFormContainer"
 GroupFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map).isRequired,
   activeHost: PropTypes.instanceOf(Map),
+  allowModify: PropTypes.bool,
   canEditServices: PropTypes.bool,
   canFetchNetworks: PropTypes.bool,
   canSeeLocations: PropTypes.bool,
@@ -340,7 +343,6 @@ GroupFormContainer.propTypes = {
   invalid: PropTypes.bool,
   isFetchingEntities: PropTypes.bool,
   isFetchingHosts: PropTypes.bool,
-  locationPermissions: PropTypes.object,
   locations: PropTypes.instanceOf(List),
   name: PropTypes.string,
   networks: PropTypes.instanceOf(List),
@@ -372,6 +374,8 @@ const  mapStateToProps = (state, ownProps) => {
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
+  const roles = state.roles.get('roles')
+
   return {
     account: activeAccount,
     activeHost: host.get('activeHost'),
@@ -392,6 +396,7 @@ const  mapStateToProps = (state, ownProps) => {
                     : [],
     servicesInfo: getServicesInfo(state),
     group: activeGroup,
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_GROUP),
     networks: getNetworksByGroup(state, groupId)
   }
 }

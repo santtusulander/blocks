@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import {
   getAnalyticsUrlFromParams,
   getContentUrl,
-  getNetworkUrl
+  getDashboardUrl
 } from '../../util/routes.js'
 
 import accountActions from '../../redux/modules/entities/accounts/actions'
@@ -56,13 +56,22 @@ export class Brand extends React.Component {
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
   createAccount(brand, id, data) {
     return this.props.createAccount({brand, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   editAccount(brand, id, data) {
     return this.props.updateAccount({brand, id, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   deleteAccount(id) {
     const {brand} = this.props.params
     return this.props.removeAccount({brand, id})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
@@ -101,7 +110,7 @@ export class Brand extends React.Component {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
         return getContentUrl('groups', accountID, this.props.params)
       } else {
-        return getNetworkUrl('groups', accountID, this.props.params)
+        return getDashboardUrl('account', accountID, this.props.params)
       }
     }
     const analyticsURLBuilder = (...account) => {

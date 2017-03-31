@@ -24,6 +24,9 @@ import HelpPopover from '../../../components/help-popover'
 import NetworkEditNodeForm, { getNodeValues, MULTIPLE_VALUE_INDICATOR } from '../../../components/network/forms/edit-node-form'
 import { NETWORK_DATE_FORMAT } from '../../../constants/network'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 /**
  * build a subtitle for the modal using URL params
  * @param  {[type]} state  [description]
@@ -61,7 +64,7 @@ class EditNodeFormContainer extends React.Component {
   }
 
   render() {
-    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle, nodePermissions } = this.props
+    const { show, onCancel, onSave, initialValues, intl, nodeValues, nodes, subTitle, allowModify } = this.props
     const { hasMultipleNodes, showDeleteModal } = this.state
     const firstNode = nodes[0]
     const dateLists = {
@@ -140,7 +143,7 @@ class EditNodeFormContainer extends React.Component {
       onCancel,
       onDelete: this.onToggleDeleteModal,
       onSave,
-      nodePermissions
+      readOnly: !allowModify
     }
 
     const deleteModalProps = {
@@ -172,9 +175,9 @@ class EditNodeFormContainer extends React.Component {
 EditNodeFormContainer.displayName = "NetworkEditNodeContainer"
 
 EditNodeFormContainer.propTypes = {
+  allowModify: React.PropTypes.bool,
   initialValues: React.PropTypes.object,
   intl: intlShape.isRequired,
-  nodePermissions: React.PropTypes.object,
   nodeValues: React.PropTypes.object,
   nodes: React.PropTypes.array,
   onCancel: React.PropTypes.func,
@@ -195,6 +198,9 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   })
   const nodeValues = getNodeValues(nodes)
 
+  const roles = state.roles.get('roles')
+  const currentUser = state.user.get('currentUser')
+
   const initialValues = {}
   for (let field in nodeValues) {
     const value = nodeValues[field]
@@ -202,6 +208,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   }
 
   return {
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NODE),
     subTitle: getSubtitle(state, params),
     nodes,
     initialValues,
