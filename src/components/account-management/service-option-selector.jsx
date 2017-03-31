@@ -121,12 +121,12 @@ class ServiceOptionSelector extends React.Component {
                   <Table striped={true} className="table-simple">
                     <tbody>
                       {option.options.map((subOption, j) => {
-                        const options = serviceIndex >= 0 ? input.value.get(serviceIndex).get('options') : List()
-                        const subOptionsIds = options.map(item => item.get('option_id'))
+                        const inputOptions = serviceIndex >= 0 ? input.value.get(serviceIndex).get('options') : List()
+                        const subOptionsIds = inputOptions.map(item => item.get('option_id'))
                         const subOptionIndex = subOptionsIds ? subOptionsIds.indexOf(subOption.value) : -1
                         const subOptionValue = subOptionIndex >= 0
                         const optionRegions = (subOptionValue && subOption.requires_charge_number)
-                                              ? options.get(subOptionIndex).get('billing_meta').get('regions')
+                                              ? inputOptions.get(subOptionIndex).get('billing_meta').get('regions')
                                               : List()
 
                         return (

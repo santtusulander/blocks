@@ -198,8 +198,13 @@ export function buildAnalyticsOpts(params, filters, location ){
   const tabKey = getTabName(location.pathname)
   //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
   let visibleFilters = List()
-  const tab = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey )
-  if (tab) { visibleFilters = tab.get('filters') }
+  const tab = AnalyticsTabConfig.find((analytics_tab) => {
+    return analytics_tab.get('key') === tabKey
+  })
+
+  if (tab) {
+    visibleFilters = tab.get('filters')
+  }
 
   //get filter values
   let filterValues = {}
@@ -474,11 +479,13 @@ export function userHasRole(user, roleToFind) {
   const mapping = fromJS(ROLES_MAPPING)
 
   for (let roleId of userRoles) {
-    const role = mapping.find(role => role.get('id') === roleId)
+    const role = mapping.find((mapping_role) => {
+      return mapping_role.get('id') === roleId
+    })
     const accountTypes = role.get('accountTypes')
 
     if (role && accountTypes && accountTypes.size > 0) {
-      if (accountTypes.find(roleId => roleId === roleToFind)) {
+      if (accountTypes.find((accountRoleId) => accountRoleId === roleToFind)) {
         return true
       }
     }

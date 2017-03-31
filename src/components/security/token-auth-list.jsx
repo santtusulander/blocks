@@ -14,14 +14,14 @@ import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuratio
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
   const getSchemaLabel = (schema) => {
-    return schema.reduce((acc, schema) => {
-      return acc.concat([schemaOptions.find(option => option.value === schema).label])
+    return schema.reduce((acc, sigleSchema) => {
+      return acc.concat([schemaOptions.find(option => option.value === sigleSchema).label])
     }, []).join(' + ')
   }
 
   const getEncryptionLabel = ({encryption, streaming_encryption}) => {
     if (streaming_encryption) {
-      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label} 
+      return `${intl.formatMessage({id: 'portal.security.tokenAuth.manifest.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === encryption).label}
               ${intl.formatMessage({id: 'portal.security.tokenAuth.chunk.text'})}: ${ENCRYPTION_OPTIONS.find(item => item.value === streaming_encryption).label}`
     } else {
       return ENCRYPTION_OPTIONS.find(item => item.value === encryption).label

@@ -14,6 +14,7 @@ const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (
       </CustomToggle>
       <Dropdown.Menu className="button-dropdown-menu">
         {
+          // eslint-disable-next-line no-shadow
           options.map(({disabled, value, label, handleClick}, index)=>(
             <MenuItem
               disabled={disabled}

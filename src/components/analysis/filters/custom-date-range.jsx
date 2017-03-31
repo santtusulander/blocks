@@ -9,8 +9,8 @@ const FilterCustomDateRange = ({ onFilterChange, startDate }) =>
     <h5><FormattedMessage id="portal.analysis.filters.customDateRange.title"/></h5>
     <CustomDatePicker
       startDate={startDate}
-      changeDateRange={(startDate, endDate) => {
-        onFilterChange('customDateRange', { startDate, endDate })
+      changeDateRange={(newStartDate, newEndDate) => {
+        onFilterChange('customDateRange', { newStartDate, newEndDate })
       }} />
   </div>
 

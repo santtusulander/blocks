@@ -66,14 +66,14 @@ class UserMenu extends React.Component {
                   className="btn-block"
                   onSelect={handleThemeChange}
                   value={theme}
-                  options={AVAILABLE_THEMES.map((theme) =>
-                    [theme,
+                  options={AVAILABLE_THEMES.map((singleTheme) =>
+                    [singleTheme,
                       <div>
                         <span className="helper-header helper-ui-theme text-sm">
                           <FormattedMessage id="portal.header.menu.theme.title"/>
                         </span>
                         <span className="theme-title">
-                          <FormattedMessage id="portal.header.menu.theme.ericssonTitle.text" values={{themeTitle: theme}}/>
+                          <FormattedMessage id="portal.header.menu.theme.ericssonTitle.text" values={{themeTitle: singleTheme}}/>
                         </span>
                       </div>
                     ])
