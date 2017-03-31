@@ -13,7 +13,7 @@ const rolePermissionSchema = new schema.Entity('roles', {}, {
   processStrategy: (value, parent, key) => {
 
     //To provide compability with the old permissionMapping
-    const reduced = value.services.reduce( (acc, val) => {
+    const reduced = value.services.reduce((acc, val) => {
       acc[val.service.toLowerCase()] = val.permissions.resources
       return acc;
     }, {})
@@ -24,7 +24,7 @@ const rolePermissionSchema = new schema.Entity('roles', {}, {
 
 export const fetch = ({id}) => {
   return axios.get(baseUrl(id), PAGINATION_MOCK)
-  .then( ({data}) => {
+  .then(({data}) => {
     return normalize(
       {
         id,

@@ -19,6 +19,7 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -60,7 +61,7 @@ class PodFormContainer extends React.Component {
       showFootprintModal: false,
       showRoutingDaemonModal: false,
       footprintId: null,
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
@@ -105,7 +106,7 @@ class PodFormContainer extends React.Component {
       });
   }
 
-  refreshFootprints(){
+  refreshFootprints() {
     const { UIFootprints, footprints, setFormVal } = this.props
 
     const footprintIDs = UIFootprints.map(fp => fp.id)
@@ -185,7 +186,7 @@ class PodFormContainer extends React.Component {
       local_as: parseInt(values.UILocalAS),
       request_fwd_type: values.UIRequestFwdType,
       provider_weight: parseFloat(values.UIProviderWeight),
-      ip_list: values.UIIpList.map( ip => ip.label ),
+      ip_list: values.UIIpList.map(ip => ip.label),
       salt_roles: [values.UISaltRole]
     }
 
@@ -202,7 +203,7 @@ class PodFormContainer extends React.Component {
 
       //Get footprint IDs
       const UIFootprints = values.UIFootprints || []
-      data.footprints = UIFootprints.filter( fp => !fp.removed || fp.removed === false ).map( fp => fp.id )
+      data.footprints = UIFootprints.filter(fp => !fp.removed || fp.removed === false).map(fp => fp.id)
     }
 
     data.services = [service]
@@ -433,7 +434,7 @@ const mapStateToProps = (state, ownProps) => {
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
 
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const edit = !!ownProps.podId
@@ -461,7 +462,7 @@ const mapStateToProps = (state, ownProps) => {
 
   initialValues.UIFootprints = inititalUIFootprints ? inititalUIFootprints : []
   initialValues.status = edit && pod ? pod.get('status') : STATUS_VALUE_DEFAULT
-  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map( ip => { return {id: ip, label: ip} } ).toJS() || []
+  initialValues.UIIpList = edit && pod && pod.get('UIIpList').map(ip => { return {id: ip, label: ip} }).toJS() || []
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
@@ -496,7 +497,7 @@ const mapDispatchToProps = (dispatch) => {
 
     pushFormVal: (field, val) => dispatch(arrayPush('pod-form', field, val)),
     setFormVal: (field, val) => dispatch(change('pod-form', field, val)),
-    showNotification: (message) => dispatch( changeNotification(message) ),
+    showNotification: (message) => dispatch(changeNotification(message)),
     reinitForm: (initialValues) => dispatch(initialize('pod-form', initialValues))
   }
 }

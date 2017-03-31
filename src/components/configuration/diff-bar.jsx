@@ -47,7 +47,7 @@ class ConfigurationDiffBar extends React.Component {
               </p>
               <p>
                 {configDiff.map((change, i) => {
-                  return(
+                  return (
                     <span key={i}>
                       [{change.get('op')} {change.get('path')}]
                     </span>

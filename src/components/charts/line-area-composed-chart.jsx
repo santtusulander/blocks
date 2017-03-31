@@ -16,14 +16,14 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
   const haveEstimate = data && data[0] && data[0].estimate
   const containerProps = isMiniChart ? { width: width, height: height} : { minHeight: 300, aspect: 2}
   const getTicks = (data) => {
-    if (!data || !data.length || isMiniChart ) {return [];}
+    if (!data || !data.length || isMiniChart) {return [];}
 
     const start = unixTimestampToDate(data[0].timestamp).valueOf()
     const end = unixTimestampToDate(data[data.length - 1].timestamp).valueOf()
 
-    const steps = ( (end - start) <= dayInMilliSeconds ) ? d3.time.hour.utc : d3.time.day.utc
+    const steps = ((end - start) <= dayInMilliSeconds) ? d3.time.hour.utc : d3.time.day.utc
 
-    dateFormat = ( (end - start) <= dayInMilliSeconds ) ? dateFormat = "HH:mm" : "MMM DD"
+    dateFormat = ((end - start) <= dayInMilliSeconds) ? dateFormat = "HH:mm" : "MMM DD"
 
     const scale = d3.time
                     .scale
@@ -33,7 +33,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
 
 
     const ticks = scale.ticks(steps, 1);
-    return ticks.map(entry => +(entry/1000) );
+    return ticks.map(entry => +(entry/1000));
   }
 
   return (
@@ -44,7 +44,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
         <ResponsiveContainer {...containerProps}>
           <ComposedChart
               data={data}
-              margin={isMiniChart ? {} : {left:50, bottom: 30, top: 100}}
+              margin={isMiniChart ? {} : {left: 50, bottom: 30, top: 100}}
               className={classNames({'comparison': isComparison}, {'non-stacked': !isComparison})}
           >
             { isComparison &&
@@ -98,10 +98,9 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
               cursor={{stroke: black}}
               content={
                 <LineAreaComposedChartTooltip
-                  iconClassNamePicker={(dataKey) => dataKey !== comparisonDataKey
-                    ? 'storage'
-                    : 'comparison_storage'
-                  }
+                  iconClassNamePicker={(dataKey) => {
+                    return (dataKey !== comparisonDataKey) ? 'storage' : 'comparison_storage'
+                  }}
                   ignoreValues={["estimate"]}
                   valueFormatter={valueFormatter}
                 />

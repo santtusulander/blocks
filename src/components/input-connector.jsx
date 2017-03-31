@@ -3,16 +3,16 @@ import React from 'react';
 class InputConnector extends React.Component {
   render() {
     let className = 'input-connector'
-    if(this.props.show) {
+    if (this.props.show) {
       className += ' show'
     }
-    if(this.props.hasTwoEnds) {
+    if (this.props.hasTwoEnds) {
       className += ' has-two-ends'
     }
-    if(this.props.noLabel) {
+    if (this.props.noLabel) {
       className += ' no-label'
     }
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     return (

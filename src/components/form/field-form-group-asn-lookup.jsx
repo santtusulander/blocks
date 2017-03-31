@@ -13,7 +13,9 @@ const fetchAsns = (filterBy, filterValue) => {
   const queryParams = qsBuilder({ filter_by: filterBy, filter_value: filterValue, page_size: ASN_ITEMS_COUNT_TO_SEARCH })
 
   return axios.get(`${BASE_URL_NORTH}/asns${queryParams}`)
-    .then(res => res ? res.data.data : [])
+    .then((res) => {
+      return res ? res.data.data : []
+    })
 }
 class FieldFormGroupAsnLookup extends Component {
   constructor(props) {

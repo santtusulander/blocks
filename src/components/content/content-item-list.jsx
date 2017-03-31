@@ -41,7 +41,7 @@ class ContentItemList extends React.Component {
   }
   render() {
     const datasets = []
-    if(this.props.primaryData.size) {
+    if (this.props.primaryData.size) {
       datasets.push({
         area: true,
         color: paleblue,

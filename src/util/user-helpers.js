@@ -7,7 +7,7 @@ import { getTokenMeta } from './local-storage'
  * @return {String} phone number without countryCode
  */
 export const stripCountryCode = (phoneNumber, countryCode) => {
-  return phoneNumber.replace( new RegExp ( `^\\+${countryCode}` ), '')
+  return phoneNumber.replace(new RegExp (`^\\+${countryCode}`), '')
 }
 
 /**

@@ -12,7 +12,7 @@ import IconArrowDown from './icons/icon-arrow-down.jsx'
 import { ALLOW_ALWAYS } from '../constants/permissions'
 
 function ActionButtons ({ arrowDownDisabled, arrowUpDisabled, className, deleteDisabled, removeDisabled, onArrowDown, onArrowUp, onEdit, onDelete, onRemove, permissions }) {
-  let finalClassName = classNames(
+  const finalClassName = classNames(
     'action-buttons',
     {
       'primary': !className

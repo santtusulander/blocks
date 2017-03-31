@@ -49,7 +49,7 @@ class Cache extends React.Component {
   }
   handleChange(key) {
     return e => {
-      let stateObj = {}
+      const stateObj = {}
       stateObj[key] = e.target.value
       this.setState(stateObj)
     }
@@ -62,7 +62,7 @@ class Cache extends React.Component {
   }
   handleToggleChange(key) {
     return value => {
-      let stateObj = {}
+      const stateObj = {}
       stateObj[key] = value
       this.setState(stateObj)
     }

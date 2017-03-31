@@ -18,7 +18,7 @@ const fileTypes = [
 ]
 
 class ExportFileForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -30,19 +30,19 @@ class ExportFileForm extends React.Component {
     this.onDownload = this.onDownload.bind(this)
   }
 
-  onChange( val ){
+  onChange(val) {
     return () => {
       this.setState({fileType: val})
     }
   }
 
-  onDownload( fileType ){
+  onDownload(fileType) {
     return () => {
       this.props.onDownload(fileType);
     }
   }
 
-  onCancel(){
+  onCancel() {
     this.props.onCancel();
   }
 

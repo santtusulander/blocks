@@ -26,9 +26,9 @@ class RolesList extends React.Component {
   }
 
   labelPermissions(rolePermissions, permissions) {
-    let permissionNames = rolePermissions
+    const permissionNames = rolePermissions
       .map((rules, key) => {
-        let permissionName = permissions
+        const permissionName = permissions
           .find(permission => permission.get('name') === key)
           .get('title')
         return permissionName
@@ -47,14 +47,14 @@ class RolesList extends React.Component {
     return data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
       }
-      else if(aVal > bVal) {
+      else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0

@@ -3,7 +3,7 @@ import React from 'react'
 class PageContainer extends React.Component {
   render() {
     let className = 'page-container';
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 

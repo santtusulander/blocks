@@ -26,23 +26,23 @@ export const FILE_EXTENSION_DEFAULT_CASE = FILE_EXTENSION_CASE_START + FILE_EXTE
 
 //"equals | substr | exists | empty | in | regexp"
 export function getMatchFilterType(item) {
-  if(item.get('type') === 'exists') {
+  if (item.get('type') === 'exists') {
     return item.get('inverted') ? 'does_not_exist' : 'exists'
   }
 
-  if(item.get('type') === 'in') {
+  if (item.get('type') === 'in') {
     return item.get('inverted') ? 'not_in' : 'in'
   }
 
-  if(item.get('type') === 'substr') {
+  if (item.get('type') === 'substr') {
     return item.get('inverted') ? 'does_not_contain' : 'contains'
   }
 
-  if(item.get('type') === 'equals') {
+  if (item.get('type') === 'equals') {
     return item.get('inverted') ? 'does_not_equal' : 'equals'
   }
 
-  if(item.get('type') === 'empty') {
+  if (item.get('type') === 'empty') {
     return item.get('inverted') ? 'does_not_empty' : 'empty'
   }
 
@@ -51,7 +51,7 @@ export function getMatchFilterType(item) {
 
 /* eslint-disable react/display-name */
 export function getConditionFilterText(match) {
-  switch(match.filterType) {
+  switch (match.filterType) {
     case 'exists':
       return <FormattedMessage id="portal.policy.edit.rule.matcher.exists.text"/>
     case 'does_not_exist':
@@ -91,7 +91,7 @@ export function matchIsFileExtension(match) {
 }
 
 export function filterActionIsTokenAuth(sets) {
-  return sets.filter( set => (set.setkey === 'tokenauth') )
+  return sets.filter(set => (set.setkey === 'tokenauth'))
 }
 
 const parseConditions = (items, path) => {
@@ -138,7 +138,7 @@ export function parsePolicy(rule, path) {
  * @param policy
  * @returns {*}
  */
-export const getScriptLua = ( policy ) => {
+export const getScriptLua = (policy) => {
   return policy.getIn(['match', 'cases', 0, 1, 0, 'script_lua']).toJS()
 }
 
@@ -147,12 +147,12 @@ export const getScriptLua = ( policy ) => {
  * @param scriptLua, responseCodes
  * @returns {*|Array}
  */
-export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
+export const parseCountriesByResponseCodes = (scriptLua, responseCodes) => {
   const countries = scriptLua.target.geo[0].country
 
-  return flatten(countries.filter( c => {
-    return c.response && c.response.code && ( responseCodes.includes( c.response.code ) )
-  }).map( c => {
+  return flatten(countries.filter(c => {
+    return c.response && c.response.code && (responseCodes.includes(c.response.code))
+  }).map(c => {
     const cArray = c.in || c.not_in
     return (cArray)
   }))
@@ -163,10 +163,10 @@ export const parseCountriesByResponseCodes = ( scriptLua, responseCodes ) => {
  * @param config
  * @returns Boolean
  */
-export const getVaryHeaderRuleId = ( config ) => {
+export const getVaryHeaderRuleId = (config) => {
   const path = config.getIn([POLICY_TYPES.RESPONSE, 'policy_rules'])
 
-  return path.findIndex( rule => {
+  return path.findIndex(rule => {
     return 'Vary' === rule.getIn(['set', 'header','header'])
   })
 }
@@ -179,8 +179,8 @@ export const getVaryHeaderRuleId = ( config ) => {
 export const getActiveConfiguration = (property) => {
   try {
     const activeConfigId = property.services[0].active_configurations[0].config_id
-    return property.services[0].configurations.find( config => activeConfigId === config.config_id)
-  } catch (e){
+    return property.services[0].configurations.find(config => activeConfigId === config.config_id)
+  } catch (e) {
     return null
   }
 }
@@ -191,15 +191,15 @@ export const getActiveConfiguration = (property) => {
  * @return [Array] of token auth rules
  */
 export const getTokenAuthRules = (properties) => {
-  let tokenAuthRules = []
+  const tokenAuthRules = []
 
-  for( let key in properties) {
+  for (const key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach( (rule, request_policy_key) => {
+    config && config.request_policy.policy_rules.forEach((rule, request_policy_key) => {
       const { sets, default_sets } = parsePolicy(fromJS(rule), [])
-      const tokenAuthActions = filterActionIsTokenAuth( sets.concat(default_sets) )
+      const tokenAuthActions = filterActionIsTokenAuth(sets.concat(default_sets))
 
       if (tokenAuthActions.length) {
         tokenAuthActions.forEach(set => {

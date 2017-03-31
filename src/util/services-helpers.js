@@ -97,7 +97,7 @@ export function getServiceOptionsForGroup (serviceOptionsInfo, accountServices, 
       const accountOptions = accountItem ? accountItem.get('options') : List()
       const groupOptions = groupItem ? groupItem.get('options') : List()
       const allOptions = accountOptions.concat(groupOptions)
-      acc.push( {
+      acc.push({
         ...service,
         options: service.options.filter(option => allOptions.contains(option.value))
       })

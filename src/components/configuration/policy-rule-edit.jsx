@@ -62,7 +62,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const path = ['rule_body', 'conditions']
       const newIndex = this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
-      let newCondition = Immutable.fromJS(DEFAULT_CONDITION_JS)
+      const newCondition = Immutable.fromJS(DEFAULT_CONDITION_JS)
       const conditions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(newCondition)
  
       this.props.changeValue([],
@@ -154,7 +154,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
   }
 
   renderConditionName(match) {
-    if(match.field === 'content_targeting_country_code') {
+    if (match.field === 'content_targeting_country_code') {
       return (
         <div className="condition-name">
           {'Countries: '}
@@ -180,7 +180,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       <div className="conditions">
         {actions.map((set, i) => {
           let active = false
-          if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
+          if (Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
             active = true
           }
           return (
@@ -273,7 +273,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
           <div className="conditions">
             {flattenedPolicy.matches.map((match, i) => {
               let active = false
-              if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
+              if (Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
               }
 
@@ -360,7 +360,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               onClick={this.props.hideAction}
               disabled={disableButton()}
             >
-              <FormattedMessage id="portal.button.add"/>
+              {this.props.isEditingRule ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}
             </Button>
           </ButtonToolbar>
 

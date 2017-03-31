@@ -1,13 +1,13 @@
 import { recordFields } from '../constants/dns-record-types'
 
 export const getRecordValueString = (value) => {
-  if (value.value ) return value.value
+  if (value.value) return value.value
 
   return value
 }
 
 export const getRecordFormInitialValues = record => {
-  switch(record.type) {
+  switch (record.type) {
     case 'MX':
     case 'NAPTR':
     case 'SRV':

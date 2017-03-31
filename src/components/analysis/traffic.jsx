@@ -66,10 +66,10 @@ class AnalysisTraffic extends React.Component {
 
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
-      if(a.get(sortBy) < b.get(sortBy)) {
+      if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
       }
-      else if(a.get(sortBy) > b.get(sortBy)) {
+      else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0
@@ -119,7 +119,7 @@ class AnalysisTraffic extends React.Component {
     const sortedCountries = this.sortedData(this.props.byCountry, this.state.sortBy, this.state.sortDir)
 
     const datasets = []
-    if(this.props.serviceTypes.includes('http') && httpData.size) {
+    if (this.props.serviceTypes.includes('http') && httpData.size) {
       datasets.push({
         area: true,
         color: paleblue,
@@ -132,7 +132,7 @@ class AnalysisTraffic extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(this.props.serviceTypes.includes('https') && httpsData.size){
+    if (this.props.serviceTypes.includes('https') && httpsData.size) {
       datasets.push({
         area: true,
         color: green,
@@ -145,8 +145,8 @@ class AnalysisTraffic extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(this.props.byTimeComparison.size) {
-      if(this.props.serviceTypes.includes('http') && comparisonHttpData.size) {
+    if (this.props.byTimeComparison.size) {
+      if (this.props.serviceTypes.includes('http') && comparisonHttpData.size) {
         datasets.push({
           area: true,
           color: paleblue,
@@ -159,7 +159,7 @@ class AnalysisTraffic extends React.Component {
           xAxisFormatter: (date) => moment.utc(timespanAdjust(-1)(date).get('timestamp'))
         })
       }
-      if(this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
+      if (this.props.serviceTypes.includes('https') && comparisonHttpsData.size) {
         datasets.push({
           area: true,
           color: green,
@@ -260,7 +260,7 @@ class AnalysisTraffic extends React.Component {
                   )
                 })
                 const datasets = []
-                if(primaryData.size) {
+                if (primaryData.size) {
                   datasets.push({
                     area: false,
                     color: paleblue,

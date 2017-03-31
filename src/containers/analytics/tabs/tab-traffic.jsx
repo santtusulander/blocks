@@ -38,7 +38,7 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters ||
+    if (this.props.filters !== nextProps.filters ||
         changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
@@ -85,7 +85,7 @@ class AnalyticsTabTraffic extends React.Component {
       if (activeHostConfiguredName) {
         totalsOpts.property = activeHostConfiguredName
       }
-    } else if(params.group) {
+    } else if (params.group) {
       this.setState({ metricKey: 'groupMetrics' })
       totalsOpts = {
         account: params.account,
@@ -94,7 +94,7 @@ class AnalyticsTabTraffic extends React.Component {
         endDate: fetchOpts.endDate,
         service_type: fetchOpts.service_type
       }
-    } else if(params.account) {
+    } else if (params.account) {
       this.setState({ metricKey: 'accountMetrics' })
       totalsOpts = {
         account: params.account,
@@ -113,7 +113,7 @@ class AnalyticsTabTraffic extends React.Component {
       const dateSpan = fetchOpts.endDate - fetchOpts.startDate + 1
       let startDate = fetchOpts.startDate - dateSpan
       let endDate = fetchOpts.endDate - dateSpan
-      if(dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
+      if (dateRangeLabel === DateRanges.LAST_MONTH || dateRangeLabel === DateRanges.MONTH_TO_DATE) {
         startDate = Number(moment(fetchOpts.startDate * 1000).subtract(1, 'months').format('X'))
         endDate = startDate + dateSpan
       }
@@ -127,9 +127,9 @@ class AnalyticsTabTraffic extends React.Component {
   }
 
   formatTotals(value) {
-    if(this.props.filters.get('recordType') === 'transfer_rates') {
+    if (this.props.filters.get('recordType') === 'transfer_rates') {
       return formatBitsPerSecond(value, 2)
-    } else if(this.props.filters.get('recordType') === 'requests') {
+    } else if (this.props.filters.get('recordType') === 'requests') {
       return numeral(value).format('0,0')
     }
   }

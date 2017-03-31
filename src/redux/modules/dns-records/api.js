@@ -3,14 +3,14 @@ import { BASE_URL_NORTH, PAGINATION_MOCK }  from '../../util.js'
 
 /* CRUD OPERATIONS FOR DNS Resource Records */
 
-export const fetchAll = ( zone ) => {
+export const fetchAll = (zone) => {
   return axios.get(`${BASE_URL_NORTH}/brands/udn/zones/${zone}/rr?format=detailed`, PAGINATION_MOCK)
-    .then( ({data})  => ({ data, zone }))
+    .then(({data})  => ({ data, zone }))
 }
 
 export const fetchDetailsByName = (zone, resource) => {
   return axios.get(`${BASE_URL_NORTH}/brands/udn/zones/${zone}/rr/${resource}`)
-    .then( ({data})  => ({ data, zone, resource }))
+    .then(({data})  => ({ data, zone, resource }))
 }
 
 export const create = (zone, resource, data) => {

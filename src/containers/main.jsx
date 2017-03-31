@@ -40,7 +40,7 @@ export class Main extends React.Component {
     this.notificationTimeout = null
   }
 
-  getChildContext(){
+  getChildContext() {
     return {
       currentUser: this.props.currentUser,
       roles: this.props.roles
@@ -51,14 +51,14 @@ export class Main extends React.Component {
     // Validate token
     this.props.userActions.checkToken()
       .then(action => {
-        if(action.error) {
+        if (action.error) {
           // Check token failed
           return false
         }
 
         return this.props.userActions.fetchUser(action.payload.username)
-          .then( () => {
-            this.props.currentUser.get('roles').map( id => { return this.props.fetchRole(id) })
+          .then(() => {
+            this.props.currentUser.get('roles').map(id => { return this.props.fetchRole(id) })
           })
 
       })
@@ -93,7 +93,7 @@ export class Main extends React.Component {
   }
 
   render() {
-    if ( this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size ) {
+    if (this.props.user.get('loggedIn') === false || !this.props.currentUser.size || !this.props.roles.size) {
       return <LoadingSpinner />
     }
 
@@ -101,7 +101,7 @@ export class Main extends React.Component {
 
     let classNames = 'main-container';
 
-    if(this.props.viewingChart) {
+    if (this.props.viewingChart) {
       classNames = `${classNames} chart-view`
     }
 
@@ -291,7 +291,7 @@ const mapDispatchToProps = (dispatch) => {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
 
-    fetchRole: (id) => dispatch( rolesActions.fetchOne({id}) )
+    fetchRole: (id) => dispatch(rolesActions.fetchOne({id}))
   }
 }
 
