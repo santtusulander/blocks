@@ -46,7 +46,10 @@ AreaTooltip.propTypes = {
 export default AreaTooltip
 
 const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
-  const total = valueFormatter(payload.reduce((sum, { value }) => sum += value, 0), true)
+  const total = valueFormatter(payload.reduce((sum, { value }) => {
+    const result = sum + value
+    return result
+  }, 0), true)
   const ts = payload && payload[0] && payload[0].payload && payload[0].payload.timestamp
   return (
     <div>

@@ -263,7 +263,7 @@ Account.propTypes = {
   oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   toggleDeleteConfirmationModal: PropTypes.func,
@@ -279,7 +279,7 @@ Account.defaultProps = {
   dailyTraffic: List(),
   groups: List(),
   metrics: List(),
-  roles: List(),
+  roles: Map(),
   sortValuePath: List(),
   user: Map()
 }

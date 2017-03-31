@@ -18,9 +18,9 @@ export class LoginFormTwoFactorCode extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.fetching != nextProps.fetching) {
+    if (this.props.fetching !== nextProps.fetching) {
       return true
-    } else if (this.props.loginError != nextProps.loginError){
+    } else if (this.props.loginError !== nextProps.loginError){
       return true
     } else {
       return false
@@ -40,18 +40,18 @@ export class LoginFormTwoFactorCode extends Component {
       // Verify all inputs
       for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
         let inputValue = codeInputs[inputIndex].value
-        if (inputValue.length == TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
+        if (inputValue.length === TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
           code += inputValue
         }
       }
 
       // If all inputs has a value, parse those value and submit token
-      if (code.length == codeInputs.length) {
+      if (code.length === codeInputs.length) {
         this.props.onSubmit(code, codeInputs)
         return
       }
 
-      if (next != null) {
+      if (next !== null) {
         // Focuse on next input, and select text
         next.focus();
         next.select();
@@ -84,7 +84,7 @@ export class LoginFormTwoFactorCode extends Component {
 
     // Focus previos element when backspace or delete key is pressed
     // but only when current is empty
-    if (((charCode == 46) || (charCode == 8)) && (prevElem != null)) {
+    if (((charCode === 46) || (charCode === 8)) && (prevElem !== null)) {
       if (!e.target.value) {
         prevElem.value = ''
         prevElem.focus()

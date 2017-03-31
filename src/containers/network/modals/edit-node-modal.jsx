@@ -38,6 +38,7 @@ const getSubtitle = (state, params) => {
   const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
   // const group = getGroupById(state, params.group)
+  // eslint-disable-next-line 
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
   const network = getNetworkById(state, buildReduxId(params.group, params.network))
 

@@ -365,7 +365,7 @@ class PodFormContainer extends React.Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={()=>{
+            onSubmit={() => {
               this.onToggleDeleteModal(false)
               this.onDelete(podId)
               onCancel()
