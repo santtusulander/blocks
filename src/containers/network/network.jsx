@@ -713,8 +713,8 @@ class Network extends React.Component {
               noDataText={<FormattedMessage id="portal.network.entities.groups.noData"/>}
               fetching={groupsFetching}
               isParentSelected={!!this.props.params.account}
-              ref={(groups) => {
-                this.entityList.groupList = groups
+              ref={(groupsRef) => {
+                this.entityList.groupList = groupsRef
                 return this.entityList.groupList
               }}
               entities={groups}
@@ -765,8 +765,8 @@ class Network extends React.Component {
               fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.network}
               noDataText={<FormattedMessage id="portal.network.entities.pops.noData"/>}
-              ref={(pops) => {
-                this.entityList.popList = pops
+              ref={(popsRef) => {
+                this.entityList.popList = popsRef
                 return this.entityList.popList
               }}
               entities={params.network && pops}
@@ -786,8 +786,8 @@ class Network extends React.Component {
               fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
-              ref={(pods) => {
-                this.entityList.podList = pods
+              ref={(podsRef) => {
+                this.entityList.podList = podsRef
                 return this.entityList.podList
               }}
               entityIdKey='pod_name'
@@ -809,8 +809,8 @@ class Network extends React.Component {
               fetching={isFetching('node')}
               isParentSelected={!!params.pod}
               noDataText={<FormattedMessage id="portal.network.entities.nodes.noData"/>}
-              ref={(nodes) => {
-                this.entityList.nodeList = nodes
+              ref={(nodesRef) => {
+                this.entityList.nodeList = nodesRef
                 return this.entityList.nodeList
               }}
               entities={params.pod && nodes}

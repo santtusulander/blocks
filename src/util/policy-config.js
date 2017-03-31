@@ -163,16 +163,16 @@ export const getActiveConfiguration = (property) => {
  */
 export const getTokenAuthRules = (properties) => {
   let tokenAuthRules = []
-  for( let key in properties) {
+  for (let key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach( (rule, key) => {
+    config && config.request_policy.policy_rules.forEach((rule, request_policy_key) => {
       const {sets} = parsePolicy(fromJS(rule), [])
       if ( actionIsTokenAuth( sets ) ) {
         const tokenAuthConfig = fromJS(rule).getIn(sets[0].path).toJS()
         const returnObj = {
-          ruleId: key,
+          ruleId: request_policy_key,
           propertyName: property.published_host_id,
           type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
           accountId: property.accountId,
