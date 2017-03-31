@@ -75,7 +75,7 @@ class AsperaUpload extends Component {
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     if (this.state.isAsperaInitialized) {
       this.aspera.asperaDeInitConnect()
     }

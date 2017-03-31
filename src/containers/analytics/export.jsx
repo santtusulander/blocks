@@ -10,7 +10,7 @@ import IconExport from '../../components/icons/icon-export.jsx'
 import { FormattedMessage } from 'react-intl'
 
 class AnalyticsExport extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.getExportData = this.getExportData.bind(this)
     this.exportCSV = this.exportCSV.bind(this)
@@ -18,7 +18,7 @@ class AnalyticsExport extends React.Component {
 
   getExportData(activeTab) {
     let exportData = []
-    switch(activeTab) {
+    switch (activeTab) {
       case 'traffic':
         exportData = [this.props.trafficByTime, this.props.serviceTypes]
         break
@@ -59,7 +59,7 @@ class AnalyticsExport extends React.Component {
     const exporters = createCSVExporters(fileName)
     const exportData = this.getExportData(activeTab)
 
-    if(exportData.length) {
+    if (exportData.length) {
       exporters[activeTab](...exportData)
     }
   }
@@ -113,9 +113,9 @@ AnalyticsExport.defaultProps = {
 function mapStateToProps(state, { params: { account, group, storage } }) {
   let getStorageByParent
 
-  if(storage) {
+  if (storage) {
     getStorageByParent = getByStorageId(state, storage)
-  } else if(group) {
+  } else if (group) {
     getStorageByParent = getByGroupId(state, group)
   } else {
     getStorageByParent = getByAccountId(state, account)

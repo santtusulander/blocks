@@ -62,17 +62,17 @@ class SupportTicketModal extends React.Component {
     })])
 
     const comments = List([Map({
-      "id":        1274,
-      "type":      "Comment",
-      "body":      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac ipsum eget est malesuada condimentum. Mauris commodo purus ex, rhoncus ornare turpis interdum et. Nam pharetra eros ante, in elementum tortor convallis vel. Etiam dapibus iaculis magna, at luctus orci vehicula in. Sed et mattis sem, sed cursus ex. Cras vel pellentesque metus. Integer consectetur quis mauris eget tempus. Pellentesque posuere in ex a varius.",
-      "public":    true,
+      "id": 1274,
+      "type": "Comment",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac ipsum eget est malesuada condimentum. Mauris commodo purus ex, rhoncus ornare turpis interdum et. Nam pharetra eros ante, in elementum tortor convallis vel. Etiam dapibus iaculis magna, at luctus orci vehicula in. Sed et mattis sem, sed cursus ex. Cras vel pellentesque metus. Integer consectetur quis mauris eget tempus. Pellentesque posuere in ex a varius.",
+      "public": true,
       "created_at": "2009-07-20T22:55:29Z",
       "author_id": 123123
     }), Map({
-      "id":        1275,
-      "type":      "Comment",
-      "body":      "Mauris sollicitudin sagittis felis, at elementum purus porttitor vel. Sed sed sapien ipsum. Morbi nec urna sit amet est convallis consequat vel ac lectus. Nam sed tincidunt arcu, commodo lacinia metus. Phasellus tincidunt, dui id porttitor vulputate, mi urna hendrerit justo, non feugiat orci turpis sit amet turpis. Cras porta, tellus in ultricies elementum, lorem purus rutrum lacus, vitae feugiat ex ipsum ut orci. Donec blandit, magna vitae iaculis aliquam, dui tellus ullamcorper erat, ut sodales ipsum diam vitae massa. Quisque vehicula vestibulum elit, at aliquam erat aliquam ut.",
-      "public":    true,
+      "id": 1275,
+      "type": "Comment",
+      "body": "Mauris sollicitudin sagittis felis, at elementum purus porttitor vel. Sed sed sapien ipsum. Morbi nec urna sit amet est convallis consequat vel ac lectus. Nam sed tincidunt arcu, commodo lacinia metus. Phasellus tincidunt, dui id porttitor vulputate, mi urna hendrerit justo, non feugiat orci turpis sit amet turpis. Cras porta, tellus in ultricies elementum, lorem purus rutrum lacus, vitae feugiat ex ipsum ut orci. Donec blandit, magna vitae iaculis aliquam, dui tellus ullamcorper erat, ut sodales ipsum diam vitae massa. Quisque vehicula vestibulum elit, at aliquam erat aliquam ut.",
+      "public": true,
       "created_at": "2009-07-20T22:55:29Z",
       "author_id": 123123
     })])

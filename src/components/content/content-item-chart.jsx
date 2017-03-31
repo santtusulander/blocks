@@ -23,7 +23,7 @@ const dayHours = 24
 const rayHours = 3
 
 function groupData(rawData, groupSize, key) {
-  return rawData.reduce( (points, data, i) => {
+  return rawData.reduce((points, data, i) => {
 
     let val
 
@@ -248,9 +248,9 @@ class ContentItemChart extends React.Component {
                 viewBox={differenceArcViewBox}>
                 <g className={this.props.showSlices ? 'hover-info' : 'hidden-slices'}>
                   {pie(daySlices).reduce((slices, arc, i) => {
-                    if(!(i % 2)) {
+                    if (!(i % 2)) {
                       const data = this.props.dailyTraffic.get(Math.floor(i / 2))
-                      if(data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
+                      if (data && data.get('transfer_rates') && data.get('transfer_rates').get('total')) {
                         slices.push(
                           <path key={i} className="day-arc" d={dayArc(arc)}
                             onMouseEnter={this.sliceHover(data)}

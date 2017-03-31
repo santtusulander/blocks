@@ -21,7 +21,7 @@ class AnalyticsTabVisitors extends React.Component {
     this.getCityData = this.getCityData.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchData(
       this.props.params,
       this.props.filters,
@@ -30,8 +30,8 @@ class AnalyticsTabVisitors extends React.Component {
     )
   }
 
-  componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps) ||
+  componentWillReceiveProps(nextProps) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
         nextProps.params,
@@ -42,8 +42,8 @@ class AnalyticsTabVisitors extends React.Component {
     }
   }
 
-  fetchData(params, filters, location, hostConfiguredName){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, location, hostConfiguredName) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })

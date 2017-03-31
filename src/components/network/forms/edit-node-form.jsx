@@ -77,7 +77,7 @@ const validate = function({ custom_grains, ...values }, props) {
 
 
 function getValueLabel(options, value) {
-  if(!options || !options.length) {
+  if (!options || !options.length) {
     return value;
   }
   for (let i = 0, len = options.length; i < len; i++) {

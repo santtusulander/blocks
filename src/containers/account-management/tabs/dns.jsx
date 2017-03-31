@@ -96,7 +96,7 @@ class AccountManagementSystemDNS extends Component {
 
     const { domainSearch, recordSearch, recordToDelete } = this.state
     const setSearchValue = (event, stateVariable) => this.setState({ [stateVariable]: event.target.value })
-    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase() ))
+    const visibleRecords = records.filter(({ name, value }) => name.toLowerCase().includes(recordSearch.toLocaleLowerCase()) || getRecordValueString(value).toLowerCase().includes(recordSearch.toLowerCase()))
 
     const hiddenRecordCount = records.length - visibleRecords.length
     const domainHeaderProps = {
@@ -202,7 +202,7 @@ class AccountManagementSystemDNS extends Component {
 AccountManagementSystemDNS.displayName = "AccountManagementSystemDNS"
 AccountManagementSystemDNS.propTypes = {
   activeDomain: PropTypes.string,
-  activeModal:PropTypes.string,
+  activeModal: PropTypes.string,
   changeActiveDomain: PropTypes.func,
   deleteDomain: PropTypes.func,
   deleteRecord: PropTypes.func,
@@ -256,7 +256,7 @@ function mapDispatchToProps(dispatch, { params: { brand }, showNotification }) {
       deleteDomain('udn', domainId)
         .then(res => {
           if (res.error) {
-            dispatch( showInfoDialog({
+            dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.deleteError"/>,
               content: res.payload.data.message,
               okButton: true,

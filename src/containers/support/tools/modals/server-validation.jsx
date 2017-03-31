@@ -26,7 +26,7 @@ class ModalServerValidation extends React.Component {
   }
   componentWillReceiveProps(newProps) {
     clearTimeout(this.loadingTimeout)
-    if(newProps.showDetails) {
+    if (newProps.showDetails) {
       this.setState({
         showLoading: true
       })

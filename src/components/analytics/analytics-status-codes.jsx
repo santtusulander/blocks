@@ -20,7 +20,7 @@ function StatusCodes({ errorCodesOnly, options, values, onChange }) {
       } else {
         if (values.size !== options.size) {
           optionValue.forEach(item => {
-            if(!values.includes(item)) {
+            if (!values.includes(item)) {
               values = values.push(item)
             }
           })

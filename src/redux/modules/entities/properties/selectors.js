@@ -33,7 +33,7 @@ export const getByAccount = (state, account) => {
   if (groups && groups.size > 0) {
     return groups.reduce((acc, g) => {
       const groupProperties = getByGroup(state, g.get('id'))
-      return acc.merge( groupProperties )
+      return acc.merge(groupProperties)
     }, List())
   }
 }
@@ -49,7 +49,7 @@ export const getByGroups = (state, groups) => {
     const properties = []
     groups.forEach(group => {
       const groupProperties = getByGroup(state, group.get('id'))
-      groupProperties.forEach( property => {
+      groupProperties.forEach(property => {
         properties.push(property)
       })
     })
@@ -79,7 +79,7 @@ export const getPropertyMetricsById = (state, propertyId) => {
   const entity = getById(state, propertyId)
   const configuredName = getConfiguredName(entity)
 
-  return state.metrics.get('hostMetrics').find( metric => metric.get('property') === configuredName )
+  return state.metrics.get('hostMetrics').find(metric => metric.get('property') === configuredName)
 }
 
 /**
@@ -90,7 +90,7 @@ export const getPropertyMetricsById = (state, propertyId) => {
  */
 export const getByGroupWithTotalTraffic = (state, group) => {
   const properties = getByGroup(state, group)
-  const result = properties.map( property => {
+  const result = properties.map(property => {
 
     const metrics = getPropertyMetricsById(state, property.get('published_host_id'))
     const totalTraffic = metrics ? metrics.get('totalTraffic') : 0
@@ -112,7 +112,7 @@ export const getPropertyDailyTrafficById = (state, propertyId) => {
   const entity = getById(state, propertyId)
   const configuredName = getConfiguredName(entity)
 
-  return state.metrics.get('hostDailyTraffic').find( metric => metric.get('property') === configuredName )
+  return state.metrics.get('hostDailyTraffic').find(metric => metric.get('property') === configuredName)
 }
 
 /**
@@ -121,5 +121,5 @@ export const getPropertyDailyTrafficById = (state, propertyId) => {
  * @return {List} List of totalTraffics
  */
 export const getTotalTraffics = (state) => {
-  return state.metrics.get('hostMetrics').map( property => property.get('totalTraffic') )
+  return state.metrics.get('hostMetrics').map(property => property.get('totalTraffic'))
 }

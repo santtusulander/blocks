@@ -46,7 +46,7 @@ const groupIngestPoints = new schema.Entity('groupIngestPoints', {
  */
 export const fetch = (params) => {
   return axios.get(`${baseUrl(params)}`)
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize({ id: params.group, accountId: params.account, ingestPoints: [ {ingest_point_id: params.id, ...data} ] }, groupIngestPoints)
     })
 }
@@ -56,9 +56,9 @@ export const fetch = (params) => {
  * @param  {Object} params {group}
  * @return {Object} normalizr ingestPoints
  */
-export const fetchAll = ( params = {}) => {
+export const fetchAll = (params = {}) => {
   return axios.get(baseListUrl(params))
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize({ id: params.group, accountId: params.account, ingestPoints: data }, groupIngestPoints)
     })
 }
@@ -102,6 +102,6 @@ export const update = ({ payload, ...params }) => {
  * @return {[type]}               [description]
  */
 export const remove = (params) => {
-  return axios.delete( baseUrl(params) )
+  return axios.delete(baseUrl(params))
     .then(() => ({ id: buildReduxId(params.group, params.id) }))
 }

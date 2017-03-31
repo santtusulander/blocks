@@ -4,7 +4,7 @@ import IconClose from '../components/icons/icon-close.jsx'
 class Notification extends React.Component {
   render() {
     let className = 'notification-panel'
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     return (

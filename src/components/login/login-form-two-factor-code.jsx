@@ -20,7 +20,7 @@ export class LoginFormTwoFactorCode extends Component {
   shouldComponentUpdate(nextProps) {
     if (this.props.fetching !== nextProps.fetching) {
       return true
-    } else if (this.props.loginError !== nextProps.loginError){
+    } else if (this.props.loginError !== nextProps.loginError) {
       return true
     } else {
       return false

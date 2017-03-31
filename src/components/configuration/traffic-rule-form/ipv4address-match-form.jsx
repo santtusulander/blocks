@@ -13,7 +13,7 @@ const validate = ({ ipv4Address }) => {
     return { ipv4CIDR: <FormattedMessage id="portal.account.soaForm.validation.required" /> }
   }
 
-  for(const value of ipv4Address) {
+  for (const value of ipv4Address) {
 
     if (!isValidIP(value.label)) {
       return { ipv4Address: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.input.error" /> }

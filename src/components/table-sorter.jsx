@@ -12,7 +12,7 @@ class TableSorter extends React.Component {
   activateSort(e) {
     e.preventDefault()
     let direction = this.props.reversed ? -1 : 1
-    if(this.props.column === this.props.activeColumn) {
+    if (this.props.column === this.props.activeColumn) {
       direction = -1 * this.props.activeDirection
     }
     this.props.activateSort(this.props.column, direction, this.props.sortFunc)
@@ -21,8 +21,8 @@ class TableSorter extends React.Component {
     const width = this.props.width
     const className = 'table-sorter' + (this.props.textAlign === 'left' ? ' text-left' : '')
     let caret = ''
-    if(this.props.column === this.props.activeColumn) {
-      if(this.props.activeDirection < 0) {
+    if (this.props.column === this.props.activeColumn) {
+      if (this.props.activeDirection < 0) {
         caret = <IconArrowDown />
       }
       else {

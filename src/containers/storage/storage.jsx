@@ -69,7 +69,7 @@ class Storage extends Component {
       })
 
       const metricsOpts = {
-        brand : brand,
+        brand: brand,
         account: account,
         group: group,
         ingest_point: storage,
@@ -335,9 +335,9 @@ const mapDispatchToProps = (dispatch) => {
   const uiActions = bindActionCreators(uiActionCreators, dispatch)
   const groupActions = bindActionCreators(groupActionCreators, dispatch)
   return {
-    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
+    fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchGroupData: ({brand, account, group}) => groupActions.fetchGroup(brand, account, group),
-    fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
+    fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
     initStorageAccessKey: bindActionCreators(getStorageAccessKey, dispatch),
     uploadHandlers: bindActionCreators(uploadActions, dispatch),
     fetchStorageMetrics: (params) => dispatch(fetchMetrics({include_history: true, ...params})),

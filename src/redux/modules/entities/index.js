@@ -23,98 +23,98 @@ export const metricsActionTypes = {
 
 const locations =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'locations' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'locations' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const accounts =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'accounts' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'accounts' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const footprints = handleActions({
-  [actionTypes.RECEIVE] : receiveEntity({ key: 'footprints' }),
-  [actionTypes.REMOVE] : removeEntity,
-  [actionTypes.FAIL] : failEntity
+  [actionTypes.RECEIVE]: receiveEntity({ key: 'footprints' }),
+  [actionTypes.REMOVE]: removeEntity,
+  [actionTypes.FAIL]: failEntity
 }, Map())
 
 const groups =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'groups' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'groups' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const nodes =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'nodes' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'nodes' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const properties =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'properties', useMergeDeep: false }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'properties', useMergeDeep: false }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const pops =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'pops' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'pops' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const pods =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'pods', useMergeDeep: false }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'pods', useMergeDeep: false }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const networks =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'networks' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'networks' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 
 const CISIngestPoints =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'ingestPoints' }),
-    [actionTypes.REMOVE] : removeEntity,
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'ingestPoints' }),
+    [actionTypes.REMOVE]: removeEntity,
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const CISClusters =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'clusters' }),
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'clusters' }),
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const CISWorkflowProfiles =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'workflowProfiles' }),
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'workflowProfiles' }),
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 const storageMetrics =
   handleActions({
-    [metricsActionTypes.RECEIVE_METRICS] : receiveMetrics({ key: 'storageMetrics' }),
-    [metricsActionTypes.RECEIVE_GROUPS_METRICS] : receiveGroupsMetrics(),
-    [metricsActionTypes.RECEIVE_COMPARISON_METRICS] : receiveMetrics({ key: 'storageMetrics', comparison: true }),
-    [actionTypes.FAIL] : failEntity
+    [metricsActionTypes.RECEIVE_METRICS]: receiveMetrics({ key: 'storageMetrics' }),
+    [metricsActionTypes.RECEIVE_GROUPS_METRICS]: receiveGroupsMetrics(),
+    [metricsActionTypes.RECEIVE_COMPARISON_METRICS]: receiveMetrics({ key: 'storageMetrics', comparison: true }),
+    [actionTypes.FAIL]: failEntity
   }, Map({ comparisonData: Map(), data: Map(), groupsData: List() }))
 
 const roles =
   handleActions({
-    [actionTypes.RECEIVE] : receiveEntity({ key: 'roles' }),
-    [actionTypes.FAIL] : failEntity
+    [actionTypes.RECEIVE]: receiveEntity({ key: 'roles' }),
+    [actionTypes.FAIL]: failEntity
   }, Map())
 
 

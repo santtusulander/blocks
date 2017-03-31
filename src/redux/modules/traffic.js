@@ -53,7 +53,7 @@ const emptyTraffic = Immutable.Map({
 })
 
 // REDUCERS
-export function trafficFetchSuccess(state, action){
+export function trafficFetchSuccess(state, action) {
   return state.merge({
     traffic: Immutable.fromJS(action.payload.data.map(entity => {
       entity.detail = entity.detail.map(datapoint => {
@@ -65,13 +65,13 @@ export function trafficFetchSuccess(state, action){
   })
 }
 
-export function trafficFetchFailure(state){
+export function trafficFetchFailure(state) {
   return state.merge({
     traffic: Immutable.List()
   })
 }
 
-export function totalsFetchSuccess(state, action){
+export function totalsFetchSuccess(state, action) {
   // API always returns an array, therefore we access the first child, [0]
   const data = Immutable.fromJS(action.payload.data)
   return state.merge({
@@ -79,13 +79,13 @@ export function totalsFetchSuccess(state, action){
   })
 }
 
-export function totalsFetchFailure(state){
+export function totalsFetchFailure(state) {
   return state.merge({
     totals: Immutable.Map()
   })
 }
 
-export function trafficByTimeSuccess(state, action){
+export function trafficByTimeSuccess(state, action) {
   return state.merge({
     byTime: {
       totals: Immutable.fromJS(action.payload.data.totals),
@@ -97,13 +97,13 @@ export function trafficByTimeSuccess(state, action){
   })
 }
 
-export function trafficByTimeFailure(state){
+export function trafficByTimeFailure(state) {
   return state.merge({
     byTime: Immutable.Map()
   })
 }
 
-export function trafficByTimeComparisonSuccess(state, action){
+export function trafficByTimeComparisonSuccess(state, action) {
   return state.merge({
     byTimeComparison: {
       totals: Immutable.fromJS(action.payload.data.totals),
@@ -115,35 +115,35 @@ export function trafficByTimeComparisonSuccess(state, action){
   })
 }
 
-export function trafficByTimeComparisonFailure(state){
+export function trafficByTimeComparisonFailure(state) {
   return state.merge({
     byTimeComparison: Immutable.Map()
   })
 }
 
-export function trafficByCountrySuccess(state, action){
+export function trafficByCountrySuccess(state, action) {
   return state.merge({
     byCountry: Immutable.fromJS(action.payload.data.countries)
   })
 }
-export function trafficByCountryFailure(state){
+export function trafficByCountryFailure(state) {
   return state.merge({
     byCountry: Immutable.List()
   })
 }
 
-export function trafficByCitySuccess(state, action){
+export function trafficByCitySuccess(state, action) {
   return state.merge({
     byCity: Immutable.fromJS(action.payload.data.cities)
   })
 }
-export function trafficByCityFailure(state){
+export function trafficByCityFailure(state) {
   return state.merge({
     byCity: Immutable.List()
   })
 }
 
-export function trafficOnOffNetSuccess(state, action){
+export function trafficOnOffNetSuccess(state, action) {
   action.payload.data.detail = action.payload.data.detail.map(datapoint => {
     datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
     return datapoint
@@ -153,46 +153,46 @@ export function trafficOnOffNetSuccess(state, action){
   })
 }
 
-export function trafficOnOffNetFailure(state){
+export function trafficOnOffNetFailure(state) {
   return state.merge({
     onOffNet: Immutable.Map()
   })
 }
 
-export function trafficOnOffNetTodaySuccess(state, action){
+export function trafficOnOffNetTodaySuccess(state, action) {
   return state.merge({
     onOffNetToday: Immutable.fromJS(action.payload.data)
   })
 }
-export function trafficOnOffNetTodayFailure(state){
+export function trafficOnOffNetTodayFailure(state) {
   return state.merge({
     onOffNetToday: Immutable.Map()
   })
 }
 
-export function trafficServiceProvidersSuccess(state, action){
+export function trafficServiceProvidersSuccess(state, action) {
   return state.merge({
     contribution: Immutable.fromJS(action.payload)
   })
 }
-export function trafficServiceProvidersFailure(state){
+export function trafficServiceProvidersFailure(state) {
   return state.merge({
     contribution: Immutable.Map()
   })
 }
 
-export function trafficContentProvidersSuccess(state, action){
+export function trafficContentProvidersSuccess(state, action) {
   return state.merge({
     contribution: Immutable.fromJS(action.payload)
   })
 }
-export function trafficContentProvidersFailure(state){
+export function trafficContentProvidersFailure(state) {
   return state.merge({
     contribution: Immutable.Map()
   })
 }
 
-export function trafficStorageSuccess(state, action){
+export function trafficStorageSuccess(state, action) {
   action.payload.data = action.payload.data.map(datapoint => {
     datapoint.timestamp = moment(datapoint.timestamp, 'X').toDate()
     return datapoint
@@ -202,17 +202,17 @@ export function trafficStorageSuccess(state, action){
   })
 }
 
-export function trafficStorageFailure(state){
+export function trafficStorageFailure(state) {
   return state.merge({
     storage: Immutable.Map()
   })
 }
 
-export function trafficStartFetch(state){
+export function trafficStartFetch(state) {
   return state.set('fetching', true)
 }
 
-export function trafficFinishFetch(state){
+export function trafficFinishFetch(state) {
   return state.set('fetching', false)
 }
 
