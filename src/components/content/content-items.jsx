@@ -471,7 +471,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.sort( sortContent(this.getCustomSortPath('storages'), sortDirection) ).map((storage, i) => {
+                        { groupHasStorageService && storages.sort(sortContent(this.getCustomSortPath('storages'), sortDirection)).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -508,7 +508,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort( sortContent(this.getCustomSortPath('properties'), sortDirection) ).map( (property,i) => {
+                { properties.sort(sortContent(this.getCustomSortPath('properties'), sortDirection)).map((property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}
