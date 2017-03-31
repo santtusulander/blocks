@@ -1,5 +1,5 @@
 import { PropTypes, Children, Component } from 'react'
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 
 import * as PERMISSIONS from '../constants/permissions.js'
 import checkPermissions from '../util/permissions'
@@ -23,7 +23,7 @@ IsAllowed.displayName = 'IsAllowed'
 
 IsAllowed.contextTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(List)
+  roles: PropTypes.instanceOf(Map)
 }
 
 IsAllowed.propTypes = {

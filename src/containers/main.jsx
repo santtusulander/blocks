@@ -8,13 +8,16 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import * as uiActionCreators from '../redux/modules/ui'
 import * as userActionCreators from '../redux/modules/user'
-import * as rolesActionCreators from '../redux/modules/roles'
 
 import { getById as getAccountById, getByBrand as getAccountsByBrand} from '../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../redux/modules/entities/groups/selectors'
 import { getById as getPropertyById } from '../redux/modules/entities/properties/selectors'
 
+import rolesActions from '../redux/modules/entities/roles/actions'
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+
 import { getGlobalFetching } from '../redux/modules/fetching/selectors'
+
 
 import Header from './header'
 import Navigation from '../components/navigation/navigation.jsx'
@@ -53,8 +56,10 @@ export class Main extends React.Component {
           return false
         }
 
-        this.props.userActions.fetchUser(action.payload.username)
-        this.props.rolesActions.fetchRoles()
+        return this.props.userActions.fetchUser(action.payload.username)
+          .then( () => {
+            this.props.currentUser.get('roles').map( id => { return this.props.fetchRole(id) })
+          })
 
       })
   }
@@ -213,17 +218,16 @@ Main.propTypes = {
   activeHost: PropTypes.instanceOf(Map),
   asperaNotification: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   bannerNotification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-
   breadcrumbs: PropTypes.instanceOf(Map),
   children: PropTypes.node,
   currentUser: PropTypes.instanceOf(Map),
+  fetchRole: PropTypes.func,
   fetching: PropTypes.bool,
   infoDialogOptions: PropTypes.instanceOf(Map),
   location: PropTypes.object,
   notification: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   params: PropTypes.object,
-  roles: PropTypes.instanceOf(List),
-  rolesActions: PropTypes.object,
+  roles: PropTypes.instanceOf(Map),
   router: PropTypes.object,
   routes: PropTypes.array,
   showErrorDialog: PropTypes.bool,
@@ -241,13 +245,13 @@ Main.defaultProps = {
   activeGroup: Map(),
   activeHost: Map(),
   currentUser: Map(),
-  roles: List(),
+  roles: Map(),
   user: Map()
 }
 
 Main.childContextTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(List)
+  roles: PropTypes.instanceOf(Map)
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -271,7 +275,7 @@ const mapStateToProps = (state, ownProps) => {
     currentUser: state.user.get('currentUser'),
     fetching,
     notification: state.ui.get('notification'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     showErrorDialog: state.ui.get('showErrorDialog'),
     showInfoDialog: state.ui.get('showInfoDialog'),
     infoDialogOptions: state.ui.get('infoDialogOptions'),
@@ -286,7 +290,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch),
-    rolesActions: bindActionCreators(rolesActionCreators, dispatch)
+
+    fetchRole: (id) => dispatch( rolesActions.fetchOne({id}) )
   }
 }
 
