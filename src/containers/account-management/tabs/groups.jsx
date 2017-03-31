@@ -1,14 +1,16 @@
-import React from 'react'
+import React, {Component, PropTypes} from 'react'
 import { FormControl, FormGroup, Table, Button } from 'react-bootstrap'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import Immutable from 'immutable'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'react-router'
 
 import * as userActionCreators from '../../../redux/modules/user'
-import * as groupActionCreators from '../../../redux/modules/group'
 import * as uiActionCreators from '../../../redux/modules/ui'
+
+import groupActions from '../../../redux/modules/entities/groups/actions'
+import {getByAccount as getGroupsByAccount} from '../../../redux/modules/entities/groups/selectors'
 
 import PageContainer from '../../../components/layout/page-container'
 import SectionHeader from '../../../components/layout/section-header'
@@ -25,14 +27,14 @@ import { isValidTextField } from '../../../util/validators'
 
 import { MODIFY_GROUP, CREATE_GROUP } from '../../../constants/permissions'
 
-class AccountManagementAccountGroups extends React.Component {
+class AccountManagementAccountGroups extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       adding: false,
       editing: null,
-      newUsers: Immutable.List(),
+      newUsers: List(),
       search: '',
       sortBy: 'name',
       sortDir: 1
@@ -49,12 +51,13 @@ class AccountManagementAccountGroups extends React.Component {
     this.isLeaving       = false;
   }
   componentWillMount() {
-    const {router, route, params: { brand, account }} = this.props
+    const {router, route} = this.props
+    const {brand, account} = this.props.params
+
     this.props.userActions.fetchUsers(brand, account)
 
-    if (!this.props.groups.toJS().length) {
-      this.props.groupActions.fetchGroups(brand, account);
-    }
+    this.props.fetchGroups({brand, account})
+
     router.setRouteLeaveHook(route, this.shouldLeave)
   }
 
@@ -228,33 +231,37 @@ class AccountManagementAccountGroups extends React.Component {
 
 AccountManagementAccountGroups.displayName  = 'AccountManagementAccountGroups'
 AccountManagementAccountGroups.propTypes    = {
-  deleteGroup: React.PropTypes.func,
-  groupActions: React.PropTypes.object,
-  groups: React.PropTypes.instanceOf(Immutable.List),
-  intl: React.PropTypes.object,
-  params: React.PropTypes.object,
-  route: React.PropTypes.object,
-  router: React.PropTypes.object,
-  showGroupModal: React.PropTypes.func,
-  uiActions: React.PropTypes.object,
-  userActions: React.PropTypes.object,
-  users: React.PropTypes.instanceOf(Immutable.List)
+  deleteGroup: PropTypes.func,
+  fetchGroups: PropTypes.func,
+  groups: PropTypes.instanceOf(List),
+  intl: PropTypes.object,
+  params: PropTypes.object,
+  route: PropTypes.object,
+  router: PropTypes.object,
+  showGroupModal: PropTypes.func,
+  uiActions: PropTypes.object,
+  userActions: PropTypes.object,
+  users: PropTypes.instanceOf(List)
 }
 AccountManagementAccountGroups.defaultProps = {
-  groups: Immutable.List(),
-  users: Immutable.List()
+  groups: List(),
+  users: List()
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state, ownProps) => {
+  const {account} = ownProps.params
+
   return {
     users: state.user.get('allUsers'),
-    groups: state.group.get('allGroups')
+    groups: getGroupsByAccount(state, account)
   }
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
+
   return {
-    groupActions: bindActionCreators(groupActionCreators, dispatch),
+    fetchGroups: (params) => dispatch( groupActions.fetchAll(params) ),
+
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };
