@@ -646,7 +646,7 @@ class ContentItems extends React.Component {
               editing={false}
               fetching={false}
               onCancel={this.hideStorageModal}
-              onSubmit={()=>{/* onsubmit here */}}
+              onSubmit={() => {/* onsubmit here */}}
             />
           }
         </PageContainer>

@@ -71,7 +71,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             { !isMiniChart &&
               <XAxis dataKey='timestamp'
                      ticks={getTicks(data)}
-                     tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)}
+                     tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)}
                      tickLine={false}
                      tick={{ transform: 'translate(0, 20)' }}
                      axisLine={false}
