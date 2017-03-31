@@ -149,7 +149,7 @@ class PopFormContainer extends Component {
     return this.props.onDelete(params)
       .then(() => {
         // Unselect POP item
-        if (this.props.selectedEntityId == popId) {
+        if (this.props.selectedEntityId === popId) {
           this.props.handleSelectedEntity(popId)
         }
         this.showNotification(<FormattedMessage id="portal.network.popEditForm.deletePop.status"/>)

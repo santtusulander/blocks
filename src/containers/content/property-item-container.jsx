@@ -36,7 +36,7 @@ const PropertyItemContainer = props => {
   let trafficMin = Math.min(...totalTraffics)
   let trafficMax = Math.max(...totalTraffics)
 
-  trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+  trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
   const rangeMin = 400
   const rangeMax = 500
