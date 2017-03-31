@@ -183,7 +183,7 @@ function mapStateToProps(state, ownProps) {
   let hasMDSupport = false
 
   enabledServices.forEach((service) => {
-    let serviceId = service.get('service_id')
+    const serviceId = service.get('service_id')
     if (serviceId === VOD_STREAMING_SERVICE_ID) {
       hasVODSupport = true
     } else if (serviceId === MEDIA_DELIVERY_SERVICE_ID) {

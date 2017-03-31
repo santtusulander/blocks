@@ -80,7 +80,7 @@ class BreadcrumbsItem extends React.Component {
   }
 
   updateLinks(props) {
-    let links = []
+    const links = []
     const { pathname, params, activeGroup } = props
     const { roles, user, router } = this.props
 

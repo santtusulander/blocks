@@ -35,11 +35,11 @@ export class LoginFormTwoFactorCode extends Component {
 
     // Verify current input
     if (currentLength >= TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
-      let next = target.nextElementSibling;
+      const next = target.nextElementSibling;
 
       // Verify all inputs
       for (let inputIndex = 0; inputIndex < codeInputs.length; inputIndex++) {
-        let inputValue = codeInputs[inputIndex].value
+        const inputValue = codeInputs[inputIndex].value
         if (inputValue.length === TWO_FA_CODE_INPUT_FIELD_MAX_LENGTH) {
           code += inputValue
         }

@@ -34,8 +34,8 @@ export class FilterDropdown extends React.Component {
   }
 
   handleFilter() {
-    let inputVal = this.refs.filterInput.value
-    let filtered = this.props.options.filter(
+    const inputVal = this.refs.filterInput.value
+    const filtered = this.props.options.filter(
       option => option.get('label').toLowerCase().indexOf(inputVal) !== -1
     )
 
@@ -49,7 +49,7 @@ export class FilterDropdown extends React.Component {
 
     const { dropdownOpen, filteredResults, filterValue, selectedValue } = this.state
 
-    let label     = selectedValue ? selectedValue : 'Please Select'
+    const label     = selectedValue ? selectedValue : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
     if(this.props.className) {

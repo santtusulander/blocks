@@ -120,7 +120,7 @@ export class Dashboard extends React.Component {
 
       const params = { brand: urlParams.brand, account: urlParams.account }
 
-      let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
       const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
         ? ACCOUNT_TYPE_CONTENT_PROVIDER

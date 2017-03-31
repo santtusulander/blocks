@@ -19,7 +19,7 @@ class TableSorter extends React.Component {
   }
   render() {
     const width = this.props.width
-    let className = 'table-sorter' + (this.props.textAlign === 'left' ? ' text-left' : '')
+    const className = 'table-sorter' + (this.props.textAlign === 'left' ? ' text-left' : '')
     let caret = ''
     if(this.props.column === this.props.activeColumn) {
       if(this.props.activeDirection < 0) {

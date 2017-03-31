@@ -147,7 +147,7 @@ export class PasswordFields extends Component {
     const showPasswordError = !passwordValid && !passwordFocus && password !== ''
     const showConfirmError = passwordValid && !confirmValid && !confirmFocus && confirm !== ''
 
-    let passwordWrapperClassName = classNames(
+    const passwordWrapperClassName = classNames(
       {
         'input-addon-before input-addon-after-outside has-login-label': stackedPassword,
         'invalid': showPasswordError,
@@ -157,7 +157,7 @@ export class PasswordFields extends Component {
       'login-label-password'
     )
 
-    let confirmWrapperClassName = classNames(
+    const confirmWrapperClassName = classNames(
       {
         'input-addon-before has-login-label login-label-confirm': stackedPassword,
         'invalid': showConfirmError,
@@ -167,7 +167,7 @@ export class PasswordFields extends Component {
       'input-addon-after-outside'
     )
 
-    let layoutClassName = classNames(
+    const layoutClassName = classNames(
       {
         'inline-form-layout': inlinePassword
       }

@@ -82,7 +82,7 @@ class SortableMultiSelector extends React.Component {
   }
 
   onSortEnd({oldIndex, newIndex}) {
-    let item = this.props.value.get(oldIndex)
+    const item = this.props.value.get(oldIndex)
 
     this.props.onChange(this.props.value.delete(oldIndex).insert(newIndex, item))
   }

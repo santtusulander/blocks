@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react'
 import classNames from 'classnames'
 
 const SectionHeader = ({ className, headerId, sectionHeaderTitle, subHeaderId, sectionSubHeaderTitle, children, addonAfter, addonBefore }) => {
-  let customClassName = className || '';
-  let finalClassName = classNames(
+  const customClassName = className || '';
+  const finalClassName = classNames(
     'section-header-container',
     customClassName
   );

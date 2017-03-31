@@ -26,9 +26,9 @@ class RolesList extends React.Component {
   }
 
   labelPermissions(rolePermissions, permissions) {
-    let permissionNames = rolePermissions
+    const permissionNames = rolePermissions
       .map((rules, key) => {
-        let permissionName = permissions
+        const permissionName = permissions
           .find(permission => permission.get('name') === key)
           .get('title')
         return permissionName

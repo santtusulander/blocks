@@ -19,7 +19,7 @@ import * as securityActionCreators from '../../redux/modules/security'
 import CertificateForm from './certificate-form'
 
 const validate = values => {
-  let errors = {}
+  const errors = {}
   const { title, privateKey, certificate, group } = values
 
   if (!group || group === '') {

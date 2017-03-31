@@ -13,7 +13,7 @@ export const fetch = (urlParams) =>
   })
 
 export const fetchByGroups = (groups, urlParams) => {
-  let groupsMetrics = []
+  const groupsMetrics = []
   groups.forEach((group) => {
     urlParams.group = group.get('id')
     groupsMetrics.push(

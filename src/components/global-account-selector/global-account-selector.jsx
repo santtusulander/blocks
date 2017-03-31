@@ -141,7 +141,9 @@ class AccountSelector extends Component {
    * in brand and account tiers, in both cases 'account' gets passed
    */
   onItemClick(value) {
-    let { onSelect, params: { brand, account, group }, accountSelectorActions } = this.props
+    const { onSelect, params: { brand, group }, accountSelectorActions } = this.props
+    let { params: { account } } = this.props
+
     if(!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
@@ -162,7 +164,8 @@ class AccountSelector extends Component {
     * top bar pressed -> calls to function from parent with desired effects
     */
   onTopbarClick() {
-    let { topBarAction, params: { brand, account, group, property } } = this.props
+    const { topBarAction, params: { brand, group, property } } = this.props
+    let { params: { account } } = this.props
     if(!this.canSeeAccounts() && !account) {
       account = this.props.currentUser.get('account_id')
     }
@@ -201,7 +204,7 @@ class AccountSelector extends Component {
     return itemsToSort.sort((a,b) => {
       const aLower = a.get(1).toLowerCase()
       const bLower = b.get(1).toLowerCase()
-      
+
       if ( aLower < bLower ) return -1
       if ( aLower > bLower ) return 1
       return 0
@@ -209,7 +212,7 @@ class AccountSelector extends Component {
   }
 
   isDrillable() {
-    let { restrictedTo } = this.props
+    const { restrictedTo } = this.props
 
     if (!this.canSeeProperties() && this.tier === 'group') {
       return false

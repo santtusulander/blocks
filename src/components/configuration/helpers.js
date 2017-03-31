@@ -160,7 +160,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
   }
   if (setPath) {
     const activeSet = config.getIn(setPath)
-    let setKey = activeSet.keySeq().first()
+    const setKey = activeSet.keySeq().first()
 
     const setterProps = {
       changeValue: changeValue,

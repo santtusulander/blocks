@@ -44,7 +44,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
   fetchData(params, filters, location, hostConfiguredName) {
     const fetchOpts  = buildAnalyticsOpts(params, filters, location)
 
-    let trafficParams = {
+    const trafficParams = {
       account: params.account,
       startDate: fetchOpts.startDate,
       endDate: fetchOpts.endDate,

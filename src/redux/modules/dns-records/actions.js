@@ -73,8 +73,8 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
 })
 
 export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource, data) => {
-  let isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone)
-  let recordName = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
+  const isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone)
+  const recordName = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
   resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
 
   const recordToDelete = {
@@ -86,7 +86,7 @@ export const removeResource = createAction(DNS_RECORDS_DELETED, (zone, resource,
 })
 
 export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource, data) => {
-  let isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone || data.type === 'NS' && data.name === '')
+  const isNSRecordWithEmptyResource = (data.type === 'NS' && data.name === zone || data.type === 'NS' && data.name === '')
   data.name = isNSRecordWithEmptyResource ? zone : data.name.concat('.' + zone)
   resource = isNSRecordWithEmptyResource ? resource : resource.concat('.' + zone)
 
@@ -101,7 +101,7 @@ export const updateResource = createAction(DNS_RECORDS_UPDATED, (zone, resource,
 export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DETAILS, (zone) => {
   return dnsRecordsApi.fetchAll(zone)
     .then((response) => {
-      let responseData = response.data.data
+      const responseData = response.data.data
 
       // UDNP-2883:
       // Since records data model that comes from back-end was changed - convert it to previous
