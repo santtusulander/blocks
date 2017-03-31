@@ -124,9 +124,9 @@ export class PlaybackDemo extends React.Component {
         return totals.set(bitrate, 1 + (totals.get(bitrate) || 0))
       }, Immutable.Map())
       .entrySeq()
-      .reduce(((maxCount, total) => {
+      .reduce((maxCount, total) => {
         return maxCount[1] < total[1] ? total : maxCount
-      }), [0, 0])[0]
+      }, [0, 0])[0]
     return (
       <div className="analysis-playback-demo">
         <div className="container-fluid low-pad">
