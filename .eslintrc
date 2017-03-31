@@ -135,6 +135,7 @@
     "no-unsafe-negation": 2,
     "no-empty-pattern": 2,
     "no-empty-function": 1,
+    "no-confusing-arrow": 1,
 
     "array-callback-return": 1,
     "array-bracket-spacing": [0, "never"],
