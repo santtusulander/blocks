@@ -56,7 +56,7 @@ class AnalysisStackedByTime extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    let columnHeights = []
+    const columnHeights = []
     return (
       <div className={className}>
         <svg

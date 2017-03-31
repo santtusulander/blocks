@@ -143,7 +143,7 @@ class NetworkEditNodeForm extends React.Component {
     const { nodeValues, nodes } = this.props
     const updatedNodeValues = nodes.slice(0)
 
-    for (let field in formValues) {
+    for (const field in formValues) {
       const originalNodeValue = nodeValues[field]
       const fieldValue = formValues[field]
       let updatedValue

@@ -44,8 +44,8 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
-  let contributionOpts = Object.assign({}, opts, {granularity: 'day'})
-  let dashboardRequests = []
+  const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  const dashboardRequests = []
 
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH

@@ -51,7 +51,7 @@ class AnalysisContribution extends React.Component {
     const isOnNet = this.props.onOffFilter.includes('on')
     const isOffNet = this.props.onOffFilter.includes('off')
 
-    let barModels = []
+    const barModels = []
     if (isHttps && isOffNet)
       barModels.push({
         dataKey: 'offNetHttps',

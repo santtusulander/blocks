@@ -53,7 +53,7 @@ class StackedByTimeSummary extends React.Component {
       totalDatasetValue
     } = this.props
 
-    let datasets = []
+    const datasets = []
     datasets.push({
       area: true,
       color: paleblue,

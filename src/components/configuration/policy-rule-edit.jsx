@@ -62,7 +62,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
       const path = ['rule_body', 'conditions']
       const newIndex = this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
-      let newCondition = Immutable.fromJS(DEFAULT_CONDITION_JS)
+      const newCondition = Immutable.fromJS(DEFAULT_CONDITION_JS)
       const conditions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(newCondition)
  
       this.props.changeValue([],

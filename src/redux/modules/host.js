@@ -63,7 +63,7 @@ export function deleteFailure(state) {
 }
 
 export function fetchSuccess(state, action) {
-  let host = action.payload
+  const host = action.payload
   host.services[0].configurations = host.services[0].configurations.map(config => {
     if (!config.defaults) {
       config.defaults = {}

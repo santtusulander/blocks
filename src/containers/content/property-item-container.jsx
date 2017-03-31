@@ -34,7 +34,7 @@ const PropertyItemContainer = props => {
 
   //Scale starbursts based on totalTraffic
   let trafficMin = Math.min(...totalTraffics)
-  let trafficMax = Math.max(...totalTraffics)
+  const trafficMax = Math.max(...totalTraffics)
 
   trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 

@@ -19,7 +19,7 @@ import { getRecordFormInitialValues, isShown, recordValues } from '../../../util
  * Filter fields to validate according to the fields that get rendered for the active record type.
  */
 const filterFields = fields => {
-  let filteredFields = {}
+  const filteredFields = {}
   for(const field in fields) {
     if (isShown(fields.type)(field)) {
       filteredFields[field] = fields[field]
@@ -50,7 +50,7 @@ const validate = ({ type = '', value = '', name = '', ttl = '', prio = '' }, pro
 
   //Don't validate name for NS record
   name = (type !== 'NS') ? name : null
-  let filteredFields = filterFields({ type, value, name, ttl })
+  const filteredFields = filterFields({ type, value, name, ttl })
   const ipAddressConfig = validateIpAddress(filteredFields, props.intl)
 
   const conditions = {
@@ -82,7 +82,7 @@ const RecordFormContainer = ({ domain, edit, updateRecord, addRecord, closeModal
     type: recordType,
     onSubmit: values => {
       const filteredValues = filterFields(values)
-      let { ttl, prio } = filteredValues
+      const { ttl, prio } = filteredValues
       if (ttl) {
         filteredValues.ttl = Number(ttl)
       }
@@ -127,9 +127,9 @@ function mapStateToProps(state, { edit }) {
   const { dnsRecords, dns } = state
   const getRecordById = recordActionCreators.getById
   const getField = formValueSelector('record-edit')
-  let activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
+  const activeRecord = getRecordById(dnsRecords.get('resources'), dnsRecords.get('activeRecord'))
   let initialValues = {}
-  let domain = dns.get('activeDomain')
+  const domain = dns.get('activeDomain')
   if (activeRecord && edit) {
     initialValues = getRecordFormInitialValues(activeRecord.toJS())
 
@@ -163,7 +163,7 @@ function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
         })
     },
     updateRecord: (formValues, zone, activeRecord) => {
-      let vals = recordValues(formValues)
+      const vals = recordValues(formValues)
       vals.id = activeRecord.get('id')
       vals.class = 'IN'
       startFetching()

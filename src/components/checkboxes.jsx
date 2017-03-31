@@ -22,7 +22,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
     if (!e.target.checked) {
       field.onChange([])
     } else {
-      let values = []
+      const values = []
       iterable.forEach((option) => {
         values.push(option.value)
       })
@@ -49,7 +49,7 @@ const CheckboxArray = ({ disabled, inline, iterable, field, headerText }) => {
     return allChecked
   }
 
-  let classNames = classnames(
+  const classNames = classnames(
     'checkbox-array',
     { 'checkbox-array--table': headerText }
   )

@@ -119,7 +119,7 @@ export function formatTime(milliseconds) {
  * @returns object
  */
 export function separateUnit(stringValue) {
-  let separateUnitArray = stringValue.split(' ')
+  const separateUnitArray = stringValue.split(' ')
   return {
     'value': separateUnitArray[0],
     'unit': separateUnitArray[1]
@@ -169,7 +169,7 @@ export function flatten(arr) {
  - takes the last link part out and replaces it with tabName
  */
 export function getTabLink(location, tabName) {
-  let linkArr = location.pathname.split('/')
+  const linkArr = location.pathname.split('/')
 
   linkArr.pop()
   linkArr.push(tabName)
@@ -179,7 +179,7 @@ export function getTabLink(location, tabName) {
 
 /* A helper for returning tabName / url from path - NOT 100% accurate */
 export function getTabName(path) {
-  let linkArr = path.split('/')
+  const linkArr = path.split('/')
   return linkArr.pop()
 }
 
@@ -207,7 +207,7 @@ export function buildAnalyticsOpts(params, filters, location ){
   }
 
   //get filter values
-  let filterValues = {}
+  const filterValues = {}
   visibleFilters.forEach( filterName => {
     const filterValue = filters.get( filterName )
     filterValues[filterName] = filterValue && filterValue
@@ -311,7 +311,7 @@ export function buildAnalyticsOptsForContribution(params, filters, accountType) 
 }
 
 export function filterChangeNeedsReload(currentFilters, nextFilters) {
-  let changedFilters = [];
+  const changedFilters = [];
 
   currentFilters.map((filter, i) => {
     if (filter !== nextFilters.get(i)) {
@@ -386,7 +386,7 @@ export function filterAccountsByUserName (accounts) {
  * returns {Object} errors
  */
 export function checkForErrors(fields, customConditions, requiredTexts = {}) {
-  let errors = {}
+  const errors = {}
 
   for(const fieldName in fields) {
     const field = fields[fieldName]
@@ -433,7 +433,7 @@ export function getConfiguredName(host) {
 }
 
 export function getRolesForUser(user, roles) {
-  let userRoles = []
+  const userRoles = []
   const mappedRoles = roles.size ?
     user.get('roles').map(roleId => (
       {
@@ -458,7 +458,7 @@ export function matchesRegexp(string, pattern, caseSensitive = false) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  let testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
+  const testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
   return testPattern.test(string);
 }
 
@@ -478,7 +478,7 @@ export function userHasRole(user, roleToFind) {
   const userRoles = user.get('roles').toJS()
   const mapping = fromJS(ROLES_MAPPING)
 
-  for (let roleId of userRoles) {
+  for (const roleId of userRoles) {
     const role = mapping.find((mapping_role) => {
       return mapping_role.get('id') === roleId
     })
@@ -510,7 +510,7 @@ export function accountIsCloudProviderType(account) {
 
 export function getAccountByID(accounts, ids) {
   if (Array.isArray(ids)) {
-    let accountsArray = []
+    const accountsArray = []
     ids.map(id => {
       accountsArray.push(accounts.find(account => account.get('id') === id))
 

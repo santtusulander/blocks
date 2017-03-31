@@ -46,7 +46,7 @@ export const getByAccount = (state, account) => {
  */
 export const getByGroups = (state, groups) => {
   if (groups && groups.size > 0) {
-    let properties = []
+    const properties = []
     groups.forEach(group => {
       const groupProperties = getByGroup(state, group.get('id'))
       groupProperties.forEach( property => {

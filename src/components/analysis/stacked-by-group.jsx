@@ -59,7 +59,7 @@ class AnalysisStackedByGroup extends React.Component {
     if(this.props.className) {
       className = className + ' ' + this.props.className
     }
-    let columnHeights = []
+    const columnHeights = []
 
     let strokeWidth = (xMaxPx - xMinPx) / this.props.datasets.size - this.props.padding
     strokeWidth = Math.max(strokeWidth, minStrokeWidth)

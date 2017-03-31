@@ -31,8 +31,8 @@ class DNSList extends Component {
       intl,
       hiddenRecordCount,
       visibleRecordCount } = this.props
-    let tables = []
-    let recordsByType = {}
+    const tables = []
+    const recordsByType = {}
 
     /**
      * Build recordsByType: { MX: [ ... ], AAAA: [ ... ], ... }. If recordsByType does not contain

@@ -49,7 +49,7 @@ class ServiceOptionSelector extends React.Component {
   }
 
   togglePanel (index) {
-    let openPanels = this.state.openPanels
+    const openPanels = this.state.openPanels
     const panelIndex = openPanels.indexOf(index)
     if ( panelIndex === -1) {
       openPanels.push(index)

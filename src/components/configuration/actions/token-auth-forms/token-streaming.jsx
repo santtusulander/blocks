@@ -22,7 +22,7 @@ import {
 } from '../../../../constants/configuration'
 
 const validate = ({ streamingEnabled, streaming_ttl }) => {
-  let errors = {}
+  const errors = {}
 
   if (streamingEnabled && (!streaming_ttl && streaming_ttl !== null)) {
     errors.streaming_ttl = <FormattedMessage id="portal.policy.edit.tokenauth.streaming_ttl.required.error" />

@@ -28,7 +28,7 @@ export const getAll = (state) => {
  * @return []
  */
 export const getABRProfilesOptions = (state) => {
-  let profilesOptions = []
+  const profilesOptions = []
 
   state.entities.CISWorkflowProfiles.forEach((profile) => {
     profilesOptions.push([

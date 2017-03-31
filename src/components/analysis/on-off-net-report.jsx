@@ -111,7 +111,7 @@ class AnalysisOnOffNetReport extends React.Component {
       }
     })
 
-    let dataSets = [];
+    const dataSets = [];
     if ( this.props.onOffFilter.contains('on') ) {
       dataSets.push( onNet.toJS() )
     } else {

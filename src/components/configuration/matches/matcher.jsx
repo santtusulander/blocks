@@ -162,7 +162,7 @@ class Matcher extends React.Component {
     const hasContainingRule = this.state.activeFilter === 'contains' ||
       this.state.activeFilter === 'does_not_contain'
  
-    let matchOpts = []
+    const matchOpts = []
 
     if(this.props.hasExists) {
       matchOpts.push(['exists', <FormattedMessage id="portal.policy.edit.matcher.exists.text"/>])
