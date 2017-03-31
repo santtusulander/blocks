@@ -9,6 +9,7 @@ import footprintActions from '../../../redux/modules/entities/footprints/actions
 import * as uiActionCreators from '../../../redux/modules/ui'
 
 import { getById } from '../../../redux/modules/entities/footprints/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import FootprintForm from '../../../components/network/forms/footprint-form'
@@ -205,7 +206,7 @@ const mapStateToProps = (state, ownProps) => {
   const editing = !!ownProps.footprintId
   const footprint = ownProps.footprintId && getById(state)(ownProps.footprintId)
 
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const defaultValues = {

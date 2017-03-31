@@ -11,6 +11,7 @@ import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -307,7 +308,7 @@ NetworkLocationFormContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const selector = formValueSelector('networkLocationForm')
