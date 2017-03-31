@@ -17,7 +17,7 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService } from '../../util/helpers'
+import { userIsCloudProvider, hasService, customSort } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -327,47 +327,23 @@ class ContentItems extends React.Component {
       </AccountSelector>
     )
   }
-  /** TODO: UDNP-3069 Refactor sorters */
-  storageSorter( a,b ) {
+
+  storageSorter( storages ) {
     const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
 
-    let valA, valB
-
-    //sort By Name
     if (sortBy === 'item') {
-      valA = a.get('ingest_point_id').toLowerCase()
-      valB = b.get('ingest_point_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
+      return customSort(storages, this.props.sortDirection, 'ingest_point_id')
     }
-
-    if ( valA > valB ) return sortDirection
-    if ( valA < valB ) return -1 * sortDirection
-
-    return 0
+    return customSort(storages, this.props.sortDirection, 'totalTraffic')
   }
-  /** TODO: UDNP-3069 Refactor sorters */
-  propertySorter( a,b ) {
+
+  propertySorter( storages ) {
     const [sortBy] =  this.props.sortValuePath
-    const sortDirection = this.props.sortDirection
 
-    let valA, valB
-
-    //sort By Name
     if (sortBy === 'item') {
-      valA = a.get('published_host_id').toLowerCase()
-      valB = b.get('published_host_id').toLowerCase()
-    } else {
-      valA = a.get('totalTraffic')
-      valB = b.get('totalTraffic')
+      return customSort(storages, this.props.sortDirection, 'published_host_id')
     }
-
-    if ( valA > valB ) return sortDirection
-    if ( valA < valB ) return -1 * sortDirection
-
-    return 0
+    return customSort(storages, this.props.sortDirection, 'totalTraffic')
   }
 
   render() {
@@ -497,7 +473,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && storages.sort( this.storageSorter ).map((storage, i) => {
+                        { groupHasStorageService && this.storageSorter(storages).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -534,7 +510,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { properties.sort( this.propertySorter ).map( (property,i) => {
+                { this.propertySorter(properties).map( (property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}
