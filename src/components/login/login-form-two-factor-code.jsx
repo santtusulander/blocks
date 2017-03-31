@@ -51,7 +51,7 @@ export class LoginFormTwoFactorCode extends Component {
         return
       }
 
-      if (next != null) {
+      if (next !== null) {
         // Focuse on next input, and select text
         next.focus();
         next.select();
@@ -84,7 +84,7 @@ export class LoginFormTwoFactorCode extends Component {
 
     // Focus previos element when backspace or delete key is pressed
     // but only when current is empty
-    if (((charCode == 46) || (charCode == 8)) && (prevElem != null)) {
+    if (((charCode == 46) || (charCode == 8)) && (prevElem !== null)) {
       if (!e.target.value) {
         prevElem.value = ''
         prevElem.focus()

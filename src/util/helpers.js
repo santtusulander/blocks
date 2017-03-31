@@ -309,13 +309,19 @@ export function filterChangeNeedsReload(currentFilters, nextFilters) {
   let changedFilters = [];
 
   currentFilters.map((filter, i) => {
-    if(filter !== nextFilters.get(i))  changedFilters.push(i)
+    if (filter !== nextFilters.get(i)) {
+      changedFilters.push(i)
+    }
+
+    return false
   })
 
   const reloadNeeded = changedFilters.reduce((prev, filterName) => {
-    if(filterNeedsReload.includes(filterName)) return true;
+    if (filterNeedsReload.includes(filterName)) {
+      return true
+    }
 
-    return false;
+    return false
   }, false)
 
   return reloadNeeded;
@@ -364,7 +370,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 
 
 export function filterAccountsByUserName (accounts) {
-  // placeholder for now 
+  // placeholder for now
   return accounts
 }
 
@@ -500,6 +506,8 @@ export function getAccountByID(accounts, ids) {
     let accountsArray = []
     ids.map(id => {
       accountsArray.push(accounts.find(account => account.get('id') === id))
+
+      return false
     })
     return accountsArray
   } else {
@@ -621,6 +629,8 @@ export function getTopURLs(urlMetrics, dataKey) {
       url: byBytes.keyOf(url),
       bytes: url
     })
+
+    return false
   })
 
   let aggregatedByRequests = List([])
@@ -629,6 +639,8 @@ export function getTopURLs(urlMetrics, dataKey) {
       url: byRequests.keyOf(url),
       requests: url
     })
+
+    return false
   })
   const aggregatedData = dataKey === 'bytes' ?
     aggregatedByBytes.sortBy((metric) => -metric.bytes) :

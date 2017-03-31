@@ -113,6 +113,8 @@ class Tabs extends React.Component {
                       }
                     )
                   }
+
+                  return false
                 })}
               </Dropdown.Menu>
             </Dropdown>

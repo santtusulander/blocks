@@ -747,7 +747,9 @@ Mapbox.propTypes = {
 
 Mapbox.defaultProps = {
   dataKeyFormat: data => data,
-  getCitiesWithinBounds: () => {},
+  getCitiesWithinBounds: () => {
+    // no-op
+  },
   mapboxActions: {
     setMapBounds: () => null,
     setMapZoom: () => null
