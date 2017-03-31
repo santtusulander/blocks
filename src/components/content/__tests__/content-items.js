@@ -2,6 +2,14 @@ import React from 'react'
 import Immutable from 'immutable'
 import { shallow } from 'enzyme'
 
+jest.mock('../../../util/helpers', () => {
+  return{
+    customSort: arr => arr,
+    hasService: group => group,
+    userIsCloudProvider: jest.fn()
+  }
+})
+
 jest.unmock('../../../constants/content-item-sort-options.js')
 jest.unmock('../../../util/status-codes')
 jest.unmock('../content-items.jsx')
