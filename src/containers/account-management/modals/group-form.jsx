@@ -81,7 +81,7 @@ class GroupFormContainer extends React.Component {
 
   onSubmit(values) {
     const { groupId, invalid, onSave } = this.props
-    if(!invalid) {
+    if (!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
       // if (groupId) {
@@ -408,7 +408,7 @@ const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
     fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

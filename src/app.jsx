@@ -23,7 +23,7 @@ import './styles/style.scss'
 
 import Root from './root'
 
-const useRaven = SENTRY_HOSTNAMES.includes( window.location.hostname )
+const useRaven = SENTRY_HOSTNAMES.includes(window.location.hostname)
 
 /* Initialize Middlewares */
 const createStoreWithMiddleware =
@@ -80,17 +80,17 @@ axios.interceptors.response.use(function (response) {
   if (error) {
     const status = error.status;
     if (status === 401) {
-      if(!location.href.includes('/login')
+      if (!location.href.includes('/login')
         && !location.href.includes('/set-password')
         && !location.href.includes('/reset-password')
         && !location.href.includes('/forgot-password')
         && !error.config.url.includes('/password')) {
 
         //Check expiration from  expires_at -key)
-        if ( tokenDidExpire() ) {
+        if (tokenDidExpire()) {
           const returnPath = location.pathname
-          return store.dispatch( logOut() )
-            .then( () => {
+          return store.dispatch(logOut())
+            .then(() => {
               // Token expired, redirect to login
               browserHistory.push({
                 pathname: '/login',
@@ -100,14 +100,14 @@ axios.interceptors.response.use(function (response) {
                 }
               })
 
-              store.dispatch( destroyStore() )
+              store.dispatch(destroyStore())
               return Promise.reject(error)
             })
         } else {
           //Token is invalid and not expired => logout
-          return store.dispatch( logOut() )
-            .then( () => {
-              store.dispatch( destroyStore() )
+          return store.dispatch(logOut())
+            .then(() => {
+              store.dispatch(destroyStore())
               return Promise.reject(error)
             })
         }
@@ -160,7 +160,7 @@ if (useRaven) {
   if (!Raven.isSetup()) Raven.config(SENTRY_DSN, {release: VERSION}).install()
   /* eslint-enable no-undef */
 
-  startApp = Raven.wrap( runApp )
+  startApp = Raven.wrap(runApp)
 
   let errorDisplayed = false
 

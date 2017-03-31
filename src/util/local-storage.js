@@ -56,7 +56,7 @@ export const deleteUserToken = () => {
  * setTokenMeta to localStorage
  * @param {Object} tokenMeta
  */
-export const setTokenMeta = ( tokenMeta ) => {
+export const setTokenMeta = (tokenMeta) => {
   localStorage.setItem(LOCALSTORAGE_USER_TOKEN_META, JSON.stringify(tokenMeta))
 }
 
@@ -65,7 +65,7 @@ export const setTokenMeta = ( tokenMeta ) => {
  * @return {Object}
  */
 export const getTokenMeta = () => {
-  return JSON.parse( localStorage.getItem(LOCALSTORAGE_USER_TOKEN_META) || '{}')
+  return JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_TOKEN_META) || '{}')
 }
 
 /**

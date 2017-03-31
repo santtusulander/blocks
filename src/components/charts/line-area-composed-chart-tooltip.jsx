@@ -14,8 +14,8 @@ const LineAreaComposedChartTooltip = ({ payload = [], valueFormatter = formatByt
         !ignoreValues.includes(dataKey) && <div key={i} className="tooltip-item">
           <div className="tooltip-item-date">
             {dataKey && dataKey.includes('historical')
-              ? formatUnixTimestamp( comparisonTimestamp, "MMM DD HH:mm")
-              : formatUnixTimestamp( timestamp, "MMM DD HH:mm")}
+              ? formatUnixTimestamp(comparisonTimestamp, "MMM DD HH:mm")
+              : formatUnixTimestamp(timestamp, "MMM DD HH:mm")}
           </div>
           <div className="legend">
             <span className="legend-label">

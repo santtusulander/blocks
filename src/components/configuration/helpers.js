@@ -58,7 +58,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       matchType = 'file_extension'
     }
 
-    switch(matchType) {
+    switch (matchType) {
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
@@ -160,7 +160,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
   }
   if (setPath) {
     const activeSet = config.getIn(setPath)
-    let setKey = activeSet.keySeq().first()
+    const setKey = activeSet.keySeq().first()
 
     const setterProps = {
       changeValue: changeValue,
@@ -171,7 +171,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       setKey
     }
 
-    switch(setKey) {
+    switch (setKey) {
       case 'cache_name':
         activeEditForm = (
           <ConfigurationActionCacheKeyQueryString {...setterProps}/>
@@ -223,7 +223,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
 
 export function secondsToUnit(value, unit) {
   value = Number(value || 0)
-  switch(unit) {
+  switch (unit) {
     case 'minutes':
       value = value / 60
       break
@@ -239,7 +239,7 @@ export function secondsToUnit(value, unit) {
 
 export function secondsFromUnit(value = 0, unit) {
   value = Number(value)
-  switch(unit) {
+  switch (unit) {
     case 'minutes':
       value = value * 60
       break
@@ -255,7 +255,7 @@ export function secondsFromUnit(value = 0, unit) {
 
 export function unitFromSeconds(value = 0) {
   value = Number(value)
-  switch(0) {
+  switch (0) {
     case (value % 86400):
       return 'days'
     case (value % 3600):

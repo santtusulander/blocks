@@ -44,7 +44,7 @@ const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
 
         </thead>
         <tbody>
-          { rules.map( (rule, index) => {
+          { rules.map((rule, index) => {
 
             const routeTo = editUrlBuilder(rule.propertyName, { policyId: rule.ruleId, policyType: 'request_policy' })
 

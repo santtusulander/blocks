@@ -146,24 +146,24 @@ class Network extends React.Component {
   componentWillMount() {
     this.props.fetchData()
 
-    this.props.fetchNetworks( this.props.params )
-    this.props.fetchPops( this.props.params )
-    this.props.fetchNodes( this.props.params )
+    this.props.fetchNetworks(this.props.params)
+    this.props.fetchPops(this.props.params)
+    this.props.fetchNodes(this.props.params)
   }
 
   componentWillReceiveProps(nextProps) {
     const { group, network, pod } = nextProps.params
 
     if (group !== this.props.params.group) {
-      this.props.fetchNetworks( nextProps.params )
+      this.props.fetchNetworks(nextProps.params)
     }
 
     if (network !== this.props.params.network) {
-      this.props.fetchPops( nextProps.params )
+      this.props.fetchPops(nextProps.params)
     }
 
     if (pod !== this.props.params.pod) {
-      this.props.fetchNodes( nextProps.params )
+      this.props.fetchNodes(nextProps.params)
     }
 
   }
@@ -970,10 +970,10 @@ const mapStateToProps = (state, ownProps) => {
     accountFetching: state.account.get('fetching'),
 
     accountManagementModal: state.ui.get('accountManagementModal'),
-    nodes: sortByKey( getNodesByPod(state, buildReduxId(group, network, pop, pod)), 'updated', 'desc'),
-    networks: sortByKey( getNetworksByGroup(state, ownProps.params.group) ),
-    pops: sortByKey( getPopsByNetwork(state, buildReduxId(group, network)) ),
-    pods: sortByKey( getPodsByPop(state, buildReduxId(group, network, pop)), 'pod_name'),
+    nodes: sortByKey(getNodesByPod(state, buildReduxId(group, network, pop, pod)), 'updated', 'desc'),
+    networks: sortByKey(getNetworksByGroup(state, ownProps.params.group)),
+    pops: sortByKey(getPopsByNetwork(state, buildReduxId(group, network))),
+    pods: sortByKey(getPodsByPop(state, buildReduxId(group, network, pop)), 'pod_name'),
     isFetching: entityType => getFetchingByTag(state, entityType),
 
     networkModal: state.ui.get('networkModal'),
@@ -1025,7 +1025,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     accountActions: accountActions,
     uiActions: uiActions,
 
-    fetchGroup: (params) => dispatch( newGroupActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(newGroupActions.fetchOne(params)),
     fetchNetworks: (params) => params.group && dispatch(networkActions.fetchAll(params)),
     fetchPops: (params) => params.network && dispatch(popActions.fetchAll(params)),
     fetchNodes: (params) => params.pod && dispatch(nodeActions.fetchAll(params))

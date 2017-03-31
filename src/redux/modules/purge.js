@@ -29,7 +29,7 @@ export const emptyPurge = Immutable.fromJS({
 // REDUCERS
 
 export function createRequestSuccess(state, action) {
-  if(action.payload instanceof Error) {
+  if (action.payload instanceof Error) {
     return state.merge({
       fetching: false
     })
@@ -128,7 +128,7 @@ export const createPurge = createAction(PURGE_CREATED, (brand, account, group, p
 export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, property, id) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge/${id}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -137,7 +137,7 @@ export const fetchPurge = createAction(PURGE_FETCHED, (brand, account, group, pr
 export const fetchPurgeList = createAction(PURGE_LIST_FETCHED, (brand, account, group, property) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${property}/purge`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -146,7 +146,7 @@ export const fetchPurgeList = createAction(PURGE_LIST_FETCHED, (brand, account, 
 export const fetchPurgeObjects = createAction(PURGE_OBJECTS_FETCHED, (brand, account, group, params = {}) => {
   return axios.get(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/purge_many`, { params })
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });

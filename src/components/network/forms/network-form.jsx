@@ -82,7 +82,7 @@ const NetworkForm = ({
             disabled={deleteButtonDisabled}
             onClick={handleSubmit(() => onDelete(initialValues.name))}
             tooltipId="tooltip-help"
-            tooltipMessage={{text :intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
+            tooltipMessage={{text: intl.formatMessage({id: "portal.network.networkForm.delete.tooltip.message"})}}>
             {
               //Commented out: as submitting is also true when 'saving'.
               //Should show DELETE -modal and ask for confirmation

@@ -3,13 +3,13 @@ import React from 'react';
 class Tooltip extends React.Component {
   render() {
     let className = 'chart-tooltip';
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className;
     }
-    if(this.props.offsetTop){
+    if (this.props.offsetTop) {
       className = className + ' offset-top'
     }
-    if(this.props.hidden){
+    if (this.props.hidden) {
       return (
         <div className={`${className} hidden`} />
       );

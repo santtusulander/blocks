@@ -21,7 +21,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 class ExportEmailForm extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.onCancel = this.onCancel.bind(this);
@@ -37,13 +37,13 @@ class ExportEmailForm extends React.Component {
   onSubmit(e) {
     e.preventDefault()
 
-    this.props.onSend( this.props.formValues )
+    this.props.onSend(this.props.formValues)
   }
   onCancel() {
     this.props.onCancel()
   }
 
-  render(){
+  render() {
 
     const { subject } = this.props
 

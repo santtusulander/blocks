@@ -88,7 +88,7 @@ class StorageItemList extends React.Component {
               transitionLeaveTimeout={250}>
 
               {!fetchingMetrics &&
-                ( chartData.length > 0
+                (chartData.length > 0
                   ? <LineAreaComposedChart
                     isMiniChart={true}
                     data={chartData}
@@ -114,18 +114,18 @@ StorageItemList.propTypes = {
   average: PropTypes.number,
   chartData: PropTypes.array,
   configurationLink: PropTypes.string,
-  currentUsage:  PropTypes.number,
+  currentUsage: PropTypes.number,
 
   estimate: PropTypes.number,
   fetchingMetrics: PropTypes.bool,
 
   locations: PropTypes.instanceOf(List),
-  low:PropTypes.number,
+  low: PropTypes.number,
 
   name: PropTypes.string,
 
   onConfigurationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  peak:PropTypes.number,
+  peak: PropTypes.number,
   storageContentLink: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 
 }

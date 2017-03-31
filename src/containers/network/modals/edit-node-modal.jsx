@@ -77,7 +77,7 @@ class EditNodeFormContainer extends React.Component {
     if (hasMultipleNodes) {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
-        for (let dateProp in dateLists) {
+        for (const dateProp in dateLists) {
           dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], NETWORK_DATE_FORMAT)}</td></tr>)
         }
       }
@@ -204,7 +204,7 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   const currentUser = state.user.get('currentUser')
 
   const initialValues = {}
-  for (let field in nodeValues) {
+  for (const field in nodeValues) {
     const value = nodeValues[field]
     initialValues[field] = value === MULTIPLE_VALUE_INDICATOR ? null : value
   }

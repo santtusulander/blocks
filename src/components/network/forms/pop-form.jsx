@@ -35,7 +35,7 @@ const validate = ({ name, billing_region, locationId, id }) => {
     },
     id: {
       condition: !isInt(id),
-      errorText:<FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
+      errorText: <FormattedMessage id="portal.network.popEditForm.popId.validation.error.text"/>
     }
   }
 

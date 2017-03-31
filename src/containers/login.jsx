@@ -46,7 +46,7 @@ export class Login extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const token = getUserToken()
     const redirect = this.props.location.query.redirect
     const expiry = this.props.location.query.sessionExpired
@@ -54,14 +54,14 @@ export class Login extends React.Component {
     if (expiry) {
       // Session expired!
       return
-    } else if ( redirect && token ) {
+    } else if (redirect && token) {
       // Token and redirect found --- trying to redirect
       //  If we have a token and a redirect is set, could be reload => set login to true
       //  and  try to go to original location where token will be checked
       this.props.userActions.setLogin(true)
       this.props.router.push(redirect)
       return
-    } else if ( redirect ) {
+    } else if (redirect) {
       // No token. Login required
       // we had redirect but no token
     }
@@ -271,7 +271,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUiTheme: () => dispatch(changeTheme( getUITheme() )),
+    setUiTheme: () => dispatch(changeTheme(getUITheme())),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     userActions: bindActionCreators(userActionCreators, dispatch)
   };

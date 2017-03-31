@@ -10,7 +10,7 @@ import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
   const toggle = type => () => {
     // TODO: Maybe some general error messaging box?
-    if(onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
+    if (onOffNetValues.size === 1 && onOffNetValues.includes(type)) {
       showInfoDialog({
         title: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.title"/>,
         content: <FormattedMessage id="portal.analytics.onOffNet.noOptionsSelected.text"/>,

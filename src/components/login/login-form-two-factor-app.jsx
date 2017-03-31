@@ -35,7 +35,7 @@ export class LoginFormTwoFactorApp extends Component {
   }
 
   startPulling() {
-    let pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
+    const pollingIntervalId = setInterval(this.props.startAppPulling, AUTHY_APP_POLLING_INTERVAL);
     this.setState({ pollingIntervalId });
   }
 

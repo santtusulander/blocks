@@ -7,7 +7,7 @@ import {FormattedMessage} from 'react-intl'
 
 class AnalysisStackedByTime extends React.Component {
   formatY(data) {
-    if(this.props.yAxisCustomFormat) {
+    if (this.props.yAxisCustomFormat) {
       return this.props.yAxisCustomFormat(data)
     }
     else {
@@ -17,7 +17,7 @@ class AnalysisStackedByTime extends React.Component {
   render() {
     const dataKey = this.props.dataKey
 
-    if(!this.props.width || !this.props.dataSets) {
+    if (!this.props.width || !this.props.dataSets) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }
     const totals = this.props.dataSets.reduce((total, dataSet) => {
@@ -53,10 +53,10 @@ class AnalysisStackedByTime extends React.Component {
       .nice(d3.time.day, 1);
 
     let className = 'analysis-by-time analysis-stacked'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
-    let columnHeights = []
+    const columnHeights = []
     return (
       <div className={className}>
         <svg
@@ -90,7 +90,7 @@ class AnalysisStackedByTime extends React.Component {
             showHours={this.props.dontShowHours ? false : xExtent[1] - xExtent[0] <= 24*60*60*1000}
             />}
           {yScale.ticks(4).reduce((axes, tick, i) => {
-            if(i) {
+            if (i) {
               axes.push(
                 <g key={i}>
                   <text x={this.props.padding*1.5} y={yScale(tick)}
