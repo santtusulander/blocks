@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl'
 class Footer extends React.Component {
   render() {
     let className = 'footer'
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     return (

@@ -37,7 +37,7 @@ export class PlaybackDemo extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUpdate(nextProps) {
-    if(nextProps.activeVideo !== this.props.activeVideo) {
+    if (nextProps.activeVideo !== this.props.activeVideo) {
       this.setState({
         bitrates: Immutable.List(),
         bufferErrors: 0,
@@ -51,7 +51,7 @@ export class PlaybackDemo extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if(prevProps.activeVideo !== this.props.activeVideo) {
+    if (prevProps.activeVideo !== this.props.activeVideo) {
       this.playVideo()
     }
   }
@@ -66,7 +66,7 @@ export class PlaybackDemo extends React.Component {
     })
   }
   playVideo() {
-    if(this.state.hls) {
+    if (this.state.hls) {
       this.state.hls.loadSource('https://origin.udn.global'+this.props.activeVideo)
       this.state.hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
@@ -112,8 +112,8 @@ export class PlaybackDemo extends React.Component {
     }
   }
 
-  destroyVideo(){
-    if(this.state.hls) {
+  destroyVideo() {
+    if (this.state.hls) {
       this.state.hls.destroy();
     }
   }

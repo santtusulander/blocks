@@ -130,11 +130,11 @@ export class Account extends React.Component {
     const id = group.get('id')
 
     return this.props.removeGroup({brand, account, id})
-      .then( () => {
+      .then(() => {
         this.props.toggleDeleteConfirmationModal(null)
         this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
       })
-      .catch( (response) => {
+      .catch((response) => {
         this.props.toggleDeleteConfirmationModal(null)
         this.props.uiActions.showInfoDialog({
           title: 'Error',
@@ -322,8 +322,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
   const fetchData = () => {
     return Promise.all([
-      dispatch( accountActions.fetchOne({...params, id: params.account}) ),
-      dispatch( groupActions.fetchAll(params) ),
+      dispatch(accountActions.fetchOne({...params, id: params.account})),
+      dispatch(groupActions.fetchAll(params)),
 
       metricsActions.startGroupFetching(),
       metricsActions.fetchGroupMetrics(metricsOpts),

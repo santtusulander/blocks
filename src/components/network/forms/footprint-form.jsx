@@ -83,7 +83,7 @@ const validate = ({ name, description, data_type, value_ipv4cidr, value_asnlist,
 
   /* TODO, refactor checkForErrors, so field which not required still able to check for conditions
      UDNP-2772 Validation function does not support validation for optional fields */
-  if(description && !isValidFootprintDescription(description)) {
+  if (description && !isValidFootprintDescription(description)) {
     errors.description = (
       <MultilineTextFieldError
         fieldLabel="portal.common.description"

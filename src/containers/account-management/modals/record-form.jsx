@@ -20,7 +20,7 @@ import { getRecordFormInitialValues, isShown, recordValues } from '../../../util
  */
 const filterFields = fields => {
   const filteredFields = {}
-  for(const field in fields) {
+  for (const field in fields) {
     if (isShown(fields.type)(field)) {
       filteredFields[field] = fields[field]
     }

@@ -221,10 +221,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (!canListAccounts) {
         metricsOpts.account = ownProps.params.account
         metricsOpts.list_children = false
-        dispatch( accountActions.fetchOne({brand, id: account}) )
+        dispatch(accountActions.fetchOne({brand, id: account}))
       } else {
         metricsOpts.list_children = true
-        dispatch( accountActions.fetchAll({brand}) )
+        dispatch(accountActions.fetchAll({brand}))
       }
 
       metricsActions.startAccountFetching()

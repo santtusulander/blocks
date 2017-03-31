@@ -52,11 +52,11 @@ export class FilterDropdown extends React.Component {
     const label     = selectedValue ? selectedValue : 'Please Select'
     let className = 'dropdown-select dropdown-filter btn-block'
 
-    if(this.props.className) {
+    if (this.props.className) {
       className += ` ${this.props.className}`
     }
 
-    if(this.props.parent) {
+    if (this.props.parent) {
       className += ' has-parent'
     }
 

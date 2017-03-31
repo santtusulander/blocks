@@ -23,7 +23,7 @@ class EntityList extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if(this.props.disableButtons !== nextProps.disableButtons){
+    if (this.props.disableButtons !== nextProps.disableButtons) {
       return true
     }
     if (!Immutable.is(nextProps.entities, this.props.entities)) {

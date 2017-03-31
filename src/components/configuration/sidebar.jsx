@@ -8,7 +8,7 @@ class ConfigurationSidebar extends React.Component {
   }
   render() {
     let className = 'configuration-sidebar'
-    if(this.props.rightColVisible) {
+    if (this.props.rightColVisible) {
       className = className + ' ' + 'right-col-visible'
     }
     return (

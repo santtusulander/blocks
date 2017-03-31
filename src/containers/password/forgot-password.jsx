@@ -44,7 +44,7 @@ export class ForgotPassword extends React.Component {
     this.props.userActions
       .requestPasswordReset(this.state.email, this.state.recaptcha)
       .then(action => {
-        if(!action.error) {
+        if (!action.error) {
           this.setState({submitted: true})
         }
         else {

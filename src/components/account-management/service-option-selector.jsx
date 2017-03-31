@@ -41,7 +41,7 @@ class ServiceOptionSelector extends React.Component {
       return false
     }
 
-    if(option.requires_charge_number) {
+    if (option.requires_charge_number) {
       this.props.showServiceItemForm(serviceId, optionId, callback, optionValue)
     } else {
       this.changeOptionValue(serviceId, optionId, optionValue, serviceIndex, optionIndex)
@@ -51,7 +51,7 @@ class ServiceOptionSelector extends React.Component {
   togglePanel (index) {
     const openPanels = this.state.openPanels
     const panelIndex = openPanels.indexOf(index)
-    if ( panelIndex === -1) {
+    if (panelIndex === -1) {
       openPanels.push(index)
     } else {
       openPanels.splice(panelIndex, 1)
@@ -135,7 +135,7 @@ class ServiceOptionSelector extends React.Component {
                             onClick={() => this.handleOptionClick(subOption, option.value, subOption.value, subOptionValue, serviceIndex, subOptionIndex, input.onChange)}
                           >
                             <td>
-                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange )}
+                              {this.renderFlexRowItem(subOptionValue, subOption, optionRegions, false, i, input.onChange)}
                             </td>
                           </tr>
                         )

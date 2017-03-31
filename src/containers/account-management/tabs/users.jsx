@@ -75,7 +75,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.params.account !== nextProps.params.account) {
+    if (this.props.params.account !== nextProps.params.account) {
       !this.state.usersGroups.isEmpty() && this.setState({ usersGroups: List() })
       this.props.resetRoles()
     }
@@ -103,7 +103,7 @@ export class AccountManagementAccountUsers extends React.Component {
       group_id: this.state.usersGroups.toJS()
     }
     return createUser(requestBody).then(res => {
-      if(res.error){
+      if (res.error) {
         throw new SubmissionError({email: res.payload.message})
       }
       else {
@@ -237,7 +237,7 @@ export class AccountManagementAccountUsers extends React.Component {
   }
 
   deleteUser(user) {
-    if(user === this.props.currentUser) {
+    if (user === this.props.currentUser) {
       this.props.uiActions.showInfoDialog({
         title: 'Error',
         content: 'You cannot delete the account you are logged in with.',
@@ -294,7 +294,7 @@ export class AccountManagementAccountUsers extends React.Component {
       activeDirection: this.state.sortDir
     }
     const filteredUsersByRole = users.filter((user) => {
-      if(this.state.filteredRoles === 'all') {
+      if (this.state.filteredRoles === 'all') {
         return true
       } else {
         return user.get('roles').find(role => {
@@ -303,7 +303,7 @@ export class AccountManagementAccountUsers extends React.Component {
       }
     })
     const filteredUsersByGroup = filteredUsersByRole.filter((user) => {
-      if(this.state.filteredGroups === 'all') {
+      if (this.state.filteredGroups === 'all') {
         return true
       } else {
         return user.get('group_id').find(group => {
@@ -444,7 +444,7 @@ export class AccountManagementAccountUsers extends React.Component {
                       {this.props.permissions.get('ui').map((uiPermission, uiPermissionIndex) => {
                         const permissionTitle = uiPermission.get('title')
                         const permissionName = uiPermission.get('name')
-                        return(
+                        return (
                           <tr key={uiPermissionIndex}>
                             <td className="no-border">{permissionTitle}</td>
                             <td><b>{role.getIn(['permissions', 'ui']).get(permissionName) ? 'Yes' : 'No'}</b></td>

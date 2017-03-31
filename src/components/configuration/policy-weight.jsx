@@ -12,7 +12,7 @@ class PolicyWeight extends Component {
 
     const ticks = (tickSteps) => {
       const ticksArr = []
-      for(let i = 0; i <= tickSteps; i++) {
+      for (let i = 0; i <= tickSteps; i++) {
         ticksArr.push(
           <span className="tick" key={i}>
             { i % 2 === 0 && <span className="tick-label">{numeral(i * (max - min) / tickSteps).format(numbersFormat)}%</span> }

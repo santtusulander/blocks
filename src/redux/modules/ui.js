@@ -31,7 +31,7 @@ const UI_POLICY_ACTIVE_RULE_CHANGED = 'UI_POLICY_ACTIVE_RULE_CHANGED'
 
 import { getUITheme, setUITheme, isLocalStorageSupported } from '../../util/local-storage'
 
-const theme = AVAILABLE_THEMES.includes( getUITheme() ) ?
+const theme = AVAILABLE_THEMES.includes(getUITheme()) ?
   getUITheme() : AVAILABLE_THEMES[0]
 
 // Check whether localStorage supported and mute error messaging if not.
@@ -98,7 +98,7 @@ export function themeChanged(state, action) {
     /dark-theme|light-theme/gi, action.payload + '-theme'
   )
 
-  setUITheme( action.payload)
+  setUITheme(action.payload)
 
   return state.set('theme', action.payload)
 }
@@ -125,7 +125,7 @@ export function sidePanelNotificationChanged(state, action) {
 
 export function analysisServiceTypeToggled(state, action) {
   let newServiceTypes = state.get('analysisServiceTypes')
-  if(newServiceTypes.includes(action.payload)) {
+  if (newServiceTypes.includes(action.payload)) {
     newServiceTypes = newServiceTypes.filter(type => type !== action.payload)
   }
   else {
@@ -173,7 +173,7 @@ export function infoDialogHidden(state) {
 }
 
 export function analysisStatusCodeToggled(state, action) {
-  if(action.payload === getAnalysisErrorCodes()) {
+  if (action.payload === getAnalysisErrorCodes()) {
     return state.get('analysisErrorStatusCodes').size === getAnalysisErrorCodes().length ?
       state.set('analysisErrorStatusCodes', fromJS([])) :
       state.set('analysisErrorStatusCodes', fromJS(getAnalysisErrorCodes()))

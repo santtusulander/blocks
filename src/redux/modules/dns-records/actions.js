@@ -111,7 +111,7 @@ export const fetchResourcesWithDetails = createAction(DNS_RECORD_RECEIVE_WITH_DE
         delete item.entries
       })
 
-      return responseData.map( record => {
+      return responseData.map(record => {
         record.id = uniqid()
         record.name = domainlessRecordName(zone, record.dns_record_id)
         return record
@@ -141,6 +141,6 @@ export default handleActions({
 }, InitialState)
 
 //SELECTOR
-export const getById = ( resources, id ) => {
-  return resources.find( item => item.get('id') === id)
+export const getById = (resources, id) => {
+  return resources.find(item => item.get('id') === id)
 }

@@ -8,18 +8,18 @@ import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
-  if(!permission) {
+  if (!permission) {
     return true
   }
   return checkPermissions(
-    getRoles( store.getState() ),
+    getRoles(store.getState()),
     user,
     permission
   )
 }
 
 const servicePermissionChecker = (permission) => permissions => {
-  if(!permission || !permissions || !permissions.size) {
+  if (!permission || !permissions || !permissions.size) {
     return true
   }
 
@@ -89,14 +89,14 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
           perm
         )
       })
-      if(fallback) {
+      if (fallback) {
         let path = ownProps.location.pathname.replace(/\/$/, '')
         path = path.substr(0, path.lastIndexOf('/'))
         return `${path}/${fallback[1]}`
       }
       else {
         // TODO: Where should we send them? Wrap these checks to 404 on error?
-        throw("User doesn't have permission to see any analytics tabs.")
+        throw ("User doesn't have permission to see any analytics tabs.")
       }
     },
     wrapperDisplayName: 'UserCanViewAnalyticsTab',

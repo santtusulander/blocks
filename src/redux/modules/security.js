@@ -185,7 +185,7 @@ export const fetchSSLCertificates = createAction(SECURITY_SSL_CERTIFICATES_FETCH
 export const fetchGroupsForModal = createAction(SECURITY_MODAL_GROUPS_FETCH, (brand, account) => {
   return axios.get(`${BASE_URL_AAA}/brands/${brand}/accounts/${account}/groups`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });

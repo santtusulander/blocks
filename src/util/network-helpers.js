@@ -32,7 +32,7 @@ export const locationReverseGeoCodingLookup = (lon, lat, limit = 1, mode = 'mapb
 export const fetchASOverview = (asn) => {
   return axios.get(`${BASE_URL_NORTH}/asns?filter_by=asn&filter_value=${asn}&page_size=1`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data.data;
     }
   })
@@ -61,7 +61,7 @@ export const generateNodeName = ({ pod_id, iata, serverNumber, node_role, node_e
   //make pod_id (=== pod_name) alphanumeric
   const sanitizedPodId = String(pod_id).replace(/[^a-z0-9]/gi, '').toLowerCase()
 
-  if ( node_role === 'cache') {
+  if (node_role === 'cache') {
     return `large.${sanitizedPodId}.cache${serverNumber}.${iata}.${envDomain}`
   } else if (node_role === 'gslb') {
     return `gslb.${sanitizedPodId}.ns${serverNumber}.${iata}.${envDomain}`

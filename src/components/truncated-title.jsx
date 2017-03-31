@@ -27,7 +27,7 @@ class TruncatedTitle extends React.Component {
 
   render() {
     let className = 'truncated-title'
-    if(this.props.className) {
+    if (this.props.className) {
       className += ' ' + this.props.className
     }
     const tooltip = (

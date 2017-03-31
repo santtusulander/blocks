@@ -95,7 +95,7 @@ export class Dashboard extends React.Component {
       this.props.filterActions.resetContributionFilters()
     }
 
-    if ( prevParams !== params || !is(this.props.filters,nextProps.filters) ) {
+    if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
     // TODO: remove this timeout as part of UDNP-1426
@@ -115,7 +115,7 @@ export class Dashboard extends React.Component {
   fetchData(urlParams, filters, activeAccount) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
-      const {brand, account : id} = urlParams
+      const {brand, account: id} = urlParams
       this.props.fetchAccount({brand, id})
 
       const params = { brand: urlParams.brand, account: urlParams.account }
@@ -195,7 +195,7 @@ export class Dashboard extends React.Component {
     const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
 
     if (!activeAccount.size) {
-      return(
+      return (
         <div className="text-center">
           <FormattedMessage id="portal.dashboard.selectAccount.text" values={{br: <br/>}} />
         </div>

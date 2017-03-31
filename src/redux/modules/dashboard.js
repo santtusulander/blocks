@@ -28,11 +28,11 @@ export function dashboardFetchFailure(state) {
   })
 }
 
-export function dashboardStartFetch(state){
+export function dashboardStartFetch(state) {
   return state.set('fetching', true)
 }
 
-export function dashboardFinishFetch(state){
+export function dashboardFinishFetch(state) {
   return state.set('fetching', false)
 }
 
