@@ -49,7 +49,7 @@ class CertificateFormContainer extends Component {
     this.props.fetchGroups('udn', this.props.activeAccount.get('id'))
   }
 
-  handleFormSubmit(values){
+  handleFormSubmit(values) {
     const { certificateToEdit, upload, edit, securityActions, resetForm, toggleModal, showNotification } = this.props
     const cert = certificateToEdit && certificateToEdit.get('cn')
     const data = [
@@ -64,7 +64,7 @@ class CertificateFormContainer extends Component {
       }
     ]
 
-    if(cert) {
+    if (cert) {
       data.push(cert)
     }
 

@@ -68,7 +68,7 @@ function mapStateToProps({ dns }, { edit }) {
 
     const initialValues = currentDomain && currentDomain.get('details')
 
-    if ( initialValues ) {
+    if (initialValues) {
       props.initialValues = initialValues.toJS()
       props.initialValues.name = currentDomain.get('id')
     }
@@ -109,7 +109,7 @@ function mapDispatchToProps(dispatch, { closeModal, showNotification }) {
       return dnsActions[method]('udn', domain, data)
         .then(res => {
           if (res.error) {
-            dispatch( showInfoDialog({
+            dispatch(showInfoDialog({
               title: <FormattedMessage id="portal.accountManagement.dns.domain.saveError"/>,
               content: res.payload.data.message,
               okButton: true,

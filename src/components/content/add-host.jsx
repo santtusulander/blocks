@@ -28,11 +28,11 @@ const validate = (values) => {
     serviceType
   } = values
 
-  if(!hostName) {
+  if (!hostName) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.required" />
   }
 
-  if( hostName && !isValidHostName(hostName)) {
+  if (hostName && !isValidHostName(hostName)) {
     errors.hostName = <FormattedMessage id="portal.content.addHost.newHostnamePlaceholder.invalid" />
   }
 
@@ -55,7 +55,7 @@ class AddHost extends React.Component {
     this.onSubmit = this.onSubmit.bind(this)
   }
 
-  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }){
+  onSubmit({ hostName, deploymentMode, serviceType = DEFAULT_HOST_SERVICE_TYPE }) {
     const res = this.props.createHost(hostName, deploymentMode, serviceType)
 
     return res.catch((error) => {
@@ -65,7 +65,7 @@ class AddHost extends React.Component {
     })
   }
 
-  onCancel(){
+  onCancel() {
     return this.props.cancelChanges()
   }
 

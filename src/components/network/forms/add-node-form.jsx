@@ -42,7 +42,7 @@ const validate = ({ node_name, numNodes, node_role, node_env, node_type, cloud_d
       },
       {
         condition: isInt(numNodes) === false || numNodes < 1,
-        errorText: <FormattedMessage id="portal.validators.type.number" values={{field : <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
+        errorText: <FormattedMessage id="portal.validators.type.number" values={{field: <FormattedMessage id="portal.network.addNodeForm.howMany.title" /> }}/>
       }
     ],
     node_role: [
@@ -92,8 +92,8 @@ class NetworkAddNodeForm extends React.Component {
 
     // This will autogenerate the value of the node_name field if the nodeName prop changed
     // See mapStateToProps in src/containers/network/modals/add-node-modal.jsx
-    if ( nodeName !== this.props.nodeName ) {
-      this.props.dispatch( change( ADD_NODE_FORM_NAME, 'node_name', nodeName) )
+    if (nodeName !== this.props.nodeName) {
+      this.props.dispatch(change(ADD_NODE_FORM_NAME, 'node_name', nodeName))
     }
 
   }

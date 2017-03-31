@@ -55,7 +55,7 @@ export class TokenStreaming extends React.Component {
     const { isStreamingEnabled } = nextProps
 
     if ((typeof this.props.isStreamingEnabled !== 'undefined') && (this.props.isStreamingEnabled !== isStreamingEnabled)) {
-      if ( !isStreamingEnabled ) {
+      if (!isStreamingEnabled) {
         this.props.change('streaming_ttl', null)
         this.props.change('streaming_add_ip_addr', false)
         this.props.change('streaming_encryption', null)

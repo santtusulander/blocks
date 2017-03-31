@@ -28,19 +28,19 @@ export function formatBytes(bytes, setMax, customFormat) {
   let formatted = numeral(bytes / Math.pow(BYTE_BASE, 5)).format(customFormat || '0,0') + ' PB'
   bytes         = bytes || 0
 
-  if((setMax || bytes) < BYTE_BASE) {
+  if ((setMax || bytes) < BYTE_BASE) {
     formatted = numeral(bytes).format(customFormat || '0,0') + ' B'
   }
-  else if((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
+  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bytes / BYTE_BASE).format(customFormat || '0,0') + ' KB'
   }
-  else if((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
+  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 2)).format(customFormat || '0,0') + ' MB'
   }
-  else if((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
+  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 3)).format(customFormat || '0,0') + ' GB'
   }
-  else if((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
+  else if ((setMax || bytes) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bytes / Math.pow(BYTE_BASE, 4)).format(customFormat || '0,0') + ' TB'
   }
   return formatted
@@ -82,19 +82,19 @@ export function formatBitsPerSecond(bits_per_second, decimals, setMax) {
   bits_per_second = bits_per_second || 0
   let formatted   = numeral(bits_per_second / Math.pow(BYTE_BASE, 5)).format(digits) + ' Pbps'
 
-  if((setMax || bits_per_second) < BYTE_BASE) {
+  if ((setMax || bits_per_second) < BYTE_BASE) {
     formatted = numeral(bits_per_second).format(digits) + ' bps'
   }
-  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 2)) {
+  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 2)) {
     formatted = numeral(bits_per_second / BYTE_BASE).format(digits) + ' Kbps'
   }
-  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 3)) {
+  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 3)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 2)).format(digits) + ' Mbps'
   }
-  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 4)) {
+  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 4)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 3)).format(digits) + ' Gbps'
   }
-  else if((setMax || bits_per_second) < Math.pow(BYTE_BASE, 5)) {
+  else if ((setMax || bits_per_second) < Math.pow(BYTE_BASE, 5)) {
     formatted = numeral(bits_per_second / Math.pow(BYTE_BASE, 4)).format(digits) + ' Tbps'
   }
   return formatted
@@ -104,10 +104,10 @@ export function formatTime(milliseconds) {
   milliseconds  = milliseconds || 0
   let formatted = numeral(milliseconds).format('0,0') + ' ms'
 
-  if(milliseconds >= 60000) {
+  if (milliseconds >= 60000) {
     formatted = numeral(milliseconds / 60000).format('0,0') + ' m'
   }
-  else if(milliseconds >= 1000) {
+  else if (milliseconds >= 1000) {
     formatted = numeral(milliseconds / 1000).format('0,0') + ' s'
   }
   return formatted
@@ -145,8 +145,8 @@ export function filterMetricsByAccounts(metrics, accounts) {
 export function removeProps(object, remove) {
   const result = {}
 
-  for(const property in object) {
-    if(object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
+  for (const property in object) {
+    if (object.hasOwnProperty(property) && remove.indexOf(property) === -1) {
       result[property] = object[property];
     }
   }
@@ -193,7 +193,7 @@ export function generateNestedLink(base, linkParts) {
   return base + '/' + linkParts.join("/")
 }
 
-export function buildAnalyticsOpts(params, filters, location ){
+export function buildAnalyticsOpts(params, filters, location) {
 
   const tabKey = getTabName(location.pathname)
   //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
@@ -208,8 +208,8 @@ export function buildAnalyticsOpts(params, filters, location ){
 
   //get filter values
   const filterValues = {}
-  visibleFilters.forEach( filterName => {
-    const filterValue = filters.get( filterName )
+  visibleFilters.forEach(filterName => {
+    const filterValue = filters.get(filterName)
     filterValues[filterName] = filterValue && filterValue
   })
 
@@ -226,14 +226,14 @@ export function buildAnalyticsOpts(params, filters, location ){
     group: params.group,
     property: params.property,
     ingest_point: params.storage,
-    startDate: toUnixTimestamp( startDate ),
-    endDate: toUnixTimestamp( endDate ),
+    startDate: toUnixTimestamp(startDate),
+    endDate: toUnixTimestamp(endDate),
     sp_account_ids: filterValues.serviceProviders && filterValues.serviceProviders.join(','),
     sp_group_ids: filterValues.serviceProviderGroups && filterValues.serviceProviderGroups.join(','),
     account_ids: filterValues.contentProviders && filterValues.contentProviders.join(','),
     group_ids: filterValues.contentProviderGroups && filterValues.contentProviderGroups.join(','),
-    service_type: filterValues.serviceTypes && createToggledFilter( filterValues.serviceTypes),
-    net_type: filterValues.onOffNet &&  createToggledFilter( filterValues.onOffNet)
+    service_type: filterValues.serviceTypes && createToggledFilter(filterValues.serviceTypes),
+    net_type: filterValues.onOffNet &&  createToggledFilter(filterValues.onOffNet)
   }
 
   if (filterValues.statusCodes && filterValues.statusCodes.size) {
@@ -252,7 +252,7 @@ export function buildAnalyticsOpts(params, filters, location ){
  * @param options
  * @returns {*}
  */
-const createToggledFilter = ( options ) => {
+const createToggledFilter = (options) => {
   //FIXME: this only works when there are only 2 options
   //if all opts selected - remove filter
   if (options.size > 1) return undefined
@@ -260,7 +260,7 @@ const createToggledFilter = ( options ) => {
   return options.toJS()
 }
 
-const toUnixTimestamp = ( date ) => {
+const toUnixTimestamp = (date) => {
   return date && date.format('X')
 }
 
@@ -388,21 +388,21 @@ export function filterAccountsByUserName (accounts) {
 export function checkForErrors(fields, customConditions, requiredTexts = {}) {
   const errors = {}
 
-  for(const fieldName in fields) {
+  for (const fieldName in fields) {
     const field = fields[fieldName]
     const isEmptyArray = field instanceof Array && field.length === 0
     if ((isEmptyArray || field === '' || field === undefined)) {
       errors[fieldName] = requiredTexts[fieldName] || 'Required'
     }
     else if (customConditions) {
-      if(Array.isArray(customConditions[fieldName])) {
-        for(const customCondition in customConditions[fieldName]) {
-          if(customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
+      if (Array.isArray(customConditions[fieldName])) {
+        for (const customCondition in customConditions[fieldName]) {
+          if (customConditions[fieldName][customCondition] && customConditions[fieldName][customCondition].condition) {
             errors[fieldName] = customConditions[fieldName][customCondition].errorText
           }
         }
       }
-      else if(customConditions[fieldName] && customConditions[fieldName].condition) {
+      else if (customConditions[fieldName] && customConditions[fieldName].condition) {
         errors[fieldName] = customConditions[fieldName].errorText
       }
     }
@@ -415,7 +415,7 @@ export function formatFileSize(bytes) {
 }
 
 export const isTrialHost = (host) => {
-  if(host && host.getIn(['services',0,'deployment_mode']) === 'trial') {
+  if (host && host.getIn(['services',0,'deployment_mode']) === 'trial') {
     return true
   }
 
@@ -423,10 +423,10 @@ export const isTrialHost = (host) => {
 }
 
 export function getConfiguredName(host) {
-  if(!host || !host.size) {
+  if (!host || !host.size) {
     return null
   }
-  if(isTrialHost(host)) {
+  if (isTrialHost(host)) {
     return host.getIn(['services',0,'configurations',0,'edge_configuration','trial_name'])
   }
   return host.getIn(['services',0,'configurations',0,'edge_configuration','published_name']) || null
@@ -455,7 +455,7 @@ export function getRolesForUser(user, roles) {
  * @returns {boolean}
  */
 export function matchesRegexp(string, pattern, caseSensitive = false) {
-  if(!(pattern instanceof RegExp)) {
+  if (!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
   const testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
@@ -561,14 +561,14 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
     sortFunc = data.sort((a, b) => {
       let aVal = a.get(sortBy)
       let bVal = b.get(sortBy)
-      if(typeof a.get(sortBy) === 'string') {
+      if (typeof a.get(sortBy) === 'string') {
         aVal = aVal.toLowerCase()
         bVal = bVal.toLowerCase()
       }
-      if(aVal < bVal) {
+      if (aVal < bVal) {
         return -1 * sortDir
       }
-      else if(aVal > bVal) {
+      else if (aVal > bVal) {
         return 1 * sortDir
       }
       return 0
@@ -585,14 +585,14 @@ export function getSortData(data, sortBy, sortDir, stateSortFunc) {
  * @param  {String} [direction='asc|desc']
  * @return {List} sorted list
  */
-export const sortByKey = ( list, key = 'name', direction = 'asc') => {
-  if (!list || list.isEmpty() ) return
+export const sortByKey = (list, key = 'name', direction = 'asc') => {
+  if (!list || list.isEmpty()) return
 
   return list.sort(
       (a, b) => {
         const valA = a.get(key)
         const valB = b.get(key)
-        if ( isNaN(valA) || isNaN(valB) ) {
+        if (isNaN(valA) || isNaN(valB)) {
           return (direction === 'asc')
             ? valA.toString().localeCompare(valB.toString())
             : - valA.toString().localeCompare(String(valB.toString()))
@@ -682,7 +682,7 @@ export function buildFetchOpts({ coordinates = {}, params = {}, filters = Map({}
   const endDate    = filters.getIn(['dateRange', 'endDate'])
   const rangeDiff  = startDate && endDate ? endDate.diff(startDate, 'month') : 0
   const byTimeOpts = Object.assign({
-    granularity:  rangeDiff >= 2 ? 'day' : 'hour'
+    granularity: rangeDiff >= 2 ? 'day' : 'hour'
   }, fetchOpts || params)
 
   const dashboardStartDate  = Math.floor(startDate / 1000)

@@ -43,7 +43,7 @@ export const getProviderTypeById = (state, id) => {
  * @return []
  */
 export const getProviderTypeOptions = (state) => {
-  return state.serviceInfo.providerTypes.reduce( (acc, type) => {
+  return state.serviceInfo.providerTypes.reduce((acc, type) => {
     acc.push({
       label: type.get('name'),
       value: type.get('id')
@@ -64,7 +64,7 @@ export const getServiceOptions = (state, providerType) => {
 
   const providerServices = state.serviceInfo.providerTypes.getIn([String(providerType), 'services'])
 
-  return providerServices && providerServices.reduce( (acc, serviceId) => {
+  return providerServices && providerServices.reduce((acc, serviceId) => {
     const service = state.serviceInfo.services.get(String(serviceId))
 
     acc.push({
@@ -72,7 +72,7 @@ export const getServiceOptions = (state, providerType) => {
       value: service.get('id'),
       requires_charge_number: service.get('requires_charge_number'),
       supports_regional_billing: service.get('supports_regional_billing'),
-      options: service.get('options').sortBy(option => option.get('name')).reduce( (opts, option) => {
+      options: service.get('options').sortBy(option => option.get('name')).reduce((opts, option) => {
         opts.push({
           label: option.get('name'),
           value: option.get('id'),
@@ -93,7 +93,7 @@ export const getServiceOptions = (state, providerType) => {
  * @return []
  */
 export const getRegionsInfo = (state) => {
-  return state.serviceInfo.regions.reduce( (acc, region) => {
+  return state.serviceInfo.regions.reduce((acc, region) => {
     acc.push(region.toJS())
 
     return acc
@@ -101,10 +101,10 @@ export const getRegionsInfo = (state) => {
 }
 
 /* HELPERS */
-export const getProviderTypeName = (providerTypes, id ) => {
+export const getProviderTypeName = (providerTypes, id) => {
   if (!id) return;
 
-  const providerType = providerTypes.find( item => item.get('id') === id)
+  const providerType = providerTypes.find(item => item.get('id') === id)
 
   if (providerType) return providerType.get('name')
 
@@ -124,7 +124,7 @@ export const getOptionName = (services, serviceId, optionId) => {
   let optionName = "N/A"
 
   if (service) {
-    const option = service.get('options').find( item => item.get('id') === optionId)
+    const option = service.get('options').find(item => item.get('id') === optionId)
     if (option) optionName = option.get('name')
   }
 

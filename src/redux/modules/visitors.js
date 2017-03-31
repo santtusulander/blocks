@@ -126,7 +126,7 @@ export default handleActions({
 export const fetchByTime = createAction(VISITORS_BY_TIME_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/time${qsBuilder(opts)}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -135,7 +135,7 @@ export const fetchByTime = createAction(VISITORS_BY_TIME_FETCHED, (opts) => {
 export const fetchByCity = createAction(VISITORS_BY_CITY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/city${qsBuilder(opts)}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -144,7 +144,7 @@ export const fetchByCity = createAction(VISITORS_BY_CITY_FETCHED, (opts) => {
 export const fetchByCountry = createAction(VISITORS_BY_COUNTRY_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/country${qsBuilder(opts)}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -153,7 +153,7 @@ export const fetchByCountry = createAction(VISITORS_BY_COUNTRY_FETCHED, (opts) =
 export const fetchByBrowser = createAction(VISITORS_BY_BROWSER_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/browser${qsBuilder(opts)}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });
@@ -162,7 +162,7 @@ export const fetchByBrowser = createAction(VISITORS_BY_BROWSER_FETCHED, (opts) =
 export const fetchByOS = createAction(VISITORS_BY_OS_FETCHED, (opts) => {
   return axios.get(`${analyticsBase()}/visitors/os${qsBuilder(opts)}`)
   .then((res) => {
-    if(res) {
+    if (res) {
       return res.data;
     }
   });

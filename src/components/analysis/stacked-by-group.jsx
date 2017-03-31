@@ -22,7 +22,7 @@ class AnalysisStackedByGroup extends React.Component {
 
   }
   render() {
-    if(!this.props.width || !this.props.datasets) {
+    if (!this.props.width || !this.props.datasets) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
@@ -56,7 +56,7 @@ class AnalysisStackedByGroup extends React.Component {
       .range([xMinPx, xMaxPx])
 
     let className = 'analysis-by-time analysis-stacked'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
     const columnHeights = []
@@ -68,7 +68,7 @@ class AnalysisStackedByGroup extends React.Component {
     // If last bar isn't at edge of chart, add padding to center bars
     let centerPad = 0
     const lastBarEdge = xScale(this.props.datasets.size - 1) + strokeWidth / 2
-    if(lastBarEdge < xMaxPx) {
+    if (lastBarEdge < xMaxPx) {
       centerPad = (xMaxPx - lastBarEdge) / 2 - this.props.padding
     }
     const xOffset = strokeWidth / 2 + this.props.padding / 2 + centerPad

@@ -69,17 +69,17 @@ class Header extends React.Component {
 
   saveChanges() {
     let newSet
-    if(this.state.activeActivity === 'unset') {
+    if (this.state.activeActivity === 'unset') {
       newSet = this.props.set.merge({
         action: "unset",
         header: this.state.to_header
       })
       // If there was perviously a value, be sure to delete it
-      if(newSet.has('value')) {
+      if (newSet.has('value')) {
         newSet = newSet.delete('value')
       }
     }
-    else if(this.state.activeActivity === 'set') {
+    else if (this.state.activeActivity === 'set') {
       newSet = this.props.set.merge({
         action: "set",
         header: this.state.to_header,

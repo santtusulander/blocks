@@ -58,7 +58,7 @@ class AnalysisOnOffNetReport extends React.Component {
   }
   sortedData(data, sortBy, sortDir) {
     let sortFunc = ''
-    if(this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
+    if (this.state.sortFunc === 'specific' && sortBy.indexOf(',') > -1) {
       sortFunc = data.sort((a, b) => {
         sortBy = sortBy.toString().split(',')
 
@@ -71,7 +71,7 @@ class AnalysisOnOffNetReport extends React.Component {
         if (lhs && rhs) {
           if (lhs.get(sortBy[1]) < rhs.get(sortBy[1])) {
             return -1 * sortDir
-          } else if(lhs.get(sortBy[1]) > rhs.get(sortBy[1])) {
+          } else if (lhs.get(sortBy[1]) > rhs.get(sortBy[1])) {
             return 1 * sortDir
           }
         }
@@ -80,10 +80,10 @@ class AnalysisOnOffNetReport extends React.Component {
       })
     } else {
       sortFunc = data.sort((a, b) => {
-        if(a.get(sortBy) < b.get(sortBy)) {
+        if (a.get(sortBy) < b.get(sortBy)) {
           return -1 * sortDir
         }
-        else if(a.get(sortBy) > b.get(sortBy)) {
+        else if (a.get(sortBy) > b.get(sortBy)) {
           return 1 * sortDir
         }
         return 0
@@ -112,18 +112,18 @@ class AnalysisOnOffNetReport extends React.Component {
     })
 
     const dataSets = [];
-    if ( this.props.onOffFilter.contains('on') ) {
-      dataSets.push( onNet.toJS() )
+    if (this.props.onOffFilter.contains('on')) {
+      dataSets.push(onNet.toJS())
     } else {
-      dataSets.push( [] )
+      dataSets.push([])
     }
 
-    if ( this.props.onOffFilter.contains('off') ) {
-      dataSets.push( offNet.toJS() )
+    if (this.props.onOffFilter.contains('off')) {
+      dataSets.push(offNet.toJS())
     }
 
     const datasets = []
-    if(this.props.onOffFilter.contains('on') && onNet) {
+    if (this.props.onOffFilter.contains('on') && onNet) {
       datasets.push({
         area: false,
         color: paleblue,
@@ -136,7 +136,7 @@ class AnalysisOnOffNetReport extends React.Component {
         xAxisFormatter: false
       })
     }
-    if(this.props.onOffFilter.contains('off') && offNet) {
+    if (this.props.onOffFilter.contains('off') && offNet) {
       datasets.push({
         area: false,
         color: 'yellow',
@@ -182,13 +182,13 @@ class AnalysisOnOffNetReport extends React.Component {
     const dataKey = this.props.onOffFilter.get(0) === 'off' ? 'net_off' : 'net_on'
     const trafficToday = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? statsToday.get('total')
-      : statsToday.getIn([ dataKey, 'bytes'] )
+      : statsToday.getIn([ dataKey, 'bytes'])
 
     const totalTrafficByDateRange = this.props.onOffFilter.contains('on') && this.props.onOffFilter.contains('off')
       ? stats.get('total')
-      : stats.getIn([ dataKey, 'bytes'] )
+      : stats.getIn([ dataKey, 'bytes'])
 
-    const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
+    const trafficByDateRangeLabel = getTrafficByDateRangeLabel(this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
 
     return (
       <div>

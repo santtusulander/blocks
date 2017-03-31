@@ -98,7 +98,7 @@ class ConfigurationPolicies extends React.Component {
     this.props.saveChanges()
   }
 
-  handleHide(){
+  handleHide() {
     this.props.cancelEditPolicyRoute()
     this.setState({ isEditingRule: true })
     this.props.activateRule(null)
@@ -141,7 +141,7 @@ class ConfigurationPolicies extends React.Component {
 
   render() {
     const config = this.props.config;
-    if(!config || !config.size) {
+    if (!config || !config.size) {
       return (
         <div className="container"><LoadingSpinner /></div>
       )

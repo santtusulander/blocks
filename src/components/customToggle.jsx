@@ -16,7 +16,7 @@ const CustomToggle = ({ children, onClick }) => {
 CustomToggle.displayName = 'CustomToggle'
 
 CustomToggle.propTypes = {
-  children : PropTypes.node,
+  children: PropTypes.node,
   onClick: PropTypes.func
 }
 

@@ -58,7 +58,7 @@ export class PasswordFields extends Component {
   }
 
   changePassword(e) {
-    if(this.props.onChange) {
+    if (this.props.onChange) {
       this.props.onChange(e)
     }
     this.changeField('password')(e)
@@ -102,7 +102,7 @@ export class PasswordFields extends Component {
   }
 
   doPasswordsMatch(password, confirm, isValidString) {
-    const validPassword = (password === confirm ) && isValidString
+    const validPassword = (password === confirm) && isValidString
 
     this.setState({
       confirmValid: validPassword

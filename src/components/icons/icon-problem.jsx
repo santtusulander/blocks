@@ -4,7 +4,7 @@ import Icon from '../icon.jsx'
 const IconProblem = (props) => {
   const {className, height, width} = props
   let classNames = 'two-tone';
-  if(className) {
+  if (className) {
     classNames = classNames + ' ' + className;
   }
   return (

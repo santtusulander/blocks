@@ -29,7 +29,7 @@ class AnalyticsTabCacheHitRate extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if( this.props.filters !== nextProps.filters ||
+    if (this.props.filters !== nextProps.filters ||
         changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName) {
       this.fetchData(
@@ -130,4 +130,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default withRouter( connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate) );
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AnalyticsTabCacheHitRate));
