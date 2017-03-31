@@ -52,7 +52,7 @@ class BreadcrumbsItem extends React.Component {
     if (params.group === activeGroup) {
       links.push({
         url: (params.property || params.storage) ? urlMethod('group', params.group, params) : null,
-        label:  params.group === activeGroup ? props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
+        label: params.group === activeGroup ? props.activeGroup.get('name') : <FormattedMessage id="portal.header.group.text"/>
       })
     }
   }
@@ -63,7 +63,7 @@ class BreadcrumbsItem extends React.Component {
     if (property) {
       links.push({
         url: !isLastLink ? urlMethod('property', property, params) : null,
-        label:  property
+        label: property
       })
     }
   }
@@ -74,13 +74,13 @@ class BreadcrumbsItem extends React.Component {
     if (storage) {
       links.push({
         url: !isLastLink ? urlMethod('storage', storage, params) : null,
-        label:  storage
+        label: storage
       })
     }
   }
 
   updateLinks(props) {
-    let links = []
+    const links = []
     const { pathname, params, activeGroup } = props
     const { roles, user, router } = this.props
 
@@ -89,7 +89,7 @@ class BreadcrumbsItem extends React.Component {
       let storageLinkIsLast = true
       if (router.isActive(getRoute('analyticsProperty', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.analytics.text"/>
+          label: <FormattedMessage id="portal.header.analytics.text"/>
         })
 
         propertyLinkIsLast = false
@@ -97,7 +97,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('contentPropertyConfiguration', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.configuration.text"/>
+          label: <FormattedMessage id="portal.header.configuration.text"/>
         })
 
         propertyLinkIsLast = false
@@ -105,7 +105,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('analyticsStorage', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.analytics.text"/>
+          label: <FormattedMessage id="portal.header.analytics.text"/>
         })
 
         storageLinkIsLast = false
@@ -113,7 +113,7 @@ class BreadcrumbsItem extends React.Component {
 
       if (router.isActive(getRoute('contentStorageConfiguration', params))) {
         links.push({
-          label:  <FormattedMessage id="portal.header.configuration.text"/>
+          label: <FormattedMessage id="portal.header.configuration.text"/>
         })
 
         storageLinkIsLast = false
@@ -124,7 +124,7 @@ class BreadcrumbsItem extends React.Component {
       this.addGroupLink(props, links, getContentUrl)
 
       links.push({
-        label:  <FormattedMessage id="portal.header.content.text"/>,
+        label: <FormattedMessage id="portal.header.content.text"/>,
         url: params.account && links.length > 0 ? getContentUrl('groups', params.account, params) : null
       })
     } else if (router.isActive(getRoute('analytics'))) {
@@ -137,21 +137,21 @@ class BreadcrumbsItem extends React.Component {
         label: <FormattedMessage id="portal.header.analytics.text"/>,
         url: links.length > 0 ? getAnalyticsUrlFromParams(accountParams, user, roles) : null
       })
-    } else if (new RegExp( getRoute('accountManagement'), 'g' ).test(pathname)) {
-      links.push( {label:  'Account Management'} )
-    } else if (new RegExp( getRoute('services'), 'g' ).test(pathname)) {
-      links.push( {label:  'Services'} )
-    } else if (new RegExp( getRoute('security'), 'g' ).test(pathname)) {
-      links.push( {label:  'Security'} )
-    } else if (new RegExp( getRoute('support'), 'g' ).test(pathname)) {
-      links.push( {label:  'Support'} )
-    } else if (new RegExp( getRoute('configuration'), 'g' ).test(pathname)) {
-      links.push( {label:  'Configuration'} )
-    } else if (new RegExp( getRoute('network'), 'g' ).test(pathname)) {
+    } else if (new RegExp(getRoute('accountManagement'), 'g').test(pathname)) {
+      links.push({label: 'Account Management'})
+    } else if (new RegExp(getRoute('services'), 'g').test(pathname)) {
+      links.push({label: 'Services'})
+    } else if (new RegExp(getRoute('security'), 'g').test(pathname)) {
+      links.push({label: 'Security'})
+    } else if (new RegExp(getRoute('support'), 'g').test(pathname)) {
+      links.push({label: 'Support'})
+    } else if (new RegExp(getRoute('configuration'), 'g').test(pathname)) {
+      links.push({label: 'Configuration'})
+    } else if (new RegExp(getRoute('network'), 'g').test(pathname)) {
       // Link to POD
       if (params.pod) {
         links.push({
-          label:  params.pod,
+          label: params.pod,
           url: getNetworkUrl('pod', params.pod, params)
         })
       }
@@ -159,7 +159,7 @@ class BreadcrumbsItem extends React.Component {
       // Link to POP
       if (params.pop) {
         links.push({
-          label:  params.pop,
+          label: params.pop,
           url: getNetworkUrl('pop', params.pop, params)
         })
       }
@@ -167,7 +167,7 @@ class BreadcrumbsItem extends React.Component {
       // Link to Network
       if (params.network) {
         links.push({
-          label:  params.network,
+          label: params.network,
           url: getNetworkUrl('network', params.network, params)
         })
       }
@@ -187,8 +187,8 @@ class BreadcrumbsItem extends React.Component {
         url: params.group && getNetworkUrl('account', params.account, params)
       })
 
-    } else if (new RegExp( getRoute('dashboard'), 'g' ).test(pathname)) {
-      links.push( {label:  'Dashboard'} )
+    } else if (new RegExp(getRoute('dashboard'), 'g').test(pathname)) {
+      links.push({label: 'Dashboard'})
     }
 
     this.setState({ links: links.reverse() })

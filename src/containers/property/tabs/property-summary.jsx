@@ -126,8 +126,8 @@ class PropertySummary extends React.Component {
   }
 
   getEmptyHourlyTraffic(startDate, endDate) {
-    let hourlyTraffic = [];
-    for (var t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
+    const hourlyTraffic = [];
+    for (let t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
       hourlyTraffic.push({
         bits_per_second: 0,
         timestamp: moment(t, 'X').toDate()
@@ -176,7 +176,7 @@ class PropertySummary extends React.Component {
       granularity: 'hour'
     }).then(this.props.visitorsActions.finishFetching)
 
-    if(!this.props.properties || !this.props.properties.size) {
+    if (!this.props.properties || !this.props.properties.size) {
       this.props.hostActions.fetchHosts(brand, account, group)
     }
     if (!this.props.activeAccount || !this.props.activeAccount.size) {

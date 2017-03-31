@@ -62,7 +62,7 @@ class AccountManagementAccountGroups extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.params.account !== this.props.params.account) {
+    if (nextProps.params.account !== this.props.params.account) {
       const { brand, account } = nextProps.params
       this.props.userActions.fetchUsers(brand, account)
     }
@@ -95,7 +95,7 @@ class AccountManagementAccountGroups extends Component {
     }
   }
 
-  validateInlineAdd({name = ''}){
+  validateInlineAdd({name = ''}) {
     const conditions = {
       name: [
         {
@@ -136,7 +136,7 @@ class AccountManagementAccountGroups extends Component {
     return true
   }
 
-  filteredData( groupName ) {
+  filteredData(groupName) {
     return this.props.groups.filter((group) => {
       return group.get('name').toLowerCase().includes(groupName)
     })

@@ -136,7 +136,7 @@ const validateCIDRToken = (item) => {
 const renderFootprints = ({ fields, onEdit, footprintPermissions }) => (
   <ul className="footprints">
     {
-      fields.map(( footprint, index) =>
+      fields.map((footprint, index) =>
         <Field
           key={index}
           name={`${footprint}`}
@@ -239,7 +239,7 @@ const PodForm = ({
 
   const showFootprints = (UIDiscoveryMethod === 'footprints')
   const showBgp = (UIDiscoveryMethod === 'BGP')
-  const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter( fp => fp && !fp.removed || fp && fp.removed === false).length > 0
+  const hasFootprints = UIFootprints.length > 0 && UIFootprints.filter(fp => fp && !fp.removed || fp && fp.removed === false).length > 0
 
   const hasBGPRoutingDaemon = !!UIsp_bgp_router_as
 
@@ -247,7 +247,7 @@ const PodForm = ({
   const discoveryMethodChangeAllowed = showFootprints && !hasFootprints || !showFootprints && !hasBGPRoutingDaemon
 
   //Filter out footprints that have been added to UIFootprints
-  const availableFootprints = showFootprints && footprints.filter( fp => UIFootprints.filter( item => item.id === fp.id ).length === 0  )
+  const availableFootprints = showFootprints && footprints.filter(fp => UIFootprints.filter(item => item.id === fp.id).length === 0)
   const noFootprintsPlaceholder = availableFootprints.length === 0 ? intl.formatMessage({id: 'portal.network.podForm.footprintSearch.placeholder'}) : null
 
   let actionButtonTitle = edit ? <FormattedMessage id='portal.button.save' /> : <FormattedMessage id='portal.button.add' />
@@ -502,7 +502,7 @@ const PodForm = ({
               disabled={hasNodes}
               onClick={onDelete}
               tooltipId="tooltip-help"
-              tooltipMessage={{text :intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
+              tooltipMessage={{text: intl.formatMessage({id: "portal.network.podForm.delete.tooltip.message"})}}>
               <FormattedMessage id="portal.button.delete"/>
             </ButtonDisableTooltip>
           </IsAllowed>

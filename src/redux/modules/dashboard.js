@@ -28,11 +28,11 @@ export function dashboardFetchFailure(state) {
   })
 }
 
-export function dashboardStartFetch(state){
+export function dashboardStartFetch(state) {
   return state.set('fetching', true)
 }
 
-export function dashboardFinishFetch(state){
+export function dashboardFinishFetch(state) {
   return state.set('fetching', false)
 }
 
@@ -44,8 +44,8 @@ export default handleActions({
 
 // ACTIONS
 export const fetchDashboard = createAction(DASHBOARD_FETCHED, (opts, account_type) => {
-  let contributionOpts = Object.assign({}, opts, {granularity: 'day'})
-  let dashboardRequests = []
+  const contributionOpts = Object.assign({}, opts, {granularity: 'day'})
+  const dashboardRequests = []
 
   // Limit the amount of results for providers
   contributionOpts.limit = TOP_PROVIDER_LENGTH

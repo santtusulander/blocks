@@ -9,9 +9,9 @@ const alignOptions = ['left', 'right', 'center'];
  * @param {string} textAlign - one of {@link alignOptions}
  * @return {{textAlign: string}} align
  */
-const getAlignStyle = (textAlign) => alignOptions.includes(textAlign) ?
-  { textAlign } :
-  { textAlign: FormFooterButtons.defaultProps.align };
+const getAlignStyle = (textAlign) => {
+  return alignOptions.includes(textAlign) ? { textAlign } : { textAlign: FormFooterButtons.defaultProps.align }
+}
 
 /**
  * Buttons wrapper with configurable alignment

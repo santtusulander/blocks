@@ -15,7 +15,7 @@ const ButtonDropdown = ({ bsStyle, disabled, options, pullRight }) => (
       <Dropdown.Menu className="button-dropdown-menu">
         {
           // eslint-disable-next-line no-shadow
-          options.map(({disabled, value, label, handleClick}, index)=>(
+          options.map(({disabled, value, label, handleClick}, index) => (
             <MenuItem
               disabled={disabled}
               key={index}

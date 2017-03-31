@@ -151,7 +151,7 @@ class AccountManagementStorages extends Component {
       const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 
-      let origins = []
+      const origins = []
       const storageGatewayHost = storage.getIn(['gateway','hostname'])
       const originsData = properties.filter(property => {
         const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
@@ -162,7 +162,7 @@ class AccountManagementStorages extends Component {
         origins.push(origin.get('published_host_id'))
       })
 
-      let locations = []
+      const locations = []
       storage.get('clusters').forEach(clusterId => {
         const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
         if (clusterData) {
@@ -190,7 +190,7 @@ class AccountManagementStorages extends Component {
     const hiddenStorageText = numHiddenStorages ? ` (${numHiddenStorages} ${intl.formatMessage({id: 'portal.account.storage.hidden.text'})})` : ''
     const finalStorageText = sortedStorages.size + storageText + hiddenStorageText
 
-    const permissions = {modify : PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
+    const permissions = {modify: PERMISSIONS.MODIFY_STORAGE , delete: PERMISSIONS.DELETE_STORAGE}
 
     return (
       <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
@@ -346,12 +346,12 @@ function mapDispatchToProps(dispatch) {
 
   return {
     toggleModal: uiActions.toggleAccountManagementModal,
-    deleteStorage: (params) => dispatch( storageActions.remove(params)),
+    deleteStorage: (params) => dispatch(storageActions.remove(params)),
     fetchStorages: (params) => dispatch(storageActions.fetchAll(params)),
     fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
     fetchProperties: (params) => dispatch(propertyActions.fetchAll(params)),
     fetchGroupsMetrics: (groups, params) => dispatch(fetchGroupsMetrics(groups, params)),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) )
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params))
   };
 }
 

@@ -19,7 +19,7 @@ export const PAGINATION_MOCK = {
 }
 
 export const topoBase = () => {
-  switch(process.env.NODE_ENV) {
+  switch (process.env.NODE_ENV) {
     case 'development':
       return TOPO_BASE_URI_DEVELOPMENT
     case 'production':
@@ -30,7 +30,7 @@ export const topoBase = () => {
 }
 
 export const analyticsBase = ({legacy = true} = {}) => {
-  switch(process.env.NODE_ENV) {
+  switch (process.env.NODE_ENV) {
     case 'development':
       return legacy ? ANALYTICS_BASE_URI_DEVELOPMENT_LEGACY : ANALYTICS_BASE_URI_DEVELOPMENT
     case 'production':
@@ -40,10 +40,12 @@ export const analyticsBase = ({legacy = true} = {}) => {
   }
 }
 
-export const parseResponseData = response => response ? response.data : null
+export const parseResponseData = (response) => {
+  return response ? response.data : null
+}
 
 export function mapReducers(next, err) {
-  if(!next || !err) {
+  if (!next || !err) {
     throw Error('Expects next and throw functions.')
   }
   return {next, throw: err}
@@ -57,7 +59,7 @@ export function qsBuilder(params) {
 
     let param = key
 
-    if(key === 'startDate') {
+    if (key === 'startDate') {
       param = 'start'
     }
     else if (key === 'endDate') {
@@ -68,7 +70,7 @@ export function qsBuilder(params) {
   return qs.length ? '?'+qs.join('&') : ''
 }
 
-export function getDateRange( filters ) {
+export function getDateRange(filters) {
   const endDate = filters.getIn(['dateRange', 'endDate']) || moment().utc().endOf('day')
   const startDate = filters.getIn(['dateRange', 'startDate']) || moment().utc().startOf('month')
 
@@ -78,7 +80,7 @@ export function getDateRange( filters ) {
   }
 }
 
-export function getCustomDateRange( filters ) {
+export function getCustomDateRange(filters) {
   const endDate = filters.getIn(['customDateRange', 'endDate']) || moment().utc().endOf('day')
   const startDate = filters.getIn(['customDateRange', 'startDate']) || moment().utc().startOf('day')
 

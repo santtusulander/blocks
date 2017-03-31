@@ -175,7 +175,7 @@ const mapDispatchToProps = (dispatch, { params, onCancel }) => ({
 
     return dispatch(nodeActions.create({ ...params, payload: node }))
       .then(() => {
-        const showNotification = (message) => dispatch( changeNotification(message) )
+        const showNotification = (message) => dispatch(changeNotification(message))
         showNotification(<FormattedMessage id="portal.network.addNodeForm.createNode.status"/>)
         setTimeout(showNotification, 10000)
         onCancel()

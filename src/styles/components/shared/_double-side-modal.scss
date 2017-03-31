@@ -3,6 +3,7 @@
 
   & > .modal-content {
     display: flex;
+    background: none;
 
     .secondary-side-modal {
       width: 600px;
@@ -24,8 +25,16 @@
     .primary-side-modal {
       width: 700px;
 
+      .dark-theme & {
+        background-color: $dt-modal-bg-color;
+      }
+
+      .light-theme & {
+        background-color: $lt-modal-bg-color;
+      }
+
       &.disabled {
-        opacity: 0.7;
+        opacity: 0.5;
       }
 
       .modal-footer {

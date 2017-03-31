@@ -25,6 +25,7 @@ import {
 } from '../../../redux/modules/entities/locations/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getByPop as getPodsByPop } from '../../../redux/modules/entities/pods/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -42,11 +43,11 @@ class PopFormContainer extends Component {
     super(props)
     this.notificationTimeout = null
     this.state = {
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const {brand, accountId, groupId, networkId, popId} = this.props
 
     // If editing => fetch data from API
@@ -60,7 +61,7 @@ class PopFormContainer extends Component {
     this.props.fetchServiceInfo()
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     const {brand, accountId, groupId, networkId} = nextProps
 
     // If editing => fetch data from API
@@ -118,7 +119,7 @@ class PopFormContainer extends Component {
     const save = edit ? this.props.onUpdate : this.props.onCreate
 
     return save(params)
-      .then( () => {
+      .then(() => {
 
         const message = edit ? <FormattedMessage id="portal.network.popEditForm.updatePop.status"/> :
          <FormattedMessage id="portal.network.popEditForm.createPop.status"/>
@@ -256,7 +257,7 @@ const formSelector = formValueSelector(POP_FORM_NAME)
 
 const mapStateToProps = (state, ownProps) => {
   const edit = !!ownProps.popId
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const popReduxId = buildReduxId(ownProps.groupId, ownProps.networkId, ownProps.popId)
@@ -302,19 +303,19 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( popActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( popActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( popActions.remove(params)),
+    onCreate: (params, data) => dispatch(popActions.create({...params, data })),
+    onUpdate: (params, data) => dispatch(popActions.update({...params, data })),
+    onDelete: (params) => dispatch(popActions.remove(params)),
 
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPop: (params) => dispatch( popActions.fetchOne(params) ),
-    fetchPods: (params) => dispatch( podActions.fetchAll(params) ),
-    fetchLocations: (params) => dispatch( locationActions.fetchAll(params) ),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() ),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
+    fetchPop: (params) => dispatch(popActions.fetchOne(params)),
+    fetchPods: (params) => dispatch(podActions.fetchAll(params)),
+    fetchLocations: (params) => dispatch(locationActions.fetchAll(params)),
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll()),
 
-    showNotification: (message) => dispatch( changeNotification(message) )
+    showNotification: (message) => dispatch(changeNotification(message))
   }
 }
 

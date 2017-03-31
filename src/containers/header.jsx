@@ -43,7 +43,7 @@ class Header extends React.Component {
     } = this.props
 
     let className = 'header'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
 

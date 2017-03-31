@@ -20,7 +20,7 @@ class AnalyticsTabFileError extends React.Component {
     )
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (changedParamsFiltersQS(this.props, nextProps) ||
         this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
         this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes') ||
@@ -39,8 +39,8 @@ class AnalyticsTabFileError extends React.Component {
     this.props.filterActions.resetErrorFilters()
   }
 
-  fetchData(params, filters, location, hostConfiguredName){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, location, hostConfiguredName) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })
@@ -49,8 +49,8 @@ class AnalyticsTabFileError extends React.Component {
     this.props.reportsActions.fetchFileErrorsMetrics(fetchOpts)
   }
 
-  render(){
-    if ( this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0 ) return (
+  render() {
+    if (this.props.fileErrorSummary.count() === 0 || this.props.fileErrorURLs.count() === 0) return (
       <FormattedMessage id="portal.analytics.fileErrors.noData.text" />
     )
 

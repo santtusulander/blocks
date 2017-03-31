@@ -50,17 +50,17 @@ const validate = fields => {
     refresh: [
       {
         condition: !isInt(refresh),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.refresh.text"/>
       },
       {
         condition: !(parseInt(refresh) >= 0),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.minRefresh.text" values={{minRefresh}}/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.minRefresh.text" values={{minRefresh}}/>
       }
     ],
     ttl: [
       {
         condition: !isInt(ttl),
-        errorText:<FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
+        errorText: <FormattedMessage id="portal.accountManagement.dns.form.validation.ttl.text"/>
       },
       {
         condition: parseInt(ttl) > maxTtl,
@@ -74,7 +74,7 @@ const validate = fields => {
     negative_ttl: [
       {
         condition: isNaN(negative_ttl),
-        errorText:<FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
+        errorText: <FormattedMessage id="portal.account.domainForm.validation.negativeTtl.text"/>
       },
       {
         condition: parseInt(negative_ttl) > maxTtl,

@@ -17,6 +17,7 @@ import { buildReduxId } from '../../../redux/util'
 import { getById as getNetworkById } from '../../../redux/modules/entities/networks/selectors'
 import { getById as getPopById } from '../../../redux/modules/entities/pops/selectors'
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -38,7 +39,7 @@ const getSubtitle = (state, params) => {
   const pop = getPopById(state, buildReduxId(params.group, params.network, params.pop))
 
   // const group = getGroupById(state, params.group)
-  // eslint-disable-next-line 
+  // eslint-disable-next-line
   const group = state.group.get('allGroups').find(group => group.get('id') == params.group)
   const network = getNetworkById(state, buildReduxId(params.group, params.network))
 
@@ -76,7 +77,7 @@ class EditNodeFormContainer extends React.Component {
     if (hasMultipleNodes) {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
-        for (let dateProp in dateLists) {
+        for (const dateProp in dateLists) {
           dateLists[dateProp].push(<tr key={i}><td>{node.id}</td><td>{formatUnixTimestamp(node[dateProp], NETWORK_DATE_FORMAT)}</td></tr>)
         }
       }
@@ -199,11 +200,11 @@ const mapStateToProps = (state, { nodeIds, params }) => {
   })
   const nodeValues = getNodeValues(nodes)
 
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const initialValues = {}
-  for (let field in nodeValues) {
+  for (const field in nodeValues) {
     const value = nodeValues[field]
     initialValues[field] = value === MULTIPLE_VALUE_INDICATOR ? null : value
   }
