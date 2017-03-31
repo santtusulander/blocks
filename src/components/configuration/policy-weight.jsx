@@ -52,7 +52,7 @@ class PolicyWeight extends Component {
             step={(max - min) / steps}
             style={{'backgroundSize': `${(this.state.value - min) * 100 / (max - min)}% 100%`}}
             onChange={this.handleChange}
-            onMouseUp={this.handleChange} //we need this event because IE doesn't handle onChange
+            onMouseUp={this.handleChange} // UDNP-3210/UDNP-3211 | we need this event because IE doesn't handle onChange
           />
           <div className="ruler">
             {ticks(steps)}
