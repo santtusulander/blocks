@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { showInfoDialog, hideInfoDialog } from '../../../redux/modules/ui'
 
+// eslint-disable-next-line no-shadow
 const FilterOnOffNet = ({ toggleFilter, onOffNetValues, hideInfoDialog, showInfoDialog }) => {
   const toggle = type => () => {
     // TODO: Maybe some general error messaging box?

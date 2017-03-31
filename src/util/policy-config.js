@@ -1,5 +1,6 @@
+import React from 'react'
 import Immutable, { fromJS, List } from 'immutable'
-
+import { FormattedMessage } from 'react-intl'
 import { flatten } from '../util/helpers'
 import {
   POLICY_TYPES
@@ -48,6 +49,32 @@ export function getMatchFilterType(item) {
   return item.get('type')
 }
 
+/* eslint-disable react/display-name */
+export function getConditionFilterText(match) {
+  switch(match.filterType) {
+    case 'exists':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.exists.text"/>
+    case 'does_not_exist':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntExist.text"/>
+    case 'contains':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.contains.text" values={match}/>
+    case 'does_not_contain':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntContain.text" values={match}/>
+    case 'in':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.from.text"/>
+    case 'not_in':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.notFrom.text"/>
+    case 'equals':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.equals.text"/>
+    case 'does_not_equal':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEqual.text"/>
+    case 'empty':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.empty.text"/>
+    case 'does_not_empty':
+      return <FormattedMessage id="portal.policy.edit.rule.matcher.doesntEmpty.text"/>
+  }
+}
+
 export function policyContainsMatchField(policy, field, count) {
   const matches = fromJS(policy.matches)
   return matches.filter(match => match.get('field') === field).count() === count
@@ -63,13 +90,13 @@ export function matchIsFileExtension(match) {
           && FILE_EXTENSION_REGEXP.test(match.get('value')))
 }
 
-export function actionIsTokenAuth(sets) {
-  return sets.some( set => (set.setkey === 'tokenauth') )
+export function filterActionIsTokenAuth(sets) {
+  return sets.filter( set => (set.setkey === 'tokenauth') )
 }
 
 const parseConditions = (items, path) => {
   return items ? items.map((item, i) => {
-    const value = item.get('value').size >= 0 ? item.get('value').toJS() : item.get('value')
+    const value = (item.get('value') && item.get('value').size >= 0) ? item.get('value').toJS() : item.get('value')
 
     return {
       field: item.get('field'),
@@ -97,10 +124,12 @@ const parseActions = (items, path) => {
 export function parsePolicy(rule, path) {
   const conditions = rule ? rule.get('rule_body').get('conditions') : Immutable.List()
   const actions = rule ? rule.get('rule_body').get('actions') : Immutable.List()
+  const else_actions = rule ? rule.get('rule_body').get('else_actions') : Immutable.List()
 
   return  {
     matches: parseConditions(conditions, path.concat(['rule_body', 'conditions'])),
-    sets: parseActions(actions, path.concat(['rule_body', 'actions']))
+    sets: parseActions(actions, path.concat(['rule_body', 'actions'])),
+    default_sets: parseActions(else_actions, path.concat(['rule_body', 'else_actions']))
   }
 }
 
@@ -163,26 +192,32 @@ export const getActiveConfiguration = (property) => {
  */
 export const getTokenAuthRules = (properties) => {
   let tokenAuthRules = []
+
   for( let key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach( (rule, key) => {
-      const {sets} = parsePolicy(fromJS(rule), [])
-      if ( actionIsTokenAuth( sets ) ) {
-        const tokenAuthConfig = fromJS(rule).getIn(sets[0].path).toJS()
-        const returnObj = {
-          ruleId: key,
-          propertyName: property.published_host_id,
-          type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
-          accountId: property.accountId,
-          groupId: property.groupId,
-          encryption: tokenAuthConfig.encryption,
-          streaming_encryption: tokenAuthConfig.streaming_encryption,
-          schema: tokenAuthConfig.schema,
-          created: config.config_created
-        }
-        tokenAuthRules.push(returnObj)
+    config && config.request_policy.policy_rules.forEach( (rule, request_policy_key) => {
+      const { sets, default_sets } = parsePolicy(fromJS(rule), [])
+      const tokenAuthActions = filterActionIsTokenAuth( sets.concat(default_sets) )
+
+      if (tokenAuthActions.length) {
+        tokenAuthActions.forEach(set => {
+          const tokenAuthConfig = fromJS(rule).getIn(set.path.concat('tokenauth')).toJS()
+          const returnObj = {
+            ruleId: request_policy_key,
+            propertyName: property.published_host_id,
+            type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
+            accountId: property.accountId,
+            groupId: property.groupId,
+            encryption: tokenAuthConfig.encryption,
+            streaming_encryption: tokenAuthConfig.streaming_encryption,
+            schema: tokenAuthConfig.schema,
+            created: config.config_created
+          }
+
+          tokenAuthRules.push(returnObj)
+        })
       }
     })
   }

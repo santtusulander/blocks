@@ -111,6 +111,13 @@ const storageMetrics =
     [actionTypes.FAIL] : failEntity
   }, Map({ comparisonData: Map(), data: Map(), groupsData: List() }))
 
+const roles =
+  handleActions({
+    [actionTypes.RECEIVE] : receiveEntity({ key: 'roles' }),
+    [actionTypes.FAIL] : failEntity
+  }, Map())
+
+
 export default combineReducers({
   accounts,
   nodes,
@@ -126,5 +133,6 @@ export default combineReducers({
   locations,
   footprints,
   storageMetrics,
+  roles,
   fetching: mapActionsToFetchingReducers({ ...actionTypes, ...metricsActionTypes })
 })

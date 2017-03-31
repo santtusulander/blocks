@@ -219,8 +219,8 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !isNaN(int) &&
-         parseInt(Number(int)) == int &&
+  // eslint-disable-next-line eqeqeq
+  return !isNaN(int) && parseInt(Number(int)) == int &&
          !isNaN(parseInt(int, 10));
 }
 
@@ -263,6 +263,7 @@ export function isValidASN(asn) {
 
   if (asn >= ASN_MIN && asn <= ASN_MAX) {
     isValid = true
+    // eslint-disable-next-line eqeqeq
     if (asn == ASN_RESERVED || (asn >= ASN_RESERVED_RANGE_START && asn <= ASN_RESERVED_RANGE_END)) {
       isValid = false
     }

@@ -17,7 +17,7 @@ const RecordForm = ({ type, submitting, domain, edit, onSubmit, cancel, handleSu
       <Field
         name="type"
         disabled={edit}
-        options={recordTypes.map(type => [type, type])}
+        options={recordTypes.map(recType => [recType, recType])}
         component={FormGroupSelect}
         label={<FormattedMessage id="portal.account.recordForm.selectRecordType.label"/>}/>
       {shouldShowField('name') &&

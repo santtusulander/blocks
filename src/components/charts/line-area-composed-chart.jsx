@@ -35,7 +35,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
   }
-  
+
   return (
     <div className="line-area-composed-chart-container">
       <span id="line-area-composed-chart-label" className="line-area-composed-chart-label">
@@ -71,7 +71,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             { !isMiniChart &&
               <XAxis dataKey='timestamp'
                      ticks={getTicks(data)}
-                     tickFormatter={(val)=>formatUnixTimestamp(val, dateFormat)}
+                     tickFormatter={(val) => formatUnixTimestamp(val, dateFormat)}
                      tickLine={false}
                      tick={{ transform: 'translate(0, 20)' }}
                      axisLine={false}

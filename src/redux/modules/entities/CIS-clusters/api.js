@@ -17,9 +17,9 @@ const clusterSchema = new schema.Entity('clusters', {},{
  * Fetch list of Clusters (Locations)
  * @return {Object} normalzed list of clusters
  */
-export const fetchAll = ({}) => {
+export const fetchAll = () => {
   return axios.get(baseUrl())
-  .then( ({data}) => {
+  .then(({data}) => {
     return normalize(data, [ clusterSchema ])
   })
 }

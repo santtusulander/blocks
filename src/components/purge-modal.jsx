@@ -48,11 +48,11 @@ class PurgeModal extends React.Component {
       type: type,
       invalid: true
     })
-    if (type == 'url' || type == 'directory') {
+    if (type === 'url' || type === 'directory') {
       this.props.changePurge(this.props.activePurge.delete('published_hosts').set('objects', Immutable.List()).set('published_host_id', this.props.activeHost.get('published_host_id')))
-    } else if (type == 'hostname') {
+    } else if (type === 'hostname') {
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', Immutable.List()))
-    } else if (type == 'group') {
+    } else if (type === 'group') {
       this.setState({invalid: false})
       const allHostIds = this.props.allHosts.isEmpty() ? this.props.allHosts : this.props.allHosts.map(host => host.get('published_host_id'))
       this.props.changePurge(this.props.activePurge.delete('published_host_id').set('objects', Immutable.List(['/*'])).set('published_hosts', allHostIds))

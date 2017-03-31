@@ -14,7 +14,7 @@ import {
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
-
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import * as accountActionCreators from '../../redux/modules/account'
 
@@ -170,7 +170,7 @@ Brand.propTypes = {
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
@@ -180,11 +180,11 @@ Brand.propTypes = {
 }
 
 Brand.defaultProps = {
-  Brand: List(),
+  accounts: List(),
   activeAccount: Map(),
   dailyTraffic: List(),
   metrics: List(),
-  roles: List(),
+  roles: Map(),
   user: Map()
 }
 
@@ -196,7 +196,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),

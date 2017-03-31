@@ -63,11 +63,13 @@ class AccountManagementStorages extends Component {
     const accountId = account.get('id')
     const metricsStartDate = moment.utc().subtract(STORAGE_METRICS_SHIFT_TIME, 'hours').unix()
 
-    this.props.groups.map( group => {
+    this.props.groups.map(group => {
       const groupId = group.get('id')
 
       this.props.fetchStorages({ brand: brandId, account: accountId, group: groupId })
       this.props.fetchProperties({ brand: brandId, account: accountId, group: groupId })
+
+      return false
     })
 
     if (this.props.params.group) {
@@ -145,6 +147,7 @@ class AccountManagementStorages extends Component {
 
     const storagesFullData = storages.map(storage => {
       const storageGroupId = storage.get('parentId')
+      // eslint-disable-next-line eqeqeq
       const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 

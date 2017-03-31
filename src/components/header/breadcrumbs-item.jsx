@@ -173,6 +173,7 @@ class BreadcrumbsItem extends React.Component {
       }
 
       // Link to Group
+      // eslint-disable-next-line eqeqeq
       if (params.group && (activeGroup && (activeGroup.get('id') == params.group))) {
         links.push({
           label: activeGroup.get('name'),
@@ -210,7 +211,7 @@ BreadcrumbsItem.propTypes = {
   activeGroup: React.PropTypes.instanceOf(Immutable.Map),
   params: PropTypes.object,
   pathname: PropTypes.string,
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   user: PropTypes.instanceOf(Immutable.Map)
 }

@@ -4,13 +4,15 @@ import * as PERMISSIONS from '../constants/permissions'
 import { MEDIA_DELIVERY_SECURITY } from '../constants/service-permissions'
 import checkPermissions from './permissions'
 
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
+
 const authSelector = state => state.user.get('currentUser')
 const permissionChecker = (permission, store) => user => {
   if(!permission) {
     return true
   }
   return checkPermissions(
-    store.getState().roles.get('roles'),
+    getRoles( store.getState() ),
     user,
     permission
   )
@@ -82,7 +84,7 @@ export const UserCanViewAnalyticsTab = (permission, store, allTabs) => {
     failureRedirectPath: (state, ownProps) => {
       const fallback = allTabs.find(([perm]) => {
         return checkPermissions(
-          store.getState().roles.get('roles'),
+          getRoles(state),
           state.user.get('currentUser'),
           perm
         )

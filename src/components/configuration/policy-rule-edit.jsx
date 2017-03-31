@@ -6,7 +6,7 @@ import ActionButtons from '../action-buttons'
 import IconAdd from '../icons/icon-add.jsx'
 import TruncatedTitle from '../truncated-title'
 
-import { parsePolicy } from '../../util/policy-config'
+import { parsePolicy, getConditionFilterText } from '../../util/policy-config'
 import Select from '../select'
 import {
   POLICY_TYPES,
@@ -41,6 +41,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     this.activateSet = this.activateSet.bind(this)
     this.submitForm = this.submitForm.bind(this)
     this.renderConditionName = this.renderConditionName.bind(this)
+    this.renderActions = this.renderActions.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,11 +72,10 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     }
   }
 
-  addAction() {
+  addAction(path) {
     return e => {
       e.preventDefault()
 
-      const path = ['rule_body', 'actions']
       const newIndex = this.props.rule.getIn(path, Immutable.List()).size
       const newPath = this.props.rulePath.concat(path, [newIndex])
       const actions = this.props.config.getIn(this.props.rulePath.concat(path), Immutable.List()).push(Immutable.Map({_temp: true}))
@@ -175,6 +175,40 @@ class ConfigurationPolicyRuleEdit extends React.Component {
     )
   }
 
+  renderActions(actions) {
+    return (
+      <div className="conditions">
+        {actions.map((set, i) => {
+          let active = false
+          if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
+            active = true
+          }
+          return (
+            <div key={i}
+              className={active ? 'condition clearfix active' : 'condition clearfix'}
+              onClick={this.activateSet(set.path)}>
+              <Col xs={8}>
+                <p>{i + 1} {set.name}</p>
+              </Col>
+              <Col xs={4} className="text-right">
+                <ActionButtons
+                  className="secondary"
+                  onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
+                  arrowUpDisabled={i <= 0}
+                  onArrowDown={i < actions.length - 1 ?
+                    this.moveSet(set.path, i+1) : () => false}
+                  arrowDownDisabled={i >= actions.length - 1}
+                  onDelete={this.deleteSet(set.path)}
+                  deleteDisabled={actions.length === 1}
+                />
+              </Col>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   render() {
     const ModalTitle = this.props.isEditingRule ? 'portal.policy.edit.editRule.editPolicy.text' : 'portal.policy.edit.editRule.addPolicy.text';
     const flattenedPolicy = parsePolicy(this.props.rule, this.props.rulePath)
@@ -242,37 +276,6 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               if(Immutable.fromJS(match.path).equals(this.props.activeMatchPath)) {
                 active = true
               }
-              let filterText = ''
-              if(match.filterType === 'exists') {
-                filterText = 'Exists'
-              }
-              else if(match.filterType === 'does_not_exist') {
-                filterText = 'Does not exist'
-              }
-              else if(match.filterType === 'contains') {
-                filterText = `Contains: ${match.values}`
-              }
-              else if(match.filterType === 'does_not_contain') {
-                filterText = `Does not contain: ${match.values}`
-              }
-              else if(match.filterType === 'in') {
-                filterText = 'Users from'
-              }
-              else if(match.filterType === 'not_in') {
-                filterText = 'Users not from'
-              }
-              else if(match.filterType === 'equals') {
-                filterText = `Equals`
-              }
-              else if(match.filterType === 'does_not_equal') {
-                filterText = `Does not equal`
-              }
-              else if(match.filterType === 'empty') {
-                filterText = `Is empty`
-              }
-              else if(match.filterType === 'does_not_empty') {
-                filterText = `Is not empty`
-              }
 
               return (
                 <div key={i}
@@ -286,7 +289,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
                   </Col>
                   <Col xs={3}>
                     <p>
-                      {filterText}
+                      {getConditionFilterText(match)}
                     </p>
                   </Col>
                   <Col xs={2} className="text-right">
@@ -308,42 +311,29 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               <Button
                 bsStyle="primary"
                 className="btn-icon btn-add-new"
-                onClick={this.addAction(flattenedPolicy.matches[0])}
+                onClick={this.addAction(['rule_body', 'actions'])}
               >
                 <IconAdd />
               </Button>
             </Col>
           </Row>
+          {this.renderActions(flattenedPolicy.sets)}
 
-          <div className="conditions">
-            {flattenedPolicy.sets.map((set, i) => {
-              let active = false
-              if(Immutable.fromJS(set.path).equals(this.props.activeSetPath)) {
-                active = true
-              }
-              return (
-                <div key={i}
-                  className={active ? 'condition clearfix active' : 'condition clearfix'}
-                  onClick={this.activateSet(set.path)}>
-                  <Col xs={8}>
-                    <p>{i + 1} {set.name}</p>
-                  </Col>
-                  <Col xs={4} className="text-right">
-                    <ActionButtons
-                      className="secondary"
-                      onArrowUp={i > 0 ? this.moveSet(set.path, i-1) : () => false}
-                      arrowUpDisabled={i <= 0}
-                      onArrowDown={i < flattenedPolicy.sets.length - 1 ?
-                        this.moveSet(set.path, i+1) : () => false}
-                      arrowDownDisabled={i >= flattenedPolicy.sets.length - 1}
-                      onDelete={this.deleteSet(set.path)}
-                      deleteDisabled={flattenedPolicy.sets.length === 1 && flattenedPolicy.matches.length > 0}
-                    />
-                  </Col>
-                </div>
-              )
-            })}
-          </div>
+          <Row className="header-btn-row">
+            <Col xs={8}>
+              <h3><FormattedMessage id="portal.policy.edit.editRule.defaultActions.text"/></h3>
+            </Col>
+            <Col xs={4} className="text-right">
+              <Button
+                bsStyle="primary"
+                className="btn-icon btn-add-new"
+                onClick={this.addAction(['rule_body', 'else_actions'])}
+              >
+                <IconAdd />
+              </Button>
+            </Col>
+          </Row>
+          {this.renderActions(flattenedPolicy.default_sets)}
 
           <FormGroup>
             <ControlLabel>

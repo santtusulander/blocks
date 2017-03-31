@@ -12,6 +12,8 @@ import {
   getTotalTraffics
 } from '../../redux/modules/entities/properties/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { isTrialHost } from '../../util/helpers'
 import { getAnalyticsUrlFromParams, getContentUrl } from '../../util/routes.js'
 
@@ -34,7 +36,7 @@ const PropertyItemContainer = props => {
   let trafficMin = Math.min(...totalTraffics)
   let trafficMax = Math.max(...totalTraffics)
 
-  trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+  trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
   const rangeMin = 400
   const rangeMax = 500
@@ -144,7 +146,7 @@ const makeMapStateToProps = () => {
       dailyTraffic: getPropertyDailyTrafficById(state, propertyId),
       totalTraffics: getTotalTraffics(state),
       user: state.user,
-      roles: state.roles
+      roles: getRoles(state)
     }
   }
 

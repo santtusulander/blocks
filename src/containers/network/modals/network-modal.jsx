@@ -124,7 +124,7 @@ class NetworkFormContainer extends React.Component {
     return this.props.onDelete(params)
       .then(() => {
         // Unselect network item
-        if (this.props.selectedEntityId == this.networkId) {
+        if (this.props.selectedEntityId === this.networkId) {
           this.props.handleSelectedEntity(this.networkId)
         }
         this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)

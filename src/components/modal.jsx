@@ -61,7 +61,10 @@ class ModalWindow extends React.Component {
                 label={<FormattedMessage id="portal.deleteModal.validation.label" />}
                 name="modalField"
                 required={false}
-                inputRef={ref => this.deleteInput = ref}
+                inputRef={(ref) => {
+                  this.deleteInput = ref
+                  return this.deleteInput
+                }}
                 placeholder={intl.formatMessage({id: 'portal.deleteModal.validation.placeholder'})}
                 component={FieldFormGroup}/>
             }
@@ -190,7 +193,9 @@ ModalWindow.propTypes = {
   ...reduxFormPropTypes
 }
 
-ModalWindow.defaultProps = { onSubmit() {} }
+ModalWindow.defaultProps = {onSubmit() {
+  // no-op
+}}
 
 export default reduxForm({
   form: 'ModalWindow',

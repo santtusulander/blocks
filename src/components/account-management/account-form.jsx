@@ -59,7 +59,7 @@ class AccountForm extends React.Component {
     // previosly configured account type, we need to clear them manually.
 
     if (nextProps.accountType && (!nextProps.account)) {
-      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+      if (JSON.stringify(this.props.serviceOptions) !== JSON.stringify(nextProps.serviceOptions)) {
         this.props.change('accountServices', [])
       }
     }

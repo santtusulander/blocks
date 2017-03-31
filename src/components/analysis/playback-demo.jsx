@@ -105,7 +105,7 @@ export class PlaybackDemo extends React.Component {
         this.setState({droppedFrames: data.totalDroppedFrames})
       });
       this.state.hls.on(Hls.Events.ERROR, (event, data) => {
-        if(data.type == "mediaError" && data.details === "bufferStalledError") {
+        if (data.type === "mediaError" && data.details === "bufferStalledError") {
           this.setState({bufferErrors: this.state.bufferErrors + 1})
         }
       });

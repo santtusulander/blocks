@@ -62,6 +62,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_header':
         activeEditForm = (
           <ConfigurationMatcher
+            hasExists={true}
             hasContains={true}
             hasEquals={true}
             hasEmpty={true}

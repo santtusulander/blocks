@@ -75,7 +75,9 @@ SupportTicketPanel.defaultProps = {
   assignee: 'Pending',
   priority: 'normal',
   status: 'open',
-  openTicket: () => {}
+  openTicket: () => {
+    // no-op
+  }
 }
 
 SupportTicketPanel.propTypes = {

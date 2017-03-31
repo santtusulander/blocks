@@ -102,17 +102,17 @@ class AccountManagementSystemDNS extends Component {
     const domainHeaderProps = {
       activeDomain,
       changeActiveDomain: value => changeActiveDomain(value),
-      onEditDomain: (activeDomain) => {
+      onEditDomain: (activeDomainToEdit) => {
         this.editingDomain = true
-        fetchDomain('udn', activeDomain)
+        fetchDomain('udn', activeDomainToEdit)
           .then(() => toggleModal(DNS_DOMAIN_EDIT))
       },
       onAddDomain: () => {
         this.editingDomain = false
         toggleModal(DNS_DOMAIN_EDIT)
       },
-      onDeleteDomain: (activeDomain) => {
-        this.showDeleteModal(activeDomain)
+      onDeleteDomain: (activeDomainToDelete) => {
+        this.showDeleteModal(activeDomainToDelete)
       },
       domains: domains && domains.filter(domain => domain.id.includes(domainSearch)),
       emptyDomainsTxt: loadingDomains ? 'portal.loading.text' : 'portal.account.manage.system.empty.domain',
