@@ -157,7 +157,7 @@ class UserEditForm extends React.Component {
   }
 
   tfaMethodOptions() {
-    let tfaOptions = []
+    const tfaOptions = []
 
     TWO_FA_METHODS_OPTIONS.forEach((option) => {
       tfaOptions.push({

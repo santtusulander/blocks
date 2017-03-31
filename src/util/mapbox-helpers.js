@@ -13,7 +13,7 @@ export const calculateMedian = (values) => {
 
   values.sort( function(a,b) {return a - b;} );
 
-  let half = Math.floor(values.length/2);
+  const half = Math.floor(values.length/2);
 
   if(values.length % 2)
     return values[half];

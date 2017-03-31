@@ -94,7 +94,7 @@ export const getAggregatedEstimatesByGroup = (state, groupId) => {
  */
 export const getByGroups = (state, groups) => {
   if (groups && groups.size > 0) {
-    let storages = []
+    const storages = []
     groups.forEach(group => {
       const groupStorages = getByGroup(state, group.get('id'))
       groupStorages.forEach( storage => {

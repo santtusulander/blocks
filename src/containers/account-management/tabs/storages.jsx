@@ -151,7 +151,7 @@ class AccountManagementStorages extends Component {
       const storageGroup = groups.find(group => (group.get('id') == storageGroupId))
       const groupName = storageGroup && storageGroup.get('name')
 
-      let origins = []
+      const origins = []
       const storageGatewayHost = storage.getIn(['gateway','hostname'])
       const originsData = properties.filter(property => {
         const propertyEdgeConfig = property.getIn(['services', 0, 'configurations', 0, 'edge_configuration'])
@@ -162,7 +162,7 @@ class AccountManagementStorages extends Component {
         origins.push(origin.get('published_host_id'))
       })
 
-      let locations = []
+      const locations = []
       storage.get('clusters').forEach(clusterId => {
         const clusterData = clusters.find((cluster) => (cluster.get('name') === clusterId))
         if (clusterData) {

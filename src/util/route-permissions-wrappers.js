@@ -123,7 +123,7 @@ export const UserCanViewHosts = (store) => {
   return UserAuthWrapper({
     authSelector: authSelector,
     failureRedirectPath: (state, ownProps) => {
-      let path = ownProps.location.pathname.replace(/\/$/, '')
+      const path = ownProps.location.pathname.replace(/\/$/, '')
       return path.substr(0, path.lastIndexOf('/'))
     },
     wrapperDisplayName: 'UserCanViewHosts',

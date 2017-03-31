@@ -316,7 +316,7 @@ export class AccountManagementAccountUsers extends React.Component {
     })
     const sortedUsers = getSortData(searchedUsers, this.state.sortBy, this.state.sortDir)
 
-    let roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
+    const roleOptions = this.getRoleOptions(ROLES_MAPPING, this.props)
     roleOptions.unshift(['all', 'All Roles'])
 
     const groupOptions = this.props.groups.map(group => [

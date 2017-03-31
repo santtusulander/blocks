@@ -274,7 +274,7 @@ export const fetchOnOffNetToday = createAction(TRAFFIC_ON_OFF_NET_TODAY_FETCHED,
 })
 
 export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETCHED, (opts) => {
-  let data = {}
+  const data = {}
   let totals = {}
   return axios.get(`${analyticsBase()}/traffic/sp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
@@ -298,7 +298,7 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
     return ({
       totals: totals,
       details: resp.map(resp => {
-        let name = resp.data.name || `ID: ${resp.data.id}`
+        const name = resp.data.name || `ID: ${resp.data.id}`
         return Object.assign({}, data[resp.data.id], {name: name})
       })
     })
@@ -306,7 +306,7 @@ export const fetchServiceProviders = createAction(TRAFFIC_SERVICE_PROVIDERS_FETC
 })
 
 export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETCHED, (opts) => {
-  let data = {}
+  const data = {}
   let totals = {}
   return axios.get(`${analyticsBase()}/traffic/cp-contribution${qsBuilder(opts)}`)
   .then(parseResponseData)
@@ -330,7 +330,7 @@ export const fetchContentProviders = createAction(TRAFFIC_CONTENT_PROVIDERS_FETC
     return ({
       totals: totals,
       details: resp.map(resp => {
-        let name = resp.data.name || `ID: ${resp.data.id}`
+        const name = resp.data.name || `ID: ${resp.data.id}`
         return Object.assign({}, data[resp.data.id], {name: name})
       })
     })

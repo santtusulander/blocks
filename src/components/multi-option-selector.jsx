@@ -51,7 +51,7 @@ class MultiOptionSelector extends React.Component {
   }
 
   togglePanel(panel) {
-    let openPanels = this.state.openPanels
+    const openPanels = this.state.openPanels
     const index = openPanels.indexOf(panel)
     if (index === -1) {
       openPanels.push(panel)

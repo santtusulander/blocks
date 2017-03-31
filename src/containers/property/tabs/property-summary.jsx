@@ -126,7 +126,7 @@ class PropertySummary extends React.Component {
   }
 
   getEmptyHourlyTraffic(startDate, endDate) {
-    let hourlyTraffic = [];
+    const hourlyTraffic = [];
     for (let t = startDate.clone(); t < endDate; t = t.add(1, 'h')) {
       hourlyTraffic.push({
         bits_per_second: 0,

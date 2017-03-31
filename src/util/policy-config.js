@@ -191,9 +191,9 @@ export const getActiveConfiguration = (property) => {
  * @return [Array] of token auth rules
  */
 export const getTokenAuthRules = (properties) => {
-  let tokenAuthRules = []
+  const tokenAuthRules = []
 
-  for( let key in properties) {
+  for( const key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 

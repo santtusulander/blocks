@@ -325,7 +325,8 @@ export const withPagination = (WrappedComponent, config = {}) => {
      * @returns {{offset, page_size, sort_by, sort_order, filter_by, filter_value}}
      */
     getQueryParams(params = this.props) {
-      let { offset, page_size, sort_by, sort_order, filter_by, filter_value, fields } = params;
+      let { offset, sort_by, sort_order, filter_by, filter_value, fields } = params;
+      const { page_size } = params
 
       if (!filter_by || !filter_value) {
         filter_by = null;
