@@ -38,13 +38,22 @@ export const generateTokenHash = (method, key, string) => {
   }
 }
 
-export const generateFinalURL = (url = STATIC_TOKEN_SAMPLE_VALUES.URL, token, args) => {
+export const generateFinalURL = (url = STATIC_TOKEN_SAMPLE_VALUES.URL, token, queryArguments) => {
   let finalURL = url
   if (finalURL.indexOf('http') !== 0) {
     finalURL = `http://${finalURL}`
   }
   finalURL = `${finalURL}?token=${token}`
-  return args.reduce((finalURL, arg) => (
-    `${finalURL}&${arg.label}=${arg.value}`
+  return queryArguments.reduce((finalURL, argument) => (
+    `${finalURL}&${argument}`
   ), finalURL)
+}
+
+export const getQueryArguments = (schema, values) => {
+  let queryArguments = []
+  if (schema.indexOf('EXPIRES') > -1) {
+    queryArguments.push(`expires=${values.EXPIRES}`)
+  }
+  queryArguments.push('mode=fullscreen')
+  return queryArguments
 }

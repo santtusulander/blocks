@@ -211,7 +211,7 @@ export class TokenAuth extends React.Component {
     const tableRows = generateStaticTokenTableData(schema, { ...tokenValues, EXPIRES: moment(tokenValues.EXPIRES).utc() })
     const tokenData = generateTokenData(schema, tokenValues)
     const tokenHash = generateTokenHash(encryption, sharedKey, tokenData)
-    const finalURL = generateFinalURL(undefined, tokenHash, [])
+    const finalURL = generateFinalURL(undefined, tokenHash, getQueryArguments(schema, tokenValues))
 
     return (
       <Table striped={true} className="fixed-layout">
