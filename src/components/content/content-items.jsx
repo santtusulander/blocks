@@ -260,7 +260,9 @@ class ContentItems extends React.Component {
           break
         case ACCOUNT_TYPE_SERVICE_PROVIDER:
           tagText = 'portal.content.serviceProvider'
-        default: break
+          break
+        default:
+          break
       }
     }
     return { tagText: tagText }
