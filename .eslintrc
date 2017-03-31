@@ -128,7 +128,7 @@
     "no-use-before-define": 0,
     "no-useless-call": 0,
     "no-void": 0,
-    "no-var": 0,
+    "no-var": 2,
     "no-warning-comments": [0, { "terms": ["todo", "fixme", "xxx"], "location": "start" }],
     "no-with": 0,
     "no-unsafe-finally": 2,
