@@ -20,7 +20,7 @@ import { ENCRYPTION_OPTIONS, SCHEMA_DEFAULT, ENCRYPTION_DEFAULT, TA_TYPE_DEFAULT
 import { VOD_STREAMING_TOKEN_AUTH } from '../../../constants/service-permissions'
 
 const validate = ({ shared_key }) => {
-  let errors = {}
+  const errors = {}
 
   if (!shared_key) {
     errors.shared_key = <FormattedMessage id="portal.policy.edit.tokenauth.shared_key.required.error" />

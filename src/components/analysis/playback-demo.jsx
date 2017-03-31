@@ -37,7 +37,7 @@ export class PlaybackDemo extends React.Component {
     window.addEventListener('resize', this.measureContainers)
   }
   componentWillUpdate(nextProps) {
-    if(nextProps.activeVideo !== this.props.activeVideo) {
+    if (nextProps.activeVideo !== this.props.activeVideo) {
       this.setState({
         bitrates: Immutable.List(),
         bufferErrors: 0,
@@ -51,7 +51,7 @@ export class PlaybackDemo extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if(prevProps.activeVideo !== this.props.activeVideo) {
+    if (prevProps.activeVideo !== this.props.activeVideo) {
       this.playVideo()
     }
   }
@@ -66,7 +66,7 @@ export class PlaybackDemo extends React.Component {
     })
   }
   playVideo() {
-    if(this.state.hls) {
+    if (this.state.hls) {
       this.state.hls.loadSource('https://origin.udn.global'+this.props.activeVideo)
       this.state.hls.attachMedia(this.refs.player)
       this.refs.player.addEventListener('loadedmetadata', () => {
@@ -105,15 +105,15 @@ export class PlaybackDemo extends React.Component {
         this.setState({droppedFrames: data.totalDroppedFrames})
       });
       this.state.hls.on(Hls.Events.ERROR, (event, data) => {
-        if(data.type == "mediaError" && data.details === "bufferStalledError") {
+        if (data.type === "mediaError" && data.details === "bufferStalledError") {
           this.setState({bufferErrors: this.state.bufferErrors + 1})
         }
       });
     }
   }
 
-  destroyVideo(){
-    if(this.state.hls) {
+  destroyVideo() {
+    if (this.state.hls) {
       this.state.hls.destroy();
     }
   }
@@ -124,10 +124,9 @@ export class PlaybackDemo extends React.Component {
         return totals.set(bitrate, 1 + (totals.get(bitrate) || 0))
       }, Immutable.Map())
       .entrySeq()
-      .reduce(
-        (maxCount, total) => maxCount[1] < total[1] ? total : maxCount,
-        [0, 0]
-      )[0]
+      .reduce((maxCount, total) => {
+        return maxCount[1] < total[1] ? total : maxCount
+      }, [0, 0])[0]
     return (
       <div className="analysis-playback-demo">
         <div className="container-fluid low-pad">

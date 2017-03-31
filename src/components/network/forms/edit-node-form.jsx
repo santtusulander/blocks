@@ -77,7 +77,7 @@ const validate = function({ custom_grains, ...values }, props) {
 
 
 function getValueLabel(options, value) {
-  if(!options || !options.length) {
+  if (!options || !options.length) {
     return value;
   }
   for (let i = 0, len = options.length; i < len; i++) {
@@ -143,7 +143,7 @@ class NetworkEditNodeForm extends React.Component {
     const { nodeValues, nodes } = this.props
     const updatedNodeValues = nodes.slice(0)
 
-    for (let field in formValues) {
+    for (const field in formValues) {
       const originalNodeValue = nodeValues[field]
       const fieldValue = formValues[field]
       let updatedValue

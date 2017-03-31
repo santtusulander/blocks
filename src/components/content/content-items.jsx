@@ -69,10 +69,10 @@ const sortContent = (path, direction) => (item1, item2) => {
   const val1 = item1.getIn(path) && item1.getIn(path).toLowerCase && item1.getIn(path).toLowerCase() || item1.getIn(path)
   const val2 = item2.getIn(path) && item2.getIn(path).toLowerCase && item2.getIn(path).toLowerCase() || item2.getIn(path)
 
-  if(val1 > val2 || val2 === undefined) {
+  if (val1 > val2 || val2 === undefined) {
     return direction
   }
-  else if(val1 < val2 || val1 === undefined) {
+  else if (val1 < val2 || val1 === undefined) {
     return -1 * direction
   }
   return 0
@@ -119,7 +119,7 @@ class ContentItems extends React.Component {
   }
   handleSortChange(val) {
     const sortOption = sortOptions.find(opt => opt.value === val)
-    if(sortOption) {
+    if (sortOption) {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
@@ -156,7 +156,7 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item) {
+        } else if (item) {
           this.hideModal()
           this.showNotification(<FormattedMessage id="portal.content.createEntity.status" values={{item}}/>)
         } else {
@@ -175,7 +175,7 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item) {
+        } else if (item) {
           this.hideModal()
           this.showNotification(<FormattedMessage id="portal.content.updateEntity.status" values={{item}}/>)
         } else {
@@ -187,14 +187,14 @@ class ContentItems extends React.Component {
   onItemDelete() {
     return this.props.deleteItem(...arguments)
       .then(({ item, error, payload }) => {
-        if(error) {
+        if (error) {
           this.props.showInfoDialog({
             title: 'Error',
             content: payload.data.message,
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item) {
+        } else if (item) {
           this.hideModal()
           this.showNotification(<FormattedMessage id="portal.content.deleteEntity.status" values={{item}}/>)
         } else {
@@ -217,7 +217,7 @@ class ContentItems extends React.Component {
   }
   itemSelectorTopBarAction(tier, fetchItems, IDs) {
     const { account } = IDs
-    switch(tier) {
+    switch (tier) {
       case 'property':
         fetchItems('group', 'udn', account)
         break
@@ -256,19 +256,19 @@ class ContentItems extends React.Component {
   showStorageModal(id) {
     this.setState({
       itemToEdit: id,
-      showStorageModal : true
+      showStorageModal: true
     });
   }
   hideStorageModal() {
     this.setState({
       itemToEdit: undefined,
-      showStorageModal : false
+      showStorageModal: false
     });
   }
   getTagText(isCloudProvider, providerType, trialMode) {
     let tagText = trialMode ? 'portal.configuration.details.deploymentMode.trial' : null
     if (isCloudProvider && !trialMode) {
-      switch(providerType) {
+      switch (providerType) {
         case ACCOUNT_TYPE_CONTENT_PROVIDER:
           tagText = 'portal.content.contentProvider'
           break
@@ -281,7 +281,7 @@ class ContentItems extends React.Component {
   }
 
   renderAddButton (propertyCreationIsAllowed, storageCreationIsAllowed) {
-    if(this.getTier() === 'group') {
+    if (this.getTier() === 'group') {
       if (propertyCreationIsAllowed && storageCreationIsAllowed) {
         return <ButtonDropdown bsStyle="success" disabled={false} options={this.addButtonOptions}/>
       }
@@ -376,7 +376,7 @@ class ContentItems extends React.Component {
       const itemMetrics = this.getMetrics(item)
       const itemDailyTraffic = this.getDailyTraffic(item)
 
-      if(!fetchingMetrics) {
+      if (!fetchingMetrics) {
         trafficTotals = trafficTotals.push(itemMetrics.get('totalTraffic'))
       }
 
@@ -388,7 +388,7 @@ class ContentItems extends React.Component {
     })
     .sort(sortContent(sortValuePath, sortDirection))
 
-    if(!fetchingMetrics){
+    if (!fetchingMetrics) {
       trafficMin = Math.min(...trafficTotals)
       trafficMax = Math.max(...trafficTotals)
     }
@@ -396,7 +396,7 @@ class ContentItems extends React.Component {
     // have identical metrics. In that case the amoebas will all get the minimum
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
-    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
@@ -409,7 +409,9 @@ class ContentItems extends React.Component {
 
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
-    const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
+    const toggleView = (type) => {
+      return type ? this.props.toggleChartView : () => {/*no-op*/}
+    }
 
     const addHostTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
     const addHostSubTitle = activeAccount && activeGroup
@@ -618,7 +620,7 @@ class ContentItems extends React.Component {
               editing={false}
               fetching={false}
               onCancel={this.hideStorageModal}
-              onSubmit={()=>{/* onsubmit here */}}
+              onSubmit={() => {/* onsubmit here */}}
             />
           }
         </PageContainer>

@@ -19,7 +19,7 @@ ButtonWrapper.propTypes = {
   outLine: PropTypes.bool
 }
 
-function createButtonClassName(props){
+function createButtonClassName(props) {
   return classNames({
     'btn-outline': props.outLine,
     'btn-icon': props.icon,

@@ -11,6 +11,7 @@ import { locationReverseGeoCodingLookup } from '../../../util/network-helpers'
 
 import iataCodeActions from '../../../redux/modules/entities/iata-codes/actions'
 import { getIataCodes } from '../../../redux/modules/entities/iata-codes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 import ModalWindow from '../../../components/modal'
@@ -58,7 +59,7 @@ class NetworkLocationFormContainer extends Component {
         latitude: null,
         longitude: null
       },
-      showDeleteModal : false
+      showDeleteModal: false
     }
 
     this.fetchLocation = this.fetchLocation.bind(this)
@@ -307,7 +308,7 @@ NetworkLocationFormContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const selector = formValueSelector('networkLocationForm')
@@ -342,9 +343,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
-  onCreate: (params) => dispatch( locationActions.create( {...params } ) ),
-  onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
-  onUpdate: (params) => dispatch( locationActions.update( {...params } ) )
+  onCreate: (params) => dispatch(locationActions.create({...params })),
+  onDelete: (params) => dispatch(locationActions.remove({...params })),
+  onUpdate: (params) => dispatch(locationActions.update({...params }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))

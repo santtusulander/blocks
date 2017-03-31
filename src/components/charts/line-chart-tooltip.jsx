@@ -10,7 +10,7 @@ const LineChartTooltip = ({ payload = [], valueFormatter = formatBytes }) => {
       {payload.map(({ name, value, dataKey, payload }, i) =>
         <div key={i} className="tooltip-item">
           <span className="legend-label">
-            {formatUnixTimestamp( timestamp, "MMM DD HH:mm") } { valueFormatter(value, true) }
+            {formatUnixTimestamp(timestamp, "MMM DD HH:mm") } { valueFormatter(value, true) }
           </span>
         </div>
       )}

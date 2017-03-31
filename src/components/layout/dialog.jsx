@@ -3,7 +3,7 @@ import React from 'react';
 class Dialog extends React.Component {
   render() {
     let className = 'configuration-dialog';
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className;
     }
     return (

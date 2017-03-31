@@ -28,8 +28,8 @@ class AnalyticsTabUrlReport extends React.Component {
     )
   }
 
-  componentWillReceiveProps(nextProps){
-    if(changedParamsFiltersQS(this.props, nextProps) ||
+  componentWillReceiveProps(nextProps) {
+    if (changedParamsFiltersQS(this.props, nextProps) ||
       this.props.activeHostConfiguredName !== nextProps.activeHostConfiguredName ||
       this.props.filters.get('statusCodes') !== nextProps.filters.get('statusCodes') ||
       this.props.filters.get('serviceTypes') !== nextProps.filters.get('serviceTypes')) {
@@ -45,8 +45,8 @@ class AnalyticsTabUrlReport extends React.Component {
     this.props.filterActions.resetStatusFilters()
   }
 
-  fetchData(params, filters, hostConfiguredName){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, hostConfiguredName) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })
@@ -57,7 +57,7 @@ class AnalyticsTabUrlReport extends React.Component {
     return fetchURLMetrics(fetchOpts).then(finishFetching, finishFetching)
   }
 
-  render(){
+  render() {
     if (this.props.fetching) {
       return <LoadingSpinner />
     }

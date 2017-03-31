@@ -28,10 +28,12 @@ class AnalysisFileError extends React.Component {
   hasKeys(val, keyList) {
     if (keyList.includes('all')) return true;
 
-    let found = false;
+    let found = false
+    // eslint-disable-next-line array-callback-return
     keyList.some((key) => {
       if (val.has(key)) {
-        found=true;
+        found = true;
+        // eslint-disable-next-line array-callback-return
         return
       }
     })
@@ -39,7 +41,7 @@ class AnalysisFileError extends React.Component {
   }
 
   sortByCode(error1, error2) {
-    if(error1.code > error2.code) {
+    if (error1.code > error2.code) {
       return 1;
     }
     else if (error1.code < error2.code) {
@@ -53,20 +55,20 @@ class AnalysisFileError extends React.Component {
 
     // Summary filtering
     //filter by serviceType
-    const filteredErrorSummary = summary.filter( (errorVal) => {
+    const filteredErrorSummary = summary.filter((errorVal) => {
       //error has selected serviceType?
-      return ( this.hasKeys( errorVal, serviceTypes) )
+      return (this.hasKeys(errorVal, serviceTypes))
     })
     //filter by error codes (is errorKey included in errorCodes)
-    .filter( (errorVal, i) => {
+    .filter((errorVal, i) => {
       return !statusCodes.size || statusCodes.includes(parseInt(i.substr(1)))
     })
 
     //separate server & client errs for KPIs
     let clientErrs=[], serverErrs=[];
-    filteredErrorSummary.forEach( (err, key) => {
+    filteredErrorSummary.forEach((err, key) => {
       const errorCode = parseInt(key.substr(1))
-      if ( errorCode < 500 ) clientErrs.push({value: err, code: errorCode})
+      if (errorCode < 500) clientErrs.push({value: err, code: errorCode})
       else serverErrs.push({value: err, code: errorCode})
     })
     clientErrs = clientErrs.sort(this.sortByCode)
@@ -76,11 +78,11 @@ class AnalysisFileError extends React.Component {
     //URL filtering
     //by serviceType
 
-    const filteredUrls = urls.filter( (url) => {
+    const filteredUrls = urls.filter((url) => {
       return serviceTypes.includes(url.get('service_type'))
     })
     //filter by error code
-    .filter( (url) => {
+    .filter((url) => {
       return !statusCodes.size || statusCodes.includes(parseInt(url.get('status_code')))
     })
 

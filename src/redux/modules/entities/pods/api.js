@@ -50,7 +50,7 @@ const pop = new schema.Entity('podsWrapper', {
  */
 export const fetch = ({id, ...params}) => {
   return axios.get(`${baseUrl(params)}/${id}`)
-    .then( ({data}) => {
+    .then(({data}) => {
       const wrappedWithparent = {
         group_id: params.group,
         network_id: params.network,
@@ -67,9 +67,9 @@ export const fetch = ({id, ...params}) => {
  * @param  {[type]} account [description]
  * @return {[type]}         [description]
  */
-export const fetchAll = ( params ) => {
+export const fetchAll = (params) => {
   return axios.get(baseUrl(params))
-    .then( ({data}) => {
+    .then(({data}) => {
       const wrappedWithparent = {
         group_id: params.group,
         network_id: params.network,
@@ -132,5 +132,5 @@ export const update = ({ id, payload, ...params }) => {
  */
 export const remove = ({ id, ...params }) => {
   return axios.delete(`${baseUrl(params)}/${id}`)
-    .then(() => ( { id: buildReduxId(params.group, params.network, params.pop, id) } ))
+    .then(() => ({ id: buildReduxId(params.group, params.network, params.pop, id) }))
 }

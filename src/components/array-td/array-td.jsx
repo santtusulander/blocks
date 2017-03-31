@@ -4,12 +4,12 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import './array-td.scss';
 
-const ArrayTd = ( props ) => {
+const ArrayTd = (props) => {
   let classNames = 'array-td'
-  if(props.className) {
+  if (props.className) {
     classNames += ' ' + props.className
   }
-  let maxItemsShown = props.maxItemsShown || 3
+  const maxItemsShown = props.maxItemsShown || 3
   const shownItems = props.items.slice(0,maxItemsShown).join(', ')
   const hiddenItems = props.items.slice(maxItemsShown)
   return (

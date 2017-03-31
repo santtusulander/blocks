@@ -130,11 +130,11 @@ export class Account extends React.Component {
     const id = group.get('id')
 
     return this.props.removeGroup({brand, account, id})
-      .then( () => {
+      .then(() => {
         this.props.toggleDeleteConfirmationModal(null)
         this.showNotification(<FormattedMessage id="portal.accountManagement.groupDeleted.text"/>)
       })
-      .catch( (response) => {
+      .catch((response) => {
         this.props.toggleDeleteConfirmationModal(null)
         this.props.uiActions.showInfoDialog({
           title: 'Error',
@@ -263,7 +263,7 @@ Account.propTypes = {
   oldGroupActions: PropTypes.object,
   params: PropTypes.object,
   removeGroup: PropTypes.func,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   toggleDeleteConfirmationModal: PropTypes.func,
@@ -279,7 +279,7 @@ Account.defaultProps = {
   dailyTraffic: List(),
   groups: List(),
   metrics: List(),
-  roles: List(),
+  roles: Map(),
   sortValuePath: List(),
   user: Map()
 }
@@ -322,8 +322,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
   const fetchData = () => {
     return Promise.all([
-      dispatch( accountActions.fetchOne({...params, id: params.account}) ),
-      dispatch( groupActions.fetchAll(params) ),
+      dispatch(accountActions.fetchOne({...params, id: params.account})),
+      dispatch(groupActions.fetchAll(params)),
 
       metricsActions.startGroupFetching(),
       metricsActions.fetchGroupMetrics(metricsOpts),

@@ -44,7 +44,7 @@ export class ForgotPassword extends React.Component {
     this.props.userActions
       .requestPasswordReset(this.state.email, this.state.recaptcha)
       .then(action => {
-        if(!action.error) {
+        if (!action.error) {
           this.setState({submitted: true})
         }
         else {
@@ -88,8 +88,8 @@ export class ForgotPassword extends React.Component {
     const { location: { search }} = this.props
     const token_expired = search && search === '?token_expired'
 
-    let headerText = token_expired ? <FormattedMessage id="portal.linkExpired.title"/> : <FormattedMessage id="portal.forgotPassword.forgotPassword.text"/>
-    let instructionsText = token_expired ? <span><FormattedMessage id="portal.linkExpired.definition.text"/><br/> <FormattedMessage id="portal.linkExpired.instructions.text"/></span> : <FormattedMessage id="portal.forgotPassword.enterEmail.text"/>
+    const headerText = token_expired ? <FormattedMessage id="portal.linkExpired.title"/> : <FormattedMessage id="portal.forgotPassword.forgotPassword.text"/>
+    const instructionsText = token_expired ? <span><FormattedMessage id="portal.linkExpired.definition.text"/><br/> <FormattedMessage id="portal.linkExpired.instructions.text"/></span> : <FormattedMessage id="portal.forgotPassword.enterEmail.text"/>
 
     return (
       <Modal.Dialog className="login-modal">

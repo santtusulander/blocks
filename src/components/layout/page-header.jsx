@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { FormattedMessage } from 'react-intl'
 
 const PageHeader = ({ className, secondaryPageHeader, distributedColumns, pageSubTitle, pageHeaderDetailsDeployed, pageHeaderDetailsUpdated, children }) => {
-  let customClassName = className || ''
-  let finalClassName = classNames(
+  const customClassName = className || ''
+  const finalClassName = classNames(
     'page-header-container',
     {
       'secondary-page-header': secondaryPageHeader,

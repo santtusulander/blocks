@@ -49,7 +49,7 @@ export class Group extends React.Component {
   createNewHost(id, deploymentMode, serviceType) {
     /* Create initial services and configurations for property */
     const payload = {
-      services:[{
+      services: [{
         service_type: serviceType,
         deployment_mode: deploymentMode,
         configurations: [{
@@ -171,7 +171,7 @@ Group.defaultProps = {
 
 const mapStateToProps = (state, { params: { account, group } }) => {
   return {
-    activeAccount: getAccountById( state, account),
+    activeAccount: getAccountById(state, account),
     activeGroup: getGroupById(state, group),
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),

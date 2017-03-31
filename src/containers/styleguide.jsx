@@ -289,12 +289,12 @@ class Styleguide extends React.Component {
       }
     ])
 
-    let totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
-    let totalDatasetValue = totalDatasetValueOutput.value
-    let totalDatasetUnit = totalDatasetValueOutput.unit
+    const totalDatasetValueOutput = separateUnit(formatBytes(spDashboardData.traffic.bytes))
+    const totalDatasetValue = totalDatasetValueOutput.value
+    const totalDatasetUnit = totalDatasetValueOutput.unit
 
-    let datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
-    let datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
+    const datasetAValue = numeral((spDashboardData.traffic.bytes_net_on / spDashboardData.traffic.bytes) * 100).format('0,0')
+    const datasetBValue = numeral((spDashboardData.traffic.bytes_net_off / spDashboardData.traffic.bytes) * 100).format('0,0')
 
     return (
       <div className="styleguide-page">
@@ -520,7 +520,7 @@ class Styleguide extends React.Component {
               <FilterChecklistDropdown
                 options={filterCheckboxOptions}
                 value={this.state.filterCheckboxValue}
-                onChange={(newVals)=>this.setState({filterCheckboxValue: newVals})} />
+                onChange={(newVals) => this.setState({filterCheckboxValue: newVals})} />
             </div>
           </div>
 
@@ -1198,7 +1198,9 @@ class Styleguide extends React.Component {
           />
 
           <h1 className="page-header">Slider</h1>
-            <PolicyWeight secondaryProvider="CDN" onChange={() => {}} />
+            <PolicyWeight secondaryProvider="CDN" onChange={() => {
+              // no-op
+            }} />
 
           <h1 className="page-header">Icons</h1>
           <span className="col-xs-3" style={{marginBottom: '1em'}}>

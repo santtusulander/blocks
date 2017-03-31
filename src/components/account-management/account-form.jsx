@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, formValueSelector, isInvalid, propTypes as reduxFormPropTypes } from 'redux-form'
-import { Map, List }from 'immutable'
+import { Map, List } from 'immutable'
 
 import { Button, ControlLabel, FormGroup } from 'react-bootstrap'
 
@@ -59,13 +59,13 @@ class AccountForm extends React.Component {
     // previosly configured account type, we need to clear them manually.
 
     if (nextProps.accountType && (!nextProps.account)) {
-      if (JSON.stringify(this.props.serviceOptions) != JSON.stringify(nextProps.serviceOptions)) {
+      if (JSON.stringify(this.props.serviceOptions) !== JSON.stringify(nextProps.serviceOptions)) {
         this.props.change('accountServices', [])
       }
     }
   }
 
-  onSubmit(values, dispatch, { account, accountType, onSave }){
+  onSubmit(values, dispatch, { account, accountType, onSave }) {
     const services = accountType !== ACCOUNT_TYPE_CONTENT_PROVIDER
                      ? values.accountServices.toJS()
                      : getServicesFromIds(values.accountServicesIds)
@@ -252,7 +252,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

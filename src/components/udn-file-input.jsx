@@ -18,7 +18,9 @@ const UDNFileInput = (props) => {
             type='file'
             {...otherProps}
             value=''
-            onChange={() => {}}
+            onChange={() => {
+              // no-op
+            }}
           />
           <InputGroup.Addon>{addonAfter}</InputGroup.Addon>
         </InputGroup>

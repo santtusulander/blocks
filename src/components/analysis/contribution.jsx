@@ -35,10 +35,10 @@ class AnalysisContribution extends React.Component {
 
   sortedData(data, sortBy, sortDir) {
     return data.sort((a, b) => {
-      if(a.get(sortBy) < b.get(sortBy)) {
+      if (a.get(sortBy) < b.get(sortBy)) {
         return -1 * sortDir
       }
-      else if(a.get(sortBy) > b.get(sortBy)) {
+      else if (a.get(sortBy) > b.get(sortBy)) {
         return 1 * sortDir
       }
       return 0
@@ -51,7 +51,7 @@ class AnalysisContribution extends React.Component {
     const isOnNet = this.props.onOffFilter.includes('on')
     const isOffNet = this.props.onOffFilter.includes('off')
 
-    let barModels = []
+    const barModels = []
     if (isHttps && isOffNet)
       barModels.push({
         dataKey: 'offNetHttps',
@@ -115,7 +115,7 @@ class AnalysisContribution extends React.Component {
     }
     const sortedStats = this.sortedData(byCountryStats, this.state.sortBy, this.state.sortDir)
 
-    const trafficByDateRangeLabel = getTrafficByDateRangeLabel( this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
+    const trafficByDateRangeLabel = getTrafficByDateRangeLabel(this.props.dateRange, this.props.dateRangeLabel, this.props.intl.formatMessage)
 
     return (
       <div>
