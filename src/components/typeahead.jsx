@@ -42,7 +42,10 @@ class Typeahead extends React.Component {
     {
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
-      ref: ref => this.typeahead = ref
+      ref: (ref) => {
+        this.typeahead = ref
+        return this.typeahead
+      }
     } : {}
 
     const typeahead = this.props.asyncMode ? <AsyncBSTypeahead {...this.props} {...customProps} /> :

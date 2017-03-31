@@ -317,8 +317,22 @@ class EntityList extends React.Component {
       'multi-column': multiColumn
     })
     return (
-      <div ref={ref => this.entityList = ref} className="network-entity-list">
-        {this.hasActiveItems() && <div ref={ref => this.connector = ref} className="connector-divider"/>}
+      <div
+        ref={(ref) => {
+          this.entityList = ref
+          return this.entityList
+        }}
+        className="network-entity-list"
+      >
+        {this.hasActiveItems() &&
+          <div
+            className="connector-divider"
+            ref={(ref) => {
+              this.connector = ref
+              return this.connector
+            }}
+          />
+        }
         <AccountManagementHeader
           title={title}
           creationPermission={creationPermission}
@@ -326,7 +340,13 @@ class EntityList extends React.Component {
           disableButtons={disableButtons}
         />
 
-        <div ref={ref => this.entityListItems = ref} className={entityListClasses}>
+        <div
+          ref={(ref) => {
+            this.entityListItems = ref
+            return this.entityListItems
+          }}
+          className={entityListClasses}
+        >
           {fetching ? <LoadingSpinner/> : this.renderListItems()}
         </div>
       </div>
