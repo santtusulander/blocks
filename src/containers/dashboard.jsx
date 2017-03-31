@@ -94,7 +94,7 @@ export class Dashboard extends React.Component {
     if (this.props.activeAccount !== nextProps.activeAccount) {
       this.props.filterActions.resetContributionFilters()
     }
-    
+
     if ( prevParams !== params || !is(this.props.filters,nextProps.filters) ) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
@@ -474,7 +474,7 @@ Dashboard.propTypes = {
 
 Dashboard.contextTypes = {
   currentUser: PropTypes.instanceOf(Map),
-  roles: PropTypes.instanceOf(List)
+  roles: PropTypes.instanceOf(Map)
 }
 
 Dashboard.defaultProps = {
