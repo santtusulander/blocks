@@ -27,9 +27,7 @@ class FieldFormGroupAsnLookup extends Component {
     }
 
     const filterType = parseInt(query) ? 'asn' : 'organization'
-    // UDNP-3200 - Double escape asn search query to prevent 500 Internal Server Error
-    const escapedQuery = escape(escape(query))
-    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: escapedQuery})
+    this.props.asnActions.fetchAsns({filterBy: filterType, filterValue: query})
       .then(resp => {
         let options = []
         resp.payload.forEach(item => {
