@@ -49,6 +49,7 @@ export function getMatchFilterType(item) {
   return item.get('type')
 }
 
+/* eslint-disable react/display-name */
 export function getConditionFilterText(match) {
   switch(match.filterType) {
     case 'exists':
