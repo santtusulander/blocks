@@ -86,12 +86,6 @@ TrafficRuleFormContainer.propTypes = {
   onCancel: PropTypes.func
 }
 
-//until integrated into UI
-TrafficRuleFormContainer.defaultProps = {
-  onCancel: () => console.log('onCancel'),
-  initialValues: { condition: 'or', policyWeight: 100 }
-}
-
 const stateToProps = (state, { rule }) => {
 
   const matchArrayValues = formValueSelector('traffic-rule-form')(state, 'matchArray')
@@ -100,7 +94,7 @@ const stateToProps = (state, { rule }) => {
 
   return {
     activeCondition,
-    initialValues: { condition: 'or', ...ruleValues },
+    initialValues: { condition: 'or', policyWeight: 100, ...ruleValues },
     hasMatches: matchArrayValues && !!matchArrayValues.length
   }
 }
