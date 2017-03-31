@@ -9,6 +9,7 @@ import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 
 import { checkForErrors } from '../../../util/helpers'
 
+import PolicyWeight from '../policy-weight'
 import Input from '../../form/field-form-group'
 import FormGroupSelect from '../../form/field-form-group-select'
 import FormFooterButtons from '../../form/form-footer-buttons'
@@ -115,7 +116,16 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
           chooseMatch={chooseMatch}
           component={Matches}/>
 
-        <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
+        <Row className="header-btn-row">
+          <Col sm={7}>
+            <h3><FormattedMessage id="portal.policy.edit.editRule.actions.text"/></h3>
+          </Col>
+        </Row>
+        <Field
+          name="policyWeight"
+          component={({ input }) => {
+            return <PolicyWeight {...input} disabled={disabled}/>
+          }}/>
 
       <FormFooterButtons>
         <Button

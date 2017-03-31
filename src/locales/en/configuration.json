@@ -140,7 +140,7 @@
   "portal.configuration.gtm.table.empty.text": "No traffic rules have been added yet.",
   "portal.configuration.gtm.policyWeight.label": "Percentage of traffic that UDN will serve",
   "portal.configuration.gtm.policyWeight.percentageByMainProvider.percentage": "% UDN",
-  "portal.configuration.gtm.policyWeight.secondaryProvider.percentage": "{percentage}% served by 3rd party {provider}",
+  "portal.configuration.gtm.policyWeight.secondaryProvider.percentage": "{percentage}% served by 3rd party CDN",
 
   "portal.configuration.advanced.requestPolicies.label": "Override Request Policies",
   "portal.configuration.advanced.responsePolicies.label": "Override Response Policies",
