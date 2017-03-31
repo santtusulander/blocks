@@ -6,8 +6,8 @@ import './area-tooltip.scss'
 
 /* eslint-disable react/no-multi-comp  */
 const AreaTooltip = ({ payload = [], iconClass, valueFormatter = formatBitsPerSecond, className }) => {
-  const currentPayload = payload.filter( ({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
-  const comparisonPayload = payload.filter( ({dataKey}) => dataKey.includes('comparison_'))
+  const currentPayload = payload.filter(({dataKey}) => !dataKey.includes('comparison_') && !dataKey.includes('estimate'))
+  const comparisonPayload = payload.filter(({dataKey}) => dataKey.includes('comparison_'))
 
   const normalPayload = comparisonPayload.length === 1 ? [...comparisonPayload, ...currentPayload] : currentPayload;   // combine payload if they're 1:1 comparison
   return (
@@ -56,7 +56,7 @@ const TooltipDataset = ({payload, valueFormatter, iconClass, hideTotal}) => {
       <div className="tooltip-item">
         <span className="legend-label">
           <span className="legend-line">
-            {formatUnixTimestamp( ts, "MMM D H:mm A") }
+            {formatUnixTimestamp(ts, "MMM D H:mm A") }
           </span>
         </span>
       </div>

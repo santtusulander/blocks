@@ -68,7 +68,7 @@ class Tabs extends React.Component {
         reverseTabs.forEach((tab, i) => {
           if (getDOMNodeTop(this.hiddenTabsElement) > getDOMNodeTop(this.tabElements[0])) {
             // Don't hide active tab
-            if(tab.props['data-eventKey'] !== this.props.activeKey) {
+            if (tab.props['data-eventKey'] !== this.props.activeKey) {
               hiddenTabs.push(this.props.children.length - 1 - i)
               this.setState({ hiddenTabs: hiddenTabs })
             }

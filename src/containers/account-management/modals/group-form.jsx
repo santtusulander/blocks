@@ -16,6 +16,7 @@ import { getFetchingByTag } from '../../../redux/modules/fetching/selectors'
 
 import networkActions from '../../../redux/modules/entities/networks/actions'
 import { getByGroup as getNetworksByGroup } from '../../../redux/modules/entities/networks/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import SidePanel from '../../../components/side-panel'
 
@@ -80,7 +81,7 @@ class GroupFormContainer extends React.Component {
 
   onSubmit(values) {
     const { groupId, invalid, onSave } = this.props
-    if(!invalid) {
+    if (!invalid) {
       // TODO: enable this when API is ready
       //const members = this.getMembers()
       // if (groupId) {
@@ -374,7 +375,7 @@ const  mapStateToProps = (state, ownProps) => {
   const allServiceOptions = activeAccount && getServiceOptions(state, activeAccount.get('provider_type'))
   const canSeeLocations = groupId && ownProps.hasOwnProperty('canSeeLocations') ? ownProps.canSeeLocations : accountIsServiceProviderType(activeAccount)
   const canFetchNetworks = accountIsServiceProviderType(activeAccount)
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
 
   return {
     account: activeAccount,
@@ -407,7 +408,7 @@ const mapDispatchToProps = (dispatch, { params: { brand, account } }) => {
     fetchNetworks: (group) => group && dispatch(networkActions.fetchAll({ brand, account, group })),
     hostActions: bindActionCreators(hostActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
-    fetchServiceInfo: () => dispatch( serviceInfofetchAll() )
+    fetchServiceInfo: () => dispatch(serviceInfofetchAll())
   }
 }
 

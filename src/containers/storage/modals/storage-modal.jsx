@@ -34,7 +34,7 @@ class StorageFormContainer extends React.Component {
     super(props)
 
     this.state = {
-      showDeleteModal : false
+      showDeleteModal: false
     }
 
     this.onSave = this.onSave.bind(this)
@@ -159,7 +159,7 @@ class StorageFormContainer extends React.Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={(storageId) => this.onDelete(storageId)}>
+            onSubmit={(storageIdToDelete) => this.onDelete(storageIdToDelete)}>
             <p>
              <FormattedMessage id="portal.storage.storageForm.deleteModal.confirmation.text"/>
             </p>
@@ -237,16 +237,16 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( storageActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( storageActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( storageActions.remove( {...params } )),
-    changeNotification: (message) => dispatch( uiActions.changeNotification(message)),
+    onCreate: (params, data) => dispatch(storageActions.create({...params, data })),
+    onUpdate: (params, data) => dispatch(storageActions.update({...params, data })),
+    onDelete: (params) => dispatch(storageActions.remove({...params })),
+    changeNotification: (message) => dispatch(uiActions.changeNotification(message)),
 
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchStorage: (params) => dispatch( storageActions.fetchOne(params) ),
-    fetchClusters: (params) => dispatch( clusterActions.fetchAll(params) ),
-    fetchWorkflows: (params) => dispatch( workflowActions.fetchAll(params) )
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchStorage: (params) => dispatch(storageActions.fetchOne(params)),
+    fetchClusters: (params) => dispatch(clusterActions.fetchAll(params)),
+    fetchWorkflows: (params) => dispatch(workflowActions.fetchAll(params))
   }
 }
 

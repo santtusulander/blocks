@@ -4,7 +4,7 @@ import Icon from '../icon.jsx'
 const IconCaretDown = (props) => {
   const {className, height, width} = props
   let classNames = 'two-tone caret-icon';
-  if(className) {
+  if (className) {
     classNames = classNames + ' ' + className;
   }
   return (

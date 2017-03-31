@@ -95,7 +95,7 @@ export class Dashboard extends React.Component {
       this.props.filterActions.resetContributionFilters()
     }
 
-    if ( prevParams !== params || !is(this.props.filters,nextProps.filters) ) {
+    if (prevParams !== params || !is(this.props.filters,nextProps.filters)) {
       this.fetchData(nextProps.params, nextProps.filters, nextProps.activeAccount)
     }
     // TODO: remove this timeout as part of UDNP-1426
@@ -115,12 +115,12 @@ export class Dashboard extends React.Component {
   fetchData(urlParams, filters, activeAccount) {
     if (urlParams.account) {
       // Dashboard should fetch only account level data
-      const {brand, account : id} = urlParams
+      const {brand, account: id} = urlParams
       this.props.fetchAccount({brand, id})
 
       const params = { brand: urlParams.brand, account: urlParams.account }
 
-      let { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
+      const { dashboardOpts } = buildFetchOpts({ params, filters, coordinates: this.props.mapBounds.toJS() })
       dashboardOpts.field_filters = 'chit_ratio,avg_fbl,bytes,transfer_rates,connections,timestamp'
       const accountType = accountIsContentProviderType(activeAccount || this.props.activeAccount)
         ? ACCOUNT_TYPE_CONTENT_PROVIDER
@@ -152,7 +152,7 @@ export class Dashboard extends React.Component {
             groupIds = this.props.getGroupIds()
           }
           return Promise.all([
-            ...groupIds.map(id => this.props.fetchStorages({ ...params, group: id })),
+            ...groupIds.map((groupId) => this.props.fetchStorages({ ...params, group: groupId })),
             this.props.fetchStorageMetrics({ ...providerOpts, group: undefined, include_history: true, list_children: false, show_detail: false })
           ])
         })
@@ -195,7 +195,7 @@ export class Dashboard extends React.Component {
     const { activeAccount, dashboard, filterOptions, intl, user, theme } = this.props
 
     if (!activeAccount.size) {
-      return(
+      return (
         <div className="text-center">
           <FormattedMessage id="portal.dashboard.selectAccount.text" values={{br: <br/>}} />
         </div>

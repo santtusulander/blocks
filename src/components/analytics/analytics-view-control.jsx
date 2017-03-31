@@ -123,19 +123,19 @@ const AnalyticsViewControl = (props) => {
 
   let title = "Analytics"
   let active
-  if(props.activeTab) {
+  if (props.activeTab) {
     active = tabs.find(tab => tab.key === props.activeTab)
-    if(active) {
-      if(active.hideHierarchy) {
+    if (active) {
+      if (active.hideHierarchy) {
         title = active.label
       }
-      else if(storage) {
+      else if (storage) {
         title = active.titles.storage
       }
-      else if(property) {
+      else if (property) {
         title = active.titles.property
       }
-      else if(group) {
+      else if (group) {
         title = active.titles.group
       }
       else {
@@ -148,10 +148,10 @@ const AnalyticsViewControl = (props) => {
   if (property) {
     activeItem = property
   }
-  else if(group && props.activeGroup) {
+  else if (group && props.activeGroup) {
     activeItem = props.activeGroup.get('name')
   }
-  else if(account && props.activeAccount) {
+  else if (account && props.activeAccount) {
     activeItem = props.activeAccount.get('name')
   }
   const topBarTexts = {
@@ -162,7 +162,7 @@ const AnalyticsViewControl = (props) => {
   }
   const topBarFunc = (tier, fetchItems, IDs) => {
     const { account, brand } = IDs
-    switch(tier) {
+    switch (tier) {
       case 'property':
         fetchItems('group', brand, account)
         break
@@ -189,7 +189,7 @@ const AnalyticsViewControl = (props) => {
             let url = getAnalyticsUrl(...params)
             if (active) {
               let tab = active.key
-              if((active.propertyOnly && params[0] !== 'property') ||
+              if ((active.propertyOnly && params[0] !== 'property') ||
               (active.hideForProperty && params[0] === 'property')) {
                 tab = ''
               }

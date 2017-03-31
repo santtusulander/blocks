@@ -3,7 +3,7 @@ import React from 'react'
 const BrandlistUsedBy = (props) => {
   let content
 
-  if ( Array.isArray(props.fieldVal) ) {
+  if (Array.isArray(props.fieldVal)) {
     return (
       <a>
         {props.fieldVal.length} accounts

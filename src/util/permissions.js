@@ -14,7 +14,7 @@ permissionMapping[PERMISSIONS.VIEW_ACCOUNT_SECTION] =
 permissionMapping[PERMISSIONS.VIEW_ACCOUNT_DETAIL] =
   (userRole, roleId) => {
     //TODO: refactor, this is not reliable
-    const role = ROLES_MAPPING.find(role => role.id === roleId)
+    const role = ROLES_MAPPING.find(mapping_role => mapping_role.id === roleId)
     const roleIsCloudProvider = role.accountTypes.indexOf(ACCOUNT_TYPE_CLOUD_PROVIDER) >= 0
     return !roleIsCloudProvider
   }
@@ -294,12 +294,12 @@ export const getStoragePermissions = (roles, user) => ({
 export default function checkPermissions(roles, user, permission) {
 
   const userRoles = user && user.size > 0 && user.get('roles')
-  if (!userRoles ) return false
+  if (!userRoles) return false
 
   return userRoles.some(roleId => {
 
     const role = roles && roles.get(String(roleId))
-    if ( role ) return permissionMapping[permission](role, roleId)
+    if (role) return permissionMapping[permission](role, roleId)
 
     return false
   })

@@ -52,7 +52,7 @@ export function isValidFloat(str) {
  * @returns {boolean}
  */
 export function isValidIP(addresses, IPversion = 4) {
-  if(Array.isArray(addresses)) {
+  if (Array.isArray(addresses)) {
     const hasInvalidIP = addresses.some(address => !validator.isIP(address, IPversion))
     return !hasInvalidIP
   }
@@ -68,9 +68,9 @@ export function isValidIP(addresses, IPversion = 4) {
 export function isValidIPv4Address(address, onlyCIDR) {
   const splitAddr = !!address && address.split(/\/(.+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1 || onlyCIDR) {
+  if (splitAddr.length > 1 || onlyCIDR) {
     const cidr = Number(splitAddr[1])
-    return validator.isIP(splitAddr[0], 4) && ( (cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32 )
+    return validator.isIP(splitAddr[0], 4) && ((cidr === parseInt(cidr, 10)) && cidr >= 0 && cidr <= 32)
   }
 
   return !!address && validator.isIP(address, 4)
@@ -85,8 +85,8 @@ export function isValidIPv6Address(address) {
 
   const splitAddr = !!address && address.split(/\/([0-9]+)(?=[^\/]*$)/)
 
-  if(splitAddr.length > 1) {
-    return validator.isIP(splitAddr[0], 6) && ( parseInt(splitAddr[1]) <= 32 )
+  if (splitAddr.length > 1) {
+    return validator.isIP(splitAddr[0], 6) && (parseInt(splitAddr[1]) <= 32)
   }
 
   return !!address && validator.isIP(address, 6)
@@ -219,8 +219,8 @@ export function isInLength(str, length = 10) {
  * @returns {*}
  */
 export function isInt(int) {
-  return !isNaN(int) &&
-         parseInt(Number(int)) == int &&
+  // eslint-disable-next-line eqeqeq
+  return !isNaN(int) && parseInt(Number(int)) == int &&
          !isNaN(parseInt(int, 10));
 }
 
@@ -263,6 +263,7 @@ export function isValidASN(asn) {
 
   if (asn >= ASN_MIN && asn <= ASN_MAX) {
     isValid = true
+    // eslint-disable-next-line eqeqeq
     if (asn == ASN_RESERVED || (asn >= ASN_RESERVED_RANGE_START && asn <= ASN_RESERVED_RANGE_END)) {
       isValid = false
     }

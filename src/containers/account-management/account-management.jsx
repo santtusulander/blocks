@@ -98,7 +98,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
 
-    else if(this.props.accounts.size) {
+    else if (this.props.accounts.size) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, this.props.accounts)
     }
@@ -114,7 +114,7 @@ export class AccountManagement extends Component {
       this.props.userActions.fetchUsers(brand, account)
     }
 
-    else if(!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
+    else if (!nextProps.params.account && !this.props.accounts.equals(nextProps.accounts)) {
       this.props.userActions.startFetching()
       this.props.userActions.fetchUsersForMultipleAccounts(brand, nextProps.accounts)
     }
@@ -240,7 +240,7 @@ export class AccountManagement extends Component {
   }
 
   hideGroupModal() {
-    if(this.state.groupToUpdate) {
+    if (this.state.groupToUpdate) {
       this.setState({ groupToUpdate: null })
     }
     this.props.toggleModal()

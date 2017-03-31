@@ -30,7 +30,7 @@ const validate = ({ billing_meta: { charge_number = '', regions, flow_direction 
     ],
     regions: [
       {
-        condition: regions && !(regions.reduce((acc, {charge_number}) => acc && isValidChargeNumber(charge_number), true)),
+        condition: regions && !(regions.reduce((acc, {region_charge_number}) => acc && isValidChargeNumber(region_charge_number), true)),
         errorText: <FormattedMessage id="portal.account.chargeNumbersForm.regions.validationError" />
       }
     ]

@@ -214,7 +214,7 @@ class DateRangeSelect extends React.Component {
     // UDNP-2106 - In date picker, move current month to the right
     // We should make the current month appear on the right side of the date picker,
     // so the user has more immediate access to the previous month.
-    let localEndDate = this.makeLocal(endDate)
+    const localEndDate = this.makeLocal(endDate)
 
     return localEndDate.subtract(1, 'month')
   }

@@ -63,20 +63,20 @@ export function deleteFailure(state) {
 }
 
 export function fetchSuccess(state, action) {
-  let host = action.payload
+  const host = action.payload
   host.services[0].configurations = host.services[0].configurations.map(config => {
     if (!config.defaults) {
       config.defaults = {}
     }
     if (!config.request_policy || !config.request_policy.policy_rules) {
-      config.request_policy = {policy_rules:[]}
+      config.request_policy = {policy_rules: []}
     }
     if (!config.response_policy || !config.response_policy.policy_rules) {
-      config.response_policy = {policy_rules:[]}
+      config.response_policy = {policy_rules: []}
     }
     return config;
   })
-  if(!host.services[0].active_configurations) {
+  if (!host.services[0].active_configurations) {
     host.services[0].active_configurations = []
   }
   const newActive = Immutable.fromJS(host)
@@ -172,7 +172,7 @@ export default handleActions({
 
 export const createHost = createAction(HOST_CREATED, (brand, account, group, id, deploymentMode, serviceType) => {
   return axios.post(`${BASE_URL_NORTH}/brands/${brand}/accounts/${account}/groups/${group}/published_hosts/${id}`, {
-    services:[{
+    services: [{
       service_type: serviceType,
       deployment_mode: deploymentMode,
       configurations: [{
@@ -190,7 +190,7 @@ export const createHost = createAction(HOST_CREATED, (brand, account, group, id,
     }
   })
   .then(res => {
-    if(res) {
+    if (res) {
       return Immutable.fromJS(res.data).set('id', id)
     }
   })

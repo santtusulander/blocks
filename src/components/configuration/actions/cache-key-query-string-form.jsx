@@ -35,7 +35,7 @@ class CacheKeyQueryStringForm extends React.Component {
     return e => {
       let newArgs = this.state.queryArgs.set(index, e.target.value)
 
-      if(newArgs.last()) {
+      if (newArgs.last()) {
         newArgs = newArgs.push('')
       }
       this.setState({queryArgs: newArgs}, this.updateSet)
@@ -50,8 +50,8 @@ class CacheKeyQueryStringForm extends React.Component {
     let queryArgs = List()
     let activeFilter = 'ignore_all_query_parameters'
 
-    if(currentNames) {
-      if(currentNames.find(name => name.get('field') === 'request_query')) {
+    if (currentNames) {
+      if (currentNames.find(name => name.get('field') === 'request_query')) {
         activeFilter = 'include_all_query_parameters'
       }
       else {
@@ -59,10 +59,10 @@ class CacheKeyQueryStringForm extends React.Component {
           .filter(name => name.get('field') === 'request_query_arg')
           .map(name => name.get('field_detail'))
 
-        if(currentQueryArgs.size){
+        if (currentQueryArgs.size) {
           queryArgs = currentQueryArgs
 
-          if(currentQueryArgs.last() !== '') {
+          if (currentQueryArgs.last() !== '') {
             queryArgs = queryArgs.push('')
           }
 
@@ -83,10 +83,10 @@ class CacheKeyQueryStringForm extends React.Component {
       {field: 'request_path'}
     ])
 
-    if(this.state.activeFilter === 'include_all_query_parameters') {
+    if (this.state.activeFilter === 'include_all_query_parameters') {
       newName = newName.push(Map({field: 'request_query'}))
     }
-    else if(this.state.activeFilter === 'include_some_parameters') {
+    else if (this.state.activeFilter === 'include_some_parameters') {
       if (!this.state.queryArgs.size) {
         newName = newName.push(Map({
           field: 'request_query_arg',
@@ -95,7 +95,7 @@ class CacheKeyQueryStringForm extends React.Component {
       }
 
       this.state.queryArgs.forEach(queryArg => {
-        if(queryArg) {
+        if (queryArg) {
           newName = newName.push(Map({
             field: 'request_query_arg',
             field_detail: queryArg
@@ -135,7 +135,7 @@ class CacheKeyQueryStringForm extends React.Component {
           onChange={this.handleChangeArg(i)}/>
       </FormGroup>
     )
-    if(horizontal) {
+    if (horizontal) {
       return (<div>
         <Row className="form-group">
           <Col lg={4} xs={6} className="toggle-label">

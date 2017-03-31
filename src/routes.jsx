@@ -144,11 +144,11 @@ import { UserAuthWrapper } from 'redux-auth-wrapper'
 
 const UserIsLoggedIn = UserAuthWrapper({
   authSelector: state => state.user,
-  authenticatingSelector: state => state.user.get('fetching') && ( state.user.get('loggedIn') === false ),
+  authenticatingSelector: state => state.user.get('fetching') && (state.user.get('loggedIn') === false),
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserIsLoggedIn',
   predicate: (user) => {
-    return ( user && user.get('loggedIn') === true )
+    return (user && user.get('loggedIn') === true)
   },
   allowRedirectBack: true
 })
@@ -175,7 +175,7 @@ const AccountIsSP = UserAuthWrapper({
   authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsSP',
   predicate: (account) => {
-    if(!account) {
+    if (!account) {
       return true
     } else {
       return accountIsServiceProviderType(account)
@@ -201,7 +201,7 @@ const AccountIsCP = UserAuthWrapper({
   authenticatingSelector: (state) => getFetchingByTag(state, 'accounts'),
   wrapperDisplayName: 'AccountIsCP',
   predicate: ({account}) => {
-    if(!account) {
+    if (!account) {
       return true
     } else {
       return accountIsContentProviderType(account) || accountIsCloudProviderType(account)

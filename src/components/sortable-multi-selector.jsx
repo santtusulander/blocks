@@ -82,7 +82,7 @@ class SortableMultiSelector extends React.Component {
   }
 
   onSortEnd({oldIndex, newIndex}) {
-    let item = this.props.value.get(oldIndex)
+    const item = this.props.value.get(oldIndex)
 
     this.props.onChange(this.props.value.delete(oldIndex).insert(newIndex, item))
   }
@@ -90,7 +90,7 @@ class SortableMultiSelector extends React.Component {
   render() {
     const { options, label, required } = this.props
     const value = this.props.value || List()
-    const getLabel = () => (value) => options.find(item => item.value === value).label
+    const getLabel = () => (labelValue) => options.find(item => item.value === labelValue).label
 
     const filteredOptions = options.map(option => {
       return Object.assign({}, option, {

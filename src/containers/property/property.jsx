@@ -59,9 +59,11 @@ export class Property extends React.Component {
       activePurge.toJS()
     )
     .then(({ payload }) => {
-      const getMessage = () => payload instanceof Error ?
-        <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/> :
-        <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
+      const getMessage = () => {
+        return payload instanceof Error
+        ? <FormattedMessage id="portal.content.property.summary.requestFailed.label" values={{reason: payload.message}}/> 
+        : <FormattedMessage id="portal.content.property.summary.requestSuccess.label"/>
+      }
 
       this.setState({purgeActive: false})
       this.showNotification(getMessage())

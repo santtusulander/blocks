@@ -26,11 +26,11 @@ class AnalyticsTabStorage extends Component {
     const { params, filters, location, fetchStorageMetrics } = this.props
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
 
-    fetchStorageMetrics({include_history:true, list_children: false, ...fetchOpts})
+    fetchStorageMetrics({include_history: true, list_children: false, ...fetchOpts})
 
-    if(params.storage) {
+    if (params.storage) {
       this.props.fetchOneCISIngestPoint({brand: params.brand, account: params.account, group: params.group, id: params.storage})
-    } else if(params.group){
+    } else if (params.group) {
       this.props.fetchAllCISIngestPoints(params)
     } else {
       this.props.fetchAllGroups(params)
@@ -43,26 +43,26 @@ class AnalyticsTabStorage extends Component {
     const fetchOpts = buildAnalyticsOpts(params, filters, location)
     const nextFetchOpts = buildAnalyticsOpts(nextProps.params, nextProps.filters, nextProps.location)
 
-    if(nextProps.params.account !== params.account) {
+    if (nextProps.params.account !== params.account) {
       nextProps.fetchAllGroups(nextProps.params)
     }
 
-    if(!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
-      nextProps.groups.forEach( (group) => {
+    if (!nextProps.params.group && !Immutable.is(groups, nextProps.groups)) {
+      nextProps.groups.forEach((group) => {
         const groupId = group.get('id')
         nextProps.fetchAllCISIngestPoints({brand: nextProps.params.brand, account: nextProps.params.account, group: groupId})
       })
     }
 
-    if(JSON.stringify(nextFetchOpts) !== JSON.stringify(fetchOpts)) {
-      nextProps.fetchStorageMetrics({include_history:true, list_children: false, ...nextFetchOpts})
+    if (JSON.stringify(nextFetchOpts) !== JSON.stringify(fetchOpts)) {
+      nextProps.fetchStorageMetrics({include_history: true, list_children: false, ...nextFetchOpts})
     }
   }
 
   formatTotals(value) {
-    if(this.props.filters.get('storageType') === 'bytes') {
+    if (this.props.filters.get('storageType') === 'bytes') {
       return formatBytes(value)
-    } else if(this.props.filters.get('storageType') === 'files_count') {
+    } else if (this.props.filters.get('storageType') === 'files_count') {
       return numeral(value).format('0,0 a')
     }
   }
@@ -71,7 +71,7 @@ class AnalyticsTabStorage extends Component {
     const { contentProviderAccount, filters, peakStorage, avgStorage, lowStorage, dataForChart, params} = this.props
     const storageType = filters.get('storageType')
 
-    if(!contentProviderAccount) {
+    if (!contentProviderAccount) {
       return (
         <div className="text-center">
           <FormattedMessage id="portal.analytics.selectContentProviderAccount.text" />
@@ -126,9 +126,9 @@ const mapStateToProps = (state, { params: { account, group, storage } }) => {
 
   let getStorageByParent
 
-  if(storage) {
+  if (storage) {
     getStorageByParent = getByStorageId(state, storage)
-  } else if(group) {
+  } else if (group) {
     getStorageByParent = getByGroupId(state, group)
   } else {
     getStorageByParent = getByAccountId(state, account)

@@ -30,13 +30,13 @@ const PropertyItemContainer = props => {
     )
   }
 
-  const isTrial = isTrialHost( props.entity )
+  const isTrial = isTrialHost(props.entity)
 
   //Scale starbursts based on totalTraffic
   let trafficMin = Math.min(...totalTraffics)
-  let trafficMax = Math.max(...totalTraffics)
+  const trafficMax = Math.max(...totalTraffics)
 
-  trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+  trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
   const rangeMin = 400
   const rangeMax = 500
@@ -48,10 +48,10 @@ const PropertyItemContainer = props => {
   const totalTraffic = entityMetrics.get('totalTraffic')
 
   //set to smallest size if no totalTraffic in metricsData
-  const scaledWidth = totalTraffic ? trafficScale( totalTraffic ) : rangeMin
+  const scaledWidth = totalTraffic ? trafficScale(totalTraffic) : rangeMin
 
   if (!props.viewingChart) {
-    return(
+    return (
       <ContentItemList
         id={published_host_id}
         name={published_host_id}
