@@ -14,8 +14,8 @@ import { SCHEMA_OPTIONS, ENCRYPTION_OPTIONS } from '../../constants/configuratio
 const TokenAuthList = ({ rules, editUrlBuilder, intl }) => {
   const schemaOptions = SCHEMA_OPTIONS.map(({value, label}) => ({value, label: intl.formatMessage({id: label}) }))
   const getSchemaLabel = (schema) => {
-    return schema.reduce((acc, sigleSchema) => {
-      return acc.concat([schemaOptions.find(option => option.value === sigleSchema).label])
+    return schema.reduce((acc, singleSchema) => {
+      return acc.concat([schemaOptions.find(option => option.value === singleSchema).label])
     }, []).join(' + ')
   }
 
