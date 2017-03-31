@@ -437,7 +437,9 @@ class ContentItems extends React.Component {
 
     const currentValue = foundSort ? foundSort.value : sortOptions[0].value
     const isCloudProvider = userIsCloudProvider(user.get('currentUser'))
-    const toggleView = type => type ? this.props.toggleChartView : () => {/*no-op*/}
+    const toggleView = (type) => {
+      return type ? this.props.toggleChartView : () => {/*no-op*/}
+    }
 
     const addHostTitle = <FormattedMessage id="portal.content.property.header.add.label"/>
     const addHostSubTitle = activeAccount && activeGroup

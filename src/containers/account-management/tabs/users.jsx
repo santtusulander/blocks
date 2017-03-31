@@ -435,9 +435,9 @@ export class AccountManagementAccountUsers extends React.Component {
             closeModal={true}
             closeButton={true}
             cancel={this.togglePermissionModal}>
-              {this.props.roles.map((role, roleIndex) => (
-                role.getIn(['permissions', 'ui']) ?
-                <PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
+              {this.props.roles.map((role, roleIndex) => {
+                return role.getIn(['permissions', 'ui']) ?
+                (<PanelGroup accordion={true} key={roleIndex} defaultActiveKey="">
                   <Panel header={role.get('name')} className="permission-panel" eventKey={roleIndex}>
                     <Table striped={true} key={roleIndex}>
                       <tbody>
@@ -454,8 +454,8 @@ export class AccountManagementAccountUsers extends React.Component {
                       </tbody>
                     </Table>
                   </Panel>
-                </PanelGroup> : null
-              ))}
+                </PanelGroup>) : null
+              })}
           </ModalWindow>
         }
       </PageContainer>

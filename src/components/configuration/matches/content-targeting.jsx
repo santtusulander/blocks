@@ -70,7 +70,9 @@ class ContentTargeting extends React.Component {
               className="input-select"
               component={FieldFormGroupSelect}
               options={typeOptions}
-              format={(v) => v ? 'not_in' : 'in'}
+              format={(v) => {
+                return v ? 'not_in' : 'in'
+              }}
               normalize={(v) => !(v === 'in')}
               label={label}
             />
