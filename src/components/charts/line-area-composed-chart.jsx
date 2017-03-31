@@ -35,7 +35,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
     const ticks = scale.ticks(steps, 1);
     return ticks.map(entry => +(entry/1000) );
   }
-  
+
   return (
     <div className="line-area-composed-chart-container">
       <span id="line-area-composed-chart-label" className="line-area-composed-chart-label">
@@ -95,6 +95,7 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
             }
 
             <Tooltip
+              isAnimationActive={false}
               cursor={{stroke: black}}
               content={
                 <LineAreaComposedChartTooltip
