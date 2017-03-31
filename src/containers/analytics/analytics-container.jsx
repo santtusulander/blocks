@@ -8,6 +8,7 @@ import * as accountActionCreators from '../../redux/modules/account'
 import * as groupActionCreators from '../../redux/modules/group'
 import * as propertyActionCreators from '../../redux/modules/host'
 import * as filtersActionCreators from '../../redux/modules/filters'
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import AnalyticsViewControl from '../../components/analytics/analytics-view-control'
 import AnalyticsTabControl  from '../../components/analytics/analytics-tab-control'
@@ -253,7 +254,7 @@ function mapStateToProps(state) {
     activeGroup: state.group.get('activeGroup'),
     filters: state.filters.get('filters'),
     filterOptions: state.filters.get('filterOptions'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     user: state.user.get('currentUser')
   }
 }
