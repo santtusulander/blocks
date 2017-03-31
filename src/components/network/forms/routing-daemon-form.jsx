@@ -73,7 +73,7 @@ class RoutingDaemonForm extends React.Component {
   fetchBGPName(value) {
     const BGPNumber = value
 
-    if (!BGPNumber || BGPNumber.length == 0) {
+    if (!BGPNumber || BGPNumber.length === 0) {
       this.setState({ BGPNumberIsEmpty: true })
       return
     }

@@ -191,13 +191,11 @@ export const getActiveConfiguration = (property) => {
  * @return [Array] of token auth rules
  */
 export const getTokenAuthRules = (properties) => {
-  let tokenAuthRules = []
-
   for( let key in properties) {
     const property = properties[key]
     const config = getActiveConfiguration(property)
 
-    config && config.request_policy.policy_rules.forEach( (rule, key) => {
+    config && config.request_policy.policy_rules.forEach( (rule, request_policy_key) => {
       const { sets, default_sets } = parsePolicy(fromJS(rule), [])
       const tokenAuthActions = filterActionIsTokenAuth( sets.concat(default_sets) )
 
@@ -205,7 +203,7 @@ export const getTokenAuthRules = (properties) => {
         tokenAuthActions.forEach(set => {
           const tokenAuthConfig = fromJS(rule).getIn(set.path.concat('tokenauth')).toJS()
           const returnObj = {
-            ruleId: key,
+            ruleId: request_policy_key,
             propertyName: property.published_host_id,
             type: tokenAuthConfig.type === TOKEN_AUTH_STREAMING ? 'portal.security.tokenAuth.streaming.text' :'portal.security.tokenAuth.static.text',
             accountId: property.accountId,
@@ -218,7 +216,6 @@ export const getTokenAuthRules = (properties) => {
 
           tokenAuthRules.push(returnObj)
         })
-
       }
     })
   }

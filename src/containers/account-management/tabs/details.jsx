@@ -67,8 +67,8 @@ class AccountDetails extends React.Component {
                       if (options.size > 0) {
                         optionList = (
                           <ul>
-                            {options.map( (optionId, i) => {
-                              return <li key={i}>{getOptionName(servicesInfo, service.get('id'), optionId)}</li>
+                            {options.map( (optionId, optionIndex) => {
+                              return <li key={optionIndex}>{getOptionName(servicesInfo, service.get('id'), optionId)}</li>
                             })}
                           </ul>
                         );

@@ -57,7 +57,7 @@ class ExportFileForm extends React.Component {
               <Radio
                 key={`radio-${index}`}
                 name="exportFile"
-                checked={fileType.value == this.state.fileType}
+                checked={fileType.value === this.state.fileType}
                 className="export-input-list-item"
                 onChange={this.onChange(fileType.value)}
               ><span>{fileType.label}</span></Radio>

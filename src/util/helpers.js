@@ -198,8 +198,13 @@ export function buildAnalyticsOpts(params, filters, location ){
   const tabKey = getTabName(location.pathname)
   //get array of visible filters for current tab e.g. ["dateRange", "includeComparison", "serviceTypes", "recordType"]
   let visibleFilters = List()
-  const tab = AnalyticsTabConfig.find( tab => tab.get('key') === tabKey )
-  if (tab) { visibleFilters = tab.get('filters') }
+  const tab = AnalyticsTabConfig.find((analytics_tab) => {
+    return analytics_tab.get('key') === tabKey
+  })
+
+  if (tab) {
+    visibleFilters = tab.get('filters')
+  }
 
   //get filter values
   let filterValues = {}
@@ -309,13 +314,19 @@ export function filterChangeNeedsReload(currentFilters, nextFilters) {
   let changedFilters = [];
 
   currentFilters.map((filter, i) => {
-    if(filter !== nextFilters.get(i))  changedFilters.push(i)
+    if (filter !== nextFilters.get(i)) {
+      changedFilters.push(i)
+    }
+
+    return false
   })
 
   const reloadNeeded = changedFilters.reduce((prev, filterName) => {
-    if(filterNeedsReload.includes(filterName)) return true;
+    if (filterNeedsReload.includes(filterName)) {
+      return true
+    }
 
-    return false;
+    return false
   }, false)
 
   return reloadNeeded;
@@ -364,7 +375,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 
 
 export function filterAccountsByUserName (accounts) {
-  // placeholder for now 
+  // placeholder for now
   return accounts
 }
 
@@ -468,11 +479,13 @@ export function userHasRole(user, roleToFind) {
   const mapping = fromJS(ROLES_MAPPING)
 
   for (let roleId of userRoles) {
-    const role = mapping.find(role => role.get('id') === roleId)
+    const role = mapping.find((mapping_role) => {
+      return mapping_role.get('id') === roleId
+    })
     const accountTypes = role.get('accountTypes')
 
     if (role && accountTypes && accountTypes.size > 0) {
-      if (accountTypes.find(roleId => roleId === roleToFind)) {
+      if (accountTypes.find((accountRoleId) => accountRoleId === roleToFind)) {
         return true
       }
     }
@@ -500,6 +513,8 @@ export function getAccountByID(accounts, ids) {
     let accountsArray = []
     ids.map(id => {
       accountsArray.push(accounts.find(account => account.get('id') === id))
+
+      return false
     })
     return accountsArray
   } else {
@@ -621,6 +636,8 @@ export function getTopURLs(urlMetrics, dataKey) {
       url: byBytes.keyOf(url),
       bytes: url
     })
+
+    return false
   })
 
   let aggregatedByRequests = List([])
@@ -629,6 +646,8 @@ export function getTopURLs(urlMetrics, dataKey) {
       url: byRequests.keyOf(url),
       requests: url
     })
+
+    return false
   })
   const aggregatedData = dataKey === 'bytes' ?
     aggregatedByBytes.sortBy((metric) => -metric.bytes) :

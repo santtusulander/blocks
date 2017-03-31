@@ -45,7 +45,9 @@ const BrandEditForm = (props) => {
         title={title}
         className="brand-edit-form-sidebar"
         subTitle="PLACEHOLDER"
-        cancel={() => {}}>
+        cancel={() => {
+          // no-op
+        }}>
 
         <form onSubmit={props.handleSubmit(onSubmit)}>
 

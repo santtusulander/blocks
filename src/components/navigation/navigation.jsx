@@ -54,11 +54,11 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
     analyticsActive = router.isActive(getRoute('analytics')) ? ' active' : ''
 
   const isUDNCore = (activeAccount.get('id') === UDN_CORE_ACCOUNT_ID)
-  const contentOrNetworkUrlBuilder = (params, currentUser, roles) => {
+  const contentOrNetworkUrlBuilder = (params, currentUserArg, userRoles) => {
     if (router.isActive(getRoute('network')) && (!isUDNCore)) {
-      return getNetworkUrlFromParams(params, currentUser, roles)
+      return getNetworkUrlFromParams(params, currentUserArg, userRoles)
     } else {
-      return getContentUrlFromParams(params, currentUser, roles)
+      return getContentUrlFromParams(params, currentUserArg, userRoles)
     }
   }
 
@@ -67,7 +67,7 @@ const Navigation = ({ activeAccount, currentUser, params, roles, router }) => {
   const isUDNAdmin = !isSP && !isCP
   /* When users with SP accounts log in, the initial route is still '/content/udn' before we redirect to 'dashboard/udn'.
     Hence, we need to set active class for dashboard before redirecting */
-  const dashboardSPActive = contentActive && isSP
+  const dashboardSPActive = isSP && contentActive
 
   return (
     <nav className='navigation-sidebar text-sm'>
@@ -188,7 +188,7 @@ Navigation.propTypes = {
   activeAccount: React.PropTypes.object,
   currentUser: React.PropTypes.instanceOf(Immutable.Map),
   params: React.PropTypes.object,
-  roles: React.PropTypes.instanceOf(Immutable.List),
+  roles: React.PropTypes.instanceOf(Immutable.Map),
   router: React.PropTypes.object
 }
 

@@ -28,10 +28,12 @@ class AnalysisFileError extends React.Component {
   hasKeys(val, keyList) {
     if (keyList.includes('all')) return true;
 
-    let found = false;
+    let found = false
+    // eslint-disable-next-line array-callback-return
     keyList.some((key) => {
       if (val.has(key)) {
-        found=true;
+        found = true;
+        // eslint-disable-next-line array-callback-return
         return
       }
     })

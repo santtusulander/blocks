@@ -135,8 +135,8 @@ export function getTicketPriorityIcon(priority) {
 export function getTicketPriorityLabel(priority) {
   const options = List(getTicketPriorityOptions())
 
-  const option = options.find((option) => {
-    return option.value === priority
+  const option = options.find((single_option) => {
+    return single_option.value === priority
   })
 
   return option.label
@@ -145,8 +145,8 @@ export function getTicketPriorityLabel(priority) {
 export function getTicketTypeLabel(type) {
   const options = List(getTicketTypeOptions())
 
-  const option = options.find((option) => {
-    return option.value === type
+  const option = options.find((single_option) => {
+    return single_option.value === type
   })
 
   return option.label

@@ -159,7 +159,7 @@ class StorageFormContainer extends React.Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={(storageId) => this.onDelete(storageId)}>
+            onSubmit={(storageIdToDelete) => this.onDelete(storageIdToDelete)}>
             <p>
              <FormattedMessage id="portal.storage.storageForm.deleteModal.confirmation.text"/>
             </p>
