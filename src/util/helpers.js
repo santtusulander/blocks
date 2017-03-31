@@ -458,7 +458,7 @@ export function matchesRegexp(string, pattern, caseSensitive = false) {
   if(!(pattern instanceof RegExp)) {
     throw new Error(`${pattern} is not a valid RegExp string`);
   }
-  var testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
+  let testPattern = caseSensitive ? new RegExp(pattern) : new RegExp(pattern, 'i');
   return testPattern.test(string);
 }
 
