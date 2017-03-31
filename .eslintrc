@@ -139,7 +139,7 @@
     "array-callback-return": 1,
     "array-bracket-spacing": [0, "never"],
     "arrow-parens": 0,
-    "arrow-spacing": 2,
+    "arrow-spacing": 1,
     "accessor-pairs": 0,
     "block-scoped-var": 0,
     "brace-style": [0, "1tbs"],
