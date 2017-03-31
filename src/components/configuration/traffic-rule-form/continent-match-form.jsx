@@ -13,6 +13,8 @@ const validate = ({ continents }) => checkForErrors({ continents })
 
 const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSubmit, invalid, intl }) => {
 
+  const options = continents.map(({ id, labelId }) => ({ id, label: intl.formatMessage({ id: labelId }) }))
+
   const saveMatch = values => {
     const labelText = values.continents.reduce((string, { label }, index) => `${string}${index ? ',' : ''} ${label}`, '')
     onSave({
@@ -30,7 +32,7 @@ const ContinentMatchForm = ({ onSave, onCancel, matchIndex, matchType, handleSub
         component={Typeahead}
         placeholder={intl.formatMessage({ id: "portal.configuration.traffic.rules.match.continent.input.placeholder" })}
         multiple={true}
-        options={continents}
+        options={options}
         label={<FormattedMessage id="portal.configuration.traffic.rules.match.continent" />}/>
       <FormFooterButtons>
         <Button

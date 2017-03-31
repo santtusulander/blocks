@@ -1,9 +1,9 @@
 export default [
-  { id: "AF", label: "Africa"},
-  { id: "AN", label: "Antarctica" },
-  { id: "AS", label: "Asia" },
-  { id: "EU", label: "Europe" },
-  { id: "NA", label: "North America" },
-  { id: "OC", label: "Oceania" },
-  { id: "SA", label: "South America" }
+  { id: "AF", labelId: "portal.common.continent.africa" },
+  { id: "AN", labelId: "portal.common.continent.antarctica" },
+  { id: "AS", labelId: "portal.common.continent.asia" },
+  { id: "EU", labelId: "portal.common.continent.europe" },
+  { id: "NA", labelId: "portal.common.continent.northAmerica" },
+  { id: "OC", labelId: "portal.common.continent.oceania" },
+  { id: "SA", labelId: "portal.common.continent.southAmerica" }
 ]
