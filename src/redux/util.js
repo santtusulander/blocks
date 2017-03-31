@@ -40,7 +40,9 @@ export const analyticsBase = ({legacy = true} = {}) => {
   }
 }
 
-export const parseResponseData = response => response ? response.data : null
+export const parseResponseData = (response) => {
+  return response ? response.data : null
+}
 
 export function mapReducers(next, err) {
   if(!next || !err) {

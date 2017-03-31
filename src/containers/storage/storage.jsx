@@ -239,10 +239,8 @@ Storage.defaultProps = {
   }
 }
 
-const getMockContents = (storage) => (
-  storage === 'with-contents'
-  ?
-  [
+const getMockContents = (storage) => {
+  return storage === 'with-contents' ? [
     {
       type: 'file',
       lastModified: new Date('Thu March 9 2017 11:17:01 GMT-0700 (PDT)'),
@@ -265,10 +263,8 @@ const getMockContents = (storage) => (
       status: 'Failed',
       noOfFiles: 800
     }
-  ]
-  :
-    []
-  )
+  ] : []
+}
 
 const prepareStorageMetrics = (state, storage, storageMetrics, storageType) => {
   const { value: estimated, unit } = separateUnit(formatBytes(storage.get('estimated_usage')))

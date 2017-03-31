@@ -98,10 +98,9 @@ const LineAreaComposedChart = ({chartLabel, data, dataKey, comparisonDataKey, ke
               cursor={{stroke: black}}
               content={
                 <LineAreaComposedChartTooltip
-                  iconClassNamePicker={(dataKey) => dataKey !== comparisonDataKey
-                    ? 'storage'
-                    : 'comparison_storage'
-                  }
+                  iconClassNamePicker={(dataKey) => {
+                    return (dataKey !== comparisonDataKey) ? 'storage' : 'comparison_storage'
+                  }}
                   ignoreValues={["estimate"]}
                   valueFormatter={valueFormatter}
                 />
