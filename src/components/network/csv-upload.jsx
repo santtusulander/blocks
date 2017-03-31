@@ -57,6 +57,8 @@ class CsvUploadArea extends Component {
       } else {
         rejectedFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({
@@ -93,6 +95,8 @@ class CsvUploadArea extends Component {
           rejectedFiles.push(file)
         }
       }
+
+      return false
     })
 
     this.setState({
@@ -111,6 +115,8 @@ class CsvUploadArea extends Component {
       if (file.name !== fileName) {
         newFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({

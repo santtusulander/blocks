@@ -225,6 +225,8 @@ class EntityList extends React.Component {
         // First we chunk our list of elements into segments based on how many
         // items we want to show per column and then render the wrapping divs
         // accordingly.
+
+        // eslint-disable-next-line array-callback-return
         content = this.chunkIntoSegments(entityList, itemsPerColumn).map((col, i) => {
           // We only want to show the specified amount of columns.
           if (i < numOfColumns) {
