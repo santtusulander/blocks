@@ -69,6 +69,33 @@
   "portal.policy.edit.rule.matcher.from.text": "Users from",
   "portal.policy.edit.rule.matcher.notFrom.text": "Users NOT from",
 
+  "portal.configuration.traffic.rules.match.continent.items": "Continents: {items}",
+  "portal.configuration.traffic.rules.match.country.items": "Countries: {items}",
+  "portal.configuration.traffic.rules.match.ipv4address.items": "IPv4 Addresses: {items}",
+  "portal.configuration.traffic.rules.match.ipv4cidr.items": "IPv4 CIDRs: {items}",
+  "portal.configuration.traffic.rules.match.asn.items": "ASNs: {items}",
+
+  "portal.configuration.traffic.rules.matches.modal.title": "Choose Match",
+  "portal.configuration.traffic.rules.matches.modal.subtitle": "Select the match type",
+
+  "portal.configuration.traffic.rules.match.continent.modal.subtitle": "Specify all continents that should be matched",
+  "portal.configuration.traffic.rules.match.country.modal.subtitle": "Specify all countries that should be matched",
+  "portal.configuration.traffic.rules.match.ipv4address.modal.subtitle": "Specify all IP's that should be matched",
+  "portal.configuration.traffic.rules.match.ipv4cidr.modal.subtitle": "Specify all CIDR's that should be matched",
+  "portal.configuration.traffic.rules.match.asn.modal.subtitle": "Specify all ASN's that should be matched",
+
+  "portal.configuration.traffic.rules.match.ipv4address.input.error": "Some of the values you entered could not be resolved as IPv4 addresses.",
+
+  "portal.configuration.traffic.rules.match.continent": "Continent",
+  "portal.configuration.traffic.rules.match.country": "Country",
+  "portal.configuration.traffic.rules.match.ipv4address": "IPv4 Address",
+  "portal.configuration.traffic.rules.match.ipv4cidr": "IPv4 CIDR",
+  "portal.configuration.traffic.rules.match.asn": "Autonomous System Number (ASN)",
+  "portal.configuration.traffic.rules.match.continent.input.placeholder": "Enter continent name",
+  "portal.configuration.traffic.rules.match.country.input.placeholder": "Enter country name, 2-letter or 3-letter ISO code",
+  "portal.configuration.traffic.rules.match.ipv4address.input.placeholder": "Enter IPv4 addresses, eg. 10.1.1.1",
+  "portal.configuration.traffic.rules.match.ipv4cidr.input.placeholder": "Enter IPv4 addresses in CIDR notation, eg. 10.1.1.1/24",
+
   "portal.configuration.condition.and": "AND",
   "portal.configuration.condition.or": "OR",
 

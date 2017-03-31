@@ -1,17 +1,23 @@
 import React, { Component, PropTypes } from 'react'
 import { Modal } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
 
 import IconClose from '../../icons/icon-close'
 import keyStrokeSupport from '../../../decorators/key-stroke-decorator'
 import IconCaretRight from '../../icons/icon-caret-right'
+
 import ContinentMatchConditionForm from './continent-match-form'
+import CountryMatchConditionForm from './country-match-form'
+import ASNMatchConditionForm from './asn-match-form'
+import CIDRMatchConditionForm from './ipv4cidr-match-form'
+import AddressMatchConditionForm from './ipv4address-match-form'
 
 const matches = [
-  { matchType: 'continent', label: 'Continent'},
-  { matchType: 'country', label: 'Country'},
-  { matchType: 'ipv4address', label: 'IPv4 Address'},
-  { matchType: 'ipv4cidr', label: 'IPv4 CIDR'},
-  { matchType: 'asn', label: 'ASN'}
+  { matchType: 'continent', label: <FormattedMessage id="portal.configuration.traffic.rules.match.continent" /> },
+  { matchType: 'country', label: <FormattedMessage id="portal.configuration.traffic.rules.match.country" /> },
+  { matchType: 'ipv4address', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address" /> },
+  { matchType: 'ipv4cidr', label: <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr" /> },
+  { matchType: 'asn', label: <FormattedMessage id="portal.configuration.traffic.rules.match.asn" /> }
 ]
 
 class MatchesForm extends Component {
@@ -54,46 +60,46 @@ class MatchesForm extends Component {
 
     const { chosenMatch, onCancel, saveMatch } = this.props
 
-    let title = 'Choose Match'
-    let subtitle = 'Select the match type'
+    let title = <FormattedMessage id="portal.configuration.traffic.rules.matches.modal.title" />
+    let subtitle = <FormattedMessage id="portal.configuration.traffic.rules.matches.modal.subtitle" />
     let matchType = undefined
     let Form = this.MatchSelection
 
     switch(this.props.chosenMatch.matchType) {
 
       case 'continent':
-        title = 'Continent'
-        subtitle = 'Specify all continents that should be matched'
+        title = <FormattedMessage id="portal.configuration.traffic.rules.match.continent" />
+        subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.continent.modal.subtitle"/>
         matchType = chosenMatch.matchType
         Form = ContinentMatchConditionForm
         break
 
       case 'country':
-        title = 'Country'
-        subtitle = 'Specify all continents that should be matched'
+        title = <FormattedMessage id="portal.configuration.traffic.rules.match.country" />
+        subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.country.modal.subtitle"/>
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = CountryMatchConditionForm
         break
 
       case 'ipv4address':
-        title = 'IPv4 Address'
-        subtitle = 'Specify all continents that should be matched'
+        title = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address"/>
+        subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4address.modal.subtitle"/>
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = AddressMatchConditionForm
         break
 
       case 'ipv4cidr':
-        title = 'IPv4 CIDR'
-        subtitle = 'Specify all continents that should be matched'
+        title = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr"/>
+        subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.ipv4cidr.modal.subtitle"/>
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = CIDRMatchConditionForm
         break
 
       case 'asn':
-        title = 'ASN'
-        subtitle = 'Specify all continents that should be matched'
+        title = <FormattedMessage id="portal.configuration.traffic.rules.match.asn" />
+        subtitle = <FormattedMessage id="portal.configuration.traffic.rules.match.asn.modal.subtitle"/>
         matchType = chosenMatch.matchType
-        Form = ContinentMatchConditionForm
+        Form = ASNMatchConditionForm
     }
 
     return (
