@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 import { getById as getAccountById } from './redux/modules/entities/accounts/selectors'
 import { getFetchingByTag } from './redux/modules/fetching/selectors'
 
