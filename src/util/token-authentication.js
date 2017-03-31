@@ -1,15 +1,20 @@
 import { HmacMD5, HmacSHA1, HmacSHA256, MD5, enc } from 'crypto-js'
+import moment from 'moment'
 
 import { SCHEMA_LABEL_MAP, STATIC_TOKEN_SAMPLE_VALUES } from '../constants/configuration'
 
 export const generateStaticTokenTableData = (schema, values) => (
-  schema.map(item => (
-    {
+  schema.map(item => {
+    let value = values[item] || STATIC_TOKEN_SAMPLE_VALUES[item]
+    if (item === 'EXPIRES') {
+      value = moment(value).utc()
+    }
+    return {
       labelID: SCHEMA_LABEL_MAP[item],
-      value: values[item] || STATIC_TOKEN_SAMPLE_VALUES[item],
+      value,
       schemaKey: item
     }
-  ))
+  })
 )
 
 export const generateTokenData = (schema, values) => (

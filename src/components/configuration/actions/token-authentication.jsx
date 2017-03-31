@@ -192,9 +192,9 @@ export class TokenAuth extends React.Component {
   }
 
   renderSampleOutputDialogChildren({ schema, encryption, sharedKey }) {
-    const renderRow = (titleID, content) => {
+    const renderRow = (titleID, content, index) => {
       return (
-        <tr className="sample-token-output-table-row">
+        <tr key={index} className="sample-token-output-table-row">
           <td><FormattedMessage id={titleID} /></td>
           <td><TruncatedTitle content={String(content)} /></td>
         </tr>
@@ -208,10 +208,31 @@ export class TokenAuth extends React.Component {
       USER_AGENT: navigator.userAgent,
       EXPIRES: moment().add(6, 'hour')
     }
-    const tableRows = generateStaticTokenTableData(schema, { ...tokenValues, EXPIRES: moment(tokenValues.EXPIRES).utc() })
+    const schemaRows = generateStaticTokenTableData(schema, tokenValues)
     const tokenData = generateTokenData(schema, tokenValues)
     const tokenHash = generateTokenHash(encryption, sharedKey, tokenData)
     const finalURL = generateFinalURL(undefined, tokenHash, getQueryArguments(schema, tokenValues))
+
+    const tableRows = [
+      {
+        labelID: 'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
+        value: schemaOptions.map(({ label }) => this.props.intl.formatMessage({ id: label })).join(' + ')
+      },
+      ...schemaRows,
+      {
+        labelID: 'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
+        value: tokenData
+      },
+      {
+        labelID: 'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_hash.title',
+        value: tokenHash
+      },
+      {
+        labelID: 'portal.policy.edit.tokenauth.sampleOutputDialog.table.final_url.title',
+        value: finalURL
+      }
+    ]
+
 
     return (
       <Table striped={true} className="fixed-layout">
@@ -222,24 +243,7 @@ export class TokenAuth extends React.Component {
           </tr>
         </thead>
         <tbody>
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
-              schemaOptions.map(({ label }) => this.props.intl.formatMessage({ id: label })).join(' + ')
-            )
-          }
-          { tableRows.map(row => renderRow(row.labelID, row.value)) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
-              tokenData
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_hash.title',
-              tokenHash
-          ) }
-          { renderRow(
-              'portal.policy.edit.tokenauth.sampleOutputDialog.table.final_url.title',
-              finalURL
-          ) }
+          { tableRows.map((row, index) => renderRow(row.labelID, row.value, index)) }
         </tbody>
       </Table>
     )
