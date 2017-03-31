@@ -124,6 +124,14 @@
   "portal.common.weekdayShort.friday": "Fr",
   "portal.common.weekdayShort.saturday": "Sa",
 
+  "portal.common.continent.africa": "Africa",
+  "portal.common.continent.antarctica": "Antarctica",
+  "portal.common.continent.asia": "Asia",
+  "portal.common.continent.europe": "Europe",
+  "portal.common.continent.northAmerica": "North America",
+  "portal.common.continent.oceania": "Oceania",
+  "portal.common.continent.southAmerica": "South America",
+
   "portal.common.typeahead.emptyLabel": "Add values by typing",
   "portal.common.typeahead.newSelectionPrefix": "Add value: ",
   "portal.common.search.no-results.text": "No results found.",

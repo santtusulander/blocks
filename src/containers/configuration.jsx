@@ -17,6 +17,7 @@ import * as uiActionCreators from '../redux/modules/ui'
 import propertyActions from '../redux/modules/entities/properties/actions'
 import storageActions from '../redux/modules/entities/CIS-ingest-points/actions'
 import { getByGroup } from '../redux/modules/entities/CIS-ingest-points/selectors'
+import { getAll as getRoles } from '../redux/modules/entities/roles/selectors'
 
 import { getContentUrl } from '../util/routes'
 import checkPermissions, { getStoragePermissions } from '../util/permissions'
@@ -530,10 +531,12 @@ Configuration.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { group, roles } = state
+  const { group } = state
   const activeGroup = group.get('activeGroup') || Immutable.Map()
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
-  const storagePermission = getStoragePermissions(roles.get('roles'), state.user.get('currentUser'))
+
+  const roles = getRoles(state)
+  const storagePermission = getStoragePermissions( roles, state.user.get('currentUser'))
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -544,7 +547,7 @@ function mapStateToProps(state) {
     policyActiveMatch: state.ui.get('policyActiveMatch'),
     policyActiveRule: state.ui.get('policyActiveRule'),
     policyActiveSet: state.ui.get('policyActiveSet'),
-    roles: state.roles.get('roles'),
+    roles: roles,
     groupHasStorageService,
     storagePermission,
     servicePermissions: state.group.get('servicePermissions'),

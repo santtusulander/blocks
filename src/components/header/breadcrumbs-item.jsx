@@ -173,6 +173,7 @@ class BreadcrumbsItem extends React.Component {
       }
 
       // Link to Group
+      // eslint-disable-next-line eqeqeq
       if (params.group && (activeGroup && (activeGroup.get('id') == params.group))) {
         links.push({
           label: activeGroup.get('name'),

@@ -31,6 +31,7 @@ export function createSuccess(state, action) {
 }
 
 export function deleteSuccess(state, action) {
+  // eslint-disable-next-line eqeqeq
   const newAllAccounts = state.get('allAccounts').filterNot(account => account.get('id') == action.payload.id)
   return state.merge({
     allAccounts: newAllAccounts,

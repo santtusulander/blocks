@@ -19,6 +19,7 @@ import { getById as getPopById } from '../../../redux/modules/entities/pops/sele
 import { getById as getPodById } from '../../../redux/modules/entities/pods/selectors'
 import { getByAccount as getFootprintsByAccount} from '../../../redux/modules/entities/footprints/selectors'
 import { getByPod as getNodesByPod } from '../../../redux/modules/entities/nodes/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -365,7 +366,7 @@ class PodFormContainer extends React.Component {
             cancelButton={true}
             deleteButton={true}
             cancel={() => this.onToggleDeleteModal(false)}
-            onSubmit={()=>{
+            onSubmit={() => {
               this.onToggleDeleteModal(false)
               this.onDelete(podId)
               onCancel()
@@ -433,7 +434,7 @@ const mapStateToProps = (state, ownProps) => {
   const UIDiscoveryMethod = selector(state, 'UIDiscoveryMethod')
   const UIFootprints = selector(state, 'UIFootprints')
 
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   const edit = !!ownProps.podId

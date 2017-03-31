@@ -74,9 +74,10 @@ class ConfigurationPolicyRules extends React.Component {
 
   render() {
     const policyMapper = type => (rule, i) => {
-      const { matches, sets } = parsePolicy(rule, [])
+      const { matches, sets, default_sets } = parsePolicy(rule, [])
       const matchLabel = matches.map(match => match.field).join(', ')
       const actionsLabel = sets.map(set => set.setkey).join(', ')
+      const defaultActionsLabel = default_sets.map(set => set.setkey).join(', ')
 
       const actionButtons = (
         <ActionButtons
@@ -91,6 +92,7 @@ class ConfigurationPolicyRules extends React.Component {
           <td className="text-right">{type}</td>
           <td>{matchLabel}</td>
           <td>{actionsLabel}</td>
+          <td>{defaultActionsLabel}</td>
           <td className="nowrap-column">
             {actionButtons}
             {this.state[`${type}_policy`] !== false &&
@@ -119,7 +121,6 @@ class ConfigurationPolicyRules extends React.Component {
     }
 
     const rows = [
-      ...this.props.defaultPolicies.map(policyMapper('default')),
       ...this.props.requestPolicies.map(policyMapper('request')),
       ...this.props.finalRequestPolicies.map(policyMapper('final_request')),
       ...this.props.responsePolicies.map(policyMapper('response')),
@@ -135,6 +136,7 @@ class ConfigurationPolicyRules extends React.Component {
               <th className="text-right"><FormattedMessage id="portal.policy.edit.rules.type.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.matchConditions.text"/></th>
               <th><FormattedMessage id="portal.policy.edit.rules.actions.text"/></th>
+              <th><FormattedMessage id="portal.policy.edit.rules.defaultActions.text"/></th>
               <th width="1%" />
             </tr>
           </thead>
@@ -157,7 +159,6 @@ ConfigurationPolicyRules.displayName = 'ConfigurationPolicyRules'
 ConfigurationPolicyRules.propTypes = {
   activateRule: React.PropTypes.func,
   cancelDeletePolicyRoute: React.PropTypes.func,
-  defaultPolicies: React.PropTypes.instanceOf(Immutable.List),
   deleteRule: React.PropTypes.func,
   finalRequestPolicies: React.PropTypes.instanceOf(Immutable.List),
   finalResponsePolicies: React.PropTypes.instanceOf(Immutable.List),

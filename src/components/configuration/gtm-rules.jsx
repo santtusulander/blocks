@@ -67,34 +67,34 @@ class ConfigurationGTMTrafficRules extends React.Component {
             {matches}
           </HelpTooltip>
         </td>
-        <td>{trafficSplit}%</td>
-        <td className="nowrap-column">
-          {!this.props.readOnly &&
-            <ActionButtons
-              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
-              onEdit={() => this.props.editRule(index)}
-              onDelete={this.showConfirmation(index)} />}
-          {this.state.activeIndex !== undefined &&
-            <ReactCSSTransitionGroup
-              component="div"
-              className="confirmation-transition"
-              transitionName="confirmation-transition"
-              transitionEnterTimeout={10}
-              transitionLeaveTimeout={500}
-              transitionAppear={true}
-              transitionAppearTimeout={10}>
-              {this.state.activeIndex === index &&
-                <Confirmation
-                  cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
-                  confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
-                  handleConfirm={this.deleteRule(index, fields.remove)}
-                  handleCancel={() => this.toggleConfirmation()}>
-                  <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
-                </Confirmation>
-              }
-            </ReactCSSTransitionGroup>
-          }
-        </td>
+        <td>{trafficSplit}</td>
+        {!this.props.readOnly &&
+          <td className="nowrap-column">
+              <ActionButtons
+                permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
+                onEdit={() => this.props.editRule(index)}
+                onDelete={this.showConfirmation(index)} />
+            {this.state.activeIndex !== undefined &&
+              <ReactCSSTransitionGroup
+                component="div"
+                className="confirmation-transition"
+                transitionName="confirmation-transition"
+                transitionEnterTimeout={10}
+                transitionLeaveTimeout={500}
+                transitionAppear={true}
+                transitionAppearTimeout={10}>
+                {this.state.activeIndex === index &&
+                  <Confirmation
+                    cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
+                    confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
+                    handleConfirm={this.deleteRule(index, fields.remove)}
+                    handleCancel={() => this.toggleConfirmation()}>
+                    <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
+                  </Confirmation>
+                }
+              </ReactCSSTransitionGroup>
+            }
+          </td>}
       </tr>
     )
   }

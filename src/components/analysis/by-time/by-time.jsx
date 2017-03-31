@@ -258,11 +258,11 @@ class AnalysisByTime extends React.Component {
             />}
           {this.props.axes ? (() => {
             let numTicks = 4;
-            const yMax = Math.max(...yScale.ticks(numTicks))
+            const yMaxAxes = Math.max(...yScale.ticks(numTicks))
 
-            // If the yMax is less than the number of ticks, we end up seeing
+            // If the yMaxAxes is less than the number of ticks, we end up seeing
             // multiple ticks on the Y axis with the same number. See UDNP-1586
-            numTicks = yMax < numTicks ? yMax : numTicks
+            numTicks = yMaxAxes < numTicks ? yMaxAxes : numTicks
 
             return yScale.ticks(numTicks).reduce((axes, tick, i) => {
               if(i) {
@@ -271,7 +271,7 @@ class AnalysisByTime extends React.Component {
                     <text x={this.props.padding} y={yScale(tick)}>
                       {/* Numeral.js doesn't offer all needed formats, e.g. (bps),
                       so we can use custom formatter for those cases */}
-                      {this.formatY(tick, yMax)}
+                      {this.formatY(tick, yMaxAxes)}
                     </text>
                   </g>
                 );

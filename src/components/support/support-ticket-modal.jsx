@@ -188,8 +188,10 @@ SupportTicketModal.propTypes = {
 SupportTicketModal.defaultProps = {
   ticket: null,
   onEdit: () => {
+    // no-op
   },
   onCancel: () => {
+    // no-op
   }
 }
 

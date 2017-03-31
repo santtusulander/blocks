@@ -14,6 +14,7 @@ import { getById as getNetworkById } from '../../../redux/modules/entities/netwo
 import { getById as getAccountById } from '../../../redux/modules/entities/accounts/selectors'
 import { getById as getGroupById } from '../../../redux/modules/entities/groups/selectors'
 import { getByNetwork as getPopsByNetwork } from '../../../redux/modules/entities/pops/selectors'
+import { getAll as getRoles } from '../../../redux/modules/entities/roles/selectors'
 
 import { buildReduxId } from '../../../redux/util'
 
@@ -124,7 +125,7 @@ class NetworkFormContainer extends React.Component {
     return this.props.onDelete(params)
       .then(() => {
         // Unselect network item
-        if (this.props.selectedEntityId == this.networkId) {
+        if (this.props.selectedEntityId === this.networkId) {
           this.props.handleSelectedEntity(this.networkId)
         }
         this.showNotification(<FormattedMessage id="portal.network.networkForm.deleteNetwork.status"/>)
@@ -232,7 +233,7 @@ const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
-  const roles = state.roles.get('roles')
+  const roles = getRoles(state)
   const currentUser = state.user.get('currentUser')
 
   return {

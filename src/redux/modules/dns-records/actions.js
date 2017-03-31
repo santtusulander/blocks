@@ -66,9 +66,9 @@ export const createResource = createAction(DNS_RECORDS_CREATED, (zone, resource,
     resource = resource.concat('.' + zone)
   }
 
-  return dnsRecordsApi.create(zone, resource, data).then(resource => {
-    resource.data.name = domainlessRecordName(zone, resource.data.name)
-    return resource
+  return dnsRecordsApi.create(zone, resource, data).then(dnsResource => {
+    dnsResource.data.name = domainlessRecordName(zone, dnsResource.data.name)
+    return dnsResource
   })
 })
 

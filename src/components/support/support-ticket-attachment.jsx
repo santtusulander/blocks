@@ -36,7 +36,9 @@ SupportTicketAttachment.propTypes = {
 
 SupportTicketAttachment.defaultProps = {
   attachment: Map(),
-  onDelete: () => {}
+  onDelete: () => {
+    // no-op
+  }
 }
 
 export default SupportTicketAttachment
