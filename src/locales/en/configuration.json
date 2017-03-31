@@ -30,6 +30,8 @@
   "portal.policy.edit.tokenauth.viewSampleButton.text": "View sample output",
   "portal.policy.edit.tokenauth.viewSampleButton.disabledTooltip.text": "HMAC hash functions require shared key.",
   "portal.policy.edit.tokenauth.sampleOutputDialog.title": "Sample Token Output",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.table.header.item.text": "Item",
+  "portal.policy.edit.tokenauth.sampleOutputDialog.table.header.value.text": "Value",
   "portal.policy.edit.tokenauth.sampleOutputDialog.sampleCodeButton.text": "Sample code",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title": "Schema",
   "portal.policy.edit.tokenauth.sampleOutputDialog.table.url.title": "Sample URL",

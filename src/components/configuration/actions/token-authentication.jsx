@@ -32,7 +32,8 @@ import * as uiActionCreators from '../../../redux/modules/ui'
 import { generateStaticTokenTableData,
          generateTokenData,
          generateTokenHash,
-         generateFinalURL } from '../../../util/token-authentication'
+         generateFinalURL,
+         getQueryArguments } from '../../../util/token-authentication'
 
 const validate = ({ shared_key }) => {
   let errors = {}
@@ -207,31 +208,26 @@ export class TokenAuth extends React.Component {
       USER_AGENT: navigator.userAgent,
       EXPIRES: moment().add(6, 'hour')
     }
-    const tableValues = {
-      ...tokenValues,
-      EXPIRES: moment(tokenValues.EXPIRES).utc()
-    }
-    const tableRows = generateStaticTokenTableData(schema, tableValues)
+    const tableRows = generateStaticTokenTableData(schema, { ...tokenValues, EXPIRES: moment(tokenValues.EXPIRES).utc() })
     const tokenData = generateTokenData(schema, tokenValues)
     const tokenHash = generateTokenHash(encryption, sharedKey, tokenData)
-    const finalURL = generateFinalURL(undefined, tokenHash, [{label: 'expires', value: 123}])
+    const finalURL = generateFinalURL(undefined, tokenHash, [])
 
     return (
       <Table striped={true} className="fixed-layout">
         <thead>
           <tr>
-            <th>Table Header</th>
-            <th>Table Header</th>
+            <th><FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.table.header.item.text" /></th>
+            <th><FormattedMessage id="portal.policy.edit.tokenauth.sampleOutputDialog.table.header.value.text" /></th>
           </tr>
         </thead>
         <tbody>
-          { schema &&
-            renderRow(
+          { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.schema.title',
               schemaOptions.map(({ label }) => this.props.intl.formatMessage({ id: label })).join(' + ')
             )
           }
-          { tableRows && tableRows.map(row => renderRow(row.labelID, row.value)) }
+          { tableRows.map(row => renderRow(row.labelID, row.value)) }
           { renderRow(
               'portal.policy.edit.tokenauth.sampleOutputDialog.table.token_data.title',
               tokenData
@@ -337,7 +333,6 @@ export class TokenAuth extends React.Component {
 
             <FormFooterButtons className="token-auth-no-side-padding">
               <ButtonDisableTooltip
-                // id="delete-btn"
                 bsStyle="link"
                 className="pull-left token-auth-no-side-padding"
                 disabled={!(encryption === 'MD5') && !sharedKey}
