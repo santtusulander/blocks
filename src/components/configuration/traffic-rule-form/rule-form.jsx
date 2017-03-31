@@ -109,6 +109,7 @@ const RuleForm = ({ edit, onSubmit, activeCondition, onCancel, handleSubmit, cho
 
         <FieldArray
           name="matchArray"
+          validate={value => !value}
           disabled={disabled}
           activeCondition={activeCondition}
           chooseMatch={chooseMatch}

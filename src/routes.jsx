@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import { Route, IndexRedirect } from 'react-router'
+import { Route, IndexRedirect, IndexRoute } from 'react-router'
 import { getById as getAccountById } from './redux/modules/entities/accounts/selectors'
 import { getFetchingByTag } from './redux/modules/fetching/selectors'
 
@@ -208,7 +208,7 @@ const AccountIsCP = UserAuthWrapper({
     }
   },
   failureRedirectPath: (state, ownProps) => {
-    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/network/')
+    const redirectPath = ownProps.location.pathname.replace(new RegExp(/\/content\//, 'i'), '/dashboard/')
     return redirectPath
   },
   allowRedirectBack: false
@@ -250,14 +250,18 @@ export const getRoutes = store => {
           <Route path={routes.analyticsGroup} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
+
           <Route path={routes.analyticsStorage} component={AnalyticsContainer}>
-              <IndexRedirect to={routes.analyticsTabStorage} />
-              <Route path={routes.analyticsTabStorage} component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
+              <IndexRoute component={UserCanViewAnalyticsTab(PERMISSIONS.VIEW_ANALYTICS_STORAGE, store, analyticsTabs)(AnalyticsTabStorage)} />
           </Route>
+
           <Route path={routes.analyticsProperty} component={AnalyticsContainer}>
               {getAnalyticsTabRoutes(store)}
           </Route>
+
         </Route>
+
+
 
         {/* Content / CP Accounts - routes */}
         <Route path={routes.content} component={AccountIsCP(UserHasPermission(PERMISSIONS.VIEW_CONTENT_SECTION, store))}>

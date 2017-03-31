@@ -190,7 +190,7 @@ Cache.propTypes = {
   path: React.PropTypes.instanceOf(Immutable.List),
   saveAction: React.PropTypes.func,
   set: React.PropTypes.instanceOf(Immutable.Map),
-  setKey: React.PropTypes.instanceOf(Immutable.Map)
+  setKey: React.PropTypes.string
 }
 
 module.exports = injectIntl(Cache)
