@@ -90,7 +90,7 @@ class CsvUploadArea extends Component {
           return validFile.preview === file.preview
         })
 
-        if (indexToRemove != -1) {
+        if (indexToRemove !== -1) {
           validatedFiles.splice(indexToRemove, 1);
           rejectedFiles.push(file)
         }
