@@ -27,11 +27,11 @@ const StorageContents = ({ asperaUpload, contents, onMethodToggle, asperaInstans
                         <FormattedMessage id='portal.storage.summaryPage.contents.noFiles.title' />
 
   const uploadButtonIsDisabled = asperaUpload ? (asperaInstanse.size === 0) : false
-  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => {})
-  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => {})
-  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
-  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (()=>{})
-  const processFiles = fileUploader ? fileUploader.processFiles : (()=>{})
+  const asperaShowSelectFileDialog = asperaInstanse.get('asperaShowSelectFileDialog') || (() => { /* no-op */ })
+  const asperaShowSelectFolderDialog = asperaInstanse.get('asperaShowSelectFolderDialog') || (() => { /* no-op */ })
+  const openFileDialog = asperaUpload ? asperaShowSelectFileDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+  const openFolderDialog = asperaUpload ? asperaShowSelectFolderDialog : fileUploader ? fileUploader.openFileDialog : (() => { /* no-op */ })
+  const processFiles = fileUploader ? fileUploader.processFiles : (() => { /* no-op */ })
 
   return (
     <SectionContainer>

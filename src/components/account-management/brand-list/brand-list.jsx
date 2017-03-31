@@ -45,7 +45,9 @@ export const BrandList = (props) => {
           id="brand-edit-form"
           show={props.accountManagementModal === EDIT_BRAND}
           edit={true}
-          onSave={() => {}}
+          onSave={() => {
+            // no-op
+          }}
           onCancel={() => props.toggleModal(null)}
           {...props.brandsFormInitialValues}
         />

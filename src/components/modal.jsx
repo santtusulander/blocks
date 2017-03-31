@@ -190,7 +190,9 @@ ModalWindow.propTypes = {
   ...reduxFormPropTypes
 }
 
-ModalWindow.defaultProps = { onSubmit() {} }
+ModalWindow.defaultProps = {onSubmit() {
+  // no-op
+}}
 
 export default reduxForm({
   form: 'ModalWindow',
