@@ -26,7 +26,9 @@ const StorageContentBrowser = ({ contents }) => {
             <td>{item.type === 'directory' ? item.noOfFiles : '-'}</td>
             <td>
               <IsAllowed to={MODIFY_STORAGE}>
-                <ActionButtons onDelete={() => {}} />
+                <ActionButtons onDelete={() => {
+                  // no-op
+                }} />
               </IsAllowed>
             </td>
           </tr>

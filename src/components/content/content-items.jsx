@@ -424,7 +424,7 @@ class ContentItems extends React.Component {
     // have identical metrics. In that case the amoebas will all get the minimum
     // size. Let's make trafficMin less than trafficMax and all amoebas will
     // render with maximum size instead
-    trafficMin = trafficMin == trafficMax ? trafficMin * 0.9 : trafficMin
+    trafficMin = (trafficMin === trafficMax) ? (trafficMin * 0.9) : trafficMin
 
     const trafficScale = d3.scale.linear()
       .domain([trafficMin, trafficMax])
@@ -646,7 +646,7 @@ class ContentItems extends React.Component {
               editing={false}
               fetching={false}
               onCancel={this.hideStorageModal}
-              onSubmit={()=>{/* onsubmit here */}}
+              onSubmit={() => {/* onsubmit here */}}
             />
           }
         </PageContainer>

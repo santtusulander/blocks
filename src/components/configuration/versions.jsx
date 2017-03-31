@@ -16,15 +16,17 @@ export class ConfigurationVersions extends React.Component {
     }
     const configs = this.props.configurations.reduce((built, config, i) => {
       config = config.set('active', i === this.props.activeIndex)
-      if(config.get('configuration_status').get('deployment_status') == 3){
+
+      // eslint-disable-next-line eqeqeq
+      if (config.get('configuration_status').get('deployment_status') == 3) {
         built.production.push(config)
-      }
-      else if(config.get('configuration_status').get('deployment_status') == 2){
+        // eslint-disable-next-line eqeqeq
+      } else if (config.get('configuration_status').get('deployment_status') == 2) {
         built.staging.push(config)
-      }
-      else {
+      } else {
         built.inprocess.push(config)
       }
+      
       return built
     }, {production: [], staging: [], inprocess: []})
     return (

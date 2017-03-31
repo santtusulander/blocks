@@ -59,6 +59,8 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { buildReduxId } from '../../redux/util'
 
 import Content from '../../components/layout/content'
@@ -681,7 +683,10 @@ class Network extends React.Component {
           <div className="network-entities-wrapper">
             <EntityList
               fetching={accountFetching}
-              ref={accounts => this.entityList.accountList = accounts}
+              ref={(accounts) => {
+                this.entityList.accountList = accounts
+                return this.entityList.accountList
+              }}
               entities={params.account && Immutable.List([activeAccount])}
               addEntity={() => null}
               editEntity={this.handleAccountEdit}
@@ -708,7 +713,10 @@ class Network extends React.Component {
               noDataText={<FormattedMessage id="portal.network.entities.groups.noData"/>}
               fetching={groupsFetching}
               isParentSelected={!!this.props.params.account}
-              ref={groups => this.entityList.groupList = groups}
+              ref={(groupsRef) => {
+                this.entityList.groupList = groupsRef
+                return this.entityList.groupList
+              }}
               entities={groups}
               addEntity={() => this.addEntity(ADD_EDIT_GROUP)}
               editEntity={this.handleGroupEdit}
@@ -736,7 +744,10 @@ class Network extends React.Component {
               fetching={isFetching('network')}
               isParentSelected={!!this.props.params.group}
               noDataText={<FormattedMessage id="portal.network.entities.networks.noData"/>}
-              ref={networkListRef => this.entityList.networkList = networkListRef}
+              ref={(networkListRef) => {
+                this.entityList.networkList = networkListRef
+                return this.entityList.networkList
+              }}
               entities={params.group && networks}
               addEntity={() => this.addEntity(ADD_EDIT_NETWORK)}
               editEntity={this.handleNetworkEdit}
@@ -754,7 +765,10 @@ class Network extends React.Component {
               fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.network}
               noDataText={<FormattedMessage id="portal.network.entities.pops.noData"/>}
-              ref={pops => this.entityList.popList = pops}
+              ref={(popsRef) => {
+                this.entityList.popList = popsRef
+                return this.entityList.popList
+              }}
               entities={params.network && pops}
               addEntity={() => this.addEntity(ADD_EDIT_POP)}
               editEntity={this.handlePopEdit}
@@ -772,7 +786,10 @@ class Network extends React.Component {
               fetching={isFetching('pop')}
               isParentSelected={!!this.props.params.pop}
               noDataText={<FormattedMessage id="portal.network.entities.pods.noData"/>}
-              ref={pods => this.entityList.podList = pods}
+              ref={(podsRef) => {
+                this.entityList.podList = podsRef
+                return this.entityList.podList
+              }}
               entityIdKey='pod_name'
               titleGenerator={entity => entity.get('pod_name')}
               addEntity={() => this.addEntity(ADD_EDIT_POD)}
@@ -792,7 +809,10 @@ class Network extends React.Component {
               fetching={isFetching('node')}
               isParentSelected={!!params.pod}
               noDataText={<FormattedMessage id="portal.network.entities.nodes.noData"/>}
-              ref={nodes => this.entityList.nodeList = nodes}
+              ref={(nodesRef) => {
+                this.entityList.nodeList = nodesRef
+                return this.entityList.nodeList
+              }}
               entities={params.pod && nodes}
               addEntity={() => this.addEntity(ADD_NODE)}
               editEntity={this.handleNodeEdit}
@@ -930,7 +950,7 @@ Network.propTypes = {
   params: PropTypes.object,
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
@@ -964,7 +984,7 @@ const mapStateToProps = (state, ownProps) => {
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     currentUser: state.user.get('currentUser')
   };
 }

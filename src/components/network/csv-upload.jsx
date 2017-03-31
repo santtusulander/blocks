@@ -57,6 +57,8 @@ class CsvUploadArea extends Component {
       } else {
         rejectedFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({
@@ -88,11 +90,13 @@ class CsvUploadArea extends Component {
           return validFile.preview === file.preview
         })
 
-        if (indexToRemove != -1) {
+        if (indexToRemove !== -1) {
           validatedFiles.splice(indexToRemove, 1);
           rejectedFiles.push(file)
         }
       }
+
+      return false
     })
 
     this.setState({
@@ -111,6 +115,8 @@ class CsvUploadArea extends Component {
       if (file.name !== fileName) {
         newFiles.push(file)
       }
+
+      return false
     })
 
     this.setState({

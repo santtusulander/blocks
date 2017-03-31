@@ -20,9 +20,9 @@ export const isLocalStorageSupported = () => {
 
   } catch (error) {
 
-    Storage.prototype.setItem = () => {}
-    Storage.prototype.getItem = () => {}
-    Storage.prototype.removeItem = () => {}
+    Storage.prototype.setItem = () => { /* no-op */ }
+    Storage.prototype.getItem = () => { /* no-op */ }
+    Storage.prototype.removeItem = () => { /* no-op */ }
 
     return false
   }

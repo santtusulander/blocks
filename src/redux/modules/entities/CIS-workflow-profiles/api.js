@@ -13,9 +13,9 @@ const profileSchema = new schema.Entity('workflowProfiles')
  * Fetch list of workflowProfiles
  * @return {[type]}         [description]
  */
-export const fetchAll = ({}) => {
+export const fetchAll = () => {
   return axios.get(baseUrl())
-    .then( ({data}) => {
+    .then(({data}) => {
       return normalize(data, [ profileSchema ])
     })
 }

@@ -10,7 +10,7 @@ const testUser = Immutable.Map({
   name: 'test'
 })
 
-const testRoles = Immutable.List(['testRole'])
+const testRoles = Immutable.Map({1: 'testRole'})
 
 const subject = (not) => {
   return shallow(

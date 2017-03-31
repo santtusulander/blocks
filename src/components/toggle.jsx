@@ -45,7 +45,9 @@ Toggle.propTypes = {
 Toggle.defaultProps = {
   offText: 'NO',
   onText: 'YES',
-  changeValue: () => {}
+  changeValue: () => {
+    // no-op
+  }
 }
 
 export default Toggle
