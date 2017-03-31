@@ -10,7 +10,8 @@ import { SET_ACTIVE_PAGE, SET_TOTAL, SET_SORTING, SET_FILTERING, INVALIDATE } fr
 /**
  * Decorate component with pagination functionality.
  * @param {React.Component} WrappedComponent - component to decorate
- * @return {WrappedComponent}
+ * @param {object} config - pagination parameters to override defaults
+ * @return {WithPagination}
  */
 export const withPagination = (WrappedComponent, config = {}) => {
   /** @typedef {string} actionType - type of action */
