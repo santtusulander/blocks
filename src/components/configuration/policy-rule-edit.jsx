@@ -360,7 +360,7 @@ class ConfigurationPolicyRuleEdit extends React.Component {
               onClick={this.props.hideAction}
               disabled={disableButton()}
             >
-              <FormattedMessage id="portal.button.add"/>
+              {this.props.isEditingRule ? <FormattedMessage id="portal.button.save"/> : <FormattedMessage id="portal.button.add"/>}
             </Button>
           </ButtonToolbar>
 
