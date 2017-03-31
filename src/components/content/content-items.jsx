@@ -134,7 +134,7 @@ class ContentItems extends React.Component {
     this.setState({ saving: true })
 
     return this.props.createNewItem(...arguments)
-      .then(({ item, name, error, payload, type }) => {
+      .then(({ item, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -142,23 +142,18 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if(item) {
           this.hideModal()
-          this.showNotification(`${item} ${name} created.`)
+          this.showNotification(<FormattedMessage id="portal.content.createEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
-          if (type === 'ACCOUNT_CREATED') {
-            this.showNotification(<FormattedMessage id="portal.content.account.createAccount.status"/>)
-          } else if (type === 'HOST_CREATED') {
-            this.showNotification(<FormattedMessage id="portal.content.property.createProperty.status"/>)
-          }
         }
         this.setState({ saving: false })
       })
   }
   onItemSave() {
     return this.props.editItem(...arguments)
-      .then(({ item, name, error, payload }) => {
+      .then(({ item, error, payload }) => {
         if (error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -166,9 +161,9 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if(item) {
           this.hideModal()
-          this.showNotification('Group detail updates saved.')
+          this.showNotification(<FormattedMessage id="portal.content.updateEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }
@@ -177,7 +172,7 @@ class ContentItems extends React.Component {
 
   onItemDelete() {
     return this.props.deleteItem(...arguments)
-      .then(({ item, name, error, payload }) => {
+      .then(({ item, error, payload }) => {
         if(error) {
           this.props.showInfoDialog({
             title: 'Error',
@@ -185,9 +180,9 @@ class ContentItems extends React.Component {
             cancel: () => this.props.hideInfoDialog(),
             okButton: true
           })
-        } else if(item && name) {
+        } else if(item) {
           this.hideModal()
-          this.showNotification(`${item} ${name} deleted.`)
+          this.showNotification(<FormattedMessage id="portal.content.deleteEntity.status" values={{item}}/>)
         } else {
           this.hideModal()
         }

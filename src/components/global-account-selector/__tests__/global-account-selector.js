@@ -12,7 +12,7 @@ describe('AccountSelector', () => {
   let subject, error, props = null
 
   const currentUser = new Map()
-  const roles = new List()
+  const roles = new Map()
   const items = new List()
   const fetchItems = jest.genMockFunction()
   const getChangedItem = jest.genMockFunction()

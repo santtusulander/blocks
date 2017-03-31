@@ -64,8 +64,17 @@ class AnalysisURLList extends React.Component {
 
     const finalURLs = filteredURLs.slice(0, 15)
 
+    // UDNP-1869 | Analytics/URL: Search causes the page to scroll
+    let minHeight
+    const listContainer = this.refs.listContainer
+    if (listContainer) {
+      const { bottom: footerBottom } = document.querySelector('footer.footer').getBoundingClientRect()
+      const { top: containerTop, bottom: containerBottom } = listContainer.getBoundingClientRect()
+      minHeight = Math.max(0, window.innerHeight - containerTop - footerBottom + containerBottom)
+    }
+
     return (
-      <div>
+      <div ref="listContainer" style={{ minHeight }}>
         <table className="table table-striped table-analysis">
           <thead>
             <tr>

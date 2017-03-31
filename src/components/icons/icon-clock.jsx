@@ -8,7 +8,8 @@ const IconClock = (props) => {
   return (
     <Icon className={className} width={width} height={height} viewbox="0 0 36 36">
       <g>
-        <polygon points="17.2,24 11.4,19.1 12.5,17.8 16.9,21.5 23.2,12 24.6,12.9" />
+        <path d="M18,27.4c-5.2,0-9.4-4.2-9.4-9.4s4.2-9.4,9.4-9.4s9.4,4.2,9.4,9.4S23.2,27.4,18,27.4z M18,9.6c-4.7,0-8.4,3.8-8.4,
+        8.4s3.8,8.4,8.4,8.4s8.4-3.8,8.4-8.4S22.7,9.6,18,9.6z M23,18h-5v-6h-1v7h6V18z"/>
       </g>
     </Icon>
   )

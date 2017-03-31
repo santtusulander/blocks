@@ -75,6 +75,7 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_path':
         activeEditForm = (
           <ConfigurationMatcher
+            hasExists={true}
             hasEquals={true}
             hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchDirectory.text'})}
@@ -88,7 +89,6 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasEquals={true}
-            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchHostname.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.hostname.text'})}
             label={formatMessage({id: 'portal.policy.edit.matcher.name.text'})}
@@ -100,18 +100,17 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
         activeEditForm = (
           <ConfigurationMatcher
             hasEquals={true}
-            hasEmpty={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchURL.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             label={formatMessage({id: 'portal.policy.edit.policies.url.text'})}
             placeholder={formatMessage({id: 'portal.policy.edit.policies.url.placeholder'})}
-            disableRuleSelector={true}
             {...matcherProps}/>
         )
         break
       case 'request_cookie':
         activeEditForm = (
           <ConfigurationMatcher
+            hasExists={true}
             hasContains={true}
             hasEquals={true}
             hasEmpty={true}
@@ -125,6 +124,8 @@ export function getActiveMatchSetForm(activeRule, matchPath, setPath, config, ac
       case 'request_query_arg':
         activeEditForm = (
           <ConfigurationMatcher
+            hasExists={true}
+            hasEquals={true}
             hasContains={true}
             description={formatMessage({id: 'portal.policy.edit.policies.matchQueryString.text'})}
             name={formatMessage({id: 'portal.policy.edit.policies.queryString.text'})}

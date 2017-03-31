@@ -8,13 +8,13 @@ import { FormattedMessage } from 'react-intl';
 import {
   getAnalyticsUrlFromParams,
   getContentUrl,
-  getNetworkUrl
+  getDashboardUrl
 } from '../../util/routes.js'
 
 import accountActions from '../../redux/modules/entities/accounts/actions'
 import { getById as getAccountById, getByBrand  } from '../../redux/modules/entities/accounts/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
-
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 
 import * as accountActionCreators from '../../redux/modules/account'
 
@@ -56,13 +56,22 @@ export class Brand extends React.Component {
   /* NOTE: id param is needed even if its not used as this function is called with ...arguments - and data needs to be 3rd param */
   createAccount(brand, id, data) {
     return this.props.createAccount({brand, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   editAccount(brand, id, data) {
     return this.props.updateAccount({brand, id, payload: data})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   deleteAccount(id) {
     const {brand} = this.props.params
     return this.props.removeAccount({brand, id})
+      .then(({ error, payload }) => (
+        { item: 'Account', error, payload }
+      ))
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
@@ -101,7 +110,7 @@ export class Brand extends React.Component {
       if (account.get('provider_type') === PROVIDER_TYPES.CONTENT_PROVIDER) {
         return getContentUrl('groups', accountID, this.props.params)
       } else {
-        return getNetworkUrl('groups', accountID, this.props.params)
+        return getDashboardUrl('account', accountID, this.props.params)
       }
     }
     const analyticsURLBuilder = (...account) => {
@@ -161,7 +170,7 @@ Brand.propTypes = {
   oldAccountActions: PropTypes.object,
   params: PropTypes.object,
   removeAccount: PropTypes.func,
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   uiActions: PropTypes.object,
@@ -171,11 +180,11 @@ Brand.propTypes = {
 }
 
 Brand.defaultProps = {
-  Brand: List(),
+  accounts: List(),
   activeAccount: Map(),
   dailyTraffic: List(),
   metrics: List(),
-  roles: List(),
+  roles: Map(),
   user: Map()
 }
 
@@ -187,7 +196,7 @@ const mapStateToProps = (state, ownProps) => {
     fetching: getGlobalFetching(state),
     fetchingMetrics: state.metrics.get('fetchingAccountMetrics'),
     metrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     viewingChart: state.ui.get('viewingChart'),

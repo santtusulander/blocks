@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { FormattedMessage } from 'react-intl'
 import numeral from 'numeral'
+import classNames from 'classnames'
 
 class PolicyWeight extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class PolicyWeight extends Component {
         <div className="policy-weight-label">
           <FormattedMessage id="portal.configuration.gtm.policyWeight.label" />
         </div>
-        <div className="policy-weight-scale">
+        <div className={classNames("policy-weight-scale", {'ms-browser': !!document.documentMode || !!window.StyleMedia})}>
           <input className="policy-weight-slider"
             type="range"
             min={min}
@@ -51,6 +52,7 @@ class PolicyWeight extends Component {
             step={(max - min) / steps}
             style={{'backgroundSize': `${(this.state.value - min) * 100 / (max - min)}% 100%`}}
             onChange={this.handleChange}
+            onMouseUp={this.handleChange} // UDNP-3210/UDNP-3211 | we need this event because IE doesn't handle onChange
           />
           <div className="ruler">
             {ticks(steps)}

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { ASPERA_DEFAULT_PORT, ASPERA_DEFAULT_HOST,
-         ASPERA_DEFAULT_PATH
+         ASPERA_DEFAULT_PATH, ASPERA_DEFAULT_DESTINATION_ROOT
        } from '../../constants/storage'
 
 import * as uiActionCreators from '../../redux/modules/ui'
@@ -138,6 +138,7 @@ class AsperaUpload extends Component {
       "remote_user": this.state.accessKey,
       "remote_password": this.state.accessKey,
       "direction": ASPERA_DEFAULT_PATH,
+      "destination_root": ASPERA_DEFAULT_DESTINATION_ROOT,
       "ssh_port": ASPERA_DEFAULT_PORT
     }
 

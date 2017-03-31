@@ -16,8 +16,9 @@ describe('Navigation', () => {
 
   const currentUser = new Map()
   const params = {account: "1", brand: "udn"}
-  const roles = new List()
+  const roles = new Map()
   const router = fakeRouterMaker()
+  const activeAccount = new Map()
 
   beforeEach(() => {
     subject = () => {
@@ -25,7 +26,8 @@ describe('Navigation', () => {
         currentUser,
         params,
         roles,
-        router
+        router,
+        activeAccount
       }
 
       return shallow(<Navigation {...props}/>)

@@ -36,22 +36,6 @@ $input-height: 36px;
     }
   }
 
-  .confirmation-slider {
-    padding-bottom: 0;
-
-    @media (min-width: $screen-lg-min) {
-      padding-top: 5px;
-    }
-
-    @include md {
-      padding-top: 12px;
-    }
-
-    @media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
-      padding-top: 12px;
-    }
-  }
-
   button[aria-describedby='gtm-match-tooltip'] {
     .dark-theme & {
       color: $dt-text-color;

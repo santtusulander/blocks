@@ -73,6 +73,7 @@ class FileExtension extends React.Component {
   saveChanges() {
     const matchCase = this.matchCaseFromExtensions(this.state.extensions)
     let newMatch = this.props.match
+    newMatch = newMatch.set('type', 'regexp')
     newMatch = newMatch.set('value', matchCase)
 
     this.props.changeValue(this.props.path, newMatch)
