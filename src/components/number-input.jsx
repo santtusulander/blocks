@@ -36,7 +36,7 @@ const NumberInput = (props) => {
       newValue = Math.trunc ? Math.trunc(newValue) : Math.round(newValue)
     }
 
-    if(newValue !== null && newValue < min) {
+    if (newValue !== null && newValue < min) {
       newValue = min
     } else if (newValue && newValue > max) {
       newValue = max

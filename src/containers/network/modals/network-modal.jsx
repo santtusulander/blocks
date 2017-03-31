@@ -32,11 +32,11 @@ class NetworkFormContainer extends React.Component {
     this.networkId = null
     this.notificationTimeout = null
     this.state = {
-      showDeleteModal : false
+      showDeleteModal: false
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     const { brand, accountId, groupId, networkId } = this.props
 
     // If editing => fetch data from API
@@ -47,7 +47,7 @@ class NetworkFormContainer extends React.Component {
 
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     const { brand, accountId, groupId, networkId } = nextProps
 
     // If editing => fetch data from API
@@ -114,7 +114,7 @@ class NetworkFormContainer extends React.Component {
   /**
    * Handler for Delete
    */
-  onDelete(){
+  onDelete() {
     const params = {
       brand: 'udn',
       account: this.props.accountId,
@@ -251,16 +251,16 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, data) => dispatch( networkActions.create( {...params, data } )),
-    onUpdate: (params, data) => dispatch( networkActions.update( {...params, data } )),
-    onDelete: (params) => dispatch( networkActions.remove( {...params } )),
+    onCreate: (params, data) => dispatch(networkActions.create({...params, data })),
+    onUpdate: (params, data) => dispatch(networkActions.update({...params, data })),
+    onDelete: (params) => dispatch(networkActions.remove({...params })),
 
-    fetchAccount: (params) => dispatch( accountActions.fetchOne(params) ),
-    fetchGroup: (params) => dispatch( groupActions.fetchOne(params) ),
-    fetchNetwork: (params) => dispatch( networkActions.fetchOne(params) ),
-    fetchPops: (params) => dispatch( popActions.fetchAll(params) ),
+    fetchAccount: (params) => dispatch(accountActions.fetchOne(params)),
+    fetchGroup: (params) => dispatch(groupActions.fetchOne(params)),
+    fetchNetwork: (params) => dispatch(networkActions.fetchOne(params)),
+    fetchPops: (params) => dispatch(popActions.fetchAll(params)),
 
-    showNotification: (message) => dispatch( changeNotification(message) )
+    showNotification: (message) => dispatch(changeNotification(message))
   }
 }
 

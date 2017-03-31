@@ -15,7 +15,7 @@ const FieldTelephoneInput = ({ input, meta, label, required, disabled, ErrorComp
         onChange={(val, {dialCode}) => {
 
           const countryCode = dialCode
-          const phoneNumber = stripNonNumeric( stripCountryCode( val, countryCode ) )
+          const phoneNumber = stripNonNumeric(stripCountryCode(val, countryCode))
 
           input.onChange({phone_number: phoneNumber, phone_country_code: countryCode})
         }}

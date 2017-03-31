@@ -153,7 +153,7 @@ export class Configuration extends React.Component {
       this.props.params.property,
       this.props.activeHost.toJS()
     ).then((action) => {
-      if(action.error) {
+      if (action.error) {
         this.showNotification(this.props.intl.formatMessage(
                               {id: 'portal.configuration.updateFailed.text'},
                               {reason: action.payload.data.message}))
@@ -221,8 +221,8 @@ export class Configuration extends React.Component {
       newHost.toJS()
     ).then((action) => {
       // env === 1 is retiring
-      if(env === 1) {
-        if(action.error) {
+      if (env === 1) {
+        if (action.error) {
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.retireFailed.text'},
                                 {reason: action.payload.data.message}))
@@ -231,7 +231,7 @@ export class Configuration extends React.Component {
         }
       // env !== 1 is publishing
       } else {
-        if(action.error) {
+        if (action.error) {
           this.togglePublishModal()
           this.showNotification(this.props.intl.formatMessage(
                                 {id: 'portal.configuration.publishFailed.text'},
@@ -257,7 +257,7 @@ export class Configuration extends React.Component {
   }
   render() {
     const { intl: { formatMessage }, activeHost, deleteProperty , params: { brand, account, group, property }, router, children } = this.props
-    if(this.props.fetching && (!activeHost || !activeHost.size)
+    if (this.props.fetching && (!activeHost || !activeHost.size)
       || (!activeHost || !activeHost.size)) {
       return <LoadingSpinner/>
     }
@@ -454,7 +454,7 @@ export class Configuration extends React.Component {
           invalid={true}
           verifyDelete={true}>
           <p>
-            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete : "Property"}}/>
+            <FormattedMessage id="portal.deleteModal.warning.text" values={{itemToDelete: "Property"}}/>
           </p>
         </ModalWindow>
         }
@@ -536,7 +536,7 @@ function mapStateToProps(state) {
   const groupHasStorageService = hasService(activeGroup, STORAGE_SERVICE_ID)
 
   const roles = getRoles(state)
-  const storagePermission = getStoragePermissions( roles, state.user.get('currentUser'))
+  const storagePermission = getStoragePermissions(roles, state.user.get('currentUser'))
 
   return {
     activeHost: state.host.get('activeHost'),
@@ -563,7 +563,7 @@ function mapDispatchToProps(dispatch) {
     securityActions: bindActionCreators(securityActionCreators, dispatch),
     uiActions: bindActionCreators(uiActionCreators, dispatch),
     deleteProperty: (brand, account, group, id) => dispatch(propertyActions.remove({brand, account, group, id})),
-    fetchStorage : (brand, account, group, format) => dispatch(storageActions.fetchAll({ brand, account, group, format }))
+    fetchStorage: (brand, account, group, format) => dispatch(storageActions.fetchAll({ brand, account, group, format }))
   };
 }
 

@@ -31,7 +31,7 @@ StorageItemTooltip.propTypes = {
   lastMonthPeak: PropTypes.number,
   lastMonthUsage: PropTypes.number,
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  peak:PropTypes.number,
+  peak: PropTypes.number,
   valuesFormat: PropTypes.string
 }
 

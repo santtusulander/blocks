@@ -25,7 +25,7 @@ class AnalyticsTabContribution extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (this.props.activeAccount !== nextProps.activeAccount) {
       this.props.filterActions.resetContributionFilters()
     }
@@ -50,8 +50,8 @@ class AnalyticsTabContribution extends React.Component {
     this.props.filterActions.resetContributionFilters()
   }
 
-  fetchData(params, filters, location, hostConfiguredName, accountType){
-    if(params.property && hostConfiguredName) {
+  fetchData(params, filters, location, hostConfiguredName, accountType) {
+    if (params.property && hostConfiguredName) {
       params = Object.assign({}, params, {
         property: hostConfiguredName
       })
@@ -115,7 +115,7 @@ class AnalyticsTabContribution extends React.Component {
     }
   }
 
-  render(){
+  render() {
     const { contribution } = this.props
 
     let sectionHeaderTitle = <FormattedMessage id="portal.analytics.contentProviderContribution.totalTraffic.label"/>

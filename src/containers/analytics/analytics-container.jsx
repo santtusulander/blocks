@@ -29,14 +29,14 @@ import './analytics-container.scss'
 const BODY_MIN_HEIGHT = 850
 
 class AnalyticsContainer extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.onFilterChange = this.onFilterChange.bind(this)
     this.fetchData = this.fetchData.bind(this)
     this.fetchActiveItems = this.fetchActiveItems.bind(this)
   }
 
-  componentWillMount(){
+  componentWillMount() {
     //Reset filters to default when entering analytics page
     this.props.filtersActions.resetFilters();
     this.fetchData(this.props.params, true)
@@ -47,7 +47,7 @@ class AnalyticsContainer extends React.Component {
     window.addEventListener('scroll', this.handleScroll);
   }
 
-  componentWillReceiveProps( nextProps ) {
+  componentWillReceiveProps(nextProps) {
     const prevParams = JSON.stringify(this.props.params)
     const params = JSON.stringify(nextProps.params)
 
@@ -74,7 +74,7 @@ class AnalyticsContainer extends React.Component {
     const analyticsContainer = document.querySelector('.analytics-container')
 
     if (window.innerHeight > BODY_MIN_HEIGHT && window.pageYOffset > pageHeaderTotalHeight) {
-      if(!docBody.classList.contains('sticky-filters')) {
+      if (!docBody.classList.contains('sticky-filters')) {
         const analyticsFiltersHeight = document.querySelector('.analytics-filters').offsetHeight
         analyticsContainer.style.marginTop = `${analyticsFiltersHeight}px`
         docBody.classList.add('sticky-filters')
@@ -98,18 +98,18 @@ class AnalyticsContainer extends React.Component {
     ])
   }
 
-  fetchData(params, refresh){
+  fetchData(params, refresh) {
     const brandChanged = params.brand !== this.props.params.brand
     const accountChanged = params.account !== this.props.params.account
     const groupChanged = params.group !== this.props.params.group
-    if((brandChanged || refresh) && checkPermissions(
+    if ((brandChanged || refresh) && checkPermissions(
       this.props.roles, this.props.user, PERMISSIONS.VIEW_CONTENT_ACCOUNTS)
     ) {
       this.props.accountActions.fetchAccounts(params.brand)
       this.props.filtersActions.fetchServiceProviders(params.brand)
     }
 
-    if((brandChanged || accountChanged || refresh) && params.account) {
+    if ((brandChanged || accountChanged || refresh) && params.account) {
       this.props.groupActions.fetchGroups(params.brand, params.account)
     }
 
@@ -121,11 +121,11 @@ class AnalyticsContainer extends React.Component {
     }
   }
 
-  onFilterChange( filterName, filterValue){
+  onFilterChange(filterName, filterValue) {
     this.props.filtersActions.setFilterValue({
       filterName: filterName,
       filterValue: filterValue
-    } )
+    })
   }
 
   renderFilters() {
@@ -195,7 +195,7 @@ class AnalyticsContainer extends React.Component {
     )
   }
 
-  render(){
+  render() {
     const {
       params,
       children,

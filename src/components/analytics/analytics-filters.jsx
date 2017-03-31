@@ -21,14 +21,14 @@ import FilterCustomDateRange from '../analysis/filters/custom-date-range'
 import StatusCodes from './analytics-status-codes'
 import FilterStorageType from '../analysis/filters/storage-type'
 
-function getToggledValues( currentValues, toggleVal) {
+function getToggledValues(currentValues, toggleVal) {
   if (currentValues.includes(toggleVal)) {
-    return currentValues.filter( (val ) => {
+    return currentValues.filter((val) => {
       return val.toLowerCase() !== toggleVal.toLowerCase()
     })
   }
 
-  return currentValues.push( toggleVal )
+  return currentValues.push(toggleVal)
 }
 
 const AnalyticsFilters = (props) => {
@@ -126,7 +126,7 @@ const AnalyticsFilters = (props) => {
             toggleFilter={val => {
               props.onFilterChange(
                 'onOffNet',
-                getToggledValues( props.filters.get('onOffNet'), val)
+                getToggledValues(props.filters.get('onOffNet'), val)
               )
             }}
           />
@@ -142,7 +142,7 @@ const AnalyticsFilters = (props) => {
             toggleServiceType={val => {
               props.onFilterChange(
                 'serviceTypes',
-                getToggledValues( props.filters.get('serviceTypes'), val)
+                getToggledValues(props.filters.get('serviceTypes'), val)
               )
             }}
           />

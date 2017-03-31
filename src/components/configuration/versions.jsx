@@ -10,7 +10,7 @@ import {FormattedMessage, injectIntl} from 'react-intl'
 export class ConfigurationVersions extends React.Component {
 
   render() {
-    if(this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
+    if (this.props.fetching && (!this.props.activeHost || !this.props.activeHost.size)
       || (!this.props.activeHost || !this.props.activeHost.size)) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }

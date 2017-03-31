@@ -41,10 +41,10 @@ const ContentTrafficTooltip = ({name, avgTransfer, maxTransfer, minTransfer, dat
 ContentTrafficTooltip.displayName = 'ContentTrafficTooltip'
 ContentTrafficTooltip.propTypes = {
   avgTransfer: React.PropTypes.string,
-  date:        React.PropTypes.string,
+  date: React.PropTypes.string,
   maxTransfer: React.PropTypes.string,
   minTransfer: React.PropTypes.string,
-  name:        React.PropTypes.string
+  name: React.PropTypes.string
 }
 
 module.exports = ContentTrafficTooltip

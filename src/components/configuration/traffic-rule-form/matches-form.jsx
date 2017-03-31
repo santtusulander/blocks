@@ -65,7 +65,7 @@ class MatchesForm extends Component {
     let matchType = undefined
     let Form = this.MatchSelection
 
-    switch(this.props.chosenMatch.matchType) {
+    switch (this.props.chosenMatch.matchType) {
 
       case 'continent':
         title = <FormattedMessage id="portal.configuration.traffic.rules.match.continent" />

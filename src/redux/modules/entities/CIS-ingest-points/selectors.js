@@ -97,7 +97,7 @@ export const getByGroups = (state, groups) => {
     const storages = []
     groups.forEach(group => {
       const groupStorages = getByGroup(state, group.get('id'))
-      groupStorages.forEach( storage => {
+      groupStorages.forEach(storage => {
         storages.push(storage)
       })
     })
@@ -113,7 +113,7 @@ export const getByGroups = (state, groups) => {
  */
 export const getByGroupWithTotalTraffic = (state, group) => {
   const storages = getByGroup(state, group)
-  const result = storages.map( storage => {
+  const result = storages.map(storage => {
     const metrics = getStorageMetricsById(state, storage.get('ingest_point_id'), false)
     const totalTraffic = metrics ? metrics.getIn(['totals', 'bytes', 'average']) : 0
 

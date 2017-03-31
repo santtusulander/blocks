@@ -59,7 +59,7 @@ class NetworkLocationFormContainer extends Component {
         latitude: null,
         longitude: null
       },
-      showDeleteModal : false
+      showDeleteModal: false
     }
 
     this.fetchLocation = this.fetchLocation.bind(this)
@@ -343,9 +343,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchIataCodes: () => dispatch(iataCodeActions.fetchOne({})),
-  onCreate: (params) => dispatch( locationActions.create( {...params } ) ),
-  onDelete: (params) => dispatch( locationActions.remove( {...params } ) ),
-  onUpdate: (params) => dispatch( locationActions.update( {...params } ) )
+  onCreate: (params) => dispatch(locationActions.create({...params })),
+  onDelete: (params) => dispatch(locationActions.remove({...params })),
+  onUpdate: (params) => dispatch(locationActions.update({...params }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl((NetworkLocationFormContainer)))

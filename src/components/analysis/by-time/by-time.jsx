@@ -67,7 +67,7 @@ class AnalysisByTime extends React.Component {
     )
     return e => {
       const sourceData = datasets.reduce((longest, dataset) => {
-        if(dataset.data.length > longest.length) {
+        if (dataset.data.length > longest.length) {
           return dataset.data
         }
         return longest
@@ -77,7 +77,7 @@ class AnalysisByTime extends React.Component {
       let i = closestDate(sourceData, xDate, 1)
       const d0 = sourceData[i - 1]
       const d1 = sourceData[i]
-      if(d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
+      if (d1 && xDate - d0.timestamp.getTime() <= d1.timestamp.getTime() - xDate) {
         i = i -1
       } else if (!d1) {
         i = i -1
@@ -87,10 +87,10 @@ class AnalysisByTime extends React.Component {
         //catch any TypeError: Cannot read property 'bits_per_second' of undefined(…)
         try {
           let realValue = dataset.data[i][this.props.dataKey]
-          if(dataset.stackedAgainst) {
+          if (dataset.stackedAgainst) {
             const against = datasets
               .find(otherDataset => otherDataset.id === dataset.stackedAgainst)
-            if(against) {
+            if (against) {
               realValue = realValue - against.data[i][this.props.dataKey]
             }
           }
@@ -136,18 +136,18 @@ class AnalysisByTime extends React.Component {
   }
 
   render() {
-    if(!this.props.width || !this.props.dataSets) {
+    if (!this.props.width || !this.props.dataSets) {
       return <div>Loading...</div>
     }
-    if(!this.props.dataSets || !this.props.dataSets.length ||
+    if (!this.props.dataSets || !this.props.dataSets.length ||
       !this.props.dataSets.some(dataset => dataset.data.some(data => data[this.props.dataKey]))) {
       return <h4><FormattedMessage id="portal.common.no-data.text" /></h4>
     }
     const stackedDatasets = Immutable.fromJS(this.props.dataSets).map(dataset => {
-      if(dataset.get('stackedAgainst')) {
+      if (dataset.get('stackedAgainst')) {
         const against = this.props.dataSets
           .find(otherDataset => otherDataset.id === dataset.get('stackedAgainst'))
-        if(against && against.data.length) {
+        if (against && against.data.length) {
           dataset = dataset.set('data', dataset.get('data').map((data, i) => {
             return data.merge({
               bits_per_second: data.get('bits_per_second') + against.data[i].bits_per_second,
@@ -177,7 +177,7 @@ class AnalysisByTime extends React.Component {
         this.props.width - this.props.padding * (this.props.axes ? 2 : 1)
       ])
 
-    if(!this.props.noXNice) {
+    if (!this.props.noXNice) {
       xScale.nice(d3.time.day.utc, 1)
     }
 
@@ -193,13 +193,13 @@ class AnalysisByTime extends React.Component {
       .interpolate('monotone')
 
     let className = 'analysis-by-time'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
     const slices = []
-    if(this.props.sliceGranularity) {
+    if (this.props.sliceGranularity) {
       slices.push(startDate)
-      while(slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
+      while (slices[0] < moment.utc(endDate).startOf(this.props.sliceGranularity).toDate()) {
         slices.unshift(moment.utc(slices[0]).add(1, this.props.sliceGranularity).toDate())
       }
     }
@@ -238,7 +238,7 @@ class AnalysisByTime extends React.Component {
             )
           })}
           {!this.props.noHover && this.state.tooltipText.map((text, i) => {
-            return(
+            return (
               <g key={i}>
                 <circle r="5"
                   cx={this.state.tooltipX[i]}
@@ -265,7 +265,7 @@ class AnalysisByTime extends React.Component {
             numTicks = yMaxAxes < numTicks ? yMaxAxes : numTicks
 
             return yScale.ticks(numTicks).reduce((axes, tick, i) => {
-              if(i) {
+              if (i) {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>

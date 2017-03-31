@@ -44,10 +44,10 @@ class AnalysisByKey extends React.Component {
       const d0 = data[i - 1]
       const d1 = data[i]
       let d = d0;
-      if(d1) {
+      if (d1) {
         d = xData - d0[this.props.xKey] > d1[this.props.xKey] - xData ? d1 : d0
       }
-      if(d) {
+      if (d) {
         this.setState({
           tooltipText: `${moment(d[this.props.xKey]).format('MMM D')} ${numeral(d[this.props.yKey]).format('0,0')}`,
           tooltipX: xScale(d[this.props.xKey]),
@@ -63,7 +63,7 @@ class AnalysisByKey extends React.Component {
     })
   }
   render() {
-    if(!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
+    if (!this.props.width || (!this.props.primaryData && !this.props.secondaryData)) {
       return <div><FormattedMessage id="portal.loading.text"/></div>
     }
 
@@ -116,7 +116,7 @@ class AnalysisByKey extends React.Component {
       (this.props.secondaryLabel ? this.props.padding * 1.5 : 0)
 
     let className = 'analysis-by-time'
-    if(this.props.className) {
+    if (this.props.className) {
       className = className + ' ' + this.props.className
     }
     return (
@@ -185,7 +185,7 @@ class AnalysisByKey extends React.Component {
           }
           {this.props.axes ?
             yScale.ticks(4).reduce((axes, tick, i) => {
-              if(i) {
+              if (i) {
                 axes.push(
                   <g key={i}>
                     <text x={this.props.padding} y={yScale(tick)}>
