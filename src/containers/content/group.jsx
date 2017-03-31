@@ -18,6 +18,7 @@ import { getById as getGroupById } from '../../redux/modules/entities/groups/sel
 import { getByGroupWithTotalTraffic as getStoragesByGroup } from '../../redux/modules/entities/CIS-ingest-points/selectors'
 import { getByGroupWithTotalTraffic as getPropertiesByGroup } from '../../redux/modules/entities/properties/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
 import { getGlobalFetching } from '../../redux/modules/fetching/selectors'
 
 import { fetchMetrics as fetchStorageMetrics } from '../../redux/modules/entities/storage-metrics/actions'
@@ -63,7 +64,9 @@ export class Group extends React.Component {
       this.props.params.account,
       this.props.params.group,
       payload
-    )
+      ).then(({ error, payload }) => (
+          { item: 'Property', error, payload }
+      ))
   }
 
   deleteHost(id) {
@@ -72,7 +75,9 @@ export class Group extends React.Component {
       this.props.params.account,
       this.props.params.group,
       id
-    )
+    ).then(({ error, payload }) => (
+        { item: 'Property', error, payload }
+    ))
   }
   sortItems(valuePath, direction) {
     this.props.uiActions.sortContentItems({valuePath, direction})
@@ -147,7 +152,7 @@ Group.propTypes = {
   fetchingMetrics: PropTypes.bool,
   params: PropTypes.object,
   properties: PropTypes.instanceOf(List),
-  roles: PropTypes.instanceOf(List),
+  roles: PropTypes.instanceOf(Map),
   sortDirection: PropTypes.number,
   sortValuePath: PropTypes.instanceOf(List),
   storages: PropTypes.instanceOf(List),
@@ -158,7 +163,7 @@ Group.propTypes = {
 Group.defaultProps = {
   activeAccount: Map(),
   activeGroup: Map(),
-  roles: List(),
+  roles: Map(),
   sortValuePath: List(),
   storages: List(),
   user: Map()
@@ -172,7 +177,7 @@ const mapStateToProps = (state, { params: { account, group } }) => {
     fetchingMetrics: state.metrics.get('fetchingHostMetrics'),
     properties: getPropertiesByGroup(state, group),
     storages: getStoragesByGroup(state, group),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     sortDirection: state.ui.get('contentItemSortDirection'),
     sortValuePath: state.ui.get('contentItemSortValuePath'),
     user: state.user,

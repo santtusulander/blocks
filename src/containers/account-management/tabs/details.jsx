@@ -56,8 +56,11 @@ class AccountDetails extends React.Component {
 
                 { /* List of Services (and options) */}
                 <ul className='services-list'>
+                  { servicesIds.isEmpty() &&
+                    <li><FormattedMessage id="portal.account.manage.noServices.text"/></li>
+                  }
                   {
-                    servicesIds.size && servicesIds.map( (service,i) => {
+                    !!servicesIds.size && servicesIds.map( (service,i) => {
                       const options = service.get('options')
                       let optionList;
 

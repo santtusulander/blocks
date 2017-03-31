@@ -15,6 +15,8 @@ import SectionContainer from '../layout/section-container'
 import ConfigurationGTMTrafficRules from './gtm-rules'
 import MultilineTextFieldError from '../shared/forms/multiline-text-field-error'
 
+import RuleModal from './traffic-rule-form/rule-modal'
+
 import FieldFormGroup from '../form/field-form-group'
 import FieldFormGroupToggle from '../form/field-form-group-toggle'
 
@@ -23,7 +25,11 @@ import { checkForErrors } from '../../util/helpers'
 import { isValidCName, isValidTextField } from '../../util/validators.js'
 import { GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH } from '../../constants/gtm'
 
-const validate = ({ cdnName, cName }) => {
+const validate = ({ GTMToggle, cdnName, cName }) => {
+  if (!GTMToggle) {
+    return {}
+  }
+
   const conditions = {
     cdnName: {
       condition: !isValidTextField(cdnName, GTM_CDN_NAME_MIN_LENGTH, GTM_CDN_NAME_MAX_LENGTH),
@@ -49,22 +55,21 @@ class ConfigurationGlobalTrafficManager extends React.Component {
   constructor(props) {
     super(props)
 
-    this.addRule = this.addRule.bind(this)
     this.editRule = this.editRule.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
     this.handleSave = this.handleSave.bind(this)
+
+    this.state = { ruleToEdit: {}, ruleModalOpen: false }
   }
 
-  addRule() {
-    /*
-      TODO: UDNP-3088 - Rules section
-    */
+  toggleModal() {
+    this.setState({ ruleModalOpen: !this.state.ruleModalOpen, ruleToEdit: {} })
   }
 
-  editRule() {
-    /*
-      TODO: UDNP-3088 - Rules section
-    */
+  editRule(index) {
+    this.toggleModal()
+    this.setState({ ruleToEdit: { values: this.props.getRule(index), index } })
   }
 
   deleteRule() {
@@ -86,7 +91,6 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
   render() {
     const { config, intl, isFormDisabled, initialValues, readOnly } = this.props
-
     if (!config || !config.size) {
       return (
         <LoadingSpinner />
@@ -95,6 +99,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
 
     return (
       <form className="configuration-gtm" onSubmit={this.handleSave}>
+        {this.state.ruleModalOpen && <RuleModal rule={this.state.ruleToEdit} onCancel={this.toggleModal}/>}
         {/* ENABLE GTM */}
         <SectionContainer>
           <Row>
@@ -228,7 +233,7 @@ class ConfigurationGlobalTrafficManager extends React.Component {
         <SectionHeader sectionHeaderTitle={<FormattedMessage id="portal.configuration.gtm.table.label"/>}>
           {!readOnly &&
             <IsAllowed to={MODIFY_PROPERTY}>
-              <Button bsStyle="success" className="btn-icon" onClick={this.addRule} disabled={isFormDisabled}>
+              <Button bsStyle="success" className="btn-icon" onClick={this.toggleModal} disabled={isFormDisabled}>
                 <IconAdd />
               </Button>
             </IsAllowed>
@@ -273,6 +278,7 @@ const mapStateToProps = (state) => {
   */
   return {
     isFormDisabled: !GTMToggle,
+    getRule: (index) => selector(state, 'rules')[index],
     initialValues: {
       GTMToggle: true,
       cdnName: 'google.com',

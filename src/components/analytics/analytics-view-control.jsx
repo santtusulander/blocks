@@ -77,7 +77,7 @@ const AnalyticsViewControl = (props) => {
       }
     },
     {
-      key: 'storage',
+      key: 'storage-overview',
       label: props.intl.formatMessage({id: 'portal.analytics.tabs.storage.storageTitle'}),
       hideForProperty: true,
       permission: PERMISSIONS.VIEW_ANALYTICS_STORAGE,

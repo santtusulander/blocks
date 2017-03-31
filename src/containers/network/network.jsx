@@ -59,6 +59,8 @@ import { getByNetwork as getPopsByNetwork } from '../../redux/modules/entities/p
 
 import { getByPop as getPodsByPop } from '../../redux/modules/entities/pods/selectors'
 
+import { getAll as getRoles } from '../../redux/modules/entities/roles/selectors'
+
 import { buildReduxId } from '../../redux/util'
 
 import Content from '../../components/layout/content'
@@ -77,10 +79,7 @@ import EditNodeContainer from './modals/edit-node-modal'
 import EntityEdit from '../../components/account-management/entity-edit'
 
 import { sortByKey } from '../../util/helpers'
-import checkPermissions, {
-  getLocationPermissions, getNetworkPermissions, getNODEPermissions,
-  getPODPermissions, getPOPPermissions, getFootprintsPermissions
-} from '../../util/permissions'
+import checkPermissions from '../../util/permissions'
 
 class Network extends React.Component {
   constructor(props) {
@@ -669,13 +668,6 @@ class Network extends React.Component {
         break
     }
 
-    const locationPermissions = getLocationPermissions(roles, currentUser)
-    const networkPermissions = getNetworkPermissions(roles, currentUser)
-    const popPermissions = getPOPPermissions(roles, currentUser)
-    const podPermissions = getPODPermissions(roles, currentUser)
-    const nodePermissions = getNODEPermissions(roles, currentUser)
-    const footprintPermissions = getFootprintsPermissions(roles, currentUser)
-
     return (
       <Content className="network-content">
 
@@ -844,7 +836,6 @@ class Network extends React.Component {
             onDelete={(group) => this.showDeleteGroupModal(group)}
             onSave={this.handleGroupSave}
             show={true}
-            locationPermissions={locationPermissions}
           />
         }
 
@@ -858,7 +849,6 @@ class Network extends React.Component {
             networkId={this.state.networkId}
             isFetching ={isFetching('pop')}
             onCancel={() => this.handleCancel(ADD_EDIT_NETWORK)}
-            networkPermissions={networkPermissions}
           />
         }
 
@@ -872,7 +862,6 @@ class Network extends React.Component {
             networkId={params.network}
             popId={this.state.popId}
             onCancel={() => this.handleCancel(ADD_EDIT_POP)}
-            popPermissions={popPermissions}
           />
         }
 
@@ -888,8 +877,6 @@ class Network extends React.Component {
             popId={params.pop}
             podId={this.state.podId}
             onCancel={() => this.handleCancel(ADD_EDIT_POD)}
-            podPermissions={podPermissions}
-            footprintPermissions={footprintPermissions}
           />
         }
 
@@ -900,7 +887,6 @@ class Network extends React.Component {
             onSave={this.handleNodeSave}
             onCancel={() => this.handleCancel(ADD_NODE)}
             show={true}
-            nodePermissions={nodePermissions}
           />
         }
 
@@ -911,7 +897,6 @@ class Network extends React.Component {
             params={params}
             onCancel={() => this.handleCancel(EDIT_NODE)}
             show={true}
-            nodePermissions={nodePermissions}
           />
         }
       </Content>
@@ -947,7 +932,7 @@ Network.propTypes = {
   params: PropTypes.object,
   pods: PropTypes.instanceOf(Immutable.List),
   pops: PropTypes.instanceOf(Immutable.List),
-  roles: PropTypes.instanceOf(Immutable.List),
+  roles: PropTypes.instanceOf(Immutable.Map),
   router: PropTypes.object,
   toggleDeleteConfirmationModal: PropTypes.func,
   toggleModal: PropTypes.func,
@@ -981,7 +966,7 @@ const mapStateToProps = (state, ownProps) => {
     groupMetrics: state.metrics.get('groupMetrics'),
     accountDailyTraffic: state.metrics.get('accountDailyTraffic'),
     accountMetrics: state.metrics.get('accountMetrics'),
-    roles: state.roles.get('roles'),
+    roles: getRoles(state),
     currentUser: state.user.get('currentUser')
   };
 }

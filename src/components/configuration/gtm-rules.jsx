@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table } from 'react-bootstrap'
-import Immutable from 'immutable'
+import { Field, FieldArray } from 'redux-form'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -15,87 +15,66 @@ class ConfigurationGTMTrafficRules extends React.Component {
     super(props);
 
     this.state = {
-      policy: null
+      activeIndex: undefined
     }
 
-    this.editRule = this.editRule.bind(this)
     this.deleteRule = this.deleteRule.bind(this)
-    this.parsePolicy = this.parsePolicy.bind(this)
     this.renderRules = this.renderRules.bind(this)
+    this.renderRule = this.renderRule.bind(this)
     this.showConfirmation = this.showConfirmation.bind(this)
-    this.closeConfirmation = this.closeConfirmation.bind(this)
+    this.toggleConfirmation = this.toggleConfirmation.bind(this)
   }
 
-  editRule(index) {
+  deleteRule(index, remove) {
     return () => {
-      this.props.editRule(index)
-    }
-  }
-
-  deleteRule(index) {
-    return () => {
-      this.props.deleteRule(index)
-      this.setState({
-        policy: null
-      })
+      remove(index)
+      this.toggleConfirmation()
     }
   }
 
   showConfirmation(index) {
     return () => {
-      this.setState({
-        policy: index
-      })
+      this.toggleConfirmation(index)
     }
   }
 
-  closeConfirmation() {
-    this.setState({
-      policy: null
-    })
+  toggleConfirmation(activeIndex) {
+    this.setState({ activeIndex })
   }
 
-  parsePolicy() {
-    /* TODO: UDNP-3088 - Rules section */
-    return {
-      matches: [{ field: 'a, b, c, d'}, { field: 'a, b, c, d'}],
-      sets: [{ setkey: 'd, c, b, a'}, { setkey: 'd, c, b, a'}]
+  renderRule({ input, index, fields }) {
+    const conditionOptions = {
+      'or': "portal.configuration.condition.or",
+      'and': "portal.configuration.condition.and"
     }
-  }
+    const matches = input.value.matchArray
+      .map(({ label }) => label)
+      .join(` ${this.props.intl.formatMessage({ id: conditionOptions[input.value.condition] })} `)
 
-  renderRules(policy, i) {
-    /* TODO: fix this function in scope of UDNP-3088 - Rules section */
-    if (!policy.has('match')) {
-      return null
-    }
-
-    const { matches, sets } = this.parsePolicy(policy)
-
-    let matchLabel = matches.map(match => match.field).join(', ')
-    let actionsLabel = sets.map(set => set.setkey).join(', ')
-
-    const actionButtons = this.props.readOnly ? null : (
-      <ActionButtons
-        permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
-        onEdit={this.editRule(i)}
-        onDelete={this.showConfirmation(i)} />
-    )
+    const policyWeight = input.value.policyWeight
+    const trafficSplit = policyWeight < 100
+      ? <FormattedMessage id="portal.configuration.gtm.table.action.split" values={{ UDNServed: policyWeight, otherServed: 100 - policyWeight }}/>
+      : <FormattedMessage id="portal.configuration.gtm.table.action.single" values={{ UDNServed: policyWeight }}/>
 
     return (
-      <tr key={policy + i}>
-        <td>{policy.get('rule_name')}</td>
+      <tr key={index}>
+        <td>{input.value.name}</td>
         <td>
           <HelpTooltip
             id='gtm-match-tooltip'
-            buttonText={matchLabel}
+            buttonText={matches}
             title={<FormattedMessage id="portal.configuration.gtm.table.match.label"/>}>
-            {matchLabel}
+            {matches}
           </HelpTooltip>
         </td>
-        <td>{actionsLabel}</td>
+        <td>{trafficSplit}%</td>
         <td className="nowrap-column">
-          {actionButtons}
-          {this.state.policy !== null &&
+          {!this.props.readOnly &&
+            <ActionButtons
+              permissions={{ modify: MODIFY_PROPERTY, delete: DELETE_PROPERTY }}
+              onEdit={() => this.props.editRule(index)}
+              onDelete={this.showConfirmation(index)} />}
+          {this.state.activeIndex !== undefined &&
             <ReactCSSTransitionGroup
               component="div"
               className="confirmation-transition"
@@ -104,12 +83,12 @@ class ConfigurationGTMTrafficRules extends React.Component {
               transitionLeaveTimeout={500}
               transitionAppear={true}
               transitionAppearTimeout={10}>
-              {this.state.policy === i &&
+              {this.state.activeIndex === index &&
                 <Confirmation
                   cancelText={this.props.intl.formatMessage({id: 'portal.button.no'})}
                   confirmText={this.props.intl.formatMessage({id: 'portal.button.delete'})}
-                  handleConfirm={this.deleteRule(i)}
-                  handleCancel={this.closeConfirmation}>
+                  handleConfirm={this.deleteRule(index, fields.remove)}
+                  handleCancel={() => this.toggleConfirmation()}>
                   <FormattedMessage id="portal.policy.edit.rules.deleteRuleConfirmation.text"/>
                 </Confirmation>
               }
@@ -120,12 +99,22 @@ class ConfigurationGTMTrafficRules extends React.Component {
     )
   }
 
-  render() {
-    /* TODO: UDNP-3088 - Rules section */
-    const rows = [
-      ...this.props.rules.map(this.renderRules)
-    ]
+  renderRules({ fields }) {
+    return (
+      <tbody>
+        {fields.map((rule, i) => (
+          <Field
+            key={i}
+            fields={fields}
+            index={i}
+            name={rule}
+            component={this.renderRule}/>
+        ))}
+      </tbody>
+    )
+  }
 
+  render() {
     return (
       <div className="configuration-gtm-rules">
         <Table striped={true}>
@@ -133,22 +122,14 @@ class ConfigurationGTMTrafficRules extends React.Component {
             <tr>
               <th><FormattedMessage id="portal.configuration.gtm.table.name.label"/></th>
               <th><FormattedMessage id="portal.configuration.gtm.table.match.label"/></th>
-              <th><FormattedMessage id="portal.configuration.gtm.table.actions.label"/></th>
-              <th width="1%" />
+              <th><FormattedMessage id="portal.configuration.gtm.table.action.label"/></th>
+              {!this.props.readOnly && <th width="1%" />}
             </tr>
           </thead>
-          <tbody>
-            {this.props.rules.isEmpty()
-              ?
-                <tr>
-                  <td colSpan={5}>
-                    <FormattedMessage id="portal.configuration.gtm.table.empty.text"/>
-                  </td>
-                </tr>
-              :
-                rows
-            }
-          </tbody>
+          <FieldArray
+            name="rules"
+            activeIndex={this.state.activeIndex}
+            component={this.renderRules}/>
         </Table>
       </div>
     )
@@ -157,102 +138,9 @@ class ConfigurationGTMTrafficRules extends React.Component {
 
 ConfigurationGTMTrafficRules.displayName = 'ConfigurationGTMTrafficRules'
 ConfigurationGTMTrafficRules.propTypes = {
-  deleteRule: React.PropTypes.func,
   editRule: React.PropTypes.func,
   intl: React.PropTypes.object,
-  readOnly: React.PropTypes.bool,
-  rules: React.PropTypes.instanceOf(Immutable.List)
-}
-
-/* TODO: UDNP-3088 - Rules section */
-ConfigurationGTMTrafficRules.defaultProps = {
-  rules: Immutable.fromJS([{
-    "rule_name": "First Rule",
-    "match": {
-      "field": "response_code",
-      "cases": [
-        [
-          "307",
-          [
-            {
-              "match": {
-                "field": "response_header",
-                "cases": [
-                  [
-                    "origin1.example.com/(.*)",
-                    [
-                      {
-                        "set": {
-                          "header": {
-                            "action": "set",
-                            "header": "Location",
-                            "value": [
-                              {
-                                "field": "text",
-                                "field_detail": "origin2.example.com/"
-                              },
-                              {
-                                "field": "group",
-                                "field_detail": "1"
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    ]
-                  ]
-                ],
-                "field_detail": "Location"
-              }
-            }
-          ]
-        ]
-      ]
-    }
-  }, {
-    "rule_name": "Second Rule",
-    "match": {
-      "field": "response_code",
-      "cases": [
-        [
-          "307",
-          [
-            {
-              "match": {
-                "field": "response_header",
-                "cases": [
-                  [
-                    "origin1.example.com/(.*)",
-                    [
-                      {
-                        "set": {
-                          "header": {
-                            "action": "set",
-                            "header": "Location",
-                            "value": [
-                              {
-                                "field": "text",
-                                "field_detail": "origin2.example.com/"
-                              },
-                              {
-                                "field": "group",
-                                "field_detail": "1"
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    ]
-                  ]
-                ],
-                "field_detail": "Location"
-              }
-            }
-          ]
-        ]
-      ]
-    }
-  }])
+  readOnly: React.PropTypes.bool
 }
 
 export default injectIntl(ConfigurationGTMTrafficRules)

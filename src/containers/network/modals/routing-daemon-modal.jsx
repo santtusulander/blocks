@@ -25,7 +25,8 @@ class RoutingDaemonFormContainer extends React.Component {
       intl,
       onCancel,
       show,
-      initialValues
+      initialValues,
+      readOnly
     } = this.props
 
     const edit = !!initialValues.bgp_as_number
@@ -43,6 +44,7 @@ class RoutingDaemonFormContainer extends React.Component {
         editing={edit}
         onCancel={onCancel}
         onSubmit={this.onSubmit}
+        readOnly={readOnly}
       />
       </SidePanel>
     )
@@ -55,6 +57,7 @@ RoutingDaemonFormContainer.propTypes = {
   intl: PropTypes.object,
   onCancel: PropTypes.func,
   onSave: PropTypes.func,
+  readOnly: PropTypes.bool,
   show: PropTypes.bool
 }
 

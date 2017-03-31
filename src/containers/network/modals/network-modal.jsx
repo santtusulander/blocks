@@ -22,6 +22,9 @@ import ModalWindow from '../../../components/modal'
 import NetworkForm from '../../../components/network/forms/network-form'
 import '../../../components/account-management/group-form.scss'
 
+import checkPermissions from '../../../util/permissions'
+import * as PERMISSIONS from '../../../constants/permissions'
+
 class NetworkFormContainer extends React.Component {
   constructor(props) {
     super(props)
@@ -141,7 +144,7 @@ class NetworkFormContainer extends React.Component {
   }
 
   render() {
-    const { account, group, network, initialValues, isFetching, onCancel, networkPermissions} = this.props
+    const { account, group, network, initialValues, isFetching, onCancel, allowModify } = this.props
     const { showDeleteModal } = this.state
     // simple way to check if editing -> no need to pass 'edit' - prop
     const edit = !!initialValues.name
@@ -166,7 +169,8 @@ class NetworkFormContainer extends React.Component {
             }
             }
             onCancel={onCancel}
-            networkPermissions={networkPermissions}
+            readOnly={!allowModify}
+            disabled={true}
           />
         </SidePanel>
 
@@ -193,6 +197,7 @@ NetworkFormContainer.displayName = "NetworkFormContainer"
 NetworkFormContainer.propTypes = {
   account: PropTypes.instanceOf(Map),
   accountId: PropTypes.string,
+  allowModify: PropTypes.bool,
   brand: PropTypes.string,
   fetchAccount: PropTypes.func,
   fetchGroup: PropTypes.func,
@@ -205,7 +210,6 @@ NetworkFormContainer.propTypes = {
   isFetching: PropTypes.bool,
   network: PropTypes.instanceOf(Map),
   networkId: PropTypes.string,
-  networkPermissions: PropTypes.object,
   onCancel: PropTypes.func,
   onCreate: PropTypes.func,
   onDelete: PropTypes.func,
@@ -228,13 +232,15 @@ const mapStateToProps = (state, ownProps) => {
   const network = ownProps.networkId && getNetworkById(state, networkId)
   const pops = ownProps.networkId && getPopsByNetwork(state, networkId)
   const edit = !!ownProps.networkId
+  const roles = state.roles.get('roles')
+  const currentUser = state.user.get('currentUser')
 
   return {
     account: ownProps.accountId && getAccountById(state, ownProps.accountId),
     group: ownProps.groupId && getGroupById(state, ownProps.groupId),
     network,
     pops,
-
+    allowModify: checkPermissions(roles, currentUser, PERMISSIONS.MODIFY_NETWORK),
     initialValues: {
       name: edit && network ? network.get('name') : '',
       description: edit && network ? network.get('description') : ''

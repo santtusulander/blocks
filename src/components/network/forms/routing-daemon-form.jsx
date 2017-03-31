@@ -133,7 +133,8 @@ class RoutingDaemonForm extends React.Component {
       invalid,
       onCancel,
       onSubmit,
-      submitting
+      submitting,
+      readOnly
     } = this.props
 
     const { BGPNameNotFound, BGPNumberInvalid, isFetchingBGPName, BGPNumberIsEmpty } = this.state
@@ -167,6 +168,7 @@ class RoutingDaemonForm extends React.Component {
           component={FieldFormGroup}
           onBlur={(e) => this.fetchBGPName(e.target.value)}
           props={BGB_AS_NUMBER_PROPS}
+          disabled={readOnly}
         />
 
         <Field
@@ -187,6 +189,7 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_router_ip.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <Field
@@ -196,6 +199,7 @@ class RoutingDaemonForm extends React.Component {
           label={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           placeholder={intl.formatMessage({ id: 'portal.network.spConfig.routingDaemon.editForm.bgp_password.label' })}
           component={FieldFormGroup}
+          disabled={readOnly}
         />
 
         <FormFooterButtons>
@@ -224,6 +228,7 @@ RoutingDaemonForm.displayName = 'RoutingDaemonForm'
 RoutingDaemonForm.propTypes = {
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
+  readOnly: PropTypes.bool,
 
   ...reduxFormPropTypes
 }

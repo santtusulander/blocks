@@ -509,7 +509,7 @@ Configuration.propTypes = {
   groupHasStorageService: React.PropTypes.bool,
   hostActions: React.PropTypes.object,
   intl: React.PropTypes.object,
-  notification: React.PropTypes.string,
+  notification: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
   params: React.PropTypes.object,
   policyActiveMatch: React.PropTypes.instanceOf(Immutable.List),
   policyActiveRule: React.PropTypes.instanceOf(Immutable.List),
