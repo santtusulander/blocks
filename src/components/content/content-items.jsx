@@ -17,7 +17,7 @@ import {
   getAnalyticsUrl
 } from '../../util/routes'
 
-import { userIsCloudProvider, hasService, customSort } from '../../util/helpers'
+import { userIsCloudProvider, hasService } from '../../util/helpers'
 
 import AddHost from './add-host'
 import AnalyticsLink from './analytics-link'
@@ -99,9 +99,7 @@ class ContentItems extends React.Component {
     this.showStorageModal = this.showStorageModal.bind(this)
     this.hideStorageModal = this.hideStorageModal.bind(this)
     this.showNotification = this.showNotification.bind(this)
-
-    this.storageSorter = this.storageSorter.bind(this)
-    this.propertySorter = this.propertySorter.bind(this)
+    this.getCustomSortPath = this.getCustomSortPath.bind(this)
 
     this.addButtonOptions = [{
       label: <FormattedMessage id="portal.content.property.header.addProperty.label"/>,
@@ -125,6 +123,22 @@ class ContentItems extends React.Component {
       this.props.sortItems(sortOption.path, sortOption.direction)
     }
   }
+
+  getCustomSortPath(tag) {
+    const [sortBy] = this.props.sortValuePath
+
+    if( sortBy === 'items') {
+      if(tag === 'storages') {
+        return Immutable.fromJS(['ingest_point_id'])
+      }
+      if(tag === 'properties') {
+        return Immutable.fromJS(['published_host_id'])
+      }
+    }
+
+    return Immutable.fromJS(['published_host_id'])
+  }
+
   showNotification(message) {
     clearTimeout(this.notificationTimeout)
     this.props.changeNotification(message)
@@ -328,24 +342,6 @@ class ContentItems extends React.Component {
     )
   }
 
-  storageSorter( storages ) {
-    const [sortBy] =  this.props.sortValuePath
-
-    if (sortBy === 'item') {
-      return customSort(storages, this.props.sortDirection, 'ingest_point_id')
-    }
-    return customSort(storages, this.props.sortDirection, 'totalTraffic')
-  }
-
-  propertySorter( storages ) {
-    const [sortBy] =  this.props.sortValuePath
-
-    if (sortBy === 'item') {
-      return customSort(storages, this.props.sortDirection, 'published_host_id')
-    }
-    return customSort(storages, this.props.sortDirection, 'totalTraffic')
-  }
-
   render() {
     const {
       sortValuePath,
@@ -473,7 +469,7 @@ class ContentItems extends React.Component {
                 {/* Storages */}
                 <IsAllowed to={PERMISSIONS.LIST_STORAGE}>
                       <div className="storage-wrapper">
-                        { groupHasStorageService && this.storageSorter(storages).map((storage, i) => {
+                        { groupHasStorageService && storages.sort( sortContent(this.getCustomSortPath('storages'), sortDirection) ).map((storage, i) => {
                           const id = storage.get('ingest_point_id')
                           //const reduxId = buildReduxId(group, id)
 
@@ -510,7 +506,7 @@ class ContentItems extends React.Component {
                 }
 
                 { /* Properties */}
-                { this.propertySorter(properties).map( (property,i) => {
+                { properties.sort( sortContent(this.getCustomSortPath('properties'), sortDirection) ).map( (property,i) => {
                   return (
                     <PropertyItemContainer
                       key={i}

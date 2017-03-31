@@ -364,7 +364,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 
 
 export function filterAccountsByUserName (accounts) {
-  // placeholder for now
+  // placeholder for now 
   return accounts
 }
 
@@ -706,24 +706,4 @@ export function hasOption(group, optionID) {
  */
 export function formatASN(asnObj) {
   return asnObj ? `ASN${asnObj.asn} (${asnObj.organization})` : ''
-}
-
-/**
- * customSort
- * @params unSortArr
- * @params sortDirection
- * @params sortField
- * @returns { sortedArr }
- */
-
-export function customSort (arr, sortDirection, sortField) {
-  return arr.sort((a, b) => {
-    let varA = Number.isInteger(a.get(sortField)) ? a.get(sortField) : a.get(sortField).toLowerCase()
-    let varB = Number.isInteger(b.get(sortField)) ? b.get(sortField) : b.get(sortField).toLowerCase()
-
-    if( varA > varB ) return sortDirection
-    if( varA < varB ) return -1 * sortDirection
-
-    return 0
-  })
 }
